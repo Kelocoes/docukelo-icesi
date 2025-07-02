@@ -1,47 +1,63 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 ---
 
-# Tutorial Intro
+# ¡Bienvenido!
 
-Let's discover **Docusaurus in less than 5 minutes**.
+¡Hola! 👋 Me alegra que hayas llegado a esta página de documentación. Aquí podrás explorar información relevante sobre algunos de los cursos que he tenido el gusto de impartir en la Universidad Icesi, como **Computación en Internet 2**, **Diseñando con Algoritmos** y, posiblemente, algunos temas fascinantes de **Inteligencia Artificial**. Mi objetivo es que encuentres aquí recursos útiles, explicaciones claras y ejemplos de código (propios y de la comunidad) que te ayuden a comprender mejor los conceptos que abordamos en clase.
 
-## Getting Started
+---
 
-Get started by **creating a new site**.
+## Sobre mí
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+Mi nombre es **Kevin David** y nací en 2001 en la ciudad de Cali, Colombia. Desde pequeño, la tecnología y la programación han sido mi pasión. Comencé mi formación en **Ingeniería de Sistemas** en la Universidad del Valle en 2018, donde adquirí una sólida base en áreas como:
 
-### What you'll need
+- Programación
+- Bases de datos
+- Redes
+- Sistemas operativos
+- Inteligencia Artificial
 
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+En 2024, decidí continuar mi camino académico en la **Universidad Icesi**, enfocándome en **Inteligencia Artificial** y **Aprendizaje Automático** a través de una Maestría en Investigación, la cual estoy cursando actualmente.
 
-## Generate a new site
+Durante mis años de pregrado también tuve la oportunidad de ser monitor, apoyar a otros estudiantes y profundizar en temas avanzados de IA. Además, trabajé en el **Laboratorio Digital del Banco de Bogotá** en el área de autenticación de usuarios, donde pude aplicar mis conocimientos en desarrollo de software en un entorno profesional.
 
-Generate a new Docusaurus site using the **classic template**.
+Actualmente además de mi rol como desarrollador en diferentes proyectos de la Universidad como el macro proyecto Digital Twin de la Planta Piloto y el sistema de encuestas de IAsLab, tengo la oportunidad de realizar labores de docencia en la Universidad Icesi.
 
-The classic template will automatically be added to your project after you run the command:
+---
 
-```bash
-npm init docusaurus@latest my-website classic
-```
+## Contacto
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+¿Tienes preguntas, sugerencias o simplemente quieres conversar sobre tecnología? ¡No dudes en contactarme!
 
-The command also installs all necessary dependencies you need to run Docusaurus.
+Puedes encontrarme en:
+- **GitHub**: [Kelocoes](https://github.com/Kelocoes)
+- **LinkedIn**: [Kevin David](https://www.linkedin.com/in/kevin-david-rodríguez-belalcázar-6276aa237/)
+- **Correo electrónico**:
+  - kevin.rodriguez109@gmail.com  
+  - kevin.david.rodriguez@correounivalle.edu.co  
+  - kdrodriguez@icesi.edu.co
 
-## Start your site
+---
 
-Run the development server:
+## Áreas de interés
 
-```bash
-cd my-website
-npm run start
-```
+Actualmente, soy profesor en la Universidad Icesi en Cali, Colombia. Mis principales áreas de interés son:
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
+- 🤖 Inteligencia Artificial
+- 📈 Aprendizaje Automático
+- 💻 Desarrollo de Software
+- 🔬 Sistemas complejos
+- 🧩 Modelos de optimización
 
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
+---
 
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+## Cursos impartidos
+
+Aquí puedes encontrar una lista de los cursos que he impartido y que están documentados en esta página:
+
+- **Computación en Internet 2**
+- **Diseñando con Algoritmos**
+
+¡Espero que disfrutes el contenido y encuentres información valiosa para tu aprendizaje!
+
