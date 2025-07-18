@@ -1,8 +1,8 @@
 {
-    "label": "Semana 5",
+    "label": "S5 - Testing, Calidad e IA",
     "position": 5,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 5 de diseñando con algoritmos"
+        "description": "Testing, Calidad e IA en el desarrollo de software"
     }
 }

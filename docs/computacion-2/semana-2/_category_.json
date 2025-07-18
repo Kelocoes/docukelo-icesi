@@ -1,8 +1,8 @@
 {
-    "label": "Semana 2",
+    "label": "S2 - Introducción Spring",
     "position": 2,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 2 de computación en internet 2"
+        "description": "Introducción de las aplicaciones web, manejos de comandos en linux y ejercicios de Spring con Tomcat"
     }
 }

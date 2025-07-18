@@ -1,8 +1,8 @@
 {
-    "label": "Semana 2",
+    "label": "S2 - HTML & CSS",
     "position": 2,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 2 de diseñando con algoritmos"
+        "description": "Conceptos clave de HTML y CSS, cómo estructurar una página web, y estilos básicos."
     }
 }

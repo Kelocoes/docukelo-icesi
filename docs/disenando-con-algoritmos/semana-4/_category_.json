@@ -1,8 +1,8 @@
 {
-    "label": "Semana 4",
+    "label": "S4 - DOM & Web Storage",
     "position": 4,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 4 de diseñando con algoritmos"
+        "description": "Manipulación del DOM y almacenamiento web"
     }
 }
