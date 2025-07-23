@@ -19,6 +19,7 @@ export default function BrowserWindow({
     style,
     bodyStyle,
 }) {
+
     return (
         <div className={styles.browserWindow} style={{ ...style, minHeight }}>
             <div className={styles.browserWindowHeader}>
