@@ -1,0 +1,332 @@
+---
+sidebar_position: 3
+---
+
+import BrowserWindow from '@site/src/components/BrowserWindow';
+
+# Introducción a CSS
+
+CSS (Cascading Style Sheets) es el lenguaje utilizado para dar estilo a las páginas web. Permite cambiar colores, tamaños, márgenes, ubicaciones y mucho más.
+
+### ¿Cómo se utiliza CSS?
+
+Hay varias formas de aplicar CSS en una página HTML:
+
+* **CSS en línea**: dentro de un atributo `style` directamente en el elemento HTML. No es recomendable para proyectos grandes.
+
+```html
+<p style="color: red;">Texto en rojo</p>
+```
+
+<BrowserWindow minHeight={240}>
+  <>
+    <p style={{ color: 'red' }}>Texto en rojo</p>
+  </>
+</BrowserWindow>
+
+* **CSS interno**: dentro de una etiqueta `<style>` en el `<head>` del documento HTML.
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      p {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Texto en verde</p>
+  </body>
+</html>
+```
+
+<BrowserWindow minHeight={240}>
+  <>
+    <p style={{ color: 'green' }}>Texto en verde</p>
+  </>
+</BrowserWindow>
+
+* **CSS externo**: se crea un archivo `.css` separado y se importa con `<link>`.
+
+```html
+<!-- index.html -->
+<link rel="stylesheet" href="estilos.css">
+```
+
+```css
+/* estilos.css */
+body {
+  background-color: #fafafa;
+  font-family: sans-serif;
+}
+```
+
+### 1. Selectores
+
+Los selectores permiten apuntar a los elementos HTML que quieres estilizar.
+
+#### Selector por etiqueta
+
+```css
+p {
+  color: blue;
+}
+```
+
+#### Selector por clase
+
+```css
+.texto-rojo {
+  color: red;
+}
+```
+
+#### Selector por ID
+
+```css
+#titulo-principal {
+  font-size: 32px;
+}
+```
+
+```html
+<!DOCTYPE html>
+<html>
+  <body>
+    <p id="texto-rojo">Este texto será rojo.</p>
+  </body>
+</html>
+```
+
+<BrowserWindow minHeight={240}>
+  <>
+    <p id="texto-rojo" style={{ color: 'red' }}>Este texto será rojo.</p>
+  </>
+</BrowserWindow>
+
+### 2. Propiedades comunes
+
+Algunas propiedades comunes en CSS incluyen:
+
+* `color`
+* `background-color`
+* `padding`
+* `margin`
+* `border`
+* `font-size`
+* `text-align`
+
+```css
+.box {
+  color: white;
+  background-color: steelblue;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+```
+
+### 3. Medidas Absolutas vs Relativas
+
+* **Absolutas**:
+
+  * `px` (píxeles)
+  * `cm` (centímetros)
+  * `in` (pulgadas)
+
+* **Relativas**:
+
+    * `em`: equivale al tamaño de fuente del elemento padre. Por ejemplo, si el padre tiene `font-size: 16px`, entonces `1em = 16px`. Si usas `2em`, serían `32px`.
+    * `rem`: equivale al tamaño de fuente raíz, normalmente definido en el elemento `<html>`. Por ejemplo, si `html { font-size: 16px; }`, entonces `1rem = 16px` en toda la página, sin importar el padre.
+    * `%`: relativo al tamaño del contenedor padre.
+    * `vw`, `vh`: relativo al ancho (`vw`) o alto (`vh`) del viewport (ventana del navegador). `100vw` es el 100% del ancho de la ventana.
+
+```css
+.texto-absoluto {
+  font-size: 16px;
+}
+.texto-relativo {
+  font-size: 2em;
+}
+```
+
+<BrowserWindow minHeight={240}>
+  <>
+    <p className="texto-absoluto" style={{ fontSize: '16px' }}>Texto con tamaño absoluto</p>
+    <p className="texto-relativo" style={{ fontSize: '2em' }}>Texto con tamaño relativo</p>
+  </>
+</BrowserWindow>
+
+### 4. Pseudo-clases
+
+Las pseudo-clases permiten aplicar estilos según el estado del elemento.
+
+```css
+a:hover {
+  color: red;
+}
+input:focus {
+  border-color: blue;
+}
+```
+
+<BrowserWindow minHeight={240}>
+  <>
+    <a
+      href="#"
+      style={{
+        color: 'black',
+        transition: 'color 0.2s',
+      }}
+      onMouseOver={e => (e.currentTarget.style.color = 'red')}
+      onMouseOut={e => (e.currentTarget.style.color = 'black')}
+    >
+      Enlace de ejemplo
+    </a>
+    <input
+      type="text"
+      placeholder="Haz clic aquí"
+      style={{
+        borderColor: 'black',
+        outline: 'none',
+        transition: 'border-color 0.2s',
+      }}
+      onFocus={e => (e.currentTarget.style.borderColor = 'blue')}
+      onBlur={e => (e.currentTarget.style.borderColor = 'black')}
+    />
+  </>
+</BrowserWindow>
+
+### 5. Flexbox
+
+Flexbox permite distribuir elementos fácilmente dentro de un contenedor flexible.
+
+Propiedades comunes del contenedor:
+
+* `display: flex`
+* `justify-content`: alineación horizontal
+
+  * `flex-start`, `center`, `flex-end`, `space-between`, `space-around`
+* `align-items`: alineación vertical
+
+```css
+.contenedor {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 150px;
+  background-color: #f0f0f0;
+}
+.item {
+  background: teal;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+}
+```
+
+Enlaces de referencia:
+- [Guía de Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)
+- [Flexbox Froggy](https://flexboxfroggy.com/)
+
+### 6. Media Queries
+
+Permiten adaptar los estilos según el tamaño de pantalla. Muy útiles para diseño responsivo.
+
+```css
+body {
+  background-color: lightgreen;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    background-color: lightblue;
+  }
+}
+```
+
+El `only screen` es una consulta que se aplica solo a pantallas, excluyendo otros dispositivos como impresoras.
+
+<BrowserWindow minHeight={240}>
+  <>
+    <p className="responsive-bg">
+        Redimensiona la ventana del navegador. Cuando el ancho de este documento sea de 600 píxeles o menos, el color de fondo será "lightblue", de lo contrario será "lightgreen".
+    </p>
+    <style>
+      {`
+        .responsive-bg {
+          background-color: lightgreen;
+          padding: 20px;
+          text-align: center;
+        }
+        @media only screen and (max-width: 600px) {
+          .responsive-bg {
+            background-color: lightblue;
+          }
+        }
+      `}
+  </style>
+  </>
+</BrowserWindow>
+
+```css
+.flex-mediaquery-demo {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    background: #f5f5f5;
+    padding: 16px;
+}
+.flex-mediaquery-demo .item {
+    background: #1976d2;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-align: center;
+}
+@media (max-width: 600px) {
+    .flex-mediaquery-demo {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+```
+
+<BrowserWindow minHeight={240}>
+    <>
+        <div className="flex-mediaquery-demo">
+            <div className="item">Elemento 1</div>
+            <div className="item">Elemento 2</div>
+            <div className="item">Elemento 3</div>
+        </div>
+        <style>
+            {`
+                .flex-mediaquery-demo {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 16px;
+                    background: #f5f5f5;
+                    padding: 16px;
+                }
+                .flex-mediaquery-demo .item {
+                    background: #1976d2;
+                    color: white;
+                    padding: 12px 24px;
+                    border-radius: 6px;
+                    text-align: center;
+                }
+                @media (max-width: 600px) {
+                    .flex-mediaquery-demo {
+                        flex-direction: column;
+                        align-items: stretch;
+                    }
+                }
+            `}
+        </style>
+    </>
+</BrowserWindow>
+
+Enlaces sobre Media query:
+- [Guía completa de CSS Media Queries (CSS-Tricks)](https://css-tricks.com/a-complete-guide-to-css-media-queries)
