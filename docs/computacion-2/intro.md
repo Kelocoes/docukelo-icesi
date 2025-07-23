@@ -15,9 +15,9 @@ Computación en Internet 2 es un curso que se centra en el desarrollo de aplicac
 </iframe>
 
 <iframe 
-    src="https://icesiedu-my.sharepoint.com/:x:/g/personal/1006054580_icesi_edu_co/EdS1v8xlLkFIrrnL6uqpoBcBZmqAk4HfhLR7KbM1UR83aA?e=lJ6XXZ&action=embedview" 
+    src="https://icesiedu-my.sharepoint.com/:x:/g/personal/1006054580_icesi_edu_co/EdS1v8xlLkFIrrnL6uqpoBcBt6ZdU3jf9FqrtiHt5TYryQ?e=6jucTl&action=embedview" 
     width="100%" 
     height="600px" 
     title="Excel Compartido - Computación en Internet 2">
-    <p>Tu navegador no soporta iframes. <a href="https://icesiedu-my.sharepoint.com/:x:/g/personal/1006054580_icesi_edu_co/EdS1v8xlLkFIrrnL6uqpoBcBZmqAk4HfhLR7KbM1UR83aA?e=lJ6XXZ">Abre el Excel aquí</a>.</p>
+    <p>Tu navegador no soporta iframes. <a href="https://icesiedu-my.sharepoint.com/:x:/g/personal/1006054580_icesi_edu_co/EdS1v8xlLkFIrrnL6uqpoBcBt6ZdU3jf9FqrtiHt5TYryQ?e=6jucTl">Abre el Excel aquí</a>.</p>
 </iframe>
