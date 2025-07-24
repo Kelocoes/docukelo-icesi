@@ -68,7 +68,7 @@ Asegúrate de tener instalado lo siguiente:
     ```
 
 7. Crea las siguientes carpetas para organizar tu proyecto:
-    - `src/main/java` para el código Java.
+    - `src/main/java/com/example` para el código Java.
     - `src/main/webapp` para los archivos web (HTML, JSP, etc.).
 
 8. La estructura del proyecto debe verse así:
@@ -78,7 +78,7 @@ Asegúrate de tener instalado lo siguiente:
     ├── pom.xml
     ├── src/
     │   ├── main/
-    │   │   ├── java/
+    │   │   ├── java/com/example/
     │   │   └── webapp/
     │       ├── WEB-INF/
     │       │   └── web.xml
@@ -112,6 +112,23 @@ Asegúrate de tener instalado lo siguiente:
         }
     }
     ```
+A este punto es bueno hablar sobre lo que significa un Servlet. Un Servlet es una clase Java que maneja solicitudes y respuestas HTTP, permitiendo crear aplicaciones web dinámicas. En este ejemplo, el Servlet `HelloServlet` responde a las solicitudes GET con un mensaje "Hello World!".
+
+A continuación te muestro una gráfica que expone la ubicación de un servlet dentro de un proyecto web:
+
+<img src="/img/servlet.png" alt="Ubicación de un Servlet en un proyecto web" width="600"/>
+
+Como puedes observar, los servlet se encuentran usualmente dentro del Web Server, en este caso Tomcat, y son invocados por el contenedor de servlets cuando se recibe una solicitud HTTP que coincide con su configuración.
+
+En el ciclo de vida de un servlet, puedes observar lo siguiente:
+
+<img src="/img/ciclo-vida-servlet.png" alt="Ciclo de vida de un Servlet" width="500"/>
+
+- El servlet es cargado en el Web Container cuando se recibe una solicitud.
+- Luego se crea una instancia de dicho servlet.
+- El método `init()` es llamado para inicializar el servlet.
+- Cuando se recibe una solicitud, el método `doGet()` o `doPost()` es invocado dependiendo del tipo de solicitud.
+- Finalmente, cuando el servlet ya no es necesario, el método `destroy()` es llamado para liberar recursos.
 
 10. Compila el proyecto con Maven. En la terminal ejecuta:
 

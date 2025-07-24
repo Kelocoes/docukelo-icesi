@@ -39,7 +39,7 @@ Para crear un contexto de Spring que use JSP, sigue estos pasos:
 mvn clean install
 ```
 
-5. Adicionar la clase HolaMundo como bean.
+5. Adicionar la clase HolaMundo como bean en la ruta `src/main/java/com/example/HolaMundo.java`:
 
 ```java
 public class HolaMundo {
@@ -64,14 +64,14 @@ public class HolaMundo {
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="HolaMundo" class="HolaMundo">
-        <property name="message" value="Hola Mundo spring!!" />
+    <bean id="HolaMundo" class="com.example.HolaMundo">
+        <property name="mensaje" value="Hola Mundo spring!!" />
     </bean>
 
 </beans>
 ```
 
-7. En el archivo main de tu aplicación, carga el contexto de Spring y accede al bean:
+7. Crea un archivo main `Main.java` en la carpeta `src/main/java/com/example/` para cargar el contexto de Spring y obtener el bean `HolaMundo`:
 
 ```java
 import org.springframework.context.ApplicationContext;
@@ -86,17 +86,102 @@ public class Main {
 }
 ```
 
-8. Ejecuta tu aplicación para ver el mensaje "Hola Mundo spring!!".
+8. Ejecuta tu aplicación usando el editor de código.
+
+Si deseas ejecutarlo desde la terminal, asegúrate de tener instalado el plugin de `dexec` de Maven y ejecuta el siguiente comando:
+
+```xml
+<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>exec-maven-plugin</artifactId>
+    <version>3.1.0</version>
+    <configuration>
+        <mainClass>com.example.Main</mainClass>
+    </configuration>
+</plugin>
+```
 
 ```bash
-mvn exec:java -Dexec.mainClass="Main"
+mvn exec:java -Dexec.mainClass="com.example.Main"
 ```
 
 9. Si deseas usar JSP, usando el archivo `index.jsp` en la carpeta `src/main/webapp`:
 
-```jsp
-<%
-    ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-    HolaMundo hola  = (HolaMundo) context.getBean("HolaMundo");
-%>
+```html
+<%@ page import="org.springframework.context.ApplicationContext" %>
+<%@ page import="org.springframework.context.support.ClassPathXmlApplicationContext" %>
+<%@ page import="com.example.HolaMundo" %>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Spring desde JSP</title>
+    </head>
+    <body>
+        <h1>Ejemplo de Spring desde JSP</h1>
+        
+        <%
+            // Crear el contexto de Spring
+            ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+            
+            // Obtener el bean
+            HolaMundo hola = (HolaMundo) context.getBean("HolaMundo");
+            
+            // Obtener el mensaje del bean
+            String mensaje = hola.getMensaje();
+        %>
+        
+        <p><%= mensaje %></p>
+        
+    </body>
+</html>
+```
+
+## Caso adicional: Spring Context en Servlet
+
+Si deseas usar Spring Context en un Servlet, puedes seguir estos pasos:
+
+1. Crea o modifica el Servlet que desees utilizar, por ejemplo, `HolaMundoServlet.java` en la carpeta `src/main/java/com/example/`:
+
+```java
+package com.example;
+
+import java.io.*;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import jakarta.servlet.http.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.*;
+
+@WebServlet(name = "helloServlet", value = "/hello-servlet")
+public class HelloServlet extends HttpServlet {
+    private String message;
+
+    public void init() {
+         message = "Hello World from a Servlet!";
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Crear el contexto de Spring
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        
+        // Obtener el bean
+        HolaMundo hola = (HolaMundo) context.getBean("HolaMundo");
+        
+        
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        out.println("<html><body>");
+        out.println("<h1>Hola Mundo desde Servlet</h1>");
+        out.println("<p>El siguiente mensaje es un atributo del bean: </p>");
+        out.println("<p>" + hola.getMensaje() + "</p>");
+        out.println("</body></html>");
+    }
+
+    public void destroy() {
+    }
+}
+
 ```
