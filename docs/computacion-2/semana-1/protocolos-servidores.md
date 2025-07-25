@@ -9,7 +9,7 @@ sidebar_position: 1
 Como se ha mencionado en cursos anteriores, **los protocolos son conjuntos de reglas que permiten la comunicación entre dispositivos en una red**. Cada protocolo tiene características específicas y se utiliza según las necesidades de la aplicación.
 
 En particular, el **protocolo TCP** es conocido como el *mensajero confiable de Internet*. Cuando se envían datos mediante TCP, este protocolo garantiza que **toda la información llegue completa, sin errores y en el orden correcto**.  
-Puedes imaginarlo como un servicio de mensajería que requiere confirmación de entrega: si algún paquete se pierde o llega dañado, **TCP lo solicita nuevamente hasta que todo esté correcto**.
+Podrías imaginarlo como un servicio de mensajería que requiere confirmación de entrega: si algún paquete se pierde o llega dañado, **TCP lo solicita nuevamente hasta que todo esté correcto**.
 
 Por esta razón, TCP es fundamental en aplicaciones donde **la integridad de los datos es esencial**, como *páginas web*, *correos electrónicos* y *transferencias de archivos*.
 
@@ -27,7 +27,16 @@ Una vez completados estos pasos, la conexión está lista y ambos dispositivos p
 
 ### Protocolo UDP
 
-Por otro lado, tenemos a UDP, que es mucho más relajado. Acá no hay tanta formalidad: mandas los datos y listo, sin preocuparte si llegaron o no. UDP es más rápido porque no tiene que estar chequeando cada paquete, pero eso significa que a veces se pueden perder datos. Se usa en cosas como videollamadas, juegos en línea y streaming, donde lo importante es la velocidad y no tanto la precisión. Si se pierde un paquete, no pasa nada, seguimos adelante.
+Por otro lado, tenemos a **UDP**, que es mucho más relajado en el aseguramiento de datos. En este protocolo **no hay verificación de entrega**: se envían los datos sin preocuparse si llegaron o no. 
+
+UDP es **más rápido** que TCP porque no tiene que verificar cada paquete, pero esto significa que **pueden perderse datos en el camino**. 
+
+Este protocolo se utiliza principalmente en aplicaciones donde **la velocidad es más importante que la precisión**, como:
+- *Videollamadas*
+- *Juegos en línea* 
+- *Streaming de contenido*
+
+Si se pierde un paquete durante la transmisión, la comunicación continúa sin interrupciones.
 
 <img src="/files/TCP_UDP.jpg" alt="Protocolo UDP" width="800" />
 
@@ -35,7 +44,7 @@ Por otro lado, tenemos a UDP, que es mucho más relajado. Acá no hay tanta form
 
 ### Protocolo HTTP
 
-Ahora, ya teniendo en cuenta sobre todo el protocolo TCP, podemos hablar de los servidores HTTP. Y es que basándose en el protocolo TCP, se creó el protocolo HTTP (Hypertext Transfer Protocol), que es el que usan los navegadores para comunicarse con los servidores web. Cuando escribes una dirección en tu navegador, este le manda una solicitud al servidor HTTP, que responde enviando los archivos necesarios para que veas la página.
+Ahora, ya teniendo en cuenta el protocolo TCP, podemos hablar de los servidores HTTP. Y es que basándose en el protocolo TCP, se creó el protocolo HTTP (Hypertext Transfer Protocol), que es el que usan los navegadores para comunicarse con los servidores web. Cuando escribes una dirección en tu navegador, este le manda una solicitud al servidor HTTP, que responde enviando los archivos necesarios para que veas la página.
 
 Los protocolos HTTP se componen de diferentes partes, las cuales se presentan a continuación:
 - **Método HTTP**: Indica la acción que se desea realizar, como `GET` (para obtener datos) o `POST` (para enviar datos al servidor).

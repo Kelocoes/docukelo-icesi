@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Contenido del curso
 
-Computación en Internet 2 es un curso que se centra en el desarrollo de aplicaciones web. A continuación se presenta el contenido del curso:
+Computación en Internet 2 es un curso que se centra en el desarrollo de aplicaciones web usando las tecnologías de Spring Boot y React. A continuación se presenta el contenido del curso:
 
 <iframe 
     src="/files/Syllabus-Compu2.pdf" 

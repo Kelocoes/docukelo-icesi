@@ -17,7 +17,7 @@ A continuación se explica brevemente para qué se usan estas librerías:
 
 - `java.io`: Proporciona clases para manejar entrada y salida, como leer archivos y flujos de datos.
 - `java.net`: Permite trabajar con redes, sockets y conexiones TCP/IP.
-- `java.util`: Incluye utilidades como colecciones y clases para manipular cadenas, por ejemplo, `StringTokenizer`.
+- `java.util`: Incluye utilidades como colecciones y clases para manipular strings, por ejemplo, `StringTokenizer`.
 
 ```java
 import java.io.*;

@@ -3,6 +3,9 @@ sidebar_position: 1
 ---
 
 # ¡Bienvenido!
+<!--
+
+
 
 ¡Hola! 👋 Me alegra que hayas llegado a esta página de documentación. Aquí podrás explorar información relevante sobre algunos de los cursos que he tenido el gusto de impartir en la Universidad Icesi, como **Computación en Internet 2**, **Diseñando con Algoritmos** y, posiblemente, algunos temas fascinantes de **Inteligencia Artificial**. Mi objetivo es que encuentres aquí recursos útiles, explicaciones claras y ejemplos de código (propios y de la comunidad) que te ayuden a comprender mejor los conceptos que abordamos en clase.
 
@@ -34,9 +37,9 @@ Puedes encontrarme en:
 - **GitHub**: [Kelocoes](https://github.com/Kelocoes)
 - **LinkedIn**: [Kevin David](https://www.linkedin.com/in/kevin-david-rodríguez-belalcázar-6276aa237/)
 - **Correo electrónico**:
-  - kevin.rodriguez109@gmail.com  
-  - kevin.david.rodriguez@correounivalle.edu.co  
-  - kdrodriguez@icesi.edu.co
+    - kevin.rodriguez109@gmail.com  
+    - kevin.david.rodriguez@correounivalle.edu.co  
+    - kdrodriguez@icesi.edu.co
 
 ---
 
@@ -61,3 +64,4 @@ Aquí puedes encontrar una lista de los cursos que he impartido y que están doc
 
 ¡Espero que disfrutes el contenido y encuentres información valiosa para tu aprendizaje!
 
+-->
