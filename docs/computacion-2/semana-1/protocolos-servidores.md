@@ -13,7 +13,7 @@ Podrías imaginarlo como un servicio de mensajería que requiere confirmación d
 
 Por esta razón, TCP es fundamental en aplicaciones donde **la integridad de los datos es esencial**, como *páginas web*, *correos electrónicos* y *transferencias de archivos*.
 
-<img src="/files/TCP.webp" alt="Protocolo TCP" width="800" />
+<img src="/img/TCP.webp" alt="Protocolo TCP" width="800" />
 
 #### Three-Way Handshake
 
@@ -38,7 +38,7 @@ Este protocolo se utiliza principalmente en aplicaciones donde **la velocidad es
 
 Si se pierde un paquete durante la transmisión, la comunicación continúa sin interrupciones.
 
-<img src="/files/TCP_UDP.jpg" alt="Protocolo UDP" width="800" />
+<img src="/img/TCP_UDP.jpg" alt="Protocolo UDP" width="800" />
 
 ## Servidores web
 
@@ -53,4 +53,4 @@ Los protocolos HTTP se componen de diferentes partes, las cuales se presentan a 
 - **Encabezados**: Información adicional sobre la solicitud, como el tipo de contenido aceptado o las cookies.
 - **Cuerpo de la solicitud**: Contiene los datos que se envían al servidor, si es necesario (por ejemplo, en una solicitud `POST`).
 
-<img src="/files/HTTP_protocol.png" alt="Protocolo HTTP" width="500" />
+<img src="/img/HTTP_protocol.png" alt="Protocolo HTTP" width="500" />
