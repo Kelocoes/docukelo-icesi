@@ -11,7 +11,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
     title: 'Documentación Kevin Rodríguez',
-    tagline: 'Espacio para la documentación de proyectos y temas de interés',
+    tagline: 'Espacio para la documentación de proyectos y temas de interés desarrollados en la Universidad Icesi',
     favicon: 'img/favicon.ico',
 
     // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
