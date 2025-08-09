@@ -234,6 +234,58 @@ console.log('Memoria libre:', os.freemem());
 console.log('CPUs:', os.cpus());
 ```
 
+### Ejemplo de process.nextTick()
+
+`process.nextTick()` permite ejecutar código de forma asíncrona en la próxima iteración del event loop, antes que cualquier otro evento asíncrono:
+
+```javascript
+console.log('Inicio del programa');
+
+// Se ejecuta inmediatamente
+console.log('1. Código síncrono');
+
+// Se ejecuta en la siguiente iteración del event loop
+process.nextTick(() => {
+    console.log('3. nextTick callback');
+});
+
+// Se ejecuta después de nextTick
+setTimeout(() => {
+    console.log('4. setTimeout callback');
+}, 0);
+
+console.log('2. Final del código síncrono');
+
+// Salida:
+// Inicio del programa
+// 1. Código síncrono
+// 2. Final del código síncrono
+// 3. nextTick callback
+// 4. setTimeout callback
+```
+
+#### Caso de uso común: Manejo de errores
+
+```javascript
+function asyncFunction(callback) {
+    if (typeof callback !== 'function') {
+        // Usar nextTick para manejar errores de forma asíncrona
+        process.nextTick(() => {
+            throw new TypeError('Callback debe ser una función');
+        });
+        return;
+    }
+    
+    // Simular operación asíncrona
+    process.nextTick(callback);
+}
+
+// Uso
+asyncFunction(() => {
+    console.log('Callback ejecutado correctamente');
+});
+```
+
 ## Información o recursos adicionales
 
 - [Event loop example](https://www.jsv9000.app)

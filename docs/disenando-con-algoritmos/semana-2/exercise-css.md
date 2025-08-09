@@ -10,3 +10,11 @@ Algunos ejercicios y recursos para practicar CSS:
 - [Flexbox Froggy](https://flexboxfroggy.com/#es)
 - [Flukeout](https://flukeout.github.io/)
 - [CSS Battle](https://cssbattle.dev)
+
+<iframe 
+    src="https://www.canva.com/design/DAGvg_If0rA/Z4H2tyIeTH77XR6EPGxxng/view?embed"
+    width="100%"
+    height="600px"
+    allowfullscreen="true"
+    frameborder="0"
+></iframe>
