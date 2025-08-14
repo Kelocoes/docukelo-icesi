@@ -66,14 +66,14 @@ services:
         ports:
         - "27017:27017"
         environment:
-        MONGO_INITDB_ROOT_USERNAME: admin
-        MONGO_INITDB_ROOT_PASSWORD: admin123
-        MONGO_INITDB_DATABASE: boardgame-db
+            MONGO_INITDB_ROOT_USERNAME: admin
+            MONGO_INITDB_ROOT_PASSWORD: admin123
+            MONGO_INITDB_DATABASE: boardgame-db
         volumes:
         - mongo_data:/data/db
 
-    volumes:
-    mongo_data:
+volumes:
+mongo_data:
 ```
 
 En este caso usaremos la versión 8.0.12 de MongoDB que es de las más modernas hasta el momento de escribir esta guía. El contenedor expondrá el puerto 27017, que es el puerto predeterminado de MongoDB, y establecerá un usuario administrador con las credenciales `admin` y `admin123`. Además, se crea un volumen llamado `mongo_data` para persistir los datos de la base de datos.
