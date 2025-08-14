@@ -116,7 +116,7 @@ npm install express mongoose dotenv cors bcrypt
 Ahora, instalaremos TypeScript y las herramientas relacionadas para configurar nuestro proyecto con TypeScript:
 
 ```bash
-npm install --save-dev typescript @types/node @types/express ts-node nodemon
+npm install --save-dev typescript @types/node @types/express @types/bcrypt ts-node nodemon
 ```
 
 Luego, inicializa un archivo de configuración de TypeScript ejecutando:
@@ -210,7 +210,6 @@ compunet3-20252/
 ├── src
 │   ├── config/
 │   ├── controllers/
-│   ├── index.ts
 │   ├── interfaces/
 │   ├── models/
 │   ├── routes/
