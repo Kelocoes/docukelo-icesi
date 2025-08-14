@@ -680,7 +680,6 @@ services:
       - mongo_data:/data/db
 
   express:
-    express:
     build: .
     container_name: express-app
     restart: always
