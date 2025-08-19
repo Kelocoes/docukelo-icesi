@@ -1,8 +1,8 @@
 {
-    "label": "S4",
+    "label": "S4 - Express",
     "position": 4,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 4 de computación en internet 3"
+        "description": "Express"
     }
 }
