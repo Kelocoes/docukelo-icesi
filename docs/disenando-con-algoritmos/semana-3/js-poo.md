@@ -1,3 +1,7 @@
+---
+sidebar_position: 4
+---
+
 # Programación Orientada a Objetos en JavaScript
 
 ¡Bienvenido al mundo de la Programación Orientada a Objetos (POO) en JavaScript! Si estás aquí, probablemente ya sabes algo de programación básica, pero ahora quieres dar el siguiente paso. La POO es como organizar tu código de una manera más inteligente, como si fueras un arquitecto diseñando una casa en lugar de solo apilar ladrillos.
