@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Ejercicos de DOM y Eventos en JavaScript
+# Ejercicios de DOM y Eventos en JavaScript
 
 ¡Hola! Aquí tienes una serie de ejercicios progresivos para practicar **DOM**, **eventos**, **manejo de estado** y **consumo de APIs.**
 
