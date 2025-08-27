@@ -269,7 +269,7 @@ console.log(--num); // 5 (prefijo: primero decrementa, luego imprime)
 
 ---
 
-## Recursos adicionales (Ejercicos Fáciles)
+## Recursos adicionales (Ejercicios Fáciles)
 
 - [MDN - Variables](https://developer.mozilla.org/es/docs/Web/JavaScript/Guide/Grammar_and_types#declaraciones)
 - [MDN - Hoisting](https://developer.mozilla.org/es/docs/Glossary/Hoisting)
@@ -563,7 +563,7 @@ console.log(esPar(5));
 
 ---
 
-## Recursos adicionales (Ejercicos Básicos)
+## Recursos adicionales (Ejercicios Básicos)
 
 - [MDN - Estructuras de control](https://developer.mozilla.org/es/docs/Web/JavaScript/Guide/Control_flow_and_error_handling)
 - [JavaScript.info - Condicionales](https://javascript.info/ifelse)
