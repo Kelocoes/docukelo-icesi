@@ -549,7 +549,7 @@ describe("UserService", () => {
             const mockUserInput: UserInput = {
                 name: "John Doe",
                 email: "john.doe@example.com",
-                password: "hashedPassword123",
+                password: "password123",
             };
 
             const mockHashedPassword = "hashedPassword123";
