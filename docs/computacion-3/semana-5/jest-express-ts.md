@@ -525,3 +525,8 @@ Desglosando el código:
 - En este caso, mockeamos el servicio de usuario (`userService`) para simular su comportamiento durante las pruebas.
 - **beforeEach**: Limpiamos los mocks antes de cada prueba para asegurarnos de que no haya interferencias entre pruebas.
 - Podemos observar que cada prueba también puede verificar el código de estado HTTP que se devuelve y los datos que se envían en la respuesta.
+
+TODO: 
+
+- Finalizar las pruebas del Usuario a nivel de Servicio y Controlador.
+- Realizar las pruebas de Game a nivel de Servicio y Controlador.
