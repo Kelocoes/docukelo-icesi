@@ -1143,3 +1143,8 @@ Esto hará que las pruebas fallen si la cobertura cae por debajo del umbral esta
 - Cobertura de funciones en controladores: **71.42%**
 
 **¡Felicitaciones!** Has implementado exitosamente las pruebas básicas para tu aplicación Express con TypeScript usando Jest. El **86.11%** de cobertura en el controlador de usuario y el **58.33%** en el servicio demuestran la efectividad de las pruebas implementadas.
+
+TODO:
+
+- Aumentar la cobertura del controlador y servicio de usuario que cubra todos los métodos
+- Implementar pruebas para el controlador y servicio de games
