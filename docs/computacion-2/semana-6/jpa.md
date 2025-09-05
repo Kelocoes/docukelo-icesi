@@ -1166,7 +1166,6 @@ repo.findByFirstNameNotContaining("test");
 </details>
 
 
----
 
 ## Notas finales
 
@@ -1174,4 +1173,3 @@ repo.findByFirstNameNotContaining("test");
 - Cuando la expresión derivada se vuelva muy compleja (muchos joins, subselects, condiciones dinámicas), considera usar `@Query` con JPQL/SQL, QueryDSL o Specification/Criteria API.  
 - Para opciones de paginación y ordenamiento es preferible usar `Pageable` y `Sort` desde los parámetros de método en lugar de crear métodos con `OrderBy` muy largos.
 
----
