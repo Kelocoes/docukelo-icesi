@@ -2,6 +2,7 @@
   "name": "my-website",
   "version": "0.0.0",
   "private": true,
+  "homepage": "https://kelocoes.github.io/docukelo-icesi",
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
