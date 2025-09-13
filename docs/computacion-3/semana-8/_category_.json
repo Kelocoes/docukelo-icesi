@@ -1,8 +1,8 @@
 {
-    "label": "S8",
+    "label": "S8 - NestJS",
     "position": 8,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 8 de computación en internet 3"
+        "description": "Nest JS introduction and setup"
     }
 }
