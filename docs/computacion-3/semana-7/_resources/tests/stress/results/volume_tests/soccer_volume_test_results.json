@@ -1,0 +1,4312 @@
+{
+  "sport": "soccer",
+  "num_tests": 100,
+  "success_rate": 100.0,
+  "avg_response_time": 3.506034061908722,
+  "max_response_time": 3.6018025875091553,
+  "min_response_time": 3.4288253784179688,
+  "error_count": 0,
+  "sample_errors": [],
+  "detailed_results": [
+    {
+      "test_number": 1,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.4590399265289307,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 99.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 2,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.5322601795196533,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 3,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.504884719848633,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 4,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.5430548191070557,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 5,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.4744434356689453,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 6,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.510676860809326,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 90.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 7,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.5129354000091553,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 8,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.5170536041259766,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 40.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 9,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.4288253784179688,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 10.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 10,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.568784713745117,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 75.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 11,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.453972339630127,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 25.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 12,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.520798921585083,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 99.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 13,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.4497973918914795,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 90.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 14,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.4685111045837402,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 85.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 15,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.491851329803467,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 16,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.507960796356201,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 1.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 17,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.531334400177002,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 85.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 18,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.4917681217193604,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 19,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.517300605773926,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 30.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 20,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.552424669265747,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 21,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.5012388229370117,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 22,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.5002355575561523,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 15.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 23,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.4728333950042725,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 95.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 24,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.5063834190368652,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 80.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 25,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.4971842765808105,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 25.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 26,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.5150644779205322,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 27,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.4931840896606445,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 40.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 28,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.4836955070495605,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 40.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 29,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.5312209129333496,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 30.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 30,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.56308650970459,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 31,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.549959421157837,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 32,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.503359317779541,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 75.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 33,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.519575357437134,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 90.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 34,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.5192954540252686,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 70.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 35,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.4737062454223633,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 40.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 36,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.5136218070983887,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 15.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 37,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.501701831817627,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 38,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.5056750774383545,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 1.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 39,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.5186352729797363,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 85.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 40,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.4901649951934814,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 90.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 41,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.5039889812469482,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 85.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 42,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.4693968296051025,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 30.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 43,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.4871177673339844,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 25.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 44,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.4937667846679688,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 30.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 45,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.4623570442199707,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 46,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.4564003944396973,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 85.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 47,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.4832167625427246,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 48,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.4782180786132812,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 70.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 49,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.4953017234802246,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 50,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.4871771335601807,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 99.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 51,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.4827020168304443,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 52,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.6018025875091553,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 20.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 53,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.5037930011749268,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 99.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 54,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.442901611328125,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 80.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 55,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.530907392501831,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 35.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 56,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.487976312637329,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 57,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.5310792922973633,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 85.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 58,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.4672443866729736,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 20.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 59,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.500742197036743,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 99.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 60,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.4704387187957764,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 61,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.4986183643341064,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 62,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.523932695388794,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 63,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.4461774826049805,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 64,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.5134823322296143,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 75.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 65,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.5150105953216553,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 95.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 66,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.491126298904419,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 99.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 67,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.4972901344299316,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 80.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 68,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.440981388092041,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 75.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 69,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.4889707565307617,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 10.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 70,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.494027614593506,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 25.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 71,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.5281643867492676,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 72,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.5445094108581543,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 75.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 73,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.526641845703125,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 20.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 74,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.4904448986053467,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 75,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.500713586807251,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 25.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 76,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.553384304046631,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 5.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 77,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.5050175189971924,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 78,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.4817161560058594,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 79,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.485978126525879,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 99.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 80,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.466611862182617,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 1.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 81,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.4913902282714844,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 20.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 82,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.560256242752075,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 99.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 83,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.5270938873291016,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 1.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 84,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.515655040740967,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 85,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.4942965507507324,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 99.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 86,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.4729597568511963,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 87,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.511207342147827,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 90.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 88,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.4953510761260986,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 89,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.5477817058563232,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 30.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 90,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.539832353591919,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 91,
+      "facts": [
+        {
+          "home_advantage": "no"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.518097162246704,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 92,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.5253024101257324,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 99.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 93,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "no"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.5415689945220947,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 99.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 94,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.5281636714935303,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 75.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 95,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "media"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja visitante"
+        }
+      ],
+      "response_time": 3.5169825553894043,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 96,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "fatigado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.5393903255462646,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 75.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 97,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "neutral"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.5125679969787598,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 98,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "no"
+        },
+        {
+          "performance": "medio"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "alta"
+        },
+        {
+          "recent_streak": "ganadora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.5706608295440674,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 99.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 99,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "alto"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "no"
+        },
+        {
+          "league_position": "media"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "alta"
+        },
+        {
+          "physical_condition": "normal"
+        },
+        {
+          "head_to_head": "ventaja local"
+        }
+      ],
+      "response_time": 3.578688144683838,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 70.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 100,
+      "facts": [
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "injuries": "sí"
+        },
+        {
+          "performance": "bajo"
+        },
+        {
+          "weather": "sí"
+        },
+        {
+          "rivalry": "sí"
+        },
+        {
+          "league_position": "baja"
+        },
+        {
+          "recent_streak": "perdedora"
+        },
+        {
+          "match_importance": "baja"
+        },
+        {
+          "physical_condition": "descansado"
+        },
+        {
+          "head_to_head": "equilibrado"
+        }
+      ],
+      "response_time": 3.5893306732177734,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 15.0%.\nEsto se debe a una combinación de factores: localía, lesiones, rendimiento, clima, rivalidad, posición en la tabla, racha, importancia del partido, condición física e historial directo.",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    }
+  ]
+}

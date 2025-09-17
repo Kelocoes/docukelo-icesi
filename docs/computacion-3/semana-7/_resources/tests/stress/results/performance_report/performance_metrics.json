@@ -1,0 +1,26 @@
+{
+  "basketball": {
+    "response_times_stats": {
+      "count": 100,
+      "min": 0.707942008972168,
+      "max": 0.9080655574798584,
+      "mean": 0.7852063751220704,
+      "median": 0.7893445491790771,
+      "percentile_95": 0.8527929782867432
+    },
+    "success_rate": 100.0,
+    "error_count": 0
+  },
+  "soccer": {
+    "response_times_stats": {
+      "count": 100,
+      "min": 3.4288253784179688,
+      "max": 3.6018025875091553,
+      "mean": 3.506034061908722,
+      "median": 3.5039889812469482,
+      "percentile_95": 3.568784713745117
+    },
+    "success_rate": 100.0,
+    "error_count": 0
+  }
+}

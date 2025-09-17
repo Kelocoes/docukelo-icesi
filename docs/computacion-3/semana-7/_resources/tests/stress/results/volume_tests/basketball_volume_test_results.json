@@ -1,0 +1,3712 @@
+{
+  "sport": "basketball",
+  "num_tests": 100,
+  "success_rate": 100.0,
+  "avg_response_time": 0.7852063751220704,
+  "max_response_time": 0.9080655574798584,
+  "min_response_time": 0.707942008972168,
+  "error_count": 0,
+  "sample_errors": [],
+  "detailed_results": [
+    {
+      "test_number": 1,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "4"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7971584796905518,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- el equipo ha tenido buen descanso\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 2,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7422566413879395,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- solo tiene lesiones menores\n- juega como local\n- ha ganado recientemente contra este rival\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 3,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7915158271789551,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- solo tiene lesiones menores\n- juega como local\n- las cuotas reflejan alta probabilidad de victoria",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 4,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7858831882476807,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- solo tiene lesiones menores\n- juega como local\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 5,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7964937686920166,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 80.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- no tiene jugadores lesionados\n- juega como local\n- las cuotas reflejan alta probabilidad de victoria\n- el equipo ha tenido buen descanso\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 6,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "4"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7309753894805908,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 90.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- solo tiene lesiones menores\n- juega como local\n- las cuotas reflejan alta probabilidad de victoria\n- el equipo ha tenido buen descanso\n- el rival está en mala forma\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 7,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "7"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.9080655574798584,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- juega como local\n- el equipo ha tenido buen descanso\n- el rival está en mala forma\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 8,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "1"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.797316312789917,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%\nEsto se debe a:\n- las cuotas reflejan alta probabilidad de victoria\n- el rival está en mala forma\n- ha ganado recientemente contra este rival\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 9,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "1"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.789959192276001,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%\nEsto se debe a:\n- solo tiene lesiones menores\n- las cuotas reflejan alta probabilidad de victoria\n- el rival está en mala forma\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 10,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "0"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.8027362823486328,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- juega como visitante\n- el equipo llega con poco descanso\n- ha perdido recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 11,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "5"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.792102575302124,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 30.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- tiene jugadores titulares lesionados\n- juega como visitante\n- el rival es fuerte",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 12,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7995426654815674,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 70.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- juega como local\n- las cuotas reflejan alta probabilidad de victoria\n- el rival está en mala forma\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 13,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "4"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7934558391571045,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- no tiene jugadores lesionados\n- juega como local\n- el equipo ha tenido buen descanso\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 14,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7889583110809326,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 75.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- no tiene jugadores lesionados\n- el equipo ha tenido buen descanso\n- ha ganado recientemente contra este rival\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 15,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "7"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7166557312011719,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- solo tiene lesiones menores\n- juega como local\n- el equipo ha tenido buen descanso",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 16,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7899463176727295,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 30.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- juega como visitante\n- las cuotas son altas, lo que sugiere baja probabilidad\n- el rival es fuerte",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 17,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7974038124084473,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- no tiene jugadores lesionados\n- juega como local\n- las cuotas reflejan alta probabilidad de victoria\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 18,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "3"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.8006501197814941,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- el rival está en mala forma",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 19,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "1"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7204947471618652,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- tiene jugadores titulares lesionados\n- juega como visitante\n- el equipo llega con poco descanso\n- el rival es fuerte",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 20,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "3"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.8588707447052002,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- juega como local\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 21,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "7"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7945096492767334,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- tiene jugadores titulares lesionados\n- juega como visitante\n- las cuotas son altas, lo que sugiere baja probabilidad",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 22,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "5"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7963786125183105,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- solo tiene lesiones menores\n- las cuotas reflejan alta probabilidad de victoria\n- el equipo ha tenido buen descanso\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 23,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7893445491790771,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 75.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- solo tiene lesiones menores\n- juega como local\n- el rival está en mala forma\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 24,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "7"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7971892356872559,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 35.0%\nEsto se debe a:\n- juega como visitante\n- el rival es fuerte\n- ha perdido recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 25,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "5"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7982742786407471,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 85.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- no tiene jugadores lesionados\n- las cuotas reflejan alta probabilidad de victoria\n- el equipo ha tenido buen descanso\n- el rival está en mala forma\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 26,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7925631999969482,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 30.0%\nEsto se debe a:\n- juega como visitante\n- las cuotas son altas, lo que sugiere baja probabilidad\n- el rival es fuerte\n- ha perdido recientemente contra este rival\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 27,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "0"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7833566665649414,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- juega como local\n- el rival está en mala forma\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 28,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "5"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7292747497558594,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- solo tiene lesiones menores\n- juega como local\n- el equipo ha tenido buen descanso\n- ha ganado recientemente contra este rival\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 29,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "5"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7921528816223145,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 75.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- no tiene jugadores lesionados\n- las cuotas reflejan alta probabilidad de victoria\n- el equipo ha tenido buen descanso\n- el rival está en mala forma",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 30,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7907769680023193,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 25.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- las cuotas son altas, lo que sugiere baja probabilidad\n- el rival es fuerte\n- ha perdido recientemente contra este rival\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 31,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "0"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7948598861694336,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 20.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- juega como visitante\n- el equipo llega con poco descanso\n- ha perdido recientemente contra este rival\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 32,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "4"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7260606288909912,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- no tiene jugadores lesionados\n- el equipo ha tenido buen descanso\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 33,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.8687984943389893,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- juega como visitante\n- el rival es fuerte",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 34,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "3"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7880153656005859,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- ha ganado recientemente contra este rival\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 35,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "3"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7989053726196289,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- juega como local\n- el rival está en mala forma",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 36,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7954397201538086,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- ha ganado recientemente contra este rival\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 37,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "1"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7890467643737793,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- solo tiene lesiones menores\n- juega como local\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 38,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "7"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.8092010021209717,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 25.0%\nEsto se debe a:\n- tiene jugadores titulares lesionados\n- juega como visitante\n- el rival es fuerte\n- ha perdido recientemente contra este rival\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 39,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "5"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7998368740081787,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 35.0%\nEsto se debe a:\n- tiene jugadores titulares lesionados\n- las cuotas son altas, lo que sugiere baja probabilidad\n- el rival es fuerte\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 40,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7996494770050049,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- solo tiene lesiones menores\n- juega como local\n- el equipo ha tenido buen descanso",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 41,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7240748405456543,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 20.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- tiene jugadores titulares lesionados\n- las cuotas son altas, lo que sugiere baja probabilidad\n- el rival es fuerte\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 42,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7723202705383301,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%\nEsto se debe a:\n- las cuotas reflejan alta probabilidad de victoria\n- el rival está en mala forma",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 43,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "3"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7780876159667969,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- solo tiene lesiones menores\n- el rival está en mala forma",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 44,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7770826816558838,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- las cuotas reflejan alta probabilidad de victoria\n- el rival está en mala forma",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 45,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.707942008972168,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- tiene jugadores titulares lesionados\n- las cuotas son altas, lo que sugiere baja probabilidad\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 46,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "4"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.8503146171569824,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%\nEsto se debe a:\n- solo tiene lesiones menores\n- juega como local\n- el equipo ha tenido buen descanso\n- el rival está en mala forma\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 47,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "1"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7692618370056152,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- las cuotas reflejan alta probabilidad de victoria\n- el rival está en mala forma\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 48,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "7"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7811877727508545,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%\nEsto se debe a:\n- juega como local\n- el equipo ha tenido buen descanso",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 49,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "4"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7961893081665039,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- las cuotas son altas, lo que sugiere baja probabilidad\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 50,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "0"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7783732414245605,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 30.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- juega como visitante\n- el equipo llega con poco descanso\n- el rival es fuerte",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 51,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "0"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7851197719573975,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- no tiene jugadores lesionados\n- las cuotas reflejan alta probabilidad de victoria",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 52,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "7"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7762553691864014,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- tiene jugadores titulares lesionados\n- las cuotas son altas, lo que sugiere baja probabilidad\n- ha perdido recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 53,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.8500730991363525,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 85.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- solo tiene lesiones menores\n- las cuotas reflejan alta probabilidad de victoria\n- el equipo ha tenido buen descanso\n- el rival está en mala forma\n- ha ganado recientemente contra este rival\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 54,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "5"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7274587154388428,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- el rival es fuerte\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 55,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "3"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7866737842559814,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%\nEsto se debe a:\n- solo tiene lesiones menores\n- juega como local\n- las cuotas reflejan alta probabilidad de victoria\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 56,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7863743305206299,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 35.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- juega como visitante\n- el rival es fuerte\n- ha perdido recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 57,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7871923446655273,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 75.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- juega como local\n- el rival está en mala forma\n- ha ganado recientemente contra este rival\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 58,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "7"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7205610275268555,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 70.0%\nEsto se debe a:\n- juega como local\n- las cuotas reflejan alta probabilidad de victoria\n- el equipo ha tenido buen descanso\n- el rival está en mala forma\n- ha ganado recientemente contra este rival\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 59,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "1"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.8403730392456055,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- juega como local\n- las cuotas reflejan alta probabilidad de victoria",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 60,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "3"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7802810668945312,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- las cuotas son altas, lo que sugiere baja probabilidad\n- ha perdido recientemente contra este rival\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 61,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "1"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7806718349456787,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 35.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- tiene jugadores titulares lesionados\n- juega como visitante\n- las cuotas son altas, lo que sugiere baja probabilidad\n- el equipo llega con poco descanso",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 62,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "4"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7821798324584961,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- el equipo ha tenido buen descanso\n- el rival está en mala forma\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 63,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "0"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7773270606994629,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- juega como visitante\n- el equipo llega con poco descanso",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 64,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7850284576416016,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- el equipo ha tenido buen descanso\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 65,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.8060665130615234,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 40.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 66,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "1"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7909824848175049,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- juega como local\n- el rival está en mala forma\n- ha ganado recientemente contra este rival\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 67,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "4"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7270584106445312,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- juega como visitante\n- las cuotas son altas, lo que sugiere baja probabilidad\n- el rival es fuerte\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 68,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "1"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7740402221679688,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 20.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- tiene jugadores titulares lesionados\n- las cuotas son altas, lo que sugiere baja probabilidad\n- el equipo llega con poco descanso\n- el rival es fuerte\n- ha perdido recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 69,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.8188948631286621,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 35.0%\nEsto se debe a:\n- juega como visitante\n- las cuotas son altas, lo que sugiere baja probabilidad\n- el rival es fuerte\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 70,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "0"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.786557674407959,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- el equipo llega con poco descanso\n- el rival es fuerte\n- ha perdido recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 71,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7156896591186523,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%\nEsto se debe a:\n- juega como local\n- las cuotas reflejan alta probabilidad de victoria\n- el equipo ha tenido buen descanso\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 72,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "1"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.8612082004547119,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 40.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- tiene jugadores titulares lesionados\n- el equipo llega con poco descanso\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 73,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "0"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.780705451965332,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 30.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- tiene jugadores titulares lesionados\n- juega como visitante\n- las cuotas son altas, lo que sugiere baja probabilidad\n- el equipo llega con poco descanso\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 74,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "1"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7856960296630859,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 75,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "3"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7927815914154053,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- juega como local",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 76,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "1"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7900285720825195,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- solo tiene lesiones menores\n- juega como local",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 77,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.79510498046875,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 70.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- juega como local\n- el equipo ha tenido buen descanso\n- el rival está en mala forma",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 78,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "5"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7803940773010254,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- tiene jugadores titulares lesionados\n- juega como visitante\n- ha perdido recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 79,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7825601100921631,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 99.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- no tiene jugadores lesionados\n- juega como local\n- las cuotas reflejan alta probabilidad de victoria\n- el equipo ha tenido buen descanso\n- el rival está en mala forma\n- ha ganado recientemente contra este rival\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 80,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "0"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7235934734344482,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- las cuotas son altas, lo que sugiere baja probabilidad\n- el equipo llega con poco descanso\n- ha perdido recientemente contra este rival\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 81,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7974331378936768,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 70.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- juega como local\n- el rival está en mala forma\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 82,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7786948680877686,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- solo tiene lesiones menores\n- juega como local",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 83,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7897107601165771,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- las cuotas reflejan alta probabilidad de victoria\n- el rival está en mala forma\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 84,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "5"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7095105648040771,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- juega como visitante\n- las cuotas son altas, lo que sugiere baja probabilidad\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 85,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.8527929782867432,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 55.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- juega como local\n- ha ganado recientemente contra este rival\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 86,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "4"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.787531852722168,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 40.0%\nEsto se debe a:\n- juega como visitante\n- el rival es fuerte\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 87,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "1"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7921185493469238,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%\nEsto se debe a:\n- solo tiene lesiones menores\n- juega como local\n- las cuotas reflejan alta probabilidad de victoria\n- ha ganado recientemente contra este rival\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 88,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "5"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7986762523651123,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- tiene jugadores titulares lesionados\n- juega como visitante\n- el rival es fuerte",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 89,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "7"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7933969497680664,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 70.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- juega como local\n- el equipo ha tenido buen descanso\n- el rival está en mala forma\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 90,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.777407169342041,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- juega como local",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 91,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "3"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7926604747772217,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%\nEsto se debe a:\n- juega como local\n- el rival está en mala forma\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 92,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "altas"
+        },
+        {
+          "rest_days": "5"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7880198955535889,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- no tiene jugadores lesionados\n- juega como local\n- el equipo ha tenido buen descanso\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 93,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7155978679656982,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- el rival está en mala forma\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 94,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "4"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7855205535888672,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 65.0%\nEsto se debe a:\n- juega como local\n- las cuotas reflejan alta probabilidad de victoria\n- el equipo ha tenido buen descanso\n- el rival está en mala forma",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 95,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "derrota"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7918422222137451,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 30.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- tiene jugadores titulares lesionados\n- juega como visitante\n- ha perdido recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 96,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "2"
+        },
+        {
+          "opponent_strength": "débil"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "alta"
+        }
+      ],
+      "response_time": 0.7950685024261475,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 90.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- no tiene jugadores lesionados\n- juega como local\n- las cuotas reflejan alta probabilidad de victoria\n- el rival está en mala forma\n- el partido es decisivo",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 97,
+      "facts": [
+        {
+          "team_form": "regular"
+        },
+        {
+          "player_injuries": "menor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.7282962799072266,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 40.0%\nEsto se debe a:\n- juega como visitante\n- el rival es fuerte",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 98,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "medias"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.7771618366241455,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **arriesgada**, con una probabilidad de éxito del 45.0%\nEsto se debe a:\n- el equipo ha tenido un mal rendimiento reciente\n- tiene jugadores titulares lesionados\n- el partido no tiene mucha importancia",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 99,
+      "facts": [
+        {
+          "team_form": "malo"
+        },
+        {
+          "player_injuries": "ninguna"
+        },
+        {
+          "home_advantage": "sí"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "6"
+        },
+        {
+          "opponent_strength": "promedio"
+        },
+        {
+          "recent_head_to_head": "empate"
+        },
+        {
+          "match_importance": "media"
+        }
+      ],
+      "response_time": 0.8471729755401611,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 60.0%\nEsto se debe a:\n- no tiene jugadores lesionados\n- juega como local\n- las cuotas reflejan alta probabilidad de victoria\n- el equipo ha tenido buen descanso",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    },
+    {
+      "test_number": 100,
+      "facts": [
+        {
+          "team_form": "bueno"
+        },
+        {
+          "player_injuries": "mayor"
+        },
+        {
+          "home_advantage": "no"
+        },
+        {
+          "betting_odds": "bajas"
+        },
+        {
+          "rest_days": "7"
+        },
+        {
+          "opponent_strength": "fuerte"
+        },
+        {
+          "recent_head_to_head": "victoria"
+        },
+        {
+          "match_importance": "baja"
+        }
+      ],
+      "response_time": 0.776181697845459,
+      "success": true,
+      "response": {
+        "message": "Se considera una apuesta **segura**, con una probabilidad de éxito del 50.0%\nEsto se debe a:\n- el equipo llega en buena forma\n- las cuotas reflejan alta probabilidad de victoria\n- el equipo ha tenido buen descanso\n- ha ganado recientemente contra este rival",
+        "is_final": true,
+        "next_fact": null
+      },
+      "error": null
+    }
+  ]
+}
