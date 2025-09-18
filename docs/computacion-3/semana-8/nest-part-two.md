@@ -448,3 +448,8 @@ Para migrar de un sistema en memoria a uno con base de datos relacional usando T
 
 - [Documentación oficial de NestJS - TypeORM](https://docs.nestjs.com/techniques/database)
 - [Documentación oficial de TypeORM](https://typeorm.io/)
+
+## 11. TODO
+
+- [ ] Añadir las entidades de Permisos y la relación muchos a muchos con Roles.
+- [ ] Añadir la entidad de Games y su relación con Users.
