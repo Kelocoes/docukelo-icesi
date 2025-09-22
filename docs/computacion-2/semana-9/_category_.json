@@ -1,8 +1,8 @@
 {
-    "label": "S9",
+    "label": "S9 - Security MVC",
     "position": 9,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 9 de computación en internet 2"
+        "description": "Autenticación con Spring Security"
     }
 }
