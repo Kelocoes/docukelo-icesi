@@ -12,7 +12,7 @@ La Universidad Icesi ha realizado una encuesta a sus estudiantes para conocer su
 
 Te han asignado la tarea de desarrollador una aplicación web utilizando React que permita a los usuarios visualizar los datos de la encuesta de manera interactiva. Las recomiendaciones que te han dado son las siguientes:
 
-- Los interesados desean ver un resumen de los resultados de la encuesta, incluyendo un gráfico en torta que muestre la distribución de las respuestas para cada aspecto evaluado.
+- Los interesados desean ver un resumen de los resultados de la encuesta, incluyendo un gráfico de barras que muestre la distribución de las respuestas para cada aspecto evaluado.
 - Los usuarios deben poder filtrar los resultados por diferentes criterios, como el año académico, el programa de estudio y la ubicación geográfica.
 - En un segundo apartado de la página, los usuarios deben de poder observar en pequeñas tarjetas (cards) los comentarios más relevantes que los estudiantes han dejado en la encuesta, permitiendo filtrar estos comentarios por palabras clave.
 - No te han dado más información al respecto, no obstante, te han comentado que el archivo JSON proporcionado contiene toda la información necesaria para cumplir con los requisitos. Su estructura es parecida a este:
