@@ -278,7 +278,6 @@ Para manejar las rutas privadas y públicas, es necesario modificar el archivo d
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
-        .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(authz -> authz
             .requestMatchers("/mvc/public/**").permitAll()
             .anyRequest().authenticated()
@@ -345,7 +344,6 @@ También deberemos de modificar nuestro filter chain para que use nuestro formul
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
-        .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(authz -> authz
             .requestMatchers("/mvc/public/**").permitAll()
             .requestMatchers("/mvc/auth/login", "/css/**", "/js/**").permitAll()
