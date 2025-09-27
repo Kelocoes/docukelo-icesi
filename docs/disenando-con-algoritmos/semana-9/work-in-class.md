@@ -10,7 +10,7 @@ Esta prueba corta tiene como objetivo aplicar los conocimientos adquiridos en la
 
 La Universidad Icesi ha realizado una encuesta a sus estudiantes para conocer su opinión sobre la calidad de los servicios ofrecidos. Se han recopilado datos sobre diferentes aspectos, como la calidad de la enseñanza, las instalaciones, el apoyo académico y la vida estudiantil. Los resultados de la encuesta se han almacenado en un archivo JSON llamado `survey-results.json`.
 
-Te han asignado la tarea de desarrollador una aplicación web utilizando React que permita a los usuarios visualizar los datos de la encuesta de manera interactiva. Las recomiendaciones que te han dado son las siguientes:
+Te han asignado la tarea de desarrollar una aplicación web utilizando React que permita a los usuarios visualizar los datos de la encuesta de manera interactiva. Las recomiendaciones que te han dado son las siguientes:
 
 - Los interesados desean ver un resumen de los resultados de la encuesta, incluyendo un gráfico de barras que muestre la distribución de las respuestas para cada aspecto evaluado.
 - Los usuarios deben poder filtrar los resultados por diferentes criterios, como el año académico, el programa de estudio y la ubicación geográfica.
