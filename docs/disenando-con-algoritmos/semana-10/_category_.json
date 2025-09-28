@@ -1,8 +1,8 @@
 {
-    "label": "S10",
+    "label": "S10 - React Router",
     "position": 10,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 10 de diseñando con algoritmos"
+        "description": "Redireccionamiento y rutas dinámicas en aplicaciones React."
     }
 }
