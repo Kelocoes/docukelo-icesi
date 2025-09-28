@@ -81,7 +81,6 @@ Instalamos las respectivas dependencias:
 
 ```bash
 npm install class-validator class-transformer
-npm install --save-dev @types/class-validator
 ```
 
 Después, modificaremos nuestros DTOs para incluir las validaciones:
