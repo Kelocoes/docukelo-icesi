@@ -1,8 +1,8 @@
 {
-    "label": "S11",
+    "label": "S11 - API",
     "position": 11,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 11 de diseñando con algoritmos"
+        "description": "Apis & Requests"
     }
 }
