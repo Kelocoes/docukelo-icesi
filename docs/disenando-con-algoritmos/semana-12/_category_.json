@@ -1,8 +1,8 @@
 {
-    "label": "S12",
+    "label": "S12- Axios",
     "position": 12,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 12 de diseñando con algoritmos"
+        "description": "Axios explained"
     }
 }
