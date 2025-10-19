@@ -1,8 +1,8 @@
 {
-    "label": "S13",
+    "label": "S13 - Redux",
     "position": 13,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 13 de diseñando con algoritmos"
+        "description": "Flux & Redux"
     }
 }
