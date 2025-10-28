@@ -1,8 +1,8 @@
 {
-    "label": "S14",
+    "label": "S14 - Tailwind & Redux",
     "position": 14,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 14 de computación en internet 3"
+        "description": "Recursos y materiales de la semana 14 del curso de Computación 3, enfocados en Tailwind CSS y Redux."
     }
 }

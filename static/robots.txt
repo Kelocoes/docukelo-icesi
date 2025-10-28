@@ -1,0 +1,13 @@
+# robots.txt para docukelo-icesi
+# Algolia-Crawler-Verif: 8BEB391BE449A936
+
+# Permitir acceso a todos los bots
+User-agent: *
+Allow: /
+
+# Bloquear el acceso a archivos de build y configuración (si existen)
+Disallow: /build/
+Disallow: /node_modules/
+
+# Sitemap (actualiza con tu URL real cuando despliegues)
+# Sitemap: https://tu-dominio.com/sitemap.xml
