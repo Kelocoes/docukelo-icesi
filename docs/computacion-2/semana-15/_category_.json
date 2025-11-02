@@ -1,6 +1,6 @@
 {
     "label": "S15 - React Router",
-    "position": 10,
+    "position": 15,
     "link": {
         "type": "generated-index",
         "description": "Redireccionamiento y rutas dinámicas en aplicaciones React."
