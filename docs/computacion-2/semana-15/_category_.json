@@ -1,8 +1,8 @@
 {
-    "label": "S15",
-    "position": 15,
+    "label": "S15 - React Router",
+    "position": 10,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 15 de computación en internet 2"
+        "description": "Redireccionamiento y rutas dinámicas en aplicaciones React."
     }
 }
