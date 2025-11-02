@@ -25,10 +25,10 @@ const config = {
     // For GitHub pages deployment, it is often '/<projectName>/'
     baseUrl: '/',
 
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'Kelocoes', // Usually your GitHub org/user name.
-  projectName: 'docukelo-icesi', // Usually your repo name.
+    // GitHub pages deployment config.
+    // If you aren't using GitHub pages, you don't need these.
+    organizationName: 'Kelocoes', // Usually your GitHub org/user name.
+    projectName: 'docukelo-icesi', // Usually your repo name.
 
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
@@ -41,39 +41,39 @@ const config = {
         locales: ['es'],
     },
 
-  presets: [
-    [
-      'classic',
-      /** @type {import('@docusaurus/preset-classic').Options} */
-      ({
-        docs: {
-          sidebarPath: './sidebars.js',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/Kelocoes/docukelo-icesi/tree/main/',
-        },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-                'https://github.com/Kelocoes/docukelo-icesi/tree/main/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
-        theme: {
-          customCss: './src/css/custom.css',
-        },
-      }),
+    presets: [
+        [
+            'classic',
+            /** @type {import('@docusaurus/preset-classic').Options} */
+            ({
+                docs: {
+                    sidebarPath: './sidebars.js',
+                    // Please change this to your repo.
+                    // Remove this to remove the "edit this page" links.
+                    editUrl:
+                        'https://github.com/Kelocoes/docukelo-icesi/tree/main/',
+                },
+                blog: {
+                    showReadingTime: true,
+                    feedOptions: {
+                        type: ['rss', 'atom'],
+                        xslt: true,
+                    },
+                    // Please change this to your repo.
+                    // Remove this to remove the "edit this page" links.
+                    editUrl:
+                        'https://github.com/Kelocoes/docukelo-icesi/tree/main/',
+                    // Useful options to enforce blogging best practices
+                    onInlineTags: 'warn',
+                    onInlineAuthors: 'warn',
+                    onUntruncatedBlogPosts: 'warn',
+                },
+                theme: {
+                    customCss: './src/css/custom.css',
+                },
+            }),
+        ],
     ],
-  ],
 
     themeConfig:
         /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
@@ -104,6 +104,41 @@ const config = {
                 theme: prismThemes.vsDark,
                 darkTheme: prismThemes.vsDark,
                 additionalLanguages: ['java', 'javascript', 'python', 'bash', 'json'],
+            },
+            algolia: {
+                // The application ID provided by Algolia
+                appId: 'XMIZTZ9SYC',
+
+                // Public API key: it is safe to commit it
+                apiKey: '3396694ad776af300d9d679757047e3f',
+
+                indexName: 'Documentation Website',
+
+                // Optional: see doc section below
+                contextualSearch: true,
+
+                // Optional: Specify domains where the navigation should occur through window.location instead on history.push. Useful when our Algolia config crawls multiple documentation sites and we want to navigate with window.location.href to them.
+                externalUrlRegex: 'external\\.com|domain\\.com',
+
+                // Optional: Replace parts of the item URLs from Algolia. Useful when using the same search index for multiple deployments using a different baseUrl. You can use regexp or string in the `from` param. For example: localhost:3000 vs myCompany.com/docs
+                replaceSearchResultPathname: {
+                    from: '/docs/', // or as RegExp: /\/docs\//
+                    to: '/docs/',
+                },
+
+                // Optional: Algolia search parameters
+                searchParameters: {},
+
+                // Optional: path for search page that enabled by default (`false` to disable it)
+                searchPagePath: 'search',
+
+                // Optional: whether the insights feature is enabled or not on Docsearch (`false` by default)
+                insights: false,
+
+                // Optional: whether you want to use the new Ask AI feature (undefined by default)
+                askAi: 'YOUR_ALGOLIA_ASK_AI_ASSISTANT_ID',
+
+                //... other Algolia params
             },
         }),
 };
