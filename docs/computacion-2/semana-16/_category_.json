@@ -1,8 +1,8 @@
 {
-    "label": "S16",
+    "label": "S16 - Axios & Store",
     "position": 16,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 16 de computación en internet 2"
+        "description": "Axios and more..."
     }
 }
