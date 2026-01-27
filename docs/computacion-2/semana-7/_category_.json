@@ -1,8 +1,0 @@
-{
-    "label": "S7 - Tests",
-    "position": 7,
-    "link": {
-        "type": "generated-index",
-        "description": "Pruebas unitarias y de integración en desarrollo de software."
-    }
-}

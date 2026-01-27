@@ -1,8 +1,8 @@
 {
-    "label": "S3 - Conceptos de Spring",
-    "position": 3,
+    "label": "S3 - Spring Annotations",
+    "position": 2,
     "link": {
         "type": "generated-index",
-        "description": "Dependency Injection, Inversion of Control, Beans, Anotaciones en XML"
+        "description": "Introducción a Spring Annotations: @Value, @Qualifier, SpEL"
     }
 }

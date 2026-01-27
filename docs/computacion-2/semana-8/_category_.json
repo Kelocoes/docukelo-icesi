@@ -1,8 +1,0 @@
-{
-    "label": "S8 - MVC",
-    "position": 8,
-    "link": {
-        "type": "generated-index",
-        "description": "Spring MVC con Thymeleaf"
-    }
-}

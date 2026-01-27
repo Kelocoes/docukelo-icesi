@@ -6,6 +6,12 @@ sidebar_position: 5
 
 Esta pequeña documentación, es para que puedas ubicarte en el uso inicial de un servidor Tomcat, ya que es una herramienta muy útil para el desarrollo de aplicaciones web en Java.
 
+## ¿Qué es Apache Tomcat?
+
+Apache Tomcat es un servidor web de código abierto desarrollado por la Apache Software Foundation. Está diseñado para ejecutar aplicaciones web basadas en Java, específicamente servlets y JavaServer Pages (JSP). Tomcat actúa como un contenedor de servlets, gestionando la ejecución de estos componentes y facilitando la comunicación entre el cliente (navegador web) y la aplicación web.
+
+Tomcat es ampliamente utilizado en el desarrollo y despliegue de aplicaciones web debido a su facilidad de uso, flexibilidad y compatibilidad con las especificaciones de Java EE. Proporciona un entorno robusto para ejecutar aplicaciones web dinámicas, manejando solicitudes HTTP, sesiones de usuario, seguridad y otras funcionalidades esenciales para aplicaciones web modernas.
+
 ## Estructura de Apache Tomcat
 
 La estructura general de un Apache Tomcat es la siguiente:
