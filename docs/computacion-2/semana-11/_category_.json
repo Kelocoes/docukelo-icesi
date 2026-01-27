@@ -1,8 +1,0 @@
-{
-    "label": "S11 - Rest",
-    "position": 11,
-    "link": {
-        "type": "generated-index",
-        "description": "REST, DTO and more"
-    }
-}

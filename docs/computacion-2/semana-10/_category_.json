@@ -1,8 +1,0 @@
-{
-    "label": "S10 - Spring Security Authorization",
-    "position": 10,
-    "link": {
-        "type": "generated-index",
-        "description": "Autorización con Spring Security"
-    }
-}

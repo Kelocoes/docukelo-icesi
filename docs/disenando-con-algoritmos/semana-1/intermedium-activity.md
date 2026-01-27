@@ -8,7 +8,7 @@ Este ejercicio está diseñado para que practiques operaciones fundamentales en 
 
 ---
 
-## 🧱 1. Crear un nuevo repositorio
+## 1. Crear un nuevo repositorio
 
 Crea un nuevo repositorio en GitHub llamado:
 
@@ -40,7 +40,7 @@ git push origin main
 
 ---
 
-## 🌿 2. Crear una rama y hacer commits (MERGE)
+## 2. Crear una rama y hacer commits (MERGE)
 
 1. Crea una rama llamada `agregar-capitulo-1`:
 
@@ -109,7 +109,7 @@ git log --oneline --graph --all
 
 ---
 
-## 🔀 3. Crear otra rama y aplicar REBASE
+## 3. Crear otra rama y aplicar REBASE
 
 1. Crea una nueva rama llamada `agregar-capitulo-2` desde `main`:
 
@@ -174,7 +174,7 @@ Si seguiste los pasos correctamente, deberías observar que el historial de comm
 
 ---
 
-## 🗑️ 4. Crear rama, cometer error y eliminar commit
+## 4. Crear rama, cometer error y eliminar commit
 
 1. Crea una nueva rama llamada `agregar-capitulo-error`:
 

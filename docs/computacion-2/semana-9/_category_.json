@@ -1,8 +1,0 @@
-{
-    "label": "S9 - Security MVC",
-    "position": 9,
-    "link": {
-        "type": "generated-index",
-        "description": "Autenticación con Spring Security"
-    }
-}
