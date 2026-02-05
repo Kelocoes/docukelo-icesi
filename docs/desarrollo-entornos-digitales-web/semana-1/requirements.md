@@ -8,23 +8,23 @@ Los requerimientos describen las necesidades y restricciones que un producto de 
 
 Desde el punto de vista del desarrollo de software, los requerimientos pueden entenderse desde dos perspectivas complementarias:
 
--   **Expresión de necesidades**: describen qué se espera que el sistema haga y bajo qué condiciones, a partir de las necesidades del contexto real.
--   **Marco de referencia para el desarrollo**: orientan las decisiones de análisis, diseño, implementación y verificación del sistema.
+- **Expresión de necesidades**: describen qué se espera que el sistema haga y bajo qué condiciones, a partir de las necesidades del contexto real.
+- **Marco de referencia para el desarrollo**: orientan las decisiones de análisis, diseño, implementación y verificación del sistema.
 
 :::warning
 Si el equipo realiza un trabajo deficiente en la determinación de los requerimientos, es común que se presenten:
 
--   Incrementos en el tiempo de desarrollo
--   Incrementos en el costo del proyecto
--   Retrasos importantes o cancelaciones  
-    :::
+- Incrementos en el tiempo de desarrollo
+- Incrementos en el costo del proyecto
+- Retrasos importantes o cancelaciones  
+  :::
 
 ## Problemas Relacionados con los Requerimientos
 
 En la práctica, existen dos problemas principales asociados a los requerimientos:
 
--   **Incompletitud**: cuando no se capturan todas las necesidades, reglas de negocio o restricciones relevantes del sistema.
--   **Ambigüedad**: cuando un requerimiento puede interpretarse de más de una forma, lo que puede llevar a implementaciones inconsistentes.
+- **Incompletitud**: cuando no se capturan todas las necesidades, reglas de negocio o restricciones relevantes del sistema.
+- **Ambigüedad**: cuando un requerimiento puede interpretarse de más de una forma, lo que puede llevar a implementaciones inconsistentes.
 
 Estos problemas suelen originarse por una comprensión limitada del dominio, una comunicación deficiente con los stakeholders o una documentación poco precisa.
 
@@ -40,17 +40,17 @@ El análisis de requerimientos suele ser una de las fases más subestimadas del 
 
 En este contexto, los requerimientos del software:
 
--   No son necesariamente una actividad de _front-end_ o de inicio del proyecto.
--   Constituyen un **proceso continuo** que se ajusta conforme evoluciona el entendimiento del sistema.
--   Deben estar enlazados a la organización y al contexto del proyecto, incluyendo aspectos técnicos, organizacionales y operativos.
+- No son necesariamente una actividad de _front-end_ o de inicio del proyecto.
+- Constituyen un **proceso continuo** que se ajusta conforme evoluciona el entendimiento del sistema.
+- Deben estar enlazados a la organización y al contexto del proyecto, incluyendo aspectos técnicos, organizacionales y operativos.
 
 ## Fundamentos de Requerimientos
 
 Los requerimientos se definen como:
 
--   Una **condición o capacidad** necesitada por el usuario para resolver un problema o alcanzar un objetivo.
--   Una **condición o capacidad** que debe ser cumplida o poseída por un sistema para satisfacer un contrato, estándar, especificación u otro documento formalmente impuesto.
--   Una **declaración** que identifica una necesidad, capacidad, característica o atributo de calidad que debe ser incluido en el sistema.
+- Una **condición o capacidad** necesitada por el usuario para resolver un problema o alcanzar un objetivo.
+- Una **condición o capacidad** que debe ser cumplida o poseída por un sistema para satisfacer un contrato, estándar, especificación u otro documento formalmente impuesto.
+- Una **declaración** que identifica una necesidad, capacidad, característica o atributo de calidad que debe ser incluido en el sistema.
 
 Estas definiciones reflejan que los requerimientos pueden originarse tanto en necesidades explícitas de los usuarios como en restricciones externas impuestas al sistema.
 
@@ -68,9 +68,9 @@ Describen las funciones o servicios que el sistema debe proveer. Indican cómo e
 
 Ejemplos comunes incluyen:
 
--   Procesamiento de información
--   Interacción con usuarios
--   Comunicación con otros sistemas
+- Procesamiento de información
+- Interacción con usuarios
+- Comunicación con otros sistemas
 
 #### 1.2 Requerimientos No Funcionales
 
@@ -78,10 +78,10 @@ Describen las restricciones bajo las cuales el sistema debe operar. No definen q
 
 Incluyen aspectos como:
 
--   Rendimiento: tiempos de respuesta, capacidad de procesamiento
--   Usabilidad: facilidad de uso, accesibilidad
--   Fiabilidad: disponibilidad, tolerancia a fallos
--   Seguridad: confidencialidad, integridad, autenticación
+- Rendimiento: tiempos de respuesta, capacidad de procesamiento
+- Usabilidad: facilidad de uso, accesibilidad
+- Fiabilidad: disponibilidad, tolerancia a fallos
+- Seguridad: confidencialidad, integridad, autenticación
 
 ##### 1.2.1 Restricciones de Tecnología
 
@@ -89,9 +89,9 @@ Obligan o prohíben el uso específico de tecnologías, plataformas o infraestru
 
 Ejemplos:
 
--   Lenguajes de programación permitidos: Java, Python, JavaScript
--   Infraestructura de despliegue: nube, on-premise, híbrida.
--   Motores de bases de datos: MySQL, PostgreSQL, etc.
+- Lenguajes de programación permitidos: Java, Python, JavaScript
+- Infraestructura de despliegue: nube, on-premise, híbrida.
+- Motores de bases de datos: MySQL, PostgreSQL, etc.
 
 ##### 1.2.2 Restricciones de Calidad
 
@@ -99,9 +99,9 @@ Establecen expectativas relacionadas con el comportamiento del sistema.
 
 Preguntas típicas asociadas a este tipo de requerimientos incluyen:
 
--   ¿En qué plataformas de cómputo debe ejecutarse el sistema?
--   ¿Qué motor de base de datos debe utilizarse?
--   ¿Con qué rapidez deben presentarse los resultados al usuario?
+- ¿En qué plataformas de cómputo debe ejecutarse el sistema?
+- ¿Qué motor de base de datos debe utilizarse?
+- ¿Con qué rapidez deben presentarse los resultados al usuario?
 
 ### 2. Requerimientos del Proceso de Software
 
@@ -109,10 +109,10 @@ Especifican las actividades y los recursos necesarios para desarrollar el softwa
 
 Incluyen aspectos como:
 
--   Costos
--   Tiempo
--   Personal
--   Herramientas y entorno de desarrollo
+- Costos
+- Tiempo
+- Personal
+- Herramientas y entorno de desarrollo
 
 Estos requerimientos influyen directamente en la planificación y organización del proyecto.
 
@@ -124,35 +124,35 @@ La elicitación de requerimientos es el proceso de **descubrir, documentar y ent
 
 Un stakeholder es cualquier persona o entidad que:
 
--   Está activamente involucrada en el proyecto
--   Se ve afectada por el resultado del proyecto
--   Puede influir en el resultado del proyecto
+- Está activamente involucrada en el proyecto
+- Se ve afectada por el resultado del proyecto
+- Puede influir en el resultado del proyecto
 
 Stakeholders típicos incluyen:
 
--   Clientes
--   Usuarios finales
--   Desarrolladores
--   Gerentes de proyecto
+- Clientes
+- Usuarios finales
+- Desarrolladores
+- Gerentes de proyecto
 
 ### Técnicas de Elicitación
 
 Los requerimientos pueden obtenerse mediante distintas técnicas, entre ellas:
 
--   Entrevistas
--   Reuniones
--   Cuestionarios
--   Análisis de protocolos
--   Grupos focales
+- Entrevistas
+- Reuniones
+- Cuestionarios
+- Análisis de protocolos
+- Grupos focales
 
 ### Otras Fuentes de Requerimientos
 
 Además de los stakeholders, los requerimientos pueden ser elicitados a partir de:
 
--   Versiones pasadas del sistema
--   Sistemas que se enlazan con el sistema bajo desarrollo
--   Búsqueda de literatura
--   Descripciones de escenarios de uso
+- Versiones pasadas del sistema
+- Sistemas que se enlazan con el sistema bajo desarrollo
+- Búsqueda de literatura
+- Descripciones de escenarios de uso
 
 ## Análisis de Requerimientos
 
@@ -160,12 +160,12 @@ El análisis de requerimientos es el proceso de examinar los requerimientos elic
 
 Durante este proceso, los requerimientos deben cumplir con las siguientes características:
 
--   Ser **no ambiguos**, es decir, interpretables de una sola forma
--   Ser **verificables**, de modo que pueda demostrarse que el sistema los cumple
--   Ser **atómicos**, sin combinar múltiples requerimientos en una sola declaración
--   Representar una necesidad real del usuario o del sistema
--   Utilizar el vocabulario propio del dominio del problema
--   Ser aceptables para los stakeholders
+- Ser **no ambiguos**, es decir, interpretables de una sola forma
+- Ser **verificables**, de modo que pueda demostrarse que el sistema los cumple
+- Ser **atómicos**, sin combinar múltiples requerimientos en una sola declaración
+- Representar una necesidad real del usuario o del sistema
+- Utilizar el vocabulario propio del dominio del problema
+- Ser aceptables para los stakeholders
 
 En conjunto, los requerimientos deben ser:
 **completos, concisos, consistentes y viables**.
@@ -180,9 +180,9 @@ Las herramientas de gestión de proyectos ayudan a organizar los requerimientos 
 
 Algunas herramientas comúnmente utilizadas son:
 
--   [Jira](https://www.atlassian.com/software/jira)
--   [Trello](https://trello.com/es)
--   [ClickUp](https://clickup.com)
+- [Jira](https://www.atlassian.com/software/jira)
+- [Trello](https://trello.com/es)
+- [ClickUp](https://clickup.com)
 
 ## Escritura de Requerimientos
 
@@ -192,11 +192,11 @@ La forma en que se redactan los requerimientos es crucial para su comprensión y
 
 Un requerimiento bien escrito debe cumplir con las siguientes características:
 
--   **Claridad**: debe ser fácil de leer y entender por todos los stakeholders
--   **Precisión**: debe utilizar términos específicos y evitar vaguedades
--   **Concisión**: debe expresar la idea completa sin palabras innecesarias
--   **Verificabilidad**: debe poder comprobarse mediante pruebas o inspección
--   **Trazabilidad**: debe poder rastrearse desde su origen hasta su implementación
+- **Claridad**: debe ser fácil de leer y entender por todos los stakeholders
+- **Precisión**: debe utilizar términos específicos y evitar vaguedades
+- **Concisión**: debe expresar la idea completa sin palabras innecesarias
+- **Verificabilidad**: debe poder comprobarse mediante pruebas o inspección
+- **Trazabilidad**: debe poder rastrearse desde su origen hasta su implementación
 
 ### Forma Usual de Redacción
 
@@ -220,15 +220,15 @@ El sistema debe [característica de calidad] [métrica medible] [en contexto esp
 
 Los requerimientos deben expresarse utilizando verbos que indiquen obligación:
 
--   **Debe** (obligatorio)
--   **Debería** (recomendado pero no obligatorio)
--   **Puede** (opcional)
+- **Debe** (obligatorio)
+- **Debería** (recomendado pero no obligatorio)
+- **Puede** (opcional)
 
 Ejemplos:
 
--   "El sistema **debe** validar el formato del correo electrónico antes de registrar un usuario"
--   "El sistema **debería** mostrar un mensaje de confirmación después de guardar los datos"
--   "El sistema **puede** permitir exportar los reportes en formato PDF"
+- "El sistema **debe** validar el formato del correo electrónico antes de registrar un usuario"
+- "El sistema **debería** mostrar un mensaje de confirmación después de guardar los datos"
+- "El sistema **puede** permitir exportar los reportes en formato PDF"
 
 #### 2. Evitar Ambigüedades
 
@@ -252,9 +252,9 @@ Cada requerimiento debe expresar una sola necesidad. Si contiene múltiples idea
 
 **Correcto**:
 
--   "El sistema debe permitir al usuario crear una cuenta proporcionando correo electrónico y contraseña"
--   "El sistema debe permitir al usuario iniciar sesión utilizando correo electrónico y contraseña"
--   "El sistema debe permitir al usuario recuperar su contraseña mediante un enlace enviado a su correo electrónico"
+- "El sistema debe permitir al usuario crear una cuenta proporcionando correo electrónico y contraseña"
+- "El sistema debe permitir al usuario iniciar sesión utilizando correo electrónico y contraseña"
+- "El sistema debe permitir al usuario recuperar su contraseña mediante un enlace enviado a su correo electrónico"
 
 ### Ejemplos de Requerimientos Funcionales Bien Redactados
 
@@ -322,11 +322,23 @@ Desde el punto de vista del negocio, el objetivo principal del sistema es mejora
 
 ### Instrucciones
 
-A partir de la descripción anterior, se espera que el equipo de trabajo (grupos de 3 personas):
+A partir de la descripción anterior, se espera que de forma individual:
 
--   Identifique las principales **necesidades del cliente**.
--   Identifique los **subsistemas** que compondrían la aplicación, descomponiendo el sistema general en módulos o componentes funcionales coherentes (por ejemplo: subsistema de gestión de usuarios, subsistema de gestión de juegos, etc.).
--   Derive un conjunto coherente de **requerimientos funcionales** para cada subsistema identificado, que permitan satisfacer las necesidades del cliente.
--   Proponga **requerimientos no funcionales** relacionados con aspectos como seguridad, usabilidad, disponibilidad, desempeño y mantenibilidad.
+1. Identifique y documente **15 requerimientos funcionales** expresados como historias de usuario siguiendo la estructura:
+
+    ```
+    Como [tipo de usuario], quiero [realizar una acción] para [obtener un beneficio]
+    ```
+
+    Considere los diferentes roles mencionados en la problemática (administradores, organizadores, participantes) y las funcionalidades clave del sistema (gestión de usuarios, juegos, encuentros, participación y valoraciones).
+2. Proponga **3 requerimientos no funcionales** relevantes para el sistema, siguiendo un formato estructurado que incluya:
+    - Descripción clara y verificable
+    - Métrica o criterio medible asociado
+
+3. Entregue un **documento PDF** que contenga:
+    - Listado de las 15 historias de usuario con identificadores (HU-001, HU-002, etc.)
+    - Listado de los 3 requerimientos no funcionales
+
+    **Nota**: Se sugiere utilizar herramientas de IA generativa (proporcionando un prompt adecuado basado en esta documentación) para facilitar la generación de propuestas coherentes y bien estructuradas.
 
 No se espera una única solución correcta; se valorará la coherencia, claridad y capacidad de interpretación del problema :).
