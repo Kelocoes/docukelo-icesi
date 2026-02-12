@@ -12,7 +12,7 @@ import rehypeKatex from 'rehype-katex';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-    title: 'Documentación Kevin Rodríguez',
+    title: 'Documentación',
     tagline: 'Espacio para la documentación de proyectos y temas de interés desarrollados en la Universidad Icesi',
     favicon: 'img/favicon.ico',
 
