@@ -1,0 +1,8 @@
+{
+    "label": "S5 - Spring Data JPA",
+    "position": 5,
+    "link": {
+        "type": "generated-index",
+        "description": "Spring Data JPA."
+    }
+}
