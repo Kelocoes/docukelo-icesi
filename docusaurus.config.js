@@ -101,7 +101,7 @@ const config = {
             // Replace with your project's social card
             image: 'img/docusaurus-social-card.jpg',
             navbar: {
-                title: 'Documentación - Kevin Rodríguez',
+                title: 'Documentación - Kelo',
                 logo: {
                     alt: 'My Site Logo',
                     src: 'img/logo.svg',
