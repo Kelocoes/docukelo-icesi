@@ -12,7 +12,7 @@ import rehypeKatex from 'rehype-katex';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-    title: 'Documentación Kevin Rodríguez',
+    title: 'Documentación',
     tagline: 'Espacio para la documentación de proyectos y temas de interés desarrollados en la Universidad Icesi',
     favicon: 'img/favicon.ico',
 
@@ -101,7 +101,7 @@ const config = {
             // Replace with your project's social card
             image: 'img/docusaurus-social-card.jpg',
             navbar: {
-                title: 'Documentación - Kevin Rodríguez',
+                title: 'Documentación - Kelo',
                 logo: {
                     alt: 'My Site Logo',
                     src: 'img/logo.svg',

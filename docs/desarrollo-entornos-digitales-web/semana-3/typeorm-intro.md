@@ -50,6 +50,8 @@ DB_PORT=5433
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
 DB_DATABASE=mydatabase
+DB_TYPE=postgres
+DB_SYNCHRONIZE=true
 ```
 
 ## 3. Configuración de TypeORM en NestJS
@@ -60,8 +62,7 @@ Para configurar TypeORM en tu aplicación NestJS, importa el módulo TypeOrmModu
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { UsersModule } from "./users/users.module";
-import { RolesModule } from "./roles/roles.module";
+
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 
@@ -76,8 +77,6 @@ type SupportedDbTypes =
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
-        UsersModule,
-        RolesModule,
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
