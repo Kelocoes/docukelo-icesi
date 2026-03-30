@@ -114,7 +114,6 @@ public class UserService {
 11. Debemos inyectar la dependencia de `UserService` en nuestro `CustomUserDetailsService` para poder buscar el usuario por su nombre de usuario.
 
 ```java
-@Service
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserService userService;
