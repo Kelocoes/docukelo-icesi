@@ -1,0 +1,8 @@
+{
+    "label": "S11 - REST y JWT",
+    "position": 11,
+    "link": {
+        "type": "generated-index",
+        "description": "Autenticación con JWT y desarrollo de APIs REST con Spring Boot"
+    }
+}
