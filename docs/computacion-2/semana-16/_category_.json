@@ -1,0 +1,8 @@
+{
+    "label": "S15 - State management & useContext",
+    "position": 13,
+    "link": {
+        "type": "generated-index",
+        "description": "Introducción a useContext y manejo de estado en React"
+    }
+}
