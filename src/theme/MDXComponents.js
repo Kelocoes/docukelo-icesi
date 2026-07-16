@@ -9,6 +9,7 @@ import PdfViewer from '@site/src/components/PdfViewer/PdfViewer';
 import { StepByStep, Step } from '@site/src/components/StepByStep';
 import { CardGrid, Card } from '@site/src/components/CardGrid';
 import ZoomableMermaid from '@site/src/components/ZoomableMermaid';
+import { Quiz, Question, Option } from '@site/src/components/Quiz/Quiz';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -27,6 +28,9 @@ export default {
     CardGrid,
     Card,
     ZoomableMermaid,
+    Quiz,
+    Question,
+    Option,
     Tabs,
     TabItem,
 };

@@ -21,4 +21,6 @@ yarn-error.log*
 
 # Agents spec files
 /agents/*spec.md
+/agents/spec/
+
 

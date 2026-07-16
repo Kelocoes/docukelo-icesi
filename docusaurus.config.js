@@ -48,7 +48,7 @@ const config = {
     // may want to replace "en" with "zh-Hans".
     i18n: {
         defaultLocale: 'es',
-        locales: ['es'],
+        locales: ['es', 'en'],
     },
 
     stylesheets: [
@@ -107,7 +107,7 @@ const config = {
                 title: 'Documentación - Kelo',
                 logo: {
                     alt: 'My Site Logo',
-                    src: 'img/logo.svg',
+                    src: '/img/logo.svg',
                 },
                 items: [
                     {
@@ -115,6 +115,10 @@ const config = {
                         sidebarId: 'tutorialSidebar',
                         position: 'left',
                         label: 'Docs',
+                    },
+                    {
+                        type: 'localeDropdown',
+                        position: 'right',
                     },
                     {
                         href: 'https://github.com/Kelocoes/docukelo-icesi.git',
@@ -126,7 +130,7 @@ const config = {
             prism: {
                 theme: prismThemes.vsDark,
                 darkTheme: prismThemes.vsDark,
-                additionalLanguages: ['java', 'javascript', 'python', 'bash', 'json'],
+                additionalLanguages: ['java', 'javascript', 'python', 'bash', 'json', 'dart'],
             },
             algolia: {
                 // The application ID provided by Algolia

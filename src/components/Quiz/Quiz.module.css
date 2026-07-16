@@ -1,0 +1,323 @@
+.quizContainer {
+  background-color: var(--ifm-card-background-color, #ffffff);
+  border: 1px solid var(--ifm-color-emphasis-200, #ebedf0);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 32px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  font-family: var(--ifm-font-family-base);
+  transition: all 0.3s ease;
+}
+
+html[data-theme='dark'] .quizContainer {
+  background-color: #1b1b1d;
+  border-color: #2e2e33;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.loading {
+  text-align: center;
+  padding: 32px;
+  color: var(--ifm-color-emphasis-600);
+  font-style: italic;
+}
+
+/* Header & Progress Bar */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.progressText {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-700);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.progressBar {
+  width: 100%;
+  height: 6px;
+  background-color: var(--ifm-color-emphasis-200, #ebedf0);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+html[data-theme='dark'] .progressBar {
+  background-color: #2e2e33;
+}
+
+.progressBarFill {
+  height: 100%;
+  background-color: var(--ifm-color-primary, #2563eb);
+  border-radius: 3px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Question & Options */
+.questionBox {
+  margin-bottom: 24px;
+}
+
+.questionTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--ifm-heading-color, #1c1e21);
+  line-height: 1.4;
+}
+
+html[data-theme='dark'] .questionTitle {
+  color: #f5f6f7;
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.optionBtn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 8px;
+  border: 1.5px solid var(--ifm-color-emphasis-300, #dadde1);
+  background-color: transparent;
+  color: var(--ifm-font-color-base, #1c1e21);
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+html[data-theme='dark'] .optionBtn {
+  border-color: #3e3e44;
+}
+
+.interactive:hover {
+  border-color: var(--ifm-color-primary, #2563eb);
+  background-color: rgba(37, 99, 235, 0.04);
+}
+
+html[data-theme='dark'] .interactive:hover {
+  background-color: rgba(37, 99, 235, 0.1);
+}
+
+.optionLetter {
+  font-weight: 700;
+  margin-right: 12px;
+  color: var(--ifm-color-primary, #2563eb);
+}
+
+.optionText {
+  flex-grow: 1;
+}
+
+/* States after click */
+.correct {
+  border-color: #10b981 !important;
+  background-color: rgba(16, 185, 129, 0.08) !important;
+  color: #065f46 !important;
+}
+
+html[data-theme='dark'] .correct {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  color: #a7f3d0 !important;
+}
+
+.incorrect {
+  border-color: #ef4444 !important;
+  background-color: rgba(239, 68, 68, 0.08) !important;
+  color: #991b1b !important;
+}
+
+html[data-theme='dark'] .incorrect {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  color: #fca5a5 !important;
+}
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.feedbackIcon {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-left: 12px;
+}
+
+.correct .feedbackIcon {
+  color: #10b981;
+}
+
+.incorrect .feedbackIcon {
+  color: #ef4444;
+}
+
+/* Navigation Buttons */
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  border-top: 1px solid var(--ifm-color-emphasis-200, #ebedf0);
+  padding-top: 16px;
+}
+
+html[data-theme='dark'] .navigation {
+  border-color: #2e2e33;
+}
+
+.navButton {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: 1px solid var(--ifm-color-emphasis-300, #dadde1);
+  background-color: transparent;
+  color: var(--ifm-font-color-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+html[data-theme='dark'] .navButton {
+  border-color: #3e3e44;
+}
+
+.navButton:hover:not(:disabled) {
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.navButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.navButtonPrimary {
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: none;
+  background-color: var(--ifm-color-primary, #2563eb);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navButtonPrimary:hover:not(:disabled) {
+  background-color: var(--ifm-color-primary-dark, #1d4ed8);
+}
+
+.navButtonPrimary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Summary Screen */
+.summaryContainer {
+  text-align: center;
+  padding: 16px 0;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.summaryContainer h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 24px;
+}
+
+.scoreSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.circularProgressWrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.svgCircle {
+  transform: rotate(-90deg);
+}
+
+.circleBg {
+  fill: none;
+  stroke: var(--ifm-color-emphasis-200, #ebedf0);
+}
+
+html[data-theme='dark'] .circleBg {
+  stroke: #2e2e33;
+}
+
+.circleProgressSuccess {
+  fill: none;
+  stroke: #10b981;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease-out;
+}
+
+.circleProgressFail {
+  fill: none;
+  stroke: #ef4444;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease-out;
+}
+
+.percentageText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--ifm-font-color-base);
+}
+
+.scoreFraction {
+  font-size: 1.1rem;
+  color: var(--ifm-color-emphasis-800);
+}
+
+.feedbackMessage {
+  font-size: 0.95rem;
+  max-width: 400px;
+  color: var(--ifm-color-emphasis-600);
+  line-height: 1.5;
+}
+
+.retryButton {
+  padding: 12px 28px;
+  border-radius: 8px;
+  border: 1px solid var(--ifm-color-primary, #2563eb);
+  background-color: transparent;
+  color: var(--ifm-color-primary, #2563eb);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retryButton:hover {
+  background-color: var(--ifm-color-primary, #2563eb);
+  color: #ffffff;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
