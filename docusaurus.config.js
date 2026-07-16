@@ -14,7 +14,7 @@ import rehypeKatex from 'rehype-katex';
 const config = {
     title: 'Documentación',
     tagline: 'Espacio para la documentación de proyectos y temas de interés desarrollados en la Universidad Icesi',
-    favicon: 'img/favicon.ico',
+    favicon: 'img/logo.svg',
 
     // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
     future: {
@@ -37,7 +37,10 @@ const config = {
         hooks: {
             onBrokenMarkdownLinks: 'warn',
         },
-        mermaid: true
+        mermaid: true,
+        mdx1Compat: {
+            headingIds: true,
+        },
     },
 
     // Even if you don't use internationalization, you can use this field to set
@@ -161,7 +164,7 @@ const config = {
                 //... other Algolia params
             },
             mermaid: {
-                theme: { light: 'neutral', dark: 'base' },
+                theme: { light: 'neutral', dark: 'dark' },
             },
         }),
 };

@@ -8,7 +8,7 @@ sidebar_position: 1
 
 En el contexto de servicios web, la diferencia entre **stateless** y **stateful** se refiere a cómo se maneja el estado de las interacciones entre el cliente y el servidor.
 
-<img src="/img/stateful-stateless.png" alt="Stateful vs Stateless" width="500" />
+<img src="/img/computacion-2/stateful-stateless.png" alt="Stateful vs Stateless" width="500" />
 
 ### Stateless
 

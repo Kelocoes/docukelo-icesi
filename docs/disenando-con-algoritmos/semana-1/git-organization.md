@@ -16,13 +16,13 @@ Git Flow es un modelo de ramificación que define un conjunto de reglas para ges
 
 Además, se utilizan ramas adicionales para características (`feature`), correcciones (`hotfix`) y lanzamientos (`release`).
 
-<img src="/img/git-flow.webp" alt="Git Flow Diagram" width="600" />
+<img src="/img/disenando-con-algoritmos/git-flow.webp" alt="Git Flow Diagram" width="600" />
 
 ### Git Trunk
 
 Git Trunk es un enfoque más simple que se centra en una única rama principal, a menudo llamada `trunk` o `main`. En este modelo, todo el desarrollo se realiza directamente en la rama principal, lo que simplifica el flujo de trabajo y reduce la complejidad de las ramas.
 
-<img src="/img/git-trunk.png" alt="Git Flow Diagram" width="600" style={{ backgroundColor: 'white', padding: '8px'}} />
+<img src="/img/disenando-con-algoritmos/git-trunk.png" alt="Git Flow Diagram" width="600" style={{ backgroundColor: 'white', padding: '8px'}} />
 
 ## Comparación entre Git Flow y Git Trunk
 

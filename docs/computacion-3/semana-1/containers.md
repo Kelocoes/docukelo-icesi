@@ -41,7 +41,7 @@ Los contenedores representan una evolución en la virtualización, enfocándose 
 
 Un contenedor encapsula una aplicación y sus dependencias, asegurando que se ejecute de manera consistente en cualquier entorno. Para gestionar contenedores, se utilizan plataformas como Docker, que simplifican la creación, despliegue y administración de estos entornos aislados.
 
-<img src="/img/docker-architecture.png" alt="Contenedor" width="600" />
+<img src="/img/computacion-3/docker-architecture.png" alt="Contenedor" width="600" />
 
 ### Docker
 

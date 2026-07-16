@@ -18,7 +18,7 @@ Antes de agregar la aplicación, configura primero la base de datos. Ve a la sec
 
 Si estás trabajando completamente en Railway, usa las credenciales internas proporcionadas por la plataforma para conectar la aplicación, ya que están diseñadas para funcionar dentro del entorno de Railway y pueden diferir de las credenciales externas.
 
-<img src="/img/railway-3.png" alt="Configuración de la base de datos en Railway" width="800" />
+<img src="/img/computacion-3/railway-3.png" alt="Configuración de la base de datos en Railway" width="800" />
 
 ## Paso 3: Agregar y configurar la aplicación
 
@@ -28,9 +28,9 @@ Después de seleccionar el repositorio y la rama, configura las variables de ent
 
 En la sección `Build`, define el comando de construcción y el comando de inicio. Por ejemplo, para una aplicación Node.js puedes usar `npm install` como comando de construcción y `npm start` como comando de inicio. Si tu proyecto usa Docker, configura la construcción para que utilice tu archivo `Dockerfile`.
 
-<img src="/img/railway-1.png" alt="Creación de proyecto en Railway" width="800" />
+<img src="/img/computacion-3/railway-1.png" alt="Creación de proyecto en Railway" width="800" />
 
-<img src="/img/railway-2.png" alt="Configuración del despliegue en Railway" width="800" />
+<img src="/img/computacion-3/railway-2.png" alt="Configuración del despliegue en Railway" width="800" />
 
 ## Paso 4: Desplegar y publicar
 

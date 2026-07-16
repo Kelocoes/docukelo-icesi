@@ -24,7 +24,7 @@ Este proyecto es una aplicación **NestJS** que utiliza **TypeORM** y **PostgreS
 - Un autor puede tener **múltiples posts**
 - Cada post pertenece a **un autor específico**
 
-<img src="/img/db_authors_posts.png" alt="Diagrama de Entidad-Relación" width="600" />
+<img src="/img/computacion-3/db_authors_posts.png" alt="Diagrama de Entidad-Relación" width="600" />
 
 ### Datos de Prueba
 
@@ -48,7 +48,7 @@ El proyecto ya cuenta con servicios funcionales para **CRUD** de autores y posts
 
 **GraphQL** es un lenguaje de consulta para APIs que permite a los clientes solicitar _exactamente_ los datos que necesitan, ni más ni menos. Fue desarrollado por **Facebook** en 2012 y liberado como un proyecto de código abierto en 2015. Desde entonces, ha ganado popularidad como una alternativa a las APIs REST tradicionales.
 
-<img src="/img/graphql_rest.png" alt="Logo de GraphQL" width="600" />
+<img src="/img/computacion-3/graphql_rest.png" alt="Logo de GraphQL" width="600" />
 
 ### Problemas comunes con REST que GraphQL resuelve
 
@@ -345,7 +345,7 @@ export class AuthorsResolver { // <--- Aquí!
 
 ¡Ahora es momento de probar! Puedes iniciar tu servidor NestJS con `npm run start:dev` y acceder a la interfaz de GraphQL en `http://localhost:3000/graphql` (o el puerto que estés usando). Desde allí, puedes ejecutar las consultas definidas para verificar que todo funcione correctamente. Si configuraste el **sandbox de Apollo**, podrás usar esa interfaz para probar tus consultas y mutaciones de GraphQL de manera interactiva.
 
-<img src="/img/apollo_sandbox.png" alt="Interfaz de GraphQL Sandbox" width="1000" />
+<img src="/img/computacion-3/apollo_sandbox.png" alt="Interfaz de GraphQL Sandbox" width="1000" />
 
 Te explico a grandes rasgos la interfaz:
 

@@ -181,11 +181,11 @@ git pull origin nombre-rama
 ## Git Cheat Sheet
 
 <iframe 
-    src="/files/git-cheat-sheet-education.pdf" 
+    src="/files/disenando-con-algoritmos/git-cheat-sheet-education.pdf" 
     width="100%" 
     height="600px" 
     title="Git Cheat Sheet">
-    <p>Tu navegador no soporta iframes. <a href="/files/git-cheat-sheet-education.pdf">Descarga el PDF aquí</a>.</p>
+    <p>Tu navegador no soporta iframes. <a href="/files/disenando-con-algoritmos/git-cheat-sheet-education.pdf">Descarga el PDF aquí</a>.</p>
 </iframe>
 
 ## Recursos adicionales

@@ -31,7 +31,7 @@ Express es una opción popular para el desarrollo de aplicaciones web y APIs por
 
 Siguiendo los stack de desarrollo más populares, el stack MERN (MongoDB, Express, React, Node.js) es ampliamente utilizado para construir aplicaciones web modernas. MongoDB es una base de datos NoSQL que se integra bien con Express y Node.js debido a su naturaleza flexible y escalable.
 
-<img src="/img/mern.png" alt="MERN Stack" width="800"/>
+<img src="/img/computacion-3/mern.png" alt="MERN Stack" width="800"/>
 
 ## 4. Contexto del taller guiado
 

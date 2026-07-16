@@ -92,7 +92,7 @@ Antes de saber su implementación, es importante entender la diferencia entre au
 - **Autenticación**: Es el proceso de verificar la identidad de un usuario. En otras palabras, es el proceso de asegurarse de que el usuario es quien dice ser. Esto generalmente se hace a través de un sistema de inicio de sesión donde el usuario proporciona sus credenciales (como un nombre de usuario y una contraseña) para autenticarse. Existen diferentes estrategias de autenticación, como JWT (JSON Web Tokens), OAuth, y autenticación basada en sesiones, entre otras.
 - **Autorización**: Es el proceso de determinar qué recursos y acciones un usuario autenticado puede acceder o realizar. Esto se basa en los roles y permisos asignados a cada usuario. Por ejemplo, un usuario con el rol de "admin" puede tener acceso a ciertas rutas o funcionalidades que un usuario con el rol de "user" no tiene.
 
-<img src="/img/auth_example.png" alt="Autenticación vs Autorización" width="800"  />
+<img src="/img/desarrollo-entornos-digitales-web/auth_example.png" alt="Autenticación vs Autorización" width="800"  />
 
 ## Guards y Passport en NestJS
 

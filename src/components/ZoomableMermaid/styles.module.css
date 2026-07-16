@@ -1,0 +1,135 @@
+.mermaidPreviewWrapper {
+    position: relative;
+    cursor: zoom-in;
+    border: 1px solid var(--ifm-color-emphasis-200);
+    border-radius: 8px;
+    padding: 12px;
+    background: var(--ifm-background-color);
+    transition: all 0.2s ease-in-out;
+}
+
+.mermaidPreviewWrapper:hover {
+    border-color: var(--ifm-color-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.zoomHint {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 0.75rem;
+    color: var(--ifm-color-content-secondary);
+    background: rgba(0, 0, 0, 0.05);
+    padding: 2px 6px;
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+[data-theme='dark'] .zoomHint {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Modal Styling */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalContent {
+    position: relative;
+    width: 90vw;
+    height: 85vh;
+    background: var(--ifm-background-color);
+    border: 1px solid var(--ifm-color-emphasis-200);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+.controlPanel {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    gap: 8px;
+    z-index: 10001;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] .controlPanel {
+    background: rgba(30, 41, 59, 0.85);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.controlBtn, .controlBtnClose {
+    border: none;
+    background: transparent;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--ifm-color-content);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+
+.controlBtn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='dark'] .controlBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.controlBtnClose {
+    background: var(--ifm-color-danger);
+    color: white;
+}
+
+.controlBtnClose:hover {
+    background: var(--ifm-color-danger-dark);
+}
+
+.diagramContainer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+}
+
+.diagramContainer :global(.docusaurus-mermaid-container),
+.diagramContainer :global(.docusaurus-mermaid-container) svg {
+    width: 80vw !important;
+    height: auto !important;
+    max-height: 70vh !important;
+}
+
+.grab {
+    cursor: grab;
+}
+
+.grabbing {
+    cursor: grabbing;
+}

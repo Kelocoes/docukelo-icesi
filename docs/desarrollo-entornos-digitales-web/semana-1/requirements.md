@@ -32,7 +32,7 @@ Estos problemas suelen originarse por una comprensión limitada del dominio, una
 
 Los requerimientos están presentes a lo largo de todas las fases del ciclo de vida del software y no se limitan únicamente a una etapa inicial.
 
-<img src="/img/software-lifecycle.png" alt="Ciclo de vida del software" width="800" />
+<img src="/img/desarrollo-entornos-digitales-web/software-lifecycle.png" alt="Ciclo de vida del software" width="800" />
 
 :::info
 El análisis de requerimientos suele ser una de las fases más subestimadas del desarrollo de software, a pesar de que sus resultados influyen directamente en las fases posteriores.

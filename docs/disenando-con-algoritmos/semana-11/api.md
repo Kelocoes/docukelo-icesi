@@ -13,7 +13,7 @@ Una API (Interfaz de Programación de Aplicaciones) es un conjunto de reglas y d
 Las APIs funcionan como intermediarios entre diferentes aplicaciones o servicios. Cuando una aplicación quiere acceder a una funcionalidad o datos de otra, envía una solicitud a la API correspondiente. La API procesa esta solicitud, realiza las operaciones necesarias y devuelve una respuesta con los datos o resultados solicitados.
 
 <div align="center">
-    <img src="/img/api.png" alt="Diagrama de cómo funciona una API" width="800"/>
+    <img src="/img/disenando-con-algoritmos/api.png" alt="Diagrama de cómo funciona una API" width="800"/>
 </div>
 
 ---
@@ -60,7 +60,7 @@ El Protocolo de Transferencia de Hipertexto (HTTP) es el protocolo fundamental u
 
 Una petición HTTP es un mensaje enviado por el cliente al servidor para solicitar un recurso o realizar una acción. Una petición HTTP típica consta de:
 
-<img src="/img/http-request.png" alt="Estructura de una petición HTTP"/>
+<img src="/img/disenando-con-algoritmos/http-request.png" alt="Estructura de una petición HTTP"/>
 
 ### Métodos HTTP
 

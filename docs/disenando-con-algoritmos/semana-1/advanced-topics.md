@@ -17,7 +17,7 @@ Los Pull Requests (PR) son una forma de proponer cambios en un repositorio. Perm
 3. Ve a la página del repositorio en GitHub.
 4. Haz clic en el botón "Pull Request".
 
-<img src="/img/pull-request.png" alt="Pull Request" width="1000" />
+<img src="/img/disenando-con-algoritmos/pull-request.png" alt="Pull Request" width="1000" />
 
 5. Selecciona la opción "New Pull Request".
 6. Elige la rama base y la rama de comparación, teniendo en cuenta la dirección de la flecha, indicando que los cambios de la rama de comparación se integrarán en la rama base.
@@ -25,11 +25,11 @@ Los Pull Requests (PR) son una forma de proponer cambios en un repositorio. Perm
 8. Haz clic en "Create Pull Request".
 9. Una vez creado, puedes asignar revisores, etiquetas y proyectos al Pull Request.
 
-<img src="/img/pull-request-2.png" alt="Pull Request 2" width="1000" />
+<img src="/img/disenando-con-algoritmos/pull-request-2.png" alt="Pull Request 2" width="1000" />
 
 10. Los revisores pueden comentar, solicitar cambios o aprobar el Pull Request.
 
-<img src="/img/pull-request-3.png" alt="Pull Request 3" width="1000" />
+<img src="/img/disenando-con-algoritmos/pull-request-3.png" alt="Pull Request 3" width="1000" />
 
 11. Una vez aprobado, puedes hacer clic en "Merge Pull Request" para integrar los cambios en la rama base.
 
@@ -37,7 +37,7 @@ Los Pull Requests (PR) son una forma de proponer cambios en un repositorio. Perm
 
 Los merge conflicts ocurren cuando dos ramas tienen cambios incompatibles en las mismas líneas de un archivo. Git no puede resolver automáticamente estos conflictos y requiere intervención manual.
 
-<img src="/img/merge-conflict.png" alt="Merge Conflict" width="700" />
+<img src="/img/disenando-con-algoritmos/merge-conflict.png" alt="Merge Conflict" width="700" />
 
 ### Cómo resolver un Merge Conflict
 
@@ -116,7 +116,7 @@ Stash es uno de los métodos más útiles de Git para guardar temporalmente los 
 
 Un fork es una copia de un repositorio que te permite hacer cambios sin afectar el repositorio original. Es útil para contribuir a proyectos de código abierto o para experimentar con cambios sin comprometer el repositorio original.
 
-<img src="/img/fork.png" alt="Fork" width="1000" />
+<img src="/img/disenando-con-algoritmos/fork.png" alt="Fork" width="1000" />
 
 ## Configurar tu access token de Github
 

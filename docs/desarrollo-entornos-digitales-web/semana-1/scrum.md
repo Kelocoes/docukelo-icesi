@@ -6,7 +6,7 @@ sidebar_position: 2
 
 Scrum es un marco de trabajo ágil utilizado para gestionar proyectos complejos, especialmente en el desarrollo de software. Se basa en principios de colaboración, flexibilidad y entrega incremental de valor. Scrum se estructura en roles, eventos y artefactos que facilitan la organización y ejecución del trabajo en equipo.
 
-<img src="/img/scrum.png" alt="Scrum" width="800" />
+<img src="/img/desarrollo-entornos-digitales-web/scrum.png" alt="Scrum" width="800" />
 
 ## Roles en Scrum
 
@@ -74,5 +74,5 @@ La puntuación de historias de usuario es una técnica utilizada para estimar el
 3. **Asignación de Puntos**: Cada miembro del equipo asigna una puntuación basada en su percepción del esfuerzo necesario. Se pueden utilizar técnicas como el Planning Poker para facilitar este proceso.
 4. **Consenso**: Si hay discrepancias significativas en las puntuaciones, el equipo discute las razones y vuelve a puntuar hasta llegar a un consenso.
 
-<img src="/img/planning_poker.png" alt="Planning Poker" width="600" />
+<img src="/img/desarrollo-entornos-digitales-web/planning_poker.png" alt="Planning Poker" width="600" />
 
