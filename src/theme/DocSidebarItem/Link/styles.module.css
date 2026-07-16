@@ -1,0 +1,64 @@
+.menuExternalLink {
+  align-items: center;
+}
+
+.linkLabel {
+  overflow: hidden;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.customCheckbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  user-select: none;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.customCheckboxChecked svg rect {
+  stroke: var(--ifm-color-primary, #2563eb) !important;
+  fill: var(--ifm-color-primary, #2563eb) !important;
+}
+
+.customCheckbox svg rect {
+  stroke: var(--ifm-color-emphasis-400, #dadde1);
+  transition: stroke 0.2s ease;
+}
+
+html[data-theme='dark'] .customCheckbox svg rect {
+  stroke: #52525e;
+}
+
+.customCheckbox:hover svg rect {
+  stroke: var(--ifm-color-primary, #2563eb);
+}
+
+.customCheckbox:active {
+  transform: scale(0.85);
+}
+
+@keyframes checkPop {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.customCheckboxChecked {
+  animation: checkPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}

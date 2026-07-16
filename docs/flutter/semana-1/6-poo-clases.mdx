@@ -1,0 +1,334 @@
+---
+sidebar_position: 6
+---
+
+# Programación Orientada a Objetos: Clases y Constructores
+
+La Programación Orientada a Objetos (POO) en Dart es fundamental para estructurar aplicaciones en Flutter. En esta guía, exploraremos cómo definir clases, manejar propiedades, implementar getters y setters, y dominar todos los tipos de constructores que ofrece Dart para inicializar objetos con flexibilidad.
+
+---
+
+## 1. Clases y Propiedades
+
+En Dart, una clase es un molde (blueprint) para crear objetos. Todas las clases heredan implícitamente de `Object`.
+
+```dart title="lib/models/user.dart" showLineNumbers
+class Usuario {
+  // Propiedades de instancia (campos o variables miembros)
+  String username;
+  String email;
+  String? bio; // Propiedad opcional (nullable)
+
+  // Constructor generativo básico
+  Usuario(this.username, this.email, [this.bio]);
+}
+```
+
+> **¿Qué es el syntactic sugar `this.username`?**  
+> En lugar de recibir parámetros y asignarlos manualmente en el cuerpo (`this.username = username;`), Dart permite realizar la asignación directa en la firma del constructor, ahorrándonos líneas de código repetitivas (boilerplate).
+
+---
+
+## 2. Getters y Setters
+
+Los *getters* y *setters* son métodos especiales que proporcionan acceso de lectura y escritura a las propiedades de un objeto, permitiendo encapsular lógica o validaciones adicionales.
+
+```dart title="lib/models/product.dart" showLineNumbers
+class Producto {
+  String nombre;
+  double _precio = 0.0; // Propiedad privada (inicia con guion bajo _)
+
+  Producto(this.nombre, double precioInicial) {
+    precio = precioInicial; // Llama al setter para aplicar la validación
+  }
+
+  // Getter para obtener el precio
+  double get precio => _precio;
+
+  // Setter con validación de negocio
+  set precio(double nuevoPrecio) {
+    if (nuevoPrecio < 0) {
+      throw ArgumentError("El precio de un producto no puede ser negativo.");
+    }
+    _precio = nuevoPrecio;
+  }
+}
+```
+
+:::warning
+En Dart, la privacidad está a nivel de **archivo** o **biblioteca** (library), no a nivel de clase. Si declaras `_precio` con guion bajo, solo será inaccesible para código que se encuentre en otros archivos. Dentro del mismo archivo de la clase, podrás seguir leyéndolo y modificándolo directamente.
+:::
+
+---
+
+## 3. Lista de Inicialización (Initializer List)
+
+La *initializer list* permite inicializar propiedades antes de que se ejecute el cuerpo del constructor. Es sumamente útil para:
+1. Validar argumentos usando `assert`.
+2. Inicializar campos `final` basados en expresiones de otros parámetros.
+
+```dart title="lib/models/point.dart" showLineNumbers
+import 'dart:math';
+
+class Punto {
+  final double x;
+  final double y;
+  final double distanciaAlOrigen;
+
+  // Lista de inicialización (se ejecuta antes del cuerpo '{}')
+  Punto(double x, double y)
+      : this.x = x,
+        this.y = y,
+        distanciaAlOrigen = sqrt(x * x + y * y) {
+    // Cuerpo del constructor (opcional)
+    print("Punto creado en ($x, $y) con distancia al origen: $distanciaAlOrigen");
+  }
+}
+```
+
+---
+
+## 4. Tipos de Constructores en Dart
+
+Dart ofrece una amplia gama de tipos de constructores para adaptarse a diferentes escenarios de desarrollo y optimizaciones de memoria.
+
+### A. Constructor Generativo (Generative Constructor)
+Es el constructor común y corriente que instancia la clase y retorna una nueva referencia en memoria.
+
+```dart title="lib/models/car.dart"
+class Auto {
+  String marca;
+  String modelo;
+
+  Auto(this.marca, this.modelo);
+}
+```
+
+### B. Constructor Nombrado (Named Constructor)
+Permite definir múltiples formas de inicializar una misma clase utilizando nombres descriptivos.
+
+```dart title="lib/models/profile.dart" showLineNumbers
+class Perfil {
+  String username;
+  String rol;
+
+  // Constructor estándar
+  Perfil(this.username, this.rol);
+
+  // Constructor nombrado para perfiles de Administradores
+  Perfil.admin(this.username) : rol = 'ADMIN';
+
+  // Constructor nombrado para perfiles de Invitados
+  Perfil.guest()
+      : username = 'Invitado',
+        rol = 'GUEST';
+}
+```
+
+### C. Constructor de Redireccionamiento (Redirecting Constructor)
+A veces un constructor solo sirve para llamar a otro constructor de la misma clase con valores por defecto. En este caso, redirigimos el flujo usando `: this(...)`.
+
+```dart title="lib/models/player.dart" showLineNumbers
+class Jugador {
+  String nickname;
+  int nivel;
+  int puntos;
+
+  // Constructor principal (generativo)
+  Jugador(this.nickname, this.nivel, this.puntos);
+
+  // Redirige al constructor principal asignando nivel 1 y 0 puntos
+  Jugador.nuevo(String nickname) : this(nickname, 1, 0);
+}
+```
+
+### D. Constructor Constante (Const Constructor)
+Si tu clase produce objetos inmutables cuyos valores se conocen en tiempo de compilación, puedes definir un constructor `const`. Todos los campos de la clase deben ser `final`.
+
+```dart title="lib/models/theme.dart" showLineNumbers
+class AppColor {
+  final int red;
+  final int green;
+  final int blue;
+
+  // Constructor constante
+  const AppColor(this.red, this.green, this.blue);
+}
+
+void main() {
+  // Se crea una única instancia en memoria en tiempo de compilación
+  const color1 = AppColor(255, 0, 0);
+  const color2 = AppColor(255, 0, 0);
+
+  print(identical(color1, color2)); // Imprime: true
+}
+```
+
+:::tip
+El uso de `const` en constructores es un pilar fundamental en el rendimiento de **Flutter**. Al renderizar widgets `const`, Flutter sabe que no han cambiado y evita redibujarlos innecesariamente en el árbol de widgets.
+:::
+
+### E. Constructor de Fábrica (Factory Constructor)
+Se declara usando la palabra clave `factory`. A diferencia de los constructores comunes, un `factory constructor` no crea obligatoriamente una nueva instancia de su propia clase. Puede:
+1. Retornar una instancia de una subclase.
+2. Retornar una instancia existente desde un caché (Patrón Singleton o Multiton).
+3. Realizar lógica de procesamiento previa antes de invocar a un constructor generativo.
+
+```dart title="lib/services/logger.dart" showLineNumbers
+class Logger {
+  final String nombre;
+  bool habilitado;
+
+  // Caché en memoria para almacenar las instancias creadas
+  static final Map<String, Logger> _cache = {};
+
+  // Constructor generativo privado para evitar instanciación externa directa
+  Logger._interno(this.nombre, this.habilitado);
+
+  // Constructor factory que controla la instanciación
+  factory Logger(String nombre) {
+    if (_cache.containsKey(nombre)) {
+      // Retorna una instancia ya existente del caché en lugar de crear una nueva
+      return _cache[nombre]!;
+    } else {
+      final nuevoLogger = Logger._interno(nombre, true);
+      _cache[nombre] = nuevoLogger;
+      return nuevoLogger;
+    }
+  }
+}
+```
+
+Otro uso sumamente común es mapear respuestas JSON:
+
+```dart title="lib/models/post.dart" showLineNumbers
+class Post {
+  final int id;
+  final String titulo;
+
+  Post({required this.id, required this.titulo});
+
+  // Constructor factory para parsing de datos externos
+  factory Post.fromJson(Map<String, dynamic> json) {
+    return Post(
+      id: json['id'] as int,
+      titulo: json['title'] as String,
+    );
+  }
+}
+```
+
+---
+
+## 5. Ejercicios Prácticos
+
+Pon a prueba tu conocimiento implementando estos retos en Dart.
+
+### Ejercicio 1: El Validador de Calificaciones
+Crea una clase `Estudiante` que tenga propiedades para `nombre` y una lista de `calificaciones` (números reales). Utiliza un **getter** llamado `promedio` que calcule la nota promedio del estudiante y un **setter** para agregar una calificación, el cual debe validar que la nota ingresada esté en el rango de `0.0` a `5.0`. Lanza una excepción si no cumple la regla.
+
+<details>
+<summary>Ver Solución</summary>
+
+```dart title="lib/exercises/exercise_1.dart" showLineNumbers
+class Estudiante {
+  final String nombre;
+  final List<double> _calificaciones = [];
+
+  Estudiante(this.nombre);
+
+  double get promedio {
+    if (_calificaciones.isEmpty) return 0.0;
+    final suma = _calificaciones.reduce((a, b) => a + b);
+    return suma / _calificaciones.length;
+  }
+
+  // Setter para agregar calificacion individual
+  set agregarCalificacion(double nota) {
+    if (nota < 0.0 || nota > 5.0) {
+      throw ArgumentError("La nota debe estar en el rango [0.0 - 5.0]");
+    }
+    _calificaciones.add(nota);
+  }
+}
+
+void main() {
+  final estudiante = Estudiante("Juan Pérez");
+  estudiante.agregarCalificacion = 4.5;
+  estudiante.agregarCalificacion = 3.8;
+  print("Promedio: ${estudiante.promedio}"); // 4.15
+  
+  try {
+    estudiante.agregarCalificacion = 6.0; // Lanza error
+  } catch (e) {
+    print(e);
+  }
+}
+```
+
+</details>
+
+### Ejercicio 2: Sistema de Conexiones a Base de Datos (Singleton con Factory)
+Crea una clase `ConexionDB` que represente una conexión a base de datos. Implementa el patrón Singleton usando un **factory constructor** para garantizar que solo exista una instancia de `ConexionDB` en todo el ciclo de vida del programa. Debe poseer un constructor nombrado privado e internamente guardar el estado `String url`.
+
+<details>
+<summary>Ver Solución</summary>
+
+```dart title="lib/exercises/exercise_2.dart" showLineNumbers
+class ConexionDB {
+  final String url;
+  static ConexionDB? _instancia;
+
+  // Constructor nombrado privado
+  ConexionDB._interno(this.url);
+
+  // Constructor factory que controla la instancia única
+  factory ConexionDB(String url) {
+    // Si no se ha instanciado, la creamos. De lo contrario, retornamos la existente.
+    _instancia ??= ConexionDB._interno(url);
+    return _instancia!;
+  }
+}
+
+void main() {
+  final c1 = ConexionDB("mongodb://localhost:27017/prod");
+  final c2 = ConexionDB("mongodb://localhost:27017/test"); // Se ignora esta URL
+
+  print("URL c1: ${c1.url}"); // mongodb://localhost:27017/prod
+  print("URL c2: ${c2.url}"); // mongodb://localhost:27017/prod
+  print("¿Son la misma instancia?: ${identical(c1, c2)}"); // true
+}
+```
+
+</details>
+
+### Ejercicio 3: Figuras Geométricas y Redireccionamiento
+Crea una clase `Rectangulo` con propiedades `final double ancho` y `final double alto`. Define un constructor generativo principal y un constructor nombrado `Rectangulo.cuadrado(double lado)` que redirija al constructor principal asignándole el mismo valor a ambas propiedades.
+
+<details>
+<summary>Ver Solución</summary>
+
+```dart title="lib/exercises/exercise_3.dart" showLineNumbers
+class Rectangulo {
+  final double ancho;
+  final double alto;
+
+  // Constructor principal
+  Rectangulo(this.ancho, this.alto);
+
+  // Constructor de redireccionamiento
+  Rectangulo.cuadrado(double lado) : this(lado, lado);
+
+  double get area => ancho * alto;
+}
+
+void main() {
+  final rect = Rectangulo(10, 5);
+  final cuad = Rectangulo.cuadrado(4);
+
+  print("Área Rectángulo: ${rect.area}"); // 50.0
+  print("Área Cuadrado: ${cuad.area}");     // 16.0
+}
+```
+
+</details>

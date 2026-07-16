@@ -27,7 +27,7 @@ Flux es una arquitectura con flujo unidireccional. Elementos conceptuales:
 
 Flujo simplificado:
 
-<img src="/img/flux.png" alt="Flujo unidireccional en Flux" />
+<img src="/img/disenando-con-algoritmos/flux.png" alt="Flujo unidireccional en Flux" />
 
 Beneficios:
 

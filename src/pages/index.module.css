@@ -1,24 +1,167 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
- */
-
 .heroBanner {
-  padding: 4rem 0;
+  background: linear-gradient(135deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary) 50%, var(--ifm-color-primary-light) 100%);
+  padding: 6rem 0;
   text-align: center;
   position: relative;
   overflow: hidden;
-  min-height: 100vh;
+  color: white;
+  border-bottom: 4px solid var(--ifm-color-primary);
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
+[data-theme='dark'] .heroBanner {
+  background: linear-gradient(135deg, #020617 0%, var(--ifm-color-primary-darkest) 60%, var(--ifm-color-primary) 100%);
+  border-bottom: 4px solid var(--ifm-color-primary);
+}
+
+.heroTitle {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.heroSubtitle {
+  font-size: 1.35rem;
+  max-width: 800px;
+  margin: 0 auto 2.5rem auto;
+  line-height: 1.6;
+  opacity: 0.95;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 16px;
+}
+
+.primaryButton {
+  background-color: var(--ifm-color-primary) !important;
+  color: white !important;
+  border: none !important;
+  font-weight: 700 !important;
+  padding: 0.75rem 2rem !important;
+  border-radius: 50px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.25s ease !important;
+}
+
+[data-theme='dark'] .primaryButton {
+  color: #0f172a !important;
+  background-color: white !important;
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.2) !important;
+}
+
+.primaryButton:hover {
+  background-color: var(--ifm-color-primary-dark) !important;
+  transform: translateY(-2px);
+}
+
+[data-theme='dark'] .primaryButton:hover {
+  background-color: #e2e8f0 !important;
+}
+
+.secondaryButton {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  font-weight: 600 !important;
+  padding: 0.75rem 2rem !important;
+  border-radius: 50px !important;
+  backdrop-filter: blur(10px);
+  transition: all 0.25s ease !important;
+}
+
+.secondaryButton:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-2px);
+  text-decoration: none !important;
+}
+
+.mainSection {
+  padding: 5rem 0;
+  background-color: #f8fafc;
+}
+
+[data-theme='dark'] .mainSection {
+  background-color: #0b0f19;
+}
+
+.sectionTitle {
+  text-align: center;
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin-bottom: 3.5rem;
+  position: relative;
+}
+
+.sectionTitle::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--ifm-color-primary);
+  margin: 12px auto 0 auto;
+  border-radius: 2px;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  padding: 0 20px;
+}
+
+.courseCard {
+  background: white;
+  border-radius: 16px;
+  padding: 2.25rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e2e8f0;
+  text-decoration: none !important;
+  color: inherit !important;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme='dark'] .courseCard {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.courseCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: var(--ifm-color-primary);
+}
+
+.cardTitle {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.cardDescription {
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+[data-theme='dark'] .cardDescription {
+  color: #94a3b8;
+}
+
+.cardFooter {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }

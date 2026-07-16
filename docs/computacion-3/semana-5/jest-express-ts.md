@@ -126,7 +126,7 @@ Aquí explicaré brevemente cada una de las configuraciones que encontraremos en
 
 Para organizar nuestro proyecto, crearemos una estructura de carpetas que separe las pruebas del código fuente. Una estructura común es tener una carpeta `src` para el código fuente y una carpeta `tests` para las pruebas. Aquí agrego un ejemplo de como podría verse la estructura de carpetas:
 
-<img src="/img/jest-1.png" alt="Estructura de carpetas" width="500" />
+<img src="/img/computacion-3/jest-1.png" alt="Estructura de carpetas" width="500" />
 
 ## 4. Creación de una primera prueba
 

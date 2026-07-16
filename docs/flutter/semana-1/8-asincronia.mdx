@@ -1,0 +1,212 @@
+---
+sidebar_position: 8
+---
+
+# Programación Asíncrona: Futures, Streams y Generadores
+
+Dart es un lenguaje de un solo hilo (single-threaded) con un modelo de ejecución basado en un bucle de eventos (*Event Loop*). Para realizar tareas pesadas o que requieran esperar respuestas externas (como peticiones HTTP, lectura de archivos o consultas a bases de datos) sin bloquear la interfaz gráfica de Flutter, utilizamos las herramientas de asincronía nativas de Dart.
+
+---
+
+## 1. ¿Qué es un Future?
+
+Un `Future` representa un valor o un error que estará disponible en algún momento del futuro. Es equivalente a las `Promises` en JavaScript. Un `Future` puede estar en tres estados:
+1. **Uncompleted** (Incompleto): La tarea asíncrona está ejecutándose.
+2. **Completed with a value** (Completado con valor): La tarea terminó con éxito.
+3. **Completed with an error** (Completado con error): La tarea falló.
+
+```dart title="lib/async/fetch_data.dart" showLineNumbers
+Future<String> obtenerNombreUsuario(String id) {
+  // Simulamos un retraso de red de 2 segundos
+  return Future.delayed(Duration(seconds: 2), () {
+    if (id == "error") {
+      throw Exception("El usuario no existe en la base de datos");
+    }
+    return "Diego Alejandro";
+  });
+}
+```
+
+---
+
+## 2. Sintaxis async/await y Manejo de Errores
+
+Para consumir el valor de un `Future` de forma legible y secuencial, declaramos el cuerpo de la función como `async` y esperamos a que el futuro resuelva utilizando `await`. El manejo de excepciones se realiza mediante bloques tradicionales de `try-catch`.
+
+```dart title="lib/async/main_async.dart" showLineNumbers
+import 'fetch_data.dart';
+
+Future<void> mostrarPerfil(String id) async {
+  print("Consultando servidor...");
+  try {
+    // La ejecución de esta función se detiene aquí hasta que el Future se complete
+    final nombre = await obtenerNombreUsuario(id);
+    print("Usuario encontrado: $nombre");
+  } on Exception catch (e) {
+    print("Ocurrió un error esperado: $e");
+  } catch (e) {
+    print("Error inesperado: $e");
+  } finally {
+    print("Operación finalizada.");
+  }
+}
+```
+
+---
+
+## 3. Streams: Flujo Continuo de Datos
+
+A diferencia de un `Future` que retorna únicamente un único valor, un `Stream` es una fuente o flujo de múltiples eventos asíncronos distribuidos en el tiempo. Piensa en un `Stream` como una tubería donde se van enviando datos de forma progresiva (por ejemplo, las actualizaciones de ubicación en tiempo real de GPS o eventos de sockets).
+
+Existen dos formas de escuchar un `Stream`:
+1. **`listen()`**: Método directo para subscribirse a los eventos del flujo.
+2. **`await for`**: Bucle que consume los valores del stream a medida que van llegando.
+
+```dart title="lib/async/stream_example.dart" showLineNumbers
+Stream<int> contadorSegundos(int limite) async* {
+  for (int i = 1; i <= limite; i++) {
+    await Future.delayed(Duration(seconds: 1));
+    yield i; // Genera un nuevo evento en el Stream
+  }
+}
+
+Future<void> procesarStream() async {
+  final stream = contadorSegundos(5);
+  
+  // Consumiendo el Stream con un bucle await for
+  await for (final segundo in stream) {
+    print("Transcurrido: $segundo s");
+  }
+}
+```
+
+---
+
+## 4. Generadores y las palabras clave yield / yield*
+
+Dart ofrece soporte nativo para funciones generadoras, las cuales permiten producir secuencias de valores de manera perezosa (lazy computation). Existen dos tipos:
+
+### A. Generadores Síncronos (`sync*`)
+Retornan un objeto `Iterable`. Los valores se calculan bajo demanda del consumidor del iterable. Se utiliza la palabra clave `yield` para retornar valores individuales.
+
+```dart title="lib/async/generators_sync.dart" showLineNumbers
+Iterable<int> rango(int inicio, int fin) sync* {
+  for (int i = inicio; i <= fin; i++) {
+    yield i;
+  }
+}
+
+void main() {
+  final numeros = rango(1, 3);
+  for (final n in numeros) {
+    print(n); // Imprime 1, luego 2, luego 3
+  }
+}
+```
+
+### B. Generadores Asíncronos (`async*`)
+Retornan un objeto `Stream`. Se utilizan cuando la generación de cada valor requiere esperar una operación asíncrona.
+
+```dart title="lib/async/generators_async.dart" showLineNumbers
+Stream<String> descargarArchivos(List<String> urls) async* {
+  for (final url in urls) {
+    // Simula la descarga de cada archivo
+    await Future.delayed(Duration(seconds: 1));
+    yield "Archivo descargado desde: $url";
+  }
+}
+```
+
+### C. Redirección de Generadores (`yield*`)
+Cuando un generador necesita delegar la producción de valores a otro generador iterable o a otro stream, utiliza `yield*` (yield-each). Esto optimiza el rendimiento al evitar la creación de bucles intermedios innecesarios.
+
+```dart title="lib/async/generators_delegate.dart" showLineNumbers
+Iterable<int> duplicarRango(int max) sync* {
+  // yield* delega la ejecución al iterable retornado por rango()
+  yield* rango(1, max);
+  yield* rango(1, max);
+}
+
+Iterable<int> rango(int inicio, int fin) sync* {
+  for (int i = inicio; i <= fin; i++) {
+    yield i;
+  }
+}
+
+void main() {
+  print(duplicarRango(2).toList()); // Imprime: [1, 2, 1, 2]
+}
+```
+
+---
+
+## 5. Ejercicios Prácticos
+
+### Ejercicio 1: Simulando Descarga de Archivos con Control de Errores
+Escribe una función asíncrona `obtenerClima(String ciudad)` que retorne un `Future<String>`. Si el nombre de la ciudad es vacío, el Future debe fallar inmediatamente lanzando un error descriptivo. De lo contrario, debe esperar 3 segundos para simular la petición de red y retornar un mensaje como: `El clima en [ciudad] es Soleado con 28°C`. Consume el Future capturando los posibles errores.
+
+<details>
+<summary>Ver Solución</summary>
+
+```dart title="lib/exercises/exercise_1_async.dart" showLineNumbers
+Future<String> obtenerClima(String ciudad) {
+  return Future.delayed(Duration(seconds: 3), () {
+    if (ciudad.trim().isEmpty) {
+      throw ArgumentError("El nombre de la ciudad no puede estar vacío.");
+    }
+    return "El clima en $ciudad es Soleado con 28°C";
+  });
+}
+
+void main() async {
+  print("Inicio de consulta...");
+  
+  // Caso de éxito
+  try {
+    final resultado = await obtenerClima("Cali");
+    print(resultado);
+  } catch (e) {
+    print("Error: $e");
+  }
+
+  // Caso de error
+  try {
+    await obtenerClima("");
+  } catch (e) {
+    print("Capturado con éxito: $e");
+  }
+}
+```
+
+</details>
+
+### Ejercicio 2: El Stream del Temporizador con Cuenta Regresiva
+Crea un generador asíncrono (`async*`) que actúe como una cuenta regresiva: `cuentaRegresiva(int inicio)`. Debe emitir un número entero cada segundo disminuyendo el valor hasta llegar a `0`. Cuando llegue a `0`, la emisión del stream debe terminar. Consúmela en el `main` usando un bucle `await for`.
+
+<details>
+<summary>Ver Solución</summary>
+
+```dart title="lib/exercises/exercise_2_async.dart" showLineNumbers
+Stream<int> cuentaRegresiva(int inicio) async* {
+  for (int i = inicio; i >= 0; i--) {
+    await Future.delayed(Duration(seconds: 1));
+    yield i;
+  }
+}
+
+void main() async {
+  print("Despegue en...");
+  
+  final conteo = cuentaRegresiva(5);
+  
+  await for (final valor in conteo) {
+    if (valor == 0) {
+      print("🚀 ¡Despegue!");
+    } else {
+      print("$valor...");
+    }
+  }
+}
+```
+
+</details>

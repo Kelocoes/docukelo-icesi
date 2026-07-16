@@ -24,22 +24,22 @@ Asegúrate de tener instalado lo siguiente:
 2. Elige **Jakarta EE** como plantilla y selecciona **Web Application**.
 3. En **Application server**, selecciona **Tomcat Server** y luego **Tomcat 10**. Si no está configurado, haz clic en **New** y selecciona la carpeta donde instalaste Tomcat.
 
-    ![Configuración de Tomcat en IntelliJ IDEA](/img/tomcat-jakarta-1.png)
+    ![Configuración de Tomcat en IntelliJ IDEA](/img/computacion-2/tomcat-jakarta-1.png)
 
 4. Crea el proyecto y espera a que IntelliJ configure el entorno.
 5. Ve a la esquina superior derecha, haz clic en el engranaje de configuración y selecciona **Plugins**.
 6. Busca **Smart Tomcat** e instálalo.
 
-    ![Instalación del plugin Smart Tomcat](/img/tomcat-jakarta-2.png)
+    ![Instalación del plugin Smart Tomcat](/img/computacion-2/tomcat-jakarta-2.png)
 
 7. Haz clic en el icono de ejecución y selecciona **Edit Configurations**.
 
-    ![Configuración de Smart Tomcat en IntelliJ IDEA](/img/tomcat-jakarta-3.png)
+    ![Configuración de Smart Tomcat en IntelliJ IDEA](/img/computacion-2/tomcat-jakarta-3.png)
 
 8. En la ventana de configuración, selecciona **Smart Tomcat** y haz clic en el icono **+** para agregar una nueva configuración.
 9. En **Tomcat Server**, selecciona la ruta de instalación de Tomcat y verifica que el puerto sea el correcto (por defecto, 8080).
 
-    ![Configuración del servidor Tomcat](/img/tomcat-jakarta-4.png)
+    ![Configuración del servidor Tomcat](/img/computacion-2/tomcat-jakarta-4.png)
 
 10. Aplica los cambios y cierra la ventana de configuración.
 11. Ahora puedes ejecutar tu aplicación web haciendo clic en el icono de ejecución.
@@ -52,7 +52,7 @@ Asegúrate de tener instalado lo siguiente:
 2. Abre la paleta de comandos (`Ctrl+Shift+P`) y ejecuta **Java: Create Java Project**.
 3. Selecciona **Maven** y luego **maven-archetype-webapp** en su versión más reciente.
 
-    ![Creación de proyecto Java en Vscode](/img/tomcat-jakarta-vscode-1.png)
+    ![Creación de proyecto Java en Vscode](/img/computacion-2/tomcat-jakarta-vscode-1.png)
 
 4. Elige el grupo y artefacto del proyecto (por ejemplo, `com.example` y `my-web-app`).
 5. Selecciona la ubicación del proyecto y espera a que se cree.
@@ -116,13 +116,13 @@ A este punto es bueno hablar sobre lo que significa un Servlet. Un Servlet es un
 
 A continuación te muestro una gráfica que expone la ubicación de un servlet dentro de un proyecto web:
 
-<img src="/img/servlet.png" alt="Ubicación de un Servlet en un proyecto web" width="600"/>
+<img src="/img/computacion-2/servlet.png" alt="Ubicación de un Servlet en un proyecto web" width="600"/>
 
 Como puedes observar, los servlet se encuentran usualmente dentro del Web Server, en este caso Tomcat, y son invocados por el contenedor de servlets cuando se recibe una solicitud HTTP que coincide con su configuración.
 
 En el ciclo de vida de un servlet, puedes observar lo siguiente:
 
-<img src="/img/ciclo-vida-servlet.png" alt="Ciclo de vida de un Servlet" width="500"/>
+<img src="/img/computacion-2/ciclo-vida-servlet.png" alt="Ciclo de vida de un Servlet" width="500"/>
 
 - El servlet es cargado en el Web Container cuando se recibe una solicitud.
 - Luego se crea una instancia de dicho servlet.
@@ -138,11 +138,11 @@ En el ciclo de vida de un servlet, puedes observar lo siguiente:
 
 11. Instala la extensión **Community Server Connectors** desde el marketplace de VS Code.
 
-     ![Instalación de Community Server Connectors en Vscode](/img/tomcat-jakarta-vscode-2.png)
+     ![Instalación de Community Server Connectors en Vscode](/img/computacion-2/tomcat-jakarta-vscode-2.png)
 
 12. Haz clic en el tab **Servers** (parte inferior izquierda), haz clic derecho en **Community Server Connectors** y selecciona **Create new server**.
 
-     ![Creación de nuevo servidor en Vscode](/img/tomcat-jakarta-vscode-3.png)
+     ![Creación de nuevo servidor en Vscode](/img/computacion-2/tomcat-jakarta-vscode-3.png)
 
 13. Selecciona **Tomcat** y la versión instalada, luego haz clic en **Finish**.
 14. Empaqueta tu aplicación web ejecutando:
@@ -153,7 +153,7 @@ En el ciclo de vida de un servlet, puedes observar lo siguiente:
 
 15. Haz clic derecho sobre el Tomcat creado y selecciona **Add deployment**.
 
-     ![Agregar despliegue en Vscode](/img/tomcat-jakarta-vscode-4.png)
+     ![Agregar despliegue en Vscode](/img/computacion-2/tomcat-jakarta-vscode-4.png)
 
 16. Selecciona el archivo WAR generado en `target/my-web-app.war`.
 17. Inicia el servidor Tomcat haciendo clic derecho en el servidor y seleccionando **Start**.

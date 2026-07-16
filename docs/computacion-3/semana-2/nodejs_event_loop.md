@@ -58,9 +58,9 @@ El Event Loop es el mecanismo que permite a Node.js ejecutar operaciones no bloq
 5. **Check:** Ejecuta `setImmediate()`.
 6. **Close callbacks:** Ej. `socket.on('close')`.
 
-<img src="/img/event-loop.png" alt="Event Loop" />
+<img src="/img/computacion-3/event-loop.png" alt="Event Loop" />
 
-<img src="/img/event-loop-1.png" alt="Event Loop 1" />
+<img src="/img/computacion-3/event-loop-1.png" alt="Event Loop 1" />
 
 ### Microtasks vs Macrotasks
 

@@ -13,7 +13,7 @@ La **programación orientada a objetos (POO)** es uno de esos paradigmas, y se b
 
 Un objeto es una estructura que agrupa datos (atributos) y comportamientos (métodos). La idea principal de la POO es modelar conceptos del mundo real dentro de un programa, lo que facilita la comprensión, modularidad y reutilización del código.
 
-<img src="/img/programming-paradigms.png" alt="POO en JavaScript" />
+<img src="/img/disenando-con-algoritmos/programming-paradigms.png" alt="POO en JavaScript" />
 
 ---
 

@@ -1,0 +1,8 @@
+{
+    "label": "Semana 1: Fundamentos de Dart",
+    "position": 1,
+    "link": {
+        "type": "generated-index",
+        "description": "Bases del lenguaje de programación Dart: tipado, variables, funciones, colecciones y flujos de ejecución."
+    }
+}

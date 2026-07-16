@@ -14,7 +14,7 @@ import rehypeKatex from 'rehype-katex';
 const config = {
     title: 'Documentación',
     tagline: 'Espacio para la documentación de proyectos y temas de interés desarrollados en la Universidad Icesi',
-    favicon: 'img/favicon.ico',
+    favicon: 'img/logo.svg',
 
     // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
     future: {
@@ -37,7 +37,10 @@ const config = {
         hooks: {
             onBrokenMarkdownLinks: 'warn',
         },
-        mermaid: true
+        mermaid: true,
+        mdx1Compat: {
+            headingIds: true,
+        },
     },
 
     // Even if you don't use internationalization, you can use this field to set
@@ -45,7 +48,7 @@ const config = {
     // may want to replace "en" with "zh-Hans".
     i18n: {
         defaultLocale: 'es',
-        locales: ['es'],
+        locales: ['es', 'en'],
     },
 
     stylesheets: [
@@ -104,7 +107,7 @@ const config = {
                 title: 'Documentación - Kelo',
                 logo: {
                     alt: 'My Site Logo',
-                    src: 'img/logo.svg',
+                    src: '/img/logo.svg',
                 },
                 items: [
                     {
@@ -112,6 +115,10 @@ const config = {
                         sidebarId: 'tutorialSidebar',
                         position: 'left',
                         label: 'Docs',
+                    },
+                    {
+                        type: 'localeDropdown',
+                        position: 'right',
                     },
                     {
                         href: 'https://github.com/Kelocoes/docukelo-icesi.git',
@@ -123,7 +130,7 @@ const config = {
             prism: {
                 theme: prismThemes.vsDark,
                 darkTheme: prismThemes.vsDark,
-                additionalLanguages: ['java', 'javascript', 'python', 'bash', 'json'],
+                additionalLanguages: ['java', 'javascript', 'python', 'bash', 'json', 'dart'],
             },
             algolia: {
                 // The application ID provided by Algolia
@@ -161,7 +168,7 @@ const config = {
                 //... other Algolia params
             },
             mermaid: {
-                theme: { light: 'neutral', dark: 'base' },
+                theme: { light: 'neutral', dark: 'dark' },
             },
         }),
 };

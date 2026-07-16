@@ -78,7 +78,7 @@ En Spring, este contenedor se llama **IoC Container**, y se implementa principal
 
 A continuación se presenta un diagrama que ilustra el concepto de IoC Container en Spring y su relación con los beans y la inyección de dependencias:
 
-<img src="/img/ioc-container.png" alt="IoC Container" />
+<img src="/img/computacion-2/ioc-container.png" alt="IoC Container" />
 
 ---
 

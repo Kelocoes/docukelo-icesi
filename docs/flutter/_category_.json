@@ -1,0 +1,8 @@
+{
+    "label": "Flutter",
+    "position": 4,
+    "link": {
+        "type": "generated-index",
+        "description": "Introducción al desarrollo de aplicaciones móviles multiplataforma utilizando el SDK de Flutter y el lenguaje Dart."
+    }
+}

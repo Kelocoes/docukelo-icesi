@@ -8,7 +8,7 @@ Hasta este punto, hemos visto cómo representar las entidades de nuestra aplicac
 
 Las aplicaciones desarrolladas en NestJS se estructuran en módulos, y para separar de manera organizada cada una de las preocupaciones y responsabilidades de la aplicación, Nest propone un sistema de capas ampliamente utilizado en otras arquitecturas de software. Estas capas son:
 
-<img src="/img/nest-modules.png" alt="Módulos en NestJS" />
+<img src="/img/desarrollo-entornos-digitales-web/nest-modules.png" alt="Módulos en NestJS" />
 
 - **Módulos**: Agrupan los controladores, servicios y repositorios relacionados en una unidad cohesiva. Esto facilita la organización, el mantenimiento y la evolución del código.
 - **Controladores**: Son responsables de manejar las solicitudes HTTP entrantes y devolver las respuestas al cliente. Actúan como la interfaz entre el cliente y el resto de la aplicación.

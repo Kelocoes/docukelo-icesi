@@ -10,7 +10,7 @@ sidebar_position: 3
 
 1. Descargar Docker Desktop desde el sitio oficial de Docker.
 
-<img src="/img/docker-install-win.png" alt="Descargar Docker Desktop" width="800"/>
+<img src="/img/computacion-3/docker-install-win.png" alt="Descargar Docker Desktop" width="800"/>
 
 2. Ejecutar el instalador y seguir las instrucciones en pantalla.
 3. Una vez instalado, abrir Docker Desktop y asegurarse de que esté en ejecución.

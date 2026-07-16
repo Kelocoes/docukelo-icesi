@@ -1,0 +1,463 @@
+---
+sidebar_position: 1
+---
+
+import { StepByStep, Step } from '@site/src/components/StepByStep';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
+import ZoomableMermaid from '@site/src/components/ZoomableMermaid';
+
+# Guía para el uso del módulo de Spring Security en Spring Boot
+
+Para poder seguir de la mejor manera esta guía, te recomiendo empezar con el proyecto de Spring Boot que se encuentra en el siguiente repositorio base:
+[Repositorio de inicio (rama: springboot-mvc)](https://github.com/Kelocoes/compunet2-202502/tree/springboot-mvc)
+
+Esta guía te ayudará a configurar Spring Security tanto en memoria como utilizando usuarios almacenados en una base de datos de manera dinámica.
+
+---
+
+## Bloque 1: Fundamentos Conceptuales (Arquitectura de Spring Security)
+
+Antes de escribir código, es fundamental comprender cómo viaja la petición HTTP del cliente y cómo Spring Security valida las credenciales a través de su arquitectura interna.
+
+### El Flujo de Autenticación en Detalle
+
+El siguiente diagrama ilustra el ciclo de vida de una solicitud protegida con autenticación basada en credenciales (Basic Auth o Form Login):
+
+<ZoomableMermaid value={`sequenceDiagram
+    autonumber
+    actor Cliente as Cliente (Navegador/Postman)
+    participant Filters as Security Filter Chain
+    participant AuthFilter as UsernamePasswordAuthenticationFilter
+    participant Manager as AuthenticationManager
+    participant Provider as DaoAuthenticationProvider
+    participant Service as CustomUserDetailsService
+    participant Context as SecurityContextHolder
+
+    Cliente->>Filters: HTTP Request (Credenciales)
+    Filters->>AuthFilter: Intercepta la petición
+    AuthFilter->>Manager: authenticate(UsernamePasswordAuthenticationToken)
+    Manager->>Provider: Delega la autenticación
+    Provider->>Service: loadUserByUsername(username)
+    Service-->>Provider: Retorna UserDetails (de la Base de Datos)
+    Provider-->>Manager: Retorna objeto Authentication validado
+    Manager-->>AuthFilter: Retorna objeto Authentication
+    AuthFilter->>Context: Almacena credenciales en SecurityContext
+    AuthFilter->>Cliente: HTTP Response / Permite acceso al controlador`} />
+
+### Explicación de los Componentes Clave
+
+Para comprender qué sucede en segundo plano, analiza el rol que desempeña cada componente ilustrado en el diagrama de secuencia anterior:
+
+1. **Security Filter Chain (Cadena de Filtros de Seguridad)**:
+   * **Qué es:** Una serie de filtros HTTP servlets ordenados que interceptan la solicitud antes de que esta llegue a tu controlador.
+   * **Propósito:** Actúa como el primer muro de defensa de tu aplicación. Evalúa si la ruta de la petición es pública o privada y delega las credenciales al filtro específico responsable de autenticar.
+   
+   <ZoomableMermaid value={`graph LR
+        Req[Petición HTTP] --> Filter1[CorsFilter]
+        Filter1 --> Filter2[HeaderWriterFilter]
+        Filter2 --> Filter3[SecurityContextHolderFilter]
+        Filter3 --> Filter4[UsernamePasswordAuthenticationFilter]
+        Filter4 --> Filter5[FilterSecurityInterceptor]
+        Filter5 -->|Permitido| Servlet["DispatcherServlet (Tu Controlador)"]
+        Filter5 -->|Denegado| Err["HTTP 401 / 403 Access Denied"]
+
+        subgraph SecurityFilterChain ["Security Filter Chain (Cadena de Filtros)"]
+            Filter1
+            Filter2
+            Filter3
+            Filter4
+            Filter5
+        end
+
+        style Req fill:none,stroke:#64748b,stroke-width:2px,color:#64748b
+        style Filter1 fill:none,stroke:#2563eb,stroke-width:2px,color:#2563eb
+        style Filter2 fill:none,stroke:#2563eb,stroke-width:2px,color:#2563eb
+        style Filter3 fill:none,stroke:#2563eb,stroke-width:2px,color:#2563eb
+        style Filter4 fill:none,stroke:#2563eb,stroke-width:2px,color:#2563eb
+        style Filter5 fill:none,stroke:#2563eb,stroke-width:2px,color:#2563eb
+        style Servlet fill:none,stroke:#16a34a,stroke-width:2px,color:#16a34a
+        style Err fill:none,stroke:#dc2626,stroke-width:2px,color:#dc2626
+        style SecurityFilterChain fill:none,stroke:#003B6D,stroke-width:2px,stroke-dasharray: 5 5,color:#003B6D`} />
+   *Explicación:* Toda petición debe recorrer estos filtros en orden. Si algún filtro determina que las credenciales no son válidas o que no tienes acceso, la petición es interceptada y rechazada inmediatamente (retornando un código de error HTTP como 401 o 403) sin que llegue a tocar el código de tus controladores Java.
+
+2. **UsernamePasswordAuthenticationFilter (Filtro de Autenticación)**:
+   * **Qué es:** Un filtro especializado dentro de la cadena que se activa cuando la petición intenta autenticarse mediante usuario y contraseña.
+   * **Propósito:** Extrae el usuario y la contraseña del encabezado de la petición (Basic Auth) o del formulario (Form Login), construye un token sin verificar de tipo `UsernamePasswordAuthenticationToken` y lo delega al gestor.
+
+3. **AuthenticationManager (Gestor de Autenticación)**:
+   * **Qué es:** El punto de entrada principal para el proceso de autenticación en Spring Security (comúnmente implementado por `ProviderManager`).
+   * **Propósito:** Actúa como coordinador general. No valida credenciales directamente, sino que delega esa tarea a una lista de proveedores registrados.
+
+4. **DaoAuthenticationProvider (Proveedor de Autenticación DAO)**:
+   * **Qué es:** El proveedor estándar encargado de validar credenciales cargando los datos desde un almacén persistente o base de datos.
+   * **Propósito:** Realiza la validación real. Utiliza el servicio `UserDetailsService` para cargar al usuario de la base de datos, valida que la contraseña ingresada coincida con la almacenada (usando el `PasswordEncoder`) y, si todo coincide, retorna un objeto `Authentication` validado y autenticado.
+
+5. **CustomUserDetailsService (Servicio de Carga de Usuarios)**:
+   * **Qué es:** Un servicio personalizado que implementa la interfaz `UserDetailsService` suministrada por Spring Security.
+   * **Propósito:** Sirve de conector con tu base de datos. Su única función es buscar el registro del usuario por su `username` en la base de datos y envolverlo en una instancia compatible de tipo `UserDetails`.
+
+6. **SecurityContextHolder y SecurityContext (Contenedor del Contexto de Seguridad)**:
+   * **Qué es:** La memoria temporal asociada al hilo de ejecución de la petición actual (`ThreadLocal`).
+   * **Propósito:** Mantiene la sesión activa para el hilo de la petición. Al almacenar el objeto `Authentication` autenticado aquí, cualquier parte de tu código (como un controlador) puede consultar quién es el usuario logueado y qué permisos posee mediante `SecurityContextHolder.getContext().getAuthentication()`.
+
+    <ZoomableMermaid value={`graph TD
+        SCH[SecurityContextHolder] -->|"Contiene (ThreadLocal)"| SC[SecurityContext]
+        SC -->|Contiene| Auth[Authentication]
+        
+        Auth --> Principal["Principal (Detalles: CustomUserDetails)"]
+        Auth --> Credentials["Credentials (Contraseña: Cifrada)"]
+        Auth --> Authorities["Authorities (Permisos: SecurityAuthority)"]
+
+        style SCH fill:none,stroke:#2563eb,stroke-width:2px,color:#2563eb
+        style SC fill:none,stroke:#64748b,stroke-width:2px,color:#64748b
+        style Auth fill:none,stroke:#003B6D,stroke-width:2px,color:#003B6D
+        style Principal fill:none,stroke:#64748b,stroke-width:2px,color:#64748b
+        style Credentials fill:none,stroke:#64748b,stroke-width:2px,color:#64748b
+        style Authorities fill:none,stroke:#16a34a,stroke-width:2px,color:#16a34a`} />
+   *Explicación:* El `SecurityContextHolder` almacena el contexto de seguridad mediante almacenamiento local al hilo (`ThreadLocal`). El contexto (`SecurityContext`) envuelve el objeto `Authentication` que, a su vez, agrupa tres elementos primordiales: el **Principal** (que representa la información del usuario autenticado, como tu clase `CustomUserDetails`), las **Credentials** (la contraseña, que suele borrarse tras la autenticación por seguridad) y las **Authorities** (la lista de roles y permisos del usuario, implementada mediante `SecurityAuthority`).
+
+---
+
+## Bloque 2: Guía de Desarrollo Práctico (Laboratorio)
+
+<StepByStep>
+  <Step number="1" title="Agregar Dependencias al Proyecto">
+    Para iniciar con Spring Security, agrega la dependencia inicial en tu archivo de configuración de dependencias:
+
+    <Tabs>
+      <TabItem value="maven" label="Maven (pom.xml)" default>
+        ```xml title="pom.xml"
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        ```
+      </TabItem>
+      <TabItem value="gradle" label="Gradle (build.gradle)">
+        ```groovy title="build.gradle"
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        ```
+      </TabItem>
+    </Tabs>
+
+    Instala las dependencias ejecutando en tu terminal:
+    ```bash
+    mvn clean install
+    ```
+  </Step>
+
+  <Step number="2" title="Ejecución Inicial y Bloqueo de Rutas">
+    Ejecuta el servidor de desarrollo:
+    ```bash
+    mvn spring-boot:run
+    ```
+    
+    A partir de este momento, Spring Security bloqueará cualquier solicitud entrante (ej. al intentar ingresar a `http://localhost:8081/compunet2-2025/mvc/users`). 
+    
+    <Admonition type="info" title="Credenciales por defecto">
+      Spring Security genera un usuario por defecto llamado <code>user</code> y una contraseña aleatoria que se imprime en la consola del servidor durante el arranque.
+    </Admonition>
+
+    Si realizas peticiones a través de Postman, puedes autenticarte seleccionando **Basic Auth** en la pestaña de *Authorization* y completando el usuario y contraseña del arranque.
+  </Step>
+
+  <Step number="3" title="Configurar Autenticación en Memoria">
+    Crea una clase annotated con `@Configuration` para configurar un usuario y contraseña personalizados en memoria y evitar el uso de credenciales aleatorias.
+
+    ```java title="src/main/java/com/games/back/config/WebSecurityConfig.java" showLineNumbers
+    package com.games.back.config;
+
+    import org.springframework.context.annotation.Bean;
+    import org.springframework.context.annotation.Configuration;
+    import org.springframework.security.core.userdetails.User;
+    import org.springframework.security.core.userdetails.UserDetails;
+    import org.springframework.security.core.userdetails.UserDetailsService;
+    import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+    @Configuration
+    public class WebSecurityConfig {
+        
+        @Bean
+        public UserDetailsService userDetailsService() {
+            InMemoryUserDetailsManager userDetailsMngr = new InMemoryUserDetailsManager();
+
+            UserDetails user = User.withUsername("miUsuario") // Cambiar el usuario
+                    .password("123456") // Especificar la contraseña
+                    .authorities("read") // Las authorities representan los permisos que tiene el usuario
+                    .roles("USER") // Los roles son un conjunto de authorities
+                    .build();
+            
+            userDetailsMngr.createUser(user); // Agregar el usuario a la lista de usuarios
+            return userDetailsMngr; // Retornar la lista de usuarios
+        }
+    }
+    ```
+  </Step>
+
+  <Step number="4" title="Definir el codificador de contraseñas (PasswordEncoder)">
+    Spring Security requiere de manera obligatoria que se defina cómo se manejarán y verificarán las contraseñas. Agrega el siguiente Bean en tu clase de configuración:
+
+    ```java title="src/main/java/com/games/back/config/WebSecurityConfig.java" {3}
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        // NoOpPasswordEncoder no aplica ningún hash. Solo utilizar en desarrollo local.
+        return NoOpPasswordEncoder.getInstance(); 
+    }
+    ```
+  </Step>
+
+  <Step number="5" title="Crear un Servicio de Usuarios Personalizado (Custom UserDetailsService)">
+    Para evitar quemar los usuarios en memoria, debemos conectar Spring Security con nuestra base de datos.
+    
+    Analiza el cambio estructural entre el almacenamiento en memoria y la obtención de credenciales desde la base de datos:
+
+    **Opción A: Autenticación en Memoria (Pasos 3-4)**
+    <ZoomableMermaid value={`graph LR
+        A[WebSecurityConfig] -->|Define Bean| B["InMemoryUserDetailsManager (En Memoria)"]
+        B -->|Contiene credenciales fijas| C["UserDetails (miUsuario / 123456)"]
+
+        style A fill:none,stroke:#003B6D,stroke-width:2px,color:#003B6D
+        style B fill:none,stroke:#2563eb,stroke-width:2px,color:#2563eb
+        style C fill:none,stroke:#64748b,stroke-width:2px,color:#64748b`} />
+
+    **Opción B: Autenticación Dinámica con Base de Datos (Pasos 5-8)**
+    <ZoomableMermaid value={`graph LR
+        D[WebSecurityConfig] -->|Registra Bean| E["CustomUserDetailsService (Dinámico)"]
+        E -->|Consulta| F[UserService]
+        F -->|Consulta| G[UserRepository]
+        G -->|Consulta SQL| H[(Base de Datos)]
+        E -->|Envuelve en adaptador| I["CustomUserDetails (Wrapper de Entidad User)"]
+
+        style D fill:none,stroke:#003B6D,stroke-width:2px,color:#003B6D
+        style E fill:none,stroke:#2563eb,stroke-width:2px,color:#2563eb
+        style F fill:none,stroke:#64748b,stroke-width:2px,color:#64748b
+        style G fill:none,stroke:#64748b,stroke-width:2px,color:#64748b
+        style H fill:none,stroke:#16a34a,stroke-width:2px,color:#16a34a
+        style I fill:none,stroke:#64748b,stroke-width:2px,color:#64748b`} />
+
+    *Explicación:* En los pasos anteriores, las credenciales vivían de manera estática dentro de la memoria RAM del servidor. Ahora, implementaremos un flujo dinámico donde Spring Security delegará la consulta a un servicio (`CustomUserDetailsService`), el cual utilizará JPA (`UserService` y `UserRepository`) para recuperar el usuario de la base de datos y adaptarlo al formato esperado por el framework.
+
+    Implementa la interfaz `UserDetailsService` en tu capa de servicios:
+
+    ```java title="src/main/java/com/games/back/security/CustomUserDetailsService.java" showLineNumbers
+    package com.games.back.security;
+
+    import org.springframework.security.core.userdetails.UserDetails;
+    import org.springframework.security.core.userdetails.UserDetailsService;
+    import org.springframework.security.core.userdetails.UsernameNotFoundException;
+    import org.springframework.stereotype.Service;
+
+    @Service
+    public class CustomUserDetailsService implements UserDetailsService {
+
+        @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+            // Se completará en los siguientes pasos
+            throw new UnsupportedOperationException("Método no implementado");
+        }
+    }
+    ```
+
+    Modifica tu Bean `UserDetailsService` en `WebSecurityConfig` para retornar el nuevo servicio dinámico:
+    ```java title="src/main/java/com/games/back/config/WebSecurityConfig.java"
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new CustomUserDetailsService();
+    }
+    ```
+  </Step>
+
+  <Step number="6" title="Vincular con tu Entidad y Repositorio de Base de Datos">
+    Crea o extiende tu servicio de usuarios para buscar por nombre de usuario en la base de datos:
+
+    ```java title="src/main/java/com/games/back/service/UserService.java" showLineNumbers
+    @Service
+    public class UserService {
+        @Autowired
+        private UserRepository userRepository;
+
+        public User findByUsername(String username) {
+            return userRepository.findByUsername(username);
+        }
+    }
+    ```
+
+    Inyecta `UserService` en tu `CustomUserDetailsService`:
+    ```java title="src/main/java/com/games/back/security/CustomUserDetailsService.java"
+    @Autowired
+    private UserService userService;
+    ```
+  </Step>
+
+  <Step number="7" title="Implementar la envoltura UserDetails">
+    Spring Security no trabaja directamente con tu clase de entidad `User`, sino con la interfaz `UserDetails`. Crea una clase wrapper para adaptar tu entidad:
+
+    ```java title="src/main/java/com/games/back/security/CustomUserDetails.java" showLineNumbers
+    package com.games.back.security;
+
+    import java.util.Collection;
+    import java.util.List;
+    import org.springframework.security.core.GrantedAuthority;
+    import org.springframework.security.core.userdetails.UserDetails;
+    import com.games.back.model.User;
+    import lombok.AllArgsConstructor;
+
+    @AllArgsConstructor
+    public class CustomUserDetails implements UserDetails {
+
+        private final User user;
+
+        @Override
+        public String getUsername() {
+            return user.getUsername();
+        }
+
+        @Override
+        public String getPassword() {
+            return user.getPassword();
+        }
+
+        @Override
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+            // GrantedAuthority es una interfaz que representa un permiso concedido a un objeto de autenticación.
+            // Podemos crear una implementación personalizada de GrantedAuthority para representar nuestros propios permisos.
+            // En este caso, estamos devolviendo una lista de permisos que el usuario tiene.
+            return List.of(() -> "read");
+        }
+    }
+    ```
+
+    Ahora, completa el método `loadUserByUsername` en `CustomUserDetailsService`:
+    ```java title="src/main/java/com/games/back/security/CustomUserDetailsService.java"
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        try {
+            User user = userService.findByUsername(username);
+            return new CustomUserDetails(user);
+        } catch (RuntimeException ex) {
+            throw new UsernameNotFoundException("Usuario no encontrado: " + username, ex);
+        }
+    }
+    ```
+  </Step>
+
+  <Step number="8" title="Configurar Autorizaciones Dinámicas (GrantedAuthority)">
+    Para mapear los permisos del usuario desde la base de datos, implementa la interfaz `GrantedAuthority`:
+
+    ```java title="src/main/java/com/games/back/security/SecurityAuthority.java" showLineNumbers
+    package com.games.back.security;
+
+    import org.springframework.security.core.GrantedAuthority;
+    import com.games.back.model.Permission;
+    import lombok.AllArgsConstructor;
+
+    @AllArgsConstructor
+    public class SecurityAuthority implements GrantedAuthority {
+
+        private final Permission permission;
+
+        @Override
+        public String getAuthority() {
+            return permission.getName();
+        }
+    }
+    ```
+
+    Actualiza el método `getAuthorities` en `CustomUserDetails` para mapear los roles y permisos del usuario:
+    ```java title="src/main/java/com/games/back/security/CustomUserDetails.java"
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return user.getRole().getRolePermissions().stream()
+                .map(RolePermission::getPermission)
+                .map(SecurityAuthority::new)
+                .toList();
+    }
+    ```
+
+    <Admonition type="warning" title="Alerta de Hibernate (Lazy Loading)">
+      Al acceder a <code>user.getRole().getRolePermissions()</code> fuera del contexto de una transacción de Hibernate o Session, se lanzará una excepción de tipo LazyInitializationException. Asegúrate de inicializar la relación en tu repositorio usando <code>FETCH JOIN</code> o anotando tu servicio con <code>@Transactional</code>.
+    </Admonition>
+  </Step>
+
+  <Step number="9" title="Cifrado de Contraseñas (Hashing con BCrypt)">
+    Cambia el codificador de contraseñas de desarrollo por el estándar recomendado de cifrado unidireccional `BCrypt`:
+
+    ```java title="src/main/java/com/games/back/config/WebSecurityConfig.java"
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    ```
+
+    Asegúrate de cifrar la contraseña al momento de registrar o guardar un usuario:
+    ```java title="src/main/java/com/games/back/service/UserService.java"
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public User save(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+    ```
+
+    En tu script SQL inicial, las contraseñas de los usuarios predefinidos deben ingresarse cifradas con BCrypt:
+    ```sql title="src/main/resources/data.sql"
+    INSERT INTO users (username, email, password_hash, created_at, role_id) VALUES 
+    ('admin', 'admin@example.com', '$2y$10$6o5vS5YmB6/txDbxtABg8OlTI2XTrdzGdwwsOt4EgVRsJujeef6CC', CURRENT_TIMESTAMP, 1);
+    ```
+  </Step>
+
+  <Step number="10" title="Configurar Rutas Públicas y Privadas">
+    Define las reglas de autorización personalizadas configurando el Bean de `SecurityFilterChain`:
+
+    ```java title="src/main/java/com/games/back/config/WebSecurityConfig.java" showLineNumbers
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .authorizeHttpRequests(authz -> authz
+                .requestMatchers("/mvc/public/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .formLogin(Customizer.withDefaults())
+            .logout(Customizer.withDefaults())
+            .build();
+    }
+    ```
+
+    * Las peticiones a rutas que comiencen con `/mvc/public/` se permitirán sin autenticación (`permitAll()`).
+    * Cualquier otra ruta (`anyRequest()`) requerirá obligatoriamente que el usuario esté autenticado.
+  </Step>
+
+  <Step number="11" title="Configurar Login Personalizado">
+    Si deseas usar tu propia vista HTML para el login en lugar del formulario por defecto, ajusta el filter chain de la siguiente manera:
+
+    ```java title="src/main/java/com/games/back/config/WebSecurityConfig.java" showLineNumbers
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .authorizeHttpRequests(authz -> authz
+                .requestMatchers("/mvc/public/**").permitAll()
+                .requestMatchers("/mvc/auth/login", "/css/**", "/js/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .formLogin(form -> form
+                .loginPage("/mvc/auth/login")           // Ruta del controlador que muestra la vista
+                .loginProcessingUrl("/mvc/auth/login")  // Ruta que procesa el POST de login
+                .defaultSuccessUrl("/mvc/users", true)  // Ruta destino al autenticarse con éxito
+                .failureUrl("/mvc/auth/login?error")    // Redirección si falla
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/mvc/auth/login?logout")
+                .permitAll()
+            )
+            .build();
+    }
+    ```
+  </Step>
+</StepByStep>
