@@ -635,3 +635,21 @@ console.log(original.nested.b); // 3 -> no cambió
 </details>
 
 ---
+
+## 14. Hoja rápida y pasos siguientes {#hoja-rapida}
+
+### Resumen Rápido (Cheat Sheet)
+
+| Concepto | Sintaxis | Descripción |
+| :--- | :--- | :--- |
+| **Variables** | `let x = 1; const y = 2;` | `let` para valores reasignables, `const` para constantes. |
+| **Funciones** | `const f = (a) => a * 2;` | Funciones flecha compactas y modernas. |
+| **Bucle** | `for (const item of array)` | Itera sobre elementos de un array. |
+| **Transformar** | `array.map(n => n * 2)` | Retorna un nuevo array modificado. |
+| **Copias** | `const copia = { ...original }` | Copia superficial usando el operador spread. |
+
+### Pasos Siguientes
+
+1. Practica los ejercicios anteriores en la consola de tu navegador.
+2. Explora cómo conectar JavaScript con HTML usando el DOM (Document Object Model).
+3. Continúa con la guía de introducción a React para construir interfaces dinámicas.
