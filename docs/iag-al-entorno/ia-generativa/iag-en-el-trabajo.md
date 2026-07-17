@@ -85,7 +85,7 @@ Para realizar cada simulación, descarga los recursos de apoyo adjuntos y utiliz
 
 ## 6. Prototipo de Cuadro de Mando (HTML/CSS)
 * **Objetivo**: Diseñar una interfaz web interna para visualizar métricas clave del equipo administrativo.
-* **Recurso de apoyo**: [Descargar plantilla_dashboard.html](/files/iag-en-el-trabajo/plantilla_dashboard.html)
+* **Recurso de apoyo**: [Descargar plantilla_dashboard.html](pathname:///files/iag-en-el-trabajo/plantilla_dashboard.html)
 * **Prompt**:
   ```text
   Actúa como Desarrollador Front-end. Toma la plantilla HTML proporcionada y expande el código agregando estilos CSS modernos y limpios.
