@@ -1,0 +1,8 @@
+{
+    "label": "IA Tradicional",
+    "position": 2,
+    "link": {
+        "type": "generated-index",
+        "description": "Conceptos y fundamentos de la Inteligencia Artificial Tradicional."
+    }
+}

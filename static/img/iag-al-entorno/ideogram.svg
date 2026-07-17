@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="15 20 90 60" width="100%">
+  <circle cx="60" cy="45" r="20" fill="#fdf2f8" stroke="#ec4899" stroke-width="2" />
+  <text x="60" y="52" text-anchor="middle" font-size="18" font-family="system-ui, sans-serif" fill="#db2777" font-weight="bold">Abc</text>
+</svg>

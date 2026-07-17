@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="15 25 90 50" width="100%">
+  <rect x="20" y="35" width="40" height="20" rx="2" fill="#eff6ff" stroke="#3b82f6" stroke-width="2" />
+  <text x="40" y="47" text-anchor="middle" font-size="7" font-family="system-ui, sans-serif" fill="#1e3a8a" font-weight="bold">Train</text>
+  <rect x="63" y="35" width="20" height="20" rx="2" fill="#fef3c7" stroke="#d97706" stroke-width="2" />
+  <text x="73" y="47" text-anchor="middle" font-size="7" font-family="system-ui, sans-serif" fill="#78350f" font-weight="bold">Val</text>
+  <rect x="86" y="35" width="20" height="20" rx="2" fill="#fee2e2" stroke="#dc2626" stroke-width="2" />
+  <text x="96" y="47" text-anchor="middle" font-size="7" font-family="system-ui, sans-serif" fill="#991b1b" font-weight="bold">Test</text>
+</svg>

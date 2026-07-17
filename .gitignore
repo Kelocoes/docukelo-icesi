@@ -23,4 +23,7 @@ yarn-error.log*
 /agents/*spec.md
 /agents/spec/
 
+# Temporary files & scripts
+/temp/
+
 

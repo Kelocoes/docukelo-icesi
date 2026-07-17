@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 60" width="100%">
+  <rect width="160" height="60" rx="6" fill="#f8fafc" stroke="#10b981" stroke-width="1.5" />
+  <circle cx="40" cy="30" r="12" fill="#dcfce7" />
+  <path d="M 40 24 A 6 6 0 1 1 34 30 L 40 30 Z" fill="#059669" />
+  <text x="65" y="35" font-size="12" font-family="system-ui, sans-serif" fill="#0f172a" font-weight="bold">ChatGPT</text>
+</svg>

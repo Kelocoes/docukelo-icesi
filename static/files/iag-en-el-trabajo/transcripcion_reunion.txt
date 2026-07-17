@@ -1,0 +1,8 @@
+[09:00] Carlos: Buenos días equipo. Hoy debemos revisar el avance del lanzamiento del nuevo sistema de facturación.
+[09:01] Marta: Por mi parte, el módulo de cobros ya pasó las pruebas unitarias, pero falta integrarlo con la pasarela de pagos. Necesito que soporte técnico me asigne las credenciales antes de este viernes.
+[09:02] Jorge: Ok, Marta, yo me encargo de gestionar las credenciales con soporte hoy mismo por la tarde y te las comparto.
+[09:03] Carlos: Excelente. ¿Y qué hay de la migración de datos de los clientes antiguos?
+[09:04] Andrés: La base de datos tiene algunas inconsistencias en las direcciones postales. Estimamos que tardaremos dos días adicionales limpiando las celdas duplicadas y vacías. Deberíamos tenerlo listo para el lunes 20 de julio.
+[09:05] Carlos: Está bien, Andrés. Haz esa depuración con calma. Jorge, por favor agenda una sesión de capacitación para el equipo de ventas una vez que el sistema esté integrado. Digamos para el miércoles 22 de julio.
+[09:06] Jorge: Anotado. Coordinaré la videollamada y enviaré las invitaciones por correo electrónico mañana por la mañana.
+[09:07] Carlos: Perfecto, nos vemos en el seguimiento del viernes. Gracias a todos.

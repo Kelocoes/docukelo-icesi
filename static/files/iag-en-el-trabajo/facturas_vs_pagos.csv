@@ -1,0 +1,6 @@
+ID_Factura,Cliente,Monto_Facturado,Monto_Pagado,Diferencia
+F-1001,Almacenes Exito,1500.00,1500.00,0.00
+F-1002,Olímpica S.A.,2400.00,2000.00,-400.00
+F-1003,Tiendas D1,890.00,890.00,0.00
+F-1004,Homecenter,3500.00,3550.00,50.00
+F-1005,Makro,1200.00,1100.00,-100.00
