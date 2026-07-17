@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 60" width="100%">
+  <rect width="160" height="60" rx="6" fill="#f8fafc" stroke="#d97706" stroke-width="1.5" />
+  <circle cx="40" cy="30" r="12" fill="#fef3c7" />
+  <polygon points="40,24 45,35 35,35" fill="#d97706" />
+  <text x="65" y="35" font-size="12" font-family="system-ui, sans-serif" fill="#0f172a" font-weight="bold">Claude</text>
+</svg>
