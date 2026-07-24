@@ -10,5 +10,7 @@ Welcome to the DocuKelo Agent System repository configuration. This directory co
   * [Documentation Auditor](./  .agents/skills/documentation_auditor/SKILL.md): Guides agents on how to review and identify improvements in educational content.
   * [Docusaurus Content Researcher](./.agents/skills/docusaurus_content_researcher/SKILL.md): Guides agents on tone, pedagogical structure, and curricular alignment.
   * [Docusaurus Mermaid SVG](./.agents/skills/docusaurus_mermaid_svg/SKILL.md): Visual design rules and Mermaid templates for flowcharts, sequence diagrams, and block diagrams.
+  * [Docusaurus Quiz](./.agents/skills/docusaurus_quiz/SKILL.md): Guidelines, formatting rules, and component specifications for embedding interactive multiple-choice quizzes (<Quiz>, <Question>, <Option>) in DocuKelo Docusaurus documentation.
   * [Docusaurus Resource Visualizer](./.agents/skills/resource_visualizer/SKILL.md): Guides agents on how to visually illustrate educational links and tools in DocuKelo using simple, clean, SVG schemas (vector diagrams).
+
 
