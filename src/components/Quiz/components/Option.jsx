@@ -29,7 +29,7 @@ export function Option({ children, correct, optionIndex, questionIndex }) {
       className={optionClass}
     >
       <span className={styles.optionLetter}>
-        {String.fromCharCode(65 + optionIndex)}.
+        {String.fromCharCode(65 + optionIndex)}
       </span>
       <span className={styles.optionText}>{children}</span>
       {isAnswered && correct && (

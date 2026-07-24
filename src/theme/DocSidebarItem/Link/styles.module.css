@@ -14,8 +14,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   margin-right: 10px;
   flex-shrink: 0;
   cursor: pointer;

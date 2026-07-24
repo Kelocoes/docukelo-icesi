@@ -32,7 +32,7 @@ Estos problemas suelen originarse por una comprensión limitada del dominio, una
 
 Los requerimientos están presentes a lo largo de todas las fases del ciclo de vida del software y no se limitan únicamente a una etapa inicial.
 
-<img src="/img/desarrollo-entornos-digitales-web/software-lifecycle.png" alt="Ciclo de vida del software" width="800" />
+<img src={require('@site/static/img/desarrollo-entornos-digitales-web/software-lifecycle.png').default} alt="Ciclo de vida del software" width="800" />
 
 :::info
 El análisis de requerimientos suele ser una de las fases más subestimadas del desarrollo de software, a pesar de que sus resultados influyen directamente en las fases posteriores.
@@ -342,3 +342,71 @@ A partir de la descripción anterior, se espera que de forma individual:
     **Nota**: Se sugiere utilizar herramientas de IA generativa (proporcionando un prompt adecuado basado en esta documentación) para facilitar la generación de propuestas coherentes y bien estructuradas.
 
 No se espera una única solución correcta; se valorará la coherencia, claridad y capacidad de interpretación del problema :).
+
+---
+
+## Cuestionario de Autoevaluación
+
+<Quiz id="web-env-requirements-quiz">
+  <Question title="¿Cuál es una de las principales consecuencias de realizar un trabajo deficiente en la determinación de requerimientos?">
+    <Option>El código generado compilará más rápido en producción.</Option>
+    <Option correct>Incrementos en el tiempo de desarrollo, sobrecostos en el proyecto y retrasos o cancelaciones.</Option>
+    <Option>La necesidad de migrar automáticamente la base de datos a NoSQL.</Option>
+    <Option>Mayor facilidad para prescindir del equipo de diseño UI/UX.</Option>
+  </Question>
+  <Question title="¿Qué diferencia existe entre un requerimiento ambiguo y uno incompleto?">
+    <Option correct>El incompleto omite necesidades o restricciones clave; el ambiguo permite múltiples interpretaciones distintas.</Option>
+    <Option>El incompleto solo afecta los requerimientos no funcionales; el ambiguo solo a los funcionales.</Option>
+    <Option>El ambiguo es imposible de corregir; el incompleto se soluciona automáticamente al compilar.</Option>
+    <Option>Son conceptos idénticos que representan el mismo tipo de error de sintaxis en el código.</Option>
+  </Question>
+  <Question title="Respecto al ciclo de vida del software, ¿cuándo debe llevarse a cabo la gestión de requerimientos?">
+    <Option>Únicamente el primer día del proyecto antes de escribir código.</Option>
+    <Option>Al final del proyecto durante la fase de despliegue en producción.</Option>
+    <Option correct>Como un proceso continuo que se ajusta a lo largo de todas las fases del ciclo de vida del software.</Option>
+    <Option>Solo cuando el cliente solicita un cambio de diseño gráfico.</Option>
+  </Question>
+  <Question title="¿Cuál de las siguientes afirmaciones describe adecuadamente a un requerimiento funcional?">
+    <Option correct>Especifica una función o servicio que el sistema debe proveer y cómo reacciona ante eventos o entradas.</Option>
+    <Option>Define el presupuesto total y el número de desarrolladores asignados al proyecto.</Option>
+    <Option>Establece que la base de datos debe ser PostgreSQL obligatoriamente.</Option>
+    <Option>Determina el tiempo máximo de respuesta en milisegundos bajo alta carga.</Option>
+  </Question>
+  <Question title="¿A qué categoría pertenece la restricción que exige utilizar Java o Node.js como lenguaje de programación backend?">
+    <Option>Requerimiento funcional de procesamiento.</Option>
+    <Option correct>Requerimiento no funcional de restricción de tecnología.</Option>
+    <Option>Requerimiento de elicitación de stakeholders.</Option>
+    <Option>Requerimiento atómico de usabilidad.</Option>
+  </Question>
+  <Question title="¿Qué se entiende por 'Elicitación de requerimientos'?">
+    <Option>El proceso de traducir código de JavaScript a TypeScript.</Option>
+    <Option correct>El proceso de descubrir, documentar y comprender los requerimientos a partir de los stakeholders.</Option>
+    <Option>La ejecución de pruebas unitarias sobre el sistema.</Option>
+    <Option>La estimación en puntos de historia durante el Planning Poker.</Option>
+  </Question>
+  <Question title="¿Qué característica debe cumplir un requerimiento para ser considerado 'atómico'?">
+    <Option>Debe estar escrito en un lenguaje de programación de bajo nivel.</Option>
+    <Option>Debe requerir exactamente un día de trabajo para ser desarrollado.</Option>
+    <Option correct>Debe expresar una sola necesidad sin combinar múltiples ideas o funcionalidades en una misma declaración.</Option>
+    <Option>Debe ser visible únicamente para el perfil de Administrador.</Option>
+  </Question>
+  <Question title="Según los patrones de redacción recomendados, ¿por qué deben evitarse términos como 'rápido', 'fácil' o 'flexible'?">
+    <Option correct>Porque son términos subjetivos y ambiguos que impiden medir o verificar objetivamente el cumplimiento del requerimiento.</Option>
+    <Option>Porque la palabra 'rápido' está reservada exclusivamente para requerimientos de base de datos.</Option>
+    <Option>Porque Docusaurus no permite compilar archivos MDX con palabras de más de dos sílabas.</Option>
+    <Option>Porque solo se permite su uso en requerimientos del proceso de software.</Option>
+  </Question>
+  <Question title="¿Cuál de las siguientes declaraciones corresponde a un requerimiento funcional bien redactado?">
+    <Option>El sistema debe ser amigable e intuitivo para cualquier tipo de usuario.</Option>
+    <Option correct>El sistema debe permitir a los usuarios buscar productos por categoría y mostrar los resultados en una lista paginada.</Option>
+    <Option>El sistema debe cargar muy rápido todas sus páginas en horas pico.</Option>
+    <Option>La base de datos debe almacenar contraseñas en texto plano.</Option>
+  </Question>
+  <Question title="En el contexto de requerimientos no funcionales, ¿qué cualidad evalúa un criterio como 'El sistema debe estar disponible el 99.9% del tiempo mensual'?">
+    <Option>Usabilidad.</Option>
+    <Option>Mantenibilidad.</Option>
+    <Option correct>Disponibilidad / Fiabilidad.</Option>
+    <Option>Elicitación.</Option>
+  </Question>
+</Quiz>
+
