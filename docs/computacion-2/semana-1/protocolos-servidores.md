@@ -54,3 +54,70 @@ Los protocolos HTTP se componen de diferentes partes, las cuales se presentan a 
 - **Cuerpo de la solicitud**: Contiene los datos que se envían al servidor, si es necesario (por ejemplo, en una solicitud `POST`).
 
 <img src="/img/computacion-2/HTTP_protocol.png" alt="Protocolo HTTP" width="500" />
+
+---
+
+## Cuestionario de Autoevaluación
+
+<Quiz id="comp2-protocolos-servidores-quiz">
+  <Question title="¿Por qué se conoce al protocolo TCP como el 'mensajero confiable de Internet'?">
+    <Option>Porque transmite datos a la máxima velocidad posible sin verificar errores.</Option>
+    <Option correct>Porque garantiza que toda la información llegue completa, sin errores y en el orden correcto.</Option>
+    <Option>Porque encripta todos los paquetes mediante certificados SSL obligatorios.</Option>
+    <Option>Porque funciona de forma aislada sin requerir direcciones IP.</Option>
+  </Question>
+  <Question title="¿Qué sucede en el protocolo TCP si un paquete de datos se pierde o llega dañado?">
+    <Option>La comunicación se interrumpe y se cierra la sesión permanentemente.</Option>
+    <Option>El servidor ignora el paquete y continúa con el siguiente sin solicitarlo.</Option>
+    <Option correct>TCP lo solicita nuevamente al emisor hasta que todo esté correcto.</Option>
+    <Option>El navegador convierte automáticamente el paquete dañado al formato UDP.</Option>
+  </Question>
+  <Question title="¿Cuál es la secuencia correcta de mensajes en el proceso Three-Way Handshake de TCP?">
+    <Option>ACK -&gt; SYN -&gt; SYN-ACK</Option>
+    <Option correct>SYN -&gt; SYN-ACK -&gt; ACK</Option>
+    <Option>CONNECT -&gt; ACCEPT -&gt; OK</Option>
+    <Option>SYN -&gt; FIN -&gt; ACK</Option>
+  </Question>
+  <Question title="¿Qué mensaje envía el servidor en respuesta a la solicitud SYN inicial del cliente?">
+    <Option>ACK</Option>
+    <Option>FIN-ACK</Option>
+    <Option correct>SYN-ACK</Option>
+    <Option>RESET</Option>
+  </Question>
+  <Question title="¿Cuál es la característica principal del protocolo UDP frente a TCP?">
+    <Option>Garantiza que no exista pérdida de paquetes durante el streaming.</Option>
+    <Option correct>No realiza verificación de entrega ni confirmaciones, priorizando la velocidad.</Option>
+    <Option>Es más lento pero ofrece mayor integridad en la transferencia de archivos.</Option>
+    <Option>Requiere un establecimiento previo de conexión de tres vías.</Option>
+  </Question>
+  <Question title="¿En qué tipo de aplicaciones es ideal utilizar UDP según la lectura?">
+    <Option>Transferencias de archivos bancarios y correos electrónicos.</Option>
+    <Option>Bases de datos transaccionales y archivos HTML estáticos.</Option>
+    <Option correct>Videollamadas, juegos en línea y streaming de contenido.</Option>
+    <Option>Compilación de código fuente y parches del sistema operativo.</Option>
+  </Question>
+  <Question title="¿Qué protocolo de la capa de aplicación utilizan los navegadores para solicitar y recibir páginas web sobre TCP?">
+    <Option>UDP</Option>
+    <Option>FTP</Option>
+    <Option correct>HTTP (Hypertext Transfer Protocol)</Option>
+    <Option>DNS</Option>
+  </Question>
+  <Question title="¿Qué método HTTP se utiliza principalmente para solicitar u obtener un recurso desde un servidor web?">
+    <Option>POST</Option>
+    <Option correct>GET</Option>
+    <Option>DELETE</Option>
+    <Option>UPDATE</Option>
+  </Question>
+  <Question title="¿Qué sección de una solicitud HTTP contiene información adicional sobre el tipo de contenido aceptado o las cookies?">
+    <Option>El método HTTP.</Option>
+    <Option>El cuerpo de la solicitud (body).</Option>
+    <Option correct>Los Encabezados (Headers).</Option>
+    <Option>La versión del protocolo TCP.</Option>
+  </Question>
+  <Question title="¿Cuál de las siguientes afirmaciones es correcta sobre el protocolo HTTP?">
+    <Option>No requiere de un protocolo de transporte subyacente para funcionar.</Option>
+    <Option correct>Se basa en la infraestructura de transporte confiable del protocolo TCP.</Option>
+    <Option>Solo se puede ejecutar si se utiliza un hipervisor de tipo 1 en el host.</Option>
+    <Option>Envía todos los datos sin especificar la URL del recurso solicitado.</Option>
+  </Question>
+</Quiz>
