@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 480" width="100%" height="100%">
+  <defs>
+    <!-- Sombra elegante para tarjetas -->
+    <filter id="cardShadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+
+    <!-- Marcadores de flechas -->
+    <marker id="arrowHttp" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+
+    <marker id="arrowInternal" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <style>
+    .title-client { font-family: system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 15px; fill: #1e293b; }
+    .subtitle-client { font-family: system-ui, -apple-system, sans-serif; font-weight: 500; font-size: 12px; fill: #64748b; }
+    .label-tomcat { font-family: system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 16px; fill: #d97706; letter-spacing: 0.5px; }
+    .label-catalina { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 14px; fill: #475569; }
+    .label-app { font-family: system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 15px; fill: #0f172a; }
+    .label-servlet-context { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 13px; fill: #2563eb; }
+    .label-ioc { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 13px; fill: #15803d; }
+    .bean-text { font-family: system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 12px; fill: #14532d; }
+    .bean-subtext { font-family: system-ui, -apple-system, sans-serif; font-weight: 600; font-size: 10px; fill: #15803d; }
+    .flow-label { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 11px; fill: #2563eb; }
+  </style>
+
+  <!-- BACKGROUND BASE -->
+  <rect x="0" y="0" width="1100" height="480" fill="#ffffff" rx="12"/>
+
+  <!-- 1. CLIENTE (NAVEGADOR WEB) EN LA IZQUIERDA -->
+  <g transform="translate(20, 120)">
+    <rect x="0" y="0" width="160" height="240" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" filter="url(#cardShadow)"/>
+    
+    <!-- Barra superior del navegador -->
+    <rect x="0" y="0" width="160" height="32" rx="12" fill="#e2e8f0"/>
+    <rect x="0" y="20" width="160" height="12" fill="#e2e8f0"/>
+    <circle cx="15" cy="16" r="4" fill="#ef4444"/>
+    <circle cx="27" cy="16" r="4" fill="#f59e0b"/>
+    <circle cx="39" cy="16" r="4" fill="#10b981"/>
+
+    <!-- Icono Navegador -->
+    <rect x="20" y="55" width="120" height="18" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+    <text x="28" y="68" font-family="monospace" font-size="10" fill="#64748b">http://localhost...</text>
+
+    <text x="80" y="115" class="title-client" text-anchor="middle">Cliente Web</text>
+    <text x="80" y="135" class="subtitle-client" text-anchor="middle">Navegador HTTP</text>
+
+    <rect x="20" y="165" width="120" height="50" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="80" y="185" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#1d4ed8" text-anchor="middle">GET / POST</text>
+    <text x="80" y="202" font-family="system-ui, sans-serif" font-size="10" fill="#3b82f6" text-anchor="middle">Petición Usuario</text>
+  </g>
+
+  <!-- FLECHA PETICIÓN HTTP: Cliente -> Tomcat -->
+  <path d="M 180 240 L 232 240" fill="none" stroke="#2563eb" stroke-width="3" stroke-dasharray="6,4" marker-end="url(#arrowHttp)"/>
+  <rect x="182" y="215" width="48" height="20" rx="10" fill="#dbeafe"/>
+  <text x="206" y="229" class="flow-label" text-anchor="middle">HTTP</text>
+
+  <!-- 2. SERVIDOR APACHE TOMCAT (CAJA PRINCIPAL EN LA DERECHA) -->
+  <g transform="translate(240, 20)">
+    <!-- CAJA 1: APACHE TOMCAT -->
+    <rect x="0" y="0" width="840" height="440" rx="18" fill="#fffbeb" stroke="#fde68a" stroke-width="2.5" filter="url(#cardShadow)"/>
+    <text x="25" y="32" class="label-tomcat">SERVIDOR WEB: APACHE TOMCAT</text>
+
+    <!-- CAJA 2: ENGINE CATALINA -->
+    <g transform="translate(20, 45)">
+      <rect x="0" y="0" width="800" height="375" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="20" y="26" class="label-catalina">Motor de Servlets: Catalina (Servlet Engine)</text>
+
+      <!-- OTRAS APPS WEB DE FONDO (DEMOSTRANDO MULTI-APP) -->
+      <rect x="710" y="45" width="70" height="310" rx="8" fill="#e2e8f0" stroke="#94a3b8" stroke-dasharray="4"/>
+      <text x="745" y="190" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#64748b" text-anchor="middle" transform="rotate(-90, 745, 190)">Otras WebApps (.war)</text>
+
+      <!-- CAJA 3: NUESTRA APLICACIÓN WEB -->
+      <g transform="translate(20, 40)">
+        <rect x="0" y="0" width="675" height="315" rx="12" fill="#ffffff" stroke="#94a3b8" stroke-width="2" filter="url(#cardShadow)"/>
+        
+        <!-- Encabezado App Web -->
+        <rect x="0" y="0" width="675" height="34" rx="12" fill="#e2e8f0"/>
+        <rect x="0" y="22" width="675" height="12" fill="#e2e8f0"/>
+        <text x="18" y="22" class="label-app">Nuestra Aplicación Web: mi-app.war</text>
+        <text x="450" y="21" class="subtitle-client">Iniciada por ContextLoaderListener</text>
+
+        <!-- CAJA 4: SERVLET CONTEXT (MEMORIA DE LA APLICACIÓN WEB) -->
+        <g transform="translate(15, 45)">
+          <rect x="0" y="0" width="645" height="255" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+          <text x="15" y="22" class="label-servlet-context">ServletContext (Memoria Compartida de la WebApp)</text>
+
+          <!-- COMPONENTE A: SERVLET (ATENCIÓN HTTP) -->
+          <g transform="translate(20, 35)">
+            <rect x="0" y="0" width="160" height="200" rx="10" fill="#ffffff" stroke="#3b82f6" stroke-width="2" filter="url(#cardShadow)"/>
+            <rect x="0" y="0" width="160" height="28" rx="10" fill="#dbeafe"/>
+            <rect x="0" y="18" width="160" height="10" fill="#dbeafe"/>
+            
+            <text x="80" y="19" font-family="system-ui, sans-serif" font-size="12" font-weight="800" fill="#1d4ed8" text-anchor="middle">EstudianteServlet</text>
+            <text x="80" y="55" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle">HttpServlet</text>
+            
+            <rect x="15" y="75" width="130" height="40" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+            <text x="80" y="92" font-family="monospace" font-size="10" fill="#0f172a" text-anchor="middle">doGet() / doPost()</text>
+            <text x="80" y="106" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">Procesa Parámetros</text>
+
+            <rect x="15" y="130" width="130" height="55" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+            <text x="80" y="148" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#15803d" text-anchor="middle">Obtiene Bean de</text>
+            <text x="80" y="162" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#15803d" text-anchor="middle">Spring Context</text>
+            <text x="80" y="176" font-family="system-ui, sans-serif" font-size="8" fill="#16a34a" text-anchor="middle">via WebApplicationContextUtils</text>
+          </g>
+
+          <!-- FLECHA EXTRAER BEAN: Servlet -> IoC -->
+          <path d="M 180 135 L 223 135" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-dasharray="5,4" marker-end="url(#arrowInternal)"/>
+          <text x="202" y="125" font-family="system-ui, sans-serif" font-size="9" font-weight="700" fill="#16a34a" text-anchor="middle">getBean()</text>
+
+          <!-- COMPONENTE B: SPRING IOC CONTAINER (WebApplicationContext) -->
+          <g transform="translate(225, 35)">
+            <rect x="0" y="0" width="400" height="200" rx="10" fill="#ffffff" stroke="#22c55e" stroke-width="2" filter="url(#cardShadow)"/>
+            <rect x="0" y="0" width="400" height="28" rx="10" fill="#f0fdf4"/>
+            <rect x="0" y="18" width="400" height="10" fill="#f0fdf4"/>
+
+            <text x="15" y="19" class="label-ioc">Spring IoC Container (WebApplicationContext Singleton)</text>
+
+            <!-- BEAN SERVICIO (FRIJOLITO) -->
+            <g transform="translate(25, 45)">
+              <path d="M 18 18 C 8 36, 8 68, 24 86 C 38 100, 70 100, 82 82 C 92 64, 86 36, 68 18 C 50 0, 30 0, 18 18 Z" 
+                    fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+              <path d="M 58 18 Q 68 4 78 12 Q 68 22 58 18 Z" fill="#4ade80" stroke="#16a34a" stroke-width="1.2"/>
+              
+              <text x="50" y="48" class="bean-text" text-anchor="middle">Servicio</text>
+              <text x="50" y="62" class="bean-subtext" text-anchor="middle">Bean</text>
+            </g>
+
+            <!-- FLECHA INYECCIÓN DI INTERNA EN IOC -->
+            <path d="M 125 95 L 180 95" fill="none" stroke="#16a34a" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowInternal)"/>
+            <text x="152" y="87" font-family="system-ui, sans-serif" font-size="9" font-weight="700" fill="#16a34a" text-anchor="middle">Inyecta (DI)</text>
+
+            <!-- BEAN REPOSITORIO (FRIJOLITO) -->
+            <g transform="translate(185, 45)">
+              <path d="M 18 18 C 8 36, 8 68, 24 86 C 38 100, 70 100, 82 82 C 92 64, 86 36, 68 18 C 50 0, 30 0, 18 18 Z" 
+                    fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+              <path d="M 58 18 Q 68 4 78 12 Q 68 22 58 18 Z" fill="#4ade80" stroke="#16a34a" stroke-width="1.2"/>
+
+              <text x="50" y="48" class="bean-text" text-anchor="middle">Repositorio</text>
+              <text x="50" y="62" class="bean-subtext" text-anchor="middle">Bean</text>
+            </g>
+
+            <!-- NOTA COMPARTIDA AL PIE DEL IOC -->
+            <rect x="25" y="155" width="350" height="30" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+            <text x="200" y="174" font-family="system-ui, sans-serif" font-size="10" fill="#475569" text-anchor="middle">Instancia Única VIVA durante todo el ciclo de vida de la WebApp</text>
+          </g>
+
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

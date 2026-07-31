@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 320" width="100%" height="100%">
+  <defs>
+    <!-- Sombra suave para los elementos -->
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    
+    <!-- Flecha estilizada para inyección -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <style>
+    .jvm-title { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 13px; fill: #64748b; letter-spacing: 0.5px; }
+    .ioc-title { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 16px; fill: #0f172a; }
+    .ioc-subtitle { font-family: system-ui, -apple-system, sans-serif; font-weight: 500; font-size: 12px; fill: #64748b; }
+    .bean-name { font-family: system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 14px; fill: #14532d; }
+    .bean-sub { font-family: system-ui, -apple-system, sans-serif; font-weight: 600; font-size: 11px; fill: #15803d; }
+    .di-label { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 12px; fill: #15803d; }
+  </style>
+
+  <!-- MARCO EXTERNO: Entorno Runtime Java (JVM) -->
+  <rect x="10" y="10" width="680" height="300" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="6,4"/>
+  <text x="25" y="32" class="jvm-title">ENTORNO RUNTIME JAVA (JVM)</text>
+
+  <!-- CONTENEDOR INTERNO: Spring IoC Container -->
+  <rect x="25" y="45" width="650" height="250" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" filter="url(#shadow)"/>
+  
+  <!-- Encabezado del IoC Container -->
+  <rect x="25" y="45" width="650" height="38" rx="14" fill="#f0fdf4"/>
+  <rect x="25" y="68" width="650" height="15" fill="#f0fdf4"/>
+  <text x="40" y="69" class="ioc-title">Spring IoC Container (ApplicationContext)</text>
+  <text x="430" y="68" class="ioc-subtitle">Administrador de Beans y Dependencias</text>
+
+  <!-- BEAN 1: Servicio (Frijolito Verde Compacto) -->
+  <g transform="translate(85, 105)">
+    <!-- Silueta del Bean Proporcionada -->
+    <path d="M 25 25 
+             C 10 50, 10 90, 32 115 
+             C 50 135, 95 135, 110 110 
+             C 122 85, 115 50, 90 25 
+             C 65 0, 40 0, 25 25 Z" 
+          fill="#dcfce7" stroke="#22c55e" stroke-width="2.5" filter="url(#shadow)"/>
+    
+    <!-- Hoja del Bean -->
+    <path d="M 78 25 Q 90 6 102 18 Q 90 30 78 25 Z" fill="#4ade80" stroke="#16a34a" stroke-width="1.5"/>
+
+    <text x="68" y="68" class="bean-name" text-anchor="middle">Bean Servicio</text>
+    <text x="68" y="84" class="bean-sub" text-anchor="middle">Lógica de Negocio</text>
+  </g>
+
+  <!-- ETIQUETA 'Inyecta' POSICIONADA SOBRE LA FLECHA -->
+  <text x="350" y="165" class="di-label" text-anchor="middle">Inyecta</text>
+  
+  <!-- FLECHA CONEXIÓN DI DEBAJO DE LA ETIQUETA -->
+  <path d="M 235 178 L 465 178" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+
+  <!-- BEAN 2: Repositorio (Frijolito Verde Compacto) -->
+  <g transform="translate(485, 105)">
+    <!-- Silueta del Bean Proporcionada -->
+    <path d="M 25 25 
+             C 10 50, 10 90, 32 115 
+             C 50 135, 95 135, 110 110 
+             C 122 85, 115 50, 90 25 
+             C 65 0, 40 0, 25 25 Z" 
+          fill="#dcfce7" stroke="#22c55e" stroke-width="2.5" filter="url(#shadow)"/>
+    
+    <!-- Hoja del Bean -->
+    <path d="M 78 25 Q 90 6 102 18 Q 90 30 78 25 Z" fill="#4ade80" stroke="#16a34a" stroke-width="1.5"/>
+
+    <text x="68" y="68" class="bean-name" text-anchor="middle">Bean Repositorio</text>
+    <text x="68" y="84" class="bean-sub" text-anchor="middle">Acceso a Datos</text>
+  </g>
+</svg>
