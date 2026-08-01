@@ -1,8 +1,8 @@
 {
-    "label": "S2 - Node JS",
+    "label": "S2 - NodeJS y TS-Express Intro",
     "position": 2,
     "link": {
         "type": "generated-index",
-        "description": "Aspectos de Node JS"
+        "description": "Aspectos de Node JS y Express con TypeScript"
     }
 }

@@ -4,6 +4,14 @@ sidebar_position: 1
 
 # Node JS
 
+<iframe 
+    src="https://www.canva.com/design/DAGu-4WfRDQ/VIHwselUZRjkD21_QspqxQ/view?embed"
+    width="100%"
+    height="600px"
+    allowfullscreen="true"
+    frameborder="0"
+></iframe>
+
 Aspectos generales sobre Node JS, diferencias entre JavaScript, y su uso en el lado del servidor.
 
 ## ¿Qué es Node JS?
