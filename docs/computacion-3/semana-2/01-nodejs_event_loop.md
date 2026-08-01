@@ -297,3 +297,88 @@ asyncFunction(() => {
 ## Información o recursos adicionales
 
 - [Event loop example](https://www.jsv9000.app)
+
+---
+
+## Cuestionario de Autoevaluación
+
+<Quiz id="compu3-s2-nodejs-quiz">
+  <Question title="¿Sobre qué motor de JavaScript está construido Node.js?">
+    <Option>SpiderMonkey de Firefox</Option>
+    <Option correct>V8 de Chrome</Option>
+    <Option>JavaScriptCore de Safari</Option>
+    <Option>Chakra de Edge</Option>
+  </Question>
+  <Question title="¿Cuál es el modelo de ejecución principal de Node.js en su hilo principal?">
+    <Option>Multi-threaded síncrono</Option>
+    <Option>Multi-threaded asíncrono</Option>
+    <Option correct>Single-threaded asíncrono y no bloqueante</Option>
+    <Option>Single-threaded puramente síncrono</Option>
+  </Question>
+  <Question title="¿Qué biblioteca utiliza Node.js para proveer el pool de hilos del sistema que gestiona operaciones I/O bloqueantes?">
+    <Option>V8</Option>
+    <Option correct>libuv</Option>
+    <Option>OpenSSL</Option>
+    <Option>c-ares</Option>
+  </Question>
+  <Question title="¿Cuál de los siguientes objetos NO existe en el entorno de ejecución de Node.js a diferencia del navegador?">
+    <Option>process</Option>
+    <Option>Buffer</Option>
+    <Option correct>document (DOM)</Option>
+    <Option>global</Option>
+  </Question>
+  <Question title="En la estructura del Event Loop, ¿qué fase se encarga de ejecutar los callbacks de setTimeout y setInterval?">
+    <Option correct>Timers</Option>
+    <Option>Poll</Option>
+    <Option>Check</Option>
+    <Option>Pending callbacks</Option>
+  </Question>
+  <Question title="¿En qué fase del Event Loop se ejecutan los callbacks programados con setImmediate()?">
+    <Option>Poll</Option>
+    <Option correct>Check</Option>
+    <Option>Timers</Option>
+    <Option>Close callbacks</Option>
+  </Question>
+  <Question title="¿Cuál de las siguientes tareas se clasifica como una Microtask?">
+    <Option>setTimeout</Option>
+    <Option>setImmediate</Option>
+    <Option correct>Promise.then</Option>
+    <Option>setInterval</Option>
+  </Question>
+  <Question title="¿Qué sucede cuando se anidan múltiples callbacks asíncronos profundamente?">
+    <Option>Un Memory Leak automático</Option>
+    <Option correct>Se produce el denominado Callback Hell</Option>
+    <Option>Se convierte automáticamente en una Promesa</Option>
+    <Option>Node.js bloquea el hilo principal permanentemente</Option>
+  </Question>
+  <Question title="¿Cuáles son los 3 estados posibles de una Promesa en JavaScript?">
+    <Option>Start, Processing, Completed</Option>
+    <Option correct>Pending, Fulfilled, Rejected</Option>
+    <Option>Init, Success, Error</Option>
+    <Option>Waiting, Active, Done</Option>
+  </Question>
+  <Question title="¿Qué sistema de módulos nativo de Node.js utiliza require y module.exports?">
+    <Option>ES6 Modules</Option>
+    <Option correct>CommonJS</Option>
+    <Option>AMD</Option>
+    <Option>UMD</Option>
+  </Question>
+  <Question title="¿Qué módulo nativo de Node.js se utiliza para trabajar con el sistema de archivos (lectura/escritura)?">
+    <Option>path</Option>
+    <Option>http</Option>
+    <Option correct>fs</Option>
+    <Option>os</Option>
+  </Question>
+  <Question title="¿Cuál es la función principal del módulo nativo path en Node.js?">
+    <Option>Crear servidores de red</Option>
+    <Option correct>Manipular y concatenar rutas de archivos y directorios</Option>
+    <Option>Obtener la memoria libre del sistema operativo</Option>
+    <Option>Monitorear la CPU del servidor</Option>
+  </Question>
+  <Question title="¿Qué comportamiento caracteriza a process.nextTick()?">
+    <Option>Se ejecuta en la fase Check después de setImmediate</Option>
+    <Option correct>Ejecuta su callback antes de continuar con la siguiente fase del Event Loop</Option>
+    <Option>Programa una tarea para ejecutarse después de 1 segundo</Option>
+    <Option>Delega la tarea directamente al pool de hilos de libuv</Option>
+  </Question>
+</Quiz>
