@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Comandos de Docker (Avanzado)
+# Comandos de Docker
 
 Al utilizar docker, tendremos en cuenta múltiples áreas donde realizar bloques de código o comandos para la configuración de un contenedor. A continuación, se presentan los comandos más comunes y útiles para trabajar con Docker.
 
@@ -103,3 +103,69 @@ En este ejemplo de archivo `docker-compose.yml`, se definen dos servicios: `back
 | `docker-compose logs` | Muestra los logs de todos los servicios. |
 | `docker-compose exec <servicio> <comando>` | Ejecuta un comando en un contenedor en ejecución de un servicio específico. |
 
+---
+
+## Cuestionario de Autoevaluación
+
+<Quiz id="dedw-docker-commands-quiz">
+  <Question title="¿Qué comando de Docker se utiliza para listar todas las imágenes almacenadas localmente?">
+    <Option>docker ps -a</Option>
+    <Option correct>docker images</Option>
+    <Option>docker network ls</Option>
+    <Option>docker pull</Option>
+  </Question>
+  <Question title="¿Qué comando combina en un solo paso la creación y el inicio de un contenedor?">
+    <Option>docker build</Option>
+    <Option>docker create</Option>
+    <Option correct>docker run</Option>
+    <Option>docker start</Option>
+  </Question>
+  <Question title="¿Para qué se utiliza la instrucción FROM en un Dockerfile?">
+    <Option>Para exponer los puertos TCP hacia la red interna.</Option>
+    <Option correct>Para especificar la imagen base y su versión a partir de la cual se construirá la nueva imagen.</Option>
+    <Option>Para definir el comando por defecto al detener el contenedor.</Option>
+    <Option>Para crear un volumen persistente en el sistema anfitrión.</Option>
+  </Question>
+  <Question title="¿Cuál es la diferencia principal entre las instrucciones CMD y ENTRYPOINT en un Dockerfile?">
+    <Option>CMD requiere permisos de administrador mientras que ENTRYPOINT se ejecuta como usuario sin privilegios.</Option>
+    <Option correct>CMD proporciona valores por defecto que pueden ser sobrescritos al ejecutar, mientras que ENTRYPOINT establece un comando fijo.</Option>
+    <Option>ENTRYPOINT se ejecuta durante la construcción de la imagen y CMD únicamente al publicar en el registro.</Option>
+    <Option>No existe diferencia; ambas instrucciones son totalmente idénticas.</Option>
+  </Question>
+  <Question title="¿Qué directiva de Dockerfile permite copiar archivos locales desde el host hacia el sistema de archivos del contenedor?">
+    <Option>EXPOSE</Option>
+    <Option>MAINTAINER</Option>
+    <Option correct>COPY</Option>
+    <Option>RUN</Option>
+  </Question>
+  <Question title="En un archivo docker-compose.yml, ¿qué directiva asegura que el contenedor mi_postgres se inicie antes que backendnode?">
+    <Option>environment</Option>
+    <Option correct>depends_on</Option>
+    <Option>volumes</Option>
+    <Option>ports</Option>
+  </Question>
+  <Question title="En la configuración de docker-compose.yml, ¿qué función cumple la sección volumes?">
+    <Option>Limita el consumo de memoria RAM de la base de datos.</Option>
+    <Option>Mapea las variables de entorno de autenticación del usuario.</Option>
+    <Option correct>Almacena los datos de la base de datos de manera persistente fuera del ciclo efímero del contenedor.</Option>
+    <Option>Expone el puerto 5432 del contenedor hacia la red pública.</Option>
+  </Question>
+  <Question title="¿Qué comando de Docker Compose se debe ejecutar para detener y eliminar contenedores, redes y volúmenes definidos?">
+    <Option>docker-compose stop</Option>
+    <Option correct>docker-compose down</Option>
+    <Option>docker-compose rmi</Option>
+    <Option>docker-compose clear</Option>
+  </Question>
+  <Question title="¿Qué comando permite ejecutar una instrucción interna dentro de un servicio activo de Docker Compose?">
+    <Option>docker-compose run &lt;servicio&gt;</Option>
+    <Option correct>docker-compose exec &lt;servicio&gt; &lt;comando&gt;</Option>
+    <Option>docker-compose build &lt;servicio&gt;</Option>
+    <Option>docker-compose logs &lt;servicio&gt;</Option>
+  </Question>
+  <Question title="¿Qué bandera del comando docker build permite asignar un nombre amigable y etiqueta (tag) a la imagen construida?">
+    <Option>-p</Option>
+    <Option>-d</Option>
+    <Option correct>-t</Option>
+    <Option>-v</Option>
+  </Question>
+</Quiz>

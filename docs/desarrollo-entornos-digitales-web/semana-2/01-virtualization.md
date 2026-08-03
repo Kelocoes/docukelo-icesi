@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Fundamentos de Virtualización
+# Contenedores
 
 Antes de profundizar en los contenedores, es útil entender primero el concepto de máquinas virtuales (VMs), ya que los contenedores evolucionan a partir de esta tecnología.
 
@@ -79,3 +79,69 @@ Docker es la plataforma de contenedores más popular. Permite empaquetar aplicac
 - Herramientas como Kubernetes permiten orquestar y gestionar grandes cantidades de contenedores, automatizando tareas como escalado, balanceo de carga y recuperación ante fallos, aunque para ejercicios de pequeña-mediana escala no es necesario complicarse con estas herramientas.
 - Los contenedores no sustituyen a las VMs en todos los casos; cada tecnología tiene su lugar dependiendo de los requisitos de aislamiento, seguridad y compatibilidad. Por ejemplo, las VMs siguen siendo útiles para ejecutar aplicaciones que requieren un sistema operativo completo o para entornos de alta seguridad donde el aislamiento es crítico.
 
+---
+
+## Cuestionario de Autoevaluación
+
+<Quiz id="dedw-containers-quiz">
+  <Question title="¿Cuál es el rol del computador denominado 'host' en la virtualización clásica?">
+    <Option>Es una máquina virtual que emula componentes de hardware.</Option>
+    <Option correct>Es el equipo físico sobre el cual se ejecutan el hipervisor y las máquinas virtuales (guests).</Option>
+    <Option>Es el software que distribuye paquetes de red hacia los contenedores.</Option>
+    <Option>Es la imagen base desde la cual se instancian los sistemas invitados.</Option>
+  </Question>
+  <Question title="¿Cuál es la característica distintiva de un Hipervisor Tipo 1 (bare-metal)?">
+    <Option>Se instala sobre un sistema operativo comercial como Windows 11 o macOS.</Option>
+    <Option correct>Se ejecuta directamente sobre el hardware físico sin necesidad de un sistema operativo subyacente.</Option>
+    <Option>Funciona únicamente dentro de navegadores web modernos mediante WebAssembly.</Option>
+    <Option>Requiere que cada contenedor incluya su propio núcleo de kernel de Linux.</Option>
+  </Question>
+  <Question title="¿Cuál de las siguientes herramientas es un ejemplo de Hipervisor Tipo 2?">
+    <Option>VMware ESXi.</Option>
+    <Option>Microsoft Hyper-V bare-metal.</Option>
+    <Option correct>Oracle VirtualBox.</Option>
+    <Option>Docker Engine Daemon.</Option>
+  </Question>
+  <Question title="¿En qué se diferencian principalmente los contenedores respecto a las máquinas virtuales en términos de arquitectura?">
+    <Option>Los contenedores emulan todo el conjunto de instrucciones de la CPU física.</Option>
+    <Option correct>Los contenedores comparten el núcleo (kernel) del sistema operativo del host en lugar de emular hardware completo.</Option>
+    <Option>Las máquinas virtuales no pueden ejecutar aplicaciones con dependencias binarias.</Option>
+    <Option>Los contenedores requieren la instalación obligatoria de una VM tipo Guest OS por aplicación.</Option>
+  </Question>
+  <Question title="¿Cuál es una ventaja principal de la tecnología de contenedores según la lectura?">
+    <Option>Ofrece un aislamiento de kernel 100% independiente garantizado a nivel de hardware.</Option>
+    <Option>Permite ejecutar múltiples kernels de diferentes arquitecturas sin hipervisor.</Option>
+    <Option correct>Proporciona alta portabilidad y rapidez de inicio en cuestión de segundos.</Option>
+    <Option>Elimina automáticamente la necesidad de bases de datos y almacenamiento persistente.</Option>
+  </Question>
+  <Question title="¿Qué sucede con los datos almacenados internamente en un contenedor cuando este es eliminado?">
+    <Option>Se respaldan automáticamente en la nube de Docker Hub.</Option>
+    <Option correct>Pueden perderse definitivamente a menos que se utilicen volúmenes o servicios externos.</Option>
+    <Option>Se convierten en una nueva imagen base dentro del registro local.</Option>
+    <Option>Se migran automáticamente a una máquina virtual bare-metal.</Option>
+  </Question>
+  <Question title="¿Cuál de las siguientes es considerada una desventaja de los contenedores frente a las VMs tradicionales?">
+    <Option>Mayor tiempo de inicio al requerir varios minutos para iniciar servicios.</Option>
+    <Option>Incapacidad para empaquetar librerías o dependencias de la aplicación.</Option>
+    <Option correct>Menor aislamiento de seguridad en comparación con las VMs, al compartir el núcleo del SO host.</Option>
+    <Option>Imposibilidad de ejecutarse en entornos cloud o servidores remotos.</Option>
+  </Question>
+  <Question title="¿Qué solución se menciona para gestionar y orquestar grandes cantidades de contenedores en producción?">
+    <Option>Herramientas de orquestación como Kubernetes.</Option>
+    <Option>Hipervisores de tipo 2 como VirtualBox.</Option>
+    <Option>Reemplazar los contenedores por imágenes ISO monolíticas.</Option>
+    <Option>Scripts manuales de inicio en cada máquina física.</Option>
+  </Question>
+  <Question title="¿Por qué las máquinas virtuales siguen siendo útiles a pesar de la popularidad de los contenedores?">
+    <Option>Porque los contenedores no pueden ejecutar aplicaciones desarrolladas en lenguajes compilados.</Option>
+    <Option correct>Porque las VMs son ideales en escenarios que requieren un sistema operativo completo o aislamiento de seguridad crítico.</Option>
+    <Option>Porque las VMs consumen menos recursos de memoria RAM que los contenedores.</Option>
+    <Option>Porque los contenedores no permiten mapear puertos de red.</Option>
+  </Question>
+  <Question title="¿Qué componente de Docker se encarga de empaquetar la aplicación y sus dependencias en una unidad portable?">
+    <Option>El Hipervisor de nivel 1.</Option>
+    <Option correct>La Imagen de Docker.</Option>
+    <Option>El Guest OS de Windows.</Option>
+    <Option>El archivo de memoria de intercambio SWAP.</Option>
+  </Question>
+</Quiz>
