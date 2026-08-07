@@ -76,8 +76,7 @@ graph TD
    - **Generadores de reportes o Exportadores PDF**: Acumulan buffers de datos o estados de procesamiento durante la generación de un documento único.
    - **Comandos de tarea (*Command Pattern*)**: Instancias creadas para ejecutar un trabajo específico una sola vez y desecharse.
 
-:::warning 
-Desventaja y Gestión de Memoria en Prototype
+:::warning[Desventaja y Gestión de Memoria en Prototype]
 Spring es responsable de instanciar e inyectar beans Prototype, pero **no gestiona la destrucción final del objeto**. La responsabilidad de liberar la memoria de un bean Prototype recae sobre el ejecutor de la JVM (Garbage Collector) una vez que el bean deja de ser referenciado.
 :::
 
@@ -224,8 +223,7 @@ Una vez configurado el `pom.xml`, compila y ejecuta el proyecto Standalone desde
 mvn clean compile exec:java
 ```
 
-:::tip 
-¿Qué realiza este comando Maven?
+:::tip[¿Qué realiza este comando Maven?]
 1. `clean`: Elimina los archivos previamente compilados en el directorio `target/`.
 2. `compile`: Compila las clases Java y copia los archivos de recursos (`applicationContext.xml`) al directorio de salida del *classpath*.
 3. `exec:java`: Invoca la clase principal `com.example.Main` dentro de la JVM con todas las dependencias de Spring cargadas en el *classpath*.

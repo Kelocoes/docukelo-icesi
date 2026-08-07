@@ -175,4 +175,6 @@ DocuKelo natively renders Mermaid diagrams. Keep diagram layouts clean and style
 * **Prohibition of Icons and Emojis**: Do not use emojis in headers, titles, cards, or buttons to keep the user interface clean, professional, and visually uniform.
 * **Code Headers**: Always label code blocks with titles (`title="filename.ext"`) and enable line numbering (`showLineNumbers`) for guides.
 * **SVG Storage and Reference**: All SVG schemas must be saved as standalone `.svg` files in the directory `static/img/<course-name>/` (e.g., `static/img/iag-al-entorno/`). They should be called in Markdown files using: `![Alt Text](/img/<course-name>/filename.svg)`. Do not embed raw inline SVG XML markup directly inside Markdown/MDX files.
+* **Admonition Syntax**: Use `:::type[Title]` syntax when specifying an admonition title (e.g., `:::note[Optional Title]`). Do not place the title string on the line immediately below `:::type`. Admonitions without custom titles can simply use `:::type`.
+
 
