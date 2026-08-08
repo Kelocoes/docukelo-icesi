@@ -1,8 +1,8 @@
 {
-    "label": "S3 - Spring Annotations",
-    "position": 2,
-    "link": {
-        "type": "generated-index",
-        "description": "Introducción a Spring Annotations: @Value, @Qualifier, SpEL"
-    }
+  "label": "S3 - Anotaciones y SpEL",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "Transición de XML a Anotaciones, estereotipos (@Component, @Service, @Repository), ciclo de vida con @PostConstruct/@PreDestroy, @Configuration y @Bean, inyección con @Autowired y @Qualifier, y expresiones avanzadas con SpEL y application.properties."
+  }
 }

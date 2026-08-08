@@ -1,0 +1,8 @@
+{
+  "label": "Week 3: Annotations, JavaConfig & SpEL",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "Transition from XML to Annotations, Stereotypes, Bean Lifecycle, JavaConfig, @Qualifier, @Value, and Spring Expression Language (SpEL)."
+  }
+}

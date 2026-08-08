@@ -1,0 +1,8 @@
+{
+    "label": "W3 - Databases & TypeORM",
+    "position": 3,
+    "link": {
+        "type": "generated-index",
+        "description": "This week you will learn to design relational databases from scratch, identify and resolve structural issues, and implement them in NestJS using TypeORM and PostgreSQL."
+    }
+}

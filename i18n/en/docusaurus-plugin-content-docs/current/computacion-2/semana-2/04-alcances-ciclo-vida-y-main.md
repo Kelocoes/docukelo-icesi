@@ -76,8 +76,7 @@ graph TD
    - **Report Generators or PDF Exporters**: Accumulating data buffers or processing states during single document generation.
    - **Task Commands (Command Pattern)**: Instances created to execute a specific job once and then be discarded.
 
-:::warning 
-Prototype Memory Management Consideration
+:::warning[Prototype Memory Management Consideration]
 Spring is responsible for instantiating and injecting Prototype beans, but **does not manage final object destruction**. Memory release for a Prototype bean is the responsibility of the JVM Garbage Collector once the bean is no longer referenced.
 :::
 
@@ -220,8 +219,7 @@ Once `pom.xml` is configured, compile and run the Standalone project from the te
 mvn clean compile exec:java
 ```
 
-:::tip 
-What does this Maven command do?
+:::tip[What does this Maven command do?]
 1. `clean`: Removes previously compiled files in the `target/` directory.
 2. `compile`: Compiles Java classes and copies resource files (`applicationContext.xml`) to output classpath directory.
 3. `exec:java`: Invokes the main class `com.example.Main` inside the JVM with all Spring dependencies loaded in classpath.

@@ -63,9 +63,7 @@ graph TB
     npm install -g @nestjs/cli
     ```
 
-    :::tip 
-    Por qué usar el CLI.
-
+    :::tip[Por qué usar el CLI]
     El CLI evita la configuración manual de TypeScript, Webpack/SWC, ESLint y Jest, además de mantener una estructura limpia y estandarizada entre proyectos.
     :::
   </Step>
@@ -120,9 +118,7 @@ graph TB
 
     Abre tu navegador en `http://localhost:3000` para verificar que la aplicación responda correctamente.
 
-    :::info 
-    Cambio de puerto en main.ts.
-
+    :::info[Cambio de puerto en main.ts]
     Si el puerto 3000 está ocupado en tu equipo, puedes modificar el archivo `src/main.ts`:
 
     ```typescript title="src/main.ts" showLineNumbers
@@ -167,9 +163,7 @@ graph TB
       </TabItem>
     </Tabs>
 
-    :::tip 
-    Formas cortas del CLI.
-    
+    :::tip[Formas cortas del CLI]
     Puedes usar alias abreviados en la consola: `nest g mo users`, `nest g co users` y `nest g s users`.
     :::
   </Step>
