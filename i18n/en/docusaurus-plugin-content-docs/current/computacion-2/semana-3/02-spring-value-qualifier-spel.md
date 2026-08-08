@@ -354,9 +354,9 @@ public class AuditoriaComponent {
 </Question>
 
 <Question title="What is the syntax difference between extracting an application.properties property vs evaluating a SpEL expression?">
-  <Option>Properties use #{...} and SpEL uses ${...}.</Option>
-  <Option correct>Properties use ${...} and SpEL uses #{...}.</Option>
-  <Option>Both use ${...}.</Option>
+  <Option>Properties use `#{...}` and SpEL uses `${...}`.</Option>
+  <Option correct>Properties use `${...}` and SpEL uses `#{...}`.</Option>
+  <Option>Both use `${...}`.</Option>
   <Option>SpEL can only be used in XML files.</Option>
 </Question>
 
