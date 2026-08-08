@@ -1,0 +1,8 @@
+{
+  "label": "Week 3: Express, TypeScript, MongoDB & Docker",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "Introduction to Express with TypeScript, MongoDB, data validation, authentication with JWT, and containerization with Docker."
+  }
+}

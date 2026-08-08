@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 1
 ---
 
 # Express | Typescript | Mongodb | Docker. Parte 1
@@ -81,7 +81,7 @@ En este caso usaremos la versión 8.0.12 de MongoDB que es de las más modernas 
 Podemos ejecutar el contenedor con el siguiente comando:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Esto iniciará el contenedor de MongoDB en segundo plano. Puedes verificar que el contenedor esté funcionando correctamente con el comando:
@@ -94,7 +94,7 @@ Deberías ver el contenedor de MongoDB en la lista de contenedores en ejecución
 Si deseas detener el contenedor, puedes usar el comando:
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ### 5.3. Configuración del proyecto de Node.js con TypeScript
@@ -696,7 +696,7 @@ Con esto, hemos definido un nuevo servicio llamado `express` que construirá la 
 Podemos observar los logs del contenedor de Express ejecutando el siguiente comando:
 
 ```bash
-docker-compose logs -f express
+docker compose logs -f express
 ```
 
 > **Nota:** Asegúrate de que el contenedor de MongoDB esté corriendo antes de iniciar el contenedor de Express, ya que este último depende del primero para funcionar correctamente. Además de eso, debido a que el ambos contenedores funcionarán a través de una red Docker, es necesario modificar la cadena de conexión a MongoDB en el archivo `.env` para que apunte al nombre del servicio de MongoDB en lugar de `localhost`. Cambia la línea `MONGO_URI=mongodb://admin:admin123@localhost:27017` a `MONGO_URI=mongodb://admin:admin123@mongo:27017`.
