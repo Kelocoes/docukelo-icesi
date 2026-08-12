@@ -30,3 +30,29 @@
     font-size: 1.5rem;
     font-weight: 500;
 }
+
+/* Estilos de resaltado Prism para archivos .properties / ini */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: #6a9955 !important; /* Verde tenue itálico para comentarios */
+    font-style: italic;
+}
+
+.token.attr-name,
+.token.property,
+.token.key {
+    color: #9cdcfe !important; /* Azul claro para claves de propiedad */
+}
+
+.token.attr-value,
+.token.value,
+.token.string {
+    color: #ce9178 !important; /* Salmón cálido para valores */
+}
+
+.token.number,
+.token.boolean {
+    color: #b5cea8 !important; /* Verde claro para números y booleanos */
+}
