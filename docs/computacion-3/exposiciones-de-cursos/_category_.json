@@ -1,0 +1,8 @@
+{
+    "label": "Exposiciones de cursos",
+    "position": 17,
+    "link": {
+        "type": "generated-index",
+        "description": "Exposiciones y proyectos desarrollados por los estudiantes del curso."
+    }
+}
