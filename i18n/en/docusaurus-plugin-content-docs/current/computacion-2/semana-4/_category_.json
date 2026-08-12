@@ -1,0 +1,8 @@
+{
+    "label": "W4 - Spring Boot & Spring Data JPA",
+    "position": 5,
+    "link": {
+        "type": "generated-index",
+        "description": "Introduction to Spring Boot, Project Lombok, Spring Data JPA, and Hibernate."
+    }
+}
