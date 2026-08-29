@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 230" width="100%" height="100%">
+  <defs>
+    <filter id="shadow-rn" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="740" height="230" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- 3 Blocks in Flow -->
+  <g transform="translate(40, 25)">
+    <!-- Block 1: JS Thread -->
+    <g transform="translate(0, 0)">
+      <rect width="195" height="135" rx="10" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" filter="url(#shadow-rn)"/>
+      <rect width="195" height="30" rx="10" fill="#eff6ff"/>
+      <text x="97" y="20" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#1e40af" text-anchor="middle">Hilo JavaScript</text>
+      
+      <rect x="15" y="44" width="165" height="34" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+      <text x="97" y="65" font-family="monospace" font-size="11" font-weight="bold" fill="#334155" text-anchor="middle">&lt;Text&gt;Hola&lt;/Text&gt;</text>
+      
+      <text x="97" y="102" font-family="system-ui, sans-serif" font-size="10" fill="#64748b" text-anchor="middle">Lógica de React / Estado</text>
+      <text x="97" y="118" font-family="system-ui, sans-serif" font-size="10" fill="#64748b" text-anchor="middle">y reglas de negocio</text>
+    </g>
+
+    <!-- Center: Bridge / JSI -->
+    <g transform="translate(210, 20)">
+      <rect width="240" height="95" rx="8" fill="#f8fafc" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <text x="120" y="28" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle">Puente / Bridge (JSI)</text>
+      <rect x="20" y="42" width="200" height="38" rx="6" fill="#eff6ff"/>
+      <text x="120" y="58" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#1e40af" text-anchor="middle">Serialización asíncrona JSON</text>
+      <text x="120" y="72" font-family="monospace" font-size="9" fill="#3b82f6" text-anchor="middle">JS ⇄ C++ / JNI ⇄ Nativo</text>
+    </g>
+
+    <!-- Block 3: Native UI Thread -->
+    <g transform="translate(465, 0)">
+      <rect width="195" height="135" rx="10" fill="#ffffff" stroke="#86efac" stroke-width="1.5" filter="url(#shadow-rn)"/>
+      <rect width="195" height="30" rx="10" fill="#f0fdf4"/>
+      <text x="97" y="20" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#14532d" text-anchor="middle">Hilo UI Nativo</text>
+      
+      <rect x="15" y="44" width="165" height="34" rx="6" fill="#f8fafc" stroke="#bbf7d0"/>
+      <text x="97" y="65" font-family="monospace" font-size="10" font-weight="bold" fill="#166534" text-anchor="middle">UILabel / TextView</text>
+      
+      <text x="97" y="102" font-family="system-ui, sans-serif" font-size="10" fill="#64748b" text-anchor="middle">Widgets reales del SO</text>
+      <text x="97" y="118" font-family="system-ui, sans-serif" font-size="10" fill="#64748b" text-anchor="middle">(iOS UIKit / Android Views)</text>
+    </g>
+  </g>
+
+  <!-- Bottom Note -->
+  <g transform="translate(130, 178)">
+    <rect width="480" height="36" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="240" y="22" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1d4ed8" text-anchor="middle">
+      Ventaja: Componentes nativos reales. Reto: Posible sobrecarga en puente durante animaciones
+    </text>
+  </g>
+</svg>

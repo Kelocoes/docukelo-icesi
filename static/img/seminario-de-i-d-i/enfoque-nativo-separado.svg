@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 230" width="100%" height="100%">
+  <defs>
+    <filter id="shadow-native" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#ef4444"/>
+    </marker>
+  </defs>
+
+  <rect width="740" height="230" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Columna 1: Android -->
+  <g transform="translate(40, 25)">
+    <rect width="300" height="135" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow-native)"/>
+    <rect width="300" height="32" rx="10" fill="#f1f5f9"/>
+    <text x="150" y="21" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#334155" text-anchor="middle">Plataforma Android</text>
+    
+    <rect x="20" y="46" width="120" height="32" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="80" y="66" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1e40af" text-anchor="middle">Código Kotlin</text>
+    
+    <line x1="140" y1="62" x2="168" y2="62" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+    
+    <rect x="175" y="46" width="105" height="32" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+    <text x="227" y="66" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#166534" text-anchor="middle">Android SDK</text>
+    
+    <rect x="20" y="90" width="260" height="30" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="150" y="109" font-family="system-ui, sans-serif" font-size="11" fill="#64748b" text-anchor="middle">App Android (.apk / .aab)</text>
+  </g>
+
+  <!-- Columna 2: iOS -->
+  <g transform="translate(400, 25)">
+    <rect width="300" height="135" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow-native)"/>
+    <rect width="300" height="32" rx="10" fill="#f1f5f9"/>
+    <text x="150" y="21" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#334155" text-anchor="middle">Plataforma iOS</text>
+    
+    <rect x="20" y="46" width="120" height="32" rx="6" fill="#fff7ed" stroke="#fed7aa"/>
+    <text x="80" y="66" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#c2410c" text-anchor="middle">Código Swift</text>
+    
+    <line x1="140" y1="62" x2="168" y2="62" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+    
+    <rect x="175" y="46" width="105" height="32" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+    <text x="227" y="66" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#166534" text-anchor="middle">iOS SDK</text>
+    
+    <rect x="20" y="90" width="260" height="30" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="150" y="109" font-family="system-ui, sans-serif" font-size="11" fill="#64748b" text-anchor="middle">App iOS (.ipa)</text>
+  </g>
+
+  <!-- Bottom Warning Pill -->
+  <g transform="translate(145, 178)">
+    <rect width="450" height="36" rx="8" fill="#fee2e2" stroke="#fca5a5"/>
+    <text x="225" y="22" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#991b1b" text-anchor="middle">
+      Costo duplicado: 2 proyectos, 2 lenguajes y mantenimiento independiente
+    </text>
+  </g>
+</svg>
