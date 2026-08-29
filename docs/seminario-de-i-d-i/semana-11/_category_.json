@@ -1,0 +1,8 @@
+{
+    "label": "S11 - Skills y Manejo de Estado",
+    "position": 11,
+    "link": {
+        "type": "generated-index",
+        "description": "Extensión del agente mediante Skills, diseño no funcional y fundamentos de StatefulWidget."
+    }
+}

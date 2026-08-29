@@ -1,0 +1,8 @@
+{
+    "label": "S14 - Persistencia y Supabase",
+    "position": 14,
+    "link": {
+        "type": "generated-index",
+        "description": "Integración del SDK de Supabase, capa de servicio y operaciones CRUD en Postgres."
+    }
+}

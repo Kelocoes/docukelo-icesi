@@ -1,0 +1,8 @@
+{
+    "label": "S9 - Introducción y Entorno",
+    "position": 9,
+    "link": {
+        "type": "generated-index",
+        "description": "Introducción al desarrollo frontend multiplataforma y configuración del entorno de trabajo."
+    }
+}

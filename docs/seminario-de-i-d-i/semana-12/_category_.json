@@ -1,0 +1,8 @@
+{
+    "label": "S12 - Elevación de Estado y Navegación",
+    "position": 12,
+    "link": {
+        "type": "generated-index",
+        "description": "Elevación de estado, callbacks y navegación declarativa entre pantallas."
+    }
+}
