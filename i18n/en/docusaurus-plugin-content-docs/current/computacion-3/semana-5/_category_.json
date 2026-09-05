@@ -1,0 +1,8 @@
+{
+    "label": "W5 - NestJS Intro",
+    "position": 5,
+    "link": {
+        "type": "generated-index",
+        "description": "Introduction to the NestJS framework, modular architecture, request lifecycle, first steps with the CLI, entity modeling with TypeORM, dependency injection, and querying with repositories."
+    }
+}

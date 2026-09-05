@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 260" width="100%" height="100%">
+  <defs>
+    <filter id="shadow-repo" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arr-amber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <style>
+    .title-main { font-family: system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 15px; fill: #0f172a; }
+    .card-title { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 13.5px; }
+    .card-sub { font-family: system-ui, -apple-system, sans-serif; font-weight: 600; font-size: 11px; }
+    .card-item { font-family: system-ui, -apple-system, sans-serif; font-weight: 400; font-size: 10.5px; fill: #475569; }
+    .step-tag { font-family: system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .conn-txt { font-family: system-ui, -apple-system, sans-serif; font-weight: 600; font-size: 10.5px; }
+  </style>
+
+  <rect x="15" y="15" width="850" height="230" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="15" y="15" width="850" height="38" rx="14" fill="#f1f5f9"/>
+  <rect x="15" y="38" width="850" height="15" fill="#f1f5f9"/>
+  <text x="35" y="39" class="title-main">El Patrón Repositorio en la Arquitectura por Capas</text>
+
+  <g transform="translate(35, 65)">
+    <rect x="0" y="0" width="170" height="160" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.8" filter="url(#shadow-repo)"/>
+    <rect x="0" y="0" width="170" height="28" rx="10" fill="#dbeafe"/>
+    <rect x="0" y="18" width="170" height="10" fill="#dbeafe"/>
+    <text x="85" y="19" class="step-tag" fill="#1e3a8a" text-anchor="middle">1. Presentación</text>
+    <text x="85" y="48" class="card-title" fill="#1e3a8a" text-anchor="middle">BooksController</text>
+    <text x="85" y="66" class="card-sub" fill="#2563eb" text-anchor="middle">Rutas HTTP REST</text>
+    <line x1="12" y1="78" x2="158" y2="78" stroke="#bfdbfe" stroke-width="1"/>
+    <text x="85" y="98" class="card-item" text-anchor="middle">Recibe GET, POST</text>
+    <text x="85" y="115" class="card-item" text-anchor="middle">Valida DTOs de entrada</text>
+    <text x="85" y="132" class="card-item" text-anchor="middle">Retorna respuestas JSON</text>
+  </g>
+
+  <path d="M 215 140 L 245 140" fill="none" stroke="#2563eb" stroke-width="2.2" marker-end="url(#arr-blue)"/>
+  <text x="230" y="128" class="conn-txt" fill="#1e3a8a" text-anchor="middle">Delega</text>
+
+  <g transform="translate(255, 65)">
+    <rect x="0" y="0" width="175" height="160" rx="10" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.8" filter="url(#shadow-repo)"/>
+    <rect x="0" y="0" width="175" height="28" rx="10" fill="#dcfce7"/>
+    <rect x="0" y="18" width="175" height="10" fill="#dcfce7"/>
+    <text x="87" y="19" class="step-tag" fill="#14532d" text-anchor="middle">2. Negocio</text>
+    <text x="87" y="48" class="card-title" fill="#14532d" text-anchor="middle">BooksService</text>
+    <text x="87" y="66" class="card-sub" fill="#15803d" text-anchor="middle">Lógica y Reglas</text>
+    <line x1="12" y1="78" x2="163" y2="78" stroke="#bbf7d0" stroke-width="1"/>
+    <text x="87" y="98" class="card-item" text-anchor="middle">Aplica validaciones</text>
+    <text x="87" y="115" class="card-item" text-anchor="middle">Inyecta los repositorios</text>
+    <text x="87" y="132" class="card-item" text-anchor="middle">Coordina los datos</text>
+  </g>
+
+  <path d="M 440 140 L 470 140" fill="none" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arr-green)"/>
+  <text x="455" y="128" class="conn-txt" fill="#14532d" text-anchor="middle">Invoca</text>
+
+  <g transform="translate(480, 65)">
+    <rect x="0" y="0" width="185" height="160" rx="10" fill="#fefce8" stroke="#eab308" stroke-width="1.8" filter="url(#shadow-repo)"/>
+    <rect x="0" y="0" width="185" height="28" rx="10" fill="#fef08a"/>
+    <rect x="0" y="18" width="185" height="10" fill="#fef08a"/>
+    <text x="92" y="19" class="step-tag" fill="#713f12" text-anchor="middle">3. Repositorio (ORM)</text>
+    <text x="92" y="48" class="card-title" fill="#713f12" text-anchor="middle">Repository&lt;Entity&gt;</text>
+    <text x="92" y="66" class="card-sub" fill="#a16207" text-anchor="middle">TypeORM Abstracción</text>
+    <line x1="12" y1="78" x2="173" y2="78" stroke="#fde047" stroke-width="1"/>
+    <text x="92" y="98" class="card-item" text-anchor="middle">find(), save(), update()</text>
+    <text x="92" y="115" class="card-item" text-anchor="middle">Mapeo Objeto-Relacional</text>
+    <text x="92" y="132" class="card-item" text-anchor="middle">Genera SQL seguro</text>
+  </g>
+
+  <path d="M 675 140 L 705 140" fill="none" stroke="#d97706" stroke-width="2.2" marker-end="url(#arr-amber)"/>
+  <text x="690" y="128" class="conn-txt" fill="#78350f" text-anchor="middle">SQL</text>
+
+  <g transform="translate(715, 65)">
+    <rect x="0" y="0" width="135" height="160" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="1.8" filter="url(#shadow-repo)"/>
+    <rect x="0" y="0" width="135" height="28" rx="10" fill="#fee2e2"/>
+    <rect x="0" y="18" width="135" height="10" fill="#fee2e2"/>
+    <text x="67" y="19" class="step-tag" fill="#7f1d1d" text-anchor="middle">4. Persistencia</text>
+    <text x="67" y="48" class="card-title" fill="#7f1d1d" text-anchor="middle">PostgreSQL</text>
+    <text x="67" y="66" class="card-sub" fill="#dc2626" text-anchor="middle">Base de Datos</text>
+    <line x1="10" y1="78" x2="125" y2="78" stroke="#fecaca" stroke-width="1"/>
+    <text x="67" y="98" class="card-item" text-anchor="middle">Tablas relacionales</text>
+    <text x="67" y="115" class="card-item" text-anchor="middle">authors y books</text>
+    <text x="67" y="132" class="card-item" text-anchor="middle">Almacenamiento</text>
+  </g>
+</svg>

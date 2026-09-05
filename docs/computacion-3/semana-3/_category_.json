@@ -1,8 +1,8 @@
 {
-    "label": "S3 - Typescript & Express",
+    "label": "S3 - Express, Typescript & Pruebas con Jest",
     "position": 3,
     "link": {
         "type": "generated-index",
-        "description": "Conceptos básicos de Typescript y primeros pasos con Express."
+        "description": "Desarrollo de APIs con Express y TypeScript, pruebas unitarias con Jest y despliegue."
     }
 }

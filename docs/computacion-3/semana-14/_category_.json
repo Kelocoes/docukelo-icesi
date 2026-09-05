@@ -1,5 +1,6 @@
 {
     "label": "S14 - Tailwind & Redux",
+    "className": "hidden",
     "position": 14,
     "link": {
         "type": "generated-index",

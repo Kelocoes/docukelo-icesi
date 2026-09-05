@@ -3,6 +3,6 @@
     "position": 4,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 5 de Desarrollo de Entornos Digitales Web."
+        "description": "Fundamentos de Inyección de Dependencias, Providers en NestJS y gestión avanzada de consultas y persistencia con Repositorios de TypeORM."
     }
 }

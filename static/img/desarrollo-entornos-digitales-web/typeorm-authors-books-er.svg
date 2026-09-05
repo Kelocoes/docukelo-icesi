@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 270" width="100%" height="100%">
+  <defs>
+    <filter id="er-shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+
+    <marker id="crow-foot" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 6 L 0 11 M 10 1 L 10 11" fill="none" stroke="#2563eb" stroke-width="1.8"/>
+    </marker>
+    <marker id="one-bar" viewBox="0 0 12 12" refX="2" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 2 1 L 2 11 M 6 1 L 6 11" fill="none" stroke="#2563eb" stroke-width="1.8"/>
+    </marker>
+  </defs>
+
+  <style>
+    .er-title { font-family: system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 14px; fill: #0f172a; }
+    .table-name { font-family: system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 13.5px; fill: #ffffff; letter-spacing: 0.5px; }
+    .table-header { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 11px; fill: #64748b; }
+    .col-name { font-family: "JetBrains Mono", Consolas, monospace; font-weight: 600; font-size: 11.5px; fill: #1e293b; }
+    .col-type { font-family: "JetBrains Mono", Consolas, monospace; font-weight: 500; font-size: 11px; fill: #64748b; }
+    .pk-badge { font-family: system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 9.5px; fill: #d97706; }
+    .fk-badge { font-family: system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 9.5px; fill: #2563eb; }
+    .rel-text { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 11.5px; fill: #1e3a8a; }
+    .rel-sub { font-family: system-ui, -apple-system, sans-serif; font-weight: 500; font-size: 10px; fill: #64748b; }
+  </style>
+
+  <rect x="10" y="10" width="740" height="250" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+
+  <!-- TABLA 1: AUTHORS (IZQUIERDA) -->
+  <g transform="translate(35, 30)">
+    <rect x="0" y="0" width="230" height="210" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" filter="url(#er-shadow)"/>
+    
+    <!-- Encabezado de la Tabla -->
+    <rect x="0" y="0" width="230" height="34" rx="10" fill="#1e3a8a"/>
+    <rect x="0" y="24" width="230" height="10" fill="#1e3a8a"/>
+    <text x="115" y="22" class="table-name" text-anchor="middle">AUTHORS (authors)</text>
+
+    <!-- Fila 1: id (PK) -->
+    <rect x="1" y="35" width="228" height="28" fill="#eff6ff"/>
+    <text x="15" y="53" class="col-name">id</text>
+    <text x="155" y="53" class="col-type">int</text>
+    <text x="195" y="53" class="pk-badge">PK</text>
+    <line x1="0" y1="63" x2="230" y2="63" stroke="#e2e8f0" stroke-width="1"/>
+
+    <!-- Fila 2: name -->
+    <rect x="1" y="64" width="228" height="28" fill="#ffffff"/>
+    <text x="15" y="82" class="col-name">name</text>
+    <text x="155" y="82" class="col-type">string</text>
+    <line x1="0" y1="92" x2="230" y2="92" stroke="#e2e8f0" stroke-width="1"/>
+
+    <!-- Fila 3: nationality -->
+    <rect x="1" y="93" width="228" height="28" fill="#f8fafc"/>
+    <text x="15" y="111" class="col-name">nationality</text>
+    <text x="155" y="111" class="col-type">string</text>
+    <line x1="0" y1="121" x2="230" y2="121" stroke="#e2e8f0" stroke-width="1"/>
+
+    <!-- Fila 4: birthYear -->
+    <rect x="1" y="122" width="228" height="28" fill="#ffffff"/>
+    <text x="15" y="140" class="col-name">birthYear</text>
+    <text x="155" y="140" class="col-type">int</text>
+    <line x1="0" y1="150" x2="230" y2="150" stroke="#e2e8f0" stroke-width="1"/>
+
+    <!-- Fila 5: isActive -->
+    <rect x="1" y="151" width="228" height="28" fill="#f8fafc"/>
+    <text x="15" y="169" class="col-name">isActive</text>
+    <text x="155" y="169" class="col-type">boolean</text>
+  </g>
+
+  <!-- RELACIÓN 1 A N (CENTRO) -->
+  <g transform="translate(265, 120)">
+    <path d="M 10 20 L 175 20" fill="none" stroke="#2563eb" stroke-width="2.2" marker-start="url(#one-bar)" marker-end="url(#crow-foot)"/>
+    <rect x="35" y="3" width="115" height="34" rx="6" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.2"/>
+    <text x="92.5" y="18" class="rel-text" text-anchor="middle">1 a N (1:Many)</text>
+    <text x="92.5" y="30" class="rel-sub" text-anchor="middle">1 autor tiene N libros</text>
+  </g>
+
+  <!-- TABLA 2: BOOKS (DERECHA) -->
+  <g transform="translate(455, 30)">
+    <rect x="0" y="0" width="270" height="210" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" filter="url(#er-shadow)"/>
+    
+    <!-- Encabezado de la Tabla -->
+    <rect x="0" y="0" width="270" height="34" rx="10" fill="#1e3a8a"/>
+    <rect x="0" y="24" width="270" height="10" fill="#1e3a8a"/>
+    <text x="135" y="22" class="table-name" text-anchor="middle">BOOKS (books)</text>
+
+    <!-- Fila 1: id (PK) -->
+    <rect x="1" y="35" width="268" height="25" fill="#eff6ff"/>
+    <text x="15" y="52" class="col-name">id</text>
+    <text x="165" y="52" class="col-type">int</text>
+    <text x="235" y="52" class="pk-badge">PK</text>
+    <line x1="0" y1="60" x2="270" y2="60" stroke="#e2e8f0" stroke-width="1"/>
+
+    <!-- Fila 2: title -->
+    <rect x="1" y="61" width="268" height="25" fill="#ffffff"/>
+    <text x="15" y="78" class="col-name">title</text>
+    <text x="165" y="78" class="col-type">string</text>
+    <line x1="0" y1="86" x2="270" y2="86" stroke="#e2e8f0" stroke-width="1"/>
+
+    <!-- Fila 3: isbn -->
+    <rect x="1" y="87" width="268" height="25" fill="#f8fafc"/>
+    <text x="15" y="104" class="col-name">isbn</text>
+    <text x="165" y="104" class="col-type">string</text>
+    <line x1="0" y1="112" x2="270" y2="112" stroke="#e2e8f0" stroke-width="1"/>
+
+    <!-- Fila 4: price -->
+    <rect x="1" y="113" width="268" height="25" fill="#ffffff"/>
+    <text x="15" y="130" class="col-name">price</text>
+    <text x="165" y="130" class="col-type">decimal</text>
+    <line x1="0" y1="138" x2="270" y2="138" stroke="#e2e8f0" stroke-width="1"/>
+
+    <!-- Fila 5: publicationYear -->
+    <rect x="1" y="139" width="268" height="25" fill="#f8fafc"/>
+    <text x="15" y="156" class="col-name">publicationYear</text>
+    <text x="165" y="156" class="col-type">int</text>
+    <line x1="0" y1="164" x2="270" y2="164" stroke="#e2e8f0" stroke-width="1"/>
+
+    <!-- Fila 6: author_id (FK) -->
+    <rect x="1" y="165" width="268" height="25" fill="#eff6ff"/>
+    <text x="15" y="182" class="col-name">author_id</text>
+    <text x="165" y="182" class="col-type">int</text>
+    <text x="235" y="182" class="fk-badge">FK</text>
+  </g>
+</svg>

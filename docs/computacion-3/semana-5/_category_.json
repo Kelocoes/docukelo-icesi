@@ -1,0 +1,8 @@
+{
+    "label": "S5 - NestJS Intro",
+    "position": 5,
+    "link": {
+        "type": "generated-index",
+        "description": "Introducción al framework NestJS, arquitectura modular, ciclo de vida de peticiones, primeros pasos con el CLI, modelado de entidades con TypeORM, inyección de dependencias y consultas con repositorios."
+    }
+}

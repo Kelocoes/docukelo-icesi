@@ -1,0 +1,466 @@
+---
+sidebar_position: 2
+---
+
+# Repositories and Queries with TypeORM in NestJS
+
+Once our database entities have been modeled, the next fundamental milestone is interacting with them from application logic. Rather than writing raw, manual SQL queries inside services, NestJS and TypeORM leverage the **Repository Pattern**—an object-oriented abstraction that allows querying, creating, updating, and deleting records safely and with strong typing.
+
+---
+
+## The Repository Pattern in Layered Architecture
+
+The Repository pattern acts as an intermediary between business logic and the underlying relational database. Its goal is to encapsulate table queries so that services remain decoupled from database dialect details:
+
+<div style={{ textAlign: "center", margin: "1.5rem 0" }}>
+  <img src="/img/desarrollo-entornos-digitales-web/typeorm-repository-pattern.svg" alt="Repository Pattern in Layered Architecture" width="100%" />
+</div>
+
+* **Controller (`Controller`)**: Receives the incoming HTTP request, validates input data with DTOs, and delegates execution to the service.
+* **Service (`Service`)**: Applies business domain rules and calls the methods provided by injected repositories.
+* **Repository (`Repository<T>`)**: Exposes TypeORM persistence methods (`find`, `save`, `update`, `delete`) and translates them into parameterized SQL.
+* **Database (PostgreSQL)**: Physically stores records across tables and enforces relational constraints.
+
+---
+
+## Data Model Example: Authors and Books Relationship
+
+To demonstrate relational operations and query filtering, we will use a classic one-to-many (**1:N**) association: an author can write multiple books, and each book belongs to a single author.
+
+<div style={{ textAlign: "center", margin: "1.5rem 0" }}>
+  <img src="/img/desarrollo-entornos-digitales-web/typeorm-authors-books-er.svg" alt="Entity-Relationship Diagram: Authors and Books" width="100%" />
+</div>
+
+### TypeScript Entities with TypeORM
+
+We declare both entities using TypeORM relational decorators:
+
+```typescript title="src/authors/entities/author.entity.ts" showLineNumbers
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Book } from '../../books/entities/book.entity';
+
+@Entity('authors')
+export class Author {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ length: 150 })
+  name: string;
+
+  @Column({ length: 80, nullable: true })
+  nationality: string;
+
+  @Column({ name: 'birth_year', type: 'int', nullable: true })
+  birthYear: number;
+
+  @Column({ name: 'is_active', type: 'boolean', default: true })
+  isActive: boolean;
+
+  // Relation: An author has many books
+  @OneToMany(() => Book, (book) => book.author)
+  books: Book[];
+}
+```
+
+```typescript title="src/books/entities/book.entity.ts" showLineNumbers
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Author } from '../../authors/entities/author.entity';
+
+@Entity('books')
+export class Book {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ length: 200 })
+  title: string;
+
+  @Column({ unique: true, length: 20 })
+  isbn: string;
+
+  @Column({ type: 'decimal', precision: 8, scale: 2 })
+  price: number;
+
+  @Column({ name: 'publication_year', type: 'int' })
+  publicationYear: number;
+
+  @Column({ length: 60 })
+  genre: string;
+
+  // Relation: Many books belong to a single author
+  @ManyToOne(() => Author, (author) => author.books, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'author_id' }) // Physical foreign key column in PostgreSQL
+  author: Author;
+}
+```
+
+:::info[Placement of @JoinColumn]
+In `@ManyToOne` / `@OneToMany` relationships, the physical foreign key column (`author_id`) resides in the table on the "many" side (`books`). For this reason, the `@JoinColumn` decorator is always placed on the `Book` entity.
+:::
+
+---
+
+## Injecting Repositories in NestJS
+
+To consume repositories within our services, we follow a two-step procedure:
+
+### 1. Register entities in the module (`TypeOrmModule.forFeature`)
+
+The `TypeOrmModule.forFeature()` method registers repository providers (`Repository<Book>` and `Repository<Author>`) within the module's IoC container:
+
+```typescript title="src/books/books.module.ts" showLineNumbers
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Book } from './entities/book.entity';
+import { Author } from '../authors/entities/author.entity';
+import { BooksService } from './books.service';
+import { BooksController } from './books.controller';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Book, Author])],
+  controllers: [BooksController],
+  providers: [BooksService],
+  exports: [BooksService],
+})
+export class BooksModule {}
+```
+
+### 2. Inject with `@InjectRepository()` in the service constructor
+
+```typescript title="src/books/books.service.ts" showLineNumbers
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Book } from './entities/book.entity';
+import { Author } from '../authors/entities/author.entity';
+
+@Injectable()
+export class BooksService {
+  constructor(
+    @InjectRepository(Book)
+    private readonly bookRepository: Repository<Book>,
+
+    @InjectRepository(Author)
+    private readonly authorRepository: Repository<Author>,
+  ) {}
+}
+```
+
+---
+
+## Basic CRUD Operations with the Repository
+
+The `Repository<T>` class provides built-in methods ready for immediate consumption:
+
+| Method | Purpose | Database Behavior |
+|---|---|---|
+| `create(dto)` | Instantiates the entity in memory | Does not execute SQL (only creates the JS object) |
+| `save(entity)` | Inserts a new row or updates an existing one | Executes `INSERT` or `UPDATE` |
+| `find(options)` | Returns all rows matching conditions | Executes `SELECT * FROM...` |
+| `findOne(options)` | Returns the first matching row or `null` | Executes `SELECT * ... LIMIT 1` |
+| `findBy(criteria)` | Shorthand lookup by simple field equality | Executes `SELECT * WHERE col = val` |
+| `findOneBy(criteria)` | Shorthand to retrieve a single row by fields | Executes `SELECT * WHERE ... LIMIT 1` |
+| `update(id, partial)` | Updates columns by ID without loading the entity | Executes `UPDATE ... WHERE id = ...` |
+| `delete(id)` | Physically deletes a record by ID | Executes `DELETE FROM ... WHERE id = ...` |
+| `count(options)` | Returns total count of matching rows | Executes `SELECT COUNT(*) FROM...` |
+| `findAndCount(options)`| Returns `[records, total]` tuple for pagination | Executes both data fetch and count queries |
+
+### Key Distinction: `create()` vs. `save()`
+
+```typescript
+// 1. create() only instantiates the object in JavaScript memory (validates TypeScript types)
+const bookInstance = this.bookRepository.create({
+  title: 'One Hundred Years of Solitude',
+  isbn: '978-0307474728',
+  price: 45.00,
+  publicationYear: 1967,
+  genre: 'Magical Realism',
+  author: authorInstance,
+});
+// At this stage, NO SQL statement has been executed against the database
+
+// 2. save() physically persists the entity into PostgreSQL
+const savedBook = await this.bookRepository.save(bookInstance);
+// Executes: INSERT INTO books (title, isbn, price...) VALUES (...)
+```
+
+---
+
+## Declarative Queries with FindOptions
+
+The `find()` method accepts a `FindManyOptions` configuration object with expressive declarative options:
+
+```typescript
+const books = await this.bookRepository.find({
+  // 1. select: Project specific columns (avoids SELECT *)
+  select: {
+    id: true,
+    title: true,
+    price: true,
+  },
+
+  // 2. where: Filtering conditions
+  where: {
+    genre: 'Fantasy',
+  },
+
+  // 3. relations: Load related associations via SQL JOIN
+  relations: {
+    author: true,
+  },
+
+  // 4. order: Sorting criteria
+  order: {
+    price: 'DESC',
+    title: 'ASC',
+  },
+
+  // 5. Pagination: Records count and offset
+  take: 10, // LIMIT 10
+  skip: 0,  // OFFSET 0
+});
+```
+
+---
+
+## TypeORM Query Operators
+
+To apply expressive filtering beyond simple equality, TypeORM offers dedicated operators exported from `typeorm`:
+
+| TypeORM Operator | SQL Equivalent | Common Use Case |
+|---|---|---|
+| `ILike('%term%')` | `WHERE col ILIKE '%term%'` | Case-insensitive substring matching |
+| `Like('%term%')` | `WHERE col LIKE '%term%'` | Case-sensitive pattern matching |
+| `Between(min, max)` | `WHERE col BETWEEN min AND max` | Range of prices, dates, or years |
+| `In([a, b, c])` | `WHERE col IN (a, b, c)` | Matches any value within an array |
+| `MoreThan(n)` | `WHERE col > n` | Values strictly greater than a threshold |
+| `MoreThanOrEqual(n)` | `WHERE col >= n` | Values greater than or equal |
+| `LessThan(n)` | `WHERE col < n` | Books published prior to a given year |
+| `LessThanOrEqual(n)` | `WHERE col <= n` | Prices lower than or equal to a cap |
+| `IsNull()` | `WHERE col IS NULL` | Records where a field is not set |
+| `Not(condition)` | `WHERE NOT (...)` | Negates any inner condition |
+
+### Example with Combined Operators
+
+```typescript title="src/books/queries-example.ts" showLineNumbers
+import { Between, ILike, In } from 'typeorm';
+
+// Find Sci-Fi or Novel books priced between 20 and 70 USD,
+// whose title contains the word "guide"
+const results = await this.bookRepository.find({
+  where: {
+    genre: In(['Sci-Fi', 'Novel']),
+    price: Between(20, 70),
+    title: ILike('%guide%'),
+  },
+  relations: {
+    author: true,
+  },
+  order: {
+    price: 'ASC',
+  },
+  take: 10,
+});
+```
+
+---
+
+## Complete Service Implementation (`BooksService`)
+
+The following complete NestJS service integrates CRUD persistence, relational loading, and filtered queries:
+
+```typescript title="src/books/books.service.ts" showLineNumbers
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, ILike, Between, In } from 'typeorm';
+import { Book } from './entities/book.entity';
+import { Author } from '../authors/entities/author.entity';
+
+export interface CreateBookDto {
+  title: string;
+  isbn: string;
+  price: number;
+  publicationYear: number;
+  genre: string;
+  authorId: number;
+}
+
+@Injectable()
+export class BooksService {
+  constructor(
+    @InjectRepository(Book)
+    private readonly bookRepository: Repository<Book>,
+
+    @InjectRepository(Author)
+    private readonly authorRepository: Repository<Author>,
+  ) {}
+
+  // 1. Create a book linked to an existing author
+  async create(dto: CreateBookDto): Promise<Book> {
+    const author = await this.authorRepository.findOneBy({ id: dto.authorId });
+    if (!author) {
+      throw new NotFoundException(`Author with ID ${dto.authorId} does not exist`);
+    }
+
+    const existingBook = await this.bookRepository.findOneBy({ isbn: dto.isbn });
+    if (existingBook) {
+      throw new ConflictException(`A book with ISBN ${dto.isbn} already exists`);
+    }
+
+    const newBook = this.bookRepository.create({
+      ...dto,
+      author,
+    });
+
+    return await this.bookRepository.save(newBook);
+  }
+
+  // 2. List books with pagination and populated author relation
+  async findAll(page: number = 1, limit: number = 10): Promise<{ data: Book[]; total: number }> {
+    const [data, total] = await this.bookRepository.findAndCount({
+      relations: {
+        author: true,
+      },
+      order: {
+        id: 'DESC',
+      },
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+
+    return { data, total };
+  }
+
+  // 3. Find book by ID with author relation
+  async findOne(id: number): Promise<Book> {
+    const book = await this.bookRepository.findOne({
+      where: { id },
+      relations: { author: true },
+    });
+
+    if (!book) {
+      throw new NotFoundException(`Book with ID ${id} not found`);
+    }
+
+    return book;
+  }
+
+  // 4. Filter books by price range and genres list
+  async findByPriceAndGenres(min: number, max: number, genres: string[]): Promise<Book[]> {
+    return await this.bookRepository.find({
+      where: {
+        price: Between(min, max),
+        genre: In(genres),
+      },
+      relations: {
+        author: true,
+      },
+      order: {
+        price: 'ASC',
+      },
+    });
+  }
+
+  // 5. Approximate title search
+  async searchByTitle(term: string): Promise<Book[]> {
+    return await this.bookRepository.find({
+      where: {
+        title: ILike(`%${term}%`),
+      },
+      relations: {
+        author: true,
+      },
+    });
+  }
+
+  // 6. Update price
+  async updatePrice(id: number, newPrice: number): Promise<Book> {
+    const book = await this.findOne(id);
+    book.price = newPrice;
+    return await this.bookRepository.save(book);
+  }
+
+  // 7. Physical deletion
+  async remove(id: number): Promise<void> {
+    const result = await this.bookRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Unable to delete book with ID ${id}`);
+    }
+  }
+}
+```
+
+---
+
+## Self-Assessment Quiz
+
+<Quiz id="web-env-typeorm-repositories-quiz">
+  <Question title="What is the primary role of the Repository layer in NestJS with TypeORM?">
+    <Option>Build visual React components to render data on the client.</Option>
+    <Option correct>Abstract data access and encapsulate operations on database tables without writing raw SQL.</Option>
+    <Option>Automatically generate REST endpoints without requiring controller classes.</Option>
+    <Option>Manage client-side authentication cookies in the browser.</Option>
+  </Question>
+
+  <Question title="What NestJS module configuration is required to inject a TypeORM repository?">
+    <Option>Declare the entity inside the module's controllers array.</Option>
+    <Option correct>Import TypeOrmModule.forFeature([Book, Author]) into the module's imports array.</Option>
+    <Option>Define a global connection string variable inside main.ts.</Option>
+    <Option>Create an abstract class decorated with @GlobalRepository().</Option>
+  </Question>
+
+  <Question title="How is an entity repository injected into a service constructor in NestJS?">
+    <Option>constructor(private readonly bookRepository = new Repository&lt;Book&gt;())</Option>
+    <Option correct>constructor(@InjectRepository(Book) private readonly bookRepository: Repository&lt;Book&gt;)</Option>
+    <Option>constructor(@Inject('BOOK_SERVICE') private readonly bookRepository: any)</Option>
+    <Option>constructor(private readonly bookRepository: BookEntity)</Option>
+  </Question>
+
+  <Question title="What is the fundamental difference between create() and save() in Repository&lt;T&gt;?">
+    <Option>create() immediately executes an SQL INSERT, whereas save() only validates types.</Option>
+    <Option>create() is exclusive to MySQL, and save() is exclusive to PostgreSQL.</Option>
+    <Option correct>create() only instantiates the object in JavaScript memory without touching the database, whereas save() persists the record into the database.</Option>
+    <Option>There is no difference; both methods are identical and interchangeable.</Option>
+  </Question>
+
+  <Question title="In the relationship between Author and Book, why is the @JoinColumn(&#123; name: 'author_id' &#125;) decorator placed on the Book entity?">
+    <Option>Because Book is the parent entity in the TypeScript hierarchy.</Option>
+    <Option correct>Because the physical foreign key column (author_id) resides in the books table on the ManyToOne side.</Option>
+    <Option>Because TypeORM does not permit foreign keys in tables with fewer than five columns.</Option>
+    <Option>Because Author has no numeric primary key defined.</Option>
+  </Question>
+
+  <Question title="If you execute this.bookRepository.find(&#123; relations: &#123; author: true &#125; &#125;), what action does TypeORM perform internally?">
+    <Option>Deletes all books that do not have an associated author.</Option>
+    <Option correct>Executes an SQL query with a JOIN to eagerly load the associated Author entity for each book.</Option>
+    <Option>Clones author records into the browser's local storage.</Option>
+    <Option>Generates a temporary in-memory table listing authors.</Option>
+  </Question>
+
+  <Question title="Which TypeORM operator performs a case-insensitive text search?">
+    <Option>CaseIgnore()</Option>
+    <Option>LikeInsensitive()</Option>
+    <Option correct>ILike()</Option>
+    <Option>Match()</Option>
+  </Question>
+
+  <Question title="If you need to query books with a price between 25 and 70 USD, which TypeORM operator do you use?">
+    <Option>Inside(25, 70)</Option>
+    <Option correct>Between(25, 70)</Option>
+    <Option>Range(25, 70)</Option>
+    <Option>FromTo(25, 70)</Option>
+  </Question>
+
+  <Question title="What value does TypeORM's findOneBy() return if no record matches the search criteria?">
+    <Option>Throws an unhandled fatal database exception.</Option>
+    <Option>An empty array [].</Option>
+    <Option correct>null.</Option>
+    <Option>The number 0.</Option>
+  </Question>
+
+  <Question title="What is the main difference between update(id, data) and save(entity) when modifying a record?">
+    <Option>update() is incompatible with relational databases like PostgreSQL.</Option>
+    <Option correct>update() directly executes an SQL UPDATE on the specified columns without loading the entity into memory, whereas save() operates on a full entity instance.</Option>
+    <Option>update() deletes the original record and assigns a new autoincremented ID.</Option>
+    <Option>There is no difference; both perform the exact same in-memory validation workflow.</Option>
+  </Question>
+</Quiz>

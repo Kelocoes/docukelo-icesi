@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 330" width="100%" height="100%">
+  <defs>
+    <!-- Sombra suave para los elementos -->
+    <filter id="shadow-ioc" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    
+    <!-- Flecha estilizada para inyección -->
+    <marker id="arrow-inject" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <style>
+    .runtime-title { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 13px; fill: #64748b; letter-spacing: 0.6px; }
+    .ioc-title { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 16px; fill: #0f172a; }
+    .ioc-subtitle { font-family: system-ui, -apple-system, sans-serif; font-weight: 500; font-size: 12px; fill: #64748b; }
+    .node-title { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 14px; }
+    .node-decor { font-family: system-ui, -apple-system, sans-serif; font-weight: 600; font-size: 12px; }
+    .node-role { font-family: system-ui, -apple-system, sans-serif; font-weight: 400; font-size: 11px; fill: #475569; }
+    .di-text { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 12px; fill: #2563eb; }
+    .di-detail { font-family: system-ui, -apple-system, sans-serif; font-weight: 500; font-size: 10.5px; fill: #64748b; }
+  </style>
+
+  <!-- MARCO EXTERNO: Entorno Runtime Node.js / NestJS -->
+  <rect x="10" y="10" width="720" height="310" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="6,4"/>
+  <text x="25" y="32" class="runtime-title">ENTORNO RUNTIME NESTJS (NODE.JS)</text>
+
+  <!-- CONTENEDOR INTERNO: NestJS IoC Container -->
+  <rect x="25" y="45" width="690" height="260" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" filter="url(#shadow-ioc)"/>
+  
+  <!-- Encabezado del IoC Container -->
+  <rect x="25" y="45" width="690" height="40" rx="14" fill="#eff6ff"/>
+  <rect x="25" y="70" width="690" height="15" fill="#eff6ff"/>
+  <text x="42" y="70" class="ioc-title">NestJS Inversion of Control (IoC) Container</text>
+  <text x="475" y="70" class="ioc-subtitle">Administrador de Instancias y Dependencias</text>
+
+  <!-- PROVIDER 1: Servicio (Injectable) -->
+  <g transform="translate(60, 115)">
+    <rect x="0" y="0" width="200" height="150" rx="12" fill="#f0fdf4" stroke="#22c55e" stroke-width="2" filter="url(#shadow-ioc)"/>
+    <rect x="0" y="0" width="200" height="32" rx="12" fill="#dcfce7"/>
+    <rect x="0" y="22" width="200" height="10" fill="#dcfce7"/>
+    <text x="100" y="22" class="node-decor" fill="#15803d" text-anchor="middle">@Injectable()</text>
+    <text x="100" y="58" class="node-title" fill="#14532d" text-anchor="middle">UsersService</text>
+    <text x="100" y="76" class="node-role" text-anchor="middle">Provider (Lógica de Negocio)</text>
+    <line x1="20" y1="90" x2="180" y2="90" stroke="#bbf7d0" stroke-width="1"/>
+    <text x="100" y="112" class="node-role" text-anchor="middle">Instanciado por el motor</text>
+    <text x="100" y="128" class="node-role" text-anchor="middle">Listo para suministrarse</text>
+  </g>
+
+  <!-- FLECHA CONEXIÓN INYECCIÓN -->
+  <text x="365" y="170" class="di-text" text-anchor="middle">Inyecta como dependencia</text>
+  <path d="M 270 185 L 460 185" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="5,4" marker-end="url(#arrow-inject)"/>
+  <text x="365" y="205" class="di-detail" text-anchor="middle">vía constructor</text>
+
+  <!-- CONSUMIDOR: Controlador -->
+  <g transform="translate(470, 115)">
+    <rect x="0" y="0" width="210" height="150" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="2" filter="url(#shadow-ioc)"/>
+    <rect x="0" y="0" width="210" height="32" rx="12" fill="#dbeafe"/>
+    <rect x="0" y="22" width="210" height="10" fill="#dbeafe"/>
+    <text x="105" y="22" class="node-decor" fill="#1d4ed8" text-anchor="middle">@Controller('users')</text>
+    <text x="105" y="58" class="node-title" fill="#1e3a8a" text-anchor="middle">UsersController</text>
+    <text x="105" y="76" class="node-role" text-anchor="middle">Consumidor (Rutas HTTP)</text>
+    <line x1="20" y1="90" x2="190" y2="90" stroke="#bfdbfe" stroke-width="1"/>
+    <text x="105" y="112" class="node-role" text-anchor="middle">Recibe UsersService listo</text>
+    <text x="105" y="128" class="node-role" text-anchor="middle">Sin usar "new" internamente</text>
+  </g>
+</svg>

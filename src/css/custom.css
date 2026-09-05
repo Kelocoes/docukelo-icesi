@@ -56,3 +56,8 @@
 .token.boolean {
     color: #b5cea8 !important; /* Verde claro para números y booleanos */
 }
+
+/* Ocultar elementos de la barra lateral y tarjetas marcadas con la clase hidden */
+.hidden {
+    display: none !important;
+}

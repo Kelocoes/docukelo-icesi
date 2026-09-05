@@ -1,0 +1,466 @@
+---
+sidebar_position: 2
+---
+
+# Repositorios y Consultas con TypeORM en NestJS
+
+Una vez modeladas las entidades de nuestra base de datos, el siguiente paso es interactuar con ellas desde la lógica de la aplicación. En lugar de escribir sentencias SQL manuales en los servicios, NestJS y TypeORM utilizan el **Patrón Repositorio**, una abstracción que permite consultar, insertar, modificar y eliminar datos mediante métodos orientados a objetos.
+
+---
+
+## El Patrón Repositorio y la Arquitectura por Capas
+
+El patrón Repositorio actúa como un mediador entre la capa de negocio y la base de datos relacional. Su objetivo es aislar las consultas a tablas para que los servicios no dependan de detalles técnicos de la base de datos:
+
+<div style={{textAlign: 'center', margin: '20px 0'}}>
+  <img src="/img/desarrollo-entornos-digitales-web/typeorm-repository-pattern.svg" width="100%" alt="El Patrón Repositorio en la Arquitectura por Capas" />
+</div>
+
+- **Controlador (`Controller`)**: Recibe la solicitud HTTP, valida los datos de entrada con DTOs y delega al servicio.
+- **Servicio (`Service`)**: Aplica las reglas del negocio e invoca los métodos provistos por los repositorios inyectados.
+- **Repositorio (`Repository<T>`)**: Provee métodos de TypeORM (`find`, `save`, `update`, `delete`) y traduce las operaciones a SQL seguro.
+- **Base de Datos (PostgreSQL)**: Almacena físicamente los registros en tablas relacionadas.
+
+---
+
+## Modelo de Datos: Relación Autores y Libros
+
+Para ilustrar las operaciones y tipos de consulta, utilizaremos una relación clásica de uno a muchos (**1:N**): un autor puede escribir muchos libros, y cada libro pertenece a un único autor.
+
+<div style={{textAlign: 'center', margin: '20px 0'}}>
+  <img src="/img/desarrollo-entornos-digitales-web/typeorm-authors-books-er.svg" width="100%" alt="Diagrama Entidad-Relación de Autores y Libros" />
+</div>
+
+### Entidades en TypeScript con TypeORM
+
+Definimos las dos entidades utilizando los decoradores relacionales:
+
+```typescript title="src/authors/entities/author.entity.ts" showLineNumbers
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Book } from "../../books/entities/book.entity";
+
+@Entity("authors")
+export class Author {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ length: 150 })
+    name: string;
+
+    @Column({ length: 80, nullable: true })
+    nationality: string;
+
+    @Column({ name: "birth_year", type: "int", nullable: true })
+    birthYear: number;
+
+    @Column({ name: "is_active", type: "boolean", default: true })
+    isActive: boolean;
+
+    // Relación: Un autor tiene muchos libros
+    @OneToMany(() => Book, (book) => book.author)
+    books: Book[];
+}
+```
+
+```typescript title="src/books/entities/book.entity.ts" showLineNumbers
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Author } from "../../authors/entities/author.entity";
+
+@Entity("books")
+export class Book {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ length: 200 })
+    title: string;
+
+    @Column({ unique: true, length: 20 })
+    isbn: string;
+
+    @Column({ type: "decimal", precision: 8, scale: 2 })
+    price: number;
+
+    @Column({ name: "publication_year", type: "int" })
+    publicationYear: number;
+
+    @Column({ length: 60 })
+    genre: string;
+
+    // Relación: Muchos libros pertenecen a un único autor
+    @ManyToOne(() => Author, (author) => author.books, { onDelete: "CASCADE" })
+    @JoinColumn({ name: "author_id" }) // Columna física de la llave foránea
+    author: Author;
+}
+```
+
+:::info[Ubicación de @JoinColumn]
+En las relaciones `@ManyToOne` / `@OneToMany`, la columna de llave foránea (`author_id`) reside en la tabla del lado "muchos" (`books`). Por esta razón, el decorador `@JoinColumn` se ubica siempre en la entidad `Book`.
+:::
+
+---
+
+## Inyección de Repositorios en NestJS
+
+Para poder utilizar los repositorios en nuestros servicios, seguimos un proceso de dos pasos:
+
+### 1. Registrar las entidades en el módulo (`TypeOrmModule.forFeature`)
+
+El método `TypeOrmModule.forFeature()` registra automáticamente los proveedores de repositorio (`Repository<Book>` y `Repository<Author>`) en el contenedor IoC de este módulo:
+
+```typescript title="src/books/books.module.ts" showLineNumbers
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { Book } from "./entities/book.entity";
+import { Author } from "../authors/entities/author.entity";
+import { BooksService } from "./books.service";
+import { BooksController } from "./books.controller";
+
+@Module({
+    imports: [TypeOrmModule.forFeature([Book, Author])],
+    controllers: [BooksController],
+    providers: [BooksService],
+    exports: [BooksService],
+})
+export class BooksModule {}
+```
+
+### 2. Inyectar con `@InjectRepository()` en el constructor del servicio
+
+```typescript title="src/books/books.service.ts" showLineNumbers
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Book } from "./entities/book.entity";
+import { Author } from "../authors/entities/author.entity";
+
+@Injectable()
+export class BooksService {
+    constructor(
+        @InjectRepository(Book)
+        private readonly bookRepository: Repository<Book>,
+
+        @InjectRepository(Author)
+        private readonly authorRepository: Repository<Author>,
+    ) {}
+}
+```
+
+---
+
+## Operaciones CRUD Básicas con el Repositorio
+
+La clase `Repository<T>` de TypeORM expone un conjunto de métodos listos para usar:
+
+| Método | Propósito | Comportamiento en Base de Datos |
+| :--- | :--- | :--- |
+| `create(dto)` | Crea una instancia de la entidad en memoria | No ejecuta SQL (solo crea el objeto en JS) |
+| `save(entity)` | Inserta un nuevo registro o actualiza uno existente | Ejecuta `INSERT` o `UPDATE` |
+| `find(options)` | Retorna todos los registros que cumplan las condiciones | Ejecuta `SELECT * FROM...` |
+| `findOne(options)` | Retorna el primer registro coincidente o `null` | Ejecuta `SELECT * ... LIMIT 1` |
+| `findBy(criteria)` | Atajo de búsqueda por igualdad simple de campos | Ejecuta `SELECT * WHERE campo = valor` |
+| `findOneBy(criteria)` | Atajo para obtener un único registro por campos simples | Ejecuta `SELECT * WHERE ... LIMIT 1` |
+| `update(id, partial)` | Actualiza columnas directas por ID sin cargar la entidad | Ejecuta `UPDATE ... WHERE id = ...` |
+| `delete(id)` | Elimina el registro físicamente por su ID | Ejecuta `DELETE FROM ... WHERE id = ...` |
+| `count(options)` | Retorna la cantidad de registros coincidentes | Ejecuta `SELECT COUNT(*) FROM...` |
+| `findAndCount(options)`| Retorna un arreglo `[registros, total]` para paginación | Ejecuta consulta de datos y de conteo |
+
+### Diferencia clave: `create()` frente a `save()`
+
+```typescript
+// 1. create() solo crea la instancia en memoria (valida tipos en TypeScript)
+const bookInstance = this.bookRepository.create({
+    title: "Cien años de soledad",
+    isbn: "978-0307474728",
+    price: 45000,
+    publicationYear: 1967,
+    genre: "Realismo Mágico",
+    author: authorInstance,
+});
+// En este punto NO se ha ejecutado ninguna sentencia en la base de datos
+
+// 2. save() persiste físicamente la entidad en PostgreSQL
+const savedBook = await this.bookRepository.save(bookInstance);
+// Ejecuta: INSERT INTO books (title, isbn, price...) VALUES (...)
+```
+
+---
+
+## Consultas Avanzadas con FindOptions
+
+El método `find()` acepta un objeto de configuración (`FindManyOptions`) con propiedades declarativas para controlar la consulta:
+
+```typescript
+const books = await this.bookRepository.find({
+    // 1. select: Proyección de columnas específicas (evita SELECT *)
+    select: {
+        id: true,
+        title: true,
+        price: true,
+    },
+
+    // 2. where: Condiciones de igualdad y filtros
+    where: {
+        genre: "Fantasía",
+    },
+
+    // 3. relations: Carga las entidades relacionadas (JOIN)
+    relations: {
+        author: true,
+    },
+
+    // 4. order: Criterios de ordenamiento
+    order: {
+        price: "DESC",
+        title: "ASC",
+    },
+
+    // 5. Paginación: Cantidad de registros y desplazamiento
+    take: 10, // LIMIT 10
+    skip: 0,  // OFFSET 0
+});
+```
+
+---
+
+## Operadores de Consulta de TypeORM
+
+Para aplicar filtros más expresivos que la simple igualdad, TypeORM incluye operadores listos para importar desde `typeorm`:
+
+| Operador TypeORM | Equivalente SQL | Caso de Uso |
+| :--- | :--- | :--- |
+| `ILike('%cadena%')` | `WHERE col ILIKE '%cadena%'` | Búsqueda aproximada insensible a mayúsculas |
+| `Like('%cadena%')` | `WHERE col LIKE '%cadena%'` | Búsqueda aproximada sensible a mayúsculas |
+| `Between(min, max)` | `WHERE col BETWEEN min AND max` | Rango de precios, fechas o años |
+| `In([a, b, c])` | `WHERE col IN (a, b, c)` | Coincidencia con una lista de valores |
+| `MoreThan(n)` | `WHERE col > n` | Valores mayores a un número |
+| `MoreThanOrEqual(n)`| `WHERE col >= n` | Valores mayores o iguales |
+| `LessThan(n)` | `WHERE col < n` | Libros publicados antes de un año |
+| `LessThanOrEqual(n)`| `WHERE col <= n` | Precios menores o iguales a un tope |
+| `IsNull()` | `WHERE col IS NULL` | Registros sin valor asignado |
+| `Not(condicion)` | `WHERE NOT (...)` | Niega cualquier condición |
+
+### Ejemplo con Operadores Combinados
+
+```typescript title="Ejemplo de consulta con operadores" showLineNumbers
+import { Between, ILike, In, MoreThan } from "typeorm";
+
+// Buscar libros de Ciencia Ficción o Novela, con precio entre 20 y 70 USD,
+// cuyo título contenga la palabra "guía" y con precio superior a 0
+const results = await this.bookRepository.find({
+    where: {
+        genre: In(["Ciencia Ficción", "Novela"]),
+        price: Between(20, 70),
+        title: ILike("%guía%"),
+    },
+    relations: {
+        author: true,
+    },
+    order: {
+        price: "ASC",
+    },
+    take: 10,
+});
+```
+
+---
+
+## Implementación Completa del Servicio (`BooksService`)
+
+A continuación se muestra un servicio de NestJS que aplica estas operaciones de forma limpia y directa:
+
+```typescript title="src/books/books.service.ts" showLineNumbers
+import { Injectable, NotFoundException, ConflictException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, ILike, Between, In } from "typeorm";
+import { Book } from "./entities/book.entity";
+import { Author } from "../authors/entities/author.entity";
+
+export interface CreateBookDto {
+    title: string;
+    isbn: string;
+    price: number;
+    publicationYear: number;
+    genre: string;
+    authorId: number;
+}
+
+@Injectable()
+export class BooksService {
+    constructor(
+        @InjectRepository(Book)
+        private readonly bookRepository: Repository<Book>,
+
+        @InjectRepository(Author)
+        private readonly authorRepository: Repository<Author>,
+    ) {}
+
+    // 1. Crear un libro asociándolo a un autor existente
+    async create(dto: CreateBookDto): Promise<Book> {
+        const author = await this.authorRepository.findOneBy({ id: dto.authorId });
+        if (!author) {
+            throw new NotFoundException(`El autor con ID ${dto.authorId} no existe`);
+        }
+
+        const existingBook = await this.bookRepository.findOneBy({ isbn: dto.isbn });
+        if (existingBook) {
+            throw new ConflictException(`Ya existe un libro con el ISBN ${dto.isbn}`);
+        }
+
+        const newBook = this.bookRepository.create({
+            ...dto,
+            author, // Asignamos la entidad relacionada
+        });
+
+        return await this.bookRepository.save(newBook);
+    }
+
+    // 2. Listar libros con paginación y relación de autor cargada
+    async findAll(page: number = 1, limit: number = 10): Promise<{ data: Book[]; total: number }> {
+        const [data, total] = await this.bookRepository.findAndCount({
+            relations: {
+                author: true,
+            },
+            order: {
+                id: "DESC",
+            },
+            take: limit,
+            skip: (page - 1) * limit,
+        });
+
+        return { data, total };
+    }
+
+    // 3. Buscar libro por ID
+    async findOne(id: number): Promise<Book> {
+        const book = await this.bookRepository.findOne({
+            where: { id },
+            relations: { author: true },
+        });
+
+        if (!book) {
+            throw new NotFoundException(`Libro con ID ${id} no encontrado`);
+        }
+
+        return book;
+    }
+
+    // 4. Filtrar libros por rango de precio y lista de géneros usando operadores
+    async findByPriceAndGenres(min: number, max: number, genres: string[]): Promise<Book[]> {
+        return await this.bookRepository.find({
+            where: {
+                price: Between(min, max),
+                genre: In(genres),
+            },
+            relations: {
+                author: true,
+            },
+            order: {
+                price: "ASC",
+            },
+        });
+    }
+
+    // 5. Búsqueda por título aproximado
+    async searchByTitle(term: string): Promise<Book[]> {
+        return await this.bookRepository.find({
+            where: {
+                title: ILike(`%${term}%`),
+            },
+            relations: {
+                author: true,
+            },
+        });
+    }
+
+    // 6. Actualización de precio
+    async updatePrice(id: number, newPrice: number): Promise<Book> {
+        const book = await this.findOne(id);
+        book.price = newPrice;
+        return await this.bookRepository.save(book);
+    }
+
+    // 7. Eliminación física
+    async remove(id: number): Promise<void> {
+        const result = await this.bookRepository.delete(id);
+        if (result.affected === 0) {
+            throw new NotFoundException(`No fue posible eliminar el libro con ID ${id}`);
+        }
+    }
+}
+```
+
+---
+
+## Cuestionario de Autoevaluación
+
+<Quiz id="web-env-typeorm-repositories-quiz">
+  <Question title="¿Cuál es el rol principal de la capa de Repositorio en NestJS con TypeORM?">
+    <Option>Construir componentes visuales con React para renderizar datos en el cliente.</Option>
+    <Option correct>Abstraer el acceso a datos y encapsular las operaciones sobre las tablas sin escribir sentencias SQL manuales.</Option>
+    <Option>Crear rutas y endpoints REST automáticamente sin requerir controladores.</Option>
+    <Option>Gestionar la autenticación de usuarios mediante cookies en el navegador.</Option>
+  </Question>
+
+  <Question title="¿Qué configuración en el módulo de NestJS es requerida para poder inyectar un repositorio de TypeORM?">
+    <Option>Declarar la entidad dentro del arreglo controllers del módulo.</Option>
+    <Option correct>Importar TypeOrmModule.forFeature([Book, Author]) en el arreglo imports del módulo.</Option>
+    <Option>Registrar una variable global con la cadena de conexión en el archivo main.ts.</Option>
+    <Option>Crear una clase abstracta decorada con @GlobalRepository().</Option>
+  </Question>
+
+  <Question title="¿Cómo se inyecta el repositorio de una entidad en el constructor de un servicio en NestJS?">
+    <Option>constructor(private readonly bookRepository = new Repository&lt;Book&gt;())</Option>
+    <Option correct>constructor(@InjectRepository(Book) private readonly bookRepository: Repository&lt;Book&gt;)</Option>
+    <Option>constructor(@Inject('BOOK_SERVICE') private readonly bookRepository: any)</Option>
+    <Option>constructor(private readonly bookRepository: BookEntity)</Option>
+  </Question>
+
+  <Question title="¿Cuál es la diferencia fundamental entre el método create() y el método save() en Repository&lt;T&gt;?">
+    <Option>create() ejecuta un INSERT en la BD de inmediato, mientras que save() solo valida tipos.</Option>
+    <Option>create() es exclusivo para MySQL y save() es exclusivo para PostgreSQL.</Option>
+    <Option correct>create() solo instancia el objeto en memoria JavaScript sin tocar la base de datos, mientras que save() persiste el registro en la BD.</Option>
+    <Option>No existe ninguna diferencia; son métodos exactamente intercambiables.</Option>
+  </Question>
+
+  <Question title="En la relación entre Author y Book, ¿por qué el decorador @JoinColumn({ name: 'author_id' }) se ubica en la entidad Book?">
+    <Option>Porque Book es la entidad padre en la jerarquía de TypeScript.</Option>
+    <Option correct>Porque la columna física de llave foránea (author_id) reside en la tabla books del lado de la relación ManyToOne.</Option>
+    <Option>Porque TypeORM no permite llaves foráneas en tablas con menos de cinco columnas.</Option>
+    <Option>Porque Author no tiene una clave primaria numérica definida.</Option>
+  </Question>
+
+  <Question title="Si ejecutas this.bookRepository.find({ relations: &#123; author: true &#125; }), ¿qué acción realiza TypeORM internamente?">
+    <Option>Elimina todos los libros que no tengan un autor asociado.</Option>
+    <Option correct>Ejecuta una consulta SQL con un JOIN para cargar la información completa de la entidad Author relacionada en cada libro.</Option>
+    <Option>Clona la información del autor dentro del almacenamiento local del navegador.</Option>
+    <Option>Genera una tabla temporal en memoria con el listado de autores.</Option>
+  </Question>
+
+  <Question title="¿Qué operador de TypeORM permite realizar una búsqueda de texto insensible a mayúsculas y minúsculas?">
+    <Option>CaseIgnore()</Option>
+    <Option>LikeInsensitive()</Option>
+    <Option correct>ILike()</Option>
+    <Option>Match()</Option>
+  </Question>
+
+  <Question title="Si necesitas consultar los libros cuyo precio esté comprendido entre 25 y 70 USD, ¿qué operador de TypeORM utilizas?">
+    <Option>Inside(25, 70)</Option>
+    <Option correct>Between(25, 70)</Option>
+    <Option>Range(25, 70)</Option>
+    <Option>FromTo(25, 70)</Option>
+  </Question>
+
+  <Question title="¿Qué valor retorna el método findOneBy() de TypeORM si no se encuentra ningún registro que cumpla el criterio de búsqueda?">
+    <Option>Lanza una excepción fatal de base de datos no capturada.</Option>
+    <Option>Un arreglo vacío [].</Option>
+    <Option correct>null.</Option>
+    <Option>El número 0.</Option>
+  </Question>
+
+  <Question title="¿Cuál es la diferencia principal entre update(id, data) y save(entity) al modificar un registro?">
+    <Option>update() no es compatible con bases de datos relacionales como PostgreSQL.</Option>
+    <Option correct>update() ejecuta directamente una sentencia SQL UPDATE sobre las columnas indicadas sin cargar previamente la entidad en memoria, mientras que save() opera sobre una entidad completa.</Option>
+    <Option>update() elimina el registro anterior y crea uno nuevo con un ID autoincremental distinto.</Option>
+    <Option>No existe ninguna diferencia; ambos ejecutan exactamente el mismo flujo de validación en memoria.</Option>
+  </Question>
+</Quiz>
