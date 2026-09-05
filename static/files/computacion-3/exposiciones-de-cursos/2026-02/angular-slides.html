@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Angular: framework moderno para aplicaciones web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" />
+<style>
+  /* ============ Tokens — dark-first (deck de proyección) ============ */
+  :root {
+    --ink:      #131317;
+    --ink-2:    #17171d;
+    --surface:  #1e1e25;
+    --paper:    #ecebf1;
+    --muted:    #9a97a8;
+    --faint:    #6a6778;
+    --line:     #2d2d38;
+    --grad: linear-gradient(125deg, #e5007d 0%, #a22bd6 52%, #ff5247 100%);
+    --accent-text: #f06fc5;
+
+    --code-com: #7e7a8c;
+    --code-key: #e879c9;
+    --code-str: #e9b98a;
+    --code-fn:  #c6a0f2;
+
+    --shield-op: .07;
+    --dot-op: .05;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --ink:      #fbfaf8;
+      --ink-2:    #f4f2ee;
+      --surface:  #ffffff;
+      --paper:    #1a1820;
+      --muted:    #5c5866;
+      --faint:    #928d9c;
+      --line:     #e6e1ec;
+      --accent-text: #c0006a;
+      --code-com: #8f8b99;
+      --code-key: #b5007a;
+      --code-str: #a2591c;
+      --code-fn:  #7a3fb8;
+      --shield-op: .05;
+      --dot-op: .045;
+    }
+  }
+  :root[data-theme="light"] {
+    --ink:      #fbfaf8;
+    --ink-2:    #f4f2ee;
+    --surface:  #ffffff;
+    --paper:    #1a1820;
+    --muted:    #5c5866;
+    --faint:    #928d9c;
+    --line:     #e6e1ec;
+    --accent-text: #c0006a;
+    --code-com: #8f8b99;
+    --code-key: #b5007a;
+    --code-str: #a2591c;
+    --code-fn:  #7a3fb8;
+    --shield-op: .05;
+    --dot-op: .045;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============ Atmósfera de fondo ============ */
+  .bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(60vw 60vw at 8% -10%, rgba(229,0,125,.16), transparent 60%),
+      radial-gradient(55vw 55vw at 100% 110%, rgba(124,58,237,.16), transparent 60%);
+  }
+  .bg::after {
+    content: ""; position: absolute; inset: 0;
+    background-image: radial-gradient(currentColor 1px, transparent 1.4px);
+    background-size: 46px 46px;
+    color: var(--paper);
+    opacity: var(--dot-op);
+  }
+  .shield {
+    position: fixed; z-index: 0; pointer-events: none;
+    right: -8vmin; top: 50%; translate: 0 -50%;
+    width: 78vmin; height: 78vmin;
+    opacity: var(--shield-op);
+  }
+  .shield path { fill: var(--ink); }
+
+  /* ============ Deck ============ */
+  #deck { position: relative; z-index: 1; height: 100%; }
+  .slide {
+    position: absolute; inset: 0;
+    display: none;
+    justify-content: center; align-content: safe center;
+    overflow-y: auto;
+    padding: clamp(2.5rem, 7vw, 8rem) clamp(1.5rem, 12vw, 12rem);
+  }
+  .slide.active { display: grid; animation: fade .34s ease both; }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+  .inner { width: min(64rem, 100%); }
+
+  .reveal { animation: none; }
+  .slide.active .reveal {
+    animation: rise .5s cubic-bezier(.2,.7,.2,1) both;
+    animation-delay: var(--d, 0s);
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(15px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ============ Tipografía de slide ============ */
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: clamp(.66rem, 1vw, .8rem);
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    color: var(--muted);
+    display: flex; align-items: center; gap: .8em;
+    margin-bottom: clamp(1.2rem, 3vw, 2.4rem);
+  }
+  .eyebrow::before {
+    content: ""; width: 2.4em; height: 2px; flex: none;
+    background: var(--grad);
+  }
+
+  h2.title {
+    font-family: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    line-height: 1.03;
+    letter-spacing: -.02em;
+    text-wrap: balance;
+    margin-bottom: clamp(1.4rem, 3.5vw, 2.6rem);
+  }
+  .grad {
+    background: var(--grad);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+
+  .lead {
+    font-size: clamp(1.05rem, 1.7vw, 1.4rem);
+    line-height: 1.5;
+    color: var(--paper);
+    max-width: 46ch;
+    margin-bottom: 1.6rem;
+  }
+
+  ul.points { list-style: none; display: flex; flex-direction: column; gap: .95rem; }
+  ul.points li {
+    position: relative; padding-left: 1.6rem;
+    font-size: clamp(.98rem, 1.5vw, 1.24rem);
+    line-height: 1.45;
+    color: var(--paper);
+  }
+  ul.points li::before {
+    content: ""; position: absolute; left: 0; top: .5em;
+    width: .62rem; height: .62rem; background: var(--grad);
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+  ul.points li b { font-weight: 600; }
+  ul.points li .k {
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: .86em; color: var(--accent-text);
+    background: color-mix(in srgb, var(--accent-text) 12%, transparent);
+    padding: .08em .4em; border-radius: 3px;
+  }
+  ul.points.tight li { font-size: clamp(.9rem, 1.35vw, 1.08rem); }
+
+  .cols {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(1.5rem, 4vw, 3.5rem); align-items: start;
+  }
+  @media (max-width: 860px) { .cols { grid-template-columns: 1fr; } }
+
+  /* ============ Chip "En React" ============ */
+  .vs {
+    display: inline-flex; align-items: center; gap: .55em;
+    margin-top: 1.7rem;
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: clamp(.74rem, 1.15vw, .9rem);
+    color: var(--accent-text);
+    border: 1px solid color-mix(in srgb, var(--accent-text) 45%, transparent);
+    border-radius: 3px;
+    padding: .5em .8em;
+    line-height: 1.35;
+  }
+  .vs::before { content: "\21C4"; font-size: 1.1em; opacity: .9; }
+  .vs b { color: var(--paper); font-weight: 500; }
+
+  /* ============ Bloque de código ============ */
+  figure.code {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    overflow: hidden;
+  }
+  figure.code::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px; background: var(--grad);
+  }
+  figure.code + figure.code { margin-top: 1rem; }
+  figure.code figcaption {
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: clamp(.62rem, .95vw, .74rem);
+    letter-spacing: .04em;
+    color: var(--muted);
+    padding: .6rem .95rem;
+    border-bottom: 1px solid var(--line);
+  }
+  figure.code pre {
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: clamp(.72rem, 1.05vw, .92rem);
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--paper) 92%, transparent);
+  }
+  .code .c { color: var(--code-com); font-style: italic; }
+  .code .k { color: var(--code-key); }
+  .code .s { color: var(--code-str); }
+  .code .f { color: var(--code-fn); }
+
+  /* ============ Tabla comparativa ============ */
+  .table-wrap { overflow-x: auto; }
+  table.cmp {
+    width: 100%; border-collapse: collapse;
+    font-size: clamp(.82rem, 1.3vw, 1.05rem);
+  }
+  table.cmp th, table.cmp td {
+    text-align: left; padding: .72rem .9rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.cmp thead th {
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: .78em; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--muted); border-bottom: 2px solid transparent;
+    border-image: var(--grad) 1;
+  }
+  table.cmp tbody td:first-child { color: var(--muted); }
+  table.cmp tbody td:nth-child(2) { color: var(--paper); font-weight: 500; }
+  table.cmp tbody td:nth-child(3) { color: var(--muted); }
+  table.cmp tbody tr:last-child td { border-bottom: none; }
+
+  /* ============ Agenda ============ */
+  ol.agenda { list-style: none; display: flex; flex-direction: column; gap: .2rem; counter-reset: a; }
+  ol.agenda li {
+    display: grid;
+    grid-template-columns: 2.2rem 1fr auto;
+    gap: 1rem; align-items: baseline;
+    padding: .85rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  ol.agenda li:last-child { border-bottom: none; }
+  ol.agenda li::before {
+    counter-increment: a; content: counter(a, decimal-leading-zero);
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: .82rem; color: var(--accent-text);
+  }
+  ol.agenda .who {
+    font-size: clamp(.95rem, 1.5vw, 1.18rem); color: var(--paper);
+  }
+  ol.agenda .who span { display: block; color: var(--muted); font-size: .82em; margin-top: .15rem; }
+  ol.agenda .t {
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: .84rem; color: var(--muted); white-space: nowrap;
+  }
+
+  /* ============ Portada ============ */
+  .slide--cover .inner { width: min(70rem, 100%); }
+  .cover-kicker {
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: clamp(.7rem, 1.1vw, .86rem);
+    text-transform: uppercase; letter-spacing: .28em;
+    color: var(--muted); margin-bottom: 1.4rem;
+  }
+  h1.cover {
+    font-family: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+    font-weight: 800;
+    font-size: clamp(3.25rem, 15vw, 12rem);
+    line-height: .86; letter-spacing: -.04em;
+  }
+  .cover-sub {
+    font-size: clamp(1.1rem, 2.4vw, 1.9rem);
+    color: var(--muted); margin-top: 1.4rem; font-weight: 400;
+  }
+  .cover-meta {
+    margin-top: clamp(2.5rem, 6vw, 4.5rem);
+    display: flex; flex-wrap: wrap; gap: .6rem 1.4rem;
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: clamp(.72rem, 1.1vw, .9rem); color: var(--muted);
+  }
+  .cover-meta span { display: inline-flex; align-items: center; gap: .5em; }
+  .cover-meta span::before { content: ""; width: 6px; height: 6px; background: var(--grad); }
+
+  .huge-q {
+    font-family: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+    font-weight: 800; letter-spacing: -.03em; line-height: .9;
+    font-size: clamp(2.75rem, 11vw, 8.5rem);
+  }
+
+  /* ============ Chrome (barra, controles, notas) ============ */
+  .progress {
+    position: fixed; top: 0; left: 0; right: 0; height: 3px;
+    background: color-mix(in srgb, var(--paper) 10%, transparent); z-index: 5;
+  }
+  .progress span { display: block; height: 100%; width: 0; background: var(--grad); transition: width .35s ease; }
+
+  .controls {
+    position: fixed; right: clamp(1rem, 3vw, 2.4rem); bottom: clamp(1rem, 3vw, 2rem);
+    display: flex; align-items: center; gap: .5rem; z-index: 5;
+  }
+  .controls button, .theme-btn {
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    background: color-mix(in srgb, var(--surface) 80%, transparent);
+    color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    width: 2.3rem; height: 2.3rem;
+    font-size: 1.1rem; line-height: 1;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition: border-color .2s ease, color .2s ease;
+  }
+  .controls button:hover, .theme-btn:hover { border-color: var(--accent-text); color: var(--accent-text); }
+  .count {
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: .82rem; color: var(--muted);
+    min-width: 5.2ch; text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .theme-btn {
+    position: fixed; left: clamp(1rem, 3vw, 2.4rem); bottom: clamp(1rem, 3vw, 2rem);
+    z-index: 5;
+  }
+  :focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
+
+  .hint {
+    position: fixed; left: 50%; bottom: clamp(1rem, 3vw, 2rem); translate: -50% 0;
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: .74rem; color: var(--faint);
+    z-index: 5; transition: opacity .5s ease; text-align: center;
+  }
+
+  .notes {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
+    background: var(--ink-2);
+    border-top: 2px solid transparent; border-image: var(--grad) 1;
+    padding: 1.2rem clamp(1.5rem, 8vw, 6rem) 1.4rem;
+    max-height: 42vh; overflow-y: auto;
+  }
+  .notes h3 {
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .18em;
+    color: var(--muted); margin-bottom: .5rem;
+  }
+  .notes p { font-size: clamp(.9rem, 1.4vw, 1.1rem); line-height: 1.55; color: var(--paper); max-width: 70ch; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slide.active, .slide.active .reveal { animation: none !important; }
+    .progress span { transition: none; }
+  }
+
+  /* ============ Impresión → PDF (una slide por página) ============ */
+  @media print {
+    @page { size: landscape; margin: 0; }
+    :root {
+      --ink: #ffffff; --ink-2: #ffffff; --surface: #f6f4f8; --paper: #16141c;
+      --muted: #55515f; --faint: #55515f; --line: #d9d4e0;
+      --accent-text: #b5007a; --shield-op: .06; --dot-op: .04;
+      --code-com: #8a8698; --code-key: #b5007a; --code-str: #a2591c; --code-fn: #7a3fb8;
+    }
+    html, body { overflow: visible; height: auto; background: #fff; }
+    .bg, .shield { position: absolute; }
+    .progress, .controls, .theme-btn, .hint, .notes { display: none !important; }
+    #deck { height: auto; }
+    .slide {
+      position: relative; inset: auto; display: grid !important;
+      width: 100vw; height: 100vh; page-break-after: always;
+      animation: none !important;
+    }
+    .slide .reveal { animation: none !important; opacity: 1 !important; transform: none !important; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<svg class="shield" viewBox="0 0 250 250" aria-hidden="true">
+  <defs>
+    <linearGradient id="sg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e5007d" />
+      <stop offset=".52" stop-color="#a22bd6" />
+      <stop offset="1" stop-color="#ff5247" />
+    </linearGradient>
+  </defs>
+  <polygon fill="url(#sg)" points="125,12 12,52 30,205 125,238 220,205 238,52" />
+  <path fill="var(--ink)" d="M125,45 55,205 h24 l14,-35 h64 l14,35 h24 Z M125,92 l21,52 h-42 Z" />
+</svg>
+
+<main id="deck">
+
+  <!-- 1 -->
+  <section class="slide slide--cover" data-notes="Abrir con una idea clara: Angular no es solo una forma de pintar botones; es una plataforma completa para construir aplicaciones web mantenibles. Mencionar React solo como referencia mínima porque la clase ya lo conoce, no como eje de la exposición.">
+    <div class="inner">
+      <p class="cover-kicker reveal" style="--d:0s">Compunet 3 · Exposición</p>
+      <h1 class="cover reveal" style="--d:.06s"><span class="grad">Angular</span></h1>
+      <p class="cover-sub reveal" style="--d:.14s">Framework moderno para crear aplicaciones web escalables con TypeScript.</p>
+      <div class="cover-meta reveal" style="--d:.22s">
+        <span>Compunet 3</span><span>2 sep 2026</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide" data-notes="La agenda se reorganiza para que Angular sea el centro: primero qué problema resuelve, luego arquitectura, luego comunicación con datos, después herramientas y demo. La comparación con React queda como referencia breve.">
+    <div class="inner">
+      <p class="eyebrow reveal">Agenda · 20 minutos · 5 bloques</p>
+      <h2 class="title reveal" style="--d:.05s">Cómo va la sesión</h2>
+      <ol class="agenda reveal" style="--d:.1s">
+        <li><span class="who">Qué es Angular y qué problema resuelve</span><span class="t">~3 min</span></li>
+        <li><span class="who">Arquitectura: componentes, templates y carpetas</span><span class="t">~4 min</span></li>
+        <li><span class="who">Data binding, control de flujo y formularios</span><span class="t">~5 min</span></li>
+        <li><span class="who">Servicios, DI, HTTP, RxJS y routing</span><span class="t">~5 min</span></li>
+        <li><span class="who">CLI, demo, criterios de uso y preguntas</span><span class="t">~3 min</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" data-notes="Definición base. Angular es mantenido por Google, usa TypeScript y se usa para SPAs. Además, no solo crea interfaces: organiza navegación, formularios, servicios, comunicación HTTP y testing.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 1 · Introducción</p>
+      <h2 class="title reveal" style="--d:.05s">¿Qué es <span class="grad">Angular</span>?</h2>
+      <div class="cols">
+        <ul class="points reveal" style="--d:.1s">
+          <li>Framework de <b>desarrollo web basado en TypeScript</b>, mantenido por Google.</li>
+          <li>Permite construir <b>aplicaciones dinámicas</b>, especialmente <b>Single Page Applications</b>.</li>
+          <li>Organiza la app por <b>componentes reutilizables</b>: vista, lógica, datos y estilos.</li>
+          <li>Incluye herramientas oficiales para <b>rutas, formularios, HTTP, testing y compilación</b>.</li>
+        </ul>
+        <div class="reveal" style="--d:.18s">
+          <p class="lead">La idea central: Angular propone una arquitectura completa para que equipos grandes puedan construir, escalar y mantener una aplicación sin inventar todo desde cero.</p>
+          <p class="vs"><b>Comparación mínima:</b> React se enfoca en la UI; Angular trae más decisiones resueltas por defecto.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide" data-notes="Esta diapositiva reemplaza la comparación extensa con React. El foco es explicar el modelo mental de Angular: componente, template, servicio, router y CLI. Es más importante que memorizar nombres sueltos.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 1 · Modelo mental</p>
+      <h2 class="title reveal" style="--d:.05s">Angular piensa en <span class="grad">capas</span></h2>
+      <div class="table-wrap reveal" style="--d:.1s">
+        <table class="cmp">
+          <thead><tr><th>Capa</th><th>Qué hace</th><th>Ejemplo</th></tr></thead>
+          <tbody>
+            <tr><td>Componente</td><td>Controla una parte de la pantalla.</td><td><code>ProductListComponent</code></td></tr>
+            <tr><td>Template</td><td>Define lo que ve el usuario y cómo se conecta con los datos.</td><td><code>{{ name }}</code>, <code>[disabled]</code>, <code>(click)</code></td></tr>
+            <tr><td>Servicio</td><td>Guarda lógica reutilizable: datos, API, reglas de negocio.</td><td><code>ProductService</code></td></tr>
+            <tr><td>Router</td><td>Maneja navegación entre pantallas sin recargar toda la página.</td><td><code>/product/:id</code></td></tr>
+            <tr><td>CLI</td><td>Crea proyectos, genera archivos y compila la aplicación.</td><td><code>ng new</code>, <code>ng generate</code>, <code>ng serve</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide" data-notes="Explicar que Angular usa componentes. En versiones modernas se trabaja mucho con componentes standalone, donde el componente declara lo que necesita importar. Ya no es obligatorio entender NgModules para empezar.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 2 · Arquitectura</p>
+      <h2 class="title reveal" style="--d:.05s">Componentes y <span class="grad">standalone</span></h2>
+      <div class="cols">
+        <ul class="points reveal" style="--d:.1s">
+          <li>Componente = <b>clase TypeScript</b> + <span class="k">@Component</span> + template + estilos.</li>
+          <li>Divide la interfaz en piezas pequeñas: lista, tarjeta, formulario, detalle, navbar.</li>
+          <li><b>Standalone</b>: el componente declara sus propios <span class="k">imports</span> y puede usarse sin un <span class="k">NgModule</span>.</li>
+          <li>Ventaja: menos configuración inicial y una estructura más directa para proyectos nuevos.</li>
+        </ul>
+        <div class="reveal" style="--d:.18s">
+          <figure class="code">
+            <figcaption>product-list.component.ts</figcaption>
+<pre class="code"><code><span class="f">@Component</span>({
+  selector: <span class="s">'app-product-list'</span>,
+  imports: [RouterLink, FormsModule, CurrencyPipe],
+  templateUrl: <span class="s">'./product-list.component.html'</span>
+})
+<span class="k">export class</span> <span class="f">ProductListComponent</span> { }</code></pre>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide" data-notes="Tomado y mejorado desde la presentación de referencia: un componente suele tener ts, html y css. El .ts maneja lógica, el .html muestra la vista y el .css define presentación visual.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 2 · Estructura del proyecto</p>
+      <h2 class="title reveal" style="--d:.05s">Archivos que vas a ver</h2>
+      <div class="cols">
+        <ul class="points reveal" style="--d:.1s">
+          <li><span class="k">main.ts</span>: punto de arranque de la aplicación.</li>
+          <li><span class="k">app.config.ts</span>: configuración general: router, providers, HTTP.</li>
+          <li><span class="k">app.routes.ts</span>: mapa de rutas de la app.</li>
+          <li><span class="k">*.component.ts/html/css</span>: lógica, vista y estilos de cada componente.</li>
+          <li><span class="k">angular.json</span> y <span class="k">package.json</span>: configuración del proyecto y dependencias.</li>
+        </ul>
+        <figure class="code reveal" style="--d:.18s">
+          <figcaption>estructura típica</figcaption>
+<pre class="code"><code>src/
+ └─ app/
+    ├─ app.component.ts
+    ├─ app.component.html
+    ├─ app.config.ts
+    ├─ app.routes.ts
+    └─ features/
+       └─ products/
+          ├─ product-list.component.ts
+          └─ product.service.ts
+main.ts
+angular.json
+package.json</code></pre>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide" data-notes="Data binding conecta lo que ocurre en TypeScript con lo que se ve en HTML. Es una de las partes más preguntables de la exposición porque tiene sintaxis concreta.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 3 · Templates</p>
+      <h2 class="title reveal" style="--d:.05s">Data binding</h2>
+      <div class="cols">
+        <ul class="points reveal" style="--d:.1s">
+          <li><b>Interpolación</b> — <span class="k">{{ valor }}</span> muestra una variable.</li>
+          <li><b>Property binding</b> — <span class="k">[disabled]="x"</span> cambia una propiedad del DOM.</li>
+          <li><b>Event binding</b> — <span class="k">(click)="fn()"</span> ejecuta una función por un evento.</li>
+          <li><b>Two-way binding</b> — <span class="k">[(ngModel)]="x"</span> sincroniza input y variable.</li>
+        </ul>
+        <figure class="code reveal" style="--d:.18s">
+          <figcaption>template.html</figcaption>
+<pre class="code"><code>&lt;h2&gt;{{ title }}&lt;/h2&gt;
+
+&lt;button [disabled]=<span class="s">"loading"</span>
+        (click)=<span class="s">"save()"</span>&gt;
+  Guardar
+&lt;/button&gt;
+
+&lt;input [(ngModel)]=<span class="s">"filterText"</span> /&gt;</code></pre>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide" data-notes="Explicar la sintaxis moderna de control de flujo. @for y @if hacen que el template sea más legible. track ayuda a Angular a identificar cada elemento y actualizar eficientemente.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 3 · Templates</p>
+      <h2 class="title reveal" style="--d:.05s">Control de flujo: <span class="grad">@for / @if</span></h2>
+      <div class="cols">
+        <ul class="points reveal" style="--d:.1s">
+          <li><span class="k">@if</span> muestra una parte de la vista solo si se cumple una condición.</li>
+          <li><span class="k">@for</span> recorre listas y renderiza un bloque por cada elemento.</li>
+          <li><span class="k">track</span> le dice a Angular cómo identificar cada item para actualizar mejor.</li>
+          <li><span class="k">@empty</span> permite mostrar un mensaje cuando la lista está vacía.</li>
+        </ul>
+        <figure class="code reveal" style="--d:.18s">
+          <figcaption>template moderno</figcaption>
+<pre class="code"><code>@if (loading()) {
+  &lt;p&gt;Cargando...&lt;/p&gt;
+} @else {
+  @for (product of products(); track product.id) {
+    &lt;article&gt;{{ product.name }}&lt;/article&gt;
+  } @empty {
+    &lt;p&gt;No hay productos.&lt;/p&gt;
+  }
+}</code></pre>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide" data-notes="Agregar formularios y validaciones porque en la presentación del otro grupo aparecía crear formularios como utilidad central. Angular tiene forms como parte importante de su ecosistema oficial.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 3 · Formularios</p>
+      <h2 class="title reveal" style="--d:.05s">Formularios y validación</h2>
+      <div class="cols">
+        <ul class="points reveal" style="--d:.1s">
+          <li>Angular tiene soporte oficial para <b>template-driven forms</b> y <b>reactive forms</b>.</li>
+          <li>Permite validar campos requeridos, formatos, longitudes y reglas personalizadas.</li>
+          <li>En proyectos grandes, los <b>reactive forms</b> ayudan porque el formulario vive como modelo en TypeScript.</li>
+          <li>Uso típico: registro, login, filtros, checkout, edición de perfiles y paneles administrativos.</li>
+        </ul>
+        <figure class="code reveal" style="--d:.18s">
+          <figcaption>reactive form</figcaption>
+<pre class="code"><code>form = new FormGroup({
+  name: new FormControl(<span class="s">''</span>, Validators.required),
+  email: new FormControl(<span class="s">''</span>, Validators.email)
+});
+
+save() {
+  if (this.form.valid) console.log(this.form.value);
+}</code></pre>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide" data-notes="Los servicios y la inyección de dependencias son una de las ideas más importantes de Angular. Separan la lógica de negocio de la interfaz visual y evitan duplicar código.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 4 · Servicios</p>
+      <h2 class="title reveal" style="--d:.05s">Servicios e inyección de dependencias</h2>
+      <div class="cols">
+        <ul class="points reveal" style="--d:.1s">
+          <li>Un <b>servicio</b> concentra lógica reutilizable: datos, llamadas a API o reglas de negocio.</li>
+          <li><span class="k">providedIn: 'root'</span> lo registra para toda la aplicación como singleton.</li>
+          <li>La <b>inyección de dependencias</b> entrega el servicio donde se necesita, sin crear instancias manualmente.</li>
+          <li>Resultado: componentes más limpios y código más fácil de probar.</li>
+        </ul>
+        <figure class="code reveal" style="--d:.18s">
+          <figcaption>product.service.ts</figcaption>
+<pre class="code"><code><span class="f">@Injectable</span>({ providedIn: <span class="s">'root'</span> })
+<span class="k">export class</span> <span class="f">ProductService</span> {
+  getProducts() { return this.http.get&lt;Product[]&gt;(<span class="s">'/api/products'</span>); }
+}
+
+<span class="k">constructor</span>(private productService: ProductService) {}</code></pre>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" data-notes="HttpClient y RxJS. La idea clave es que Angular trabaja mucho con Observables: flujos de datos que pueden emitir valores en el tiempo. No entrar demasiado profundo, solo dejar claro para qué sirve.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 4 · Datos externos</p>
+      <h2 class="title reveal" style="--d:.05s">HttpClient y RxJS</h2>
+      <div class="cols">
+        <ul class="points reveal" style="--d:.1s">
+          <li><span class="k">HttpClient</span> permite hacer peticiones <b>GET, POST, PUT, DELETE</b>.</li>
+          <li>Usualmente devuelve un <b>Observable</b>: un flujo asíncrono de datos.</li>
+          <li>RxJS permite transformar, combinar y manejar errores en esos flujos.</li>
+          <li>En una app real: Angular pide datos a un backend y actualiza la interfaz cuando llegan.</li>
+        </ul>
+        <figure class="code reveal" style="--d:.18s">
+          <figcaption>product.service.ts</figcaption>
+<pre class="code"><code>getProducts(): Observable&lt;Product[]&gt; {
+  return this.http.get&lt;Product[]&gt;(<span class="s">'/api/products'</span>);
+}
+
+this.productService.getProducts()
+  .subscribe(products =&gt; this.products.set(products));</code></pre>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide" data-notes="Routing: importante porque las SPAs no recargan toda la página. Angular Router controla qué componente se muestra según la URL.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 4 · Navegación</p>
+      <h2 class="title reveal" style="--d:.05s">Routing</h2>
+      <div class="cols">
+        <ul class="points reveal" style="--d:.1s">
+          <li><span class="k">provideRouter(routes)</span> configura las rutas en aplicaciones standalone.</li>
+          <li><span class="k">&lt;router-outlet /&gt;</span> marca dónde aparece el componente de la ruta activa.</li>
+          <li><span class="k">routerLink</span> permite navegar desde el HTML.</li>
+          <li>Los parámetros como <span class="k">product/:id</span> permiten pantallas dinámicas.</li>
+        </ul>
+        <figure class="code reveal" style="--d:.18s">
+          <figcaption>app.routes.ts</figcaption>
+<pre class="code"><code><span class="k">export const</span> routes: Routes = [
+  { path: <span class="s">''</span>, component: ProductListComponent },
+  { path: <span class="s">'product/:id'</span>, component: ProductDetailComponent },
+  { path: <span class="s">'**'</span>, redirectTo: <span class="s">''</span> }
+];</code></pre>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide" data-notes="Signals es una parte moderna de Angular. Explicar como un contenedor de valor que avisa cuando cambia. computed permite derivar valores sin recalcular todo manualmente.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 4 · Reactividad</p>
+      <h2 class="title reveal" style="--d:.05s">Signals</h2>
+      <div class="cols">
+        <ul class="points reveal" style="--d:.1s">
+          <li><span class="k">signal()</span> guarda un valor reactivo.</li>
+          <li><span class="k">computed()</span> crea valores derivados que se recalculan cuando cambia una dependencia.</li>
+          <li>Angular puede saber con más precisión qué parte de la vista debe actualizar.</li>
+          <li>Útil para filtros, contadores, estados de carga y datos calculados en pantalla.</li>
+        </ul>
+        <figure class="code reveal" style="--d:.18s">
+          <figcaption>product-list.component.ts</figcaption>
+<pre class="code"><code>readonly filterText = signal(<span class="s">''</span>);
+readonly products = signal&lt;Product[]&gt;([]);
+
+readonly filteredProducts = computed(() =&gt;
+  this.products().filter(p =&gt;
+    p.name.includes(this.filterText())
+  )
+);</code></pre>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide" data-notes="CLI: tomado del otro archivo, pero organizado con más claridad. Explicar que la CLI reduce fricción: crea, genera, corre y compila.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 5 · Herramientas</p>
+      <h2 class="title reveal" style="--d:.05s">Angular CLI</h2>
+      <div class="cols">
+        <ul class="points reveal" style="--d:.1s">
+          <li>Antes de instalar: tener <b>Node.js</b> y <b>npm</b>.</li>
+          <li><span class="k">ng new</span> crea un proyecto nuevo con estructura inicial.</li>
+          <li><span class="k">ng generate</span> crea componentes, servicios y otros archivos.</li>
+          <li><span class="k">ng serve</span> corre la app localmente; <span class="k">ng build</span> compila para producción.</li>
+        </ul>
+        <figure class="code reveal" style="--d:.18s">
+          <figcaption>comandos básicos</figcaption>
+<pre class="code"><code>node -v
+npm -v
+npm install -g @angular/cli
+ng version
+
+ng new mi-app
+ng generate component product-list
+ng serve</code></pre>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide" data-notes="Mostrar la demostración práctica de creación de un proyecto con Angular CLI usando el enlace de YouTube.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 5 · Demo CLI</p>
+      <h2 class="title reveal" style="--d:.05s">Creando un proyecto con <span class="grad">Angular CLI</span></h2>
+      <div class="reveal" style="--d:.1s">
+        <a href="https://youtu.be/DYKT6YRMkdU" target="_blank" rel="noopener" style="font-family:'IBM Plex Mono', ui-monospace, Consolas, monospace;font-size:clamp(1rem,2vw,1.5rem);color:var(--accent-text);text-decoration:none;border-bottom:1px solid color-mix(in srgb, var(--accent-text) 55%, transparent);">https://youtu.be/DYKT6YRMkdU</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide" data-notes="Esta es la única comparación directa. Mantenerla corta: no pelear frameworks, sino elegir según contexto. Angular conviene cuando se quiere estructura oficial; React cuando se quiere flexibilidad y ecosistema modular.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 5 · Criterio técnico</p>
+      <h2 class="title reveal" style="--d:.05s">¿Cuándo conviene Angular?</h2>
+      <div class="table-wrap reveal" style="--d:.1s">
+        <table class="cmp">
+          <thead><tr><th>Situación</th><th>Angular encaja mejor si...</th><th>Cuidado con...</th></tr></thead>
+          <tbody>
+            <tr><td>Equipo grande</td><td>Se necesita una arquitectura uniforme y reglas comunes.</td><td>La curva inicial puede ser más alta.</td></tr>
+            <tr><td>Aplicación empresarial</td><td>Hay formularios, rutas, permisos, dashboards y consumo constante de APIs.</td><td>Puede ser demasiado pesado para una landing simple.</td></tr>
+            <tr><td>Mantenibilidad</td><td>Importa separar componentes, servicios y responsabilidades.</td><td>Hay que respetar la estructura; improvisar rompe sus ventajas.</td></tr>
+            <tr><td>Comparación breve</td><td>Angular trae más herramientas oficiales integradas.</td><td>React puede sentirse más flexible para proyectos pequeños o altamente personalizados.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide" data-notes="Explicar la demo como una app pequeña que une todo: no es solo mostrar código suelto. Lista, filtro, ruta de detalle, servicio, signals, binding y CLI.">
+    <div class="inner">
+      <p class="eyebrow reveal">Bloque 5 · Demo</p>
+      <h2 class="title reveal" style="--d:.05s">Demo — catálogo de productos</h2>
+      <div class="cols">
+        <ul class="points reveal" style="--d:.1s">
+          <li>Lista de productos con filtro de búsqueda en vivo.</li>
+          <li>Detalle de producto usando una ruta con parámetro.</li>
+          <li>Servicio para separar datos de la interfaz.</li>
+          <li>Signals para estado local y valores derivados.</li>
+          <li>Binding y control de flujo dentro del template.</li>
+        </ul>
+        <figure class="code reveal" style="--d:.18s">
+          <figcaption>terminal</figcaption>
+<pre class="code"><code>cd 02-demo/product-catalog
+npm install
+npx @angular/cli serve
+# → http://localhost:4200</code></pre>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide" data-notes="Cierre fuerte: Angular no es mejor universalmente, pero sí tiene una propuesta clara. La idea evaluable es entender qué resuelve y cómo sus piezas se conectan.">
+    <div class="inner">
+      <p class="eyebrow reveal">Cierre · Ideas clave</p>
+      <h2 class="title reveal" style="--d:.05s">Conclusiones</h2>
+      <ul class="points reveal" style="--d:.1s">
+        <li>Angular es una <b>plataforma completa</b>: componentes, rutas, formularios, HTTP, CLI y testing.</li>
+        <li>Su fortaleza no es solo crear interfaces, sino <b>ordenar aplicaciones complejas</b>.</li>
+        <li>La curva de aprendizaje viene de sus conceptos propios: <b>decoradores, DI, RxJS, routing y forms</b>.</li>
+        <li>Cuando el proyecto crece, esa estructura puede ahorrar decisiones repetidas y reducir inconsistencias.</li>
+        <li>Comparación honesta: no reemplaza a React en todo; Angular gana cuando la prioridad es arquitectura integrada.</li>
+      </ul>
+    </div>
+  </section>
+
+<!-- 20 -->
+  <section class="slide slide--cover" data-notes="Cerrar con preguntas. Recordar que se puede usar N para notas, P para imprimir a PDF y flechas para navegar.">
+    <div class="inner">
+      <p class="cover-kicker reveal" style="--d:0s">Gracias</p>
+      <h1 class="cover reveal" style="--d:.06s"><span class="grad">¿Preguntas?</span></h1>
+      <p class="cover-sub reveal" style="--d:.14s">angular.dev · Demo: catálogo de productos</p>
+    </div>
+  </section>
+
+</main>
+
+<div class="progress"><span id="bar"></span></div>
+<nav class="controls" aria-label="Navegación de diapositivas">
+  <button id="prev" type="button" aria-label="Diapositiva anterior">&#8249;</button>
+  <span class="count" id="count">01 / 16</span>
+  <button id="next" type="button" aria-label="Diapositiva siguiente">&#8250;</button>
+</nav>
+<button id="themeBtn" class="theme-btn" type="button" aria-label="Cambiar tema claro/oscuro">&#9680;</button>
+<p class="hint" id="hint">&#8594; / Espacio avanzar &nbsp;·&nbsp; N notas &nbsp;·&nbsp; F pantalla completa &nbsp;·&nbsp; P imprimir a PDF</p>
+<aside class="notes" id="notes" hidden>
+  <h3>Notas del orador</h3>
+  <p id="notesBody"></p>
+</aside>
+
+<script>
+  (function () {
+    "use strict";
+
+    // Tema recordado (best-effort).
+    try {
+      var saved = localStorage.getItem("angular-deck-theme");
+      if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
+    } catch (e) {}
+
+    var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+    var bar = document.getElementById("bar");
+    var count = document.getElementById("count");
+    var notes = document.getElementById("notes");
+    var notesBody = document.getElementById("notesBody");
+    var hint = document.getElementById("hint");
+    var total = slides.length;
+    var i = 0;
+    var hintDismissed = false;
+
+    function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+    function clampIndex(n) { return Math.max(0, Math.min(total - 1, n)); }
+
+    function indexFromHash() {
+      var m = /^#(\d+)$/.exec(location.hash || "");
+      return m ? clampIndex(parseInt(m[1], 10) - 1) : 0;
+    }
+
+    function render() {
+      slides.forEach(function (s, n) { s.classList.toggle("active", n === i); });
+      bar.style.width = (total > 1 ? (i / (total - 1)) * 100 : 100) + "%";
+      count.textContent = pad(i + 1) + " / " + pad(total);
+      if (!notes.hidden) notesBody.textContent = slides[i].getAttribute("data-notes") || "—";
+      var h = "#" + (i + 1);
+      if (location.hash !== h) history.replaceState(null, "", h);
+    }
+
+    function go(n) {
+      var next = clampIndex(n);
+      if (next === i) return;
+      i = next;
+      render();
+      if (!hintDismissed) { hint.style.opacity = "0"; hintDismissed = true; }
+    }
+    function next() { go(i + 1); }
+    function prev() { go(i - 1); }
+
+    document.getElementById("next").addEventListener("click", next);
+    document.getElementById("prev").addEventListener("click", prev);
+
+    document.getElementById("themeBtn").addEventListener("click", function () {
+      var cur = document.documentElement.dataset.theme;
+      var isLight = cur ? cur === "light"
+        : !window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var nextTheme = isLight ? "dark" : "light";
+      document.documentElement.dataset.theme = nextTheme;
+      try { localStorage.setItem("angular-deck-theme", nextTheme); } catch (e) {}
+    });
+
+    // Avanzar con clic en la diapositiva (sin molestar enlaces, botones ni código).
+    document.getElementById("deck").addEventListener("click", function (e) {
+      if (e.target.closest("a, button, pre, figure.code")) return;
+      if (!notes.hidden) return;
+      next();
+    });
+
+    window.addEventListener("keydown", function (e) {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      switch (e.key) {
+        case "ArrowRight": case "ArrowDown": case "PageDown": case " ":
+          e.preventDefault(); next(); break;
+        case "ArrowLeft": case "ArrowUp": case "PageUp":
+          e.preventDefault(); prev(); break;
+        case "Home": e.preventDefault(); go(0); break;
+        case "End": e.preventDefault(); go(total - 1); break;
+        case "n": case "N":
+          notes.hidden = !notes.hidden;
+          if (!notes.hidden) notesBody.textContent = slides[i].getAttribute("data-notes") || "—";
+          break;
+        case "f": case "F":
+          if (!document.fullscreenElement) { (document.documentElement.requestFullscreen || function () {}).call(document.documentElement); }
+          else { (document.exitFullscreen || function () {}).call(document); }
+          break;
+        case "p": case "P":
+          e.preventDefault(); window.print(); break;
+      }
+    });
+
+    window.addEventListener("hashchange", function () {
+      var target = indexFromHash();
+      if (target !== i) { i = target; render(); }
+    });
+
+    i = indexFromHash();
+    render();
+  })();
+</script>
+</body>
+</html>
