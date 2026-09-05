@@ -1,5 +1,6 @@
 {
     "label": "S10 - NestJS - 3",
+    "className": "hidden",
     "position": 10,
     "link": {
         "type": "generated-index",

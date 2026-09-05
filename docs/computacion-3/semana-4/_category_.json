@@ -1,8 +1,0 @@
-{
-    "label": "S4 - Jest y Pruebas Unitarias",
-    "position": 4,
-    "link": {
-        "type": "generated-index",
-        "description": "Pruebas unitarias con Jest en Express y TypeScript, y despliegue en Railway."
-    }
-}

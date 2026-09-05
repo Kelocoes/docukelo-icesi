@@ -1,0 +1,8 @@
+{
+    "label": "W5 - Repositories & Providers in NestJS",
+    "position": 4,
+    "link": {
+        "type": "generated-index",
+        "description": "Foundations of Dependency Injection, Providers in NestJS, and advanced persistence and querying using TypeORM Repositories."
+    }
+}

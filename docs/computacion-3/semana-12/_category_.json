@@ -1,5 +1,6 @@
 {
     "label": "S12 - React Fundamentals",
+    "className": "hidden",
     "position": 12,
     "link": {
         "type": "generated-index",

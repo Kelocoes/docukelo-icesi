@@ -1,0 +1,291 @@
+---
+sidebar_position: 1
+---
+
+# Estructura de la Aplicación y Providers en NestJS
+
+Hasta este punto, hemos explorado cómo diseñar bases de datos relacionales y cómo modelar tablas en el código mediante entidades de TypeORM. Sin embargo, en una aplicación web profesional de backend, las entidades son solo una pieza dentro de un engranaje mucho más amplio. 
+
+Para construir un sistema escalable, mantenible y profesional, es indispensable organizar el código siguiendo una **arquitectura por capas** y comprender el mecanismo que conecta estas capas sin acoplarlas rígidamente: la **Inversión de Control (IoC)** y los **Providers**.
+
+---
+
+## La Arquitectura por Capas en NestJS
+
+Una aplicación moderna no conecta directamente la interfaz visual con la base de datos. En su lugar, distribuye las responsabilidades en niveles bien delimitados para que cada parte cumpla un único propósito.
+
+Para comprender cómo viaja la información, podemos observar el sistema desde dos niveles de abstracción:
+
+<img src="/img/desarrollo-entornos-digitales-web/nest-layered-architecture.svg" alt="Arquitectura por capas en NestJS" width="100%" />
+
+---
+
+## El problema del acoplamiento fuerte frente a la Inversión de Control
+
+Ahora que conocemos las capas, surge una pregunta clave: **¿cómo se conectan el controlador, el servicio y el repositorio entre sí?**
+
+### Enfoque tradicional acoplado (Instanciación manual con `new`)
+
+En la programación tradicional, cuando una clase necesita a otra, la crea directamente usando el operador `new`:
+
+```typescript title="users.controller.ts (Sin Inversión de Control)" showLineNumbers
+export class UsersController {
+    private usersService: UsersService;
+
+    constructor() {
+        // Acoplamiento directo: el controlador se encarga de crear el servicio
+        this.usersService = new UsersService();
+    }
+
+    getUsers() {
+        return this.usersService.findAll();
+    }
+}
+```
+
+Este enfoque presenta serios inconvenientes:
+- **Acoplamiento rígido**: Si el constructor de `UsersService` cambia en el futuro para requerir una conexión o un repositorio, todos los controladores que lo instanciaban con `new` se romperán y deberán ser modificados manualmente.
+- **Imposibilidad de realizar pruebas unitarias**: No es posible aislar el controlador para probarlo con un servicio falso o simulado (*mock*), ya que el controlador crea forzosamente la instancia real.
+- **Duplicación ineficiente de memoria**: Cada vez que se crea un objeto, se instancian nuevamente todas sus dependencias en cascada.
+
+---
+
+### Enfoque con Inversión de Control (IoC) e Inyección de Dependencias
+
+Para resolver esto, NestJS implementa el patrón de **Inversión de Control (IoC - Inversion of Control)**. La clase ya no se encarga de "fabricar" lo que necesita; en su lugar, simplemente **declara sus necesidades en su constructor**.
+
+El **Contenedor IoC de NestJS** es el encargado de instanciar los componentes, resolver el árbol de dependencias y suministrarlos listos para su uso:
+
+<img src="/img/desarrollo-entornos-digitales-web/nest-ioc-container.svg" alt="Contenedor IoC de NestJS y suministro de dependencias" width="100%" />
+
+| Criterio | Instanciación Manual (`new`) | Inyección de Dependencias (IoC) |
+| :--- | :--- | :--- |
+| **Responsabilidad de creación** | Cada clase consumidora crea sus dependencias | El Contenedor IoC de NestJS las construye automáticamente |
+| **Grado de acoplamiento** | Alto (las clases dependen de implementaciones concretas) | Bajo (las clases declaran contratos o dependencias desacopladas) |
+| **Pruebas unitarias** | Muy difíciles (no permite inyectar *mocks*) | Sencillas (basta suministrar objetos simulados en el constructor) |
+| **Mantenimiento** | Frágil ante cambios en los constructores | Centralizado y gestionado por los módulos de NestJS |
+
+---
+
+## ¿Qué es un Provider en NestJS?
+
+En NestJS, un **Provider** es cualquier clase simple de TypeScript decorada con `@Injectable()` que puede ser gestionada por el contenedor IoC y suministrada como dependencia a otros componentes del sistema.
+
+La inmensa mayoría de las clases que contienen lógica en NestJS son providers:
+- **Servicios (`Services`)**: Para la lógica de negocio de la aplicación.
+- **Repositorios (`Repositories`)**: Para interactuar con TypeORM y las tablas.
+- **Adaptadores o Clientes de API**: Para comunicarse con servicios externos (pasarelas de pago, correos).
+- **Helpers o Utilidades**: Clases con funciones auxiliares compartidas.
+
+### El decorador `@Injectable()`
+
+El decorador `@Injectable()` adjunta metadatos de reflexión a la clase. Esto le indica al motor de NestJS: *"esta clase es un provider y debe poder inyectarse en los componentes que la soliciten"*.
+
+```typescript title="users.service.ts" showLineNumbers
+import { Injectable } from "@nestjs/common";
+
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+}
+
+// Marcamos la clase como un provider gestionado por NestJS
+@Injectable()
+export class UsersService {
+    private readonly users: User[] = [
+        { id: 1, name: "Ada Lovelace", email: "ada@icesi.edu.co" },
+        { id: 2, name: "Alan Turing", email: "alan@icesi.edu.co" },
+    ];
+
+    findAll(): User[] {
+        return this.users;
+    }
+
+    findById(id: number): User | undefined {
+        return this.users.find((user) => user.id === id);
+    }
+}
+```
+
+---
+
+## Cómo funciona la Inyección por Constructor
+
+NestJS utiliza principalmente la **inyección basada en constructor**. En este esquema, las dependencias requeridas se declaran como parámetros dentro del constructor de la clase consumidora.
+
+Aprovechando las capacidades de TypeScript, al anteponer un modificador de acceso como `private readonly` en el constructor, se crea y asigna la propiedad de forma automática:
+
+```typescript title="users.controller.ts" showLineNumbers
+import { Controller, Get, Param, ParseIntPipe, NotFoundException } from "@nestjs/common";
+import { UsersService, User } from "./users.service";
+
+@Controller("users")
+export class UsersController {
+    // Inyección por constructor:
+    // NestJS analiza el tipo 'UsersService' y le suministra la instancia automáticamente
+    constructor(private readonly usersService: UsersService) {}
+
+    @Get()
+    getAll(): User[] {
+        return this.usersService.findAll();
+    }
+
+    @Get(":id")
+    getById(@Param("id", ParseIntPipe) id: number): User {
+        const user = this.usersService.findById(id);
+        if (!user) {
+            throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+        }
+        return user;
+    }
+}
+```
+
+:::tip[El modificador readonly]
+Es una buena práctica declarar las dependencias inyectadas como `readonly`. Esto previene reasignaciones accidentales de la variable a lo largo del código de la clase.
+:::
+
+---
+
+## Organización en Módulos: La Estructura de `@Module()`
+
+Para que el contenedor IoC de NestJS sepa qué providers existen y quiénes pueden usarlos, debemos registrarlos dentro de un **Módulo**.
+
+Un módulo en NestJS es una clase decorada con `@Module()`. Funciona como una frontera de encapsulación que agrupa controladores y providers relacionados:
+
+<img src="/img/desarrollo-entornos-digitales-web/nest-module-structure.svg" alt="Estructura de propiedades de @Module en NestJS" width="100%" />
+
+### Las cuatro propiedades de `@Module()`
+
+El decorador `@Module()` recibe un objeto con cuatro propiedades principales:
+
+1. **`controllers: [ ... ]`**:
+   - Declara los controladores que pertenecen a este módulo.
+   - NestJS los instancia y los registra en el enrutador HTTP para que comiencen a escuchar peticiones.
+
+2. **`providers: [ ... ]`**:
+   - Declara los servicios y clases auxiliares que el contenedor IoC del módulo debe instanciar.
+   - **Regla de encapsulación**: Por defecto, los providers registrados aquí son **privados** al módulo. Solo pueden ser inyectados en los controladores o en otros providers de este mismo módulo.
+
+3. **`imports: [ ... ]`**:
+   - Lista de otros módulos cuyas capacidades exportadas son necesarias dentro de este módulo.
+   - Por ejemplo, si necesitamos interactuar con TypeORM, importamos `TypeOrmModule.forFeature([User])`.
+
+4. **`exports: [ ... ]`**:
+   - Lista de providers de este módulo que deseamos hacer **públicos**.
+   - Cualquier otro módulo que incluya a este módulo en su arreglo `imports` podrá inyectar los providers que hayan sido exportados aquí.
+
+### Ejemplo de Módulo Completo
+
+```typescript title="users.module.ts" showLineNumbers
+import { Module } from "@nestjs/common";
+import { UsersController } from "./users.controller";
+import { UsersService } from "./users.service";
+
+@Module({
+    imports: [],                 // Otros módulos que aportan dependencias externas
+    controllers: [UsersController], // Controladores que escuchan rutas HTTP
+    providers: [UsersService],      // Providers instanciados en este módulo
+    exports: [UsersService],        // Hace público a UsersService para otros módulos
+})
+export class UsersModule {}
+```
+
+---
+
+## Diagnóstico y Solución de Errores Frecuentes
+
+### Error: `Nest can't resolve dependencies of the X (?)`
+
+Este es el mensaje de error más común al trabajar con dependencias en NestJS. Ocurre cuando un componente solicita un provider en su constructor pero NestJS no encuentra ninguna instrucción para construirlo dentro del contexto del módulo actual.
+
+```text title="Consola de Error de NestJS"
+Error: Nest can't resolve dependencies of the UsersController (?). 
+Please make sure that the argument UsersService at index [0] is available in the UsersModule context.
+
+Potential solutions:
+- If UsersService is a provider, is it part of the current UsersModule?
+- If UsersService is exported from a separate @Module, is that module imported within UsersModule?
+```
+
+**Lista de verificación para resolverlo:**
+1. **¿Decorador presente?**: Revisa que la clase del servicio tenga el decorador `@Injectable()` sobre su declaración.
+2. **¿Registrado en `providers`?**: Verifica que el servicio esté incluido en el arreglo `providers` del módulo actual (`UsersModule`).
+3. **¿Proviene de otro módulo?**: Si el servicio pertenece a otro módulo (por ejemplo `AuthModule`), confirma que `AuthModule` lo haya listado en `exports`, y que el módulo actual haya agregado `AuthModule` en su lista de `imports`.
+
+---
+
+## Cuestionario de Autoevaluación
+
+<Quiz id="web-env-providers-di-quiz">
+  <Question title="En la arquitectura por capas de NestJS, ¿cuál es la responsabilidad principal del Controlador?">
+    <Option>Ejecutar directamente consultas SQL con sentencias CREATE TABLE o ALTER TABLE.</Option>
+    <Option correct>Servir como punto de entrada HTTP, enrutar endpoints, validar parámetros entrantes y delegar la ejecución al servicio.</Option>
+    <Option>Crear las tablas en la base de datos PostgreSQL de manera física.</Option>
+    <Option>Almacenar de forma permanente los registros en la memoria caché del navegador.</Option>
+  </Question>
+
+  <Question title="¿Por qué se considera una mala práctica arquitectónica que un Controlador instancie su Servicio usando 'new UsersService()'?">
+    <Option>Porque JavaScript no permite invocar métodos asíncronos en clases creadas con 'new'.</Option>
+    <Option>Porque genera una excepción de sintaxis que impide la transpilación con TypeScript.</Option>
+    <Option correct>Porque crea un acoplamiento fuerte, impide sustituir el servicio por un mock en pruebas unitarias y duplica instancias innecesariamente.</Option>
+    <Option>Porque obliga al navegador web a reiniciar la conexión TCP en cada solicitud.</Option>
+  </Question>
+
+  <Question title="En el flujo interno de una petición en NestJS (Nivel 2), ¿cuál es la secuencia correcta de capas por las que viaja la información?">
+    <Option>Cliente -> Base de Datos -> Repositorio -> Controlador -> Servicio.</Option>
+    <Option correct>Cliente -> Controlador -> Servicio -> Repositorio -> Base de Datos.</Option>
+    <Option>Cliente -> Repositorio -> Servicio -> Controlador -> Base de Datos.</Option>
+    <Option>Controlador -> Cliente -> Servicio -> Base de Datos -> Repositorio.</Option>
+  </Question>
+
+  <Question title="¿Cuál es la función del decorador @Injectable() en una clase de TypeScript?">
+    <Option>Transformar la clase en un endpoint REST accesible públicamente mediante URL.</Option>
+    <Option correct>Marcar la clase como un provider elegible para ser administrado e inyectado por el contenedor IoC de NestJS.</Option>
+    <Option>Configurar una columna de clave primaria autoincremental en PostgreSQL.</Option>
+    <Option>Forzar a la clase a ejecutarse exclusivamente en el navegador del cliente.</Option>
+  </Question>
+
+  <Question title="¿Cómo se declara habitualmente una dependencia inyectable en el constructor de un controlador en NestJS?">
+    <Option>constructor(let usersService = new UsersService())</Option>
+    <Option>constructor(@CreateInstance() usersService: UsersService)</Option>
+    <Option correct>constructor(private readonly usersService: UsersService)</Option>
+    <Option>constructor(usersService: import('./users.service'))</Option>
+  </Question>
+
+  <Question title="Por defecto, ¿cuál es el nivel de visibilidad de un provider declarado en el arreglo 'providers' de un módulo?">
+    <Option>Es global y accesible automáticamente por cualquier archivo del proyecto.</Option>
+    <Option correct>Es privado al módulo; solo los controladores y servicios del mismo módulo pueden inyectarlo.</Option>
+    <Option>Solo puede ser consumido por la base de datos PostgreSQL.</Option>
+    <Option>Solo es visible para aplicaciones externas conectadas por WebSocket.</Option>
+  </Question>
+
+  <Question title="Si un servicio declarado en ModuleA necesita ser consumido por un servicio en ModuleB, ¿qué configuración en los módulos es obligatoria?">
+    <Option>ModuleA debe listar el servicio en 'controllers' y ModuleB en 'imports'.</Option>
+    <Option correct>ModuleA debe incluir el servicio en su arreglo 'exports', y ModuleB debe agregar a ModuleA en su arreglo 'imports'.</Option>
+    <Option>Ambos servicios deben combinarse en un único archivo de TypeScript.</Option>
+    <Option>ModuleB debe eliminar su decorador @Module() para tener visibilidad total.</Option>
+  </Question>
+
+  <Question title="¿Qué rol cumple la capa de Repositorio en una aplicación estructurada con NestJS y TypeORM?">
+    <Option>Definir los componentes visuales de interfaz de usuario con HTML y CSS.</Option>
+    <Option>Recibir las solicitudes HTTP entrantes y enviar códigos de estado HTTP 404.</Option>
+    <Option correct>Abstraer el acceso a la base de datos, encapsulando las operaciones CRUD y mapeando tablas a objetos TypeScript.</Option>
+    <Option>Gestionar el inicio de sesión y la autenticación del usuario en el navegador.</Option>
+  </Question>
+
+  <Question title="¿Qué ventaja técnica ofrece la Inversión de Control (IoC) gestionada por el framework frente al diseño tradicional?">
+    <Option>Aumenta el tamaño del archivo JavaScript compilado para acelerar la carga en disco.</Option>
+    <Option correct>Desacopla la creación de instancias de su consumo, facilitando el mantenimiento, la modularidad y el testeo unitario con mocks.</Option>
+    <Option>Elimina por completo la necesidad de tener una base de datos relacional.</Option>
+    <Option>Convierte automáticamente todas las consultas SQL en consultas GraphQL.</Option>
+  </Question>
+
+  <Question title="Si la terminal arroja el error 'Nest can't resolve dependencies of the UsersController (?)', ¿cuál es el primer paso para corregirlo?">
+    <Option>Reinstalar el sistema operativo del servidor de desarrollo.</Option>
+    <Option>Eliminar el controlador de la aplicación.</Option>
+    <Option correct>Verificar que UsersService tenga el decorador @Injectable() y esté registrado en el arreglo 'providers' del módulo correspondiente.</Option>
+    <Option>Cambiar el puerto del servidor de Node.js del 3000 al 8080.</Option>
+  </Question>
+</Quiz>
