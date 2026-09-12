@@ -1,0 +1,8 @@
+{
+    "label": "W6 - Pagination, Transactions and Testing",
+    "position": 7,
+    "link": {
+        "type": "generated-index",
+        "description": "Pagination with Pageable and Sort, declarative transactions with @Transactional, and automated testing with JUnit 5 and Mockito."
+    }
+}
