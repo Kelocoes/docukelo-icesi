@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 340" width="100%" height="100%">
+  <defs>
+    <filter id="card-shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.08" />
+    </filter>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb" />
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#dc2626" />
+    </marker>
+  </defs>
+
+  <style>
+    .title-main { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 16px; fill: #0f172a; }
+    .badge-bad { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 11px; fill: #991b1b; }
+    .badge-good { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 11px; fill: #166534; }
+    .card-title { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 14px; fill: #1e293b; }
+    .text-body { font-family: system-ui, -apple-system, sans-serif; font-weight: 500; font-size: 12px; fill: #475569; }
+    .code-pill { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; fill: #1e293b; }
+  </style>
+
+  <!-- Fondo principal -->
+  <rect x="0" y="0" width="820" height="340" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5" />
+
+  <!-- SECCIÓN IZQUIERDA: Sin Paginación -->
+  <g transform="translate(25, 25)">
+    <rect x="0" y="0" width="370" height="290" rx="12" fill="#ffffff" stroke="#fecaca" stroke-width="1.5" filter="url(#card-shadow)" />
+    
+    <!-- Header -->
+    <rect x="0" y="0" width="370" height="42" rx="12" fill="#fee2e2" />
+    <rect x="0" y="24" width="370" height="18" fill="#fee2e2" />
+    <text x="16" y="26" class="title-main" fill="#991b1b">Sin Paginación (findAll)</text>
+    <rect x="255" y="10" width="100" height="22" rx="11" fill="#fecaca" />
+    <text x="272" y="25" class="badge-bad">RIESGO OOM</text>
+
+    <!-- Base de datos a Servidor -->
+    <rect x="20" y="60" width="130" height="90" rx="8" fill="#f1f5f9" stroke="#cbd5e1" />
+    <text x="32" y="82" class="card-title">Base de Datos</text>
+    <text x="32" y="104" class="text-body">100,000 registros</text>
+    <text x="32" y="122" class="text-body">150 MB en memoria</text>
+
+    <!-- Flecha pesada -->
+    <path d="M 160 105 L 210 105" stroke="#dc2626" stroke-width="3" stroke-dasharray="4,3" marker-end="url(#arrow-red)" />
+    <text x="165" y="95" class="code-pill" fill="#dc2626">SELECT *</text>
+
+    <!-- Servidor colapsado -->
+    <rect x="220" y="60" width="130" height="90" rx="8" fill="#fff1f2" stroke="#fca5a5" />
+    <text x="232" y="82" class="card-title" fill="#991b1b">Servidor JVM</text>
+    <text x="232" y="104" class="text-body" fill="#b91c1c">List&lt;Item&gt; gigante</text>
+    <text x="232" y="124" class="badge-bad">High GC &amp; Latency</text>
+
+    <!-- Consecuencias -->
+    <rect x="20" y="170" width="330" height="95" rx="8" fill="#fff5f5" stroke="#fed7d7" />
+    <text x="32" y="194" class="card-title" fill="#991b1b">Impacto negativo:</text>
+    <text x="32" y="216" class="text-body">• Sobrecarga de red transportando JSON masivo.</text>
+    <text x="32" y="234" class="text-body">• Bloqueo de hilos en la JVM y consumo de CPU.</text>
+    <text x="32" y="252" class="text-body">• Caída del servicio por OutOfMemoryError.</text>
+  </g>
+
+  <!-- SECCIÓN DERECHA: Con Paginación -->
+  <g transform="translate(425, 25)">
+    <rect x="0" y="0" width="370" height="290" rx="12" fill="#ffffff" stroke="#bbf7d0" stroke-width="1.5" filter="url(#card-shadow)" />
+    
+    <!-- Header -->
+    <rect x="0" y="0" width="370" height="42" rx="12" fill="#dcfce7" />
+    <rect x="0" y="24" width="370" height="18" fill="#dcfce7" />
+    <text x="16" y="26" class="title-main" fill="#14532d">Con Paginación (Pageable)</text>
+    <rect x="255" y="10" width="100" height="22" rx="11" fill="#bbf7d0" />
+    <text x="268" y="25" class="badge-good">EFICIENTE</text>
+
+    <!-- Base de datos particionada -->
+    <rect x="20" y="60" width="130" height="90" rx="8" fill="#f0fdf4" stroke="#86efac" />
+    <text x="32" y="82" class="card-title" fill="#14532d">Base de Datos</text>
+    <text x="32" y="102" class="text-body">LIMIT 20</text>
+    <text x="32" y="120" class="text-body">OFFSET 0 (Pág 0)</text>
+    <text x="32" y="138" class="badge-good">Solo 20 filas</text>
+
+    <!-- Flecha controlada -->
+    <path d="M 160 105 L 210 105" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrow-blue)" />
+    <text x="162" y="95" class="code-pill" fill="#2563eb">Pageable</text>
+
+    <!-- Servidor óptimo -->
+    <rect x="220" y="60" width="130" height="90" rx="8" fill="#eff6ff" stroke="#93c5fd" />
+    <text x="232" y="82" class="card-title" fill="#1e3a8a">Page&lt;Item&gt;</text>
+    <text x="232" y="102" class="text-body">Payload liviano</text>
+    <text x="232" y="120" class="text-body">25 KB de JSON</text>
+    <text x="232" y="138" class="badge-good">Respuesta &lt; 20ms</text>
+
+    <!-- Ventajas -->
+    <rect x="20" y="170" width="330" height="95" rx="8" fill="#f0fdf4" stroke="#bbf7d0" />
+    <text x="32" y="194" class="card-title" fill="#14532d">Beneficios clave:</text>
+    <text x="32" y="216" class="text-body">• Navegación fluida por lotes con Page&lt;T&gt;.</text>
+    <text x="32" y="234" class="text-body">• Metadatos automáticos (totalElements, totalPages).</text>
+    <text x="32" y="252" class="text-body">• Ordenamiento dinámico seguro mediante Sort.</text>
+  </g>
+</svg>

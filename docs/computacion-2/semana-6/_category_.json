@@ -1,8 +1,8 @@
 {
-    "label": "S6 - Spring Boot Testing",
-    "position": 6,
+    "label": "S6 - Pagination, Transactions and Testing",
+    "position": 7,
     "link": {
         "type": "generated-index",
-        "description": "Spring Boot Testing."
+        "description": "Pagination, Transactions and Testing."
     }
 }
