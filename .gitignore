@@ -27,4 +27,5 @@ yarn-error.log*
 /temp/
 output-skills/
 .agents/spec/
+.playwright-mcp/
 
