@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 460" width="100%" height="100%">
+  <defs>
+    <filter id="card-shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="840" height="460" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Title -->
+  <text x="40" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#0f172a">Estructura Canónica de un Proyecto Flutter</text>
+  <text x="40" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#64748b">Organización de carpetas nativas, assets, dependencias y arquitectura modular en lib/</text>
+
+  <!-- Left: Tree View Card -->
+  <g transform="translate(40, 80)">
+    <rect width="360" height="350" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#card-shadow)"/>
+    <!-- Card Title -->
+    <rect width="360" height="40" rx="12" fill="#0f172a"/>
+    <path d="M 0 12 Q 0 0 12 0 L 348 0 Q 360 0 360 12 L 360 40 L 0 40 Z" fill="#0f172a"/>
+    <circle cx="20" cy="20" r="5" fill="#ef4444"/>
+    <circle cx="36" cy="20" r="5" fill="#f59e0b"/>
+    <circle cx="52" cy="20" r="5" fill="#10b981"/>
+    <text x="76" y="24" font-family="monospace" font-size="12" fill="#e2e8f0">mi_proyecto_flutter/</text>
+
+    <!-- File tree lines -->
+    <!-- android / ios / web / windows -->
+    <g transform="translate(24, 60)" font-family="monospace" font-size="12">
+      <!-- Native folders -->
+      <path d="M 0 0 L 0 80" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="2 2"/>
+      
+      <text x="14" y="10" fill="#64748b">📁 android/</text>
+      <text x="14" y="32" fill="#64748b">📁 ios/</text>
+      <text x="14" y="54" fill="#64748b">📁 web/ &amp; windows/ ...</text>
+
+      <!-- lib folder highlighted -->
+      <rect x="-8" y="70" width="324" height="126" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="8" y="92" font-weight="700" fill="#1d4ed8">📁 lib/  (Código Dart del Frontend)</text>
+      
+      <!-- Inside lib -->
+      <path d="M 22 100 L 22 185" stroke="#3b82f6" stroke-width="1.2"/>
+      <text x="32" y="115" font-weight="600" fill="#2563eb">📄 main.dart</text>
+      <text x="32" y="138" font-weight="600" fill="#0284c7">📁 pages/ (o screens/)</text>
+      <text x="48" y="156" fill="#0369a1">📄 home_page.dart</text>
+      <text x="32" y="178" font-weight="600" fill="#059669">📁 components/ (o widgets/)</text>
+
+      <!-- Assets and pubspec -->
+      <text x="14" y="216" fill="#b45309">📁 assets/ (imágenes, iconos, fuentes)</text>
+      <text x="14" y="240" fill="#0f766e" font-weight="700">📄 pubspec.yaml (dependencias y config)</text>
+      <text x="14" y="260" fill="#64748b">📄 pubspec.lock</text>
+    </g>
+  </g>
+
+  <!-- Right: Explanatory Blocks -->
+  <g transform="translate(425, 80)">
+    <!-- Block 1: lib/ -->
+    <rect width="375" height="100" rx="10" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5" filter="url(#card-shadow)"/>
+    <rect width="6" height="100" rx="3" fill="#3b82f6"/>
+    <text x="24" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#1d4ed8">lib/ : El Núcleo de la Aplicación</text>
+    <text x="24" y="50" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#334155">Es la única carpeta donde escribimos el 99% de nuestro código.</text>
+    <text x="24" y="68" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#334155">Aquí reside el punto de entrada (main.dart), pantallas completas</text>
+    <text x="24" y="86" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#334155">(pages) y componentes reutilizables (components).</text>
+
+    <!-- Block 2: Carpetas Nativas -->
+    <g transform="translate(0, 115)">
+      <rect width="375" height="100" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#card-shadow)"/>
+      <rect width="6" height="100" rx="3" fill="#64748b"/>
+      <text x="24" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#334155">android/, ios/, web/ : Proyectos Nativos Host</text>
+      <text x="24" y="50" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#475569">Actúan como "contenedores cascarón" generados por Flutter.</text>
+      <text x="24" y="68" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#475569">Contienen manifiestos (AndroidManifest.xml, Info.plist) e iconos</text>
+      <text x="24" y="86" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#475569">del lanzador. Rara vez se modifican directamente.</text>
+    </g>
+
+    <!-- Block 3: pubspec.yaml -->
+    <g transform="translate(0, 230)">
+      <rect width="375" height="120" rx="10" fill="#ffffff" stroke="#10b981" stroke-width="1.5" filter="url(#card-shadow)"/>
+      <rect width="6" height="120" rx="3" fill="#10b981"/>
+      <text x="24" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#047857">pubspec.yaml &amp; assets/ : El Manifiesto</text>
+      <text x="24" y="50" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#334155">Equivalente al package.json en Node o pom.xml en Java Maven.</text>
+      <text x="24" y="68" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#334155">Declara paquetes externos de pub.dev (ej. supabase_flutter)</text>
+      <text x="24" y="86" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#334155">y habilita el registro de carpetas de recursos locales</text>
+      <text x="24" y="104" font-family="monospace" font-size="11" fill="#059669">flutter: assets: [assets/images/]</text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MD3 Widget Showcase - Flutter Stateless Catalog</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-bright": "#fef7ff",
+            "outline": "#7a7582",
+            "secondary-fixed-dim": "#ccc2dc",
+            "on-surface-variant": "#494551",
+            "on-secondary-fixed-variant": "#4a4358",
+            "on-primary-fixed-variant": "#4f378a",
+            "on-primary": "#ffffff",
+            "surface-container-highest": "#e7e0eb",
+            "background": "#fef7ff",
+            "inverse-on-surface": "#f6eefa",
+            "error-container": "#ffdad6",
+            "primary-fixed-dim": "#cfbcff",
+            "surface-variant": "#e7e0eb",
+            "surface-container-low": "#f9f1fd",
+            "surface-tint": "#6750a4",
+            "on-secondary-fixed": "#1e192b",
+            "on-tertiary-fixed": "#31111d",
+            "primary-fixed": "#e9ddff",
+            "surface": "#fef7ff",
+            "primary-container": "#6750a4",
+            "on-surface": "#1d1a22",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-fixed-variant": "#633b48",
+            "secondary-fixed": "#e8def9",
+            "inverse-surface": "#322f37",
+            "tertiary": "#633b48",
+            "on-secondary-container": "#686177",
+            "on-error": "#ffffff",
+            "tertiary-fixed": "#ffd9e3",
+            "primary": "#4f378a",
+            "inverse-primary": "#cfbcff",
+            "outline-variant": "#cbc4d2",
+            "on-primary-fixed": "#22005d",
+            "secondary": "#625b71",
+            "on-tertiary-container": "#ffcbda",
+            "secondary-container": "#e8def9",
+            "on-secondary": "#ffffff",
+            "error": "#ba1a1a",
+            "surface-dim": "#dfd7e3",
+            "on-tertiary": "#ffffff",
+            "tertiary-fixed-dim": "#eeb8c8",
+            "tertiary-container": "#7d5260",
+            "on-primary-container": "#e0d2ff",
+            "on-error-container": "#93000a",
+            "on-background": "#1d1a22",
+            "surface-container-high": "#ede6f1",
+            "surface-container": "#f3ebf7"
+          },
+          "borderRadius": {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "space-xxl": "3rem",
+            "gutter-desktop": "1.5rem",
+            "gutter": "1rem",
+            "gutter-tablet": "1.5rem",
+            "space-xxs": "0.125rem",
+            "margin-tablet": "1.5rem",
+            "space-xl": "2rem",
+            "space-md": "1rem",
+            "margin": "1rem",
+            "space-sm": "0.5rem",
+            "margin-desktop": "2rem",
+            "space-lg": "1.5rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Roboto Flex"],
+            "headline-lg": ["Roboto Flex"],
+            "title-lg": ["Roboto Flex"],
+            "title-md": ["Roboto Flex"],
+            "headline-md": ["Roboto Flex"],
+            "display-md-mobile": ["Roboto Flex"],
+            "headline-sm": ["Roboto Flex"],
+            "display-sm-mobile": ["Roboto Flex"],
+            "display-lg-mobile": ["Roboto Flex"],
+            "label-md": ["Roboto Flex"],
+            "display-md": ["Roboto Flex"],
+            "display-lg": ["Roboto Flex"],
+            "display-sm": ["Roboto Flex"],
+            "body-md": ["Roboto Flex"],
+            "label-lg": ["Roboto Flex"],
+            "title-sm": ["Roboto Flex"],
+            "body-sm": ["Roboto Flex"],
+            "label-sm": ["Roboto Flex"]
+          },
+          "fontSize": {
+            "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}],
+            "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "0px", "fontWeight": "400"}],
+            "title-lg": ["22px", {"lineHeight": "28px", "letterSpacing": "0px", "fontWeight": "400"}],
+            "title-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500"}],
+            "headline-md": ["28px", {"lineHeight": "36px", "letterSpacing": "0px", "fontWeight": "400"}],
+            "display-md-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "0px", "fontWeight": "400"}],
+            "headline-sm": ["24px", {"lineHeight": "32px", "letterSpacing": "0px", "fontWeight": "400"}],
+            "display-sm-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "0px", "fontWeight": "400"}],
+            "display-lg-mobile": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.25px", "fontWeight": "400"}],
+            "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+            "display-md": ["45px", {"lineHeight": "52px", "letterSpacing": "0px", "fontWeight": "400"}],
+            "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400"}],
+            "display-sm": ["36px", {"lineHeight": "44px", "letterSpacing": "0px", "fontWeight": "400"}],
+            "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+            "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+            "title-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+            "body-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.4px", "fontWeight": "400"}],
+            "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md text-body-md antialiased min-h-screen pb-28 selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Top App Bar (Shared Anchor Execution) -->
+<header class="sticky top-0 z-40 bg-surface/95 backdrop-blur-md">
+<div class="flex justify-between items-center w-full px-space-md h-16 max-w-screen-sm mx-auto">
+<div class="flex items-center gap-space-sm">
+<button aria-label="Menú principal" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-highest transition-colors active:scale-95 text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div>
+<h1 class="font-title-lg text-title-lg font-bold text-on-surface tracking-tight leading-none">MD3 Widget Showcase</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">10 Componentes Stateless Progresivos</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button aria-label="Buscar" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-highest transition-colors active:scale-95 text-on-surface">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button aria-label="Filtros" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-highest transition-colors active:scale-95 text-on-surface">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Canvas Container (Mobile First max-w-screen-sm) -->
+<main class="max-w-screen-sm mx-auto px-space-md space-y-space-lg pt-space-xs">
+<!-- Progressive Path Tonal Banner -->
+<section class="rounded-2xl bg-surface-container-low p-space-md border border-outline-variant/40 shadow-sm relative overflow-hidden">
+<div class="flex items-start gap-space-md">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary shrink-0 shadow-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+<div class="space-y-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+            Ruta Flutter MD3
+          </span>
+<h2 class="font-title-md text-title-md font-bold text-on-surface">Curva de Aprendizaje Progresiva</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Aprende a estructurar widgets puramente desacoplados desde micro-elementos interactivos (Nivel 1 Básico) hasta contenedores compuestos con feeds sociales (Nivel 10 Complejo).
+          </p>
+</div>
+</div>
+</section>
+<!-- Filter Chips Horizontal Scroll -->
+<nav aria-label="Categorías" class="flex items-center gap-space-sm overflow-x-auto pb-1 no-scrollbar -mx-space-md px-space-md">
+<button class="shrink-0 h-8 px-space-md rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md font-medium flex items-center gap-1.5 active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check</span>
+<span>All</span>
+</button>
+<button class="shrink-0 h-8 px-space-md rounded-full border border-outline text-on-surface hover:bg-surface-container-highest font-label-md text-label-md active:scale-95 transition-all">
+        Botones &amp; Chips
+      </button>
+<button class="shrink-0 h-8 px-space-md rounded-full border border-outline text-on-surface hover:bg-surface-container-highest font-label-md text-label-md active:scale-95 transition-all">
+        Cards
+      </button>
+<button class="shrink-0 h-8 px-space-md rounded-full border border-outline text-on-surface hover:bg-surface-container-highest font-label-md text-label-md active:scale-95 transition-all">
+        Media
+      </button>
+<button class="shrink-0 h-8 px-space-md rounded-full border border-outline text-on-surface hover:bg-surface-container-highest font-label-md text-label-md active:scale-95 transition-all">
+        Feeds
+      </button>
+</nav>
+<!-- Showcase Stream: 10 Progressive Widgets -->
+<div class="space-y-space-xl">
+<!-- 01. Custom Action Button -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">01. Básico • Botón de Acción</span>
+<span class="font-label-sm text-label-sm text-outline">StatelessWidget</span>
+</div>
+<div class="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col items-center justify-center gap-space-sm text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-2">Elevated Pill Button con tokens MD3 primarios (#6750A4)</p>
+<button class="h-10 px-space-lg rounded-full bg-primary text-on-primary font-label-lg text-label-lg font-medium flex items-center gap-space-sm shadow-md hover:shadow-lg hover:bg-primary-container active:scale-95 transition-all duration-150">
+<span class="material-symbols-outlined text-[20px]">download</span>
+<span>Descargar Guía</span>
+</button>
+</div>
+</section>
+<!-- 02. Status Tag / Badge -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">02. Tonal • Estado &amp; Indicador</span>
+<span class="font-label-sm text-label-sm text-outline">Assist Chip</span>
+</div>
+<div class="p-space-md rounded-2xl bg-surface-container-lowest border border-outline-variant/30 flex items-center justify-between">
+<span class="font-body-md text-body-md text-on-surface font-medium">Estado del Módulo Flutter</span>
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold shadow-xs">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+</span>
+<span class="font-label-md text-label-md">En Progreso</span>
+</div>
+</div>
+</section>
+<!-- 03. Notification Banner -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">03. Banner Informativo Tonal</span>
+<span class="font-label-sm text-label-sm text-outline">Surface Container Low</span>
+</div>
+<div class="rounded-2xl bg-surface-container-low p-space-md border border-outline-variant/30 flex items-start gap-space-md shadow-xs">
+<div class="w-9 h-9 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">info</span>
+</div>
+<div class="flex-1 space-y-0.5">
+<h3 class="font-title-sm text-title-sm font-bold text-on-surface">Aviso Académico</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              La entrega del Sprint 2 de Flutter vence este viernes a las 23:59 hrs.
+            </p>
+</div>
+<button aria-label="Cerrar aviso" class="text-on-surface-variant hover:text-on-surface rounded-full p-1 hover:bg-surface-container-highest transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</section>
+<!-- 04. User Profile Summary -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">04. Perfil de Usuario Compacto</span>
+<span class="font-label-sm text-label-sm text-outline">List Tile MD3</span>
+</div>
+<div class="p-space-md rounded-2xl bg-surface-container flex items-center justify-between shadow-xs">
+<div class="flex items-center gap-space-md">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover border border-outline-variant/40" data-alt="A brightly lit, professional portrait of Sofia Martinez, a young female university software mentor smiling warmly in a contemporary computer science lab. High-key natural lighting illuminates her face, surrounded by subtle violet and deep purple architectural accents aligned with modern corporate design aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC48ih0UsxYm4qXbq6kQV0aIosRftm7o57Uf7th7PMLmn3RXOMhXyCWXgyiPiZry0wm7zuIWqVwDWJQPsSa_bESJkyMkUmV4Tt6XB0aoFnL6h1V7RIh8DcvkmUv0fpB0A-i7CC8xM2POZOuxDSbHud-hmszEJCCmFKDElEac8YhHIZyK4fS9uVfVTyKxzcSxzoGXdu1a5iaQe6-R8LvbBeQWYQW-ZyENU6KZD6yTse--tVGmuL9IWnfAwytPqs87JgqLTwZ2uHrfC8"/>
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-surface-container rounded-full"></span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-title-md text-title-md font-bold text-on-surface leading-tight">Sofia Martinez</h3>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold">En línea</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Monitora SIS • Flutter GDE</p>
+</div>
+</div>
+<button aria-label="Contactar a Sofia" class="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest active:scale-95 transition-colors">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+</button>
+</div>
+</section>
+<!-- 05. Interactive Metric Card -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">05. Métrica Analítica Bento</span>
+<span class="font-label-sm text-label-sm text-outline">Stats Surface</span>
+</div>
+<div class="p-space-lg rounded-3xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex items-center justify-between">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">timer</span>
+</div>
+<span class="font-body-md text-body-md font-medium text-on-surface-variant">Tiempo de Estudio</span>
+</div>
+<div class="font-headline-md text-headline-md font-extrabold text-on-surface tracking-tight">
+              2,840 hrs
+            </div>
+<div class="inline-flex items-center gap-1 text-emerald-700 font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+14.2% este mes</span>
+</div>
+</div>
+<div class="w-16 h-16 rounded-2xl bg-surface-container flex flex-col items-center justify-center text-primary font-title-lg font-bold">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Racha</span>
+<span>28d</span>
+</div>
+</div>
+</section>
+<!-- 06. Audio Track Item -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">06. Elemento Multimedia en Lista</span>
+<span class="font-label-sm text-label-sm text-outline">Media Tile</span>
+</div>
+<div class="p-space-sm rounded-2xl bg-surface-container-low flex items-center justify-between gap-space-md border border-outline-variant/20 shadow-xs">
+<div class="flex items-center gap-space-md overflow-hidden">
+<img class="w-14 h-14 rounded-xl object-cover shrink-0" data-alt="A clean, minimalist 3D rendering of digital audio soundwaves pulsing inside modern purple studio headphones against a warm neutral background. The visual represents podcast engineering and coding audio tutorials with soft tonal shadows and crisp purple highlight reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS5KqIpz22RSjXJNRZInL-_2ALnL7oUjbcWkhzLlKd1dqML4Qgx8BBasW6VCXP7s_qnlLIpT2aIjdgXMzFh5NxQPLujAKXB4sj45NZ3lRmxpKYCUutOyQCWI0kBRwwgLNgHJc-FXF_Zed74Cc4BjR_2H1AITOrbGeyAzqcTsj6VvUqn3K8NdXcwAvo0d75Byqc49A_7qglHP9MJtE-4JhmsIknwzSjH0Kk-f3LEw5MsIXCgFkhH9tCmEK3Qe-cfUb7op-gVJWDXss"/>
+<div class="truncate">
+<h4 class="font-title-sm text-title-sm font-bold text-on-surface truncate">Podcast Flutter: State Management</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">DevCommunity Radio • 14:20 min</p>
+</div>
+</div>
+<button aria-label="Reproducir pista" class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0 hover:bg-primary hover:text-on-primary active:scale-95 transition-all shadow-xs">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+</section>
+<!-- 07. Mini Music Player Widget -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">07. Mini Reproductor Dockeable</span>
+<span class="font-label-sm text-label-sm text-outline">Level 3 Floating</span>
+</div>
+<div class="p-space-md rounded-3xl bg-surface-container-high border border-outline-variant/30 shadow-md space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<img class="w-12 h-12 rounded-xl object-cover" data-alt="An abstract graphic album cover featuring bold architectural isometric blocks in shades of violet, lavender, and deep indigo representing clean software architecture and modular Flutter code. High studio clarity with soft diffused ambient lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwE4Vduqnql5FELnJeVgcWlXf9FClZ3rx1UnTSxLPRWKbua-5mHSad3o0Y2PQYHPERmcQnYfq7xRct9GAkrv5LKhLjgvYMs8iNb2xe5mZTI0d2_cib8XPekQyuGmFpBRqQYIa4BupzRGDlX5NU-9ltC-gP_5hm1JcZBbKXa47KUefyxmONHPD2TzeKvuouBkpWmAdGi4yRHzBPwcZtJxRJS9EsJ-RNhRz1udxybWrX8e4Rah415EQt9VC4wkjIQTZXGkJibYCuZmY"/>
+<div>
+<h4 class="font-title-sm text-title-sm font-bold text-on-surface">Ep. 42: Clean Architecture</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Flutter Latam Network</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button aria-label="Anterior" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[20px]">skip_previous</span>
+</button>
+<button aria-label="Reproducir o pausar" class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">pause</span>
+</button>
+<button aria-label="Siguiente" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[20px]">skip_next</span>
+</button>
+</div>
+</div>
+<!-- Playback progress -->
+<div class="space-y-1">
+<div class="w-full bg-outline-variant/40 h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full w-1/2"></div>
+</div>
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>02:45</span>
+<span>05:30</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 08. Product Card -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">08. Ficha Comercial / Catálogo</span>
+<span class="font-label-sm text-label-sm text-outline">Elevated Card</span>
+</div>
+<div class="rounded-3xl bg-surface-container-lowest border border-outline-variant/30 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="relative h-44 w-full">
+<img class="w-full h-full object-cover" data-alt="A modern educational technology promotional scene showing a sleek laptop running an elegant mobile UI design editor alongside a smartphone demonstrating vibrant Material Design 3 interactive Flutter widgets. Professional studio illumination with rich lavender and deep purple tones highlighting modern digital craftsmanship." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp3M-jVtI1-aNcN2oRolkkMZieSHSMY7GCKKhkHzvEqG8eq6lvVJR-CeXb8DJWROvjziI4y8RHwMa8EIQh7x1_UaZFnVcbvoYJ6nyjZvctWPAF1UYtptTvcdcUmdLib0_yMOFaMz5hUG55aL8yi3a0PBC063s0FJNA-ao7y2IMdM5aMeCsymL3AToJXL9dfOu0PJp3_L3v5wVIWCYi8vVEEVjElaLU5fDQpggqKTATiT34nnwGe1oA96bWjbIyk3dyGmtz2tIzKQQ"/>
+<span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm font-semibold shadow-sm">
+              Certificación
+            </span>
+<button aria-label="Guardar en favoritos" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-surface-bright/80 backdrop-blur-sm text-on-surface flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[18px]">bookmark_border</span>
+</button>
+</div>
+<div class="p-space-lg space-y-space-md">
+<div>
+<div class="flex items-center gap-1 text-amber-600 font-label-md text-label-md mb-1">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-on-surface">4.9</span>
+<span class="text-on-surface-variant">(1.2k reseñas)</span>
+</div>
+<h3 class="font-title-md text-title-md font-bold text-on-surface leading-snug">
+                Curso Flutter Avanzado: De Cero a Experto con MD3
+              </h3>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-outline-variant/20">
+<div>
+<span class="font-label-sm text-label-sm text-outline line-through">$59.99 USD</span>
+<div class="font-headline-sm text-headline-sm font-extrabold text-primary leading-none">$29.99 USD</div>
+</div>
+<button class="h-10 px-space-md rounded-full bg-primary text-on-primary font-label-md text-label-md font-medium flex items-center gap-1.5 shadow hover:bg-primary-container active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+<span>Comprar ahora</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 09. Course Task Card -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">09. Tarjeta de Tareas Académicas</span>
+<span class="font-label-sm text-label-sm text-outline">Task Item</span>
+</div>
+<div class="p-space-md rounded-2xl bg-surface-container-low border-l-4 border-l-primary border border-outline-variant/30 shadow-xs space-y-space-sm">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-start gap-space-sm">
+<input class="mt-1 w-5 h-5 rounded text-primary focus:ring-primary border-outline cursor-pointer" id="task-1" type="checkbox"/>
+<label class="font-title-sm text-title-sm font-semibold text-on-surface cursor-pointer" for="task-1">
+                Módulo 4: Custom Painters en Flutter
+              </label>
+</div>
+<span class="px-2 py-0.5 rounded-md bg-error-container text-on-error-container font-label-sm text-label-sm font-bold shrink-0">
+              Alta Prioridad
+            </span>
+</div>
+<div class="flex items-center gap-space-md text-on-surface-variant font-label-sm text-label-sm pl-7">
+<span class="inline-flex items-center gap-1 bg-surface-container-highest px-2 py-0.5 rounded-full text-on-surface">
+<span class="material-symbols-outlined text-[14px]">code</span>
+<span>FLT-302</span>
+</span>
+<span class="inline-flex items-center gap-1 text-tertiary font-medium">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+<span>Vence: 18 Oct</span>
+</span>
+</div>
+</div>
+</section>
+<!-- 10. Social / Activity Feed Post -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">10. Avanzado • Feed Social Compuesto</span>
+<span class="font-label-sm text-label-sm text-outline">Complex Container</span>
+</div>
+<article class="rounded-3xl bg-surface-container-lowest border border-outline-variant/30 p-space-md shadow-sm space-y-space-md">
+<!-- Author Header -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="A portrait of Carlos Mendoza, a creative mobile app engineer coding on an ergonomic mechanical keyboard in a modern minimalist workspace. Natural soft atmospheric studio lighting fills the room with subtle purple and soft neutral wall tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkjiJvpopUGOjUU0_KvRI2AmLftBTNa5CpedN_TM7Xf_jzxdqf6TKTScQuJgzn671OIfi0_wE2OOAkY1_is6fDGcXlfQJniEhCgtJEFbIdhPuFHAlFXOAtD8AM2rjEsr_M-LtohRQnvJw9mGUXARLqJg7netN8Hi9aEr225tEMMX3EF_Tr7sro2XAbGnYYo6xKbFARCOeZBQxV-m2p6hUzsC3yO0fTV1MuNmQT5XoSnrKlfzAdeui5i-M4CP_WyzOCQFSu3u2mntU"/>
+<div>
+<h4 class="font-title-sm text-title-sm font-bold text-on-surface leading-tight">Carlos Mendoza</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">@cmendoza_dev • Hace 2 horas</p>
+</div>
+</div>
+<button aria-label="Más opciones del post" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+<!-- Post Content -->
+<p class="font-body-md text-body-md text-on-surface">
+            ¡Increíble la flexibilidad de Material Design 3 en Flutter! Implementé transiciones compartidas y tokens dinámicos con PaletteGenerator. 🚀✨
+          </p>
+<!-- Media Attachment -->
+<div class="rounded-2xl overflow-hidden border border-outline-variant/20">
+<img class="w-full h-48 object-cover" data-alt="A high resolution mobile software interface prototype demonstrating Material Design 3 tonal elevation cards, pastel lavender toggles, and rounded typography layouts on a glass surface desk. The ambiance is illuminated by soft diffused studio lighting adhering to authentic MD3 styling." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZLmmN-PDJLDMhxsLLYiGTaNOV5i6C1g1T-H-EloZXglp_FxHbdOhjArhfCD9-VLioTXIZB2VZKtENe4wThFH3W_CwpcVm-E7VpSLkbFQMpS_iEmhzJuZMSA_rL4fA67qU2ATn9Hd5fcwlmnA29c7s8kin2-FLVCirkDPaYRJ-027DQd5XgGo1Tjg0xlf02Mjkunp1Jz4QoD_cpX6OtBAeJZZV3zWl3BefrTds0mfVmZMUCzRAtObncjWXYEn-NGkrB2zxmIkLw2U"/>
+</div>
+<!-- Reaction & Interaction Bar -->
+<div class="flex items-center justify-between pt-1 border-t border-outline-variant/20 font-label-md text-label-md text-on-surface-variant">
+<div class="flex items-center gap-space-md">
+<button class="flex items-center gap-1.5 hover:text-primary transition-colors active:scale-95 py-1">
+<span class="material-symbols-outlined text-[20px] text-tertiary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span>128</span>
+</button>
+<button class="flex items-center gap-1.5 hover:text-primary transition-colors active:scale-95 py-1">
+<span class="material-symbols-outlined text-[20px]">chat_bubble</span>
+<span>34</span>
+</button>
+<button class="flex items-center gap-1.5 hover:text-primary transition-colors active:scale-95 py-1">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</button>
+</div>
+<button aria-label="Guardar publicación" class="hover:text-primary transition-colors active:scale-95 p-1">
+<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
+</button>
+</div>
+</article>
+</section>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Executed verbatim per Shared Components JSON) -->
+<nav aria-label="Navegación principal" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-space-sm bg-surface-container dark:bg-surface-container">
+<!-- Showcase (Active) -->
+<a class="flex flex-col items-center justify-center gap-space-xs text-on-surface dark:text-on-surface [&amp;&gt;span:first-child]:bg-secondary-container dark:[&amp;&gt;span:first-child]:bg-secondary-container [&amp;&gt;span:first-child]:text-on-secondary-container dark:[&amp;&gt;span:first-child]:text-on-secondary-container [&amp;&gt;span:first-child]:w-16 [&amp;&gt;span:first-child]:h-8 [&amp;&gt;span:first-child]:rounded-full [&amp;&gt;span:first-child]:flex [&amp;&gt;span:first-child]:items-center [&amp;&gt;span:first-child]:justify-center font-medium" href="#showcase">
+<span>
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">widgets</span>
+</span>
+<span class="text-label-md font-label-md">Showcase</span>
+</a>
+<!-- Catalog (Inactive) -->
+<a class="flex flex-col items-center justify-center gap-space-xs text-on-surface-variant dark:text-on-surface-variant [&amp;&gt;span:first-child]:w-16 [&amp;&gt;span:first-child]:h-8 [&amp;&gt;span:first-child]:flex [&amp;&gt;span:first-child]:items-center [&amp;&gt;span:first-child]:justify-center hover:bg-surface-container-high transition-colors rounded-xl active:scale-95" href="#catalog">
+<span>
+<span class="material-symbols-outlined text-[22px]">category</span>
+</span>
+<span class="text-label-md font-label-md">Catalog</span>
+</a>
+<!-- Snippets (Inactive) -->
+<a class="flex flex-col items-center justify-center gap-space-xs text-on-surface-variant dark:text-on-surface-variant [&amp;&gt;span:first-child]:w-16 [&amp;&gt;span:first-child]:h-8 [&amp;&gt;span:first-child]:flex [&amp;&gt;span:first-child]:items-center [&amp;&gt;span:first-child]:justify-center hover:bg-surface-container-high transition-colors rounded-xl active:scale-95" href="#snippets">
+<span>
+<span class="material-symbols-outlined text-[22px]">code</span>
+</span>
+<span class="text-label-md font-label-md">Snippets</span>
+</a>
+<!-- Settings (Inactive) -->
+<a class="flex flex-col items-center justify-center gap-space-xs text-on-surface-variant dark:text-on-surface-variant [&amp;&gt;span:first-child]:w-16 [&amp;&gt;span:first-child]:h-8 [&amp;&gt;span:first-child]:flex [&amp;&gt;span:first-child]:items-center [&amp;&gt;span:first-child]:justify-center hover:bg-surface-container-high transition-colors rounded-xl active:scale-95" href="#settings">
+<span>
+<span class="material-symbols-outlined text-[22px]">tune</span>
+</span>
+<span class="text-label-md font-label-md">Settings</span>
+</a>
+</nav>
+</body></html>

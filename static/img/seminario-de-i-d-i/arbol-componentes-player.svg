@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 560" width="100%" height="100%">
+  <defs>
+    <filter id="shadow-tree" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="branch-arrow" viewBox="0 0 10 10" refX="5" refY="6" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 1 0 L 5 8 L 9 0 z" fill="#3b82f6"/>
+    </marker>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="880" height="560" rx="16" fill="#0f172a" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Title & Description -->
+  <text x="40" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#f8fafc">Árbol de Widgets de la Pantalla (MusicPlayerPage)</text>
+  <text x="40" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#94a3b8">Descomposición jerárquica de la interfaz en contenedores de diseño y componentes modulares</text>
+
+  <!-- Level 1: Root Scaffold -->
+  <g transform="translate(340, 85)">
+    <rect width="200" height="42" rx="8" fill="#1e293b" stroke="#60a5fa" stroke-width="2" filter="url(#shadow-tree)"/>
+    <text x="100" y="26" font-family="monospace" font-size="13" font-weight="bold" fill="#93c5fd" text-anchor="middle">Scaffold</text>
+  </g>
+
+  <!-- Branch lines from Scaffold to AppBar and Body Column -->
+  <path d="M 380 127 L 380 155 L 200 155 L 200 180" fill="none" stroke="#3b82f6" stroke-width="2"/>
+  <path d="M 500 127 L 500 155 L 560 155 L 560 180" fill="none" stroke="#3b82f6" stroke-width="2"/>
+
+  <!-- Level 2 Left: AppBar Branch -->
+  <g transform="translate(100, 180)">
+    <rect width="200" height="42" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="100" y="26" font-family="monospace" font-size="12" font-weight="bold" fill="#7dd3fc" text-anchor="middle">AppBar (M3)</text>
+    
+    <!-- Children of AppBar -->
+    <path d="M 100 222 L 100 250" fill="none" stroke="#0284c7" stroke-width="1.5"/>
+    <rect x="20" y="250" width="160" height="50" rx="6" fill="#0f172a" stroke="#0369a1" stroke-width="1"/>
+    <text x="100" y="270" font-family="monospace" font-size="10.5" fill="#bae6fd" text-anchor="middle">leading: IconButton</text>
+    <text x="100" y="288" font-family="monospace" font-size="10.5" fill="#bae6fd" text-anchor="middle">title: Text('Now Playing')</text>
+  </g>
+
+  <!-- Level 2 Right: Body Column -->
+  <g transform="translate(440, 180)">
+    <rect width="240" height="42" rx="8" fill="#1e293b" stroke="#c084fc" stroke-width="2"/>
+    <text x="120" y="26" font-family="monospace" font-size="13" font-weight="bold" fill="#e9d5ff" text-anchor="middle">body: Column</text>
+  </g>
+
+  <!-- Lines radiating from Column to 4 Main Custom Components -->
+  <path d="M 560 222 L 560 250" fill="none" stroke="#c084fc" stroke-width="2"/>
+  <path d="M 120 250 L 780 250" fill="none" stroke="#c084fc" stroke-width="2"/>
+
+  <!-- Drop connections -->
+  <path d="M 120 250 L 120 275" fill="none" stroke="#c084fc" stroke-width="1.5"/>
+  <path d="M 340 250 L 340 275" fill="none" stroke="#c084fc" stroke-width="1.5"/>
+  <path d="M 560 250 L 560 275" fill="none" stroke="#c084fc" stroke-width="1.5"/>
+  <path d="M 780 250 L 780 275" fill="none" stroke="#c084fc" stroke-width="1.5"/>
+
+  <!-- Level 3: 4 Custom Components -->
+
+  <!-- Component 1: AlbumCoverArt -->
+  <g transform="translate(30, 275)">
+    <rect width="180" height="70" rx="8" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5" filter="url(#shadow-tree)"/>
+    <text x="90" y="24" font-family="monospace" font-size="11.5" font-weight="bold" fill="#c7d2fe" text-anchor="middle">AlbumCoverArt</text>
+    <text x="90" y="42" font-family="system-ui, sans-serif" font-size="10" fill="#a5b4fc" text-anchor="middle">lib/components/</text>
+    <text x="90" y="58" font-family="monospace" font-size="9" fill="#e0e7ff" text-anchor="middle">ClipRRect + Image</text>
+  </g>
+
+  <!-- Component 2: TrackMetadata -->
+  <g transform="translate(250, 275)">
+    <rect width="180" height="70" rx="8" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5" filter="url(#shadow-tree)"/>
+    <text x="90" y="24" font-family="monospace" font-size="11.5" font-weight="bold" fill="#c7d2fe" text-anchor="middle">TrackMetadata</text>
+    <text x="90" y="42" font-family="system-ui, sans-serif" font-size="10" fill="#a5b4fc" text-anchor="middle">lib/components/</text>
+    <text x="90" y="58" font-family="monospace" font-size="9" fill="#e0e7ff" text-anchor="middle">Row (Text + Heart Btn)</text>
+  </g>
+
+  <!-- Component 3: PlayerProgressBar -->
+  <g transform="translate(470, 275)">
+    <rect width="180" height="70" rx="8" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5" filter="url(#shadow-tree)"/>
+    <text x="90" y="24" font-family="monospace" font-size="11.5" font-weight="bold" fill="#c7d2fe" text-anchor="middle">PlayerProgressBar</text>
+    <text x="90" y="42" font-family="system-ui, sans-serif" font-size="10" fill="#a5b4fc" text-anchor="middle">lib/components/</text>
+    <text x="90" y="58" font-family="monospace" font-size="9" fill="#e0e7ff" text-anchor="middle">Slider + Row (Labels)</text>
+  </g>
+
+  <!-- Component 4: PlaybackControls -->
+  <g transform="translate(690, 275)">
+    <rect width="180" height="70" rx="8" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5" filter="url(#shadow-tree)"/>
+    <text x="90" y="24" font-family="monospace" font-size="11.5" font-weight="bold" fill="#c7d2fe" text-anchor="middle">PlaybackControls</text>
+    <text x="90" y="42" font-family="system-ui, sans-serif" font-size="10" fill="#a5b4fc" text-anchor="middle">lib/components/</text>
+    <text x="90" y="58" font-family="monospace" font-size="9" fill="#e0e7ff" text-anchor="middle">Row (Icons + FAB)</text>
+  </g>
+
+  <!-- Bottom Panel: Pedagogical Takeaway -->
+  <g transform="translate(30, 380)">
+    <rect width="820" height="150" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="24" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#38bdf8">¿Cómo se traduce este árbol en archivos del proyecto?</text>
+    
+    <g transform="translate(24, 46)" font-family="monospace" font-size="11.5">
+      <text x="0" y="15" fill="#e2e8f0">📁 lib/pages/music_player_page.dart</text>
+      <text x="320" y="15" fill="#94a3b8">→ Declara el Scaffold, AppBar y anida la Column principal.</text>
+
+      <text x="0" y="42" fill="#a5b4fc">📁 lib/components/album_cover_art.dart</text>
+      <text x="320" y="42" fill="#94a3b8">→ Widget que envuelve la imagen con bordes redondeados y sombra.</text>
+
+      <text x="0" y="69" fill="#a5b4fc">📁 lib/components/track_metadata.dart</text>
+      <text x="320" y="69" fill="#94a3b8">→ Widget con título de canción, nombre de artista y botón de favorito.</text>
+
+      <text x="0" y="96" fill="#a5b4fc">📁 lib/components/player_progress_bar.dart</text>
+      <text x="320" y="96" fill="#94a3b8">→ Widget con el Slider interactivo y los tiempos de reproducción.</text>
+    </g>
+  </g>
+</svg>
