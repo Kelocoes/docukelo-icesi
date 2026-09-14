@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 380" width="100%" height="100%">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#3b82f6"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="820" height="380" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Title & Subtitle -->
+  <text x="40" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#0f172a">Arquitectura Basada en Componentes Reutilizables</text>
+  <text x="40" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#64748b">Encapsulamiento de interfaz, parámetros de entrada (props) y ensamblaje jerárquico</text>
+
+  <!-- Card 1: Definición del Componente -->
+  <g transform="translate(40, 80)">
+    <rect width="230" height="260" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect width="230" height="42" rx="12" fill="#f1f5f9"/>
+    <path d="M 0 12 Q 0 0 12 0 L 218 0 Q 230 0 230 12 L 230 42 L 0 42 Z" fill="#f1f5f9"/>
+    <text x="16" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#1e293b">1. Unidad / Molde</text>
+
+    <!-- Component Box representation -->
+    <rect x="20" y="58" width="190" height="90" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="115" y="85" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#1d4ed8" text-anchor="middle">ProductCard</text>
+    <text x="115" y="105" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#2563eb" text-anchor="middle">Layout interno fijo</text>
+    <text x="115" y="125" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b" text-anchor="middle">(Imagen + Titulo + Precio)</text>
+
+    <text x="20" y="172" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#334155">Parámetros (Props):</text>
+    <rect x="20" y="180" width="190" height="66" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="28" y="198" font-family="monospace" font-size="11" fill="#0f766e">String title;</text>
+    <text x="28" y="218" font-family="monospace" font-size="11" fill="#0f766e">double price;</text>
+    <text x="28" y="236" font-family="monospace" font-size="11" fill="#0f766e">String imageUrl;</text>
+  </g>
+
+  <!-- Arrow 1 to 2 -->
+  <line x1="280" y1="210" x2="310" y2="210" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <!-- Card 2: Instanciación múltiple -->
+  <g transform="translate(320, 80)">
+    <rect width="210" height="260" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect width="210" height="42" rx="12" fill="#f1f5f9"/>
+    <path d="M 0 12 Q 0 0 12 0 L 198 0 Q 210 0 210 12 L 210 42 L 0 42 Z" fill="#f1f5f9"/>
+    <text x="16" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#1e293b">2. Reutilización múltiple</text>
+
+    <!-- Instance A -->
+    <rect x="15" y="55" width="180" height="54" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.2"/>
+    <text x="25" y="74" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#15803d">Instancia A</text>
+    <text x="25" y="93" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#166534">"Teclado Gamer" - $45.00</text>
+
+    <!-- Instance B -->
+    <rect x="15" y="118" width="180" height="54" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.2"/>
+    <text x="25" y="137" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#15803d">Instancia B</text>
+    <text x="25" y="156" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#166534">"Monitor 27\"" - $210.00</text>
+
+    <!-- Instance C -->
+    <rect x="15" y="181" width="180" height="54" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.2"/>
+    <text x="25" y="200" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#15803d">Instancia C</text>
+    <text x="25" y="219" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#166534">"Mouse Ergo" - $25.00</text>
+  </g>
+
+  <!-- Arrow 2 to 3 -->
+  <line x1="540" y1="210" x2="570" y2="210" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <!-- Card 3: Integración en Pantalla / App -->
+  <g transform="translate(580, 80)">
+    <rect width="200" height="260" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect width="200" height="42" rx="12" fill="#f1f5f9"/>
+    <path d="M 0 12 Q 0 0 12 0 L 188 0 Q 200 0 200 12 L 200 42 L 0 42 Z" fill="#f1f5f9"/>
+    <text x="16" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#1e293b">3. Pantalla Ensamblada</text>
+
+    <!-- Device mockup miniature -->
+    <rect x="25" y="55" width="150" height="190" rx="10" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+    <!-- Screen area -->
+    <rect x="30" y="65" width="140" height="170" rx="6" fill="#f8fafc"/>
+    <!-- Top bar -->
+    <rect x="30" y="65" width="140" height="22" rx="0" fill="#2563eb"/>
+    <text x="100" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">Catálogo</text>
+    
+    <!-- Miniature cards inside screen -->
+    <rect x="36" y="93" width="128" height="38" rx="4" fill="#ffffff" stroke="#93c5fd" stroke-width="1"/>
+    <text x="44" y="110" font-family="system-ui, -apple-system, sans-serif" font-size="8" font-weight="bold" fill="#1e293b">Teclado Gamer</text>
+    <text x="44" y="122" font-family="system-ui, -apple-system, sans-serif" font-size="7.5" fill="#16a34a">$45.00</text>
+
+    <rect x="36" y="137" width="128" height="38" rx="4" fill="#ffffff" stroke="#93c5fd" stroke-width="1"/>
+    <text x="44" y="154" font-family="system-ui, -apple-system, sans-serif" font-size="8" font-weight="bold" fill="#1e293b">Monitor 27"</text>
+    <text x="44" y="166" font-family="system-ui, -apple-system, sans-serif" font-size="7.5" fill="#16a34a">$210.00</text>
+
+    <rect x="36" y="181" width="128" height="38" rx="4" fill="#ffffff" stroke="#93c5fd" stroke-width="1"/>
+    <text x="44" y="198" font-family="system-ui, -apple-system, sans-serif" font-size="8" font-weight="bold" fill="#1e293b">Mouse Ergo</text>
+    <text x="44" y="210" font-family="system-ui, -apple-system, sans-serif" font-size="7.5" fill="#16a34a">$25.00</text>
+  </g>
+</svg>

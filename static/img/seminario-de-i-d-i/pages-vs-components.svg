@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 440" width="100%" height="100%">
+  <defs>
+    <filter id="pat-shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+    <marker id="arrow-blue2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="840" height="440" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Title -->
+  <text x="40" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#0f172a">Patrón de Arquitectura: Pages vs. Components</text>
+  <text x="40" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#64748b">Separación de responsabilidades entre pantallas completas con Scaffold y piezas modulares reutilizables</text>
+
+  <!-- Left: Pages/Screens -->
+  <g transform="translate(40, 80)">
+    <rect width="360" height="325" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#pat-shadow)"/>
+    <!-- Header -->
+    <rect width="360" height="44" rx="12" fill="#eff6ff"/>
+    <path d="M 0 12 Q 0 0 12 0 L 348 0 Q 360 0 360 12 L 360 44 L 0 44 Z" fill="#eff6ff"/>
+    <circle cx="28" cy="22" r="10" fill="#3b82f6" opacity="0.2"/>
+    <text x="28" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="#1d4ed8" text-anchor="middle">P</text>
+    <text x="48" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#1e40af">lib/pages/ (o lib/screens/)</text>
+
+    <!-- Characteristics -->
+    <g transform="translate(20, 58)" font-family="system-ui, -apple-system, sans-serif" font-size="12">
+      <rect x="0" y="0" width="320" height="46" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="12" y="20" font-weight="700" fill="#334155">Propósito: Vista de nivel superior</text>
+      <text x="12" y="36" fill="#64748b">Ocupa toda la pantalla visible del dispositivo.</text>
+
+      <rect x="0" y="54" width="320" height="46" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="12" y="74" font-weight="700" fill="#334155">Contenedor Principal: Scaffold</text>
+      <text x="12" y="90" fill="#64748b">Aporta AppBar, Drawer, FloatingActionButton y fondo.</text>
+
+      <rect x="0" y="108" width="320" height="46" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="12" y="128" font-weight="700" fill="#334155">Responsabilidad de Estado y Rutas</text>
+      <text x="12" y="144" fill="#64748b">Gestiona navegación y coordina peticiones de datos.</text>
+
+      <!-- Mini phone wireframe -->
+      <rect x="100" y="165" width="120" height="90" rx="6" fill="#0f172a"/>
+      <rect x="104" y="172" width="112" height="78" rx="4" fill="#f1f5f9"/>
+      <rect x="104" y="172" width="112" height="14" fill="#2563eb"/>
+      <text x="160" y="182" font-size="7" font-weight="bold" fill="#ffffff" text-anchor="middle">HomePage</text>
+      <rect x="110" y="192" width="100" height="16" rx="3" fill="#e2e8f0" stroke="#cbd5e1"/>
+      <rect x="110" y="213" width="100" height="30" rx="3" fill="#e2e8f0" stroke="#cbd5e1"/>
+    </g>
+  </g>
+
+  <!-- Arrow from Pages to Components -->
+  <g transform="translate(405, 230)">
+    <line x1="0" y1="0" x2="30" y2="0" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrow-blue2)"/>
+    <text x="15" y="-10" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" font-weight="bold" fill="#2563eb" text-anchor="middle">ensambla</text>
+  </g>
+
+  <!-- Right: Components/Widgets -->
+  <g transform="translate(440, 80)">
+    <rect width="360" height="325" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#pat-shadow)"/>
+    <!-- Header -->
+    <rect width="360" height="44" rx="12" fill="#f0fdf4"/>
+    <path d="M 0 12 Q 0 0 12 0 L 348 0 Q 360 0 360 12 L 360 44 L 0 44 Z" fill="#f0fdf4"/>
+    <circle cx="28" cy="22" r="10" fill="#16a34a" opacity="0.2"/>
+    <text x="28" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="#15803d" text-anchor="middle">C</text>
+    <text x="48" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#166534">lib/components/ (o lib/widgets/)</text>
+
+    <!-- Characteristics -->
+    <g transform="translate(20, 58)" font-family="system-ui, -apple-system, sans-serif" font-size="12">
+      <rect x="0" y="0" width="320" height="46" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="12" y="20" font-weight="700" fill="#334155">Propósito: Piezas visuales modulares</text>
+      <text x="12" y="36" fill="#64748b">No conocen el contexto de la pantalla completa.</text>
+
+      <rect x="0" y="54" width="320" height="46" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="12" y="74" font-weight="700" fill="#334155">Sin Scaffold: Contenido puro</text>
+      <text x="12" y="90" fill="#64748b">Construidos con Container, Card, Row, Column, etc.</text>
+
+      <rect x="0" y="108" width="320" height="46" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="12" y="128" font-weight="700" fill="#334155">Reutilizables y Parametrizables</text>
+      <text x="12" y="144" fill="#64748b">Reciben datos por constructor y emiten callbacks.</text>
+
+      <!-- Modular pieces wireframes -->
+      <g transform="translate(10, 170)">
+        <rect x="0" y="0" width="140" height="40" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+        <text x="70" y="18" font-size="9.5" font-weight="bold" fill="#1e40af" text-anchor="middle">ProductCard</text>
+        <text x="70" y="32" font-size="8.5" fill="#3b82f6" text-anchor="middle">Props: title, price, img</text>
+
+        <rect x="155" y="0" width="140" height="40" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+        <text x="225" y="18" font-size="9.5" font-weight="bold" fill="#1e40af" text-anchor="middle">CustomSearchBar</text>
+        <text x="225" y="32" font-size="8.5" fill="#3b82f6" text-anchor="middle">Props: hint, onSearch</text>
+
+        <rect x="0" y="48" width="140" height="36" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+        <text x="70" y="65" font-size="9.5" font-weight="bold" fill="#1e40af" text-anchor="middle">UserAvatar</text>
+        <text x="70" y="77" font-size="8.5" fill="#3b82f6" text-anchor="middle">Props: url, size</text>
+
+        <rect x="155" y="48" width="140" height="36" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+        <text x="225" y="65" font-size="9.5" font-weight="bold" fill="#1e40af" text-anchor="middle">PrimaryButton</text>
+        <text x="225" y="77" font-size="8.5" fill="#3b82f6" text-anchor="middle">Props: label, onTap</text>
+      </g>
+    </g>
+  </g>
+</svg>

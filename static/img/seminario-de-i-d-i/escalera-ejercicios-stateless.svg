@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 500" width="100%" height="100%">
+  <defs>
+    <filter id="card-shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+    <marker id="ladder-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#6750a4"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="880" height="500" rx="16" fill="#fef7ff" stroke="#e7e0eb" stroke-width="1.5"/>
+
+  <!-- Main Title -->
+  <text x="40" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#1d1a22">Ruta Progresiva de Componentes Stateless en Flutter</text>
+  <text x="40" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#494551">De widgets atómicos elementales a ensamblajes jerárquicos compuestos con Material Design 3</text>
+
+  <!-- Level 1: Átomo / Primitivos -->
+  <g transform="translate(40, 85)">
+    <rect width="250" height="370" rx="12" fill="#ffffff" stroke="#e8def9" stroke-width="1.5" filter="url(#card-shadow)"/>
+    <!-- Header -->
+    <rect width="250" height="42" rx="12" fill="#e8def9"/>
+    <path d="M 0 12 Q 0 0 12 0 L 238 0 Q 250 0 250 12 L 250 42 L 0 42 Z" fill="#e8def9"/>
+    <text x="20" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#21005d">Nivel 1: Átomos Visuales</text>
+
+    <!-- Items -->
+    <g transform="translate(18, 56)" font-family="system-ui, -apple-system, sans-serif" font-size="12">
+      <!-- 1 -->
+      <rect x="0" y="0" width="214" height="64" rx="8" fill="#f9f1fd" stroke="#cbc4d2"/>
+      <text x="12" y="20" font-weight="700" fill="#4f378a">01. Botón de Acción</text>
+      <text x="12" y="36" font-size="10.5" fill="#494551">ElevatedButton.icon con Pill</text>
+      <text x="12" y="52" font-family="monospace" font-size="9.5" fill="#6750a4">Icon + Text + onPressed</text>
+
+      <!-- 2 -->
+      <rect x="0" y="74" width="214" height="64" rx="8" fill="#f9f1fd" stroke="#cbc4d2"/>
+      <text x="12" y="94" font-weight="700" fill="#4f378a">02. Badge de Estado</text>
+      <text x="12" y="110" font-size="10.5" fill="#494551">Chip tonal con punto luminoso</text>
+      <text x="12" y="126" font-family="monospace" font-size="9.5" fill="#6750a4">Container + Row + Circle</text>
+
+      <!-- 3 -->
+      <rect x="0" y="148" width="214" height="64" rx="8" fill="#f9f1fd" stroke="#cbc4d2"/>
+      <text x="12" y="168" font-weight="700" fill="#4f378a">03. Banner de Notificación</text>
+      <text x="12" y="184" font-size="10.5" fill="#494551">Alerta institucional informativa</text>
+      <text x="12" y="200" font-family="monospace" font-size="9.5" fill="#6750a4">Card + ListTile + Icon</text>
+
+      <rect x="0" y="222" width="214" height="74" rx="8" fill="#ede6f1"/>
+      <text x="12" y="244" font-weight="700" fill="#21005d">Enfoque pedagógico:</text>
+      <text x="12" y="262" font-size="10.5" fill="#494551">Pocos parámetros tipados,</text>
+      <text x="12" y="278" font-size="10.5" fill="#494551">estilos directos y callbacks simples.</text>
+    </g>
+  </g>
+
+  <!-- Arrow 1 to 2 -->
+  <line x1="300" y1="270" x2="325" y2="270" stroke="#6750a4" stroke-width="2" marker-end="url(#ladder-arrow)"/>
+
+  <!-- Level 2: Moléculas / Componentes Medios -->
+  <g transform="translate(335, 85)">
+    <rect width="250" height="370" rx="12" fill="#ffffff" stroke="#e8def9" stroke-width="1.5" filter="url(#card-shadow)"/>
+    <!-- Header -->
+    <rect width="250" height="42" rx="12" fill="#6750a4"/>
+    <path d="M 0 12 Q 0 0 12 0 L 238 0 Q 250 0 250 12 L 250 42 L 0 42 Z" fill="#6750a4"/>
+    <text x="20" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#ffffff">Nivel 2: Moléculas Modulares</text>
+
+    <!-- Items -->
+    <g transform="translate(18, 56)" font-family="system-ui, -apple-system, sans-serif" font-size="12">
+      <!-- 4 -->
+      <rect x="0" y="0" width="214" height="64" rx="8" fill="#f3ebf7" stroke="#cbc4d2"/>
+      <text x="12" y="20" font-weight="700" fill="#21005d">04. Resumen de Perfil</text>
+      <text x="12" y="36" font-size="10.5" fill="#494551">Avatar circular + Info + Acción</text>
+      <text x="12" y="52" font-family="monospace" font-size="9.5" fill="#6750a4">CircleAvatar + Column + Row</text>
+
+      <!-- 5 -->
+      <rect x="0" y="74" width="214" height="64" rx="8" fill="#f3ebf7" stroke="#cbc4d2"/>
+      <text x="12" y="94" font-weight="700" fill="#21005d">05. Tarjeta de Métrica</text>
+      <text x="12" y="110" font-size="10.5" fill="#494551">KPI con tendencia porcentual</text>
+      <text x="12" y="126" font-family="monospace" font-size="9.5" fill="#6750a4">Card + IconBox + Badge</text>
+
+      <!-- 6 -->
+      <rect x="0" y="148" width="214" height="64" rx="8" fill="#f3ebf7" stroke="#cbc4d2"/>
+      <text x="12" y="168" font-weight="700" fill="#21005d">06. Elemento de Audio</text>
+      <text x="12" y="184" font-size="10.5" fill="#494551">Thumbnail + metadata + play</text>
+      <text x="12" y="200" font-family="monospace" font-size="9.5" fill="#6750a4">ListTile / Row + IconButton</text>
+
+      <!-- 7 -->
+      <rect x="0" y="222" width="214" height="64" rx="8" fill="#f3ebf7" stroke="#cbc4d2"/>
+      <text x="12" y="242" font-weight="700" fill="#21005d">07. Mini Player Flotante</text>
+      <text x="12" y="258" font-size="10.5" fill="#494551">Dock con progreso y controles</text>
+      <text x="12" y="274" font-family="monospace" font-size="9.5" fill="#6750a4">LinearProgressIndicator + FAB</text>
+    </g>
+  </g>
+
+  <!-- Arrow 2 to 3 -->
+  <line x1="595" y1="270" x2="620" y2="270" stroke="#6750a4" stroke-width="2" marker-end="url(#ladder-arrow)"/>
+
+  <!-- Level 3: Organismos / Complejos -->
+  <g transform="translate(630, 85)">
+    <rect width="210" height="370" rx="12" fill="#ffffff" stroke="#e8def9" stroke-width="1.5" filter="url(#card-shadow)"/>
+    <!-- Header -->
+    <rect width="210" height="42" rx="12" fill="#21005d"/>
+    <path d="M 0 12 Q 0 0 12 0 L 198 0 Q 210 0 210 12 L 210 42 L 0 42 Z" fill="#21005d"/>
+    <text x="16" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#ffffff">Nivel 3: Organismos</text>
+
+    <!-- Items -->
+    <g transform="translate(14, 56)" font-family="system-ui, -apple-system, sans-serif" font-size="12">
+      <!-- 8 -->
+      <rect x="0" y="0" width="182" height="64" rx="8" fill="#f9f1fd" stroke="#cbc4d2"/>
+      <text x="10" y="20" font-weight="700" fill="#4f378a">08. Ficha Comercial</text>
+      <text x="10" y="36" font-size="10" fill="#494551">Foto, badge, rating, precio</text>
+      <text x="10" y="52" font-family="monospace" font-size="9" fill="#6750a4">Column + ClipRRect + Btn</text>
+
+      <!-- 9 -->
+      <rect x="0" y="74" width="182" height="64" rx="8" fill="#f9f1fd" stroke="#cbc4d2"/>
+      <text x="10" y="94" font-weight="700" fill="#4f378a">09. Tarjeta de Tarea</text>
+      <text x="10" y="110" font-size="10" fill="#494551">Borde acento + fecha + chips</text>
+      <text x="10" y="126" font-family="monospace" font-size="9" fill="#6750a4">Container decorado + Check</text>
+
+      <!-- 10 -->
+      <rect x="0" y="148" width="182" height="64" rx="8" fill="#ede6f1" stroke="#6750a4" stroke-width="1.5"/>
+      <text x="10" y="168" font-weight="700" fill="#21005d">10. Post de Feed Social</text>
+      <text x="10" y="184" font-size="10" fill="#494551">Autor, texto, media y barra</text>
+      <text x="10" y="200" font-family="monospace" font-size="9" fill="#6750a4">Composición completa</text>
+
+      <rect x="0" y="222" width="182" height="74" rx="8" fill="#21005d"/>
+      <text x="10" y="244" font-weight="700" fill="#ffffff">Integración total:</text>
+      <text x="10" y="262" font-size="10" fill="#e0d2ff">Ensambla los átomos y</text>
+      <text x="10" y="278" font-size="10" fill="#e0d2ff">moléculas anteriores.</text>
+    </g>
+  </g>
+</svg>
