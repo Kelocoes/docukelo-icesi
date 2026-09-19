@@ -18,8 +18,8 @@ This guide teaches you how to build a complete REST API in Go with JWT authentic
 8. [Testing](#testing)
 9. [Endpoint Examples](#endpoint-examples)
 10. [Running the Project](#running-the-project)
-11. [Deployment](#deployment)
-12. [Best Practices](#best-practices)
+11. [Deployment with Docker](#deployment-with-docker)
+12. [Summary & Best Practices](#summary--best-practices)
 
 ## Prerequisites
 

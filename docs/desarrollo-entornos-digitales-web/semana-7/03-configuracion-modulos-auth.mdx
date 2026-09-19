@@ -1,0 +1,371 @@
+---
+sidebar_position: 3
+---
+
+# Implementación del Módulo de Autenticación con JWT
+
+En esta sección llevaremos los conceptos teóricos a la práctica, construyendo un módulo completo de autenticación (`AuthModule`) en NestJS. Implementaremos la validación de credenciales con hashing criptográfico, la generación de tokens firmados mediante `JwtService`, la estrategia `JwtStrategy` para validar cabeceras Bearer y el controlador de acceso (`AuthController`).
+
+---
+
+## 1. Arquitectura de Componentes
+
+La siguiente ilustración resume las relaciones de inyección de dependencias y el flujo de datos entre los componentes del módulo de autenticación:
+
+<img src="/img/desarrollo-entornos-digitales-web/nest-auth-module-architecture.svg" alt="Arquitectura e Interacción del AuthModule en NestJS" width="100%" />
+
+---
+
+## 2. Implementación Paso a Paso
+
+Sigue esta guía secuencial para estructurar y enlazar todos los componentes necesarios.
+
+<StepByStep>
+  <Step number="1" title="Configurar Variables de Entorno">
+    Asegúrate de definir la clave secreta y el tiempo de expiración del token en tu archivo `.env`. Nunca compartas esta clave en repositorios públicos.
+
+    ```env title=".env"
+    JWT_SECRET=super_secreto_para_firmar_tokens_jwt_icesi_2026
+    JWT_EXPIRES_IN=1h
+    ```
+
+    :::tip[Buenas Prácticas de Secretos]
+    En entornos productivos, `JWT_SECRET` debe ser una cadena aleatoria de alta entropía (mínimo 256 bits) inyectada mediante secretos de CI/CD o administradores de claves (como AWS Secrets Manager o Doppler).
+    :::
+  </Step>
+
+  <Step number="2" title="Definir DTOs y Tipos de Datos">
+    Crea los archivos para tipar la solicitud de inicio de sesión y la estructura interna del payload que viajará en el JWT.
+
+    ```typescript title="src/auth/dto/user-login.dto.ts" showLineNumbers
+    import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+
+    export class UserLoginDto {
+      @IsEmail({}, { message: 'El correo electrónico suministrado no es válido' })
+      @IsNotEmpty({ message: 'El correo electrónico es requerido' })
+      email: string;
+
+      @IsString()
+      @IsNotEmpty({ message: 'La contraseña es requerida' })
+      @MinLength(6, { message: 'La contraseña debe tener al menos 6 caracteres' })
+      password: string;
+    }
+    ```
+
+    Define la interfaz de TypeScript que describe el contenido del token decodificado:
+
+    ```typescript title="src/auth/interfaces/jwt-payload.interface.ts" showLineNumbers
+    export interface JwtPayload {
+      sub: number;
+      email: string;
+      permissions: string[];
+      iat?: number;
+      exp?: number;
+    }
+    ```
+  </Step>
+
+  <Step number="3" title="Implementar el Servicio de Autenticación (AuthService)">
+    `AuthService` coordina la verificación de credenciales contra la base de datos (usando `bcrypt.compare`) y delega la firma del token a `JwtService`.
+
+    ```typescript title="src/auth/auth.service.ts" showLineNumbers
+    import {
+      Injectable,
+      NotFoundException,
+      UnauthorizedException,
+    } from '@nestjs/common';
+    import { JwtService } from '@nestjs/jwt';
+    import * as bcrypt from 'bcrypt';
+    import { UsersService } from '../users/users.service';
+    import { UserLoginDto } from './dto/user-login.dto';
+    import { JwtPayload } from './interfaces/jwt-payload.interface';
+
+    @Injectable()
+    export class AuthService {
+      constructor(
+        private readonly usersService: UsersService,
+        private readonly jwtService: JwtService,
+      ) {}
+
+      /**
+       * Valida si el usuario existe y si la contraseña coincide con el hash almacenado.
+       */
+      async validateUser(email: string, pass: string) {
+        // findByEmail debe cargar las relaciones de roles y permisos
+        const user = await this.usersService.findByEmail(email);
+        if (!user) {
+          throw new NotFoundException('Usuario no encontrado');
+        }
+
+        const isMatch = await bcrypt.compare(pass, user.passwordHash);
+        if (!isMatch) {
+          throw new UnauthorizedException('Credenciales inválidas');
+        }
+
+        // Omitimos la propiedad passwordHash antes de continuar
+        const { passwordHash, ...safeUser } = user;
+        return safeUser;
+      }
+
+      /**
+       * Genera el token JWT a partir de la identidad y los permisos del usuario.
+       */
+      async login(userLoginDto: UserLoginDto) {
+        const user = await this.validateUser(
+          userLoginDto.email,
+          userLoginDto.password,
+        );
+
+        // Mapeamos los permisos asociados al rol del usuario
+        const permissions =
+          user.role?.rolePermissions?.map((rp) => rp.permission.name) ?? [];
+
+        const payload: JwtPayload = {
+          sub: user.id,
+          email: user.email,
+          permissions,
+        };
+
+        return {
+          access_token: this.jwtService.sign(payload),
+          token_type: 'Bearer',
+          user: {
+            id: user.id,
+            email: user.email,
+            role: user.role?.name,
+          },
+        };
+      }
+    }
+    ```
+
+    :::note[Carga de Relaciones en UsersService]
+    Asegúrate de que el método `findByEmail` en tu `UsersService` incluya las relaciones de TypeORM correspondientes (`role`, `role.rolePermissions`, `role.rolePermissions.permission`) para que los permisos puedan ser extraídos con éxito.
+    :::
+  </Step>
+
+  <Step number="4" title="Configurar la Estrategia JWT (JwtStrategy)">
+    `JwtStrategy` extiende de `PassportStrategy(Strategy)`. Passport se encarga de interceptar la petición, extraer el token del encabezado `Authorization: Bearer <token>` y comprobar criptográficamente la firma con la clave secreta. Si la firma es legítima, invoca el método `validate(payload)`.
+
+    ```typescript title="src/auth/strategies/jwt.strategy.ts" showLineNumbers
+    import { Injectable, UnauthorizedException } from '@nestjs/common';
+    import { ConfigService } from '@nestjs/config';
+    import { PassportStrategy } from '@nestjs/passport';
+    import { ExtractJwt, Strategy } from 'passport-jwt';
+    import { UsersService } from '../../users/users.service';
+    import { JwtPayload } from '../interfaces/jwt-payload.interface';
+
+    @Injectable()
+    export class JwtStrategy extends PassportStrategy(Strategy) {
+      constructor(
+        configService: ConfigService,
+        private readonly usersService: UsersService,
+      ) {
+        const secret = configService.get<string>('JWT_SECRET');
+        if (!secret) {
+          throw new Error('La variable de entorno JWT_SECRET no está configurada');
+        }
+
+        super({
+          // Extrae el token del header 'Authorization: Bearer <token>'
+          jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+          // Rechaza automáticamente tokens que hayan superado su fecha de expiración
+          ignoreExpiration: false,
+          // Clave secreta simétrica para verificar la firma
+          secretOrKey: secret,
+        });
+      }
+
+      /**
+       * Método invocado automáticamente por Passport tras verificar la firma del token.
+       * El objeto retornado aquí es inyectado por NestJS en 'req.user'.
+       */
+      async validate(payload: JwtPayload) {
+        const user = await this.usersService.findById(payload.sub);
+        if (!user) {
+          throw new UnauthorizedException('El token no corresponde a un usuario activo');
+        }
+        return user;
+      }
+    }
+    ```
+  </Step>
+
+  <Step number="5" title="Crear el Controlador de Autenticación (AuthController)">
+    El controlador expone el endpoint público de inicio de sesión (`POST /auth/login`) y recibe las credenciales validadas por el DTO:
+
+    ```typescript title="src/auth/auth.controller.ts" showLineNumbers
+    import {
+      Controller,
+      Post,
+      Body,
+      HttpCode,
+      HttpStatus,
+    } from '@nestjs/common';
+    import { AuthService } from './auth.service';
+    import { UserLoginDto } from './dto/user-login.dto';
+
+    @Controller('auth')
+    export class AuthController {
+      constructor(private readonly authService: AuthService) {}
+
+      @Post('login')
+      @HttpCode(HttpStatus.OK)
+      async login(@Body() loginDto: UserLoginDto) {
+        return this.authService.login(loginDto);
+      }
+    }
+    ```
+  </Step>
+
+  <Step number="6" title="Integrar y Configurar el Módulo (AuthModule)">
+    Configura el módulo importando `JwtModule` de manera asíncrona mediante `registerAsync`. Esto asegura que `ConfigService` esté listo antes de inicializar la clave secreta.
+
+    ```typescript title="src/auth/auth.module.ts" showLineNumbers
+    import { Module } from '@nestjs/common';
+    import { ConfigModule, ConfigService } from '@nestjs/config';
+    import { JwtModule } from '@nestjs/jwt';
+    import { PassportModule } from '@nestjs/passport';
+    import { AuthController } from './auth.controller';
+    import { AuthService } from './auth.service';
+    import { JwtStrategy } from './strategies/jwt.strategy';
+    import { UsersModule } from '../users/users.module';
+
+    @Module({
+      imports: [
+        UsersModule,
+        PassportModule.register({ defaultStrategy: 'jwt' }),
+        JwtModule.registerAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: (configService: ConfigService) => ({
+            secret: configService.get<string>('JWT_SECRET') || 'defaultSecret',
+            signOptions: {
+              expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '1h',
+            },
+          }),
+        }),
+      ],
+      controllers: [AuthController],
+      providers: [AuthService, JwtStrategy],
+      exports: [AuthService, PassportModule, JwtModule],
+    })
+    export class AuthModule {}
+    ```
+  </Step>
+</StepByStep>
+
+---
+
+## 3. Verificación del Endpoint de Login
+
+Para comprobar que el flujo de autenticación funciona adecuadamente, envía una petición `POST` al endpoint `/auth/login`:
+
+```bash title="Terminal (cURL)"
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "ana@icesi.edu.co",
+    "password": "MiPasswordSeguro123"
+  }'
+```
+
+### Respuesta esperada (HTTP 200 OK):
+
+```json title="HTTP 200 Response"
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYW5hQGljZXNpLmVkdS5jbyIsInBlcm1pc3Npb25zIjpbInVzZXJzOnJlYWQiLCJ1c2VyczpjcmVhdGUiXSwiaWF0IjoxNzczNTE3OTA1LCJleHAiOjE3NzM1MjE1MDV9.X9jYd8L2...",
+  "token_type": "Bearer",
+  "user": {
+    "id": 1,
+    "email": "ana@icesi.edu.co",
+    "role": "admin"
+  }
+}
+```
+
+Si el usuario envía una contraseña errónea o un correo inexistente:
+
+```json title="HTTP 401 Unauthorized"
+{
+  "message": "Credenciales inválidas",
+  "error": "Unauthorized",
+  "statusCode": 401
+}
+```
+
+---
+
+## Cuestionario de Autoevaluación
+
+<Quiz id="dedw-s7-03-config-modulos-auth-quiz">
+  <Question title="¿Por qué se recomienda utilizar 'JwtModule.registerAsync' con 'useFactory' en lugar del método estático 'JwtModule.register'?">
+    <Option>Porque registerAsync permite compilar la aplicación sin necesidad de TypeScript.</Option>
+    <Option correct>Porque permite inyectar ConfigService de forma dinámica asegurando que las variables de entorno (.env) ya han sido cargadas.</Option>
+    <Option>Porque el método estático register solo admite el algoritmo RSA de clave asimétrica.</Option>
+    <Option>Porque registerAsync almacena automáticamente los tokens en la base de datos de TypeORM.</Option>
+  </Question>
+
+  <Question title="En la clase JwtStrategy, ¿qué método de 'passport-jwt' se configura en 'jwtFromRequest' para leer el token del encabezado estándar?">
+    <Option>ExtractJwt.fromUrlQueryParameter('token')</Option>
+    <Option>ExtractJwt.fromBodyField('access_token')</Option>
+    <Option correct>ExtractJwt.fromAuthHeaderAsBearerToken()</Option>
+    <Option>ExtractJwt.fromCookie('jwt')</Option>
+  </Question>
+
+  <Question title="¿Qué sucede con el valor retornado por el método 'validate(payload: JwtPayload)' dentro de JwtStrategy?">
+    <Option>Se almacena en una variable global en el objeto process de Node.js.</Option>
+    <Option correct>NestJS y Passport lo inyectan automáticamente en la propiedad 'req.user' de la solicitud HTTP.</Option>
+    <Option>Es retornado directamente al cliente como cuerpo de la respuesta HTTP.</Option>
+    <Option>Se escribe inmediatamente en el archivo de logs del servidor.</Option>
+  </Question>
+
+  <Question title="Si se envía un token cuya fecha de expiración ('exp') ya fue superada y se tiene 'ignoreExpiration: false', ¿qué acción toma JwtStrategy?">
+    <Option>Ejecuta el método validate ignorando la fecha y renueva el token silenciosamente.</Option>
+    <Option correct>Rechaza la solicitud automáticamente retornando un error HTTP 401 Unauthorized sin invocar el método validate.</Option>
+    <Option>Lanza un error HTTP 500 Internal Server Error debido a un timeout criptográfico.</Option>
+    <Option>Redirige al cliente a la página principal de inicio de sesión.</Option>
+  </Question>
+
+  <Question title="¿Cuál es la función del método 'bcrypt.compare(pass, user.passwordHash)' en el AuthService?">
+    <Option>Descifrar el hash almacenado para comparar ambos textos planos en memoria.</Option>
+    <Option correct>Hashear la contraseña suministrada usando el mismo salt y comparar de forma segura ambos hashes en tiempo constante.</Option>
+    <Option>Actualizar la contraseña del usuario en la base de datos.</Option>
+    <Option>Eliminar los caracteres especiales de la contraseña recibida en el DTO.</Option>
+  </Question>
+
+  <Question title="Al autenticar a un usuario en AuthService.login(), ¿por qué se omite la propiedad 'passwordHash' del objeto devuelto?">
+    <Option>Porque los tokens JWT solo aceptan tipos de datos booleanos.</Option>
+    <Option>Porque TypeORM arroja un error de validación si una entidad se serializa parcialmente.</Option>
+    <Option correct>Por principio de menor privilegio y seguridad defensiva, para no filtrar hashes de contraseñas hacia el cliente o logs.</Option>
+    <Option>Porque la clase PassportStrategy bloquea objetos con nombres de propiedad que contengan 'Hash'.</Option>
+  </Question>
+
+  <Question title="¿Qué decorador de NestJS se utiliza en AuthController.login() para asegurar que la respuesta HTTP retorne un código de estado 200 en lugar del 201 por defecto de POST?">
+    <Option>@Header('Status', '200')</Option>
+    <Option correct>@HttpCode(HttpStatus.OK)</Option>
+    <Option>@ResponseStatus(200)</Option>
+    <Option>@StatusCode('OK')</Option>
+  </Question>
+
+  <Question title="¿Qué módulo utilitario de NestJS proporciona el método 'this.jwtService.sign(payload)'?">
+    <Option>@nestjs/passport</Option>
+    <Option>@nestjs/core</Option>
+    <Option correct>@nestjs/jwt</Option>
+    <Option>@nestjs/platform-express</Option>
+  </Question>
+
+  <Question title="Si la variable de entorno 'JWT_SECRET' no está presente en el servidor durante la inicialización de JwtStrategy, ¿qué comportamiento es el más seguro?">
+    <Option>Asignar una cadena vacía por defecto y permitir el arranque de la aplicación.</Option>
+    <Option correct>Lanzar una excepción explícita que impida que el servidor inicie con una clave secreta indefinida o insegura.</Option>
+    <Option>Generar una clave simétrica aleatoria en memoria en cada reinicio del servidor.</Option>
+    <Option>Deshabilitar la verificación de firma en todos los Guards.</Option>
+  </Question>
+
+  <Question title="En el UserLoginDto, ¿qué decorador de 'class-validator' garantiza que el campo email tenga una estructura sintáctica de correo electrónico?">
+    <Option>@IsString()</Option>
+    <Option>@IsDomain()</Option>
+    <Option correct>@IsEmail()</Option>
+    <Option>@IsNotEmpty()</Option>
+  </Question>
+</Quiz>

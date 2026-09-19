@@ -14,9 +14,9 @@ En lugar de requerir equipos de desarrollo independientes con lenguajes y herram
 
 <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
   <img src="/img/seminario-de-i-d-i/java-logo.svg" alt="Java Logo" width="48" height="48" />
-  <p style={{ margin: 0 }}>
+  <div style={{ margin: 0 }}>
     Hasta este punto de la carrera, en los cursos de <strong>Algoritmos y Programación Orientada a Objetos (APO 1 y APO 2)</strong>, has trabajado principalmente con <strong>Java</strong>, aprendiendo los fundamentos de tipado estricto, estructuras de datos, diseño de clases, herencia, interfaces y librerías de escritorio como <strong>JavaFX</strong> o <strong>Swing</strong>.
-  </p>
+  </div>
 </div>
 
 La transición hacia el desarrollo frontend moderno implica tres cambios conceptuales clave:

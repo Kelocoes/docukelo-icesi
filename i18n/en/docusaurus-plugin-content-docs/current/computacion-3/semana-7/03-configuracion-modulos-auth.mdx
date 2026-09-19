@@ -1,0 +1,371 @@
+---
+sidebar_position: 3
+---
+
+# Implementing the Authentication Module with JWT
+
+In this section, we transition from theoretical concepts to hands-on implementation by building a complete authentication module (`AuthModule`) in NestJS. We implement credential validation with cryptographic hashing, signed token generation via `JwtService`, the `JwtStrategy` strategy to validate incoming Bearer headers, and the authentication entrypoint controller (`AuthController`).
+
+---
+
+## 1. Component Architecture
+
+The following diagram illustrates dependency injection relationships and request data flows across authentication module components:
+
+<img src="/img/computacion-3/nest-auth-module-architecture.svg" alt="Architecture and Component Interaction of AuthModule in NestJS" width="100%" />
+
+---
+
+## 2. Step-by-Step Implementation
+
+Follow this sequential walkthrough to construct and wire all required security components.
+
+<StepByStep>
+  <Step number="1" title="Configure Environment Variables">
+    Ensure your application secret key and token expiration interval are declared in your `.env` file. Never commit production secrets to public version control.
+
+    ```env title=".env"
+    JWT_SECRET=super_secret_signing_key_jwt_icesi_2026
+    JWT_EXPIRES_IN=1h
+    ```
+
+    :::tip[Secret Management Best Practices]
+    In production deployments, `JWT_SECRET` must be a high-entropy cryptographically random string (at least 256 bits) provisioned dynamically via CI/CD secrets or secrets management services (such as AWS Secrets Manager or Doppler).
+    :::
+  </Step>
+
+  <Step number="2" title="Define DTOs and Data Interfaces">
+    Create strongly-typed classes and interfaces defining incoming login request bodies and the decoded JWT payload structure.
+
+    ```typescript title="src/auth/dto/user-login.dto.ts" showLineNumbers
+    import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+
+    export class UserLoginDto {
+      @IsEmail({}, { message: 'The provided email is invalid' })
+      @IsNotEmpty({ message: 'Email is required' })
+      email: string;
+
+      @IsString()
+      @IsNotEmpty({ message: 'Password is required' })
+      @MinLength(6, { message: 'Password must be at least 6 characters long' })
+      password: string;
+    }
+    ```
+
+    Declare the TypeScript interface describing decoded token claims:
+
+    ```typescript title="src/auth/interfaces/jwt-payload.interface.ts" showLineNumbers
+    export interface JwtPayload {
+      sub: number;
+      email: string;
+      permissions: string[];
+      iat?: number;
+      exp?: number;
+    }
+    ```
+  </Step>
+
+  <Step number="3" title="Implement Authentication Service (AuthService)">
+    `AuthService` orchestrates credential validation against the database (via `bcrypt.compare`) and delegates token signing to `JwtService`.
+
+    ```typescript title="src/auth/auth.service.ts" showLineNumbers
+    import {
+      Injectable,
+      NotFoundException,
+      UnauthorizedException,
+    } from '@nestjs/common';
+    import { JwtService } from '@nestjs/jwt';
+    import * as bcrypt from 'bcrypt';
+    import { UsersService } from '../users/users.service';
+    import { UserLoginDto } from './dto/user-login.dto';
+    import { JwtPayload } from './interfaces/jwt-payload.interface';
+
+    @Injectable()
+    export class AuthService {
+      constructor(
+        private readonly usersService: UsersService,
+        private readonly jwtService: JwtService,
+      ) {}
+
+      /**
+       * Validates whether user exists and matches the stored cryptographic password hash.
+       */
+      async validateUser(email: string, pass: string) {
+        // findByEmail must eagerly or explicitly load role and permission relations
+        const user = await this.usersService.findByEmail(email);
+        if (!user) {
+          throw new NotFoundException('User not found');
+        }
+
+        const isMatch = await bcrypt.compare(pass, user.passwordHash);
+        if (!isMatch) {
+          throw new UnauthorizedException('Invalid credentials');
+        }
+
+        // Omit sensitive passwordHash before returning
+        const { passwordHash, ...safeUser } = user;
+        return safeUser;
+      }
+
+      /**
+       * Generates a signed JWT token based on user identity and assigned authorities.
+       */
+      async login(userLoginDto: UserLoginDto) {
+        const user = await this.validateUser(
+          userLoginDto.email,
+          userLoginDto.password,
+        );
+
+        // Map assigned permissions from user roles
+        const permissions =
+          user.role?.rolePermissions?.map((rp) => rp.permission.name) ?? [];
+
+        const payload: JwtPayload = {
+          sub: user.id,
+          email: user.email,
+          permissions,
+        };
+
+        return {
+          access_token: this.jwtService.sign(payload),
+          token_type: 'Bearer',
+          user: {
+            id: user.id,
+            email: user.email,
+            role: user.role?.name,
+          },
+        };
+      }
+    }
+    ```
+
+    :::note[Eager Relation Loading in UsersService]
+    Ensure your `UsersService.findByEmail` method includes proper TypeORM relation joins (`role`, `role.rolePermissions`, `role.rolePermissions.permission`) so that granular permissions are loaded into memory.
+    :::
+  </Step>
+
+  <Step number="4" title="Configure JWT Strategy (JwtStrategy)">
+    `JwtStrategy` extends `PassportStrategy(Strategy)`. Passport intercepts requests, extracts tokens from `Authorization: Bearer <token>`, and verifies the cryptographic signature with your secret key. Upon successful validation, Passport invokes `validate(payload)`.
+
+    ```typescript title="src/auth/strategies/jwt.strategy.ts" showLineNumbers
+    import { Injectable, UnauthorizedException } from '@nestjs/common';
+    import { ConfigService } from '@nestjs/config';
+    import { PassportStrategy } from '@nestjs/passport';
+    import { ExtractJwt, Strategy } from 'passport-jwt';
+    import { UsersService } from '../../users/users.service';
+    import { JwtPayload } from '../interfaces/jwt-payload.interface';
+
+    @Injectable()
+    export class JwtStrategy extends PassportStrategy(Strategy) {
+      constructor(
+        configService: ConfigService,
+        private readonly usersService: UsersService,
+      ) {
+        const secret = configService.get<string>('JWT_SECRET');
+        if (!secret) {
+          throw new Error('JWT_SECRET environment variable is missing or empty');
+        }
+
+        super({
+          // Extract token from standard 'Authorization: Bearer <token>' header
+          jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+          // Automatically reject expired tokens
+          ignoreExpiration: false,
+          // Symmetric secret key for signature verification
+          secretOrKey: secret,
+        });
+      }
+
+      /**
+       * Method automatically invoked by Passport upon successful cryptographic verification.
+       * The object returned here is injected by NestJS into 'req.user'.
+       */
+      async validate(payload: JwtPayload) {
+        const user = await this.usersService.findById(payload.sub);
+        if (!user) {
+          throw new UnauthorizedException('Token does not correspond to an active user');
+        }
+        return user;
+      }
+    }
+    ```
+  </Step>
+
+  <Step number="5" title="Create Authentication Controller (AuthController)">
+    The controller exposes the public login endpoint (`POST /auth/login`), validating input payloads through class-validator:
+
+    ```typescript title="src/auth/auth.controller.ts" showLineNumbers
+    import {
+      Controller,
+      Post,
+      Body,
+      HttpCode,
+      HttpStatus,
+    } from '@nestjs/common';
+    import { AuthService } from './auth.service';
+    import { UserLoginDto } from './dto/user-login.dto';
+
+    @Controller('auth')
+    export class AuthController {
+      constructor(private readonly authService: AuthService) {}
+
+      @Post('login')
+      @HttpCode(HttpStatus.OK)
+      async login(@Body() loginDto: UserLoginDto) {
+        return this.authService.login(loginDto);
+      }
+    }
+    ```
+  </Step>
+
+  <Step number="6" title="Integrate and Wire the Module (AuthModule)">
+    Configure the module by registering `JwtModule` asynchronously using `registerAsync`. This guarantees that `ConfigService` is fully initialized before resolving secret keys.
+
+    ```typescript title="src/auth/auth.module.ts" showLineNumbers
+    import { Module } from '@nestjs/common';
+    import { ConfigModule, ConfigService } from '@nestjs/config';
+    import { JwtModule } from '@nestjs/jwt';
+    import { PassportModule } from '@nestjs/passport';
+    import { AuthController } from './auth.controller';
+    import { AuthService } from './auth.service';
+    import { JwtStrategy } from './strategies/jwt.strategy';
+    import { UsersModule } from '../users/users.module';
+
+    @Module({
+      imports: [
+        UsersModule,
+        PassportModule.register({ defaultStrategy: 'jwt' }),
+        JwtModule.registerAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: (configService: ConfigService) => ({
+            secret: configService.get<string>('JWT_SECRET') || 'defaultSecret',
+            signOptions: {
+              expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '1h',
+            },
+          }),
+        }),
+      ],
+      controllers: [AuthController],
+      providers: [AuthService, JwtStrategy],
+      exports: [AuthService, PassportModule, JwtModule],
+    })
+    export class AuthModule {}
+    ```
+  </Step>
+</StepByStep>
+
+---
+
+## 3. Testing the Login Endpoint
+
+To verify that the authentication pipeline behaves as expected, issue a `POST` request to `/auth/login`:
+
+```bash title="Terminal (cURL)"
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "ana@icesi.edu.co",
+    "password": "MySecurePassword123"
+  }'
+```
+
+### Expected Response (HTTP 200 OK):
+
+```json title="HTTP 200 Response"
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYW5hQGljZXNpLmVkdS5jbyIsInBlcm1pc3Npb25zIjpbInVzZXJzOnJlYWQiLCJ1c2VyczpjcmVhdGUiXSwiaWF0IjoxNzczNTE3OTA1LCJleHAiOjE3NzM1MjE1MDV9.X9jYd8L2...",
+  "token_type": "Bearer",
+  "user": {
+    "id": 1,
+    "email": "ana@icesi.edu.co",
+    "role": "admin"
+  }
+}
+```
+
+If the client supplies an incorrect password or an unregistered email:
+
+```json title="HTTP 401 Unauthorized"
+{
+  "message": "Invalid credentials",
+  "error": "Unauthorized",
+  "statusCode": 401
+}
+```
+
+---
+
+## Self-Assessment Quiz
+
+<Quiz id="compunet3-s7-03-config-modulos-auth-quiz">
+  <Question title="Why is it recommended to configure 'JwtModule.registerAsync' with 'useFactory' rather than the static 'JwtModule.register'?">
+    <Option>Because registerAsync enables TypeScript builds without requiring Node.js.</Option>
+    <Option correct>Because it allows injecting ConfigService dynamically, ensuring environment variables (.env) are fully loaded.</Option>
+    <Option>Because the static register method exclusively supports asymmetric RSA keys.</Option>
+    <Option>Because registerAsync automatically persists tokens into the TypeORM database.</Option>
+  </Question>
+
+  <Question title="In the JwtStrategy class, which helper method from 'passport-jwt' is bound to 'jwtFromRequest' to parse standard HTTP headers?">
+    <Option>ExtractJwt.fromUrlQueryParameter('token')</Option>
+    <Option>ExtractJwt.fromBodyField('access_token')</Option>
+    <Option correct>ExtractJwt.fromAuthHeaderAsBearerToken()</Option>
+    <Option>ExtractJwt.fromCookie('jwt')</Option>
+  </Question>
+
+  <Question title="What happens to the object returned by 'validate(payload: JwtPayload)' inside JwtStrategy?">
+    <Option>It is written to a global variable on the Node.js process object.</Option>
+    <Option correct>NestJS and Passport automatically assign it to the 'req.user' property of the incoming request.</Option>
+    <Option>It is returned directly to the client as the raw HTTP response body.</Option>
+    <Option>It is appended to the server's permanent audit log file.</Option>
+  </Question>
+
+  <Question title="If an incoming token's expiration date ('exp') has passed and 'ignoreExpiration: false' is set, what action does JwtStrategy take?">
+    <Option>It runs the validate method anyway and silently refreshes the token.</Option>
+    <Option correct>It rejects the request immediately, returning HTTP 401 Unauthorized without executing the validate method.</Option>
+    <Option>It throws an unhandled HTTP 500 error due to a cryptographic timeout.</Option>
+    <Option>It redirects the client to the application root route.</Option>
+  </Question>
+
+  <Question title="What is the operational purpose of 'bcrypt.compare(pass, user.passwordHash)' inside AuthService?">
+    <Option>To decrypt the stored database hash and compare both plaintext passwords in memory.</Option>
+    <Option correct>To hash the provided plaintext password using the stored salt and perform a secure constant-time hash comparison.</Option>
+    <Option>To update the user's password record inside PostgreSQL.</Option>
+    <Option>To strip special characters from the incoming password string.</Option>
+  </Question>
+
+  <Question title="When authenticating a user in AuthService.login(), why is 'passwordHash' removed from the returned user object?">
+    <Option>Because JWT tokens only support boolean values in claims.</Option>
+    <Option>Because TypeORM throws a validation exception when partial entities are serialized.</Option>
+    <Option correct>To respect defensive security principles and prevent leaking password hashes into client responses or logs.</Option>
+    <Option>Because PassportStrategy prohibits properties containing the word 'Hash'.</Option>
+  </Question>
+
+  <Question title="Which NestJS decorator is applied in AuthController.login() to ensure successful requests emit HTTP status 200 instead of POST's default 201?">
+    <Option>@Header('Status', '200')</Option>
+    <Option correct>@HttpCode(HttpStatus.OK)</Option>
+    <Option>@ResponseStatus(200)</Option>
+    <Option>@StatusCode('OK')</Option>
+  </Question>
+
+  <Question title="Which official NestJS utility module supplies the injectable 'this.jwtService.sign(payload)' method?">
+    <Option>@nestjs/passport</Option>
+    <Option>@nestjs/core</Option>
+    <Option correct>@nestjs/jwt</Option>
+    <Option>@nestjs/platform-express</Option>
+  </Question>
+
+  <Question title="If the 'JWT_SECRET' environment variable is absent during JwtStrategy initialization, what is the most secure architectural behavior?">
+    <Option>Assign an empty fallback string and allow the application to start.</Option>
+    <Option correct>Throw an explicit error that halts application startup, preventing the server from running with an undefined or insecure secret.</Option>
+    <Option>Generate a random in-memory secret on every server restart.</Option>
+    <Option>Disable signature validation on all route guards.</Option>
+  </Question>
+
+  <Question title="Inside UserLoginDto, which 'class-validator' decorator validates that the email property complies with RFC email formatting?">
+    <Option>@IsString()</Option>
+    <Option>@IsDomain()</Option>
+    <Option correct>@IsEmail()</Option>
+    <Option>@IsNotEmpty()</Option>
+  </Question>
+</Quiz>

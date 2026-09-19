@@ -28,8 +28,7 @@ A simple vista, puede parecer buena idea guardar todo en el mismo lugar. Sin emb
 
 Podemos visualizar los síntomas de una base de datos enferma con el siguiente diagnóstico:
 
-```mermaid
-flowchart TD
+<ZoomableMermaid value={`flowchart TD
     A[Diagnóstico de la BD] --> B(Múltiples columnas para lo mismo)
     A --> C(Textos mezclados)
     A --> D(Datos repetidos)
@@ -40,8 +39,7 @@ flowchart TD
     
     E -.-> H([Solución: Mover a tabla relacionada])
     F -.-> I([Solución: Separar en columnas distintas])
-    G -.-> J([Solución: Crear tabla independiente])
-```
+    G -.-> J([Solución: Crear tabla independiente])`} />
 
 ## Las reglas del buen diseño
 
@@ -172,8 +170,7 @@ Aplicar las reglas requiere un proceso metódico. Sigamos los pasos usando nuest
 
     *Aplicado al ejemplo:* El resultado final de rediseñar `CONTACTOS` es:
 
-    ```mermaid
-    %%{init: {
+    <ZoomableMermaid value={`%%{init: {
         "theme": "base",
         "themeVariables": {
             "primaryColor": "#bed1fa",
@@ -200,8 +197,7 @@ Aplicar las reglas requiere un proceso metódico. Sigamos los pasos usando nuest
             string numero
         }
         CIUDAD ||--o{ PERSONA : "tiene residentes"
-        PERSONA ||--o{ TELEFONO : "tiene numeros"
-    ```
+        PERSONA ||--o{ TELEFONO : "tiene numeros"`} />
 
     Pasamos de una tabla caótica con 8 columnas a tres tablas limpias, sin datos repetidos y sin columnas vacías.
   </Step>

@@ -123,9 +123,9 @@ Para ilustrar cómo una interfaz de usuario realista se traduce a un árbol orde
   </div>
   <div style={{ maxWidth: '440px' }}>
     <h4>Análisis Visual de la Interfaz:</h4>
-    <p style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
+    <div style={{ fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '8px' }}>
       Observa los elementos que componen la pantalla:
-    </p>
+    </div>
     <ul style={{ fontSize: '0.9rem', lineHeight: '1.6' }}>
       <li><strong>Barra superior (Top App Bar)</strong>: Botón de retorno, título centrado <em>Now Playing</em> e icono de opciones.</li>
       <li><strong>Carátula de Álbum</strong>: Imagen cuadrada con esquinas redondeadas generosas (<code>rounded-3xl</code>).</li>

@@ -29,14 +29,12 @@ En la configuración XML, el alcance se define con el atributo `scope="..."` en 
 </bean>
 ```
 
-```mermaid
-graph TD
+<ZoomableMermaid value={`graph TD
     subgraph SingletonScope ["Scope Singleton (Instancia Única Compartida)"]
         ClientA["Petición 1: context.getBean('estudianteService')"] --> SingleBean["Instancia Única en Caché de Spring<br/>(Ref: 0x4A8F9)"]
         ClientB["Petición 2: context.getBean('estudianteService')"] --> SingleBean
         ClientC["Inyección en Servlet / Main"] --> SingleBean
-    end
-```
+    end`} />
 
 ---
 
@@ -52,14 +50,12 @@ graph TD
       scope="prototype" />
 ```
 
-```mermaid
-graph TD
+<ZoomableMermaid value={`graph TD
     subgraph PrototypeScope ["Scope Prototype (Nueva Instancia por Consulta)"]
         Client1["Cliente A: context.getBean('carrito')"] --> BeanInst1["Nueva Instancia Carrito A<br/>(Ref: 0x1111 - Datos de Usuario A)"]
         Client2["Cliente B: context.getBean('carrito')"] --> BeanInst2["Nueva Instancia Carrito B<br/>(Ref: 0x2222 - Datos de Usuario B)"]
         Client3["Cliente C: context.getBean('carrito')"] --> BeanInst3["Nueva Instancia Carrito C<br/>(Ref: 0x3333 - Datos de Usuario C)"]
-    end
-```
+    end`} />
 
 #### ¿Por qué y cuándo utilizar el Alcance Prototype?
 
@@ -97,8 +93,7 @@ Spring es responsable de instanciar e inyectar beans Prototype, pero **no gestio
 
 El contenedor IoC gestiona el ciclo de vida del bean desde su creación hasta su eliminación de la memoria.
 
-```mermaid
-sequenceDiagram
+<ZoomableMermaid value={`sequenceDiagram
     autonumber
     participant Container as Spring IoC Container
     participant Bean as Instancia del Bean
@@ -108,8 +103,7 @@ sequenceDiagram
     Container->>Bean: 3. Ejecución del método de Inicialización (init-method)
     Note over Bean: 4. Bean Activo y Listo para Usar en la Aplicación
     Container->>Bean: 5. Apagado del Contenedor: Método de Destrucción (destroy-method)
-    Note over Bean: 6. Bean Destruido y Recursos Liberados
-```
+    Note over Bean: 6. Bean Destruido y Recursos Liberados`} />
 
 ### Métodos de Eventos: `init-method` y `destroy-method`
 

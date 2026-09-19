@@ -18,8 +18,7 @@ En la arquitectura de software basada en el patrón **MVC (Modelo-Vista-Controla
 
 En NestJS, un controlador es una clase TypeScript decorada con `@Controller()`. Su función primordial es el **enrutamiento** (*routing*): asociar rutas URL y métodos HTTP (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`) con funciones controladoras específicas llamadas métodos manejadores (*route handlers*).
 
-```mermaid
-flowchart LR
+<ZoomableMermaid value={`flowchart LR
     Client["Cliente HTTP<br/>(Browser / Postman)"] -->|"1. HTTP Request<br/>(GET /users/10)"| Routing["Mecanismo de Enrutamiento<br/>(NestJS Router)"]
     Routing -->|"2. Despacho al método"| Controller["UsersController<br/>(@Controller('users'))"]
     Controller -->|"3. Invocación de lógica"| Service["UsersService<br/>(@Injectable())"]
@@ -36,8 +35,7 @@ flowchart LR
     class Client clientStyle;
     class Routing routerStyle;
     class Controller,Service nestStyle;
-    class Repository dbStyle;
-```
+    class Repository dbStyle;`} />
 
 #### Responsabilidades de cada componente
 

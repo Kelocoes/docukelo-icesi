@@ -15,15 +15,13 @@ sidebar_label: "Proyecto Lombok"
 
 Durante la compilación tradicional de Java, escribir atributos privados requiere definir explícitamente decenas de líneas de código redundante. Lombok se engancha en la fase de procesamiento de anotaciones del compilador (`javac`) e inyecta directamente el código de los métodos en el archivo compilado `.class`, manteniendo el archivo fuente `.java` totalmente limpio.
 
-```mermaid
-graph LR
+<ZoomableMermaid value={`graph LR
     classDef srcStyle fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#0369a1;
     classDef procStyle fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e;
     classDef classStyle fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#166534;
 
     A["Archivo Fuente .java<br/>(Clase limpia con anotaciones)"]:::srcStyle --> B["Compilador javac + Lombok<br/>(Annotation Processor)"]:::procStyle
-    B --> C["Archivo Bytecode .class<br/>(Contiene getters, setters y constructores generados)"]:::classStyle
-```
+    B --> C["Archivo Bytecode .class<br/>(Contiene getters, setters y constructores generados)"]:::classStyle`} />
 
 ---
 

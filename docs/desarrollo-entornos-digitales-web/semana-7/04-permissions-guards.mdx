@@ -1,0 +1,353 @@
+---
+sidebar_position: 4
+---
+
+# Control de Acceso Basado en Permisos (Guards)
+
+Una vez resuelta la autenticación de usuarios y la emisión de tokens JWT, el siguiente desafío arquitectónico consiste en gobernar **qué recursos y operaciones** tiene permitido ejecutar cada usuario dentro del sistema.
+
+En esta guía final implementaremos un esquema de autorización granular basado en permisos (**PBAC - Permission-Based Access Control**), construyendo un decorador personalizado `@Permissions`, un guardia especializado `PermissionsGuard` con `Reflector` y la protección declarativa de controladores en NestJS.
+
+---
+
+## 1. De Roles a Permisos Granulares (RBAC vs. PBAC)
+
+En aplicaciones iniciales suele ser tentador validar directamente los nombres de los roles en las rutas (por ejemplo: `@Roles('admin')`). No obstante, este enfoque rígido presenta severas desventajas en sistemas en crecimiento:
+
+- **Explosión de Roles**: Si un usuario con rol "editor" necesita eliminar comentarios pero no artículos, surge la tentación de crear roles como "editor_con_borrado_de_comentarios".
+- **Acoplamiento Fuerte**: El código del controlador queda atado a los nombres específicos de los roles del negocio, impidiendo que los administradores reconfiguren dinámicamente qué puede hacer un rol desde una interfaz web.
+
+### La Solución: Autorización Basada en Permisos Atómicos (PBAC)
+
+1. Las **Rutas y Controladores** únicamente declaran qué **permiso atómico** requieren para ejecutarse (por ejemplo: `users:read`, `users:create`, `products:delete`).
+2. Los **Roles** agrupan conjuntos arbitrarios de permisos en la base de datos.
+3. Los **Usuarios** tienen asignado un rol.
+
+<ZoomableMermaid value={`graph LR
+    User["Usuario<br/>(Ana)"] -->|Tiene asignado| Role["Rol<br/>(Manager)"]
+    Role -->|Agrupa| P1["Permiso<br/>'users:read'"]
+    Role -->|Agrupa| P2["Permiso<br/>'users:create'"]
+    Role -->|Agrupa| P3["Permiso<br/>'reports:export'"]
+
+    Endpoint["GET /users<br/>@Permissions('users:read')"] -.->|Exige| P1
+
+    classDef userStyle fill:#eff6ff,stroke:#3b82f6,stroke-width:1.6px,color:#1e3a8a;
+    classDef roleStyle fill:#fef3c7,stroke:#d97706,stroke-width:1.6px,color:#92400e;
+    classDef permStyle fill:#ecfdf5,stroke:#10b981,stroke-width:1.6px,color:#065f46;
+    classDef endStyle fill:#f3e8ff,stroke:#8b5cf6,stroke-width:1.6px,color:#5b21b6;
+
+    class User userStyle;
+    class Role roleStyle;
+    class P1,P2,P3 permStyle;
+    class Endpoint endStyle;`} />
+
+---
+
+## 2. Creación del Decorador `@Permissions`
+
+NestJS permite asociar metadatos personalizados a cualquier controlador o manejador de ruta utilizando la función `SetMetadata` provista por `@nestjs/common`.
+
+Crea el archivo decorador en tu módulo de autenticación o autorización:
+
+```typescript title="src/auth/decorators/permissions.decorator.ts" showLineNumbers
+import { SetMetadata } from '@nestjs/common';
+
+/**
+ * Clave constante utilizada para almacenar y extraer metadatos de permisos.
+ */
+export const PERMISSIONS_KEY = 'permissions';
+
+/**
+ * Decorador personalizado para asociar permisos requeridos a un endpoint.
+ * Ejemplo: @Permissions('users:read', 'users:delete')
+ */
+export const Permissions = (...permissions: string[]) =>
+  SetMetadata(PERMISSIONS_KEY, permissions);
+```
+
+### ¿Cómo funciona en tiempo de ejecución?
+Cuando TypeScript compila este decorador, añade una entrada en la tabla de metadatos de reflexión (`Reflect`) asociada a la función del controlador. El decorador en sí no ejecuta validaciones; solo etiqueta la ruta con los requisitos exigidos.
+
+---
+
+## 3. Implementación del `PermissionsGuard`
+
+El `PermissionsGuard` implementa `CanActivate` y utiliza la clase utilitaria `Reflector` de NestJS para leer los metadatos inyectados por `@Permissions`.
+
+<img src="/img/desarrollo-entornos-digitales-web/guards-permission-flow.svg" alt="Flujo de Autorización con PermissionsGuard en NestJS" width="100%" />
+
+### Código del Guardia
+
+```typescript title="src/auth/guards/permissions.guard.ts" showLineNumbers
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { Request } from 'express';
+import { PERMISSIONS_KEY } from '../decorators/permissions.decorator';
+import { User } from '../../users/entities/user.entity';
+
+/**
+ * Extensión de la interfaz Request de Express para tipar el usuario autenticado.
+ */
+interface AuthenticatedRequest extends Request {
+  user?: User;
+}
+
+@Injectable()
+export class PermissionsGuard implements CanActivate {
+  constructor(private readonly reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    // 1. Extraemos los permisos requeridos del método manejador
+    const requiredPermissions = this.reflector.get<string[]>(
+      PERMISSIONS_KEY,
+      context.getHandler(),
+    );
+
+    // Si la ruta no tiene el decorador @Permissions, se considera de libre acceso (o solo requiere autenticación)
+    if (!requiredPermissions || requiredPermissions.length === 0) {
+      return true;
+    }
+
+    // 2. Obtenemos el objeto Request HTTP subyacente
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const user = request.user;
+
+    // Si req.user no existe, AuthGuard no se ejecutó previamente o el token no era válido
+    if (!user) {
+      throw new UnauthorizedException('Usuario no autenticado en la solicitud');
+    }
+
+    // 3. Obtenemos la lista plana de permisos del usuario a partir de su rol
+    const userPermissions =
+      user.role?.rolePermissions?.map((rp) => rp.permission.name) ?? [];
+
+    // 4. Verificamos que el usuario posea TODOS los permisos requeridos (condición AND)
+    const hasAllRequiredPermissions = requiredPermissions.every((permission) =>
+      userPermissions.includes(permission),
+    );
+
+    // 5. Si carece de al menos un permiso, bloqueamos el acceso
+    if (!hasAllRequiredPermissions) {
+      throw new ForbiddenException(
+        'Acceso denegado: No cuentas con los permisos suficientes para esta acción',
+      );
+    }
+
+    return true;
+  }
+}
+```
+
+:::tip[Estrategia de Evaluación: every vs some]
+En este diseño utilizamos `requiredPermissions.every(...)`, lo que significa que el usuario debe poseer **todos** los permisos indicados en el decorador. Si en tu caso de uso requieres que baste con cumplir al menos uno, puedes sustituirlo por `requiredPermissions.some(...)`.
+:::
+
+---
+
+## 4. Uso de Guards en Controladores
+
+Para proteger un endpoint, aplicamos los guards en cascada utilizando el decorador `@UseGuards()`.
+
+```typescript title="src/users/users.controller.ts" showLineNumbers
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+  Query,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { Permissions } from '../auth/decorators/permissions.decorator';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+
+@Controller('users')
+// Se aplican en orden secuencial a todos los endpoints del controlador
+@UseGuards(AuthGuard('jwt'), PermissionsGuard)
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  @Permissions('users:read')
+  async findAll(@Query('username') username?: string) {
+    return this.usersService.findAll(username);
+  }
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  @Permissions('users:create')
+  async create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Permissions('users:delete')
+  async remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
+  }
+}
+```
+
+:::important[El Orden en @UseGuards es Crucial]
+El orden de los guards pasados a `@UseGuards(AuthGuard('jwt'), PermissionsGuard)` es fundamental:
+1. Primero se ejecuta `AuthGuard('jwt')`: valida el token de la cabecera HTTP e inyecta la entidad en `req.user`.
+2. Luego se ejecuta `PermissionsGuard`: lee `req.user` para comprobar sus permisos. Si inviertes el orden, `PermissionsGuard` fallará siempre arrojando un error de usuario no autenticado.
+:::
+
+---
+
+## 5. Pruebas y Diagnóstico de Respuestas
+
+Para probar las reglas de autorización, envía solicitudes utilizando herramientas como **cURL**, **Postman** o **Insomnia**.
+
+### Caso 1: Acceso Concedido (Token Válido + Permiso Correcto)
+
+```bash title="Terminal"
+curl -X GET http://localhost:3000/users \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsIn..."
+```
+
+**Respuesta HTTP 200 OK:**
+```json
+[
+  { "id": 1, "email": "ana@icesi.edu.co", "role": { "name": "admin" } }
+]
+```
+
+### Caso 2: Rechazo por Falta de Autenticación (Sin Token o Token Expirado)
+
+```bash title="Terminal"
+curl -X GET http://localhost:3000/users
+```
+
+**Respuesta HTTP 401 Unauthorized:**
+```json
+{
+  "message": "Unauthorized",
+  "statusCode": 401
+}
+```
+
+### Caso 3: Rechazo por Permisos Insuficientes (Token Válido de Usuario sin Privilegio)
+
+Si un usuario con rol "invitado" intenta acceder a una ruta que requiere `users:read`:
+
+**Respuesta HTTP 403 Forbidden:**
+```json
+{
+  "message": "Acceso denegado: No cuentas con los permisos suficientes para esta acción",
+  "error": "Forbidden",
+  "statusCode": 403
+}
+```
+
+### Solución a Problemas Comunes (Errores 500)
+
+:::warning[Cuidado con Relaciones Nulas en TypeORM]
+Si experimentas respuestas con código **HTTP 500 Internal Server Error**, la causa más frecuente en este punto es que `user.role` o `user.role.rolePermissions` son `undefined` al intentar mapearlos en el guard.
+
+Asegúrate de que la consulta ejecutada en `JwtStrategy.validate(payload)` o en `UsersService.findById()` incluya explícitamente las relaciones de TypeORM:
+
+```typescript title="src/users/users.service.ts" showLineNumbers
+async findById(id: number): Promise<User | null> {
+  return this.userRepository.findOne({
+    where: { id },
+    relations: [
+      'role',
+      'role.rolePermissions',
+      'role.rolePermissions.permission',
+    ],
+  });
+}
+```
+:::
+
+---
+
+## Cuestionario de Autoevaluación
+
+<Quiz id="dedw-s7-04-permissions-guards-quiz">
+  <Question title="¿Cuál es la principal desventaja arquitectónica de vincular directamente los nombres de roles rígidos (como @Roles('admin')) a los endpoints en lugar de usar permisos atómicos?">
+    <Option>NestJS prohíbe el uso de cadenas de texto en los decoradores de controlador.</Option>
+    <Option correct>Genera acoplamiento fuerte y explosión de roles si se requiere modificar qué acciones puede ejecutar un rol sin reescribir código.</Option>
+    <Option>TypeORM no es compatible con bases de datos relacionales si se usan roles.</Option>
+    <Option>El tamaño del token JWT se multiplica por cada rol declarado en el controlador.</Option>
+  </Question>
+
+  <Question title="¿Qué función utilitaria del paquete '@nestjs/common' permite asociar metadatos personalizados a clases y manejadores de ruta?">
+    <Option>InjectMetadata()</Option>
+    <Option>AssignReflect()</Option>
+    <Option correct>SetMetadata()</Option>
+    <Option>AttachGuardData()</Option>
+  </Question>
+
+  <Question title="¿Qué clase provista por '@nestjs/core' se inyecta en el constructor de PermissionsGuard para recuperar los metadatos en tiempo de ejecución?">
+    <Option>MetadataRegistry</Option>
+    <Option>ContextScanner</Option>
+    <Option correct>Reflector</Option>
+    <Option>RouteIntrospector</Option>
+  </Question>
+
+  <Question title="Si un endpoint no tiene asignado el decorador @Permissions() y requiredPermissions resulta ser null o un arreglo vacío, ¿qué debe retornar PermissionsGuard?">
+    <Option>false (Bloquear la ruta por defecto)</Option>
+    <Option>Lanzar una excepción BadRequestException</Option>
+    <Option correct>true (Permitir el acceso a la ruta)</Option>
+    <Option>Redirigir la petición al endpoint de login</Option>
+  </Question>
+
+  <Question title="Al aplicar @UseGuards(AuthGuard('jwt'), PermissionsGuard), ¿por qué es crítico que AuthGuard('jwt') se coloque en primer lugar?">
+    <Option>Porque TypeScript no compila dos guards en una misma línea si no están ordenados alfabéticamente.</Option>
+    <Option correct>Porque AuthGuard('jwt') autentica el token y coloca el objeto del usuario en 'req.user', el cual PermissionsGuard necesita inspeccionar.</Option>
+    <Option>Porque PermissionsGuard consume más memoria y debe liberarse al final.</Option>
+    <Option>Porque el navegador web envía dos solicitudes HTTP consecutivas.</Option>
+  </Question>
+
+  <Question title="¿Qué código de estado HTTP emite NestJS cuando el PermissionsGuard lanza una instancia de 'ForbiddenException'?">
+    <Option>400 Bad Request</Option>
+    <Option>401 Unauthorized</Option>
+    <Option correct>403 Forbidden</Option>
+    <Option>404 Not Found</Option>
+  </Question>
+
+  <Question title="En la condición 'requiredPermissions.every((p) =&gt; userPermissions.includes(p))', ¿qué criterio lógico se está aplicando?">
+    <Option>El usuario solo necesita tener al menos uno de los permisos requeridos (OR).</Option>
+    <Option correct>El usuario debe poseer absolutamente todos y cada uno de los permisos declarados en la ruta (AND).</Option>
+    <Option>El usuario debe tener permisos con nombres idénticos al ID del usuario.</Option>
+    <Option>La solicitud solo se permite si el usuario no tiene ningún permiso asignado.</Option>
+  </Question>
+
+  <Question title="Si la API comienza a responder con errores HTTP 500 al evaluar permisos en una ruta protegida, ¿cuál es la causa más común?">
+    <Option>El puerto 3000 del servidor está bloqueado por el firewall del sistema operativo.</Option>
+    <Option correct>La consulta de TypeORM que recupera el usuario no precargó las relaciones ('role', 'rolePermissions', 'permission'), provocando un TypeError de undefined.</Option>
+    <Option>El archivo .env tiene más de 10 variables de configuración.</Option>
+    <Option>El cliente HTTP no envió la cabecera Content-Type: application/json en una petición GET.</Option>
+  </Question>
+
+  <Question title="¿De qué objeto de NestJS se obtiene el handler (método de controlador) que va a ser ejecutado para extraer sus metadatos con el Reflector?">
+    <Option>ModuleRef</Option>
+    <Option>HttpService</Option>
+    <Option correct>ExecutionContext (a través de context.getHandler())</Option>
+    <Option>ApplicationConfig</Option>
+  </Question>
+
+  <Question title="¿En qué encabezado HTTP estándar envía el cliente el token JWT para ser interceptado por la estrategia JwtStrategy?">
+    <Option>Authentication: Token &lt;token&gt;</Option>
+    <Option correct>Authorization: Bearer &lt;token&gt;</Option>
+    <Option>X-JWT-Payload: &lt;token&gt;</Option>
+    <Option>Cookie: session_token=&lt;token&gt;</Option>
+  </Question>
+</Quiz>

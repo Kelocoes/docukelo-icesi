@@ -16,8 +16,7 @@ NestJS proporciona una arquitectura de aplicación lista para usar (out-of-the-b
 
 En NestJS, las solicitudes HTTP entrantes atraviesan una serie de capas organizadas secuencialmente antes de que la respuesta sea enviada de vuelta al cliente. Cada capa cumple un propósito específico dentro de la arquitectura de la aplicación:
 
-```mermaid
-graph LR
+<ZoomableMermaid value={`graph LR
     A["Cliente (HTTP Request)"] --> B["Middlewares"]
     B --> C["Guards"]
     C --> D["Interceptors (Pre)"]
@@ -38,8 +37,7 @@ graph LR
     style G fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
     style H fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
     style I fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#7f1d1d
-    style J fill:#f8fafc,stroke:#64748b,stroke-width:2px
-```
+    style J fill:#f8fafc,stroke:#64748b,stroke-width:2px`} />
 
 #### Explicación Técnica de las Capas del Ciclo de Vida:
 

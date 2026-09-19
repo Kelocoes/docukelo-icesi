@@ -51,8 +51,7 @@ En nuestro ejemplo, Ana tiene el ID 1 en la tabla de usuarios (su llave principa
 
 Para visualizar cómo se conectan nuestras tablas, usamos diagramas. Observa esta relación entre Usuario y Pedido:
 
-```mermaid
-%%{init: {
+<ZoomableMermaid value={`%%{init: {
     "theme": "base",
     "themeVariables": {
         "primaryColor": "#bed1fa",
@@ -72,8 +71,7 @@ erDiagram
         string producto
         float total
         int usuario_id FK
-    }
-```
+    }`} />
 
 En este diagrama, los símbolos en la línea que conecta las tablas nos cuentan la historia de su relación:
 - El símbolo `||` junto a Usuario significa "exactamente uno".
@@ -88,8 +86,7 @@ Dependiendo de cómo interactúan las entidades en la vida real, las relaciones 
 
 Ocurre cuando un registro de la Tabla A se relaciona con un solo registro de la Tabla B, y viceversa. Un ejemplo clásico es una persona y su documento de identidad nacional. Una persona tiene un solo documento, y un documento pertenece a una sola persona.
 
-```mermaid
-%%{init: {
+<ZoomableMermaid value={`%%{init: {
     "theme": "base",
     "themeVariables": {
         "primaryColor": "#bed1fa",
@@ -98,15 +95,13 @@ Ocurre cuando un registro de la Tabla A se relaciona con un solo registro de la 
     }
 }}%%
 erDiagram
-    Persona ||--|| Documento : "tiene"
-```
+    Persona ||--|| Documento : "tiene"`} />
 
 ### Relación 1:N (Uno a muchos)
 
 Es la más común. Un registro de la Tabla A puede estar asociado a varios de la Tabla B, pero los de la B solo pertenecen a uno de la A. Como un autor que escribe varios libros, pero cada libro (en este escenario simple) tiene un solo autor.
 
-```mermaid
-%%{init: {
+<ZoomableMermaid value={`%%{init: {
     "theme": "base",
     "themeVariables": {
         "primaryColor": "#bed1fa",
@@ -115,8 +110,7 @@ Es la más común. Un registro de la Tabla A puede estar asociado a varios de la
     }
 }}%%
 erDiagram
-    Autor ||--o{ Libro : "escribe"
-```
+    Autor ||--o{ Libro : "escribe"`} />
 
 ### Relación N:M (Muchos a muchos)
 
@@ -124,8 +118,7 @@ Ocurre cuando muchos registros de la Tabla A se relacionan con muchos de la Tabl
 
 Para lograr esto en una base de datos relacional, **siempre** necesitamos crear una tercera tabla en medio, conocida como tabla puente o intermedia. Esta nueva tabla guarda las conexiones combinando las llaves principales de ambas tablas.
 
-```mermaid
-%%{init: {
+<ZoomableMermaid value={`%%{init: {
     "theme": "base",
     "themeVariables": {
         "primaryColor": "#bed1fa",
@@ -135,8 +128,7 @@ Para lograr esto en una base de datos relacional, **siempre** necesitamos crear 
 }}%%
 erDiagram
     Estudiante ||--o{ Inscripcion : "tiene"
-    Curso ||--o{ Inscripcion : "tiene"
-```
+    Curso ||--o{ Inscripcion : "tiene"`} />
 
 ## ¿Qué tipos de datos puede guardar una columna?
 

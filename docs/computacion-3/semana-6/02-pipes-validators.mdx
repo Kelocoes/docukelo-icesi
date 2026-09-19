@@ -17,8 +17,7 @@ Un Pipe es una clase anotada con `@Injectable()` que implementa la interfaz `Pip
 1. **Transformación**: Mutar los datos de entrada a la forma o tipo deseado (por ejemplo, convertir un string `"42"` de la URL en un número entero `42`, o instanciar una entidad).
 2. **Validación**: Evaluar si los datos recibidos cumplen con ciertas restricciones y reglas de negocio. Si los datos son válidos, continúan su flujo; si no son válidos, el pipe interrumpe la petición lanzando una excepción HTTP (habitualmente `BadRequestException` 400).
 
-```mermaid
-flowchart LR
+<ZoomableMermaid value={`flowchart LR
     Client["Cliente HTTP<br/>(POST /users con JSON)"] -->|"1. Request"| Router["NestJS Router"]
     Router -->|"2. Despacho"| Pipes["Validation & Transformation Pipes<br/>(ValidationPipe / ParseIntPipe)"]
     Pipes -->|"3a. Si es válido: datos limpios y tipados"| Controller["UsersController<br/>(@Body() dto: CreateUserDto)"]
@@ -35,8 +34,7 @@ flowchart LR
     class Router routerStyle;
     class Pipes pipeStyle;
     class Controller,Service nestStyle;
-    class ErrorResponse errorStyle;
-```
+    class ErrorResponse errorStyle;`} />
 
 #### Anatomía de la interfaz `PipeTransform`
 

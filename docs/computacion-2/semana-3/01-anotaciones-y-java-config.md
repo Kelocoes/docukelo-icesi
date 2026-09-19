@@ -25,11 +25,10 @@ En el enfoque XML definíamos cada clase como un bean utilizando la etiqueta `<b
 
 Con las anotaciones modernas de Spring, le indicamos al framework que explore automáticamente los paquetes Java en busca de clases marcadas con **Anotaciones Estereotipo** (*Stereotype Annotations*) mediante el escaneo de componentes (*Component Scanning*).
 
-```mermaid
-graph TD
+<ZoomableMermaid value={`graph TD
     subgraph SpringScan ["Escaneo de Componentes (@ComponentScan)"]
         direction TB
-        AppConfig["@Configuration / XML <context:component-scan>"] -->|Escanea paquete base com.example| Scanner["Spring ClassPathScanner"]
+        AppConfig["@Configuration / XML component-scan"] -->|Escanea paquete base com.example| Scanner["Spring ClassPathScanner"]
         Scanner -->|Detecta @Repository| RepoClass["EstudianteRepositoryImpl"]
         Scanner -->|Detecta @Service| ServiceClass["EstudianteServiceImpl"]
         Scanner -->|Detecta @Component| OtherClass["EmailHelper"]
@@ -37,8 +36,7 @@ graph TD
     
     RepoClass -->|Registra| Container["Contenedor IoC de Spring"]
     ServiceClass -->|Registra e Inyecta @Autowired| Container
-    OtherClass -->|Registra| Container
-```
+    OtherClass -->|Registra| Container`} />
 
 ---
 
@@ -155,15 +153,13 @@ public class ConexionService {
 }
 ```
 
-```mermaid
-timeline
+<ZoomableMermaid value={`timeline
     title Ciclo de Vida del Bean con Anotaciones
     Instanciación : JVM ejecuta el Constructor
     Inyección de Dependencias : Spring inyecta campos o argumentos con @Autowired
     Inicialización : Spring ejecuta los métodos marcados con @PostConstruct
     Uso Activo : El Bean atiende peticiones en la aplicación
-    Destrucción : Spring ejecuta los métodos marcados con @PreDestroy al cerrar el Contexto
-```
+    Destrucción : Spring ejecuta los métodos marcados con @PreDestroy al cerrar el Contexto`} />
 
 ---
 

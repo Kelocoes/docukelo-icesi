@@ -14,15 +14,13 @@ En esta guía compararemos cómo funcionaban las aplicaciones Java antes de Spri
 
 En aplicaciones Java tradicionales (Java SE o Servlets puros), el desarrollador era responsable de instanciar y ensamblar manualmente todas las capas del sistema utilizando el operador `new`.
 
-```mermaid
-graph TD
+<ZoomableMermaid value={`graph TD
     subgraph SinSpring ["Modelo Tradicional (Alto Acoplamiento)"]
         direction TB
         Main["Main / Servlet"] -->|Instancia con new| Service["EstudianteServiceImpl"]
         Service -->|Instancia internamente con new| Repo["EstudianteRepositoryInMemory"]
         Repo -->|Crea objetos| Model["Estudiante"]
-    end
-```
+    end`} />
 
 ### Problemas del Enfoque Tradicional
 
@@ -59,12 +57,10 @@ Spring soluciona este problema introduciendo el **Contenedor IoC** (*Inversion o
 3. **Inyectar** las dependencias requeridas entre ellos.
 4. **Gestionar** su ciclo de vida y alcances (*scopes*).
 
-```mermaid
-graph LR
+<ZoomableMermaid value={`graph LR
     XmlConfig["applicationContext.xml<br/><i>(Metadatos de Configuración)</i>"] -->|Carga de reglas| Container["Contenedor IoC de Spring<br/><i>(ApplicationContext)</i>"]
     Pojos["Clases Java (POJOs)<br/><i>(Model, Service, Repo)</i>"] -->|Instanciación| Container
-    Container -->|Ensamblaje| AppReady["Aplicación Lista para Usar<br/><i>(Beans en Memoria)</i>"]
-```
+    Container -->|Ensamblaje| AppReady["Aplicación Lista para Usar<br/><i>(Beans en Memoria)</i>"]`} />
 
 ### Tipos de Contenedores IoC en Spring
 

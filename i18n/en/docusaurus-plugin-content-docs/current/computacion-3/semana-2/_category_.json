@@ -1,0 +1,8 @@
+{
+    "label": "W2 - Node.js & TS-Express Intro",
+    "position": 2,
+    "link": {
+        "type": "generated-index",
+        "description": "Node.js core concepts and Express with TypeScript introduction."
+    }
+}

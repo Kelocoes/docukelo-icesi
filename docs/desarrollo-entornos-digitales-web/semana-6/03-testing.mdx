@@ -17,8 +17,7 @@ En el ecosistema backend con NestJS existen dos niveles principales de pruebas:
 1. **Pruebas Unitarias (*Unit Tests*)**: Verifican funciones, métodos o clases en aislamiento estricto (como un `UsersService` o `UsersController`). Todas sus dependencias externas (bases de datos, servicios HTTP, repositorios TypeORM) se reemplazan por simulaciones (*mocks* o *stubs*).
 2. **Pruebas de Integración y End-to-End (*E2E Tests*)**: Evalúan la interacción coordinada entre múltiples capas de la aplicación (enrutador, interceptores, guards, servicios y base de datos de pruebas) emulando peticiones HTTP reales mediante herramientas como [Supertest](https://github.com/visionmedia/supertest).
 
-```mermaid
-flowchart TD
+<ZoomableMermaid value={`flowchart TD
     subgraph E2E["Pruebas E2E / Integración (Supertest)"]
         Req["HTTP Request (GET /users)"] --> Ctrl["Controller"]
     end
@@ -35,8 +34,7 @@ flowchart TD
 
     class Req,Ctrl e2eStyle;
     class Svc unitStyle;
-    class Repo,Ext mockStyle;
-```
+    class Repo,Ext mockStyle;`} />
 
 ---
 
