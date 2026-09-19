@@ -17,8 +17,7 @@ En la ingeniería de software, el término *plumbing* (fontanería) hace referen
 - Manejo de recursos, transacciones y sesiones.
 - Abstracciones para conectar con bases de datos o servicios remotos.
 
-```mermaid
-graph LR
+<ZoomableMermaid value={`graph LR
     subgraph Desarrollador ["Enfoque del Desarrollador"]
         Negocio["Lógica de Negocio<br/><i>(Reglas del Dominio)</i>"]
     end
@@ -30,8 +29,7 @@ graph LR
         WebSupport["Soporte Web / Servlets"]
     end
 
-    SpringFramework -.->|Soporta y Conecta| Desarrollador
-```
+    SpringFramework -.->|Soporta y Conecta| Desarrollador`} />
 
 :::note[¿Por qué es crucial delegar la fontanería a Spring?]
 Al delegar la creación y el ensamblaje de objetos a Spring mediante configuración XML, el código Java de la aplicación se mantiene limpio (*POJOs*), libre de dependencias rígidas y fácil de someter a pruebas unitarias.
@@ -78,8 +76,7 @@ Para garantizar la **separación de responsabilidades** (*Separation of Concerns
 
 El siguiente diagrama ilustra el viaje de una petición web desde que llega al Servlet hasta que se consulta la información y retorna al cliente:
 
-```mermaid
-sequenceDiagram
+<ZoomableMermaid value={`sequenceDiagram
     autonumber
     actor Cliente as Cliente HTTP (Navegador)
     participant Web as Capa Presentación (Servlet)
@@ -94,8 +91,7 @@ sequenceDiagram
     Data-->>Repo: 5. Retorna lista de objetos Estudiante (Model)
     Repo-->>Service: 6. Entrega lista de datos al servicio
     Service-->>Web: 7. Entrega resultado procesado al Servlet
-    Web-->>Cliente: 8. Responde contenido HTML / JSON
-```
+    Web-->>Cliente: 8. Responde contenido HTML / JSON`} />
 
 :::note[Principio de Aislamiento]
 La Capa de Presentación jamás debe comunicarse directamente con la Capa de Repositorio o la Base de Datos. Todas las operaciones deben transitar obligatoriamente por la Capa de Servicio para garantizar que se apliquen las reglas de negocio.

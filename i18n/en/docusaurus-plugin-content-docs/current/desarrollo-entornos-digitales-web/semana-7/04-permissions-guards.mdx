@@ -1,0 +1,353 @@
+---
+sidebar_position: 4
+---
+
+# Permission-Based Access Control with Guards
+
+Once user authentication and signed JWT issuance are established, the next architectural challenge is governing **what resources and actions** each authenticated user is permitted to execute across system endpoints.
+
+In this concluding guide, we implement a granular **Permission-Based Access Control (PBAC)** model. We construct a custom `@Permissions` decorator, an authorization `PermissionsGuard` utilizing NestJS's `Reflector`, and declarative controller protection.
+
+---
+
+## 1. Transitioning from Roles to Granular Permissions (RBAC vs. PBAC)
+
+In early application prototypes, developers often bind rigid role names directly to route decorators (e.g., `@Roles('admin')`). However, this tight coupling introduces notable problems as systems scale:
+
+- **Role Explosion**: When an "editor" user needs permissions to delete user comments but not articles, teams are tempted to create bespoke roles like "editor_with_comment_deletion".
+- **Rigid Coupling**: Route handlers become tightly coupled to specific business role titles, preventing administrators from dynamically adjusting role privileges through a management dashboard.
+
+### The Solution: Permission-Based Access Control (PBAC)
+
+1. **Routes and Controllers** declare exclusively the **atomic permission** required for execution (e.g., `users:read`, `users:create`, `products:delete`).
+2. **Roles** group arbitrary sets of granular permissions inside the database.
+3. **Users** are assigned one or more roles.
+
+<ZoomableMermaid value={`graph LR
+    User["User<br/>(Ana)"] -->|Assigned to| Role["Role<br/>(Manager)"]
+    Role -->|Groups| P1["Permission<br/>'users:read'"]
+    Role -->|Groups| P2["Permission<br/>'users:create'"]
+    Role -->|Groups| P3["Permission<br/>'reports:export'"]
+
+    Endpoint["GET /users<br/>@Permissions('users:read')"] -.->|Requires| P1
+
+    classDef userStyle fill:#eff6ff,stroke:#3b82f6,stroke-width:1.6px,color:#1e3a8a;
+    classDef roleStyle fill:#fef3c7,stroke:#d97706,stroke-width:1.6px,color:#92400e;
+    classDef permStyle fill:#ecfdf5,stroke:#10b981,stroke-width:1.6px,color:#065f46;
+    classDef endStyle fill:#f3e8ff,stroke:#8b5cf6,stroke-width:1.6px,color:#5b21b6;
+
+    class User userStyle;
+    class Role roleStyle;
+    class P1,P2,P3 permStyle;
+    class Endpoint endStyle;`} />
+
+---
+
+## 2. Creating the `@Permissions` Decorator
+
+NestJS allows developers to attach custom metadata to controllers and route handlers using the `SetMetadata` helper provided by `@nestjs/common`.
+
+Create the decorator in your authentication or authorization module:
+
+```typescript title="src/auth/decorators/permissions.decorator.ts" showLineNumbers
+import { SetMetadata } from '@nestjs/common';
+
+/**
+ * Constant metadata key used for storing and reflecting route permissions.
+ */
+export const PERMISSIONS_KEY = 'permissions';
+
+/**
+ * Custom decorator binding required atomic permissions to an endpoint handler.
+ * Example: @Permissions('users:read', 'users:delete')
+ */
+export const Permissions = (...permissions: string[]) =>
+  SetMetadata(PERMISSIONS_KEY, permissions);
+```
+
+### Runtime Mechanics
+When TypeScript compiles this decorator, it registers an entry in the reflection metadata registry (`Reflect`) associated with the controller method. The decorator does not execute authorization checks itself; it merely annotates route handlers with policy requirements.
+
+---
+
+## 3. Implementing `PermissionsGuard`
+
+`PermissionsGuard` implements `CanActivate` and utilizes the NestJS `Reflector` utility to inspect metadata bound by `@Permissions`.
+
+<img src="/img/desarrollo-entornos-digitales-web/guards-permission-flow.svg" alt="Authorization Flow with PermissionsGuard in NestJS" width="100%" />
+
+### Guard Implementation
+
+```typescript title="src/auth/guards/permissions.guard.ts" showLineNumbers
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { Request } from 'express';
+import { PERMISSIONS_KEY } from '../decorators/permissions.decorator';
+import { User } from '../../users/entities/user.entity';
+
+/**
+ * Express Request interface extension typing the authenticated user entity.
+ */
+interface AuthenticatedRequest extends Request {
+  user?: User;
+}
+
+@Injectable()
+export class PermissionsGuard implements CanActivate {
+  constructor(private readonly reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    // 1. Extract required permissions from the target handler method
+    const requiredPermissions = this.reflector.get<string[]>(
+      PERMISSIONS_KEY,
+      context.getHandler(),
+    );
+
+    // If the route has no @Permissions decorator, access is granted (or governed solely by AuthGuard)
+    if (!requiredPermissions || requiredPermissions.length === 0) {
+      return true;
+    }
+
+    // 2. Obtain underlying HTTP Request object
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const user = request.user;
+
+    // If req.user is undefined, AuthGuard did not run or the token was invalid
+    if (!user) {
+      throw new UnauthorizedException('Unauthenticated user in request context');
+    }
+
+    // 3. Extract the flat list of permission strings from the user's role
+    const userPermissions =
+      user.role?.rolePermissions?.map((rp) => rp.permission.name) ?? [];
+
+    // 4. Verify that the user possesses ALL required permissions (AND condition)
+    const hasAllRequiredPermissions = requiredPermissions.every((permission) =>
+      userPermissions.includes(permission),
+    );
+
+    // 5. If missing any required permission, block access
+    if (!hasAllRequiredPermissions) {
+      throw new ForbiddenException(
+        'Access denied: You do not have sufficient permissions to perform this action',
+      );
+    }
+
+    return true;
+  }
+}
+```
+
+:::tip[Evaluation Strategy: every vs some]
+In this design, we employ `requiredPermissions.every(...)`, requiring that the user holds **all** specified permissions. If your domain requirements dictate that satisfying at least one permission suffices, replace it with `requiredPermissions.some(...)`.
+:::
+
+---
+
+## 4. Applying Guards to Controllers
+
+To guard an endpoint, chain guards sequentially using the `@UseGuards()` decorator.
+
+```typescript title="src/users/users.controller.ts" showLineNumbers
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+  Query,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { Permissions } from '../auth/decorators/permissions.decorator';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+
+@Controller('users')
+// Applied sequentially to all route handlers inside this controller
+@UseGuards(AuthGuard('jwt'), PermissionsGuard)
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  @Permissions('users:read')
+  async findAll(@Query('username') username?: string) {
+    return this.usersService.findAll(username);
+  }
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  @Permissions('users:create')
+  async create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Permissions('users:delete')
+  async remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
+  }
+}
+```
+
+:::important[Guard Evaluation Order Matters]
+The sequence of guards supplied to `@UseGuards(AuthGuard('jwt'), PermissionsGuard)` is strictly linear:
+1. `AuthGuard('jwt')` runs first: it validates the incoming Bearer token and attaches the user entity to `req.user`.
+2. `PermissionsGuard` runs second: it reads `req.user` to inspect authorities. If you invert this order, `PermissionsGuard` will always throw an unauthenticated user exception.
+:::
+
+---
+
+## 5. Verification and Response Diagnostics
+
+Test authorization rules using tools such as **cURL**, **Postman**, or **Insomnia**.
+
+### Scenario 1: Access Granted (Valid Token + Required Permission)
+
+```bash title="Terminal"
+curl -X GET http://localhost:3000/users \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsIn..."
+```
+
+**HTTP 200 OK Response:**
+```json
+[
+  { "id": 1, "email": "ana@icesi.edu.co", "role": { "name": "admin" } }
+]
+```
+
+### Scenario 2: Unauthenticated Request (Missing or Expired Token)
+
+```bash title="Terminal"
+curl -X GET http://localhost:3000/users
+```
+
+**HTTP 401 Unauthorized Response:**
+```json
+{
+  "message": "Unauthorized",
+  "statusCode": 401
+}
+```
+
+### Scenario 3: Access Denied (Valid Token, Insufficient Permissions)
+
+When an authenticated user with role "guest" attempts to access an endpoint requiring `users:read`:
+
+**HTTP 403 Forbidden Response:**
+```json
+{
+  "message": "Access denied: You do not have sufficient permissions to perform this action",
+  "error": "Forbidden",
+  "statusCode": 403
+}
+```
+
+### Troubleshooting: Resolving HTTP 500 Errors
+
+:::warning[Handling Null Relations in TypeORM]
+If your protected routes emit unexpected **HTTP 500 Internal Server Error** responses during permission checks, the most common root cause is that `user.role` or `user.role.rolePermissions` is `undefined` when mapped by the guard.
+
+Ensure that the query executed inside `JwtStrategy.validate(payload)` or `UsersService.findById()` explicitly loads relational joins:
+
+```typescript title="src/users/users.service.ts" showLineNumbers
+async findById(id: number): Promise<User | null> {
+  return this.userRepository.findOne({
+    where: { id },
+    relations: [
+      'role',
+      'role.rolePermissions',
+      'role.rolePermissions.permission',
+    ],
+  });
+}
+```
+:::
+
+---
+
+## Self-Assessment Quiz
+
+<Quiz id="dedw-s7-04-permissions-guards-quiz">
+  <Question title="What is the primary architectural drawback of binding hardcoded role names (such as @Roles('admin')) directly to route handlers instead of using atomic permissions?">
+    <Option>NestJS forbids strings in controller route decorators.</Option>
+    <Option correct>It creates tight coupling and role explosion whenever business privilege requirements change without modifying code.</Option>
+    <Option>TypeORM is incompatible with relational databases when roles are involved.</Option>
+    <Option>JWT token payload size multiplies for each declared role in the controller.</Option>
+  </Question>
+
+  <Question title="Which utility function from '@nestjs/common' enables attaching custom metadata to classes and route handlers?">
+    <Option>InjectMetadata()</Option>
+    <Option>AssignReflect()</Option>
+    <Option correct>SetMetadata()</Option>
+    <Option>AttachGuardData()</Option>
+  </Question>
+
+  <Question title="Which class provided by '@nestjs/core' is injected into PermissionsGuard's constructor to read route metadata at runtime?">
+    <Option>MetadataRegistry</Option>
+    <Option>ContextScanner</Option>
+    <Option correct>Reflector</Option>
+    <Option>RouteIntrospector</Option>
+  </Question>
+
+  <Question title="If an endpoint lacks the @Permissions() decorator and requiredPermissions resolves to null or an empty array, what should PermissionsGuard return?">
+    <Option>false (Block route access by default)</Option>
+    <Option>Throw a BadRequestException</Option>
+    <Option correct>true (Allow request to proceed)</Option>
+    <Option>Redirect the request to the authentication login route</Option>
+  </Question>
+
+  <Question title="When chaining @UseGuards(AuthGuard('jwt'), PermissionsGuard), why is it critical that AuthGuard('jwt') executes first?">
+    <Option>Because TypeScript does not compile multiple guards unless listed alphabetically.</Option>
+    <Option correct>Because AuthGuard('jwt') validates the token and populates 'req.user', which PermissionsGuard inspects.</Option>
+    <Option>Because PermissionsGuard allocates higher memory and must run last.</Option>
+    <Option>Because client browsers issue two consecutive HTTP requests.</Option>
+  </Question>
+
+  <Question title="Which HTTP status code does NestJS return when PermissionsGuard throws an instance of 'ForbiddenException'?">
+    <Option>400 Bad Request</Option>
+    <Option>401 Unauthorized</Option>
+    <Option correct>403 Forbidden</Option>
+    <Option>404 Not Found</Option>
+  </Question>
+
+  <Question title="In the evaluation expression 'requiredPermissions.every((p) =&gt; userPermissions.includes(p))', which logical condition is applied?">
+    <Option>The user only needs to possess at least one of the declared permissions (OR).</Option>
+    <Option correct>The user must possess every single permission required by the route handler (AND).</Option>
+    <Option>The user permissions must have identical strings to the user's primary key.</Option>
+    <Option>The request is permitted only if the user holds zero assigned permissions.</Option>
+  </Question>
+
+  <Question title="If the API starts responding with HTTP 500 errors when evaluating permissions on a protected route, what is the most common cause?">
+    <Option>Server port 3000 is blocked by the host firewall.</Option>
+    <Option correct>The TypeORM query fetching the user did not eager-load relations ('role', 'rolePermissions', 'permission'), triggering an undefined property TypeError.</Option>
+    <Option>The .env configuration file exceeds 10 variables.</Option>
+    <Option>The client omitted Content-Type: application/json on a GET request.</Option>
+  </Question>
+
+  <Question title="From which NestJS object is the route handler function reference extracted when reading metadata via the Reflector?">
+    <Option>ModuleRef</Option>
+    <Option>HttpService</Option>
+    <Option correct>ExecutionContext (via context.getHandler())</Option>
+    <Option>ApplicationConfig</Option>
+  </Question>
+
+  <Question title="Which standard HTTP header is used by clients to pass JWT access tokens to be intercepted by JwtStrategy?">
+    <Option>Authentication: Token &lt;token&gt;</Option>
+    <Option correct>Authorization: Bearer &lt;token&gt;</Option>
+    <Option>X-JWT-Payload: &lt;token&gt;</Option>
+    <Option>Cookie: session_token=&lt;token&gt;</Option>
+  </Question>
+</Quiz>

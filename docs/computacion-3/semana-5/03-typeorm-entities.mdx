@@ -15,11 +15,9 @@ TypeORM es un **Object-Relational Mapper (ORM)**, una herramienta que permite in
 * **Sin TypeORM:** Deberíamos escribir sentencias SQL crudas (`CREATE TABLE...`, `ALTER TABLE...`, `SELECT * FROM...`) y realizar el mapeo de tipos y relaciones manualmente.
 * **Con TypeORM:** Definimos clases de **Entidad (Entity)** decoradas. TypeORM se encarga de crear las tablas, definir sus columnas, llaves primarias, restricciones de integridad y relaciones foráneas de forma automática o mediante migraciones.
 
-```mermaid
-graph LR
+<ZoomableMermaid value={`graph LR
     A["Clase Entity (TypeScript)"] -->|Decoradores @Entity, @Column| B["TypeORM Engine"]
-    B -->|Mapeo de esquema y consultas SQL| C[("PostgreSQL")]
-```
+    B -->|Mapeo de esquema y consultas SQL| C[("PostgreSQL")]`} />
 
 ---
 
@@ -27,8 +25,7 @@ graph LR
 
 Tomemos como caso de estudio la relación entre `USUARIO` y `ROL`. En este modelo, un rol puede agrupar a múltiples usuarios, mientras que cada usuario tiene asignado un único rol (relación 1:N / N:1).
 
-```mermaid
-erDiagram
+<ZoomableMermaid value={`erDiagram
     ROL ||--o{ USUARIO : contiene
     ROL {
         int id PK
@@ -39,8 +36,7 @@ erDiagram
         string email
         string passwordHash
         int role_id FK
-    }
-```
+    }`} />
 
 La siguiente tabla resume la correspondencia entre los elementos del diagrama relacional y los decoradores de TypeORM:
 

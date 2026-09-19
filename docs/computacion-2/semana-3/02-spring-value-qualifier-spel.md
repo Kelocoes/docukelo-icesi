@@ -215,13 +215,11 @@ public class SistemaConfigService {
 
 Mientras que la sintaxis `${...}` se utiliza exclusivamente para **extraer propiedades de archivos de configuración**, el lenguaje **SpEL (Spring Expression Language)** se representa con la sintaxis **`#{...}`** y permite **evaluar expresiones complejas, invocar métodos, realizar operaciones matemáticas y manipular colecciones en tiempo de ejecución**.
 
-```mermaid
-graph LR
+<ZoomableMermaid value={`graph LR
     subgraph ComparacionSintaxis ["Diferencia entre Property Placeholder y SpEL"]
-        PropertySyntax["${app.nombre}<br/><i>(Extrae valor literal del .properties)</i>"]
+        PropertySyntax["\${app.nombre}<br/><i>(Extrae valor literal del .properties)</i>"]
         SpelSyntax["#{10 * 5}<br/><i>(Evalúa y calcula la expresión en tiempo de ejecución)</i>"]
-    end
-```
+    end`} />
 
 ### A. Operaciones Matemáticas y Lógicas Básicas con SpEL
 

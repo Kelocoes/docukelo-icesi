@@ -1,0 +1,300 @@
+---
+sidebar_position: 1
+---
+
+# Prerrequisitos y Conceptos de Seguridad
+
+La seguridad es uno de los pilares fundamentales en el desarrollo de arquitecturas backend modernas. En aplicaciones empresariales y APIs RESTful, no basta con implementar las funcionalidades de negocio; es obligatorio garantizar que cada petición provenga de una identidad legítima y que las operaciones ejecutadas respeten estrictamente las políticas de acceso del sistema.
+
+En esta guía abordaremos los fundamentos conceptuales de la seguridad web, el almacenamiento protegido de credenciales mediante funciones de derivación criptográfica (hashing) y la distinción arquitectónica entre autenticación y autorización.
+
+---
+
+## 1. Prerrequisitos de la Arquitectura
+
+Antes de implementar mecanismos de seguridad perimetral y protección de rutas en NestJS, el proyecto debe contar con una estructura de persistencia para usuarios, roles y permisos (también conocidos como *authorities* o privilegios).
+
+Una arquitectura de control de acceso robusta se fundamenta en un modelo relacional normalizado:
+
+<ZoomableMermaid value={`erDiagram
+    USER ||--o{ ROLE : "pertenece a"
+    ROLE ||--o{ ROLE_PERMISSION : "contiene"
+    PERMISSION ||--o{ ROLE_PERMISSION : "asignado en"
+
+    USER {
+        int id PK
+        string email UK
+        string passwordHash
+        int roleId FK
+    }
+
+    ROLE {
+        int id PK
+        string name UK
+        string description
+    }
+
+    ROLE_PERMISSION {
+        int id PK
+        int roleId FK
+        int permissionId FK
+    }
+
+    PERMISSION {
+        int id PK
+        string name UK
+        string description
+    }`} />
+
+En las etapas tempranas de un prototipo, es común que la creación de usuarios almacene contraseñas en texto plano:
+
+```typescript title="src/users/users.service.ts (Inseguro)" showLineNumbers
+async create(createUserDto: CreateUserDto) {
+  const role = await this.roleService.findByName(createUserDto.roleName);
+  if (!role) {
+    throw new NotFoundException('Role not found');
+  }
+
+  // Peligro: Almacenamiento en texto plano
+  const newUser = this.userRepository.create({
+    ...createUserDto,
+    role,
+  });
+  return await this.userRepository.save(newUser);
+}
+```
+
+:::caution[Riesgo Crítico de Seguridad]
+Almacenar contraseñas en texto plano es una de las vulnerabilidades más severas según el estándar **OWASP Top 10** (*Cryptographic Failures*). Si la base de datos se ve comprometida mediante inyección SQL, copias de seguridad expuestas o accesos no autorizados, todas las credenciales de los usuarios quedan expuestas de inmediato.
+:::
+
+---
+
+## 2. Hashing de Contraseñas con bcrypt
+
+Para proteger las credenciales de los usuarios, se emplean **funciones de hash criptográficas unidireccionales** combinadas con técnicas de **salting**. A diferencia del cifrado simétrico o asimétrico (que puede ser revertido con una clave), un hash seguro no puede revertirse a su texto original.
+
+<ZoomableMermaid value={`flowchart LR
+    A["Contraseña Plana<br/>'MiClave123'"] --> B["Salt Aleatorio<br/>'$2b$10$vI8a...'"]
+    B --> C["Función de Hash<br/>(bcrypt)"]
+    C --> D["Hash Criptográfico Seguro<br/>'$2b$10$...6zNq'"]
+    D --> E[("Base de Datos<br/>passwordHash")]
+
+    classDef inputStyle fill:#eff6ff,stroke:#3b82f6,stroke-width:1.6px,color:#1e3a8a;
+    classDef processStyle fill:#fef3c7,stroke:#d97706,stroke-width:1.6px,color:#92400e;
+    classDef resultStyle fill:#ecfdf5,stroke:#10b981,stroke-width:1.6px,color:#065f46;
+
+    class A,B inputStyle;
+    class C processStyle;
+    class D,E resultStyle;`} />
+
+### ¿Por qué utilizar bcrypt?
+
+1. **Función Unidireccional**: No existe algoritmo matemático viable para transformar el hash resultante nuevamente en la contraseña original.
+2. **Salting Automático**: Cada hash incluye un valor aleatorio (*salt*) generado dinámicamente. Esto previene ataques mediante **Rainbow Tables** (tablas de búsqueda precomputadas) y garantiza que dos usuarios con la misma contraseña tengan hashes almacenados completamente diferentes.
+3. **Factor de Costo Adaptable (*Salt Rounds*)**: bcrypt está diseñado para ser deliberadamente lento en términos computacionales. El parámetro de costo $k$ define el número de iteraciones ($2^k$, donde por ejemplo un valor de 10 representa $2^{10} = 1024$ rondas internas de derivación), mitigando de forma efectiva los ataques de fuerza bruta basados en aceleración por GPU.
+
+### Paso 1: Instalación de Dependencias
+
+Ejecuta en la terminal de tu proyecto NestJS:
+
+```bash title="Terminal"
+npm install bcrypt
+npm install -D @types/bcrypt
+```
+
+### Paso 2: Configuración de Variables de Entorno
+
+Define el factor de costo en tu archivo `.env`. Un valor estándar recomendado en la industria para entornos de producción es `10`:
+
+```env title=".env"
+SALT_ROUNDS=10
+```
+
+:::tip[Equilibrio entre Seguridad y Rendimiento]
+Cada incremento de 1 en `SALT_ROUNDS` duplica el tiempo de cómputo requerido para procesar el hash. Un valor entre 10 y 12 ofrece una excelente protección frente a fuerza bruta sin degradar la latencia del registro o inicio de sesión en tu servidor.
+:::
+
+### Paso 3: Modificación del Servicio de Usuarios
+
+Inyecta `ConfigService` en tu servicio y procesa la contraseña antes de persistir la entidad:
+
+```typescript title="src/users/users.service.ts" showLineNumbers
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { User } from './entities/user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
+import { RolesService } from '../roles/roles.service';
+
+@Injectable()
+export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly roleService: RolesService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const role = await this.roleService.findByName(createUserDto.roleName);
+    if (!role) {
+      throw new NotFoundException(`El rol '${createUserDto.roleName}' no existe`);
+    }
+
+    if (!createUserDto.password) {
+      throw new BadRequestException('La contraseña es un campo obligatorio');
+    }
+
+    // Leemos las rondas de sal desde las variables de entorno
+    const saltRounds = parseInt(
+      this.configService.get<string>('SALT_ROUNDS') ?? '10',
+      10,
+    );
+
+    // Generamos el hash criptográfico
+    const passwordHash = await bcrypt.hash(createUserDto.password, saltRounds);
+
+    const newUser = this.userRepository.create({
+      email: createUserDto.email,
+      passwordHash,
+      role,
+    });
+
+    const savedUser = await this.userRepository.save(newUser);
+
+    // Omitimos el hash de la contraseña en la respuesta
+    const { passwordHash: _, ...userWithoutPassword } = savedUser;
+    return userWithoutPassword as User;
+  }
+}
+```
+
+:::warning[Impacto en Pruebas Unitarias]
+Si disponías de suites de pruebas unitarias o de integración para `UsersService`, es muy probable que fallen tras este cambio, ya que los mocks esperarán una llamada a `bcrypt.hash` y la propiedad almacenada será `passwordHash` en lugar de una propiedad en texto plano. Asegúrate de actualizar los mocks de pruebas inyectando `ConfigService`.
+:::
+
+---
+
+## 3. Autenticación vs. Autorización
+
+Comprender la frontera conceptual y operativa entre **autenticación** y **autorización** es el requisito más importante para diseñar la seguridad en cualquier API.
+
+<img src="/img/desarrollo-entornos-digitales-web/auth-vs-authz.svg" alt="Fundamentos de Seguridad: Autenticación vs Autorización" width="100%" />
+
+### Tabla Comparativa de Conceptos
+
+| Dimensión | Autenticación (AuthN) | Autorización (AuthZ) |
+| :--- | :--- | :--- |
+| **Pregunta Central** | ¿Quién es el usuario? | ¿Qué permisos tiene el usuario sobre este recurso? |
+| **Objetivo** | Verificar la identidad declarada por el cliente. | Regular las acciones permitidas según roles y privilegios. |
+| **Mecanismo Típico** | Credenciales (email/password), JWT, OAuth2, SAML. | RBAC (roles), PBAC (permisos), Guards, Policies. |
+| **Momento de Ejecución** | Al inicio de la sesión o al descodificar el token de la petición. | Inmediatamente antes de ejecutar el manejador del controlador. |
+| **Código HTTP de Fallo** | `401 Unauthorized` | `403 Forbidden` |
+| **Estado en NestJS** | Gestionado comúnmente por `Passport` y `JwtStrategy`. | Gestionado por `Guards` (`CanActivate`) y `Reflector`. |
+
+### Flujo de Vida de una Petición Protegida
+
+<ZoomableMermaid value={`sequenceDiagram
+    autonumber
+    actor Cliente as Cliente HTTP (Frontend / Postman)
+    participant AuthN as Capa de Autenticación (AuthGuard / Passport)
+    participant AuthZ as Capa de Autorización (PermissionsGuard)
+    participant Handler as Controlador (Route Handler)
+
+    Cliente->>AuthN: Petición HTTP + Header 'Authorization: Bearer <Token>'
+    alt Token ausente o firma inválida
+        AuthN-->>Cliente: HTTP 401 Unauthorized
+    else Token válido
+        AuthN->>AuthN: Inyecta datos del usuario en req.user
+        AuthN->>AuthZ: Pasa el control a los Guards de autorización
+        alt El usuario NO posee el permiso requerido
+            AuthZ-->>Cliente: HTTP 403 Forbidden
+        else El usuario posee los permisos
+            AuthZ->>Handler: Invoca el método del controlador
+            Handler-->>Cliente: HTTP 200 OK (Datos del recurso)
+        end
+    end`} />
+
+:::info[Diferencia Semántica: 401 vs 403]
+- **`401 Unauthorized`**: El cliente no se ha identificado o su token expiró/es inválido. El cliente **puede** reintentar la solicitud suministrando credenciales correctas.
+- **`403 Forbidden`**: El servidor reconoció con éxito quién es el usuario, pero sus privilegios son insuficientes para ejecutar la acción solicitada. Reintentar con las mismas credenciales siempre resultará en el mismo rechazo.
+:::
+
+---
+
+## Cuestionario de Autoevaluación
+
+<Quiz id="dedw-s7-01-auth-concepts-quiz">
+  <Question title="¿Cuál es el riesgo crítico asociado a almacenar contraseñas en texto plano dentro de una base de datos?">
+    <Option>La aplicación incrementa drásticamente el consumo de memoria RAM en el servidor.</Option>
+    <Option correct>Cualquier brecha de datos expone directamente las credenciales de los usuarios sin necesidad de descifrado.</Option>
+    <Option>El framework NestJS rechaza la compilación de TypeScript si detecta cadenas de contraseñas planas.</Option>
+    <Option>Los índices de la base de datos se corrompen debido a la longitud de las contraseñas.</Option>
+  </Question>
+
+  <Question title="¿Qué característica distingue primordialmente a una función de hashing criptográfica de un algoritmo de cifrado?">
+    <Option>Las funciones de hashing siempre requieren una clave privada para desencriptar el mensaje.</Option>
+    <Option>El cifrado solo funciona con números binarios, mientras que el hash admite cadenas de texto.</Option>
+    <Option correct>El hashing es estrictamente unidireccional y no está diseñado para ser revertido a su entrada original.</Option>
+    <Option>El hashing produce un tamaño de salida variable que depende del número de caracteres de entrada.</Option>
+  </Question>
+
+  <Question title="En el contexto de la librería bcrypt, ¿cuál es el propósito primordial del 'salt'?">
+    <Option>Comprimir la cadena resultante para ahorrar espacio en la columna de la tabla.</Option>
+    <Option>Cifrar la clave secreta de la aplicación antes de persistirla en el archivo de entorno.</Option>
+    <Option correct>Evitar ataques mediante tablas arcoíris (Rainbow Tables) y asegurar que contraseñas idénticas generen hashes distintos.</Option>
+    <Option>Garantizar que el token JWT generado por el servidor nunca expire.</Option>
+  </Question>
+
+  <Question title="Si se incrementa en una unidad el valor de 'SALT_ROUNDS' en bcrypt (por ejemplo de 10 a 11), ¿qué sucede con el costo computacional?">
+    <Option>El tiempo de cómputo se incrementa exactamente en un 10% lineal.</Option>
+    <Option correct>El número de iteraciones se duplica, duplicando aproximadamente el tiempo de cómputo del hash.</Option>
+    <Option>El algoritmo cambia automáticamente de HMAC a SHA-512.</Option>
+    <Option>El tiempo de respuesta se reduce a la mitad debido a la optimización de subprocesos.</Option>
+  </Question>
+
+  <Question title="¿Cuál es la pregunta fundamental que responde el proceso de Autenticación (AuthN)?">
+    <Option>¿Qué permisos de lectura tiene el usuario sobre el recurso?</Option>
+    <Option>¿A qué base de datos debe dirigirse la consulta TypeORM?</Option>
+    <Option correct>¿Quién es el usuario o entidad que está realizando la solicitud?</Option>
+    <Option>¿Cuál es la dirección IP del proxy inverso que despacha la petición?</Option>
+  </Question>
+
+  <Question title="¿Cuál es el código de estado HTTP estándar emitido cuando un usuario intenta acceder a una ruta sin enviar un token o con credenciales inválidas?">
+    <Option>HTTP 200 OK</Option>
+    <Option>HTTP 400 Bad Request</Option>
+    <Option correct>HTTP 401 Unauthorized</Option>
+    <Option>HTTP 403 Forbidden</Option>
+  </Question>
+
+  <Question title="¿Cuál es el código de estado HTTP adecuado cuando un usuario autenticado válidamente intenta acceder a una ruta para la cual su rol carece de privilegios?">
+    <Option>HTTP 401 Unauthorized</Option>
+    <Option correct>HTTP 403 Forbidden</Option>
+    <Option>HTTP 404 Not Found</Option>
+    <Option>HTTP 500 Internal Server Error</Option>
+  </Question>
+
+  <Question title="¿Por qué se recomienda omitir la propiedad 'passwordHash' al retornar el objeto de usuario desde UsersService.create()?">
+    <Option>Porque TypeORM arroja una excepción si un DTO contiene la palabra 'password'.</Option>
+    <Option correct>Para evitar divulgar información criptográfica confidencial a través de la respuesta HTTP del cliente.</Option>
+    <Option>Porque los navegadores web bloquean respuestas JSON con campos que terminen en 'Hash'.</Option>
+    <Option>Porque bcrypt no permite que un hash sea serializado como JSON.</Option>
+  </Question>
+
+  <Question title="En la arquitectura de base de datos presentada, ¿cuál es el propósito de la tabla intermedia 'ROLE_PERMISSION'?">
+    <Option>Almacenar las contraseñas temporales de recuperación para los administradores.</Option>
+    <Option>Guardar los tokens JWT activos emitidos por el servidor.</Option>
+    <Option correct>Modelar una relación de muchos a muchos (M:N) entre los roles y los permisos atómicos del sistema.</Option>
+    <Option>Sincronizar las variables de entorno de la aplicación con la base de datos.</Option>
+  </Question>
+
+  <Question title="Al actualizar UsersService para usar bcrypt y ConfigService, ¿qué impacto debe preverse en las pruebas automatizadas del proyecto?">
+    <Option>Las pruebas unitarias requerirán obligatoriamente una conexión viva a PostgreSQL.</Option>
+    <Option>El archivo de configuración tsconfig.json debe recompilarse en modo estricto.</Option>
+    <Option correct>Los tests unitarios de creación de usuario fallarán si no se actualizan los mocks para suministrar ConfigService y contemplar passwordHash.</Option>
+    <Option>Las suites de pruebas con Jest deben ser reemplazadas por Postman Runners.</Option>
+  </Question>
+</Quiz>

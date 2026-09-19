@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 480" width="100%" height="100%">
+  <defs>
+    <filter id="drop-shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <style>
+    .header-title { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 800; }
+    .header-sub { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 500; fill: #64748b; }
+    .card-title { font-family: system-ui, -apple-system, sans-serif; font-size: 17px; font-weight: 700; }
+    .badge-text { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 700; }
+    .item-title { font-family: system-ui, -apple-system, sans-serif; font-size: 12.5px; font-weight: 700; }
+    .item-desc { font-family: system-ui, -apple-system, sans-serif; font-size: 11.5px; font-weight: 400; fill: #475569; }
+    .code-pill { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; font-weight: 600; }
+  </style>
+
+  <!-- Background Base Canvas -->
+  <rect x="10" y="10" width="920" height="460" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Title Section -->
+  <text x="470" y="42" class="header-title" fill="#0f172a" text-anchor="middle">Fundamentos de Seguridad: Autenticación vs. Autorización</text>
+  <text x="470" y="63" class="header-sub" text-anchor="middle">Dos fases secuenciales y complementarias para la protección de recursos en una API REST</text>
+
+  <!-- Left Card: Autenticación (AuthN) -->
+  <g transform="translate(32, 82)">
+    <!-- Card Container -->
+    <rect x="0" y="0" width="420" height="364" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="1.8" filter="url(#drop-shadow)"/>
+    <!-- Card Header Banner -->
+    <rect x="0" y="0" width="420" height="50" rx="12" fill="#eff6ff"/>
+    <rect x="0" y="38" width="420" height="12" fill="#eff6ff"/>
+    <line x1="0" y1="50" x2="420" y2="50" stroke="#bfdbfe" stroke-width="1"/>
+
+    <!-- AuthN Centered Icon (User Avatar) -->
+    <g transform="translate(30, 25)">
+      <circle cx="0" cy="0" r="14" fill="#2563eb"/>
+      <circle cx="0" cy="-3.5" r="3.3" fill="#ffffff"/>
+      <path d="M -6 6.5 C -6 2.5, -3 1, 0 1 C 3 1, 6 2.5, 6 6.5 Z" fill="#ffffff"/>
+    </g>
+    <text x="54" y="31" class="card-title" fill="#1e3a8a">Autenticación (AuthN)</text>
+
+    <!-- Header Badge -->
+    <rect x="300" y="14" width="104" height="22" rx="11" fill="#dbeafe"/>
+    <text x="352" y="29" class="badge-text" fill="#1d4ed8" text-anchor="middle">¿QUIÉN ERES?</text>
+
+    <!-- Item 1: Propósito Principal -->
+    <g transform="translate(20, 66)">
+      <rect x="0" y="0" width="380" height="58" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="14" y="19" class="item-title" fill="#1e293b">Propósito principal</text>
+      <text x="14" y="34" class="item-desc">Verificar fehacientemente la identidad declarada por el cliente</text>
+      <text x="14" y="48" class="item-desc">mediante credenciales o tokens criptográficos.</text>
+    </g>
+
+    <!-- Item 2: Mecanismos -->
+    <g transform="translate(20, 134)">
+      <rect x="0" y="0" width="380" height="58" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="14" y="19" class="item-title" fill="#1e293b">Mecanismos habituales</text>
+      <text x="14" y="34" class="item-desc">• Credenciales (email y contraseña con hashing bcrypt)</text>
+      <text x="14" y="48" class="item-desc">• JSON Web Tokens (JWT), OAuth2, OpenID Connect</text>
+    </g>
+
+    <!-- Item 3: Implementación NestJS -->
+    <g transform="translate(20, 202)">
+      <rect x="0" y="0" width="380" height="58" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="14" y="19" class="item-title" fill="#1e293b">Implementación en NestJS</text>
+      <text x="14" y="34" class="item-desc">• AuthService con validación de credenciales y firma de tokens</text>
+      <text x="14" y="48" class="item-desc">• Passport y JwtStrategy para validar cabeceras Bearer</text>
+    </g>
+
+    <!-- Item 4: Respuestas HTTP -->
+    <g transform="translate(20, 272)">
+      <!-- Éxito -->
+      <g transform="translate(0, 0)">
+        <rect x="0" y="0" width="182" height="54" rx="8" fill="#dcfce7" stroke="#86efac"/>
+        <text x="12" y="20" class="item-title" fill="#166534">Identidad válida</text>
+        <text x="12" y="38" class="code-pill" fill="#14532d">HTTP 200 / 201 (Token)</text>
+      </g>
+
+      <!-- Fallo -->
+      <g transform="translate(198, 0)">
+        <rect x="0" y="0" width="182" height="54" rx="8" fill="#fee2e2" stroke="#fca5a5"/>
+        <text x="12" y="20" class="item-title" fill="#991b1b">Credencial inválida</text>
+        <text x="12" y="38" class="code-pill" fill="#7f1d1d">HTTP 401 Unauthorized</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Right Card: Autorización (AuthZ) -->
+  <g transform="translate(488, 82)">
+    <!-- Card Container -->
+    <rect x="0" y="0" width="420" height="364" rx="12" fill="#ffffff" stroke="#86efac" stroke-width="1.8" filter="url(#drop-shadow)"/>
+    <!-- Card Header Banner -->
+    <rect x="0" y="0" width="420" height="50" rx="12" fill="#f0fdf4"/>
+    <rect x="0" y="38" width="420" height="12" fill="#f0fdf4"/>
+    <line x1="0" y1="50" x2="420" y2="50" stroke="#bbf7d0" stroke-width="1"/>
+
+    <!-- AuthZ Centered Icon (Lock Shield) -->
+    <g transform="translate(30, 25)">
+      <circle cx="0" cy="0" r="14" fill="#16a34a"/>
+      <!-- Centered Padlock -->
+      <path d="M -3.5 -1 V -4.5 C -3.5 -6.4, 3.5 -6.4, 3.5 -4.5 V -1" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/>
+      <rect x="-5.5" y="-1" width="11" height="8" rx="1.5" fill="#ffffff"/>
+      <circle cx="0" cy="2.5" r="1.1" fill="#16a34a"/>
+    </g>
+    <text x="54" y="31" class="card-title" fill="#14532d">Autorización (AuthZ)</text>
+
+    <!-- Header Badge -->
+    <rect x="268" y="14" width="136" height="22" rx="11" fill="#dcfce7"/>
+    <text x="336" y="29" class="badge-text" fill="#15803d" text-anchor="middle">¿QUÉ PUEDES HACER?</text>
+
+    <!-- Item 1: Propósito Principal -->
+    <g transform="translate(20, 66)">
+      <rect x="0" y="0" width="380" height="58" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="14" y="19" class="item-title" fill="#1e293b">Propósito principal</text>
+      <text x="14" y="34" class="item-desc">Determinar si el usuario autenticado tiene privilegios</text>
+      <text x="14" y="48" class="item-desc">para ejecutar la acción sobre el recurso solicitado.</text>
+    </g>
+
+    <!-- Item 2: Mecanismos -->
+    <g transform="translate(20, 134)">
+      <rect x="0" y="0" width="380" height="58" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="14" y="19" class="item-title" fill="#1e293b">Mecanismos habituales</text>
+      <text x="14" y="34" class="item-desc">• Control basado en roles (RBAC) y permisos atómicos (PBAC)</text>
+      <text x="14" y="48" class="item-desc">• Atributos (ABAC), claims en el token y políticas de dominio</text>
+    </g>
+
+    <!-- Item 3: Implementación NestJS -->
+    <g transform="translate(20, 202)">
+      <rect x="0" y="0" width="380" height="58" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="14" y="19" class="item-title" fill="#1e293b">Implementación en NestJS</text>
+      <text x="14" y="34" class="item-desc">• Guards personalizados que implementan CanActivate</text>
+      <text x="14" y="48" class="item-desc">• Decoradores con SetMetadata (@Permissions) y Reflector</text>
+    </g>
+
+    <!-- Item 4: Respuestas HTTP -->
+    <g transform="translate(20, 272)">
+      <!-- Éxito -->
+      <g transform="translate(0, 0)">
+        <rect x="0" y="0" width="182" height="54" rx="8" fill="#dcfce7" stroke="#86efac"/>
+        <text x="12" y="20" class="item-title" fill="#166534">Permiso concedido</text>
+        <text x="12" y="38" class="code-pill" fill="#14532d">HTTP 200 OK (Recurso)</text>
+      </g>
+
+      <!-- Fallo -->
+      <g transform="translate(198, 0)">
+        <rect x="0" y="0" width="182" height="54" rx="8" fill="#fef3c7" stroke="#fde68a"/>
+        <text x="12" y="20" class="item-title" fill="#92400e">Privilegio insuficiente</text>
+        <text x="12" y="38" class="code-pill" fill="#78350f">HTTP 403 Forbidden</text>
+      </g>
+    </g>
+  </g>
+</svg>

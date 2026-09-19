@@ -12,8 +12,7 @@ NestJS organiza las aplicaciones de backend mediante una estructura modular insp
 
 Antes de escribir código o generar archivos con el CLI, es esencial comprender cómo interactúan los componentes fundamentales dentro de un módulo de NestJS:
 
-```mermaid
-graph TB
+<ZoomableMermaid value={`graph TB
     subgraph ClientLayer ["Capa de Cliente"]
         A["Cliente HTTP (Navegador / Postman)"]
     end
@@ -42,8 +41,7 @@ graph TB
     style A fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a
     style B fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
     style C fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
-    style D fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
-```
+    style D fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f`} />
 
 ### Explicación de los Componentes Principales:
 

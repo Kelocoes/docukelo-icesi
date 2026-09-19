@@ -1,0 +1,447 @@
+---
+sidebar_position: 5
+---
+
+# Interceptors and Logging Architecture in NestJS
+
+In enterprise backend architectures, controllers and services must remain strictly focused on domain business logic. However, pervasive operational concerns crosscut multiple system modules: **auditing, latency measurement, response shaping, payload encryption, and logging**.
+
+In NestJS, these **cross-cutting concerns** are handled cleanly using **Aspect-Oriented Programming (AOP)** through **Interceptors** and the modular **Logging** abstraction.
+
+---
+
+## 1. The NestJS Logging System
+
+NestJS provides a production-grade logging abstraction that replaces rudimentary `console.log` calls with standardized severity levels, ISO timestamps, class execution contexts, and extensible sinks for persistent files or external observability telemetry (CloudWatch, Datadog, Grafana Loki).
+
+### Standard Log Severity Levels
+
+| Severity Level | Method | When to Use |
+| :--- | :--- | :--- |
+| **Error** | `logger.error(msg, trace)` | Uncaught failures, HTTP 500 errors, or database/downstream service outages. |
+| **Warn** | `logger.warn(msg)` | Non-fatal abnormal situations (deprecated endpoint usage, failed login attempts). |
+| **Log (Info)** | `logger.log(msg)` | High-level lifecycle milestones (server bootstrap, loaded module registries). |
+| **Debug** | `logger.debug(msg)` | Fine-grained diagnostic context useful during local development. |
+| **Verbose** | `logger.verbose(msg)` | Exhaustive tracing throughout intricate multi-step algorithms. |
+
+### Basic Built-in Logger Usage
+
+```typescript title="src/app.service.ts" showLineNumbers
+import { Injectable, Logger } from '@nestjs/common';
+
+@Injectable()
+export class AppService {
+  // Logger instance scoped to the current class name
+  private readonly logger = new Logger(AppService.name);
+
+  getHello(): string {
+    this.logger.log('getHello method invoked');
+    this.logger.debug('Generating static client greeting');
+    return 'Hello World!';
+  }
+}
+```
+
+---
+
+## 2. Implementing a Custom Persistent File Logger
+
+For production services, logs must not vanish when process containers restart. We construct an `AppLogger` implementing `LoggerService` that streams entries asynchronously into date-rotated log files inside the `logs/` directory.
+
+<StepByStep>
+  <Step number="1" title="Generate Module and Logger Service">
+    Create the provider under the `common` directory:
+
+    ```bash title="Terminal"
+    nest g module common/logger
+    nest g service common/logger --no-spec
+    ```
+  </Step>
+
+  <Step number="2" title="Implement AppLogger with File Streams">
+    Implement NestJS's standard `LoggerService` contract:
+
+    ```typescript title="src/common/logger/logger.service.ts" showLineNumbers
+    import { Injectable, LoggerService, OnModuleDestroy } from '@nestjs/common';
+    import * as fs from 'fs';
+    import * as path from 'path';
+
+    @Injectable()
+    export class AppLogger implements LoggerService, OnModuleDestroy {
+      private logStream: fs.WriteStream;
+
+      constructor() {
+        const dateStamp = new Date().toISOString().split('T')[0];
+        const logDir = path.join(process.cwd(), 'logs');
+
+        // Ensure storage directory exists
+        if (!fs.existsSync(logDir)) {
+          fs.mkdirSync(logDir, { recursive: true });
+        }
+
+        const logFile = path.join(logDir, `app-${dateStamp}.log`);
+        // Open file stream in append mode ('a')
+        this.logStream = fs.createWriteStream(logFile, { flags: 'a' });
+      }
+
+      log(message: string) {
+        this.write('LOG', message);
+      }
+
+      error(message: string, trace?: string) {
+        this.write('ERROR', message, trace);
+      }
+
+      warn(message: string) {
+        this.write('WARN', message);
+      }
+
+      debug(message: string) {
+        this.write('DEBUG', message);
+      }
+
+      verbose(message: string) {
+        this.write('VERBOSE', message);
+      }
+
+      private write(level: string, message: string, trace?: string) {
+        const timestamp = new Date().toISOString();
+        const formattedLog = `[${timestamp}] [${level}] ${message}${
+          trace ? '\n[Stack Trace]: ' + trace : ''
+        }\n`;
+
+        // Write to persistent disk storage
+        this.logStream.write(formattedLog);
+
+        // Print formatted output to console
+        console.log(formattedLog.trim());
+      }
+
+      onModuleDestroy() {
+        if (this.logStream) {
+          this.logStream.end();
+        }
+      }
+    }
+    ```
+  </Step>
+
+  <Step number="3" title="Export and Register Global Module">
+    ```typescript title="src/common/logger/logger.module.ts" showLineNumbers
+    import { Module, Global } from '@nestjs/common';
+    import { AppLogger } from './logger.service';
+
+    @Global()
+    @Module({
+      providers: [AppLogger],
+      exports: [AppLogger],
+    })
+    export class LoggerModule {}
+    ```
+
+    Include `LoggerModule` in `app.module.ts`:
+
+    ```typescript title="src/app.module.ts" showLineNumbers
+    import { Module } from '@nestjs/common';
+    import { LoggerModule } from './common/logger/logger.module';
+
+    @Module({
+      imports: [LoggerModule /* other modules */],
+    })
+    export class AppModule {}
+    ```
+  </Step>
+
+  <Step number="4" title="Configure AppLogger with bufferLogs">
+    In `main.ts`, bind `AppLogger` as the global application logger:
+
+    ```typescript title="src/main.ts" showLineNumbers
+    import { NestFactory } from '@nestjs/core';
+    import { AppModule } from './app.module';
+    import { ValidationPipe } from '@nestjs/common';
+    import { AppLogger } from './common/logger/logger.service';
+
+    async function bootstrap() {
+      // bufferLogs: true preserves early startup logs until AppLogger is instantiated
+      const app = await NestFactory.create(AppModule, {
+        bufferLogs: true,
+      });
+
+      const appLogger = app.get(AppLogger);
+      app.useLogger(appLogger);
+
+      app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
+      const port = process.env.PORT ?? 3000;
+      await app.listen(port);
+      appLogger.log(`Server successfully started on port ${port}`);
+    }
+    bootstrap();
+    ```
+
+    :::info[Why is bufferLogs: true Critical?]
+    During initial boot, NestJS emits internal framework diagnostics before resolving the Dependency Injection container. Setting `bufferLogs: true` buffers these messages until `AppLogger` is retrieved, preventing log loss or unformatted console printing.
+    :::
+  </Step>
+
+  <Step number="5" title="Inject and Use AppLogger in Services">
+    ```typescript title="src/users/users.service.ts" showLineNumbers
+    import { Injectable, NotFoundException } from '@nestjs/common';
+    import { AppLogger } from '../common/logger/logger.service';
+    import { CreateUserDto } from './dto/create-user.dto';
+
+    @Injectable()
+    export class UsersService {
+      constructor(
+        // Injecting the custom persistent logger
+        private readonly logger: AppLogger,
+      ) {}
+
+      async create(createUserDto: CreateUserDto) {
+        this.logger.debug(`Initiating user creation for: ${createUserDto.email}`);
+
+        // Creation logic...
+
+        this.logger.log(`User created successfully with email: ${createUserDto.email}`);
+        return { success: true };
+      }
+    }
+    ```
+  </Step>
+</StepByStep>
+
+---
+
+## 3. Foundations of NestJS Interceptors
+
+Inspired by Aspect-Oriented Programming (AOP), **Interceptors** make it possible to:
+- Execute logic prior to targeted method dispatch.
+- Execute logic following method completion.
+- Mutate or reformat result payloads returned by handlers.
+- Catch, transform, or suppress thrown exceptions.
+- Completely override function execution (e.g., short-circuiting with cached responses).
+
+### Lifecycle and ReactiveX (RxJS) Streams
+
+<ZoomableMermaid value={`flowchart LR
+    Req["HTTP Request"] --> Pre["Interceptor (Pre-Handler)<br/>Before next.handle()"]
+    Pre --> C["Controller<br/>(Route Handler)"]
+    C --> Obs["Return Observable<br/>next.handle()"]
+    Obs --> Post["RxJS Operators (Post-Handler)<br/>tap, map, catchError"]
+    Post --> Res["HTTP Response to Client"]
+
+    classDef reqStyle fill:#eff6ff,stroke:#3b82f6,stroke-width:1.6px,color:#1e3a8a;
+    classDef interceptStyle fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e;
+    classDef ctrlStyle fill:#ecfdf5,stroke:#10b981,stroke-width:1.6px,color:#065f46;
+
+    class Req,Res reqStyle;
+    class Pre,Post interceptStyle;
+    class C,Obs ctrlStyle;`} />
+
+### The `NestInterceptor` Contract
+
+Every interceptor implements `NestInterceptor`:
+
+```typescript
+export interface NestInterceptor<T = any, R = any> {
+  intercept(context: ExecutionContext, next: CallHandler<T>): Observable<R>;
+}
+```
+
+- `context: ExecutionContext`: Accesses the transport request object (`context.switchToHttp().getRequest()`).
+- `next: CallHandler`: Represents the downstream handler in the execution chain. Invoking `next.handle()` dispatches to the route handler and yields an **RxJS Observable**.
+
+### Operator Comparison: `tap` vs. `map`
+
+- **`tap` (Side Effects)**: Observes stream notifications without altering emitted values. Ideal for latency metrics, telemetry, and auditing.
+- **`map` (Transformation)**: Mutates or transforms emitted data before response serialization. Ideal for payload encryption or response envelopes (`{ data: ..., meta: ... }`).
+
+---
+
+## 4. Practical Case: Cryptographic Interceptor (AES-256-CBC)
+
+Consider a scenario where sensitive payloads arrive encrypted from client applications (`{ "encrypted": "..." }`) and outgoing responses must be returned symmetrically encrypted.
+
+<ZoomableMermaid value={`sequenceDiagram
+    autonumber
+    actor Client as HTTP Client
+    participant Interceptor as CryptoInterceptor
+    participant Controller as NestJS Controller
+
+    Client->>Interceptor: POST /payments { encrypted: "7a8b...==" }
+    Note over Interceptor: 1. Decrypts body.encrypted with AES-256-CBC
+    Interceptor->>Controller: Invokes handler with parsed JSON object
+    Controller-->>Interceptor: Returns domain response { status: "PAID", id: 99 }
+    Note over Interceptor: 2. Encrypts response payload using RxJS map()
+    Interceptor-->>Client: HTTP 200 OK { encrypted: "9f3c...==" }`} />
+
+### Implementing `CryptoInterceptor`
+
+Create `src/common/interceptors/crypto.interceptor.ts`:
+
+```typescript title="src/common/interceptors/crypto.interceptor.ts" showLineNumbers
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+  BadRequestException,
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import * as crypto from 'crypto';
+import { Request } from 'express';
+
+@Injectable()
+export class CryptoInterceptor implements NestInterceptor {
+  private readonly algorithm = 'aes-256-cbc';
+  // 32-byte secret key (256 bits) and 16-byte initialization vector
+  private readonly secretKey = Buffer.from(
+    '12345678901234567890123456789012',
+  );
+  private readonly iv = Buffer.from('1234567890123456');
+
+  // Decrypts Base64 ciphertext into a parsed JavaScript object
+  private decrypt(encryptedText: string): unknown {
+    const decipher = crypto.createDecipheriv(
+      this.algorithm,
+      this.secretKey,
+      this.iv,
+    );
+    let decrypted = decipher.update(encryptedText, 'base64', 'utf8');
+    decrypted += decipher.final('utf8');
+    return JSON.parse(decrypted);
+  }
+
+  // Encrypts arbitrary values or objects into Base64 strings
+  private encrypt(value: unknown): string {
+    const cipher = crypto.createCipheriv(
+      this.algorithm,
+      this.secretKey,
+      this.iv,
+    );
+    let encrypted = cipher.update(JSON.stringify(value), 'utf8', 'base64');
+    encrypted += cipher.final('base64');
+    return encrypted;
+  }
+
+  // Validates presence of encrypted payload property
+  private hasEncryptedProperty(
+    body: unknown,
+  ): body is { encrypted: string } {
+    return (
+      typeof body === 'object' &&
+      body !== null &&
+      'encrypted' in body &&
+      typeof (body as { encrypted: unknown }).encrypted === 'string'
+    );
+  }
+
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Observable<{ encrypted: string }> {
+    const request = context.switchToHttp().getRequest<Request>();
+
+    // 1. Pre-Handler Phase: Decrypt incoming request payload
+    if (this.hasEncryptedProperty(request.body)) {
+      try {
+        request.body = this.decrypt(request.body.encrypted);
+      } catch (error) {
+        throw new BadRequestException(
+          'Invalid encrypted payload or corrupted secret key',
+          error instanceof Error ? error.message : undefined,
+        );
+      }
+    }
+
+    // 2. Post-Handler Phase: Encrypt outgoing response
+    return next.handle().pipe(
+      map((data: unknown) => {
+        return {
+          encrypted: this.encrypt(data),
+        };
+      }),
+    );
+  }
+}
+```
+
+### Binding the Interceptor
+
+1. **Controller or Method Scope**:
+   ```typescript title="src/users/users.controller.ts" showLineNumbers
+   import { Controller, Post, Body, UseInterceptors } from '@nestjs/common';
+   import { CryptoInterceptor } from '../common/interceptors/crypto.interceptor';
+
+   @UseInterceptors(CryptoInterceptor)
+   @Controller('users')
+   export class UsersController {
+     @Post('sensitive-operation')
+     createSensitive(@Body() data: any) {
+       return { success: true, received: data };
+     }
+   }
+   ```
+
+2. **Global Application Scope**:
+   ```typescript title="src/main.ts"
+   app.useGlobalInterceptors(app.get(CryptoInterceptor));
+   ```
+
+---
+
+## 5. In-Class Assignment: End-to-End Request Traceability and Logging
+
+:::caution[Evaluated Hands-on Lab Assignment]
+This activity is to be completed individually or in pairs during the scheduled laboratory session. Rather than answering multiple-choice quiz questions, you will **design, code, and test** an end-to-end distributed request tracing solution in your NestJS project.
+:::
+
+### Problem Context
+In distributed microservice ecosystems with thousands of concurrent requests, diagnosing intermittent HTTP 500 errors or latency spikes without a unifying identifier is virtually impossible across fragmented log files.
+
+The industry-standard solution is introducing a unique **Correlation ID** (or *Trace ID*) for every incoming HTTP transaction that propagates across downstream layers and prefixes all log entries generated during that execution.
+
+### Assignment Objectives
+
+<StepByStep>
+  <Step number="1" title="Build TraceabilityInterceptor">
+    Create a custom interceptor named `TraceabilityInterceptor` in `src/common/interceptors/traceability.interceptor.ts` fulfilling these specifications:
+    1. **Header Extraction or Generation**: Inspect the incoming `x-correlation-id` header. If supplied by the client, use it; otherwise, generate a unique UUID v4 via `crypto.randomUUID()`.
+    2. **Context and Header Binding**: Attach the identifier to the request object (`request.correlationId = correlationId`) and mirror it onto outgoing response headers (`response.setHeader('x-correlation-id', correlationId)`).
+    3. **Latency Profiling**: Using RxJS `tap` or `finalize` operators, calculate total elapsed time (in milliseconds) between request entry and response emission.
+    4. Log an informational record in this exact format:
+       ```text
+       [TRACE] [GET /api/users] [200 OK] [Duration: 42ms] [CorrelationID: f47ac10b-58cc-4372-a567-0e02b2c3d479]
+       ```
+  </Step>
+
+  <Step number="2" title="Enhance AppLogger for Trace Context">
+    Update `AppLogger` so any service log message across the application can associate the request correlation identifier:
+    - Add context method signatures:
+      ```typescript
+      logWithTrace(correlationId: string, level: string, message: string): void
+      ```
+    - Or integrate Node.js [`AsyncLocalStorage`](https://nodejs.org/api/async_context.html#class-asynclocalstorage) so calls to `this.logger.debug(...)` within downstream service methods automatically include the active trace ID without manual parameter passing.
+  </Step>
+
+  <Step number="3" title="Validation and Verification">
+    Apply the interceptor globally or on your users controller and test with **cURL** or **Postman**:
+    1. Send a `GET` request supplying an explicit correlation ID:
+       ```bash title="Terminal"
+       curl -i -H "x-correlation-id: test-cid-12345" http://localhost:3000/users
+       ```
+    2. Verify the HTTP response includes the `x-correlation-id: test-cid-12345` header.
+    3. Send a `GET` request **without headers** and verify the server auto-generates a UUID v4 and mirrors it back.
+    4. Inspect your persistent log file (`logs/app-YYYY-MM-DD.log`) to confirm all trace entries record the correlation ID and elapsed duration.
+  </Step>
+</StepByStep>
+
+### Rubric and Grading Criteria
+
+| Rubric Criteria | Evaluation Detail | Weight |
+| :--- | :--- | :---: |
+| **Correlation Header Propagation** | Accurately extracts existing client IDs or generates UUID v4 fallback, mirroring it via `x-correlation-id`. | 30% |
+| **Accurate RxJS Metrics** | Proper use of `tap` / `finalize` operators without modifying route handler response payloads. | 25% |
+| **AppLogger Trace Integration** | Structured logging outputting trace correlation IDs to persistent disk files and console. | 25% |
+| **Type Safety and Error Handling** | Typed `Request` interface extensions, absence of unwarranted `any` types, and clean exception handling. | 20% |

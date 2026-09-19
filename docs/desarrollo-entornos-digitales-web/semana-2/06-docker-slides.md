@@ -12,8 +12,7 @@ Diapositivas oficiales correspondientes a la Semana 2: **Virtualización vs. Con
 
 El material en PDF abarca los conceptos teóricos y prácticos fundamentales abordados durante la sesión de la Semana 2:
 
-```mermaid
-graph TD
+<ZoomableMermaid value={`graph TD
     A["Semana 2: Presentación de Docker y Virtualización"] --> B["1. Virtualización Tradicional vs. Contenedores"]
     A --> C["2. Motor de Docker y Arquitectura"]
     A --> D["3. Dockerfile y Multi-Stage Builds"]
@@ -23,8 +22,7 @@ graph TD
     style B fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
     style C fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
     style D fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
-    style E fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
-```
+    style E fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a`} />
 
 ### Resumen de Ejes Temáticos:
 

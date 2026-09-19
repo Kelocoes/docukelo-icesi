@@ -99,8 +99,7 @@ Es muy común anteponer el comando `clean` (por ejemplo, `mvn clean package`). L
 
 ### Diagrama de Secuencia y Diferencias (Mermaid SVG)
 
-```mermaid
-graph LR
+<ZoomableMermaid value={`graph LR
     subgraph Flow1 ["1. Flujo: mvn compile"]
         direction LR
         C1["mvn compile"] --> V1["validate"] --> CP1["compile"] --> O1["/target/classes"]
@@ -121,8 +120,7 @@ graph LR
     style C2 fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
     style O2 fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
     style C3 fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
-    style O3 fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
-```
+    style O3 fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d`} />
 
 ### Tabla Comparativa Directa
 

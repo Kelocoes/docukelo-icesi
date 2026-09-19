@@ -12,8 +12,7 @@ TypeORM es un Object-Relational Mapper (ORM), una herramienta que traduce entre 
 - Sin TypeORM, tendríamos que escribir consultas SQL crudas (`CREATE TABLE...`, `ALTER TABLE...`) y manejar tipos manualmente.
 - Con TypeORM, definimos clases de **Entidad (Entity)** y decoradores. TypeORM se encarga de crear las tablas, definir sus columnas, llaves primarias, restricciones y relaciones automáticamente.
 
-```mermaid
-%%{init: {
+<ZoomableMermaid value={`%%{init: {
     "theme": "base",
     "themeVariables": {
         "primaryColor": "#bed1fa",
@@ -27,15 +26,13 @@ graph LR
     
     style A fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
     style B fill:#dcfce7,stroke:#16a34a,color:#14532d
-    style C fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
-```
+    style C fill:#fee2e2,stroke:#dc2626,color:#7f1d1d`} />
 
 ## Del diagrama ER al código: cómo se traduce
 
 Tomemos como ejemplo la relación entre `USUARIO` y `ROL`. En nuestro diseño, un rol puede pertenecer a múltiples usuarios, y un usuario tiene un único rol (relación uno a muchos).
 
-```mermaid
-%%{init: {
+<ZoomableMermaid value={`%%{init: {
     "theme": "base",
     "themeVariables": {
         "primaryColor": "#bed1fa",
@@ -54,8 +51,7 @@ erDiagram
         string email
         string password
         int rol_id FK
-    }
-```
+    }`} />
 
 La siguiente tabla resume cómo los elementos gráficos del diagrama se convierten en decoradores de TypeORM:
 

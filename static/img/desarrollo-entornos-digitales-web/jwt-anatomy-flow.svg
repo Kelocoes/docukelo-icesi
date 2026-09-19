@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 490" width="100%" height="100%">
+  <defs>
+    <filter id="jwt-shadow" x="-3%" y="-3%" width="106%" height="106%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrow-flow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#3b82f6"/>
+    </marker>
+  </defs>
+
+  <style>
+    .title-main { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 800; }
+    .subtitle-main { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 500; fill: #64748b; }
+    .section-label { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 700; }
+    .token-part-title { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 700; }
+    .token-code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; }
+    .encoded-string { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 10px; font-weight: 600; }
+    .desc-text { font-family: system-ui, -apple-system, sans-serif; font-size: 11.5px; fill: #475569; }
+    .step-badge { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 800; fill: #ffffff; }
+  </style>
+
+  <!-- Background Base Canvas -->
+  <rect x="10" y="10" width="900" height="470" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Title -->
+  <text x="460" y="42" class="title-main" fill="#0f172a" text-anchor="middle">Anatomía y Estructura de un JSON Web Token (RFC 7519)</text>
+  <text x="460" y="62" class="subtitle-main" text-anchor="middle">Estructura compacta codificada en Base64Url y validada criptográficamente</text>
+
+  <!-- Encoded Token Bar -->
+  <g transform="translate(35, 76)">
+    <rect x="0" y="0" width="850" height="46" rx="8" fill="#1e293b" stroke="#334155"/>
+    <text x="20" y="18" font-family="system-ui, sans-serif" font-size="9.5px" font-weight="700" letter-spacing="0.5px">
+      <tspan fill="#f43f5e">HEADER</tspan>
+      <tspan fill="#64748b"> (alg + typ)  ·  </tspan>
+      <tspan fill="#c084fc">PAYLOAD</tspan>
+      <tspan fill="#64748b"> (claims / datos)  ·  </tspan>
+      <tspan fill="#34d399">SIGNATURE</tspan>
+      <tspan fill="#64748b"> (firma criptográfica HMAC)</tspan>
+    </text>
+    <text x="20" y="34" class="encoded-string">
+      <tspan fill="#f43f5e">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</tspan>
+      <tspan fill="#94a3b8">.</tspan>
+      <tspan fill="#c084fc">eyJzdWIiOjEyLCJlbWFpbCI6ImFuYUBpY2VzaS5lZHUuY28ifQ</tspan>
+      <tspan fill="#94a3b8">.</tspan>
+      <tspan fill="#34d399">k7G_X9R7q0LwE58vY6pZaM1o9TuQeWd8xP</tspan>
+    </text>
+  </g>
+
+  <!-- 3 Parts Breakdown -->
+  <!-- Part 1: Header (Red/Rose) -->
+  <g transform="translate(35, 135)">
+    <rect x="0" y="0" width="270" height="175" rx="10" fill="#ffffff" stroke="#f43f5e" stroke-width="1.6" filter="url(#jwt-shadow)"/>
+    <rect x="0" y="0" width="270" height="34" rx="10" fill="#ffe4e6"/>
+    <rect x="0" y="24" width="270" height="10" fill="#ffe4e6"/>
+    <circle cx="18" cy="17" r="9" fill="#e11d48"/>
+    <text x="18" y="21" class="step-badge" text-anchor="middle">1</text>
+    <text x="35" y="22" class="token-part-title" fill="#9f1239">Header (Encabezado)</text>
+
+    <g transform="translate(12, 44)">
+      <rect x="0" y="0" width="246" height="52" rx="6" fill="#fff1f2" stroke="#fecdd3"/>
+      <text x="10" y="20" class="token-code" fill="#9f1239">&#123;</text>
+      <text x="22" y="34" class="token-code" fill="#9f1239">&quot;alg&quot;: &quot;HS256&quot;, &quot;typ&quot;: &quot;JWT&quot;</text>
+      <text x="10" y="46" class="token-code" fill="#9f1239">&#125;</text>
+    </g>
+
+    <text x="14" y="120" class="desc-text">• Indica el tipo de token (JWT)</text>
+    <text x="14" y="140" class="desc-text">• Algoritmo de firma criptográfica</text>
+    <text x="14" y="160" class="desc-text">• Codificado con Base64Url</text>
+  </g>
+
+  <!-- Part 2: Payload (Purple/Violet) -->
+  <g transform="translate(325, 135)">
+    <rect x="0" y="0" width="270" height="175" rx="10" fill="#ffffff" stroke="#a855f7" stroke-width="1.6" filter="url(#jwt-shadow)"/>
+    <rect x="0" y="0" width="270" height="34" rx="10" fill="#f3e8ff"/>
+    <rect x="0" y="24" width="270" height="10" fill="#f3e8ff"/>
+    <circle cx="18" cy="17" r="9" fill="#9333ea"/>
+    <text x="18" y="21" class="step-badge" text-anchor="middle">2</text>
+    <text x="35" y="22" class="token-part-title" fill="#6b21a8">Payload (Claims / Datos)</text>
+
+    <g transform="translate(12, 44)">
+      <rect x="0" y="0" width="246" height="66" rx="6" fill="#faf5ff" stroke="#e9d5ff"/>
+      <text x="10" y="17" class="token-code" fill="#6b21a8">&#123;</text>
+      <text x="20" y="32" class="token-code" fill="#6b21a8">&quot;sub&quot;: 12, &quot;email&quot;: &quot;...&quot;,</text>
+      <text x="20" y="47" class="token-code" fill="#6b21a8">&quot;permissions&quot;: [&quot;read&quot;], &quot;exp&quot;: ...</text>
+      <text x="10" y="60" class="token-code" fill="#6b21a8">&#125;</text>
+    </g>
+
+    <text x="14" y="132" class="desc-text">• Contiene la identidad (sub = id usuario)</text>
+    <text x="14" y="150" class="desc-text">• Claims públicos y expiración (exp)</text>
+    <text x="14" y="168" class="desc-text"><tspan fill="#b91c1c" font-weight="600">No almacenar contraseñas ni secretos</tspan></text>
+  </g>
+
+  <!-- Part 3: Signature (Green/Emerald) -->
+  <g transform="translate(615, 135)">
+    <rect x="0" y="0" width="270" height="175" rx="10" fill="#ffffff" stroke="#10b981" stroke-width="1.6" filter="url(#jwt-shadow)"/>
+    <rect x="0" y="0" width="270" height="34" rx="10" fill="#d1fae5"/>
+    <rect x="0" y="24" width="270" height="10" fill="#d1fae5"/>
+    <circle cx="18" cy="17" r="9" fill="#059669"/>
+    <text x="18" y="21" class="step-badge" text-anchor="middle">3</text>
+    <text x="35" y="22" class="token-part-title" fill="#065f46">Signature (Firma Digital)</text>
+
+    <g transform="translate(12, 44)">
+      <rect x="0" y="0" width="246" height="52" rx="6" fill="#ecfdf5" stroke="#a7f3d0"/>
+      <text x="8" y="20" class="token-code" fill="#065f46">HMACSHA256(</text>
+      <text x="16" y="34" class="token-code" fill="#065f46">base64(header) + '.' + base64(payload),</text>
+      <text x="16" y="46" class="token-code" fill="#047857"><tspan font-weight="700">JWT_SECRET</tspan> )</text>
+    </g>
+
+    <text x="14" y="120" class="desc-text">• Garantiza la integridad del token</text>
+    <text x="14" y="140" class="desc-text">• Si el payload se modifica, la firma falla</text>
+    <text x="14" y="160" class="desc-text">• Solo el servidor conoce el secreto</text>
+  </g>
+
+  <!-- Bottom Flow: Stateless Verification in NestJS -->
+  <g transform="translate(35, 330)">
+    <rect x="0" y="0" width="850" height="120" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#jwt-shadow)"/>
+    
+    <text x="24" y="28" class="section-label" fill="#1e293b">Mecanismo Stateless en NestJS (Passport + JwtStrategy)</text>
+
+    <!-- Flow Step 1 -->
+    <g transform="translate(24, 42)">
+      <rect x="0" y="0" width="230" height="60" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+      <text x="12" y="22" class="token-part-title" fill="#1e3a8a">1. Cliente envía Header</text>
+      <text x="12" y="44" class="token-code" fill="#2563eb">Authorization: Bearer &lt;token&gt;</text>
+    </g>
+
+    <path d="M 264 72 L 305 72" fill="none" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow-flow)"/>
+
+    <!-- Flow Step 2 -->
+    <g transform="translate(315, 42)">
+      <rect x="0" y="0" width="245" height="60" rx="8" fill="#fef3c7" stroke="#fde68a"/>
+      <text x="12" y="22" class="token-part-title" fill="#92400e">2. JwtStrategy verifica firma</text>
+      <text x="12" y="44" class="token-code" fill="#b45309">Valida con secretOrKey sin DB</text>
+    </g>
+
+    <path d="M 570 72 L 610 72" fill="none" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow-flow)"/>
+
+    <!-- Flow Step 3 -->
+    <g transform="translate(620, 42)">
+      <rect x="0" y="0" width="210" height="60" rx="8" fill="#ecfdf5" stroke="#a7f3d0"/>
+      <text x="12" y="22" class="token-part-title" fill="#065f46">3. Inyección en Request</text>
+      <text x="12" y="44" class="token-code" fill="#059669">req.user = payload / User</text>
+    </g>
+  </g>
+</svg>

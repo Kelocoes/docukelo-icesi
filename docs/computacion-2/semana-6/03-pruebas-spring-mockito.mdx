@@ -22,8 +22,7 @@ Garantizar la calidad y robustez de una aplicación backend requiere validar que
 
 ### Arquitectura de Capas y Aislamiento con Mockito
 
-```mermaid
-graph TD
+<ZoomableMermaid value={`graph TD
     subgraph TestingUnitario ["Prueba Unitaria Aislada: BankServiceTest"]
         Svc["BankService (Bajo Prueba: @InjectMocks)"]
         MockRepo["AccountRepository (Simulado: @Mock)"]
@@ -39,8 +38,7 @@ graph TD
 
     style Svc fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
     style MockRepo fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
-    style DBMem fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
-```
+    style DBMem fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d`} />
 
 #### Explicación de los Componentes del Diagrama
 

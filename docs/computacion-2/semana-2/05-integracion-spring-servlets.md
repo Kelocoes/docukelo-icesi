@@ -49,8 +49,7 @@ public class EstudianteServletError extends HttpServlet {
 }
 ```
 
-```mermaid
-sequenceDiagram
+<ZoomableMermaid value={`sequenceDiagram
     autonumber
     actor User1 as Cliente HTTP 1
     actor User2 as Cliente HTTP 2
@@ -58,13 +57,12 @@ sequenceDiagram
     participant Container as Spring IoC (Nuevo por Petición)
 
     User1->>Servlet: GET /estudiantes
-    Servlet->>Container: new ClassPathXmlApplicationContext() (🔴 Recrea todo el XML)
+    Servlet->>Container: new ClassPathXmlApplicationContext() (Recrea todo el XML)
     Container-->>Servlet: Retorna Beans
     
     User2->>Servlet: GET /estudiantes
-    Servlet->>Container: new ClassPathXmlApplicationContext() (🔴 Vuelve a recrear todo)
-    Container-->>Servlet: Retorna Beans Nuevos (Pierde estado Singleton y RAM)
-```
+    Servlet->>Container: new ClassPathXmlApplicationContext() (Vuelve a recrear todo)
+    Container-->>Servlet: Retorna Beans Nuevos (Pierde estado Singleton y RAM)`} />
 
 ### Consecuencias de este Anti-Patrón:
 

@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 500" width="100%" height="100%">
+  <defs>
+    <filter id="auth-shadow" x="-3%" y="-3%" width="106%" height="106%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669"/>
+    </marker>
+  </defs>
+
+  <style>
+    .title-main { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 800; }
+    .subtitle-main { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 500; fill: #64748b; }
+    .box-title { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 700; }
+    .box-sub { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 600; }
+    .code-text { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 10.5px; }
+    .badge { font-family: system-ui, -apple-system, sans-serif; font-size: 10px; font-weight: 700; }
+    .arrow-text { font-family: system-ui, -apple-system, sans-serif; font-size: 10.5px; font-weight: 600; fill: #475569; }
+  </style>
+
+  <!-- Background Base Canvas -->
+  <rect x="10" y="10" width="920" height="480" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <text x="470" y="40" class="title-main" fill="#0f172a" text-anchor="middle">Arquitectura e Interacción del AuthModule en NestJS</text>
+  <text x="470" y="60" class="subtitle-main" text-anchor="middle">Relaciones de Inyección de Dependencias, servicios y estrategias de autenticación</text>
+
+  <!-- Container AuthModule -->
+  <g transform="translate(30, 80)">
+    <!-- Boundary Box -->
+    <rect x="0" y="0" width="880" height="385" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="6 4" filter="url(#auth-shadow)"/>
+    <rect x="16" y="-12" width="130" height="24" rx="6" fill="#e0f2fe" stroke="#0284c7"/>
+    <text x="81" y="4" class="badge" fill="#0369a1" text-anchor="middle">AUTHMODULE</text>
+
+    <!-- 1. AuthController -->
+    <g transform="translate(30, 45)">
+      <rect x="0" y="0" width="230" height="110" rx="10" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+      <text x="16" y="26" class="box-title" fill="#15803d">AuthController</text>
+      <text x="16" y="44" class="box-sub" fill="#166534">@Controller('auth')</text>
+      <rect x="16" y="55" width="198" height="42" rx="6" fill="#ffffff" stroke="#bbf7d0"/>
+      <text x="24" y="73" class="code-text" fill="#14532d">POST /auth/login</text>
+      <text x="24" y="88" class="code-text" fill="#64748b">Body: UserLoginDto</text>
+    </g>
+
+    <!-- Arrow Controller -> Service -->
+    <path d="M 260 100 L 320 100" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    <text x="290" y="92" class="arrow-text" text-anchor="middle">login()</text>
+
+    <!-- 2. AuthService -->
+    <g transform="translate(330, 30)">
+      <rect x="0" y="0" width="245" height="145" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.6"/>
+      <text x="16" y="24" class="box-title" fill="#1d4ed8">AuthService</text>
+      <text x="16" y="40" class="box-sub" fill="#1e40af">@Injectable()</text>
+      <rect x="14" y="50" width="217" height="82" rx="6" fill="#ffffff" stroke="#bfdbfe"/>
+      <text x="22" y="68" class="code-text" fill="#1e3a8a">1. validateUser(email, pass)</text>
+      <text x="32" y="84" class="code-text" fill="#64748b">bcrypt.compare(pwd, hash)</text>
+      <text x="22" y="104" class="code-text" fill="#1e3a8a">2. login(userDto)</text>
+      <text x="32" y="120" class="code-text" fill="#64748b">jwtService.sign(payload)</text>
+    </g>
+
+    <!-- 3. External dependencies: UsersModule & bcrypt -->
+    <g transform="translate(635, 30)">
+      <rect x="0" y="0" width="215" height="68" rx="8" fill="#f8fafc" stroke="#94a3b8"/>
+      <text x="14" y="22" class="box-title" fill="#334155">UsersService</text>
+      <text x="14" y="38" class="box-sub" fill="#64748b">UserModule (Importado)</text>
+      <text x="14" y="54" class="code-text" fill="#0f172a">findByEmail(), findById()</text>
+
+      <rect x="0" y="78" width="215" height="60" rx="8" fill="#fef2f2" stroke="#f87171"/>
+      <text x="14" y="100" class="box-title" fill="#991b1b">bcrypt (Hashing)</text>
+      <text x="14" y="122" class="code-text" fill="#b91c1c">bcrypt.compare(pass, hash)</text>
+    </g>
+
+    <!-- Arrow AuthService -> UsersService -->
+    <path d="M 575 64 L 625 64" fill="none" stroke="#2563eb" stroke-width="1.8" marker-end="url(#arrow-blue)"/>
+    <!-- Arrow AuthService -> bcrypt -->
+    <path d="M 575 110 L 625 110" fill="none" stroke="#2563eb" stroke-width="1.8" marker-end="url(#arrow-blue)"/>
+
+    <!-- Bottom Row: JwtModule & JwtStrategy -->
+    <!-- 4. JwtModule.registerAsync -->
+    <g transform="translate(30, 215)">
+      <rect x="0" y="0" width="380" height="135" rx="10" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5"/>
+      <text x="16" y="24" class="box-title" fill="#6b21a8">JwtModule.registerAsync()</text>
+      <text x="16" y="40" class="box-sub" fill="#7e22ce">Inyecta ConfigService de forma dinámica</text>
+
+      <rect x="14" y="48" width="352" height="74" rx="6" fill="#ffffff" stroke="#e9d5ff"/>
+      <text x="24" y="68" class="code-text" fill="#581c87">secret: config.get('JWT_SECRET')</text>
+      <text x="24" y="86" class="code-text" fill="#581c87">signOptions: &#123; expiresIn: '1h' &#125;</text>
+      <text x="24" y="106" class="code-text" fill="#6b21a8">Provee: JwtService (sign / verify)</text>
+    </g>
+
+    <!-- Arrow JwtModule -> AuthService -->
+    <path d="M 280 215 L 360 175" fill="none" stroke="#059669" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#arrow-emerald)"/>
+    <text x="320" y="195" class="arrow-text" fill="#059669">Inyecta JwtService</text>
+
+    <!-- 5. JwtStrategy -->
+    <g transform="translate(470, 215)">
+      <rect x="0" y="0" width="380" height="135" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+      <text x="16" y="24" class="box-title" fill="#b45309">JwtStrategy (PassportStrategy)</text>
+      <text x="16" y="40" class="box-sub" fill="#d97706">Valida peticiones con Bearer token en headers</text>
+
+      <rect x="14" y="48" width="352" height="74" rx="6" fill="#ffffff" stroke="#fde68a"/>
+      <text x="24" y="68" class="code-text" fill="#78350f">jwtFromRequest: ExtractJwt.fromAuthHeader()</text>
+      <text x="24" y="86" class="code-text" fill="#78350f">validate(payload: JwtPayload): Promise&lt;User&gt;</text>
+      <text x="24" y="106" class="code-text" fill="#b45309">Asigna el resultado a: req.user</text>
+    </g>
+  </g>
+</svg>

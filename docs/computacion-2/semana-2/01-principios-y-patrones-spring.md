@@ -14,11 +14,9 @@ En este documento exploraremos qué es un principio de diseño, desglosaremos lo
 
 Antes de escribir código, los arquitectos de software establecen reglas y directrices. Es fundamental diferenciar un **Principio** de un **Patrón**:
 
-```mermaid
-graph TD
+<ZoomableMermaid value={`graph TD
     A["Principios de Diseño (SOLID, IoC, DIP)<br/><i>Filosofía y directrices de alto nivel</i>"] --> B["Patrones de Diseño (Factory, Strategy, DI)<br/><i>Soluciones estructurales reusables</i>"]
-    B --> C["Framework / Contenedor IoC (Spring Framework)<br/><i>Infraestructura ejecutable que automatiza el ensamblaje</i>"]
-```
+    B --> C["Framework / Contenedor IoC (Spring Framework)<br/><i>Infraestructura ejecutable que automatiza el ensamblaje</i>"]`} />
 
 ### Explicación de la Jerarquía
 
@@ -40,8 +38,7 @@ Los principios **SOLID** son un conjunto de cinco directrices creadas por Robert
 | **I** | **Interface Segregation Principle (ISP)** | Principio de Segregación de Interfaces | Es mejor tener varias interfaces específicas que una sola interfaz sobrecargada de métodos no utilizados. |
 | **D** | **Dependency Inversion Principle (DIP)** | Principio de Inversión de Dependencias | Los módulos de alto nivel no deben depender de módulos de bajo nivel; ambos deben depender de abstracciones. |
 
-```mermaid
-graph LR
+<ZoomableMermaid value={`graph LR
     subgraph SOLID ["Principios SOLID"]
         direction TB
         S["S - Single Responsibility"]
@@ -51,8 +48,7 @@ graph LR
         D["D - Dependency Inversion"]
     end
 
-    D --> IoC["Conexión con Spring: Inversión de Control"]
-```
+    D --> IoC["Conexión con Spring: Inversión de Control"]`} />
 
 ---
 
@@ -68,8 +64,7 @@ El principio de Inversión de Dependencias establece dos reglas principales:
 
 #### Esquema Conceptual: Con vs. Sin DIP
 
-```mermaid
-graph TD
+<ZoomableMermaid value={`graph TD
     subgraph SinDIP ["Sin DIP: Dependencia Directa (Alto Acoplamiento)"]
         direction TB
         Cliente1["ServicioDeNotificaciones"] -->|Crea con new| Motor1["EmailSender (Clase Concreta)"]
@@ -80,8 +75,7 @@ graph TD
         Cliente2["ServicioDeNotificaciones"] -->|Depende de| Interfaz["MessageSender (Interfaz)"]
         Motor2["EmailSender (Implementación)"] -.->|Implementa| Interfaz
         Motor3["SMSSender (Implementación)"] -.->|Implementa| Interfaz
-    end
-```
+    end`} />
 
 ### B. Inversion of Control (IoC)
 
@@ -91,8 +85,7 @@ En la **Inversión de Control (IoC)**, el control de la creación y gestión de 
 
 #### Esquema Abstracto: La Analogía de la Fábrica de Automóviles
 
-```mermaid
-graph LR
+<ZoomableMermaid value={`graph LR
     subgraph EnfoqueTradicional ["Modelo Tradicional (Sin IoC)"]
         direction TB
         Piloto["Conductor / Programador"] -->|Construye manualmente| Auto["Fabrica Motor y Ruedas"]
@@ -104,8 +97,7 @@ graph LR
         direction TB
         Fabrica["Contenedor IoC de Spring"] -->|Lee plano applicationContext.xml| Ensamblaje["Crea e inyecta piezas"]
         Ensamblaje --> Usuario["Conductor recibe vehículo listo"]
-    end
-```
+    end`} />
 
 ---
 
@@ -125,8 +117,7 @@ Las dependencias necesarias se pasan como argumentos al constructor de la clase.
 #### 2. Inyección por Setter (`<property>`)
 El contenedor crea el objeto utilizando su constructor por defecto (sin argumentos) y luego invoca los métodos `set...()` para asignar cada dependencia. Es adecuado para dependencias opcionales o reconfigurables.
 
-```mermaid
-sequenceDiagram
+<ZoomableMermaid value={`sequenceDiagram
     autonumber
     participant App as Aplicación Java
     participant XML as applicationContext.xml
@@ -139,8 +130,7 @@ sequenceDiagram
     Container->>Dep: Instanciar EmailSender
     Container->>Service: Instanciar e inyectar EmailSender
     App->>Container: Solicitar bean "notificacionService"
-    Container-->>App: Retorna NotificacionService listo para usar
-```
+    Container-->>App: Retorna NotificacionService listo para usar`} />
 
 ---
 
