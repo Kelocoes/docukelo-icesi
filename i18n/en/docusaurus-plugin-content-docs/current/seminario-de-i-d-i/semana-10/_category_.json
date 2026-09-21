@@ -1,0 +1,8 @@
+{
+    "label": "W10 - Screens, Layout & Composition",
+    "position": 10,
+    "link": {
+        "type": "generated-index",
+        "description": "Screen layout with components, scaffolding (Scaffold, SafeArea), linear layout, and the Screen vs. Page convention in Flutter."
+    }
+}

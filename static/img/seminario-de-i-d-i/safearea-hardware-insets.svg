@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 440" width="100%" height="100%">
+  <defs>
+    <filter id="shadow-phone" x="-10%" y="-5%" width="120%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <linearGradient id="grad-notch" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="840" height="440" rx="16" fill="#f8fafc"/>
+
+  <!-- Left Phone: Sin SafeArea (Vulnerable) -->
+  <g transform="translate(60, 25)">
+    <!-- Phone Bezel -->
+    <rect width="320" height="390" rx="36" fill="#0f172a" filter="url(#shadow-phone)"/>
+    <rect x="8" y="8" width="304" height="374" rx="28" fill="#ffffff"/>
+
+    <!-- Screen Content Under Hardware Obstacles -->
+    <g transform="translate(8, 8)">
+      <clipPath id="screen-clip-left">
+        <rect width="304" height="374" rx="28"/>
+      </clipPath>
+      <g clip-path="url(#screen-clip-left)">
+        <!-- Top App Bar Clashing with Status Bar and Notch -->
+        <rect x="0" y="0" width="304" height="58" fill="#ef4444"/>
+        <text x="20" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#ffffff">Mi Aplicación Móvil</text>
+        <text x="20" y="48" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#fee2e2">¡Texto tapado por la cámara y notch!</text>
+
+        <!-- Body content -->
+        <g transform="translate(16, 75)">
+          <rect width="272" height="70" rx="10" fill="#f1f5f9" stroke="#cbd5e1"/>
+          <circle cx="28" cy="35" r="16" fill="#cbd5e1"/>
+          <rect x="54" y="24" width="130" height="10" rx="3" fill="#94a3b8"/>
+          <rect x="54" y="40" width="80" height="8" rx="3" fill="#cbd5e1"/>
+
+          <rect y="82" width="272" height="70" rx="10" fill="#f1f5f9" stroke="#cbd5e1"/>
+          <circle cx="28" cy="117" r="16" fill="#cbd5e1"/>
+          <rect x="54" y="106" width="130" height="10" rx="3" fill="#94a3b8"/>
+          <rect x="54" y="122" width="80" height="8" rx="3" fill="#cbd5e1"/>
+
+          <rect y="164" width="272" height="70" rx="10" fill="#f1f5f9" stroke="#cbd5e1"/>
+          <circle cx="28" cy="199" r="16" fill="#cbd5e1"/>
+          <rect x="54" y="188" width="130" height="10" rx="3" fill="#94a3b8"/>
+          <rect x="54" y="204" width="80" height="8" rx="3" fill="#cbd5e1"/>
+        </g>
+
+        <!-- Bottom Button Clashing with Gesture Bar -->
+        <rect x="16" y="336" width="272" height="38" rx="19" fill="#ef4444"/>
+        <text x="152" y="358" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Confirmar Compra (Inaccesible)</text>
+      </g>
+    </g>
+
+    <!-- Top Hardware: Dynamic Island / Notch -->
+    <rect x="92" y="14" width="136" height="24" rx="12" fill="url(#grad-notch)"/>
+    <circle cx="204" cy="26" r="4.5" fill="#1e293b"/>
+    <circle cx="204" cy="26" r="2" fill="#0f172a"/>
+
+    <!-- Bottom Hardware: Home Indicator Bar -->
+    <rect x="100" y="366" width="120" height="5" rx="2.5" fill="#0f172a"/>
+
+    <!-- Warning Tag Below -->
+    <rect x="25" y="300" width="270" height="32" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="1.2"/>
+    <text x="160" y="320" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#991b1b" text-anchor="middle">SIN SafeArea: Elementos Bloqueados</text>
+  </g>
+
+  <!-- Right Phone: Con SafeArea (Protegido) -->
+  <g transform="translate(460, 25)">
+    <!-- Phone Bezel -->
+    <rect width="320" height="390" rx="36" fill="#0f172a" filter="url(#shadow-phone)"/>
+    <rect x="8" y="8" width="304" height="374" rx="28" fill="#ffffff"/>
+
+    <!-- Screen Content With SafeArea -->
+    <g transform="translate(8, 8)">
+      <clipPath id="screen-clip-right">
+        <rect width="304" height="374" rx="28"/>
+      </clipPath>
+      <g clip-path="url(#screen-clip-right)">
+        <!-- Top Status Bar Area (Clear Inset) -->
+        <rect x="0" y="0" width="304" height="44" fill="#ede9fe"/>
+        <text x="152" y="38" font-family="monospace" font-size="9" font-weight="bold" fill="#6750a4" text-anchor="middle">SafeArea Top Inset (~44dp)</text>
+
+        <!-- Protected AppBar -->
+        <rect x="0" y="44" width="304" height="46" fill="#6750a4"/>
+        <text x="20" y="72" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#ffffff">Mi Aplicación Móvil</text>
+
+        <!-- Body content with safe padding -->
+        <g transform="translate(16, 102)">
+          <rect width="272" height="66" rx="10" fill="#f8fafc" stroke="#c7d2fe"/>
+          <circle cx="28" cy="33" r="16" fill="#e0e7ff"/>
+          <rect x="54" y="22" width="130" height="10" rx="3" fill="#6366f1"/>
+          <rect x="54" y="38" width="80" height="8" rx="3" fill="#a5b4fc"/>
+
+          <rect y="74" width="272" height="66" rx="10" fill="#f8fafc" stroke="#c7d2fe"/>
+          <circle cx="28" cy="107" r="16" fill="#e0e7ff"/>
+          <rect x="54" y="96" width="130" height="10" rx="3" fill="#6366f1"/>
+          <rect x="54" y="112" width="80" height="8" rx="3" fill="#a5b4fc"/>
+        </g>
+
+        <!-- Protected Bottom Button -->
+        <rect x="16" y="292" width="272" height="38" rx="19" fill="#6750a4"/>
+        <text x="152" y="315" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Confirmar Compra (Protegido)</text>
+
+        <!-- Bottom Gesture Inset -->
+        <rect x="0" y="340" width="304" height="34" fill="#ede9fe"/>
+        <text x="152" y="358" font-family="monospace" font-size="9" font-weight="bold" fill="#6750a4" text-anchor="middle">SafeArea Bottom Inset (~34dp)</text>
+      </g>
+    </g>
+
+    <!-- Top Hardware: Dynamic Island / Notch -->
+    <rect x="92" y="14" width="136" height="24" rx="12" fill="url(#grad-notch)"/>
+    <circle cx="204" cy="26" r="4.5" fill="#1e293b"/>
+    <circle cx="204" cy="26" r="2" fill="#0f172a"/>
+
+    <!-- Bottom Hardware: Home Indicator Bar -->
+    <rect x="100" y="366" width="120" height="5" rx="2.5" fill="#0f172a"/>
+
+    <!-- Success Tag Below -->
+    <rect x="25" y="248" width="270" height="32" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1.2"/>
+    <text x="160" y="268" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#065f46" text-anchor="middle">CON SafeArea: 100% Accesible &amp; Visible</text>
+  </g>
+</svg>
