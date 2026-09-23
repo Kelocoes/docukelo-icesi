@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 430" width="100%" height="100%">
+  <defs>
+    <filter id="shadow-box" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+    <marker id="arrow-main" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <polygon points="0 0, 10 5, 0 10" fill="#6750a4"/>
+    </marker>
+    <marker id="arrow-cross" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <polygon points="0 0, 10 5, 0 10" fill="#0284c7"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="840" height="430" rx="16" fill="#f8fafc"/>
+
+  <!-- ==================== Panel Izquierdo: Row (Fila Horizontal) ==================== -->
+  <g transform="translate(30, 25)">
+    <rect width="375" height="380" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow-box)"/>
+
+    <!-- Header -->
+    <path d="M 0 14 Q 0 0 14 0 L 361 0 Q 375 0 375 14 L 375 48 L 0 48 Z" fill="#f3ebf7"/>
+    <text x="24" y="29" font-family="monospace" font-size="16" font-weight="700" fill="#4f378a">Row(children: [...])</text>
+    <text x="24" y="42" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#625b71">Disposición horizontal de elementos</text>
+
+    <!-- Main Axis Indicator (Horizontal) -->
+    <g transform="translate(24, 65)">
+      <line x1="0" y1="12" x2="320" y2="12" stroke="#6750a4" stroke-width="3" marker-end="url(#arrow-main)"/>
+      <rect x="55" y="0" width="215" height="24" rx="12" fill="#6750a4"/>
+      <text x="162.5" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Main Axis (Horizontal →)</text>
+    </g>
+
+    <!-- Cross Axis Indicator (Vertical) -->
+    <g transform="translate(18, 98)">
+      <line x1="10" y1="0" x2="10" y2="200" stroke="#0284c7" stroke-width="3" marker-end="url(#arrow-cross)"/>
+      <g transform="translate(20, 20)">
+        <rect x="0" y="0" width="24" height="155" rx="12" fill="#e0f2fe" stroke="#38bdf8"/>
+        <text transform="translate(12, 77.5) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" font-weight="700" fill="#0369a1">Cross Axis (Vertical ↓)</text>
+      </g>
+    </g>
+
+    <!-- Row Viewport Container -->
+    <g transform="translate(70, 110)">
+      <rect width="280" height="190" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+
+      <!-- Row items spaced out -->
+      <g transform="translate(15, 45)">
+        <rect width="68" height="100" rx="8" fill="#e8def8" stroke="#6750a4" stroke-width="1.5"/>
+        <text x="34" y="55" font-family="monospace" font-size="12" font-weight="bold" fill="#4f378a" text-anchor="middle">Hijo 1</text>
+      </g>
+
+      <g transform="translate(102, 30)">
+        <rect width="68" height="130" rx="8" fill="#e8def8" stroke="#6750a4" stroke-width="1.5"/>
+        <text x="34" y="70" font-family="monospace" font-size="12" font-weight="bold" fill="#4f378a" text-anchor="middle">Hijo 2</text>
+      </g>
+
+      <g transform="translate(189, 55)">
+        <rect width="68" height="80" rx="8" fill="#e8def8" stroke="#6750a4" stroke-width="1.5"/>
+        <text x="34" y="45" font-family="monospace" font-size="12" font-weight="bold" fill="#4f378a" text-anchor="middle">Hijo 3</text>
+      </g>
+    </g>
+
+    <!-- Summary Box -->
+    <g transform="translate(24, 320)">
+      <rect width="327" height="42" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="14" y="20" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="#334155">MainAxisAlignment: <tspan font-weight="normal" fill="#64748b">Controla espaciado horizontal</tspan></text>
+      <text x="14" y="34" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="#334155">CrossAxisAlignment: <tspan font-weight="normal" fill="#64748b">Controla alineación vertical</tspan></text>
+    </g>
+  </g>
+
+  <!-- ==================== Panel Derecho: Column (Columna Vertical) ==================== -->
+  <g transform="translate(435, 25)">
+    <rect width="375" height="380" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow-box)"/>
+
+    <!-- Header -->
+    <path d="M 0 14 Q 0 0 14 0 L 361 0 Q 375 0 375 14 L 375 48 L 0 48 Z" fill="#eff6ff"/>
+    <text x="24" y="29" font-family="monospace" font-size="16" font-weight="700" fill="#1d4ed8">Column(children: [...])</text>
+    <text x="24" y="42" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#60a5fa">Disposición vertical de elementos</text>
+
+    <!-- Cross Axis Indicator (Horizontal) -->
+    <g transform="translate(24, 65)">
+      <line x1="0" y1="12" x2="320" y2="12" stroke="#0284c7" stroke-width="3" marker-end="url(#arrow-cross)"/>
+      <rect x="55" y="0" width="215" height="24" rx="12" fill="#0284c7"/>
+      <text x="162.5" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Cross Axis (Horizontal →)</text>
+    </g>
+
+    <!-- Main Axis Indicator (Vertical) -->
+    <g transform="translate(18, 98)">
+      <line x1="10" y1="0" x2="10" y2="200" stroke="#6750a4" stroke-width="3" marker-end="url(#arrow-main)"/>
+      <g transform="translate(20, 20)">
+        <rect x="0" y="0" width="24" height="155" rx="12" fill="#f3ebf7" stroke="#c084fc"/>
+        <text transform="translate(12, 77.5) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" font-weight="700" fill="#4f378a">Main Axis (Vertical ↓)</text>
+      </g>
+    </g>
+
+    <!-- Column Viewport Container -->
+    <g transform="translate(70, 110)">
+      <rect width="280" height="190" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+
+      <!-- Column items stacked -->
+      <g transform="translate(20, 14)">
+        <rect width="180" height="42" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+        <text x="90" y="26" font-family="monospace" font-size="12" font-weight="bold" fill="#1e40af" text-anchor="middle">Hijo 1</text>
+      </g>
+
+      <g transform="translate(20, 68)">
+        <rect width="235" height="48" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+        <text x="117.5" y="29" font-family="monospace" font-size="12" font-weight="bold" fill="#1e40af" text-anchor="middle">Hijo 2 (Más Ancho)</text>
+      </g>
+
+      <g transform="translate(20, 128)">
+        <rect width="140" height="46" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+        <text x="70" y="28" font-family="monospace" font-size="12" font-weight="bold" fill="#1e40af" text-anchor="middle">Hijo 3</text>
+      </g>
+    </g>
+
+    <!-- Summary Box -->
+    <g transform="translate(24, 320)">
+      <rect width="327" height="42" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="14" y="20" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="#334155">MainAxisAlignment: <tspan font-weight="normal" fill="#64748b">Controla distribución vertical</tspan></text>
+      <text x="14" y="34" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="#334155">CrossAxisAlignment: <tspan font-weight="normal" fill="#64748b">Controla alineación horizontal</tspan></text>
+    </g>
+  </g>
+</svg>

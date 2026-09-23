@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 400" width="100%" height="100%">
+  <defs>
+    <filter id="shadow-flex" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+    <marker id="arrow-stretch" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <polygon points="0 0, 10 5, 0 10" fill="#4f46e5"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="840" height="400" rx="16" fill="#f8fafc"/>
+
+  <!-- Top Section: Cajas Fijas vs Expanded -->
+  <g transform="translate(30, 20)">
+    <rect width="780" height="165" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow-flex)"/>
+
+    <!-- Section Header -->
+    <path d="M 0 12 Q 0 0 12 0 L 768 0 Q 780 0 780 12 L 780 38 L 0 38 Z" fill="#f1f5f9"/>
+    <text x="20" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#1e293b">Caso 1: Cajas de Ancho Fijo + Expanded Central</text>
+    <text x="610" y="24" font-family="monospace" font-size="11" fill="#64748b">Row(children: [...])</text>
+
+    <!-- Visual Row Demonstration -->
+    <g transform="translate(20, 52)">
+      <!-- Left Fixed Container -->
+      <rect x="0" y="0" width="90" height="60" rx="8" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="45" y="28" font-family="monospace" font-size="11" font-weight="bold" fill="#334155" text-anchor="middle">Fixed</text>
+      <text x="45" y="44" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b" text-anchor="middle">70 px</text>
+
+      <!-- Center Expanded Container -->
+      <g transform="translate(105, 0)">
+        <rect width="530" height="60" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.8"/>
+        <line x1="20" y1="30" x2="160" y2="30" stroke="#7c3aed" stroke-width="2" marker-start="url(#arrow-stretch)" marker-end="url(#arrow-stretch)"/>
+        <line x1="370" y1="30" x2="510" y2="30" stroke="#7c3aed" stroke-width="2" marker-start="url(#arrow-stretch)" marker-end="url(#arrow-stretch)"/>
+        <rect x="180" y="14" width="170" height="32" rx="6" fill="#7c3aed"/>
+        <text x="265" y="34" font-family="monospace" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">Expanded(child: ...)</text>
+      </g>
+
+      <!-- Right Fixed Container -->
+      <g transform="translate(650, 0)">
+        <rect width="90" height="60" rx="8" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="45" y="28" font-family="monospace" font-size="11" font-weight="bold" fill="#334155" text-anchor="middle">Fixed</text>
+        <text x="45" y="44" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b" text-anchor="middle">70 px</text>
+      </g>
+    </g>
+
+    <!-- Subtitle explanation -->
+    <text x="20" y="142" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#475569">
+      El widget <tspan font-family="monospace" font-weight="bold" fill="#6d28d9">Expanded</tspan> absorbe todo el ancho residual disponible en el eje principal, adaptándose a cualquier tamaño de pantalla sin desbordar.
+    </text>
+  </g>
+
+  <!-- Bottom Section: Reparto Proporcional con flex -->
+  <g transform="translate(30, 205)">
+    <rect width="780" height="175" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow-flex)"/>
+
+    <!-- Section Header -->
+    <path d="M 0 12 Q 0 0 12 0 L 768 0 Q 780 0 780 12 L 780 38 L 0 38 Z" fill="#f1f5f9"/>
+    <text x="20" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#1e293b">Caso 2: Distribución Proporcional con Factor flex (33.3% / 66.6%)</text>
+    <text x="610" y="24" font-family="monospace" font-size="11" fill="#64748b">flex: 1 vs flex: 2</text>
+
+    <!-- Visual Row Demonstration -->
+    <g transform="translate(20, 52)">
+      <!-- Flex 1 (1/3 of remaining space) -->
+      <g transform="translate(0, 0)">
+        <rect width="235" height="60" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.8"/>
+        <text x="117.5" y="27" font-family="monospace" font-size="12" font-weight="bold" fill="#1e40af" text-anchor="middle">Expanded(flex: 1)</text>
+        <rect x="72.5" y="34" width="90" height="18" rx="4" fill="#bfdbfe"/>
+        <text x="117.5" y="47" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="700" fill="#1d4ed8" text-anchor="middle">1 Parte (33.3%)</text>
+      </g>
+
+      <!-- Flex 2 (2/3 of remaining space) -->
+      <g transform="translate(250, 0)">
+        <rect width="490" height="60" rx="8" fill="#e0e7ff" stroke="#4f46e5" stroke-width="1.8"/>
+        <text x="245" y="27" font-family="monospace" font-size="12" font-weight="bold" fill="#3730a3" text-anchor="middle">Expanded(flex: 2)</text>
+        <rect x="185" y="34" width="120" height="18" rx="4" fill="#c7d2fe"/>
+        <text x="245" y="47" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="700" fill="#4338ca" text-anchor="middle">2 Partes (66.6%)</text>
+      </g>
+    </g>
+
+    <!-- Subtitle explanation -->
+    <text x="20" y="145" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#475569">
+      El parámetro <tspan font-family="monospace" font-weight="bold" fill="#4338ca">flex</tspan> divide el espacio total en cuotas proporcionales (1 + 2 = 3 partes). Elimina por completo los cálculos manuales con <tspan font-family="monospace" fill="#64748b">MediaQuery</tspan>.
+    </text>
+  </g>
+</svg>
