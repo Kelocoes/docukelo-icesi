@@ -1,8 +1,8 @@
 {
-    "label": "S8 - Pipes, Postman & Deployment",
+    "label": "S8 - Postman & Pruebas de API",
     "position": 8,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 8 de Desarrollo de Entornos Digitales Web."
+        "description": "Herramientas de pruebas y validación de endpoints HTTP, automatización de tests, colecciones y manejo de entornos con Postman."
     }
 }

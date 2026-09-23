@@ -5,10 +5,23 @@ import {isActiveSidebarItem} from '@docusaurus/plugin-content-docs/client';
 import Link from '@docusaurus/Link';
 import isInternalUrl from '@docusaurus/isInternalUrl';
 import IconExternalLink from '@theme/Icon/ExternalLink';
+import { DocumentIcon } from '@site/src/components/IcesiIcons';
+import { extractLeadingEmoji } from '@docusaurus/theme-common/internal';
 import styles from './styles.module.css';
 
+function stripLeadingEmoji(str) {
+  if (!str || typeof str !== 'string') return str;
+  return str.replace(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u, '').trim();
+}
+
 function LinkLabel({label}) {
-  return <span className={styles.linkLabel}>{label}</span>;
+  const cleanLabel = stripLeadingEmoji(label);
+  return (
+    <span className={clsx(styles.linkLabel, 'icesiSidebarItemWrapper')}>
+      <DocumentIcon className="icesiSidebarIcon" size={15} />
+      <span className="icesiSidebarItemText">{cleanLabel || label}</span>
+    </span>
+  );
 }
 
 export default function DocSidebarItemLink({

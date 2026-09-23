@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" width="100%" height="100%">
+  <defs>
+    <filter id="flow-card-shadow" x="-3%" y="-3%" width="106%" height="108%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arr-purple" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+
+  <style>
+    .title-main { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 800; }
+    .subtitle-main { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 500; fill: #64748b; }
+    .step-num { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 800; fill: #ffffff; }
+    .node-title { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 700; }
+    .node-desc { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 500; fill: #475569; }
+    .code-pill { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 10px; }
+    .zone-label { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  </style>
+
+  <!-- Background Canvas -->
+  <rect x="10" y="10" width="940" height="460" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <text x="480" y="40" class="title-main" fill="#0f172a" text-anchor="middle">Ciclo de Vida de una Petición en Postman</text>
+  <text x="480" y="60" class="subtitle-main" text-anchor="middle">Flujo de ejecución integral: Sandbox JavaScript, transmisión HTTP, backend NestJS y captura reactiva de variables</text>
+
+  <!-- Group 1: Postman Client Zone -->
+  <rect x="25" y="80" width="575" height="375" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="6,4"/>
+  <rect x="40" y="72" width="145" height="20" rx="4" fill="#0f172a"/>
+  <text x="112" y="86" class="zone-label" fill="#f8fafc" text-anchor="middle">CLIENTE POSTMAN</text>
+
+  <!-- Step 1: Pre-request Script -->
+  <g transform="translate(45, 110)" filter="url(#flow-card-shadow)">
+    <rect x="0" y="0" width="245" height="135" rx="8" fill="#f0f9ff" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="20" cy="20" r="10" fill="#0284c7"/>
+    <text x="20" y="24" class="step-num" text-anchor="middle">1</text>
+    <text x="38" y="24" class="node-title" fill="#0369a1">Pre-request Script</text>
+    <text x="12" y="48" class="node-desc">• Ejecuta JS en sandbox seguro</text>
+    <text x="12" y="66" class="node-desc">• Prepara firmas, IDs únicos o timestamps</text>
+    <!-- Code Box -->
+    <rect x="10" y="76" width="225" height="48" rx="5" fill="#0f172a"/>
+    <text x="18" y="94" class="code-pill" fill="#38bdf8">pm.environment.set(</text>
+    <text x="24" y="112" class="code-pill" fill="#4ade80">  "timestamp", Date.now()</text>
+    <text x="175" y="112" class="code-pill" fill="#94a3b8">);</text>
+  </g>
+
+  <!-- Arrow 1 -> 2 (Downwards) -->
+  <path d="M 167 245 L 167 275" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arr-blue)"/>
+
+  <!-- Step 2: HTTP Request Construction -->
+  <g transform="translate(45, 285)" filter="url(#flow-card-shadow)">
+    <rect x="0" y="0" width="245" height="150" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+    <circle cx="20" cy="20" r="10" fill="#2563eb"/>
+    <text x="20" y="24" class="step-num" text-anchor="middle">2</text>
+    <text x="38" y="24" class="node-title" fill="#1d4ed8">Petición HTTP Saliente</text>
+    <text x="12" y="48" class="node-desc">• Reemplaza variables <tspan class="code-pill" fill="#2563eb">&#123;&#123;base_url&#125;&#125;</tspan></text>
+    <text x="12" y="66" class="node-desc">• Configura Headers (Content-Type, Auth)</text>
+    <text x="12" y="84" class="node-desc">• Serializa Body en formato JSON</text>
+    <rect x="10" y="94" width="225" height="44" rx="4" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="18" y="112" class="code-pill" fill="#1e40af">POST /auth/login</text>
+    <text x="18" y="127" class="code-pill" fill="#64748b">&#123; "email": "...", "pass": "..." &#125;</text>
+  </g>
+
+  <!-- Arrow 2 -> 3 (Across boundary to Backend) -->
+  <path d="M 290 355 L 635 355" fill="none" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+  <rect x="420" y="342" width="85" height="22" rx="4" fill="#dbeafe" stroke="#93c5fd"/>
+  <text x="462" y="357" class="code-pill" fill="#1e40af" font-weight="700" text-anchor="middle">HTTP POST</text>
+
+  <!-- Group 2: Server Zone (NestJS API) -->
+  <g transform="translate(645, 80)">
+    <rect x="0" y="0" width="285" height="375" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="6,4"/>
+    <rect x="15" y="-8" width="130" height="20" rx="4" fill="#0f172a"/>
+    <text x="80" y="6" class="zone-label" fill="#f8fafc" text-anchor="middle">API BACKEND</text>
+
+    <!-- Node 3: NestJS Processing Container -->
+    <g transform="translate(15, 30)" filter="url(#flow-card-shadow)">
+      <rect x="0" y="0" width="255" height="325" rx="10" fill="#f8fafc" stroke="#e0234e" stroke-width="1.6"/>
+      <circle cx="20" cy="22" r="10" fill="#e0234e"/>
+      <text x="20" y="26" class="step-num" text-anchor="middle">3</text>
+      <text x="38" y="26" class="node-title" fill="#9f1239">NestJS Pipeline</text>
+
+      <!-- Nest Pipeline Stages -->
+      <rect x="12" y="46" width="230" height="38" rx="6" fill="#fff1f2" stroke="#fecdd3"/>
+      <text x="20" y="63" class="node-title" font-size="11" fill="#9f1239">1. ValidationPipe</text>
+      <text x="20" y="76" class="code-pill" fill="#64748b">Valida DTO con class-validator</text>
+
+      <rect x="12" y="92" width="230" height="38" rx="6" fill="#fff1f2" stroke="#fecdd3"/>
+      <text x="20" y="109" class="node-title" font-size="11" fill="#9f1239">2. AuthGuard &amp; Strategy</text>
+      <text x="20" y="122" class="code-pill" fill="#64748b">Verifica credenciales / JWT</text>
+
+      <rect x="12" y="138" width="230" height="38" rx="6" fill="#fff1f2" stroke="#fecdd3"/>
+      <text x="20" y="155" class="node-title" font-size="11" fill="#9f1239">3. Controller &amp; Service</text>
+      <text x="20" y="168" class="code-pill" fill="#64748b">Ejecuta lógica de negocio</text>
+
+      <rect x="12" y="184" width="230" height="38" rx="6" fill="#fff1f2" stroke="#fecdd3"/>
+      <text x="20" y="201" class="node-title" font-size="11" fill="#9f1239">4. TypeORM Database</text>
+      <text x="20" y="214" class="code-pill" fill="#64748b">Consulta entidad en PostgreSQL</text>
+
+      <!-- Return Output inside Server -->
+      <rect x="12" y="235" width="230" height="75" rx="6" fill="#0f172a"/>
+      <text x="20" y="255" class="code-pill" fill="#4ade80">HTTP 201 Created</text>
+      <text x="20" y="272" class="code-pill" fill="#94a3b8">&#123;</text>
+      <text x="28" y="287" class="code-pill" fill="#38bdf8">  "accessToken": "eyJhbG..."</text>
+      <text x="20" y="301" class="code-pill" fill="#94a3b8">&#125;</text>
+    </g>
+  </g>
+
+  <!-- Arrow 3 -> 4 (Return Path across boundary) -->
+  <path d="M 645 190 L 575 190" fill="none" stroke="#16a34a" stroke-width="2.5" marker-end="url(#arr-green)"/>
+  <rect x="580" y="165" width="55" height="20" rx="3" fill="#dcfce7" stroke="#86efac"/>
+  <text x="607" y="179" class="code-pill" fill="#15803d" font-weight="700" text-anchor="middle">201 JSON</text>
+
+  <!-- Step 4: Tests and Post-response Script -->
+  <g transform="translate(320, 110)" filter="url(#flow-card-shadow)">
+    <rect x="0" y="0" width="245" height="175" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+    <circle cx="20" cy="20" r="10" fill="#16a34a"/>
+    <text x="20" y="24" class="step-num" text-anchor="middle">4</text>
+    <text x="38" y="24" class="node-title" fill="#15803d">Tests / Post-Response</text>
+    <text x="12" y="46" class="node-desc">• Ejecuta aserciones de status y tiempo</text>
+    <text x="12" y="62" class="node-desc">• Extrae valores clave del JSON</text>
+    <text x="12" y="78" class="node-desc">• Actualiza variables de entorno</text>
+    <!-- Code Box -->
+    <rect x="10" y="88" width="225" height="75" rx="5" fill="#0f172a"/>
+    <text x="18" y="106" class="code-pill" fill="#4ade80">pm.test("Status 201", () => &#123;</text>
+    <text x="26" y="122" class="code-pill" fill="#38bdf8">  pm.response.to.have.status(201);</text>
+    <text x="18" y="138" class="code-pill" fill="#4ade80">&#125;);</text>
+    <text x="18" y="154" class="code-pill" fill="#f59e0b">pm.environment.set("jwt", res.token);</text>
+  </g>
+
+  <!-- Step 5: Variable Persistence & Next Request -->
+  <g transform="translate(320, 310)" filter="url(#flow-card-shadow)">
+    <rect x="0" y="0" width="245" height="125" rx="8" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5"/>
+    <circle cx="20" cy="20" r="10" fill="#7c3aed"/>
+    <text x="20" y="24" class="step-num" text-anchor="middle">5</text>
+    <text x="38" y="24" class="node-title" fill="#6b21a8">Reutilización en Cascada</text>
+    <text x="12" y="46" class="node-desc">• La variable <tspan class="code-pill" fill="#7c3aed">&#123;&#123;jwt&#125;&#125;</tspan> queda guardada</text>
+    <text x="12" y="64" class="node-desc">• Siguientes peticiones de la colección</text>
+    <text x="12" y="80" class="node-desc">  la consumen de forma transparente:</text>
+    <rect x="10" y="90" width="225" height="24" rx="4" fill="#f3e8ff" stroke="#d8b4fe"/>
+    <text x="18" y="106" class="code-pill" fill="#6b21a8">Authorization: Bearer &#123;&#123;jwt&#125;&#125;</text>
+  </g>
+
+  <!-- Arrow 4 -> 5 (Downwards) -->
+  <path d="M 442 285 L 442 305" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr-purple)"/>
+</svg>

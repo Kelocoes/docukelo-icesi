@@ -1,0 +1,8 @@
+{
+    "label": "W8 - Postman & API Testing",
+    "position": 8,
+    "link": {
+        "type": "generated-index",
+        "description": "Tools for testing and validating HTTP endpoints, test automation, collections, and environment management with Postman."
+    }
+}

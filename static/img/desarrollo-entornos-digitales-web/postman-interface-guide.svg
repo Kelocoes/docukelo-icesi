@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="100%" height="100%">
+  <defs>
+    <filter id="pm-card-shadow" x="-2%" y="-2%" width="104%" height="105%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <linearGradient id="header-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <marker id="pm-arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <style>
+    .title-main { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 800; }
+    .subtitle-main { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 500; fill: #64748b; }
+    .ui-text { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; font-weight: 600; }
+    .ui-text-sm { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 500; }
+    .code-text { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11.5px; }
+    .badge-text { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 800; fill: #ffffff; }
+    .callout-title { font-family: system-ui, -apple-system, sans-serif; font-size: 12.5px; font-weight: 700; fill: #1e3a8a; }
+    .callout-desc { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 500; fill: #475569; }
+  </style>
+
+  <!-- Canvas Background -->
+  <rect x="10" y="10" width="940" height="520" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Top Title Bar -->
+  <text x="480" y="42" class="title-main" fill="#0f172a" text-anchor="middle">Anatomía de la Interfaz de Postman</text>
+  <text x="480" y="62" class="subtitle-main" text-anchor="middle">Componentes esenciales para construir, parametrizar y verificar peticiones HTTP</text>
+
+  <!-- Simulated Postman Window Container -->
+  <g transform="translate(30, 80)" filter="url(#pm-card-shadow)">
+    <!-- Window Outline -->
+    <rect x="0" y="0" width="620" height="425" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+
+    <!-- App Top Bar (Dark) -->
+    <rect x="0" y="0" width="620" height="34" rx="10" fill="url(#header-grad)"/>
+    <rect x="0" y="24" width="620" height="10" fill="#1e293b"/>
+    <!-- Window Dots -->
+    <circle cx="16" cy="17" r="4.5" fill="#ef4444"/>
+    <circle cx="28" cy="17" r="4.5" fill="#f59e0b"/>
+    <circle cx="40" cy="17" r="4.5" fill="#10b981"/>
+    <!-- Tab in App Header -->
+    <rect x="65" y="6" width="170" height="28" rx="6" fill="#334155"/>
+    <rect x="75" y="14" width="36" height="13" rx="3" fill="#d97706"/>
+    <text x="93" y="24" class="badge-text" font-size="9" text-anchor="middle">POST</text>
+    <text x="118" y="24" class="ui-text-sm" fill="#f1f5f9" font-size="10.5">/auth/login</text>
+
+    <!-- Environment Selector (Top Right of App) -->
+    <rect x="420" y="6" width="185" height="22" rx="4" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+    <circle cx="432" cy="17" r="3.5" fill="#10b981"/>
+    <text x="442" y="21" class="ui-text-sm" fill="#94a3b8" font-size="10">Entorno:</text>
+    <text x="485" y="21" class="ui-text-sm" fill="#38bdf8" font-size="10" font-weight="700">Dev - NestJS (Local)</text>
+
+    <!-- Request URL Bar Container -->
+    <rect x="14" y="46" width="592" height="40" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+    <!-- Method Selector Pill -->
+    <rect x="18" y="50" width="65" height="32" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+    <text x="50" y="70" class="ui-text" fill="#b45309" text-anchor="middle">POST</text>
+    <!-- URL Input Text -->
+    <text x="92" y="71" class="code-text" fill="#0284c7">{{base_url}}</text>
+    <text x="175" y="71" class="code-text" fill="#0f172a">/api/v1/auth/login</text>
+    <!-- Send Button -->
+    <rect x="522" y="50" width="80" height="32" rx="4" fill="#2563eb"/>
+    <text x="562" y="70" class="ui-text" fill="#ffffff" text-anchor="middle">Send</text>
+
+    <!-- Request Tabs Bar -->
+    <line x1="14" y1="118" x2="606" y2="118" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="24" y="112" class="ui-text-sm" fill="#64748b">Params</text>
+    <text x="82" y="112" class="ui-text-sm" fill="#64748b">Authorization</text>
+    <text x="170" y="112" class="ui-text-sm" fill="#64748b">Headers (4)</text>
+    <!-- Active Body Tab -->
+    <text x="252" y="112" class="ui-text-sm" fill="#2563eb" font-weight="700">Body (raw/json)</text>
+    <circle cx="340" cy="109" r="2.5" fill="#2563eb"/>
+    <line x1="248" y1="117" x2="345" y2="117" stroke="#2563eb" stroke-width="2"/>
+    <text x="365" y="112" class="ui-text-sm" fill="#64748b">Scripts</text>
+    <text x="420" y="112" class="ui-text-sm" fill="#64748b">Tests (2)</text>
+
+    <!-- Request Body Area -->
+    <rect x="14" y="126" width="592" height="88" rx="5" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="24" y="146" class="code-text" fill="#64748b">1</text>
+    <text x="44" y="146" class="code-text" fill="#0f172a">&#123;</text>
+    <text x="24" y="164" class="code-text" fill="#64748b">2</text>
+    <text x="54" y="164" class="code-text" fill="#2563eb">"email"</text>
+    <text x="104" y="164" class="code-text" fill="#0f172a">: </text>
+    <text x="114" y="164" class="code-text" fill="#16a34a">"estudiante@icesi.edu.co"</text>
+    <text x="290" y="164" class="code-text" fill="#0f172a">,</text>
+    <text x="24" y="182" class="code-text" fill="#64748b">3</text>
+    <text x="54" y="182" class="code-text" fill="#2563eb">"password"</text>
+    <text x="130" y="182" class="code-text" fill="#0f172a">: </text>
+    <text x="140" y="182" class="code-text" fill="#16a34a">"SuperSecret123!"</text>
+    <text x="24" y="200" class="code-text" fill="#64748b">4</text>
+    <text x="44" y="200" class="code-text" fill="#0f172a">&#125;</text>
+
+    <!-- Response Divider Bar -->
+    <rect x="0" y="222" width="620" height="32" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="16" y="243" class="ui-text" fill="#1e293b">Response</text>
+    <!-- Response Status Pill -->
+    <rect x="85" y="228" width="85" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+    <text x="127" y="242" class="ui-text-sm" fill="#15803d" font-weight="700" text-anchor="middle">201 Created</text>
+    <!-- Metrics -->
+    <text x="185" y="243" class="ui-text-sm" fill="#64748b">Time: <tspan fill="#0f172a" font-weight="700">38 ms</tspan></text>
+    <text x="260" y="243" class="ui-text-sm" fill="#64748b">Size: <tspan fill="#0f172a" font-weight="700">624 B</tspan></text>
+    <!-- Test Results tab badge -->
+    <rect x="495" y="228" width="110" height="20" rx="3" fill="#eff6ff" stroke="#3b82f6" stroke-width="1"/>
+    <text x="550" y="242" class="ui-text-sm" fill="#1d4ed8" font-weight="700" text-anchor="middle">Test Results (2/2)</text>
+
+    <!-- Response Body Area -->
+    <rect x="14" y="262" width="592" height="150" rx="5" fill="#0f172a"/>
+    <text x="26" y="284" class="code-text" fill="#94a3b8">&#123;</text>
+    <text x="44" y="304" class="code-text" fill="#38bdf8">"accessToken"</text>
+    <text x="135" y="304" class="code-text" fill="#cbd5e1">: </text>
+    <text x="148" y="304" class="code-text" fill="#4ade80">"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</text>
+    <text x="44" y="324" class="code-text" fill="#38bdf8">"user"</text>
+    <text x="88" y="324" class="code-text" fill="#cbd5e1">: &#123;</text>
+    <text x="62" y="344" class="code-text" fill="#38bdf8">"id"</text>
+    <text x="85" y="344" class="code-text" fill="#cbd5e1">: </text>
+    <text x="96" y="344" class="code-text" fill="#f59e0b">42</text>
+    <text x="110" y="344" class="code-text" fill="#cbd5e1">,</text>
+    <text x="62" y="364" class="code-text" fill="#38bdf8">"email"</text>
+    <text x="115" y="364" class="code-text" fill="#cbd5e1">: </text>
+    <text x="128" y="364" class="code-text" fill="#4ade80">"estudiante@icesi.edu.co"</text>
+    <text x="44" y="384" class="code-text" fill="#cbd5e1">&#125;</text>
+    <text x="26" y="402" class="code-text" fill="#94a3b8">&#125;</text>
+  </g>
+
+  <!-- Right Side Callout Explanations -->
+  <!-- Callout 1: Entorno -->
+  <g transform="translate(668, 85)">
+    <rect x="0" y="0" width="260" height="92" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" filter="url(#pm-card-shadow)"/>
+    <circle cx="18" cy="18" r="10" fill="#2563eb"/>
+    <text x="18" y="22" class="badge-text" text-anchor="middle">1</text>
+    <text x="36" y="22" class="callout-title">Gestión de Entornos</text>
+    <text x="12" y="44" class="callout-desc">Permite alternar variables como</text>
+    <text x="12" y="60" class="code-text" fill="#0284c7">{{base_url}}</text>
+    <text x="85" y="60" class="callout-desc">sin cambiar URLs a</text>
+    <text x="12" y="76" class="callout-desc">mano entre Local, Staging y Prod.</text>
+    <!-- Pointer Line -->
+    <path d="M 0 20 L -25 20 L -38 12" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="3,3"/>
+  </g>
+
+  <!-- Callout 2: Request Builder -->
+  <g transform="translate(668, 190)">
+    <rect x="0" y="0" width="260" height="100" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" filter="url(#pm-card-shadow)"/>
+    <circle cx="18" cy="18" r="10" fill="#2563eb"/>
+    <text x="18" y="22" class="badge-text" text-anchor="middle">2</text>
+    <text x="36" y="22" class="callout-title">Constructor de Request</text>
+    <text x="12" y="44" class="callout-desc">Define el verbo HTTP (GET, POST),</text>
+    <text x="12" y="60" class="callout-desc">el endpoint con tokens dinámicos,</text>
+    <text x="12" y="76" class="callout-desc">y el Body en formato JSON (raw).</text>
+    <!-- Pointer Line -->
+    <path d="M 0 35 L -25 35 L -45 -40" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="3,3"/>
+  </g>
+
+  <!-- Callout 3: Scripts & Aserciones -->
+  <g transform="translate(668, 302)">
+    <rect x="0" y="0" width="260" height="98" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" filter="url(#pm-card-shadow)"/>
+    <circle cx="18" cy="18" r="10" fill="#2563eb"/>
+    <text x="18" y="22" class="badge-text" text-anchor="middle">3</text>
+    <text x="36" y="22" class="callout-title">Scripts de Pre y Tests</text>
+    <text x="12" y="44" class="callout-desc">Ejecuta lógica en JavaScript antes del</text>
+    <text x="12" y="60" class="callout-desc">envío o aserciones automáticas</text>
+    <text x="12" y="76" class="code-text" fill="#15803d">pm.test()</text>
+    <text x="75" y="76" class="callout-desc">sobre la respuesta recibida.</text>
+    <!-- Pointer Line -->
+    <path d="M 0 30 L -25 30 L -205 -95" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="3,3"/>
+  </g>
+
+  <!-- Callout 4: Inspector de Respuestas -->
+  <g transform="translate(668, 412)">
+    <rect x="0" y="0" width="260" height="92" rx="8" fill="#ffffff" stroke="#86efac" stroke-width="1.5" filter="url(#pm-card-shadow)"/>
+    <circle cx="18" cy="18" r="10" fill="#16a34a"/>
+    <text x="18" y="22" class="badge-text" text-anchor="middle">4</text>
+    <text x="36" y="22" class="callout-title" fill="#14532d">Panel de Respuesta</text>
+    <text x="12" y="44" class="callout-desc">Muestra Status Code (201), tiempo</text>
+    <text x="12" y="60" class="callout-desc">de latencia, peso y el payload JSON</text>
+    <text x="12" y="76" class="callout-desc">devuelto por NestJS para inspección.</text>
+    <!-- Pointer Line -->
+    <path d="M 0 30 L -25 30 L -45 -40" fill="none" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="3,3"/>
+  </g>
+</svg>

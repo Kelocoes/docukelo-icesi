@@ -1,24 +1,28 @@
 .heroBanner {
-  background: linear-gradient(135deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary) 50%, var(--ifm-color-primary-light) 100%);
-  padding: 6rem 0;
+  background-color: var(--icesi-blue, #5454e9);
+  padding: 5.5rem 0;
   text-align: center;
   position: relative;
   overflow: hidden;
-  color: white;
-  border-bottom: 4px solid var(--ifm-color-primary);
+  color: #ffffff;
 }
 
 [data-theme='dark'] .heroBanner {
-  background: linear-gradient(135deg, #020617 0%, var(--ifm-color-primary-darkest) 60%, var(--ifm-color-primary) 100%);
-  border-bottom: 4px solid var(--ifm-color-primary);
+  background-color: #0b0f19;
+  border-bottom: 1px solid #1e293b;
 }
 
 .heroTitle {
   font-size: 3.5rem;
   font-weight: 800;
   letter-spacing: -0.025em;
-  margin-bottom: 1.5rem;
-  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 1.25rem;
+  color: #ffffff !important;
+  text-shadow: none;
+}
+
+[data-theme='dark'] .heroTitle {
+  color: #f8fafc !important;
 }
 
 .heroSubtitle {
@@ -26,8 +30,13 @@
   max-width: 800px;
   margin: 0 auto 2.5rem auto;
   line-height: 1.6;
+  color: #ffffff !important;
   opacity: 0.95;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-shadow: none;
+}
+
+[data-theme='dark'] .heroSubtitle {
+  color: #94a3b8 !important;
 }
 
 .buttons {
@@ -38,46 +47,62 @@
 }
 
 .primaryButton {
-  background-color: var(--ifm-color-primary) !important;
-  color: white !important;
-  border: none !important;
+  background-color: #ffffff !important;
+  color: var(--icesi-blue, #5454e9) !important;
+  border: 2px solid #ffffff !important;
   font-weight: 700 !important;
   padding: 0.75rem 2rem !important;
   border-radius: 50px !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
-  transition: all 0.25s ease !important;
-}
-
-[data-theme='dark'] .primaryButton {
-  color: #0f172a !important;
-  background-color: white !important;
-  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12) !important;
+  transition: all 0.2s ease !important;
 }
 
 .primaryButton:hover {
-  background-color: var(--ifm-color-primary-dark) !important;
+  background-color: #f8fafc !important;
+  color: var(--icesi-blue-dark, #3f3fe6) !important;
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18) !important;
+  text-decoration: none !important;
+}
+
+[data-theme='dark'] .primaryButton {
+  color: #0b0f19 !important;
+  background-color: var(--ifm-color-primary, #7b7bf5) !important;
+  border-color: var(--ifm-color-primary, #7b7bf5) !important;
+  box-shadow: 0 4px 14px rgba(123, 123, 245, 0.3) !important;
 }
 
 [data-theme='dark'] .primaryButton:hover {
-  background-color: #e2e8f0 !important;
+  background-color: #8f8ff7 !important;
+  border-color: #8f8ff7 !important;
+  color: #0b0f19 !important;
 }
 
 .secondaryButton {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: white !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
+  border: 2px solid rgba(255, 255, 255, 0.85) !important;
   font-weight: 600 !important;
   padding: 0.75rem 2rem !important;
   border-radius: 50px !important;
-  backdrop-filter: blur(10px);
-  transition: all 0.25s ease !important;
+  transition: all 0.2s ease !important;
 }
 
 .secondaryButton:hover {
-  background-color: rgba(255, 255, 255, 0.2) !important;
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-color: #ffffff !important;
   transform: translateY(-2px);
   text-decoration: none !important;
+}
+
+[data-theme='dark'] .secondaryButton {
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+[data-theme='dark'] .secondaryButton:hover {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border-color: var(--ifm-color-primary, #7b7bf5) !important;
 }
 
 .mainSection {
@@ -100,10 +125,10 @@
 .sectionTitle::after {
   content: '';
   display: block;
-  width: 60px;
+  width: 72px;
   height: 4px;
   background: var(--ifm-color-primary);
-  margin: 12px auto 0 auto;
+  margin: 14px auto 0 auto;
   border-radius: 2px;
 }
 
@@ -128,14 +153,14 @@
 }
 
 [data-theme='dark'] .courseCard {
-  background: #1e293b;
-  border-color: #334155;
+  background: #111827;
+  border-color: #1f2937;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
 }
 
 .courseCard:hover {
   transform: translateY(-6px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 20px 25px -5px var(--icesi-blue-glow, rgba(84, 84, 233, 0.25));
   border-color: var(--ifm-color-primary);
 }
 
