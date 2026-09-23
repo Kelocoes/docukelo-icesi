@@ -1,0 +1,8 @@
+.cardTitleIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.65rem;
+  line-height: 1;
+  vertical-align: middle;
+}

@@ -1,34 +1,384 @@
+/**
+ * Universidad Icesi - DocuKelo Theme Styling
+ * Actualizado según el Manual de Identidad de Marca (Febrero 2026)
+ */
+
+/* ==========================================================================
+   1. VARIABLES DE MARCA ICESI (DESIGN TOKENS)
+   ========================================================================== */
+
 :root {
-    --ifm-color-primary: #003B6D;
-    --ifm-color-primary-dark: #003562;
-    --ifm-color-primary-darker: #00325c;
-    --ifm-color-primary-darkest: #00294c;
-    --ifm-color-primary-light: #004178;
-    --ifm-color-primary-lighter: #00447e;
-    --ifm-color-primary-lightest: #004d8e;
-    --ifm-code-font-size: 95%;
-    --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  /* Paleta Principal Oficial */
+  --icesi-blue: #5454e9;          /* Pantone 2131 C - Azul Icesi */
+  --icesi-blue-dark: #3f3fe6;
+  --icesi-blue-darker: #3232e4;
+  --icesi-blue-darkest: #1c1ce0;
+  --icesi-blue-light: #6e6ef2;
+  --icesi-blue-lighter: #7c7cf4;
+  --icesi-blue-lightest: #a4a4f8;
+  --icesi-blue-glow: rgba(84, 84, 233, 0.15);
+
+  /* Paleta Complementaria Oficial */
+  --icesi-yellow: #e4eb60;        /* Pantone 381 C - Amarillo Icesi */
+  --icesi-green: #4cb979;         /* Pantone 2251 C - Verde Icesi */
+  --icesi-green-dark: #3da166;
+  --icesi-purple: #865cf0;        /* Pantone 2665 C - Morado Icesi */
+  --icesi-purple-light: #9d7cf4;
+  --icesi-orange: #e9683b;        /* Pantone Orange 21 C - Naranja Icesi */
+  --icesi-orange-dark: #cf5429;
+  --icesi-gray-1: #88898c;        /* Pantone 423 C - Gris 1 */
+  --icesi-gray-2: #cecfd4;        /* Pantone 420 C - Gris 2 */
+  --icesi-black: #000000;         /* Pantone Process Black C */
+  --icesi-white: #ffffff;
+
+  /* ========================================================================
+     MODO CLARO (LIGHT THEME)
+     ======================================================================== */
+  --ifm-color-primary: var(--icesi-blue);
+  --ifm-color-primary-dark: var(--icesi-blue-dark);
+  --ifm-color-primary-darker: var(--icesi-blue-darker);
+  --ifm-color-primary-darkest: var(--icesi-blue-darkest);
+  --ifm-color-primary-light: var(--icesi-blue-light);
+  --ifm-color-primary-lighter: var(--icesi-blue-lighter);
+  --ifm-color-primary-lightest: var(--icesi-blue-lightest);
+
+  /* Tipografía Oficial: Plus Jakarta Sans */
+  --ifm-font-family-base: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ifm-font-family-monospace: 'JetBrains Mono', 'Fira Code', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --ifm-heading-font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --ifm-font-size-base: 16px;
+  --ifm-line-height-base: 1.7;
+  --ifm-heading-line-height: 1.3;
+  --ifm-heading-font-weight: 700;
+  --ifm-heading-letter-spacing: -0.015em;
+
+  /* Jerarquía de Encabezados */
+  --ifm-h1-font-size: 2.25rem;
+  --ifm-h2-font-size: 1.75rem;
+  --ifm-h3-font-size: 1.35rem;
+  --ifm-h4-font-size: 1.15rem;
+
+  /* Espaciado y Radios */
+  --ifm-spacing-horizontal: 1.5rem;
+  --ifm-spacing-vertical: 1.5rem;
+  --ifm-global-radius: 8px;
+  --ifm-code-border-radius: 6px;
+  --ifm-card-border-radius: 12px;
+
+  /* Superficies y Fondos */
+  --ifm-background-color: #f8fafc;
+  --ifm-background-surface-color: #ffffff;
+  --ifm-color-content: #1e293b;
+  --ifm-color-content-secondary: #64748b;
+  --ifm-border-color: #e2e8f0;
+  --ifm-hover-overlay: rgba(84, 84, 233, 0.05);
+
+  /* Navbar y Header */
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.95);
+  --ifm-navbar-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --ifm-navbar-height: 3.75rem;
+  --ifm-navbar-link-hover-color: var(--icesi-blue);
+
+  /* Admoniciones / Callouts */
+  --ifm-color-info: var(--icesi-blue);
+  --ifm-color-success: var(--icesi-green-dark);
+  --ifm-color-warning: var(--icesi-orange);
+  --ifm-color-danger: #e11d48;
+
+  /* Código */
+  --ifm-code-font-size: 90%;
+  --ifm-code-padding-horizontal: 0.35rem;
+  --ifm-code-padding-vertical: 0.15rem;
+  --ifm-code-background: rgba(84, 84, 233, 0.07);
+  --docusaurus-highlighted-code-line-bg: rgba(84, 84, 233, 0.08);
+
+  /* Footer */
+  --ifm-footer-background-color: #0b0f19;
+  --ifm-footer-color: #94a3b8;
+  --ifm-footer-link-color: #cbd5e1;
+  --ifm-footer-link-hover-color: var(--icesi-blue-light);
 }
+
+/* ==========================================================================
+   MODO OSCURO (DARK THEME)
+   ========================================================================== */
 
 [data-theme='dark'] {
-    --ifm-color-primary: #00A3E0;
-    --ifm-color-primary-dark: #0093ca;
-    --ifm-color-primary-darker: #008bb2;
-    --ifm-color-primary-darkest: #007393;
-    --ifm-color-primary-light: #16b0eb;
-    --ifm-color-primary-lighter: #2ab6ed;
-    --ifm-color-primary-lightest: #66ccf3;
-    --docusaurus-highlighted-code-line-bg: rgba(255, 255, 255, 0.1);
+  /* Azul Icesi adaptado para alto contraste en pantallas oscuras (WCAG AA/AAA) */
+  --ifm-color-primary: #7b7bf5;
+  --ifm-color-primary-dark: #6767f3;
+  --ifm-color-primary-darker: #5a5af2;
+  --ifm-color-primary-darkest: #3939ed;
+  --ifm-color-primary-light: #8f8ff7;
+  --ifm-color-primary-lighter: #9d9df8;
+  --ifm-color-primary-lightest: #c5c5fc;
+  --icesi-blue-glow: rgba(123, 123, 245, 0.25);
+
+  /* Superficies y Fondos en Dark */
+  --ifm-background-color: #0b0f19;
+  --ifm-background-surface-color: #111827;
+  --ifm-color-content: #f1f5f9;
+  --ifm-color-content-secondary: #94a3b8;
+  --ifm-border-color: #1e293b;
+  --ifm-hover-overlay: rgba(123, 123, 245, 0.08);
+
+  /* Navbar y Header en Dark */
+  --ifm-navbar-background-color: rgba(11, 15, 25, 0.94);
+  --ifm-navbar-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+
+  /* Admoniciones en Dark */
+  --ifm-color-info: #7b7bf5;
+  --ifm-color-success: #5cd28e;
+  --ifm-color-warning: #f58257;
+  --ifm-color-danger: #fb7185;
+
+  /* Código en Dark */
+  --ifm-code-background: rgba(123, 123, 245, 0.12);
+  --docusaurus-highlighted-code-line-bg: rgba(123, 123, 245, 0.15);
+
+  /* Footer en Dark */
+  --ifm-footer-background-color: #050811;
 }
 
+/* ==========================================================================
+   2. REGLAS GLOBALES Y TIPOGRAFÍA
+   ========================================================================== */
+
+body {
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Encabezados con estilo institucional Icesi */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--ifm-heading-font-family);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ifm-color-content);
+}
+
+h1 {
+  font-weight: 800;
+  margin-bottom: 1.25rem;
+}
+
+h2 {
+  font-weight: 700;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--ifm-border-color);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Hero Section */
 .hero__title {
-    font-size: 2.3rem;
-    font-weight: 700;
+  font-size: 2.75rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
 }
 
 .hero__subtitle {
-    font-size: 1.5rem;
-    font-weight: 500;
+  font-size: 1.4rem;
+  font-weight: 500;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   3. BARRA DE NAVEGACIÓN (NAVBAR)
+   ========================================================================== */
+
+.navbar {
+  border-bottom: 1px solid var(--ifm-border-color);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.navbar__brand {
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+}
+
+.navbar__link {
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.15s ease;
+}
+
+.navbar__link:hover,
+.navbar__link--active {
+  color: var(--ifm-color-primary) !important;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   4. BARRA LATERAL (DOCS SIDEBAR)
+   ========================================================================== */
+
+.menu__link {
+  font-size: 0.92rem;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.menu__link:hover {
+  background-color: var(--ifm-hover-overlay);
+  color: var(--ifm-color-primary);
+}
+
+.menu__link--active:not(.menu__link--sublist) {
+  background-color: var(--ifm-hover-overlay) !important;
+  color: var(--ifm-color-primary) !important;
+  font-weight: 700;
+  border-left: 3px solid var(--ifm-color-primary);
+  border-radius: 0 6px 6px 0;
+}
+
+.menu__list-item-collapsible:hover {
+  background-color: var(--ifm-hover-overlay);
+  border-radius: 6px;
+}
+
+/* ==========================================================================
+   5. TARJETAS Y CONTENEDORES (CARDS)
+   ========================================================================== */
+
+.card {
+  background-color: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-border-color);
+  border-radius: var(--ifm-card-border-radius);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 10px 24px -6px var(--icesi-blue-glow);
+}
+
+/* ==========================================================================
+   6. ADMONICIONES Y ALERTAS (CALLOUTS)
+   ========================================================================== */
+
+.alert {
+  border-radius: 10px;
+  border-width: 0 0 0 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  padding: 1rem 1.25rem;
+}
+
+.alert--info {
+  --ifm-alert-background-color: rgba(84, 84, 233, 0.08);
+  --ifm-alert-border-color: var(--icesi-blue);
+  --ifm-alert-color: var(--ifm-color-content);
+}
+
+.alert--success {
+  --ifm-alert-background-color: rgba(76, 185, 121, 0.1);
+  --ifm-alert-border-color: var(--icesi-green);
+  --ifm-alert-color: var(--ifm-color-content);
+}
+
+.alert--warning {
+  --ifm-alert-background-color: rgba(233, 104, 59, 0.1);
+  --ifm-alert-border-color: var(--icesi-orange);
+  --ifm-alert-color: var(--ifm-color-content);
+}
+
+.alert--danger {
+  --ifm-alert-background-color: rgba(225, 29, 72, 0.08);
+  --ifm-alert-border-color: #e11d48;
+  --ifm-alert-color: var(--ifm-color-content);
+}
+
+[data-theme='dark'] .alert--info {
+  --ifm-alert-background-color: rgba(123, 123, 245, 0.12);
+  --ifm-alert-border-color: #7b7bf5;
+}
+
+[data-theme='dark'] .alert--success {
+  --ifm-alert-background-color: rgba(76, 185, 121, 0.14);
+  --ifm-alert-border-color: #5cd28e;
+}
+
+[data-theme='dark'] .alert--warning {
+  --ifm-alert-background-color: rgba(233, 104, 59, 0.14);
+  --ifm-alert-border-color: #f58257;
+}
+
+/* Código inline (dentro de párrafos y listas) */
+:not(pre) > code {
+  font-family: var(--ifm-font-family-monospace);
+  border-radius: 4px;
+  font-size: 85%;
+  padding: 0.2rem 0.45rem;
+  background-color: var(--ifm-code-background);
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+[data-theme='dark'] :not(pre) > code {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Contenedor de código en bloque */
+div[class*='codeBlockContainer_'] {
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--ifm-border-color);
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+[data-theme='dark'] div[class*='codeBlockContainer_'] {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Bloques de código (pre / prism-code) con padding amplio X e Y */
+pre,
+.prism-code,
+div[class*='codeBlockLines_'],
+div[class*='codeBlockContent_'] pre {
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.92rem !important;
+  line-height: 1.65 !important;
+  padding: 1.15rem 1.35rem !important;
+}
+
+pre code {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0 !important;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+/* Título de la pestaña de código */
+div[class*='codeBlockTitle_'] {
+  font-family: var(--ifm-font-family-monospace);
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  background-color: rgba(84, 84, 233, 0.06);
+  border-bottom: 1px solid var(--ifm-border-color);
+  padding: 0.55rem 1rem;
+}
+
+[data-theme='dark'] div[class*='codeBlockTitle_'] {
+  background-color: rgba(255, 255, 255, 0.04);
 }
 
 /* Estilos de resaltado Prism para archivos .properties / ini */
@@ -36,28 +386,162 @@
 .token.prolog,
 .token.doctype,
 .token.cdata {
-    color: #6a9955 !important; /* Verde tenue itálico para comentarios */
-    font-style: italic;
+  color: #6a9955 !important;
+  font-style: italic;
 }
 
 .token.attr-name,
 .token.property,
 .token.key {
-    color: #9cdcfe !important; /* Azul claro para claves de propiedad */
+  color: #9cdcfe !important;
 }
 
 .token.attr-value,
 .token.value,
 .token.string {
-    color: #ce9178 !important; /* Salmón cálido para valores */
+  color: #ce9178 !important;
 }
 
 .token.number,
 .token.boolean {
-    color: #b5cea8 !important; /* Verde claro para números y booleanos */
+  color: #b5cea8 !important;
 }
 
-/* Ocultar elementos de la barra lateral y tarjetas marcadas con la clase hidden */
+/* ==========================================================================
+   8. TABLAS DE DOCUMENTACIÓN
+   ========================================================================== */
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid var(--ifm-border-color);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+th {
+  background-color: rgba(84, 84, 233, 0.06);
+  color: var(--ifm-color-content);
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--ifm-border-color);
+  text-align: left;
+}
+
+[data-theme='dark'] th {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--ifm-border-color);
+  font-size: 0.92rem;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:nth-child(even) {
+  background-color: rgba(84, 84, 233, 0.02);
+}
+
+[data-theme='dark'] tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* ==========================================================================
+   9. ELEMENTOS DECORATIVOS INSTITUCIONALES (CENEFA ICESI)
+   ========================================================================== */
+
+/* Cenefa decorativa oficial en color sólido */
+.icesi-cenefa {
+  height: 4px;
+  width: 100%;
+  background-color: var(--icesi-blue);
+  border-radius: 2px;
+  margin: 1.5rem 0;
+}
+
+.icesi-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  background-color: var(--icesi-blue-soft);
+  color: var(--ifm-color-primary);
+  border: 1px solid rgba(84, 84, 233, 0.2);
+}
+
+/* ==========================================================================
+   10. ICONOS DE BARRA LATERAL Y TARJETAS (CONTRASTE ICESI)
+   ========================================================================== */
+
+.icesiSidebarItemWrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.icesiSidebarItemText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.icesiSidebarIcon {
+  color: var(--icesi-blue, #5454e9);
+  flex-shrink: 0;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.icesiDocCardIcon {
+  color: var(--icesi-blue, #5454e9);
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+/* En Modo Oscuro: Contraste Puro en Blanco */
+[data-theme='dark'] .icesiSidebarIcon,
+[data-theme='dark'] .icesiDocCardIcon {
+  color: #ffffff !important;
+}
+
+/* Reducción de espacio superior en páginas de categoría generadas */
+article header h1 {
+  margin-bottom: 0.75rem;
+}
+
+.theme-doc-markdown header {
+  margin-bottom: 1.25rem;
+}
+
+/* Reducción del padding en tarjetas y cajas de categoría */
+.card,
+article.card,
+.cardContainer,
+[class*='cardContainer_'] {
+  padding: 1rem 1.25rem !important;
+  min-height: auto !important;
+}
+
+/* Espaciado compacto entre tarjetas en listas de categorías */
+.col.col--6:has([class*='cardContainer_']),
+.col.col--6:has(.card) {
+  margin-bottom: 1rem !important;
+}
+
+/* Utilidad para elementos ocultos */
 .hidden {
-    display: none !important;
+  display: none !important;
 }

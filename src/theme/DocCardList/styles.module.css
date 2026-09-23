@@ -1,0 +1,7 @@
+.docCardListItem {
+  margin-bottom: 1rem;
+}
+
+.docCardListItem > * {
+  height: 100%;
+}

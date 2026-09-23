@@ -53,6 +53,10 @@ const config = {
 
     stylesheets: [
         {
+            href: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap',
+            type: 'text/css',
+        },
+        {
             href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
             type: 'text/css',
             integrity:
@@ -106,8 +110,9 @@ const config = {
             navbar: {
                 title: 'Documentación - Kelo',
                 logo: {
-                    alt: 'My Site Logo',
+                    alt: 'Universidad Icesi',
                     src: '/img/logo.svg',
+                    srcDark: '/img/logo-dark.svg',
                 },
                 items: [
                     {
@@ -173,4 +178,5 @@ const config = {
         }),
 };
 
+// Docusaurus configuration reloaded with Icesi 2026 brand identity
 export default config;

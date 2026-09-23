@@ -1,0 +1,61 @@
+.docSidebarWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.sidebarFooter {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--ifm-border-color);
+  background-color: var(--ifm-background-surface-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  width: 100%;
+}
+
+.poweredBy {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ifm-color-content-secondary);
+}
+
+.poweredByText {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.7rem;
+  opacity: 0.85;
+}
+
+.poweredByLogoLight {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.poweredByLogoDark {
+  width: 18px;
+  height: 18px;
+  display: none;
+}
+
+:global([data-theme='dark']) .poweredByLogoLight {
+  display: none;
+}
+
+:global([data-theme='dark']) .poweredByLogoDark {
+  display: block;
+}
+
+.poweredByBrand {
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--ifm-color-primary);
+}
