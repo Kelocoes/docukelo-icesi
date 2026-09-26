@@ -1,0 +1,8 @@
+{
+    "label": "W8 - Spring Boot MVC and Thymeleaf",
+    "position": 8,
+    "link": {
+        "type": "generated-index",
+        "description": "Web development with Model-View-Controller (MVC) architecture, Thymeleaf template engine, and Server Side Rendering (SSR) in Spring Boot."
+    }
+}

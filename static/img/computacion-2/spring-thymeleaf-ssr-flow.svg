@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 405" width="100%" height="100%">
+  <defs>
+    <!-- Sombra suave para tarjetas -->
+    <filter id="card-shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06" />
+    </filter>
+
+    <!-- Marcadores de flechas minimalistas -->
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#2563eb" />
+    </marker>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#16a34a" />
+    </marker>
+    <marker id="arr-purple" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#9333ea" />
+    </marker>
+    <marker id="arr-slate" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#64748b" />
+    </marker>
+    <marker id="arr-amber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#d97706" />
+    </marker>
+  </defs>
+
+  <style>
+    .title-main { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 15px; fill: #0f172a; }
+    .title-sub { font-family: system-ui, -apple-system, sans-serif; font-weight: 500; font-size: 12px; fill: #64748b; }
+    .card-title { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 13px; }
+    .card-sub { font-family: system-ui, -apple-system, sans-serif; font-weight: 500; font-size: 11px; fill: #64748b; }
+    .label-tag { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .flow-text { font-family: system-ui, -apple-system, sans-serif; font-weight: 600; font-size: 11px; }
+    .code-text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; }
+    .step-badge { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 9px; fill: #ffffff; text-anchor: middle; dominant-baseline: middle; }
+  </style>
+
+  <!-- Fondo Principal -->
+  <rect x="0" y="0" width="980" height="405" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5" />
+
+  <!-- ENCABEZADO -->
+  <g transform="translate(35, 20)">
+    <text x="0" y="15" class="title-main">Arquitectura de Generación de Vistas en Servidor (SSR)</text>
+    <text x="0" y="32" class="title-sub">Spring Boot orquesta el modelo y Thymeleaf transforma la plantilla en HTML estándar antes de responder al cliente</text>
+    <rect x="760" y="2" width="180" height="24" rx="12" fill="#dbeafe" stroke="#bfdbfe" />
+    <text x="850" y="17" class="label-tag" fill="#1e40af" text-anchor="middle">SERVER SIDE RENDERING</text>
+  </g>
+
+  <!-- ==================== 1. CLIENTE: NAVEGADOR ==================== -->
+  <g transform="translate(35, 75)">
+    <rect x="0" y="0" width="150" height="235" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#card-shadow)" />
+    
+    <!-- Barra superior simulada -->
+    <rect x="0" y="0" width="150" height="26" rx="10" fill="#f1f5f9" />
+    <rect x="0" y="14" width="150" height="12" fill="#f1f5f9" />
+    <circle cx="14" cy="13" r="3" fill="#ef4444" />
+    <circle cx="23" cy="13" r="3" fill="#f59e0b" />
+    <circle cx="32" cy="13" r="3" fill="#10b981" />
+    <text x="44" y="16" class="card-title" fill="#334155" style="font-size: 11px;">Navegador Web</text>
+
+    <!-- Contenido conceptual -->
+    <text x="75" y="48" class="card-title" fill="#0f172a" text-anchor="middle">Cliente Web</text>
+
+    <!-- Pill salida solicitud (GET alineada a y = 147) -->
+    <rect x="15" y="60" width="120" height="26" rx="6" fill="#eff6ff" stroke="#bfdbfe" />
+    <text x="75" y="77" class="code-text" fill="#1d4ed8" text-anchor="middle" style="font-weight: 600;">GET /mvc/users</text>
+
+    <!-- Pill llegada respuesta (HTML puro alineada a y = 234) -->
+    <rect x="15" y="132" width="120" height="50" rx="6" fill="#f0fdf4" stroke="#86efac" />
+    <text x="75" y="152" class="label-tag" fill="#15803d" text-anchor="middle">Recibe HTML Puro</text>
+    <text x="75" y="168" class="card-sub" fill="#166534" text-anchor="middle">Sin th:* ni código Java</text>
+  </g>
+
+  <!-- ==================== CONTENEDOR SERVIDOR (SPRING BOOT) ==================== -->
+  <rect x="235" y="75" width="710" height="235" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-dasharray="5,4" />
+  <text x="250" y="94" class="label-tag" fill="#64748b">Servidor (Spring Boot JVM)</text>
+
+  <!-- ==================== 2. CONTROLADOR MVC ==================== -->
+  <g transform="translate(260, 110)">
+    <rect x="0" y="0" width="155" height="74" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5" filter="url(#card-shadow)" />
+    <text x="14" y="24" class="card-title" fill="#1e3a8a">Controlador MVC</text>
+    <rect x="14" y="32" width="75" height="15" rx="3" fill="#dbeafe" />
+    <text x="18" y="43" class="code-text" fill="#1d4ed8">@Controller</text>
+    <text x="14" y="61" class="card-sub">Recibe la petición</text>
+  </g>
+
+  <!-- ==================== 3. CAPA DE DATOS ==================== -->
+  <g transform="translate(260, 215)">
+    <rect x="0" y="0" width="155" height="74" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="1.5" filter="url(#card-shadow)" />
+    <text x="14" y="24" class="card-title" fill="#334155">Servicio y BD</text>
+    <text x="14" y="44" class="card-sub">• Lógica de negocio</text>
+    <text x="14" y="60" class="card-sub">• Repositorio y base SQL</text>
+  </g>
+
+  <!-- ==================== 4. OBJETO MODEL ==================== -->
+  <g transform="translate(455, 110)">
+    <rect x="0" y="0" width="135" height="74" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5" filter="url(#card-shadow)" />
+    <text x="14" y="24" class="card-title" fill="#92400e">Objeto Model</text>
+    <text x="14" y="44" class="card-sub">Contenedor de datos</text>
+    <text x="14" y="60" class="code-text" fill="#b45309">addAttribute(...)</text>
+  </g>
+
+  <!-- ==================== 5. PLANTILLA HTML ==================== -->
+  <g transform="translate(630, 110)">
+    <rect x="0" y="0" width="155" height="74" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" filter="url(#card-shadow)" />
+    <text x="14" y="24" class="card-title" fill="#334155">Plantilla Base</text>
+    <text x="14" y="44" class="code-text" fill="#475569">templates/*.html</text>
+    <text x="14" y="60" class="card-sub">HTML con etiquetas th:*</text>
+  </g>
+
+  <!-- ==================== 6. MOTOR THYMELEAF ==================== -->
+  <g transform="translate(455, 215)">
+    <rect x="0" y="0" width="465" height="74" rx="10" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5" filter="url(#card-shadow)" />
+    <text x="16" y="24" class="card-title" fill="#6b21a8">Motor Thymeleaf (Template Engine)</text>
+    <text x="16" y="42" class="card-sub">Transformación y resolución de expresiones en el servidor</text>
+    
+    <!-- Chip de fusión -->
+    <rect x="16" y="48" width="433" height="19" rx="4" fill="#f3e8ff" stroke="#d8b4fe" />
+    <text x="232" y="62" class="flow-text" fill="#7e22ce" text-anchor="middle">Plantilla HTML (th:*)  +  Datos del Model   ➔   HTML Puro Sintetizado</text>
+  </g>
+
+  <!-- ==================== CONEXIONES Y FLUJO NUMERADO ==================== -->
+
+  <!-- 1. Petición HTTP directa desde GET pill (y = 148) al controlador -->
+  <path d="M 185 148 L 260 148" stroke="#2563eb" stroke-width="2" marker-end="url(#arr-blue)" />
+  <circle cx="222" cy="136" r="8" fill="#2563eb" />
+  <text x="222" y="136" class="step-badge">1</text>
+  <text x="222" y="163" class="label-tag" fill="#2563eb" text-anchor="middle">Petición</text>
+
+  <!-- 2. Controller a Servicio (bajada) -->
+  <path d="M 315 184 L 315 215" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr-slate)" />
+  <circle cx="302" cy="200" r="7" fill="#64748b" />
+  <text x="302" y="200" class="step-badge" style="font-size: 8px;">2</text>
+
+  <!-- 3. Retorno de datos de Servicio a Controller (subida) -->
+  <path d="M 365 215 L 365 184" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr-green)" />
+  <circle cx="378" cy="200" r="7" fill="#16a34a" />
+  <text x="378" y="200" class="step-badge" style="font-size: 8px;">3</text>
+
+  <!-- 4. Controller inyecta en Model -->
+  <path d="M 415 147 L 455 147" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arr-amber)" />
+  <circle cx="435" cy="135" r="7" fill="#f59e0b" />
+  <text x="435" y="135" class="step-badge" style="font-size: 8px;">4</text>
+
+  <!-- 5A. Model baja a Thymeleaf -->
+  <path d="M 522 184 L 522 215" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arr-amber)" />
+  <circle cx="522" cy="199" r="7" fill="#f59e0b" />
+  <text x="522" y="199" class="step-badge" style="font-size: 8px;">5</text>
+
+  <!-- 5B. Plantilla baja a Thymeleaf -->
+  <path d="M 707 184 L 707 215" stroke="#9333ea" stroke-width="1.5" marker-end="url(#arr-purple)" />
+  <circle cx="707" cy="199" r="7" fill="#9333ea" />
+  <text x="707" y="199" class="step-badge" style="font-size: 8px;">5</text>
+
+  <!-- 6. Retorno de HTML puro: sale de la base de Thymeleaf, viaja por el carril inferior y entra limpiamente a la pill de HTML puro -->
+  <path d="M 455 289 L 455 352 Q 455 362, 442 362 L 220 362 Q 208 362, 208 350 L 208 244 Q 208 234, 198 234 L 185 234" 
+        fill="none" stroke="#16a34a" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arr-green)" />
+
+  <!-- Pill protector para la etiqueta del paso 6 en el carril inferior -->
+  <g transform="translate(235, 350)">
+    <rect x="0" y="0" width="345" height="24" rx="12" fill="#ffffff" stroke="#86efac" stroke-width="1.5" filter="url(#card-shadow)" />
+    <circle cx="16" cy="12" r="8" fill="#16a34a" />
+    <text x="16" y="12" class="step-badge">6</text>
+    <text x="32" y="16" class="flow-text" fill="#15803d">Stream HTTP 200: HTML Generado en Servidor (SSR)</text>
+  </g>
+
+</svg>
