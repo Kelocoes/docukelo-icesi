@@ -1,8 +1,8 @@
 {
-    "label": "S8 - Spring Boot MVC",
+    "label": "S8 - Spring Boot MVC y Thymeleaf",
     "position": 8,
     "link": {
         "type": "generated-index",
-        "description": "Spring Boot MVC."
+        "description": "Desarrollo web con arquitectura Modelo-Vista-Controlador (MVC), motor de plantillas Thymeleaf y renderizado del lado del servidor (SSR) en Spring Boot."
     }
 }

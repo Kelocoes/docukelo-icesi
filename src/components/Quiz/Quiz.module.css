@@ -113,10 +113,31 @@ html[data-theme='dark'] .interactive:hover {
   font-weight: 700;
   margin-right: 12px;
   color: var(--ifm-color-primary, #2563eb);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1.5;
 }
 
 .optionText {
   flex-grow: 1;
+  line-height: 1.5;
+}
+
+.optionText p {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: inherit;
+  display: inline;
+}
+
+.optionText > *:first-child {
+  margin-top: 0 !important;
+}
+
+.optionText > *:last-child {
+  margin-bottom: 0 !important;
 }
 
 /* States after click */

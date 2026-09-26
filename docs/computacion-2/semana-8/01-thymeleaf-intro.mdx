@@ -1,0 +1,363 @@
+---
+sidebar_position: 1
+---
+
+# Fundamentos de Thymeleaf y Server Side Rendering (SSR)
+
+En el desarrollo de aplicaciones web empresariales, la generación de interfaces de usuario puede realizarse en el navegador del cliente mediante frameworks de JavaScript o directamente en el servidor antes de transmitir la respuesta por la red. Este último enfoque se denomina **Server Side Rendering (SSR)**. En el ecosistema de Java y Spring Boot, **Thymeleaf** es el motor de plantillas por excelencia para implementar arquitecturas Modelo-Vista-Controlador (MVC) seguras, mantenibles y de alto rendimiento.
+
+---
+
+## 1. Conceptos y Fundamentos Teóricos
+
+### ¿Cómo Genera Spring Boot los Templates?
+
+Para comprender el funcionamiento de Thymeleaf, es indispensable derribar un mito común: **el navegador del cliente nunca descarga ni visualiza el archivo de plantilla original (`.html`)**. Lo que el usuario recibe en su pantalla es el resultado de un **proceso de transformación y compilación en memoria ejecutado íntegramente en el servidor**.
+
+La siguiente ilustración detalla el ciclo completo de procesamiento en Spring Boot MVC:
+
+<div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+    <img
+        src="/img/computacion-2/spring-thymeleaf-ssr-flow.svg"
+        alt="Ciclo de transformación y Server Side Rendering en Spring Boot y Thymeleaf"
+        style={{ width: "100%", maxWidth: "960px" }}
+    />
+</div>
+
+#### Explicación Detallada de los Componentes del Flujo
+
+1. **Cliente / Navegador Web**:
+    - El usuario solicita una ruta web (por ejemplo, `GET /mvc/users`) desde la barra de direcciones o mediante un hipervínculo.
+    - El navegador espera un documento de tipo `text/html`.
+2. **Controlador Web (`@Controller`)**:
+    - La clase `UserMVCController` intercepta la petición HTTP mediante `@GetMapping("/mvc/users")`.
+    - A diferencia de un `@RestController` (que serializa datos directamente en formato JSON o XML), un `@Controller` tradicional orquesta la vista devolviendo una cadena con el nombre lógico de la plantilla (`"users/list"`).
+3. **Capa de Lógica de Negocio y Persistencia (Service, Repository y Base de Datos)**:
+    - El controlador delega la obtención de información en `UserService.findAll()`.
+    - El servicio coordina las reglas de negocio y consulta el repositorio JPA (`UserRepository`), el cual ejecuta la sentencia SQL sobre el motor de base de datos relacional (como PostgreSQL o MySQL).
+    - Los datos retornan a la memoria de la JVM en forma de entidades o DTOs (`List<User>`).
+4. **Inyección en el Objeto `Model`**:
+    - El controlador recibe un contenedor provisto por Spring llamado `org.springframework.ui.Model`.
+    - Mediante `model.addAttribute("users", userList)`, el controlador inyecta la información recuperada bajo una clave identificadora (`"users"`).
+5. **Motor de Plantillas Thymeleaf (`SpringTemplateEngine` y `TemplateResolver`)**:
+    - Spring Boot localiza el archivo físico en el classpath mediante `SpringResourceTemplateResolver` (por defecto en `src/main/resources/templates/users/list.html`).
+    - El motor analiza el árbol sintáctico (DOM) del template, detecta los atributos del dialecto estándar (`th:text`, `th:each`, `th:if`) y evalúa sus expresiones contra los datos presentes en el `Model`.
+6. **Transformación y Emisión de HTML Puro (Server Side Rendering)**:
+    - El motor reemplaza el contenido de prueba por los valores reales de las entidades de la base de datos y **remueve por completo todos los atributos de Thymeleaf (`th:*`)**.
+    - El servidor escribe el flujo de texto resultante (HTML5 válido) en el cuerpo de la respuesta HTTP (`HttpServletResponse`) con código de estado 200 OK.
+    - **Resultado en el Cliente**: El usuario final recibe únicamente etiquetas estándar (`<table>`, `<tr>`, `<td>`), garantizando que la estructura interna de la base de datos y la lógica Java permanezcan completamente aisladas del cliente.
+
+---
+
+### El Principio de Natural Templating
+
+Una de las ventajas competitivas más notables de Thymeleaf frente a tecnologías históricas como JSP (JavaServer Pages) o motores como FreeMarker y Velocity es el concepto de **Natural Templating** (plantillas naturales).
+
+<div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+    <img
+        src="/img/computacion-2/thymeleaf-natural-templating.svg"
+        alt="Principio de Natural Templating: vista de diseño estático versus vista procesada en Spring Boot"
+        style={{ width: "95%", maxWidth: "880px" }}
+    />
+</div>
+
+#### Comparativa de Modos de Visualización
+
+1. **Modo Prototipo Estático (Diseñador Web / Frontend)**:
+    - Si un diseñador abre el archivo `list.html` directamente en Google Chrome o Mozilla Firefox mediante el protocolo local (`file:///...`), el motor de renderizado del navegador ignora cualquier atributo desconocido con prefijo `th:`.
+    - En su lugar, el navegador renderiza el texto plano que se encuentre encerrado entre las etiquetas HTML (texto de prueba o fallback). Esto permite diseñar estilos CSS e interfaces visuales sin requerir levantar el servidor de Spring Boot ni tener una base de datos conectada.
+2. **Modo Dinámico en Tiempo de Ejecución (Spring Boot en Producción)**:
+    - Al ser procesado por el servidor web mediante `http://localhost:8080/...`, el motor `SpringTemplateEngine` intercepta las etiquetas y sustituye el contenido estático por el valor dinámico inyectado en el `Model`.
+
+---
+
+### Comparativa: Server Side Rendering (SSR) vs. Client Side Rendering (CSR)
+
+Para tomar decisiones de arquitectura fundamentadas, es esencial contrastar las características del renderizado en el servidor (Thymeleaf) frente al renderizado en el cliente (Single Page Applications como React o Angular):
+
+| Criterio                                    | Server Side Rendering (SSR - Thymeleaf)                                                       | Client Side Rendering (CSR - React / Vue)                                                  |
+| :------------------------------------------ | :-------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------- |
+| **Generación del HTML**                     | En el servidor (JVM) antes de transmitir la respuesta.                                        | En el navegador del cliente mediante scripts de JavaScript.                                |
+| **Tiempo de Primera Carga (FCP)**           | Inmediato. El navegador recibe la estructura visual lista para pintar en pantalla.            | Más lento. Requiere descargar el bundle de JS antes de pintar la UI.                       |
+| **Indexación en Motores de Búsqueda (SEO)** | Óptimo. Los rastreadores de Google ven el contenido textual completo de inmediato.            | Requiere pre-renderizado o configuración adicional de rastreo.                             |
+| **Carga de CPU**                            | El servidor asume el cómputo de evaluar las plantillas para cada usuario.                     | El cliente asume el cómputo de renderizado y gestión del DOM.                              |
+| **Seguridad de Datos Sensibles**            | Alta. La lógica de negocio y filtrado ocurre en el servidor; el cliente solo ve el resultado. | Moderada. Se deben proteger exhaustivamente los endpoints REST contra exposición de datos. |
+| **Interactividad Dinámica**                 | Requiere recargas de página o peticiones HTMX/AJAX adicionales.                               | Fluida y reactiva en memoria sin necesidad de recargar la página completa.                 |
+
+---
+
+### Ciclo de Petición y Respuesta en Spring MVC
+
+El siguiente diagrama de secuencia detalla las interacciones cronológicas internas entre el DispatcherServlet, el controlador y el motor de plantillas:
+
+<ZoomableMermaid value={`sequenceDiagram
+    autonumber
+    actor User as Usuario (Navegador)
+    participant DS as DispatcherServlet
+    participant Ctrl as UserMVCController
+    participant Svc as UserService
+    participant Repo as UserRepository
+    participant DB as Base de Datos SQL
+    participant Mod as Spring Model
+    participant TE as SpringTemplateEngine
+    participant VR as ThymeleafViewResolver
+
+    User->>DS: GET /mvc/users
+    DS->>Ctrl: invoke getAll(Model model)
+    Ctrl->>Svc: findAll()
+    Svc->>Repo: findAll()
+    Repo->>DB: SELECT * FROM users
+    DB-->>Repo: Registros de usuarios
+    Repo-->>Svc: List<User>
+    Svc-->>Ctrl: List<User>
+    Ctrl->>Mod: addAttribute("users", userList)
+    Ctrl-->>DS: Retorna vista lógica: "users/list"
+    DS->>VR: resolveViewName("users/list", locale)
+    VR-->>DS: View (ThymeleafView)
+    DS->>TE: process("users/list", context, writer)
+    TE->>TE: Carga template físico de classpath
+    TE->>TE: Evalúa th:* con variables del Model
+    TE->>TE: Genera stream HTML final
+    TE-->>DS: Documento HTML sintetizado
+    DS-->>User: HTTP 200 OK (Content-Type: text/html)`} />
+
+#### Componentes del Diagrama de Secuencia
+
+- **`DispatcherServlet`**: Front Controller central de Spring MVC que recibe todas las peticiones entrantes y las canaliza hacia los controladores mapeados.
+- **`ThymeleafViewResolver`**: Componente de infraestructura que traduce el nombre de vista retornado por el método (`"users/list"`) en una instancia ejecutable de `ThymeleafView`.
+- **`SpringTemplateEngine`**: Motor principal encargado de orquestar la resolución de fragmentos, dialectos y evaluación de expresiones SpEL (Spring Expression Language).
+
+---
+
+## 2. Configuración de Thymeleaf en Spring Boot
+
+Spring Boot proporciona una configuración automática inteligente (_Auto-configuration_) a través de su iniciador oficial.
+
+### Dependencia en Maven y Gradle
+
+Para habilitar Thymeleaf en tu proyecto, incluye la siguiente dependencia en el archivo de construcción:
+
+<Tabs groupId="build-tool">
+  <TabItem value="maven" label="Maven (pom.xml)" default>
+
+```xml title="pom.xml" showLineNumbers
+<dependencies>
+    <!-- Starter oficial de Spring Boot para Thymeleaf y Spring MVC -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+
+    <!-- Starter web requerido para el servidor Tomcat embebido y Spring MVC -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+</dependencies>
+```
+
+  </TabItem>
+  <TabItem value="gradle" label="Gradle (build.gradle)">
+
+```groovy title="build.gradle" showLineNumbers
+dependencies {
+    // Inclusión de Thymeleaf con auto-configuración
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+}
+```
+
+  </TabItem>
+</Tabs>
+
+:::info[Auto-configuración de Spring Boot]
+Al incluir `spring-boot-starter-thymeleaf`, Spring Boot registra automáticamente los beans `SpringResourceTemplateResolver`, `SpringTemplateEngine` y `ThymeleafViewResolver` sin requerir clases de configuración manuales adicionales en la mayoría de los casos de uso.
+:::
+
+---
+
+### Estructura de Directorios por Convención
+
+Por convención de Spring Boot, los recursos web deben organizarse dentro de la carpeta `src/main/resources`:
+
+```plaintext
+src/
+└── main/
+    ├── java/com/icesi/store/
+    │   └── controller/
+    │       └── UserMVCController.java      # Controladores anotados con @Controller
+    └── resources/
+        ├── static/                         # Recursos estáticos servidos directamente
+        │   ├── css/                        # Archivos de hojas de estilo (.css)
+        │   ├── js/                         # Scripts de cliente (.js)
+        │   └── images/                     # Imágenes, logos y recursos gráficos
+        ├── templates/                      # Plantillas de Thymeleaf procesadas por el servidor
+        │   ├── components/                 # Fragmentos reutilizables (header, footer, etc.)
+        │   │   ├── header.html
+        │   │   └── footer.html
+        │   └── users/                      # Vistas organizadas por dominio
+        │       ├── list.html
+        │       ├── add.html
+        │       └── edit.html
+        └── application.properties          # Configuración global del proyecto
+```
+
+:::caution[Diferencia Crucial entre templates y static]
+Los archivos ubicados dentro de `static/` son accesibles de forma directa y pública por el navegador mediante URL (por ejemplo, `http://localhost:8080/css/styles.css`). En cambio, los archivos en `templates/` están **estrictamente protegidos**: un usuario no puede acceder a `http://localhost:8080/templates/users/list.html` directamente; siempre deben ser despachados a través de un `@Controller`.
+:::
+
+---
+
+### Propiedades Clave en `application.properties`
+
+```properties title="src/main/resources/application.properties" showLineNumbers
+# Prefijo del classpath donde se almacenan las plantillas HTML
+spring.thymeleaf.prefix=classpath:/templates/
+
+# Sufijo asignado por defecto a los nombres de vista retornados por los controllers
+spring.thymeleaf.suffix=.html
+
+# Modo de plantilla compatible con las especificaciones HTML5 modernas
+spring.thymeleaf.mode=HTML
+
+# Codificación de caracteres estándar para evitar problemas con tildes o caracteres especiales
+spring.thymeleaf.encoding=UTF-8
+
+# Tipo de contenido MIME emitido en la cabecera Content-Type
+spring.thymeleaf.servlet.content-type=text/html
+
+# Gestión de memoria caché de plantillas:
+# En desarrollo: 'false' permite recargar cambios en los .html sin reiniciar la aplicación.
+# En producción: debe fijarse en 'true' para almacenar el árbol DOM en memoria y optimizar CPU.
+spring.thymeleaf.cache=false
+
+# Valida en el arranque de la aplicación que el directorio de templates exista
+spring.thymeleaf.check-template-location=true
+```
+
+---
+
+## 3. Cuestionario de Autoevaluación
+
+<Quiz id="comp2-semana8-intro-quiz">
+    <Question title="¿Qué recibe exactamente el navegador web al realizar una petición a una ruta manejada por Spring Boot y Thymeleaf?">
+        <Option>
+            El archivo .html original con las etiquetas th:* para que el
+            navegador las ejecute con JavaScript.
+        </Option>
+        <Option correct>
+            Un documento HTML estándar generado y transformado en el servidor,
+            sin etiquetas th:* ni referencias a Java.
+        </Option>
+        <Option>
+            Un archivo JSON crudo que un motor nativo del navegador interpreta
+            automáticamente.
+        </Option>
+        <Option>
+            Un archivo ejecutable de clase Java compilado en bytecode.
+        </Option>
+    </Question>
+    <Question title="¿Cuál es la función principal de la anotación @Controller en comparación con @RestController?">
+        <Option>
+            @Controller serializa el objeto de retorno directamente a formato
+            JSON.
+        </Option>
+        <Option correct>
+            @Controller retorna el nombre lógico de una vista HTML que será
+            resuelta por el motor de plantillas.
+        </Option>
+        <Option>
+            @Controller desactiva la conexión con la base de datos SQL.
+        </Option>
+        <Option>
+            @Controller solo puede ser utilizado en aplicaciones de consola.
+        </Option>
+    </Question>
+    <Question title="¿Qué significa el concepto de 'Natural Templating' en Thymeleaf?">
+        <Option>
+            Que las plantillas solo pueden ejecutarse en sistemas operativos
+            basados en Linux.
+        </Option>
+        <Option>
+            Que el motor convierte automáticamente el código HTML en lenguaje
+            ensamblador.
+        </Option>
+        <Option correct>
+            Que los archivos de plantilla son documentos HTML válidos que pueden
+            abrirse en el navegador como prototipos estáticos sin requerir un
+            servidor activo.
+        </Option>
+        <Option>
+            Que el código HTML se genera de manera aleatoria mediante algoritmos
+            genéticos.
+        </Option>
+    </Question>
+    <Question title="¿Qué componente de Spring MVC se encarga de transportar los datos desde el método del controlador hacia la plantilla Thymeleaf?">
+        <Option>HttpSessionContext</Option>
+        <Option>SecurityFilterChain</Option>
+        <Option correct>org.springframework.ui.Model</Option>
+        <Option>DriverManagerDataSource</Option>
+    </Question>
+    <Question title="¿En qué directorio por convención de Spring Boot deben almacenarse las plantillas procesadas por Thymeleaf?">
+        <Option>src/main/resources/static</Option>
+        <Option correct>src/main/resources/templates</Option>
+        <Option>src/main/resources/public</Option>
+        <Option>src/main/webapp/WEB-INF</Option>
+    </Question>
+    <Question title="¿Por qué es fundamental configurar spring.thymeleaf.cache=false durante la etapa de desarrollo?">
+        <Option>
+            Para prevenir ataques de inyección SQL en los repositorios JPA.
+        </Option>
+        <Option>
+            Para habilitar el soporte de transacciones ACID en la base de datos.
+        </Option>
+        <Option correct>
+            Para visualizar modificaciones en los archivos HTML inmediatamente
+            al refrescar el navegador sin tener que reiniciar la aplicación.
+        </Option>
+        <Option>
+            Para forzar la compilación en caliente de las entidades de Java.
+        </Option>
+    </Question>
+    <Question title="¿Qué sucede si un cliente intenta acceder directamente por URL a un archivo ubicado en /templates/users/list.html?">
+        <Option>
+            El servidor descarga el archivo a la máquina del cliente sin
+            procesar.
+        </Option>
+        <Option>Spring Boot levanta una sesión de depuración remota.</Option>
+        <Option correct>
+            El servidor deniega el acceso o responde con error 404, ya que las
+            plantillas en templates/ no son recursos estáticos públicos.
+        </Option>
+        <Option>
+            El navegador ejecuta el código Java embebido en la plantilla.
+        </Option>
+    </Question>
+    <Question title="¿Cuál es una ventaja clave de Server Side Rendering (SSR) frente a Client Side Rendering (CSR) con React?">
+        <Option>Mayor complejidad para configurar servidores web.</Option>
+        <Option correct>
+            Excelente indexación en motores de búsqueda (SEO) y rápida primera
+            visualización sin esperar la descarga de pesados bundles de
+            JavaScript.
+        </Option>
+        <Option>
+            Eliminación de la base de datos relacional en el servidor.
+        </Option>
+        <Option>
+            Capacidad de ejecutar aplicaciones sin conexión a internet de forma
+            predeterminada.
+        </Option>
+    </Question>
+    <Question title="¿Qué componente de Spring traduce el nombre de vista 'users/list' a la ruta física del archivo en el classpath?">
+        <Option>DispatcherServletInitializer</Option>
+        <Option correct>ThymeleafViewResolver</Option>
+        <Option>JpaTransactionManager</Option>
+        <Option>StandardDialectParser</Option>
+    </Question>
+    <Question title="¿Qué elemento de la arquitectura se encarga de evaluar las expresiones como th:each o th:text y sustituir los valores del Model en el HTML?">
+        <Option>Tomcat Connector Port</Option>
+        <Option>HikariCP Connection Pool</Option>
+        <Option correct>SpringTemplateEngine</Option>
+        <Option>Hibernate EntityGraph</Option>
+    </Question>
+</Quiz>

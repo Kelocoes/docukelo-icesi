@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 340" width="100%" height="100%">
+  <defs>
+    <filter id="card-shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.08" />
+    </filter>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#16a34a" />
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb" />
+    </marker>
+  </defs>
+
+  <style>
+    .title-main { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 15px; fill: #0f172a; }
+    .badge-design { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 10.5px; fill: #1e3a8a; }
+    .badge-runtime { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 10.5px; fill: #14532d; }
+    .card-title { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 13px; fill: #1e293b; }
+    .text-body { font-family: system-ui, -apple-system, sans-serif; font-weight: 500; font-size: 11px; fill: #475569; }
+    .code-pill { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; }
+  </style>
+
+  <!-- Fondo Principal -->
+  <rect x="0" y="0" width="880" height="340" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5" />
+
+  <!-- ENCABEZADO SUPERIOR -->
+  <g transform="translate(25, 20)">
+    <text x="0" y="16" class="title-main">El Principio de "Natural Templating" en Thymeleaf</text>
+    <text x="0" y="34" class="text-body">Una misma plantilla es válida como prototipo estático de diseño y como vista dinámica en producción</text>
+  </g>
+
+  <!-- CÓDIGO FUENTE CENTRAL (La Plantilla HTML) -->
+  <g transform="translate(25, 75)">
+    <rect x="0" y="0" width="830" height="65" rx="8" fill="#1e293b" filter="url(#card-shadow)" />
+    <text x="16" y="24" class="code-pill" fill="#94a3b8">&lt;!-- templates/users/list.html --&gt;</text>
+    <text x="16" y="46" class="code-pill" fill="#f8fafc">
+      &lt;h1 <tspan fill="#38bdf8">th:text</tspan>=<tspan fill="#fde047">"${title}"</tspan>&gt;<tspan fill="#4ade80">Título de Prototipo</tspan>&lt;/h1&gt;
+    </text>
+  </g>
+
+  <!-- LADO IZQUIERDO: Modo Prototipo Estático -->
+  <g transform="translate(25, 160)">
+    <rect x="0" y="0" width="395" height="155" rx="10" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.5" filter="url(#card-shadow)" />
+    
+    <rect x="0" y="0" width="395" height="34" rx="10" fill="#eff6ff" />
+    <rect x="0" y="20" width="395" height="14" fill="#eff6ff" />
+    <text x="16" y="22" class="card-title" fill="#1d4ed8">1. Abierto en el Navegador Local (file://)</text>
+    <rect x="305" y="6" width="75" height="22" rx="11" fill="#dbeafe" />
+    <text x="317" y="21" class="badge-design">DISEÑO</text>
+
+    <text x="16" y="58" class="text-body">• El navegador ignora el atributo desconocido <tspan class="code-pill" fill="#0284c7">th:text</tspan>.</text>
+    <text x="16" y="78" class="text-body">• Renderiza el contenido interno de prueba (fallback):</text>
+    
+    <!-- Render Preview -->
+    <rect x="16" y="92" width="363" height="45" rx="6" fill="#f8fafc" stroke="#e2e8f0" />
+    <text x="28" y="120" style="font-family: system-ui; font-size: 16px; font-weight: 700; fill: #0f172a;">Título de Prototipo</text>
+  </g>
+
+  <!-- LADO DERECHO: Procesado por Spring Boot -->
+  <g transform="translate(460, 160)">
+    <rect x="0" y="0" width="395" height="155" rx="10" fill="#ffffff" stroke="#bbf7d0" stroke-width="1.5" filter="url(#card-shadow)" />
+    
+    <rect x="0" y="0" width="395" height="34" rx="10" fill="#f0fdf4" />
+    <rect x="0" y="20" width="395" height="14" fill="#f0fdf4" />
+    <text x="16" y="22" class="card-title" fill="#15803d">2. Procesado en Spring Boot (http://)</text>
+    <rect x="295" y="6" width="85" height="22" rx="11" fill="#dcfce7" />
+    <text x="305" y="21" class="badge-runtime">PRODUCCIÓN</text>
+
+    <text x="16" y="58" class="text-body">• Thymeleaf evalúa la expresión <tspan class="code-pill" fill="#15803d">${title}</tspan> con el Model.</text>
+    <text x="16" y="78" class="text-body">• Sustituye el texto interno y elimina el atributo <tspan class="code-pill" fill="#15803d">th:text</tspan>:</text>
+
+    <!-- Render Preview -->
+    <rect x="16" y="92" width="363" height="45" rx="6" fill="#f0fdf4" stroke="#86efac" />
+    <text x="28" y="120" style="font-family: system-ui; font-size: 16px; font-weight: 700; fill: #14532d;">Gestión de Usuarios - ICESI</text>
+  </g>
+</svg>

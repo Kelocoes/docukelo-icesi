@@ -347,23 +347,48 @@ div[class*='codeBlockContainer_'] {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
-/* Bloques de código (pre / prism-code) con padding amplio X e Y */
+/* Bloques de código (pre / prism-code) */
 pre,
 .prism-code,
-div[class*='codeBlockLines_'],
 div[class*='codeBlockContent_'] pre {
   font-family: var(--ifm-font-family-monospace) !important;
   font-size: 0.92rem !important;
   line-height: 1.65 !important;
-  padding: 1.15rem 1.35rem !important;
+  padding: 1rem 0 !important; /* Solo padding vertical en el contenedor con scroll */
+  margin: 0 !important;
 }
 
 pre code {
   font-family: inherit;
   font-size: inherit;
-  padding: 0 !important;
   background-color: transparent !important;
   border: none !important;
+}
+
+/* Bloques SIN numeración de líneas: padding horizontal en el elemento de código interno */
+code[class*='codeBlockLines_']:not([class*='codeBlockLinesWithNumbering_']) {
+  padding: 0 1.25rem !important;
+}
+
+/* Bloques CON numeración de líneas */
+code[class*='codeBlockLinesWithNumbering_'] {
+  padding: 0 !important;
+}
+
+/* Columna de numeración de línea sticky: fija al borde, fondo opaco y margen derecho compacto */
+span[class*='codeLineNumber_'] {
+  position: sticky !important;
+  left: 0 !important;
+  z-index: 2 !important;
+  background-color: var(--prism-background-color, #1e1e1e) !important;
+  padding-left: 0.85rem !important;
+  padding-right: 0.65rem !important; /* Margen compacto hacia el código */
+  user-select: none !important;
+}
+
+/* Contenido de la línea de código */
+span[class*='codeLineContent_'] {
+  padding-right: 1.25rem !important;
 }
 
 /* Título de la pestaña de código */

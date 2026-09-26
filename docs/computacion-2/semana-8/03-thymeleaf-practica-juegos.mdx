@@ -1,0 +1,516 @@
+---
+sidebar_position: 3
+---
+
+# Laboratorio Práctico: Gestión de Usuarios con Spring Boot MVC y Thymeleaf
+
+En este laboratorio paso a paso desarrollaremos el módulo de administración visual para la aplicación **Juegos de Mesa App**. Construiremos una interfaz web completa para la gestión de usuarios y roles aplicando arquitectura **Modelo-Vista-Controlador (MVC)**, componentes modulares reutilizables mediante **fragmentos (fragments)** y el patrón **Post/Redirect/Get (PRG)**.
+
+---
+
+## 1. Arquitectura de la Solución y Componentes Modulares
+
+Para mantener un diseño desacoplado y profesional, organizamos las plantillas en dos capas: **fragmentos globales compartidos** (encabezados, pies de página y navegación) y **vistas de dominio de negocio** (listado, creación y edición).
+
+<ZoomableMermaid value={`graph TB
+    subgraph Frontend ["Capa de Vistas y Fragmentos (templates/)"]
+        H["Fragmento Header<br/>(components/header.html)"]
+        F["Fragmento Footer<br/>(components/footer.html)"]
+        L["Vista Listado<br/>(users/list.html)"]
+        A["Vista Registro<br/>(users/add.html)"]
+        E["Vista Edición<br/>(users/edit.html)"]
+    end
+
+    subgraph Backend ["Capa de Control y Negocio (Spring Boot)"]
+        C["UserMVCController<br/>(@Controller /mvc/users)"]
+        S["IUserService & IRoleService"]
+        R["UserRepository & RoleRepository"]
+    end
+
+    subgraph DB ["Capa de Persistencia"]
+        Data[("Base de Datos SQL<br/>(PostgreSQL / MySQL)")]
+    end
+
+    L -.->|th:replace| H
+    L -.->|th:replace| F
+    A -.->|th:replace| H
+    E -.->|th:replace| H
+
+    C -->|Inyecta Model| L
+    C -->|Inyecta Model| A
+    C -->|Inyecta Model| E
+    C -->|Invoca| S
+    S -->|Consulta| R
+    R -->|Sentencias SQL| Data`} />
+
+#### Explicación de los Componentes Arquitectónicos
+
+* **`th:fragment`**: Define un bloque reutilizable (como la barra de navegación en `header.html`) que puede ser inyectado en múltiples páginas sin duplicar código HTML.
+* **`th:replace`**: Reemplaza el elemento anfitrión del HTML por el contenido completo del fragmento especificado mediante la sintaxis `~{ruta :: nombreFragmento}`.
+* **`UserMVCController`**: Expone las rutas amigables bajo el prefijo `/mvc/users`, inyecta los datos de los usuarios en el `Model` y redirige el flujo tras operaciones de mutación.
+
+---
+
+## 2. Guía Práctica: Paso a Paso
+
+Sigue esta secuencia ordenada de pasos para construir el módulo completo en tu proyecto.
+
+<StepByStep>
+  <Step number="1" title="Verificar Dependencias y Rama de Trabajo">
+    Crea una nueva rama en tu repositorio para aislar las funcionalidades de la interfaz gráfica y comprueba que la dependencia de Thymeleaf esté presente en el archivo `pom.xml`.
+
+```bash title="Terminal"
+git checkout -b feature/thymeleaf-users-mvc
+```
+
+```xml title="pom.xml" showLineNumbers
+<dependencies>
+    <!-- Starter oficial de Spring Boot para Thymeleaf -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+    <!-- Starter para desarrollo web MVC con Tomcat embebido -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+</dependencies>
+```
+  </Step>
+
+  <Step number="2" title="Organizar la Estructura de Carpetas">
+    Crea las carpetas necesarias en `src/main/resources/templates` y `src/main/resources/static` para separar plantillas HTML de las hojas de estilo CSS y scripts:
+
+```plaintext title="Estructura de Directorios"
+src/main/resources/
+├── static/
+│   └── css/
+│       ├── components/
+│       │   └── header.css
+│       └── users/
+│           ├── list.css
+│           └── form.css
+└── templates/
+    ├── components/
+    │   ├── header.html
+    │   └── footer.html
+    └── users/
+        ├── list.html
+        ├── add.html
+        └── edit.html
+```
+  </Step>
+
+  <Step number="3" title="Crear los Fragmentos Modulares: Header y Footer">
+    Definimos el encabezado y el pie de página utilizando la directiva `th:fragment` para que puedan reutilizarse en todas las vistas de la aplicación.
+
+```html title="src/main/resources/templates/components/header.html" showLineNumbers
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <!-- Define el fragmento 'header' reutilizable -->
+    <header th:fragment="header" class="site-header">
+        <div class="nav-container">
+            <h1 class="logo-title">Juegos de Mesa App</h1>
+            <nav class="nav-links">
+                <ul>
+                    <!-- th:href resuelve automáticamente el contexto de la aplicación -->
+                    <li><a th:href="@{/mvc/users}">Lista de Usuarios</a></li>
+                    <li><a th:href="@{/mvc/users/add}">Agregar Usuario</a></li>
+                </ul>
+            </nav>
+        </div>
+        <hr class="nav-divider" />
+    </header>
+</body>
+</html>
+```
+
+```html title="src/main/resources/templates/components/footer.html" showLineNumbers
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <!-- Define el fragmento 'footer' reutilizable -->
+    <footer th:fragment="footer" class="site-footer">
+        <hr class="footer-divider" />
+        <p class="copyright-text">
+            &copy; 2026 Universidad Icesi - Departamento de Ingeniería de Software. Todos los derechos reservados.
+        </p>
+    </footer>
+</body>
+</html>
+```
+  </Step>
+
+  <Step number="4" title="Diseñar la Página de Listado de Usuarios">
+    La vista `list.html` sustituye el encabezado y pie de página con los fragmentos creados y utiliza `th:each` para renderizar una tabla dinámica con los usuarios inyectados en el `Model`.
+
+```html title="src/main/resources/templates/users/list.html" showLineNumbers
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Usuarios - Juegos App</title>
+    <!-- Enlace context-aware a la hoja de estilos global -->
+    <link rel="stylesheet" th:href="@{/css/users/list.css}">
+</head>
+<body>
+    <!-- Inclusión del fragmento header mediante th:replace -->
+    <div th:replace="~{components/header :: header}"></div>
+
+    <main class="main-content">
+        <div class="header-actions">
+            <h2>Catálogo de Usuarios Registrados</h2>
+            <a th:href="@{/mvc/users/add}" class="btn btn-primary">+ Nuevo Usuario</a>
+        </div>
+
+        <!-- Mensaje condicional de confirmación o alerta -->
+        <div th:if="${mensaje}" class="alert alert-info">
+            <span th:text="${mensaje}">Operación realizada</span>
+        </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>ID</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Correo Electrónico</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Iteración con th:each y uso de la variable de estado 'stat' -->
+                <tr th:each="user, stat : ${users}" th:classappend="${stat.odd} ? 'row-alt' : ''">
+                    <td th:text="${stat.count}">1</td>
+                    <td th:text="${user.id}">101</td>
+                    <td th:text="${user.username}" class="fw-bold">UsuarioEjemplo</td>
+                    <td th:text="${user.email}">correo@icesi.edu.co</td>
+                    <td>
+                        <span th:text="${user.role != null ? user.role.name : 'Sin Rol'}" class="badge">Usuario</span>
+                    </td>
+                    <td class="action-cell">
+                        <!-- Enlace dinámico con parámetro de consulta id -->
+                        <a th:href="@{/mvc/users/edit(id=${user.id})}" class="btn-action edit">Editar</a>
+                        <!-- Enlace de eliminación -->
+                        <a th:href="@{/mvc/users/delete(id=${user.id})}" 
+                           class="btn-action delete"
+                           onclick="return confirm('¿Estás seguro de eliminar este usuario?');">Eliminar</a>
+                    </td>
+                </tr>
+                <!-- Mensaje alternativo si la lista de usuarios está vacía -->
+                <tr th:if="${#lists.isEmpty(users)}">
+                    <td colspan="6" class="text-center">No hay usuarios registrados en el sistema.</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <!-- Inclusión del fragmento footer -->
+    <div th:replace="~{components/footer :: footer}"></div>
+</body>
+</html>
+```
+  </Step>
+
+  <Step number="5" title="Diseñar el Formulario de Creación de Usuario">
+    Creamos la plantilla `add.html` enlazada a un objeto `User` vacío para recibir los datos mediante `th:object` y `th:field`.
+
+```html title="src/main/resources/templates/users/add.html" showLineNumbers
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Usuario - Juegos App</title>
+    <link rel="stylesheet" th:href="@{/css/users/form.css}">
+</head>
+<body>
+    <div th:replace="~{components/header :: header}"></div>
+
+    <main class="form-container">
+        <h2>Crear Nuevo Usuario</h2>
+        
+        <!-- th:action define la ruta de destino y th:object enlaza la entidad -->
+        <form th:action="@{/mvc/users/add}" th:object="${user}" method="post">
+            
+            <div class="form-group">
+                <label for="username">Nombre de Usuario:</label>
+                <input type="text" id="username" th:field="*{username}" maxlength="50" required placeholder="Ej: ajedrecista99" />
+            </div>
+
+            <div class="form-group">
+                <label for="email">Correo Electrónico:</label>
+                <input type="email" id="email" th:field="*{email}" maxlength="100" required placeholder="usuario@icesi.edu.co" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" th:field="*{password}" maxlength="255" required />
+            </div>
+
+            <div class="form-group">
+                <label for="bio">Biografía / Perfil de Jugador:</label>
+                <textarea id="bio" th:field="*{bio}" rows="3" maxlength="500" placeholder="Escribe tus juegos favoritos..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="birthdate">Fecha de Nacimiento:</label>
+                <input type="date" id="birthdate" th:field="*{birthdate}" />
+            </div>
+
+            <div class="form-group">
+                <label for="role">Rol en el Sistema:</label>
+                <!-- Itera sobre los roles disponibles inyectados por el controlador -->
+                <select id="role" th:field="*{role.id}" required>
+                    <option value="" disabled selected>-- Selecciona un rol --</option>
+                    <option th:each="r : ${roles}" th:value="${r.id}" th:text="${r.name}">Administrador</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">Guardar Usuario</button>
+                <a th:href="@{/mvc/users}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </main>
+
+    <div th:replace="~{components/footer :: footer}"></div>
+</body>
+</html>
+```
+  </Step>
+
+  <Step number="6" title="Diseñar el Formulario de Edición con Precarga">
+    La vista `edit.html` incluye un campo oculto (`type="hidden"`) para conservar el identificador (`id`) del usuario que se está modificando.
+
+```html title="src/main/resources/templates/users/edit.html" showLineNumbers
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuario - Juegos App</title>
+    <link rel="stylesheet" th:href="@{/css/users/form.css}">
+</head>
+<body>
+    <div th:replace="~{components/header :: header}"></div>
+
+    <main class="form-container">
+        <!-- Validación de existencia del usuario -->
+        <div th:if="${actualUser == null}" class="alert alert-danger">
+            <p>El usuario solicitado no existe o fue eliminado.</p>
+            <a th:href="@{/mvc/users}" class="btn btn-primary">Volver al Listado</a>
+        </div>
+
+        <div th:if="${actualUser != null}">
+            <h2>Editar Usuario #<span th:text="${actualUser.id}">1</span></h2>
+            
+            <form th:action="@{/mvc/users/edit}" th:object="${actualUser}" method="post">
+                <!-- Campo oculto para preservar la clave primaria durante la actualización -->
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="form-group">
+                    <label for="username">Nombre de Usuario:</label>
+                    <input type="text" id="username" th:field="*{username}" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo Electrónico:</label>
+                    <input type="email" id="email" th:field="*{email}" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="bio">Biografía:</label>
+                    <textarea id="bio" th:field="*{bio}" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthdate">Fecha de Nacimiento:</label>
+                    <input type="date" id="birthdate" th:field="*{birthdate}" />
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Rol:</label>
+                    <select id="role" th:field="*{role.id}" required>
+                        <option th:each="r : ${roles}" 
+                                th:value="${r.id}" 
+                                th:text="${r.name}"
+                                th:selected="${actualUser.role != null and actualUser.role.id == r.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Actualizar Cambios</button>
+                    <a th:href="@{/mvc/users}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <div th:replace="~{components/footer :: footer}"></div>
+</body>
+</html>
+```
+  </Step>
+
+  <Step number="7" title="Implementar el Controlador Completo (UserMVCController)">
+    Orquestamos todas las operaciones CRUD conectando los servicios con las plantillas HTML y aplicando el patrón Post/Redirect/Get.
+
+```java title="src/main/java/com/games/back/controller/mvc/UserMVCController.java" showLineNumbers
+package com.games.back.controller.mvc;
+
+import com.games.back.model.User;
+import com.games.back.services.IRoleService;
+import com.games.back.services.IUserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+@Controller
+@RequestMapping("/mvc/users")
+@RequiredArgsConstructor
+public class UserMVCController {
+
+    private final IUserService userService;
+    private final IRoleService roleService;
+
+    // 1. Listar todos los usuarios
+    @GetMapping
+    public String getAll(Model model) {
+        // Carga la lista de usuarios y la inyecta bajo la clave "users"
+        model.addAttribute("users", userService.findAll());
+        return "users/list";
+    }
+
+    // 2. Mostrar formulario para nuevo usuario
+    @GetMapping("/add")
+    public String showAddForm(Model model) {
+        // Se envía un objeto User vacío para realizar el binding con th:object
+        model.addAttribute("user", new User());
+        // Se inyecta la lista de roles para el menú desplegable <select>
+        model.addAttribute("roles", roleService.findAll());
+        return "users/add";
+    }
+
+    // 3. Procesar el envío del formulario de creación (POST)
+    @PostMapping("/add")
+    public String createUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttrs) {
+        userService.save(user);
+        // Mensaje flash que sobrevive a la redirección HTTP 302
+        redirectAttrs.addFlashAttribute("mensaje", "Usuario registrado exitosamente");
+        // Patrón Post/Redirect/Get: redirige a la lista
+        return "redirect:/mvc/users";
+    }
+
+    // 4. Mostrar formulario para editar un usuario existente
+    @GetMapping("/edit")
+    public String showEditForm(@RequestParam("id") Long id, Model model) {
+        User existingUser = userService.findById(id);
+        model.addAttribute("actualUser", existingUser);
+        model.addAttribute("roles", roleService.findAll());
+        return "users/edit";
+    }
+
+    // 5. Procesar la actualización del usuario (POST)
+    @PostMapping("/edit")
+    public String updateUser(@ModelAttribute("actualUser") User user, RedirectAttributes redirectAttrs) {
+        userService.save(user);
+        redirectAttrs.addFlashAttribute("mensaje", "Usuario actualizado correctamente");
+        return "redirect:/mvc/users";
+    }
+
+    // 6. Eliminar usuario por ID
+    @GetMapping("/delete")
+    public String deleteUser(@RequestParam("id") Long id, RedirectAttributes redirectAttrs) {
+        try {
+            userService.deleteById(id);
+            redirectAttrs.addFlashAttribute("mensaje", "Usuario eliminado del sistema");
+        } catch (Exception e) {
+            redirectAttrs.addFlashAttribute("mensaje", "No es posible eliminar el usuario: posee partidas asociadas");
+        }
+        return "redirect:/mvc/users";
+    }
+}
+```
+  </Step>
+</StepByStep>
+
+---
+
+## 3. Cuestionario de Autoevaluación
+
+<Quiz id="comp2-semana8-practica-quiz">
+  <Question title="¿Cuál es la función del atributo th:fragment=&quot;header&quot; en una plantilla Thymeleaf?">
+    <Option>Compila el código HTML en un archivo binario en el servidor.</Option>
+    <Option correct>Declara un bloque de código reutilizable que puede ser incluido en otras plantillas mediante th:replace o th:insert.</Option>
+    <Option>Bloquea la edición del encabezado mediante contraseña.</Option>
+    <Option>Genera automáticamente los estilos CSS de la barra de navegación.</Option>
+  </Question>
+  <Question title="¿Qué sucede cuando se utiliza la etiqueta th:replace=&quot;~{components/header :: header}&quot;?">
+    <Option>Inserta el fragmento como hijo del contenedor actual sin alterar la etiqueta contenedora.</Option>
+    <Option correct>Sustituye por completo el elemento anfitrión HTML por las etiquetas que componen el fragmento referenciado.</Option>
+    <Option>Descarga el archivo header desde un repositorio externo en GitHub.</Option>
+    <Option>Cancela la ejecución de las sentencias SQL en la base de datos.</Option>
+  </Question>
+  <Question title="¿Por qué es indispensable incluir un campo &lt;input type=&quot;hidden&quot; th:field=&quot;*{id}&quot; /&gt; en el formulario de edición?">
+    <Option>Para ocultar la contraseña del usuario en el navegador.</Option>
+    <Option correct>Para preservar la clave primaria del registro al enviar el formulario por POST y asegurar que Hibernate realice un UPDATE en lugar de un INSERT.</Option>
+    <Option>Para activar el firewall de Spring Security.</Option>
+    <Option>Porque los navegadores rechazan formularios que no contengan campos ocultos.</Option>
+  </Question>
+  <Question title="¿Cómo se inyecta un objeto vacío en el Model para vincularlo a un formulario de creación antes de mostrar la página?">
+    <Option>model.addAttribute(&quot;user&quot;, null);</Option>
+    <Option correct>model.addAttribute(&quot;user&quot;, new User());</Option>
+    <Option>model.addAttribute(&quot;user&quot;, User.class);</Option>
+    <Option>model.setEntity(&quot;user&quot;);</Option>
+  </Question>
+  <Question title="¿Qué clase de Spring MVC se utiliza para enviar mensajes informativos temporales que persisten a través de una redirección HTTP 302 (PRG)?">
+    <Option>ModelMap</Option>
+    <Option>HttpSessionCollector</Option>
+    <Option correct>RedirectAttributes</Option>
+    <Option>FlashMemoryStore</Option>
+  </Question>
+  <Question title="Al generar un enlace dinámico de eliminación como /mvc/users/delete?id=15, ¿cuál es la sintaxis correcta en Thymeleaf?">
+    <Option>th:href=&quot;@&#123;/mvc/users/delete?id=$&#123;user.id&#125;&#125;&quot;</Option>
+    <Option correct>th:href=&quot;@&#123;/mvc/users/delete(id=$&#123;user.id&#125;)&#125;&quot;</Option>
+    <Option>th:href=&quot;#&#123;/mvc/users/delete(user.id)&#125;&quot;</Option>
+    <Option>th:href=&quot;*&#123;/mvc/users/delete&#125;&quot;</Option>
+  </Question>
+  <Question title="¿Cómo se valida en la plantilla list.html si la colección de usuarios se encuentra vacía utilizando los objetos de utilidad de Thymeleaf?">
+    <Option>th:if=&quot;$&#123;users.empty == 0&#125;&quot;</Option>
+    <Option correct>th:if=&quot;$&#123;#lists.isEmpty(users)&#125;&quot;</Option>
+    <Option>th:if=&quot;#&#123;count(users) == 0&#125;&quot;</Option>
+    <Option>th:if=&quot;*&#123;isZero(users)&#125;&quot;</Option>
+  </Question>
+  <Question title="¿Qué atributo de Thymeleaf permite marcar automáticamente una opción en un menú &lt;select&gt; cuando coincide con el rol actual del usuario en edición?">
+    <Option>th:checked</Option>
+    <Option>th:target</Option>
+    <Option correct>th:selected</Option>
+    <Option>th:value-match</Option>
+  </Question>
+  <Question title="¿Qué anotación de método en UserMVCController procesa las peticiones GET para cargar el formulario de agregar usuario en la ruta /mvc/users/add?">
+    <Option>@PostMapping(&quot;/add&quot;)</Option>
+    <Option correct>@GetMapping(&quot;/add&quot;)</Option>
+    <Option>@RequestMapping(method = RequestMethod.DELETE)</Option>
+    <Option>@PutMapping(&quot;/add&quot;)</Option>
+  </Question>
+  <Question title="Si un controlador retorna la cadena &quot;users/list&quot;, ¿dónde buscará Spring Boot el archivo físico correspondiente por defecto?">
+    <Option>src/main/resources/static/users/list.html</Option>
+    <Option>src/main/java/users/list.html</Option>
+    <Option correct>src/main/resources/templates/users/list.html</Option>
+    <Option>public/templates/users/list.html</Option>
+  </Question>
+</Quiz>

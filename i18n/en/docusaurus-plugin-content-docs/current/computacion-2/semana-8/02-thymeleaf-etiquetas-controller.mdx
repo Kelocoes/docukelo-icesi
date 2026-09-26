@@ -1,0 +1,332 @@
+---
+sidebar_position: 2
+---
+
+# Thymeleaf Tags, Expressions, and Spring MVC Controllers
+
+The true power of Thymeleaf lies in combining a **standard dialect of HTML attributes (`th:*`)** with an expressive **expression language**. Together, these mechanisms seamlessly bind data injected by Spring Boot controllers to visual elements in the web browser.
+
+---
+
+## 1. Theoretical Foundations: Expressions and Control Flow
+
+Thymeleaf defines five core expression syntaxes, each designed for a specific purpose within the rendering lifecycle:
+
+### The 5 Types of Expressions in Thymeleaf
+
+| Syntax | Name | Primary Purpose | Practical Example |
+| :--- | :--- | :--- | :--- |
+| `${...}` | **Variable Expression** | Accesses attributes in the `Model`, session variables, or request parameters. | `<span th:text="${user.name}"></span>` |
+| `*{...}` | **Selection Expression** | Accesses properties relative to an object previously defined via `th:object`. | `<input th:field="*{email}" />` |
+| `#{...}` | **Message Expression** | Retrieves internationalized (i18n) messages from `messages.properties` files. | `<button th:text="#{btn.submit}"></button>` |
+| `@{...}` | **Link Expression** | Builds context-aware absolute or relative URLs, honoring application deployment paths. | `<a th:href="@{/users/{id}(id=${u.id})}"></a>` |
+| `~{...}` | **Fragment Expression** | References and inserts modular template fragments defined in external templates. | `<div th:replace="~{components/nav :: bar}"></div>` |
+
+---
+
+### The Post/Redirect/Get (PRG) Pattern
+
+A common anti-pattern when building web applications with Spring MVC and template engines is directly returning a view template after handling a `POST` submission (for example, saving a user and returning `"users/list"`). If the user presses **F5** or the browser "Reload" button, the browser will repeat the `POST` request, inadvertently creating duplicate database records.
+
+To prevent this issue, the **Post/Redirect/Get (PRG)** design pattern is implemented:
+
+<ZoomableMermaid value={`sequenceDiagram
+    autonumber
+    actor User as User (Browser)
+    participant Ctrl as FormController
+    participant Svc as UserService
+    participant DB as SQL Database
+
+    Note over User,DB: 1. POST Phase: Form Submission
+    User->>Ctrl: POST /mvc/users/add (User payload)
+    Ctrl->>Svc: save(user)
+    Svc->>DB: INSERT INTO users ...
+    DB-->>Svc: Entity persisted
+    Svc-->>Ctrl: OK
+    Note over Ctrl: HTTP 302 Redirect
+    Ctrl-->>User: HTTP 302 Found (Location: /mvc/users)
+
+    Note over User,DB: 2. GET Phase: Safe Query
+    User->>Ctrl: GET /mvc/users
+    Ctrl->>Svc: findAll()
+    Svc->>DB: SELECT * FROM users
+    DB-->>Svc: Records
+    Svc-->>Ctrl: List of users
+    Ctrl-->>User: HTTP 200 OK (Renders users/list.html)
+    Note over User: If user presses F5, only the idempotent GET is re-requested.`} />
+
+#### Technical Explanation of the PRG Pattern
+
+1. **POST Reception**: The method annotated with `@PostMapping` receives the form payload, validates inputs, and persists the entity in the database.
+2. **HTTP 302 Redirect**: Instead of returning an HTML template name directly, the controller returns the instruction `return "redirect:/mvc/users";`. This instructs the browser to issue a fresh HTTP `GET` request.
+3. **Idempotent GET Request**: The browser requests the specified URL via `GET /mvc/users`. If the user refreshes the page multiple times, only the read-only `GET` query is executed again, guaranteeing that record insertion is never accidentally duplicated.
+
+---
+
+## 2. Thymeleaf Tag Catalog (`th:*`)
+
+Below are the most widely used attributes of the standard dialect, along with their practical use cases and security considerations.
+
+### 1. Text Insertion and XSS Prevention (`th:text` vs `th:utext`)
+
+```html title="src/main/resources/templates/examples/text.html" showLineNumbers
+<!-- th:text automatically escapes HTML special characters (Safe against XSS attacks) -->
+<!-- If ${user.bio} contains "<script>alert('hack')</script>", it renders as harmless escaped text -->
+<p th:text="${user.bio}">Default preview biography</p>
+
+<!-- th:utext (Unescaped Text) renders raw unescaped HTML markup (USE WITH CAUTION) -->
+<!-- Only use with trusted, sanitized content from the backend -->
+<div th:utext="${article.htmlContent}">Formatted content containing bold tags or links</div>
+```
+
+---
+
+### 2. Conditional Structures (`th:if`, `th:unless`, `th:switch`)
+
+Thymeleaf evaluates boolean conditions and object nullability with precision:
+
+```html title="src/main/resources/templates/examples/conditionals.html" showLineNumbers
+<!-- th:if: The element renders ONLY if the expression evaluates to true or non-null -->
+<div th:if="${successMessage != null}" class="alert alert-success">
+    <span th:text="${successMessage}">Operation completed successfully</span>
+</div>
+
+<!-- th:unless: Evaluates conversely (renders ONLY if the condition is FALSE or null) -->
+<div th:unless="${user.active}" class="alert alert-warning">
+    <span>This account is temporarily suspended.</span>
+</div>
+
+<!-- th:switch and th:case: Multi-branch condition (ideal for roles or status badges) -->
+<div th:switch="${user.role.name}">
+    <!-- Rendered if role equals 'ADMIN' -->
+    <span th:case="'ADMIN'" class="badge badge-danger">Administrator</span>
+    
+    <!-- Rendered if role equals 'MODERATOR' -->
+    <span th:case="'MODERATOR'" class="badge badge-warning">Moderator</span>
+    
+    <!-- Default fallback case if no prior condition matched (*) -->
+    <span th:case="*" class="badge badge-secondary">Standard User</span>
+</div>
+```
+
+---
+
+### 3. Collection Iteration (`th:each`) and the Iteration Status Variable
+
+When iterating over lists or sets with `th:each`, Thymeleaf provides a helpful status variable that exposes useful loop metadata (index, count, size, even/odd flags):
+
+```html title="src/main/resources/templates/examples/tables.html" showLineNumbers
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Even Row</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- 'stat' is the iteration status variable -->
+        <!-- Available properties: index (0-indexed), count (1-indexed), size, current, even, odd, first, last -->
+        <tr th:each="user, stat : ${users}" th:classappend="${stat.odd} ? 'row-odd' : 'row-even'">
+            <!-- stat.count provides human-readable row numbers (1, 2, 3...) -->
+            <td th:text="${stat.count}">1</td>
+            <td th:text="${user.id}">101</td>
+            <td th:text="${user.username}">jperez</td>
+            <td th:text="${user.email}">jperez@icesi.edu.co</td>
+            <td th:text="${stat.even ? 'Yes' : 'No'}">No</td>
+        </tr>
+    </tbody>
+</table>
+```
+
+---
+
+### 4. Dynamic Link and Route Generation (`th:href`, `th:src`)
+
+The `@{...}` syntax guarantees that URLs are resolved correctly regardless of whether the app is deployed at the server root or under a servlet context path (such as `/store`):
+
+```html title="src/main/resources/templates/examples/links.html" showLineNumbers
+<!-- 1. Link to static asset hosted in /static/css/ -->
+<link rel="stylesheet" th:href="@{/css/users/list.css}" />
+
+<!-- 2. Dynamic route with Path Variables -->
+<!-- Resolves to: /mvc/users/42/details -->
+<a th:href="@{/mvc/users/{id}/details(id=${user.id})}">View Details</a>
+
+<!-- 3. Dynamic route with Query Parameters -->
+<!-- Resolves to: /mvc/users/edit?id=42&action=update -->
+<a th:href="@{/mvc/users/edit(id=${user.id}, action='update')}">Edit</a>
+```
+
+---
+
+### 5. Form Binding and Bidirectional Mapping (`th:object`, `th:field`, `th:action`)
+
+Form binding automatically connects Java model properties to HTML form input elements:
+
+```html title="src/main/resources/templates/users/form-example.html" showLineNumbers
+<!-- th:action: Form submission endpoint with link expression -->
+<!-- th:object: Binds the entire form to the 'newUser' model attribute -->
+<form th:action="@{/mvc/users/save}" th:object="${newUser}" method="post">
+    
+    <div>
+        <label for="username">Username:</label>
+        <!-- th:field="*{username}" automatically generates id="username", name="username", and value="..." -->
+        <input type="text" id="username" th:field="*{username}" required />
+    </div>
+
+    <div>
+        <label for="email">Email Address:</label>
+        <!-- Selection expression: equivalent to ${newUser.email} -->
+        <input type="email" id="email" th:field="*{email}" required />
+    </div>
+
+    <div>
+        <label for="role">Assigned Role:</label>
+        <!-- Binds selected role id to the role.id property of the model object -->
+        <select id="role" th:field="*{role.id}">
+            <option th:each="r : ${roles}" th:value="${r.id}" th:text="${r.name}">Administrator</option>
+        </select>
+    </div>
+
+    <button type="submit">Register User</button>
+</form>
+```
+
+:::tip[What does th:field do automatically?]
+When using `th:field="*{property}"`:
+1. Generates the `name="property"` attribute for HTTP POST request binding.
+2. Generates the `id="property"` attribute for accessibility pairing with `<label for="...">`.
+3. Injects the current property value into `value="value"` (crucial in pre-populated edit forms).
+:::
+
+---
+
+## 3. Data Manipulation in Spring MVC Controllers
+
+Controllers annotated with `@Controller` serve as the bridge between HTTP requests and HTML templates.
+
+```java title="src/main/java/com/icesi/store/controller/UserController.java" showLineNumbers
+package com.icesi.store.controller;
+
+import com.icesi.store.model.User;
+import com.icesi.store.service.IUserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/mvc/users")
+@RequiredArgsConstructor
+public class UserController {
+
+    private final IUserService userService;
+
+    // 1. @GetMapping: Handles read requests and injects data into the Model
+    @GetMapping
+    public String listUsers(Model model) {
+        List<User> userList = userService.findAll();
+        // Injects the list into the Thymeleaf context under the key "users"
+        model.addAttribute("users", userList);
+        // Returns the physical template path templates/users/list.html
+        return "users/list";
+    }
+
+    // 2. @PathVariable: Extracts variables encoded directly in URL path segments
+    // Example: GET /mvc/users/42/details
+    @GetMapping("/{id}/details")
+    public String viewDetails(@PathVariable("id") Long id, Model model) {
+        User user = userService.findById(id);
+        model.addAttribute("user", user);
+        return "users/details";
+    }
+
+    // 3. @RequestParam: Captures standard query parameters from query strings
+    // Example: GET /mvc/users/filter?status=active
+    @GetMapping("/filter")
+    public String filterByStatus(@RequestParam(value = "status", defaultValue = "all") String status, Model model) {
+        model.addAttribute("users", userService.findByStatus(status));
+        return "users/list";
+    }
+
+    // 4. @ModelAttribute: Automatically deserializes submitted form fields into a Java object
+    @PostMapping("/save")
+    public String saveUser(@ModelAttribute("newUser") User user) {
+        userService.save(user);
+        // Applies Post/Redirect/Get pattern to prevent duplicate submissions on refresh
+        return "redirect:/mvc/users";
+    }
+}
+```
+
+---
+
+## 4. Self-Assessment Quiz
+
+<Quiz id="comp2-semana8-etiquetas-quiz">
+  <Question title="What is the fundamental difference between th:text and th:utext regarding application security?">
+    <Option>th:text only accepts numeric values, while th:utext only accepts string values.</Option>
+    <Option correct>th:text escapes HTML special characters to protect against Cross-Site Scripting (XSS), whereas th:utext renders raw unescaped HTML.</Option>
+    <Option>th:utext automatically encrypts data in the SQL database.</Option>
+    <Option>th:text requires that the current user be authenticated with Spring Security.</Option>
+  </Question>
+  <Question title="Which Thymeleaf expression syntax must be used to reference modular layout fragments such as headers or footers?">
+    <Option>$&#123;...&#125;</Option>
+    <Option>#&#123;...&#125;</Option>
+    <Option correct>~&#123;...&#125;</Option>
+    <Option>@&#123;...&#125;</Option>
+  </Question>
+  <Question title="What is the primary benefit of applying the Post/Redirect/Get (PRG) pattern when handling form submissions?">
+    <Option>It allows web forms to be submitted without an active internet connection.</Option>
+    <Option correct>It prevents duplicate database insertions if the user clicks the browser reload button (F5) after submitting.</Option>
+    <Option>It removes the need to define controller classes in Spring Boot.</Option>
+    <Option>It reduces graphic card RAM consumption on client computers.</Option>
+  </Question>
+  <Question title="Which syntax is used to access properties relative to an object bound via th:object?">
+    <Option>$&#123;property&#125;</Option>
+    <Option correct>*&#123;property&#125;</Option>
+    <Option>#&#123;property&#125;</Option>
+    <Option>@&#123;property&#125;</Option>
+  </Question>
+  <Question title="When iterating with th:each=&quot;u, stat : ${users}&quot;, which property of the 'stat' variable returns the 1-indexed row number?">
+    <Option>stat.index</Option>
+    <Option correct>stat.count</Option>
+    <Option>stat.size</Option>
+    <Option>stat.position</Option>
+  </Question>
+  <Question title="How does Thymeleaf construct a context-aware URL containing a path variable using link syntax?">
+    <Option>&quot;/users/&quot; + $&#123;user.id&#125;</Option>
+    <Option correct>@&#123;/users/&#123;id&#125;(id=$&#123;user.id&#125;)&#125;</Option>
+    <Option>#&#123;url.user(user.id)&#125;</Option>
+    <Option>*&#123;/users/&#123;id&#125;&#125;</Option>
+  </Question>
+  <Question title="What three attributes does th:field=&quot;*{email}&quot; automatically generate on an HTML input element?">
+    <Option>It encrypts the email value using RSA cryptographic keys.</Option>
+    <Option correct>It generates name=&quot;email&quot;, id=&quot;email&quot;, and assigns the current bound value in value=&quot;...&quot;.</Option>
+    <Option>It transmits a validation email via an external SMTP server.</Option>
+    <Option>It permanently locks the browser submit button.</Option>
+  </Question>
+  <Question title="Which Thymeleaf conditional tag renders its content only when the evaluated condition is FALSE or null?">
+    <Option>th:if</Option>
+    <Option>th:switch</Option>
+    <Option correct>th:unless</Option>
+    <Option>th:else</Option>
+  </Question>
+  <Question title="Which Spring MVC controller annotation deserializes submitted HTML form fields into a Java domain object?">
+    <Option>@RequestParam</Option>
+    <Option>@PathVariable</Option>
+    <Option correct>@ModelAttribute</Option>
+    <Option>@ResponseBody</Option>
+  </Question>
+  <Question title="What string value should a controller POST method return to redirect the browser to /mvc/users following the PRG pattern?">
+    <Option>return &quot;users/list&quot;;</Option>
+    <Option correct>return &quot;redirect:/mvc/users&quot;;</Option>
+    <Option>return &quot;forward:/users/list.html&quot;;</Option>
+    <Option>return &quot;HTTP_302_USERS&quot;;</Option>
+  </Question>
+</Quiz>
