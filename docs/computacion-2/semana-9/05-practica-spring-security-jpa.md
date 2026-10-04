@@ -354,9 +354,9 @@ git clone -b springboot-mvc https://github.com/Kelocoes/compunet2-202502.git
     En tu script inicial de inserción de datos (`src/main/resources/data.sql`), las contraseñas predefinidas deben insertarse previamente hasheadas con BCrypt:
 
     ```sql title="src/main/resources/data.sql"
-    -- Contraseña en texto plano: "admin123" hasheada con BCrypt
+    -- Contraseña en texto plano: "password" hasheada con BCrypt
     INSERT INTO users (username, email, password, role_id) VALUES 
-    ('admin', 'admin@example.com', '$2a$10$wK1.wzXF0z8bZ9C6o7Z6m.VwE/K9K12aP8W1H0Vf8zQ4Y5X7v9Z6u', 1);
+    ('admin', 'admin@example.com', '$2a$10$BvqbMz0mYdGC/d9IFRd6Ouxq.qIC9kXz77x/A78lhyFToIOYZmwse', 1);
     ```
   </Step>
 
