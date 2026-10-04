@@ -1,0 +1,137 @@
+<svg id="dockCompare" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" width="100%" style="max-width:960px;display:block;margin:0 auto" role="img" aria-labelledby="dockComp-ttl dockComp-dsc" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Inter, Roboto, Helvetica, Arial, sans-serif">
+  <title id="dockComp-ttl">¿Por qué usar Docker? Comparativa Visual</title>
+  <desc id="dockComp-dsc">Comparativa visual entre el caos de dependencias sin Docker y la estandarización mediante un contenedor idéntico en desarrollo y nube.</desc>
+  <defs>
+    <style>
+      #dockCompare .title { fill: #161A26; font-size: 22px; font-weight: 700; }
+      #dockCompare .sub { fill: #79809A; font-size: 13.5px; }
+      #dockCompare .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      #dockCompare .panel-bad { fill: #FFF5F5; stroke: #FECACA; stroke-width: 1.5; }
+      #dockCompare .panel-good { fill: #F0FDF4; stroke: #BBF7D0; stroke-width: 1.5; }
+      #dockCompare .dock-blue { fill: #0284C7; stroke: #0369A1; stroke-width: 1.5; }
+      #dockCompare .dock-ridge { fill: #0369A1; }
+    </style>
+    <filter id="compLift" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#0F172A" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="480" rx="16" fill="#FBFBFD"/>
+
+  <!-- Encabezado -->
+  <text class="title" x="48" y="50">¿Por Qué Docker? Paridad Local vs. Producción</text>
+  <text class="sub" x="48" y="74">Eliminando la discrepancia de entornos mediante empaquetado idéntico</text>
+
+  <!-- ========================================== -->
+  <!-- LADO IZQUIERDO: SIN DOCKER (CAOS)          -->
+  <!-- ========================================== -->
+  <g transform="translate(48, 105)" filter="url(#compLift)">
+    <rect width="410" height="340" rx="14" class="panel-bad"/>
+    
+    <!-- Badge de estado -->
+    <rect x="20" y="20" width="160" height="26" rx="6" fill="#FEE2E2" stroke="#FCA5A5" stroke-width="1.5"/>
+    <circle cx="34" cy="33" r="5" fill="#EF4444"/>
+    <text x="46" y="37" font-size="11" font-weight="700" fill="#991B1B">SIN DOCKER (CAOS)</text>
+
+    <!-- Dispositivo 1: PC del desarrollador (Windows) -->
+    <g transform="translate(30, 70)">
+      <rect width="160" height="85" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+      <rect x="10" y="10" width="30" height="20" rx="3" fill="#0284C7"/>
+      <text class="mono" x="25" y="24" text-anchor="middle" font-size="9" font-weight="700" fill="#FFFFFF">WIN</text>
+      <text x="48" y="24" font-size="12" font-weight="700" fill="#1E293B">Laptop Dev</text>
+      <text class="mono" x="12" y="50" font-size="11" fill="#475569">Node: v22.1.0</text>
+      <text class="mono" x="12" y="68" font-size="11" fill="#16A34A">Status: Funciona OK</text>
+    </g>
+
+    <!-- Dispositivo 2: Servidor en la Nube -->
+    <g transform="translate(220, 70)">
+      <rect width="160" height="85" rx="8" fill="#FFFFFF" stroke="#FECACA" stroke-width="2"/>
+      <rect x="10" y="10" width="35" height="20" rx="3" fill="#374151"/>
+      <text class="mono" x="27" y="24" text-anchor="middle" font-size="9" font-weight="700" fill="#FFFFFF">LINUX</text>
+      <text x="52" y="24" font-size="12" font-weight="700" fill="#1E293B">Servidor Cloud</text>
+      <text class="mono" x="12" y="50" font-size="11" fill="#DC2626">Node: v18.4.0</text>
+      <text class="mono" x="12" y="68" font-size="11" font-weight="700" fill="#DC2626">SyntaxError / Crash</text>
+    </g>
+
+    <!-- Cables enredados / Cruce de incompatibilidad -->
+    <path d="M190, 112 C 205,100 205,125 220, 112" fill="none" stroke="#DC2626" stroke-width="2.5" stroke-dasharray="4 3"/>
+
+    <!-- Alerta gráfica central: "En mi máquina sí funciona" -->
+    <g transform="translate(30, 180)">
+      <rect width="350" height="120" rx="10" fill="#FFFFFF" stroke="#FCA5A5" stroke-width="1.5"/>
+      <!-- Icono de Advertencia -->
+      <polygon points="40,25 25,55 55,55" fill="#EF4444"/>
+      <text x="40" y="50" text-anchor="middle" font-weight="800" font-size="14" fill="#FFFFFF">!</text>
+      
+      <text x="68" y="38" font-size="13" font-weight="700" fill="#991B1B">"En mi máquina sí funcionaba..."</text>
+      <text x="68" y="56" font-size="11.5" fill="#64748B">Rutas diferentes en Windows vs Linux (\ vs /)</text>
+      <text x="68" y="74" font-size="11.5" fill="#64748B">Librerías compiladas con versiones incompatibles</text>
+      <text x="68" y="94" font-size="11.5" font-weight="600" fill="#DC2626">PostgreSQL local no coincide con la base remota</text>
+    </g>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- LADO DERECHO: CON DOCKER (ESTANDARIZADO)   -->
+  <!-- ========================================== -->
+  <g transform="translate(502, 105)" filter="url(#compLift)">
+    <rect width="410" height="340" rx="14" class="panel-good"/>
+    
+    <!-- Badge de estado -->
+    <rect x="20" y="20" width="180" height="26" rx="6" fill="#DCFCE7" stroke="#86EFAC" stroke-width="1.5"/>
+    <circle cx="34" cy="33" r="5" fill="#16A34A"/>
+    <text x="46" y="37" font-size="11" font-weight="700" fill="#14532D">CON DOCKER (ESTÁNDAR)</text>
+
+    <!-- EL CONTENEDOR MARÍTIMO DOCKER -->
+    <g transform="translate(45, 65)">
+      <!-- Caja principal del contenedor -->
+      <rect width="320" height="110" rx="8" class="dock-blue"/>
+      
+      <!-- Relieves metálicos del contenedor -->
+      <rect x="25" y="15" width="8" height="80" rx="2" class="dock-ridge"/>
+      <rect x="50" y="15" width="8" height="80" rx="2" class="dock-ridge"/>
+      <rect x="75" y="15" width="8" height="80" rx="2" class="dock-ridge"/>
+      <rect x="100" y="15" width="8" height="80" rx="2" class="dock-ridge"/>
+
+      <!-- Contenido dentro del contenedor -->
+      <rect x="130" y="18" width="170" height="74" rx="6" fill="#0C4A6E"/>
+      <text class="mono" x="145" y="40" font-size="11.5" font-weight="700" fill="#38BDF8">node:20-alpine</text>
+      <text class="mono" x="145" y="58" font-size="11" fill="#F0FDF4">&gt; NestJS App (dist)</text>
+      <text class="mono" x="145" y="76" font-size="11" fill="#FDE047">&gt; Dependencias prod</text>
+    </g>
+
+    <!-- Flechas hacia abajo a cualquier anfitrión -->
+    <path d="M110, 185 V 215" fill="none" stroke="#16A34A" stroke-width="2.5"/>
+    <path d="M205, 185 V 215" fill="none" stroke="#16A34A" stroke-width="2.5"/>
+    <path d="M300, 185 V 215" fill="none" stroke="#16A34A" stroke-width="2.5"/>
+
+    <!-- Tres entornos idénticos abajo -->
+    <g transform="translate(25, 220)">
+      <!-- Host 1: Windows -->
+      <rect x="0" y="0" width="105" height="95" rx="8" fill="#FFFFFF" stroke="#86EFAC" stroke-width="1.5"/>
+      <rect x="10" y="10" width="22" height="16" rx="2" fill="#0284C7"/>
+      <text class="mono" x="21" y="22" text-anchor="middle" font-size="8" font-weight="700" fill="#FFFFFF">W</text>
+      <text x="36" y="22" font-size="11" font-weight="700" fill="#1E293B">Windows</text>
+      <rect x="10" y="38" width="85" height="24" rx="4" fill="#0284C7"/>
+      <text class="mono" x="52" y="54" text-anchor="middle" font-size="9" fill="#FFFFFF">Contenedor</text>
+      <text x="52" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#16A34A">100% Igual</text>
+
+      <!-- Host 2: Mac -->
+      <rect x="125" y="0" width="105" height="95" rx="8" fill="#FFFFFF" stroke="#86EFAC" stroke-width="1.5"/>
+      <rect x="135" y="10" width="22" height="16" rx="2" fill="#64748B"/>
+      <text class="mono" x="146" y="22" text-anchor="middle" font-size="8" font-weight="700" fill="#FFFFFF">M</text>
+      <text x="162" y="22" font-size="11" font-weight="700" fill="#1E293B">macOS</text>
+      <rect x="135" y="38" width="85" height="24" rx="4" fill="#0284C7"/>
+      <text class="mono" x="177" y="54" text-anchor="middle" font-size="9" fill="#FFFFFF">Contenedor</text>
+      <text x="177" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#16A34A">100% Igual</text>
+
+      <!-- Host 3: Railway -->
+      <rect x="250" y="0" width="105" height="95" rx="8" fill="#FFFFFF" stroke="#86EFAC" stroke-width="1.5"/>
+      <rect x="260" y="10" width="22" height="16" rx="2" fill="#7C3AED"/>
+      <text class="mono" x="271" y="22" text-anchor="middle" font-size="8" font-weight="700" fill="#FFFFFF">R</text>
+      <text x="286" y="22" font-size="11" font-weight="700" fill="#1E293B">Railway</text>
+      <rect x="260" y="38" width="85" height="24" rx="4" fill="#0284C7"/>
+      <text class="mono" x="302" y="54" text-anchor="middle" font-size="9" fill="#FFFFFF">Contenedor</text>
+      <text x="302" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#16A34A">100% Igual</text>
+    </g>
+  </g>
+</svg>

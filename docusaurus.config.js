@@ -135,7 +135,7 @@ const config = {
             prism: {
                 theme: prismThemes.vsDark,
                 darkTheme: prismThemes.vsDark,
-                additionalLanguages: ['java', 'javascript', 'python', 'bash', 'json', 'dart', 'properties', 'ini', 'groovy'],
+                additionalLanguages: ['java', 'javascript', 'python', 'bash', 'json', 'dart', 'properties', 'ini', 'groovy', 'docker', 'yaml'],
             },
             algolia: {
                 // The application ID provided by Algolia

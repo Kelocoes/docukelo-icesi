@@ -1,0 +1,8 @@
+{
+    "label": "S9 - Despliegue con Docker y Railway",
+    "position": 9,
+    "link": {
+        "type": "generated-index",
+        "description": "Fundamentos de despliegue web, contenedorización y optimización multicapa con Docker, aprovisionamiento de bases de datos PostgreSQL y puesta en producción de APIs NestJS en Railway."
+    }
+}

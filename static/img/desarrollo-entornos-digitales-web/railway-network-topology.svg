@@ -1,0 +1,130 @@
+<svg id="railTopoVisual" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 500" width="100%" style="max-width:960px;display:block;margin:0 auto" role="img" aria-labelledby="rtv-ttl rtv-dsc" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Inter, Roboto, Helvetica, Arial, sans-serif">
+  <title id="rtv-ttl">Topología de Red Railway: Privada vs. Pública</title>
+  <desc id="rtv-dsc">Ilustración gráfica de un datacenter en la nube con red privada interna para NestJS y PostgreSQL, y un túnel de acceso público para la laptop con DBeaver.</desc>
+  <defs>
+    <style>
+      #railTopoVisual .title { fill: #161A26; font-size: 22px; font-weight: 700; }
+      #railTopoVisual .sub { fill: #79809A; font-size: 13.5px; }
+      #railTopoVisual .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      #railTopoVisual .datacenter { fill: #F8FAFC; stroke: #CBD5E1; stroke-width: 2; stroke-dasharray: 8 6; }
+      #railTopoVisual .server-blade { fill: #1E2330; stroke: #0F131D; stroke-width: 1.5; }
+      #railTopoVisual .led-green { fill: #22C55E; filter: drop-shadow(0 0 3px #22C55E); }
+      #railTopoVisual .led-amber { fill: #F59E0B; filter: drop-shadow(0 0 3px #F59E0B); }
+    </style>
+    <marker id="netArrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.4,5 Z" fill="#16A34A"/>
+    </marker>
+    <marker id="netArrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.4,5 Z" fill="#D97706"/>
+    </marker>
+    <filter id="topoLift" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#0F172A" flood-opacity="0.07"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="500" rx="16" fill="#FBFBFD"/>
+
+  <!-- Encabezado -->
+  <text class="title" x="48" y="48">Topología de Red: Malla Privada vs. Proxy Público</text>
+  <text class="sub" x="48" y="72">Cómo viajan los datos dentro de la nube de Railway y cómo conectar clientes externos</text>
+
+  <!-- ========================================== -->
+  <!-- 1. LA NUBE DE RAILWAY (MALLA PRIVADA)      -->
+  <!-- ========================================== -->
+  <g transform="translate(48, 100)" filter="url(#topoLift)">
+    <rect width="530" height="360" rx="16" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    
+    <!-- Banda superior del datacenter privado -->
+    <rect x="20" y="20" width="200" height="26" rx="6" fill="#DCFCE7" stroke="#86EFAC" stroke-width="1.5"/>
+    <circle cx="34" cy="33" r="5" fill="#16A34A"/>
+    <text x="46" y="37" font-size="11" font-weight="700" fill="#14532D">MALLA PRIVADA (RAILWAY)</text>
+
+    <!-- SERVIDOR BLADE: NESTJS CONTAINER -->
+    <g transform="translate(35, 75)">
+      <rect width="200" height="175" rx="10" class="server-blade"/>
+      <!-- Luces LED del servidor -->
+      <circle cx="20" cy="20" r="3.5" class="led-green"/>
+      <circle cx="32" cy="20" r="3.5" class="led-green"/>
+      <circle cx="44" cy="20" r="3.5" class="led-amber"/>
+
+      <rect x="15" y="40" width="170" height="32" rx="4" fill="#2B3245"/>
+      <text class="mono" x="25" y="60" font-size="12" font-weight="700" fill="#60A5FA">NestJS App</text>
+
+      <rect x="15" y="82" width="170" height="80" rx="4" fill="#0F131D"/>
+      <text class="mono" x="25" y="102" font-size="10" fill="#93C5FD">PORT: 3000</text>
+      <text class="mono" x="25" y="122" font-size="10" fill="#34D399">Conecta vía:</text>
+      <text class="mono" x="25" y="142" font-size="9" fill="#FDE047">postgres.railway</text>
+      <text class="mono" x="25" y="154" font-size="9" fill="#FDE047">.internal</text>
+    </g>
+
+    <!-- CABLE DE FIBRA INTERNA (CONEXIÓN DIRECTA Y PRIVADA) -->
+    <path d="M 235, 160 H 305" fill="none" stroke="#16A34A" stroke-width="4" marker-end="url(#netArrowGreen)"/>
+    <rect x="238" y="128" width="64" height="20" rx="4" fill="#16A34A"/>
+    <text class="mono" x="270" y="142" text-anchor="middle" font-size="9" font-weight="700" fill="#FFFFFF">PORT 5432</text>
+
+    <!-- CILINDRO BASE DE DATOS: POSTGRESQL -->
+    <g transform="translate(315, 85)">
+      <!-- Cilindro 3D de base de datos -->
+      <path d="M 0,25 A 75,20 0 0,0 150,25 V 125 A 75,20 0 0,1 0,125 Z" fill="#336791"/>
+      <ellipse cx="75" cy="25" rx="75" ry="20" fill="#4178A7"/>
+      <!-- Anillos metálicos -->
+      <path d="M 0,60 A 75,20 0 0,0 150,60" fill="none" stroke="#1D4E75" stroke-width="2.5"/>
+      <path d="M 0,95 A 75,20 0 0,0 150,95" fill="none" stroke="#1D4E75" stroke-width="2.5"/>
+      
+      <text class="mono" x="75" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">PostgreSQL</text>
+      <text class="mono" x="75" y="160" text-anchor="middle" font-size="11" font-weight="600" fill="#336791">postgres-volume</text>
+    </g>
+
+    <!-- Indicador de red interna -->
+    <rect x="35" y="275" width="460" height="60" rx="8" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
+    <text x="50" y="298" font-size="12" font-weight="700" fill="#14532D">COMUNICACIÓN PRIVADA INTERNA</text>
+    <text class="mono" x="50" y="320" font-size="11" fill="#166534">postgres.railway.internal:5432  (Latencia &lt;1ms | Tráfico Gratuito)</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- 2. ACCESO EXTERNO (LAPTOP CON DBEAVER)     -->
+  <!-- ========================================== -->
+  <g transform="translate(615, 100)" filter="url(#topoLift)">
+    <rect width="300" height="360" rx="16" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    
+    <rect x="20" y="20" width="180" height="26" rx="6" fill="#FEF3C7" stroke="#FCD34D" stroke-width="1.5"/>
+    <circle cx="34" cy="33" r="5" fill="#D97706"/>
+    <text x="46" y="37" font-size="11" font-weight="700" fill="#92400E">ACCESO EXTERNO (DEV)</text>
+
+    <!-- LAPTOP CON DBEAVER -->
+    <g transform="translate(50, 65)">
+      <!-- Pantalla laptop -->
+      <rect width="200" height="120" rx="6" fill="#1E2330"/>
+      <rect x="8" y="8" width="184" height="104" rx="3" fill="#0F131D"/>
+      <!-- UI DBeaver -->
+      <rect x="15" y="15" width="40" height="90" rx="2" fill="#1F2937"/>
+      <circle cx="25" cy="25" r="3" fill="#60A5FA"/>
+      <circle cx="25" cy="40" r="3" fill="#60A5FA"/>
+      <rect x="60" y="15" width="125" height="90" rx="2" fill="#111827"/>
+      <text class="mono" x="70" y="35" font-size="9" fill="#38BDF8">DBeaver Client</text>
+      <text class="mono" x="70" y="55" font-size="8.5" fill="#A7F3D0">SELECT * FROM</text>
+      <text class="mono" x="70" y="70" font-size="8.5" fill="#FDE047">users, roles;</text>
+
+      <!-- Teclado laptop -->
+      <path d="M-15,120 L215,120 L200,138 L0,138 Z" fill="#94A3B8"/>
+    </g>
+
+    <!-- PUERTA DE ENLACE / PROXY PÚBLICO -->
+    <g transform="translate(25, 220)">
+      <rect width="250" height="115" rx="8" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.5"/>
+      <text x="15" y="22" font-size="11" font-weight="700" fill="#92400E">Túnel Proxy Público (Railway)</text>
+      
+      <!-- Dominio de proxy -->
+      <rect x="15" y="32" width="220" height="24" rx="4" fill="#FFFFFF" stroke="#FCD34D"/>
+      <text class="mono" x="22" y="48" font-size="9" fill="#B45309">sakura.proxy.rlwy.net:PORT</text>
+
+      <!-- Fallback IP si falla el ISP -->
+      <rect x="15" y="62" width="220" height="42" rx="4" fill="#FEF2F2" stroke="#FCA5A5"/>
+      <text x="22" y="77" font-size="9.5" font-weight="700" fill="#DC2626">¿Falla el DNS de tu ISP? (Claro/Tigo)</text>
+      <text class="mono" x="22" y="94" font-size="10" font-weight="700" fill="#991B1B">Usa IP: 66.33.22.220 (nslookup)</text>
+    </g>
+  </g>
+
+  <!-- Flecha conector externo hacia Postgres -->
+  <path d="M 615, 275 C 550, 275, 520, 200, 475, 175" fill="none" stroke="#D97706" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#netArrowAmber)"/>
+</svg>
