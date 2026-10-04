@@ -1,0 +1,192 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="100%" height="auto" style="max-width:960px; display:block; margin:0 auto;">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; fill: #64748b; }
+      .badge-txt { font-family: system-ui, -apple-system, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+      .h-row { font-family: system-ui, -apple-system, sans-serif; font-size: 15px; font-weight: 700; }
+      .body  { font-family: system-ui, -apple-system, sans-serif; font-size: 11.5px; fill: #475569; }
+      .body-bold { font-family: system-ui, -apple-system, sans-serif; font-size: 11.5px; font-weight: 700; }
+      .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; }
+      .card  { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; rx: 12px; }
+      .pill  { rx: 6px; }
+    </style>
+    <filter id="shadow" x="-3%" y="-4%" width="106%" height="110%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.05"/>
+    </filter>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#0284c7"/>
+    </marker>
+    <marker id="arr-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#ea580c"/>
+    </marker>
+    <marker id="arr-emerald" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#059669"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="520" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <text class="title" x="32" y="36">Codificación, Encriptación y Hashing</text>
+  <text class="sub" x="32" y="56">Comparativa de los 3 procesos de transformación de datos (Laurentiu Spilca — Spring Security)</text>
+
+  <!-- ========================================================================= -->
+  <!-- FILA 1: CODIFICACIÓN (ENCODING) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(30, 75)">
+    <rect class="card" width="900" height="132" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="6" height="132" rx="3" fill="#0284c7"/>
+
+    <!-- Left Column: Title & Info -->
+    <g transform="translate(24, 18)">
+      <rect class="pill" x="0" y="0" width="88" height="20" fill="#e0f2fe" stroke="#bae6fd" stroke-width="1"/>
+      <text class="badge-txt" x="44" y="14" fill="#0284c7" text-anchor="middle">FORMATO</text>
+      <text class="h-row" x="0" y="42" fill="#0369a1">1. Codificación (Encoding)</text>
+      <text class="body" x="0" y="62">Cambio de formato para transporte / lectura.</text>
+      <text class="mono" x="0" y="80" fill="#0284c7">Ej: Base64, ASCII, URL Encoding</text>
+      <text class="body" x="0" y="98" fill="#64748b">Sin secretos: utiliza estándares públicos.</text>
+    </g>
+
+    <!-- Center Column: Visual Pipeline -->
+    <g transform="translate(305, 16)">
+      <!-- Input Box -->
+      <rect x="0" y="0" width="118" height="54" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      <text class="badge-txt" x="10" y="18" fill="#64748b">INPUT (ORIGEN)</text>
+      <text class="mono" x="10" y="38" fill="#1e293b" font-weight="700">"admin:123"</text>
+
+      <!-- Forward Arrow -->
+      <path d="M126,27 L174,27" fill="none" stroke="#0284c7" stroke-width="2" marker-end="url(#arr-blue)"/>
+      <text class="badge-txt" x="150" y="20" fill="#0284c7" text-anchor="middle">BASE64</text>
+
+      <!-- Output Box (Correctly offset to x=194) -->
+      <rect x="182" y="0" width="144" height="54" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      <text class="badge-txt" x="194" y="18" fill="#64748b">OUTPUT (ENCODED)</text>
+      <text class="mono" x="194" y="38" fill="#0369a1" font-weight="700">"YWRtaW46MTIz"</text>
+
+      <!-- Reversibility Flow -->
+      <path d="M254,58 L254,78 L70,78 L70,58" fill="none" stroke="#0284c7" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#arr-blue)"/>
+      <rect x="102" y="69" width="120" height="18" rx="4" fill="#e0f2fe" stroke="#bae6fd" stroke-width="1"/>
+      <text class="mono" x="162" y="82" fill="#0369a1" font-size="9.5px" font-weight="700" text-anchor="middle">100% REVERSIBLE</text>
+    </g>
+
+    <!-- Right Column: Key Takeaway Box -->
+    <g transform="translate(680, 16)">
+      <rect x="0" y="0" width="196" height="100" rx="8" fill="#f0f9ff" stroke="#bae6fd" stroke-width="1"/>
+      <text class="badge-txt" x="14" y="20" fill="#0369a1">PROPIEDAD CLAVE</text>
+      <text class="body-bold" x="14" y="40" fill="#0c4a6e">Cero Confidencialidad</text>
+      <text class="body" x="14" y="58" fill="#0369a1">
+        <tspan x="14" dy="0">No protege el secreto.</tspan>
+        <tspan x="14" dy="17">Cualquiera puede decodificarlo</tspan>
+        <tspan x="14" dy="17">de manera inmediata sin claves.</tspan>
+      </text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- FILA 2: ENCRIPTACIÓN (ENCRYPTION) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(30, 222)">
+    <rect class="card" width="900" height="132" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="6" height="132" rx="3" fill="#ea580c"/>
+
+    <!-- Left Column: Title & Info -->
+    <g transform="translate(24, 18)">
+      <rect class="pill" x="0" y="0" width="112" height="20" fill="#fff7ed" stroke="#fed7aa" stroke-width="1"/>
+      <text class="badge-txt" x="56" y="14" fill="#ea580c" text-anchor="middle">CONFIDENCIALIDAD</text>
+      <text class="h-row" x="0" y="42" fill="#c2410c">2. Encriptación (Encryption)</text>
+      <text class="body" x="0" y="62">Cifrado reversible protegido por una clave.</text>
+      <text class="mono" x="0" y="80" fill="#ea580c">Ej: AES-256, RSA, TLS/HTTPS</text>
+      <text class="body" x="0" y="98" fill="#64748b">Protege datos en tránsito y en reposo.</text>
+    </g>
+
+    <!-- Center Column: Visual Pipeline -->
+    <g transform="translate(305, 16)">
+      <!-- Input Box -->
+      <rect x="0" y="0" width="118" height="54" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      <text class="badge-txt" x="10" y="18" fill="#64748b">PLAINTEXT</text>
+      <text class="mono" x="10" y="38" fill="#1e293b" font-weight="700">"Tarjeta 4509"</text>
+
+      <!-- Forward Arrow -->
+      <path d="M126,27 L174,27" fill="none" stroke="#ea580c" stroke-width="2" marker-end="url(#arr-orange)"/>
+      <text class="badge-txt" x="150" y="20" fill="#ea580c" text-anchor="middle">+ CLAVE</text>
+
+      <!-- Output Box (Correctly offset to x=194) -->
+      <rect x="182" y="0" width="144" height="54" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      <text class="badge-txt" x="194" y="18" fill="#64748b">CIPHERTEXT (HEX)</text>
+      <text class="mono" x="194" y="38" fill="#c2410c" font-weight="700">"8f4e2a1b9c..."</text>
+
+      <!-- Reversibility Flow -->
+      <path d="M254,58 L254,78 L70,78 L70,58" fill="none" stroke="#ea580c" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#arr-orange)"/>
+      <rect x="92" y="69" width="140" height="18" rx="4" fill="#fff7ed" stroke="#fed7aa" stroke-width="1"/>
+      <text class="mono" x="162" y="82" fill="#c2410c" font-size="9.5px" font-weight="700" text-anchor="middle">REQUIERE SECRET KEY</text>
+    </g>
+
+    <!-- Right Column: Key Takeaway Box -->
+    <g transform="translate(680, 16)">
+      <rect x="0" y="0" width="196" height="100" rx="8" fill="#fff7ed" stroke="#fed7aa" stroke-width="1"/>
+      <text class="badge-txt" x="14" y="20" fill="#c2410c">PROPIEDAD CLAVE</text>
+      <text class="body-bold" x="14" y="40" fill="#9a3412">Bidireccional con Llave</text>
+      <text class="body" x="14" y="58" fill="#c2410c">
+        <tspan x="14" dy="0">Existe función inversa.</tspan>
+        <tspan x="14" dy="17">Solo quien posee la clave</tspan>
+        <tspan x="14" dy="17">secreta puede recuperar el dato.</tspan>
+      </text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- FILA 3: HASHING (HASH FUNCTIONS) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(30, 369)">
+    <rect class="card" width="900" height="132" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="6" height="132" rx="3" fill="#059669"/>
+
+    <!-- Left Column: Title & Info -->
+    <g transform="translate(24, 18)">
+      <rect class="pill" x="0" y="0" width="98" height="20" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1"/>
+      <text class="badge-txt" x="49" y="14" fill="#059669" text-anchor="middle">UNIDIRECCIONAL</text>
+      <text class="h-row" x="0" y="42" fill="#047857">3. Funciones Hash (Hashing)</text>
+      <text class="body" x="0" y="62">Trampa matemática: irreversible por diseño.</text>
+      <text class="mono" x="0" y="80" fill="#059669">Ej: BCrypt, Argon2, PBKDF2</text>
+      <text class="body" x="0" y="98" fill="#64748b">Uso obligatorio para contraseñas.</text>
+    </g>
+
+    <!-- Center Column: Visual Pipeline -->
+    <g transform="translate(305, 16)">
+      <!-- Input Box -->
+      <rect x="0" y="0" width="118" height="54" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      <text class="badge-txt" x="10" y="18" fill="#64748b">PASSWORD PLANA</text>
+      <text class="mono" x="10" y="34" fill="#1e293b" font-weight="700">"miClave123"</text>
+      <text class="mono" x="10" y="47" fill="#059669" font-size="9px">+ Salt Aleatorio</text>
+
+      <!-- Forward Arrow -->
+      <path d="M126,27 L174,27" fill="none" stroke="#059669" stroke-width="2" marker-end="url(#arr-emerald)"/>
+      <text class="badge-txt" x="150" y="20" fill="#059669" text-anchor="middle">HASH</text>
+
+      <!-- Output Box (Correctly offset to x=194) -->
+      <rect x="182" y="0" width="144" height="54" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      <text class="badge-txt" x="194" y="18" fill="#64748b">DIGEST (60 CHAR)</text>
+      <text class="mono" x="194" y="34" fill="#047857" font-weight="700" font-size="10px">"$2a$10$wK...9xZ"</text>
+      <text class="mono" x="194" y="47" fill="#64748b" font-size="9px">Longitud siempre fija</text>
+
+      <!-- Irreversible Flow Blocked with perfectly sized badge -->
+      <path d="M254,58 L254,78 L70,78 L70,58" fill="none" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="4 3"/>
+      <rect x="92" y="69" width="140" height="18" rx="4" fill="#fee2e2" stroke="#fca5a5" stroke-width="1"/>
+      <text class="mono" x="162" y="82" fill="#b91c1c" font-size="9.5px" font-weight="700" text-anchor="middle">IRREVERSIBLE (-X-)</text>
+    </g>
+
+    <!-- Right Column: Key Takeaway Box -->
+    <g transform="translate(680, 16)">
+      <rect x="0" y="0" width="196" height="100" rx="8" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1"/>
+      <text class="badge-txt" x="14" y="20" fill="#047857">VERIFICACIÓN SEGURA</text>
+      <text class="body-bold" x="14" y="40" fill="#065f46">Nunca se desencripta</text>
+      <text class="body" x="14" y="58" fill="#047857">
+        <tspan x="14" dy="0">Se calcula el hash de la</tspan>
+        <tspan x="14" dy="17">contraseña ingresada y se</tspan>
+        <tspan x="14" dy="17">compara con matches().</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

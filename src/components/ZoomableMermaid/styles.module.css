@@ -1,6 +1,6 @@
 .mermaidPreviewWrapper {
     position: relative;
-    cursor: zoom-in;
+    cursor: pointer;
     border: 1px solid var(--ifm-color-emphasis-200);
     border-radius: 8px;
     padding: 12px;

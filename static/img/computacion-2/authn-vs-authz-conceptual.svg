@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" width="100%" height="auto" style="max-width:920px; display:block; margin:0 auto;">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; fill: #64748b; }
+      .label { font-family: system-ui, -apple-system, sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+      .h-card{ font-family: system-ui, -apple-system, sans-serif; font-size: 16px; font-weight: 700; fill: #1e293b; }
+      .body  { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; fill: #475569; }
+      .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; }
+      .card  { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; rx: 12px; }
+      .badge { rx: 6px; }
+    </style>
+    <filter id="shadow" x="-3%" y="-4%" width="106%" height="110%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.05"/>
+    </filter>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="920" height="460" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <text class="title" x="32" y="36">Autenticación vs. Autorización</text>
+  <text class="sub" x="32" y="56">Los dos pilares fundamentales de la seguridad a nivel de aplicación (Application-Level Security)</text>
+
+  <!-- ========================================================================= -->
+  <!-- COLUMNA 1: AUTENTICACIÓN -->
+  <!-- ========================================================================= -->
+  <g transform="translate(32, 78)">
+    <rect class="card" width="395" height="345" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="395" height="5" rx="2.5" fill="#2563eb"/>
+
+    <!-- Badge & Header -->
+    <rect class="badge" x="20" y="18" width="115" height="22" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+    <text class="label" x="77" y="33" fill="#2563eb" text-anchor="middle">FASE 1: IDENTIDAD</text>
+
+    <text class="h-card" x="20" y="66">Autenticación (Authentication)</text>
+    <text class="body" x="20" y="86">Pregunta clave: <tspan fill="#2563eb" font-weight="700">¿Quién eres? (Who are you?)</tspan></text>
+
+    <!-- Visual Metaphor: Digital ID Card / Passport -->
+    <g transform="translate(20, 102)">
+      <rect x="0" y="0" width="355" height="110" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+      <!-- Photo Avatar Placeholder -->
+      <rect x="16" y="16" width="70" height="78" rx="6" fill="#334155"/>
+      <circle cx="51" cy="46" r="16" fill="#64748b"/>
+      <path d="M30,86 C30,72 72,72 72,86 Z" fill="#64748b"/>
+      <!-- ID Details -->
+      <text class="mono" x="102" y="36" fill="#38bdf8" font-weight="700">USER IDENTITY</text>
+      <text class="mono" x="102" y="54" fill="#e2e8f0">Principal: <tspan fill="#4ade80">miUsuario</tspan></text>
+      <text class="mono" x="102" y="72" fill="#94a3b8">Credentials: <tspan fill="#facc15">•••••••• (Verificado)</tspan></text>
+      <rect x="102" y="80" width="95" height="18" rx="3" fill="#166534"/>
+      <text class="mono" x="149" y="93" fill="#86efac" font-size="9.5px" font-weight="700" text-anchor="middle">AUTHENTICATED</text>
+    </g>
+
+    <!-- Mechanisms & Output -->
+    <g transform="translate(20, 230)">
+      <text class="label" x="0" y="10" fill="#64748b">MECANISMOS DE VALIDACIÓN</text>
+      <g transform="translate(0, 20)">
+        <rect x="0" y="0" width="105" height="28" rx="5" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+        <text class="mono" x="52" y="18" fill="#1e293b" text-anchor="middle">HTTP Basic</text>
+
+        <rect x="115" y="0" width="115" height="28" rx="5" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+        <text class="mono" x="172" y="18" fill="#1e293b" text-anchor="middle">Form Login</text>
+
+        <rect x="240" y="0" width="115" height="28" rx="5" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+        <text class="mono" x="297" y="18" fill="#1e293b" text-anchor="middle">JWT / OAuth2</text>
+      </g>
+      <text class="body" x="0" y="78" font-size="11.5px">Resultado: Se crea el objeto <tspan font-family="monospace" fill="#1e293b" font-weight="700">Authentication</tspan> en memoria.</text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- CONECTOR CENTRAL -->
+  <!-- ========================================================================= -->
+  <g transform="translate(433, 235)">
+    <path d="M4,0 L48,0" fill="none" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+    <rect x="13" y="-12" width="28" height="22" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1"/>
+    <text class="label" x="27" y="3" fill="#2563eb" text-anchor="middle" font-size="9px">OK</text>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- COLUMNA 2: AUTORIZACIÓN -->
+  <!-- ========================================================================= -->
+  <g transform="translate(492, 78)">
+    <rect class="card" width="395" height="345" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="395" height="5" rx="2.5" fill="#7c3aed"/>
+
+    <!-- Badge & Header -->
+    <rect class="badge" x="20" y="18" width="115" height="22" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1"/>
+    <text class="label" x="77" y="33" fill="#7c3aed" text-anchor="middle">FASE 2: PERMISOS</text>
+
+    <text class="h-card" x="20" y="66">Autorización (Authorization)</text>
+    <text class="body" x="20" y="86">Pregunta clave: <tspan fill="#7c3aed" font-weight="700">¿Qué puedes hacer? (What can you do?)</tspan></text>
+
+    <!-- Visual Metaphor: Access Turnstile / Keycard Lock -->
+    <g transform="translate(20, 102)">
+      <rect x="0" y="0" width="355" height="110" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+
+      <!-- Granted Authorities Branch 1: Roles -->
+      <g transform="translate(14, 14)">
+        <rect x="0" y="0" width="155" height="82" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+        <text class="label" x="12" y="18" fill="#c084fc">ROLES (Who you ARE)</text>
+        <text class="mono" x="12" y="38" fill="#a855f7">&#8226; ROLE_ADMIN</text>
+        <text class="mono" x="12" y="54" fill="#e2e8f0">&#8226; ROLE_MANAGER</text>
+        <text class="mono" x="12" y="70" fill="#94a3b8">&#8226; ROLE_CLIENT</text>
+      </g>
+
+      <!-- Granted Authorities Branch 2: Permissions -->
+      <g transform="translate(186, 14)">
+        <rect x="0" y="0" width="155" height="82" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+        <text class="label" x="12" y="18" fill="#38bdf8">AUTHORITIES (Can DO)</text>
+        <text class="mono" x="12" y="38" fill="#4ade80">&#8226; READ_PRODUCTS</text>
+        <text class="mono" x="12" y="54" fill="#38bdf8">&#8226; WRITE_ORDER</text>
+        <text class="mono" x="12" y="70" fill="#f87171">&#8226; DELETE_RECORD</text>
+      </g>
+    </g>
+
+    <!-- Enforcement Level -->
+    <g transform="translate(20, 230)">
+      <text class="label" x="0" y="10" fill="#64748b">PUNTOS DE VERIFICACIÓN</text>
+      <g transform="translate(0, 20)">
+        <rect x="0" y="0" width="168" height="28" rx="5" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+        <text class="mono" x="84" y="18" fill="#1e293b" text-anchor="middle">Filtros HTTP (Web)</text>
+
+        <rect x="180" y="0" width="175" height="28" rx="5" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+        <text class="mono" x="267" y="18" fill="#1e293b" text-anchor="middle">@PreAuthorize (Métodos)</text>
+      </g>
+      <text class="body" x="0" y="78" font-size="11.5px">Resultado: Permite (<tspan fill="#16a34a" font-weight="700">200 OK</tspan>) o deniega (<tspan fill="#dc2626" font-weight="700">403 Forbidden</tspan>).</text>
+    </g>
+  </g>
+</svg>
