@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Guía de configuración de Docker
+# Configuración de Docker
 
 ## Instalación y configuración de Docker
 

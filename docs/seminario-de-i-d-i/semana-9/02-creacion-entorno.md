@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Creación de entorno
+# Configuración de Entorno
 
 Para el desarrollo del curso utilizaremos el **SDK de Flutter**, **Dart**, un editor de código optimizado (**Visual Studio Code**) y emuladores o dispositivos físicos para depuración y pruebas en tiempo real.
 

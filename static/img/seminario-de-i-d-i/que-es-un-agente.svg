@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 440" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 19px; font-weight: 800; fill: #1e293b; }
+      .subtitle { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 13.5px; fill: #64748b; }
+      .box-title { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 15px; font-weight: 700; }
+      .box-desc { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 12.5px; fill: #475569; line-height: 1.4; }
+      .badge { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; }
+    </style>
+    <filter id="shadow2" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.06"/>
+    </filter>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#059669"/>
+    </marker>
+    <marker id="arrow-blue2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#5454E9"/>
+    </marker>
+  </defs>
+
+  <!-- Fondo general -->
+  <rect width="920" height="440" rx="16" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Encabezado -->
+  <text x="40" y="44" class="title">Arquitectura de un Agente de Consola (Bucle Autónomo)</text>
+  <text x="40" y="68" class="subtitle">Entidad autónoma con acceso directo a herramientas del sistema operativo y auto-corrección</text>
+
+  <!-- 1. Desarrollador Líder -->
+  <g transform="translate(40, 100)" filter="url(#shadow2)">
+    <rect width="220" height="230" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+    <rect x="0" y="0" width="220" height="42" rx="12" fill="#EEF2FF"/>
+    <rect x="0" y="30" width="220" height="12" fill="#EEF2FF"/>
+    <text x="16" y="27" class="box-title" fill="#5454E9">1. Human-in-the-Lead</text>
+
+    <text x="16" y="70" class="box-desc" font-weight="700" fill="#1e293b">Rol: Líder Arquitectónico</text>
+    <text x="16" y="92" class="box-desc">• Define el Objetivo de alto nivel</text>
+    <text x="16" y="112" class="box-desc">• Fija el contrato (AGENTS.md)</text>
+    <text x="16" y="132" class="box-desc">• Audita el diff antes de aprobar</text>
+
+    <rect x="16" y="152" width="188" height="58" rx="8" fill="#F0FDF4" stroke="#86EFAC"/>
+    <text x="24" y="174" class="badge" fill="#15803D">AUTORIDAD DE REVISIÓN</text>
+    <text x="24" y="192" class="box-desc" fill="#166534" font-size="11.5px">Verifica lints y arquitectura.</text>
+  </g>
+
+  <!-- Flecha Objetivo -->
+  <path d="M 260 170 L 330 170" fill="none" stroke="#5454E9" stroke-width="2.5" marker-end="url(#arrow-blue2)"/>
+  <text x="295" y="160" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11px" font-weight="700" fill="#5454E9">Objetivo</text>
+
+  <!-- 2. Agente en Consola -->
+  <g transform="translate(340, 95)" filter="url(#shadow2)">
+    <rect width="270" height="240" rx="12" fill="#FFFFFF" stroke="#4CB979" stroke-width="2.5"/>
+    <rect x="0" y="0" width="270" height="44" rx="12" fill="#ECFDF5"/>
+    <rect x="0" y="32" width="270" height="12" fill="#ECFDF5"/>
+    <text x="16" y="28" class="box-title" fill="#047857">2. Agente en Consola (CLI)</text>
+
+    <text x="16" y="72" class="box-desc" font-weight="700" fill="#1e293b">Bucle de Ejecución ReAct:</text>
+    <text x="16" y="94" class="box-desc"><strong>1. Thought:</strong> Analiza contrato y código</text>
+    <text x="16" y="114" class="box-desc"><strong>2. Action:</strong> Invoca herramientas (Tools)</text>
+    <text x="16" y="134" class="box-desc"><strong>3. Observation:</strong> Lee resultado de shell</text>
+    <text x="16" y="154" class="box-desc"><strong>4. Refine:</strong> Itera hasta compilar limpio</text>
+
+    <rect x="16" y="172" width="238" height="50" rx="8" fill="#1E1E2E"/>
+    <text x="26" y="193" font-family="Consolas, monospace" font-size="11.5px" fill="#A6E3A1">> agy "resuelve overflow"</text>
+    <text x="26" y="210" font-family="Consolas, monospace" font-size="11px" fill="#CDD6F4">Invocando tool: run_command...</text>
+  </g>
+
+  <!-- Conexión Bidireccional Activa con el Entorno Local -->
+  <path d="M 610 160 L 680 160" fill="none" stroke="#059669" stroke-width="2.5" marker-end="url(#arrow-green)"/>
+  <text x="645" y="150" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5px" font-weight="700" fill="#059669">Tool Call</text>
+
+  <path d="M 680 230 L 610 230" fill="none" stroke="#5454E9" stroke-width="2.5" stroke-dasharray="4,4" marker-end="url(#arrow-blue2)"/>
+  <text x="645" y="248" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5px" font-weight="700" fill="#5454E9">Salida Real</text>
+
+  <!-- 3. Entorno Local de Flutter (Plenamente Conectado) -->
+  <g transform="translate(690, 100)" filter="url(#shadow2)">
+    <rect width="190" height="230" rx="12" fill="#FFFFFF" stroke="#059669" stroke-width="1.5"/>
+    <rect x="0" y="0" width="190" height="42" rx="12" fill="#ECFDF5"/>
+    <rect x="0" y="30" width="190" height="12" fill="#ECFDF5"/>
+    <text x="14" y="27" class="box-title" fill="#047857">3. Proyecto Flutter</text>
+
+    <text x="14" y="70" class="box-desc" font-weight="700" fill="#059669">Acceso Completo:</text>
+    <text x="14" y="92" class="box-desc">✔ Lee y edita archivos</text>
+    <text x="14" y="112" class="box-desc">✔ Corre flutter analyze</text>
+    <text x="14" y="132" class="box-desc">✔ Ejecuta dart format</text>
+    <text x="14" y="152" class="box-desc">✔ Audita dependencias</text>
+
+    <rect x="14" y="172" width="162" height="42" rx="6" fill="#F0FDF4" stroke="#86EFAC"/>
+    <text x="20" y="196" class="badge" fill="#15803D">CONEXIÓN TOTAL</text>
+  </g>
+
+  <!-- Barra de síntesis inferior -->
+  <rect x="40" y="355" width="840" height="55" rx="8" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <text x="56" y="386" font-family="Plus Jakarta Sans" font-size="13px" fill="#334155">
+    <tspan font-weight="800" fill="#059669">Resumen:</tspan> Un agente es un <tspan font-weight="700">colaborador con autonomía y herramientas</tspan>. No solo propone código, sino que lo prueba, lo audita y lo refactoriza en tu propia máquina.
+  </text>
+</svg>

@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Manipulación del DOM, Eventos y Web Storage en JavaScript
+# DOM y Web Storage
 
 ## 1. Manipulación del DOM
 

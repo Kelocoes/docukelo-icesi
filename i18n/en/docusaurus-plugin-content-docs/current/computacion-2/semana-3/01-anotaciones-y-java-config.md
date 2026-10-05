@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Transition from XML to Annotations, Stereotypes & Java Config
+# Annotations and Java Config
 
 In Week 2, we learned to configure the **Spring IoC Container** by declaring beans in XML files (`applicationContext.xml`), explicitly defining their dependencies, and managing their scopes and lifecycle methods with `init-method` and `destroy-method` attributes.
 

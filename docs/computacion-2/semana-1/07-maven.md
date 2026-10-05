@@ -2,7 +2,7 @@
 sidebar_position: 7
 ---
 
-# Apache Maven: Gestión y Ciclo de Vida
+# Maven: Ciclo de Vida
 
 **Apache Maven** es una herramienta fundamental en el ecosistema Java utilizada para la gestión, automatización de construcción (*build automation*) y administración de dependencias de proyectos de software. 
 

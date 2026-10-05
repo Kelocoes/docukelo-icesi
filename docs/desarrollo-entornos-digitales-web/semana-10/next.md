@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Next.js intro
+# Next.js
 
 ## 1. Introducción
 

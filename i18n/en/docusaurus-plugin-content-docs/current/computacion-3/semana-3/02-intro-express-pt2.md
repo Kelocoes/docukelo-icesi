@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Express | TypeScript | MongoDB | Docker. Part 2
+# Data Validation and Middleware
 
 In this second part of the introduction to Express, TypeScript, MongoDB, and Docker, we will expand our RESTful API by adding validation, global error handling, and structured logging.
 

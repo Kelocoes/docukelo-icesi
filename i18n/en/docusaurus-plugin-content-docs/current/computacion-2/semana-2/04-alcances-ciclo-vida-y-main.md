@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# Scopes, Bean Lifecycle, and Standalone Execution
+# Bean Scopes and Lifecycle
 
 In the previous document, we learned how to define beans in XML and connect them using Dependency Injection. Now we will delve into the internal behavior of beans inside the IoC container: their **Scopes**, customizing their **Lifecycle** via initialization and destruction methods, and testing the architecture in a Standalone Java application using `ClassPathXmlApplicationContext`.
 

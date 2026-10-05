@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Express | TypeScript | MongoDB | Docker. Part 3
+# Authentication and Route Protection
 
 In this third part of the guide, we will implement security controls:
 

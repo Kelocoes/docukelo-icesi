@@ -1,8 +1,8 @@
 {
-    "label": "W10 - Screens, Layout & Composition",
+    "label": "W10 - Screens & Terminal AI Agents",
     "position": 10,
     "link": {
         "type": "generated-index",
-        "description": "Screen layout with components, scaffolding (Scaffold, SafeArea), linear layout, and the Screen vs. Page convention in Flutter."
+        "description": "Screen layout with components and introduction to AI coding agents in the terminal."
     }
 }

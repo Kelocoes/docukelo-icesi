@@ -3,7 +3,7 @@ sidebar_position: 1
 sidebar_label: "Autenticación vs Autorización"
 ---
 
-# Autenticación vs. Autorización y Seguridad de Aplicación
+# Autenticación vs. Autorización
 
 En las semanas anteriores de Computación en Red 2 exploramos la arquitectura interna de Spring Boot, el ciclo de vida de los Beans, la persistencia relacional con Spring Data JPA y la construcción de vistas dinámicas con Server-Side Rendering (SSR) mediante Thymeleaf.
 

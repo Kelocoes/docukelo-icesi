@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Metodologías Ágiles: Scrum e Historias de Usuario
+# Metodologías Ágiles y Scrum
 
 Scrum es un marco de trabajo ágil utilizado para gestionar proyectos complejos, especialmente en el desarrollo de software. Se basa en principios de colaboración, flexibilidad y entrega incremental de valor. Scrum se estructura en roles, eventos y artefactos que facilitan la organización y ejecución del trabajo en equipo.
 

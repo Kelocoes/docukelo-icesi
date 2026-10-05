@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Mega Guía de JavaScript para Principiantes
+# Fundamentos de JavaScript
 
 **Cómo usar esta guía:**
 

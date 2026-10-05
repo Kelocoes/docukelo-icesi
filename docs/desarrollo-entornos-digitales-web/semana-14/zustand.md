@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Guía: Zustand en Next.js
+# Zustand en Next.js
 
 ## ¿Qué es Zustand?
 

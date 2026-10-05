@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# Guía de Jest en JS
+# Testing con Jest
 
 ## ¿Qué es Jest?
 

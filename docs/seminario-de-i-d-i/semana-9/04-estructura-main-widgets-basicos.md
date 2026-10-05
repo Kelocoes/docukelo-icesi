@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# Estructura del Proyecto, main.dart y Widgets Básicos
+# Estructura, main.dart y Widgets
 
 Una vez instalado el SDK de Flutter y verificado tu entorno con `flutter doctor`, el siguiente paso es comprender cómo está estructurado un proyecto de Flutter, cuál es la secuencia de ejecución que inicia en `main.dart`, cómo utilizar los widgets visuales primitivos y cómo organizar el código en una arquitectura escalable de **páginas** y **componentes**.
 

@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Requerimientos en el Desarrollo de Software
+# Requerimientos de Software
 
 Los requerimientos describen las necesidades y restricciones que un producto de software debe satisfacer para contribuir a la solución de un problema del mundo real. Funcionan como un medio de comunicación entre los stakeholders y el equipo de desarrollo, y establecen la base para las actividades técnicas y de gestión a lo largo del proyecto.
 

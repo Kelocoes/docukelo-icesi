@@ -3,7 +3,7 @@ sidebar_position: 1
 sidebar_label: "Authentication vs Authorization"
 ---
 
-# Authentication vs. Authorization and Application Security
+# Authentication vs. Authorization
 
 In previous weeks of Network Computing 2, we explored the internal architecture of Spring Boot, the lifecycle of Beans, relational persistence with Spring Data JPA, and building dynamic views with Server-Side Rendering (SSR) via Thymeleaf.
 

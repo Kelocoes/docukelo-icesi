@@ -5,7 +5,7 @@ sidebar_position: 2
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Reto Práctico: App de Rutinas y Ejercicios (FitTrack)
+# Reto FitTrack
 
 En este reto pondrás en práctica tus habilidades de maquetación y arquitectura en Flutter construyendo la interfaz de **FitTrack**, una aplicación móvil de entrenamiento físico diseñada bajo los estándares de **Google Material Design 3** con el color semilla Deep Purple (`#6750A4`).
 

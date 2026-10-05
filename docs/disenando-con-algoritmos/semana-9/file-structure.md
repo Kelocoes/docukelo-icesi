@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Estructura de Archivos para Proyectos con React y Tailwind CSS
+# Estructura de Proyecto React
 
 Organizar correctamente los archivos de tu proyecto es clave para facilitar el **mantenimiento** y la **escalabilidad**. A continuación, se destacan los puntos más importantes para estructurar proyectos con React y Tailwind CSS.
 

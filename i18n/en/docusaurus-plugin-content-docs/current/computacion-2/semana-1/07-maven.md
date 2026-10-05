@@ -79,7 +79,7 @@ mvn -version
 
 The default Maven lifecycle (*default lifecycle*) executes a strict series of sequential phases. When you run a command indicating a specific phase, Maven automatically executes all preceding phases in order:
 
-$$ \text{validate} \rightarrow \mathbf{compile} \rightarrow \text{test} \rightarrow \mathbf{package} \rightarrow \text{verify} \rightarrow \mathbf{install} \rightarrow \text{deploy} $$
+`validate` $\rightarrow$ **`compile`** $\rightarrow$ `test` $\rightarrow$ **`package`** $\rightarrow$ `verify` $\rightarrow$ **`install`** $\rightarrow$ `deploy`
 
 ### Main Phases Explained:
 

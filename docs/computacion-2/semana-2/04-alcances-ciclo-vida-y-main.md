@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# Alcances, Ciclo de Vida del Bean y Ejecución Standalone
+# Alcances y Ciclo de Vida del Bean
 
 En el documento anterior aprendimos a definir beans en XML y conectarlos mediante Inyección de Dependencias. Ahora profundizaremos en el comportamiento interno de los beans dentro del contenedor IoC: sus **Alcances (Scopes)**, la personalización de su **Ciclo de Vida (Lifecycle)** mediante métodos de inicialización y destrucción, y cómo probar la arquitectura en una aplicación Java Standalone utilizando `ClassPathXmlApplicationContext`.
 

@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# React fundamentals slides
+# Diapositivas de React
 
 Aquí encontrarás los fundamentos para trabajar con la librería de React y entender su funcionamiento.
 

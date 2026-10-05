@@ -1,9 +1,9 @@
 ---
 sidebar_position: 2
-title: "Agile Methodologies: Scrum and User Stories"
+title: "Agile Methodologies & Scrum"
 ---
 
-# Agile Methodologies: Scrum and User Stories
+# Agile Methodologies & Scrum
 
 Scrum is an agile framework used to manage complex projects, particularly in software development. It is built on principles of collaboration, flexibility, and incremental value delivery. Scrum is structured around roles, events, and artifacts that facilitate team organization and execution.
 

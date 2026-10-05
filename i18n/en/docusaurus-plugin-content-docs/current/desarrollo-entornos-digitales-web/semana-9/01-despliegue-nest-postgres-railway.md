@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# API Deployment with NestJS, Docker, and PostgreSQL on Railway
+# Deployment on Railway
 
 Throughout previous weeks, we built REST controllers, services, repositories with TypeORM, and authentication mechanisms using JWT. All of this development took place on our local workstation (`localhost`). However, the ultimate goal of web engineering is not running software in isolation, but delivering it to real users, mobile clients, and frontend applications across the internet reliably, securely, and continuously.
 

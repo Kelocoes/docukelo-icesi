@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Concepto de Componente y Paradigma Declarativo
+# Componentes y Paradigma Declarativo
 
 En el desarrollo de aplicaciones frontend modernas, la interfaz de usuario no se construye como una serie de pantallas monolíticas ni mediante la manipulación manual de píxeles o etiquetas. En su lugar, el diseño y la arquitectura se fundamentan en dos pilares esenciales: el **paradigma declarativo** y el **concepto de componente reutilizable**.
 

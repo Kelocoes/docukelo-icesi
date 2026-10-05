@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Transición de XML a Anotaciones, Estereotipos y Java Config
+# Anotaciones y Java Config
 
 En la Semana 2 aprendimos a configurar el **Contenedor IoC de Spring** declarando beans en archivos XML (`applicationContext.xml`), definiendo explícitamente sus dependencias y administrando sus alcances (*scopes*) y métodos de ciclo de vida con los atributos `init-method` y `destroy-method`.
 

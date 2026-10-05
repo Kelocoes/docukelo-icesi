@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Guía Completa de Axios en React con TypeScript
+# Axios en React y TypeScript
 
 ## Introducción
 

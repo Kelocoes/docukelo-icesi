@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# Ejercicios con Moment.js, Lodash y Faker.js
+# Moment, Lodash y Faker
 
 En este documento encontrarás ejercicios prácticos con **Moment.js**, **Lodash** y **Faker.js**.  
 Cada sección incluye una breve explicación de la librería, un enlace a su documentación oficial y 10 ejercicios.  

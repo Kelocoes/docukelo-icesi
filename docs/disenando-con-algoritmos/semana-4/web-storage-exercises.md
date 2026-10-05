@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Ejercicios de Web Storage en JavaScript
+# Ejercicios de Web Storage
 
 Este documento te ayudará a practicar **Web Storage** en JavaScript con ejercicios progresivos.  
 La idea es que tengas una **consigna clara** y una **base de código lista para copiar y pegar**, así no empiezas desde cero.

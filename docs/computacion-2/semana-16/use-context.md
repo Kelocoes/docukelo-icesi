@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Guía de Autenticación con Context API y Rutas Protegidas en React
+# Context API y Rutas Protegidas
 
 Esta guía explica cómo gestionar el estado global de autenticación en una aplicación React utilizando el **Context API** y cómo restringir el acceso a ciertas partes de la aplicación mediante **Rutas Protegidas**.
 

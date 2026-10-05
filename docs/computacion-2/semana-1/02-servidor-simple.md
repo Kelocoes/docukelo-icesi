@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Construcción de un servidor simple
+# Servidor Simple
 
 ## Guía paso a paso para construir un servidor web simple en Java   
 
