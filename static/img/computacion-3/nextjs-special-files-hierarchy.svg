@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" width="100%" style="max-width: 960px;" role="img" aria-label="Jerarquía de renderizado de los archivos especiales del App Router">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 13px; fill: #64748b; }
+      .label { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+      .file  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 12.5px; font-weight: 700; }
+      .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; }
+      .desc  { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 11.5px; fill: #64748b; }
+    </style>
+    <filter id="hier-shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+  </defs>
+
+  <rect x="10" y="10" width="940" height="410" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="480" y="42" class="title" text-anchor="middle">Archivos especiales: cómo se anidan al renderizar</text>
+  <text x="480" y="62" class="sub" text-anchor="middle">Next.js envuelve tu page.tsx con los archivos especiales del mismo segmento, como muñecas rusas</text>
+
+  <!-- LEFT: files -->
+  <rect x="30" y="84" width="330" height="316" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#hier-shadow)"/>
+  <text x="48" y="110" class="label" fill="#475569">APP/CURSOS/</text>
+
+  <circle cx="54" cy="140" r="6" fill="#a855f7"/>
+  <text x="70" y="144" class="file" fill="#6b21a8">layout.tsx</text>
+  <text x="70" y="160" class="desc">UI compartida que persiste</text>
+
+  <circle cx="54" cy="184" r="6" fill="#94a3b8"/>
+  <text x="70" y="188" class="file" fill="#334155">template.tsx</text>
+  <text x="70" y="204" class="desc">Como layout, pero se re-monta</text>
+
+  <circle cx="54" cy="228" r="6" fill="#ef4444"/>
+  <text x="70" y="232" class="file" fill="#b91c1c">error.tsx</text>
+  <text x="70" y="248" class="desc">UI ante errores inesperados</text>
+
+  <circle cx="54" cy="272" r="6" fill="#f59e0b"/>
+  <text x="70" y="276" class="file" fill="#b45309">loading.tsx</text>
+  <text x="70" y="292" class="desc">Skeleton mientras carga</text>
+
+  <circle cx="54" cy="316" r="6" fill="#eab308"/>
+  <text x="70" y="320" class="file" fill="#854d0e">not-found.tsx</text>
+  <text x="70" y="336" class="desc">UI para 404</text>
+
+  <circle cx="54" cy="360" r="6" fill="#2563eb"/>
+  <text x="70" y="364" class="file" fill="#1d4ed8">page.tsx</text>
+  <text x="70" y="380" class="desc">Contenido único de la ruta</text>
+
+  <rect x="232" y="352" width="110" height="34" rx="8" fill="#0f172a"/>
+  <text x="287" y="367" class="mono" fill="#94a3b8" text-anchor="middle">opcionales,</text>
+  <text x="287" y="380" class="mono" fill="#4ade80" text-anchor="middle">menos page</text>
+
+  <!-- RIGHT: nested -->
+  <rect x="384" y="84" width="546" height="316" rx="14" fill="#faf5ff" stroke="#a855f7" stroke-width="1.8"/>
+  <text x="400" y="106" class="mono" fill="#6b21a8" font-weight="700">&lt;Layout&gt;</text>
+  <text x="914" y="106" class="mono" fill="#7e22ce" text-anchor="end">layout.tsx</text>
+
+  <rect x="400" y="116" width="514" height="272" rx="12" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.6"/>
+  <text x="416" y="138" class="mono" fill="#334155" font-weight="700">&lt;Template&gt;</text>
+  <text x="898" y="138" class="mono" fill="#64748b" text-anchor="end">template.tsx</text>
+
+  <rect x="416" y="148" width="482" height="228" rx="12" fill="#fef2f2" stroke="#ef4444" stroke-width="1.6"/>
+  <text x="432" y="170" class="mono" fill="#b91c1c" font-weight="700">&lt;ErrorBoundary fallback={&lt;Error/&gt;}&gt;</text>
+  <text x="882" y="170" class="mono" fill="#dc2626" text-anchor="end">error.tsx</text>
+
+  <rect x="432" y="180" width="450" height="184" rx="12" fill="#fff7ed" stroke="#f59e0b" stroke-width="1.6"/>
+  <text x="448" y="202" class="mono" fill="#b45309" font-weight="700">&lt;Suspense fallback={&lt;Loading/&gt;}&gt;</text>
+  <text x="866" y="202" class="mono" fill="#d97706" text-anchor="end">loading.tsx</text>
+
+  <rect x="448" y="212" width="418" height="140" rx="12" fill="#fefce8" stroke="#eab308" stroke-width="1.6"/>
+  <text x="464" y="234" class="mono" fill="#854d0e" font-weight="700">&lt;NotFoundBoundary fallback={&lt;NotFound/&gt;}&gt;</text>
+  <text x="850" y="252" class="mono" fill="#a16207" text-anchor="end">not-found.tsx</text>
+
+  <rect x="464" y="264" width="386" height="74" rx="12" fill="#2563eb"/>
+  <text x="657" y="296" class="file" fill="#ffffff" text-anchor="middle">&lt;Page /&gt;</text>
+  <text x="657" y="316" class="mono" fill="#bfdbfe" text-anchor="middle">page.tsx · lo que cambia en cada ruta</text>
+</svg>

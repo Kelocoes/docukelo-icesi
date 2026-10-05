@@ -1,9 +1,9 @@
 {
-    "label": "S9 - NestJS - 2",
-    "className": "hidden",
+    "label": "S9 - Introducción a Next.js y App Router",
+    "key": "computacion-3-semana-9",
     "position": 9,
     "link": {
         "type": "generated-index",
-        "description": "Nest JS - Controllers & Validators"
+        "description": "Qué es Next.js y por qué usarlo, estrategias de renderizado (CSR, SSR, SSG), App Router vs Pages Router, Server y Client Components, estructura de un proyecto y práctica guiada con layouts, pages, metadata y navegación."
     }
 }

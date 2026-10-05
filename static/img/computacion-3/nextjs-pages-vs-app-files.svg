@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 400" width="100%" height="100%">
+  <!-- Canvas Background -->
+  <rect width="920" height="400" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Title Header -->
+  <text x="460" y="30" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="16" font-weight="800" fill="#0f172a">Archivos Especiales y Límites de Suspense: Pages Router vs App Router</text>
+  <text x="460" y="48" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="11.5" fill="#64748b">Evolución de configuraciones monolíticas globales a envolturas modulares por segmento</text>
+
+  <!-- LEFT: Pages Router Architecture (Legacy) -->
+  <g transform="translate(24, 68)">
+    <rect width="420" height="310" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="14" y="14" width="392" height="26" rx="6" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="210" y="31" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="800" fill="#475569">PAGES ROUTER: MONOLITO EN pages/</text>
+
+    <!-- File Item 1: _app.js -->
+    <g transform="translate(20, 52)">
+      <rect width="380" height="44" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+      <rect x="10" y="10" width="80" height="24" rx="4" fill="#64748b"/>
+      <text x="50" y="26" text-anchor="middle" font-family="Consolas, monospace" font-size="11" font-weight="700" fill="#ffffff">_app.tsx</text>
+      <text x="100" y="22" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5" font-weight="700" fill="#1e293b">Envoltura Global Única</text>
+      <text x="100" y="35" font-family="Plus Jakarta Sans, sans-serif" font-size="9" fill="#64748b">Se re-renderiza y pierde estado al navegar entre rutas.</text>
+    </g>
+
+    <!-- File Item 2: _document.js -->
+    <g transform="translate(20, 104)">
+      <rect width="380" height="44" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+      <rect x="10" y="10" width="110" height="24" rx="4" fill="#64748b"/>
+      <text x="65" y="26" text-anchor="middle" font-family="Consolas, monospace" font-size="10.5" font-weight="700" fill="#ffffff">_document.tsx</text>
+      <text x="130" y="22" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5" font-weight="700" fill="#1e293b">HTML &amp; Body Estático</text>
+      <text x="130" y="35" font-family="Plus Jakarta Sans, sans-serif" font-size="9" fill="#64748b">Solo corre en servidor; no admite lógica ni estilos dinámicos.</text>
+    </g>
+
+    <!-- File Item 3: _error.js -->
+    <g transform="translate(20, 156)">
+      <rect width="380" height="44" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+      <rect x="10" y="10" width="90" height="24" rx="4" fill="#64748b"/>
+      <text x="55" y="26" text-anchor="middle" font-family="Consolas, monospace" font-size="11" font-weight="700" fill="#ffffff">_error.tsx</text>
+      <text x="110" y="22" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5" font-weight="700" fill="#1e293b">Página de Error Global</text>
+      <text x="110" y="35" font-family="Plus Jakarta Sans, sans-serif" font-size="9" fill="#64748b">Pantalla monolítica sin granularidad contextual por módulo.</text>
+    </g>
+
+    <!-- Limitation Box -->
+    <rect x="20" y="210" width="380" height="84" rx="6" fill="#fff5f5" stroke="#fecaca"/>
+    <text x="32" y="230" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5" font-weight="800" fill="#dc2626">Limitación Central:</text>
+    <text x="32" y="247" font-family="Plus Jakarta Sans, sans-serif" font-size="9.5" fill="#7f1d1d">• Cero soporte de layouts anidados nativos (truco manual getLayout).</text>
+    <text x="32" y="262" font-family="Plus Jakarta Sans, sans-serif" font-size="9.5" fill="#7f1d1d">• Cero Suspense streaming: getServerSideProps bloquea toda la pantalla.</text>
+    <text x="32" y="277" font-family="Plus Jakarta Sans, sans-serif" font-size="9.5" fill="#7f1d1d">• Cualquier archivo .tsx dentro de pages/ es expuesto como ruta.</text>
+  </g>
+
+  <!-- RIGHT: App Router Architecture (Modern) -->
+  <g transform="translate(476, 68)">
+    <rect width="420" height="310" rx="10" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+    <rect x="14" y="14" width="392" height="26" rx="6" fill="#dcfce7" stroke="#4ade80"/>
+    <text x="210" y="31" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="800" fill="#15803d">APP ROUTER: ARCHIVOS ESPECIALES MODULARES</text>
+
+    <!-- File Item 1: layout.tsx -->
+    <g transform="translate(20, 52)">
+      <rect width="380" height="44" rx="6" fill="#ffffff" stroke="#bbf7d0"/>
+      <rect x="10" y="10" width="90" height="24" rx="4" fill="#5454E9"/>
+      <text x="55" y="26" text-anchor="middle" font-family="Consolas, monospace" font-size="11" font-weight="700" fill="#ffffff">layout.tsx</text>
+      <text x="110" y="22" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5" font-weight="700" fill="#1e293b">Layout Anidado Persistente</text>
+      <text x="110" y="35" font-family="Plus Jakarta Sans, sans-serif" font-size="9" fill="#166534">Preserva estado y no se desmonta al navegar entre páginas hijas.</text>
+    </g>
+
+    <!-- File Item 2: loading.tsx (Suspense) -->
+    <g transform="translate(20, 104)">
+      <rect width="380" height="44" rx="6" fill="#ffffff" stroke="#bbf7d0"/>
+      <rect x="10" y="10" width="90" height="24" rx="4" fill="#865CF0"/>
+      <text x="55" y="26" text-anchor="middle" font-family="Consolas, monospace" font-size="11" font-weight="700" fill="#ffffff">loading.tsx</text>
+      <text x="110" y="22" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5" font-weight="700" fill="#1e293b">Límite Automático de &lt;Suspense&gt;</text>
+      <text x="110" y="35" font-family="Plus Jakarta Sans, sans-serif" font-size="9" fill="#166534">Transmite skeletons instantáneos mientras el servidor hace streaming.</text>
+    </g>
+
+    <!-- File Item 3: error.tsx + not-found.tsx -->
+    <g transform="translate(20, 156)">
+      <rect width="380" height="44" rx="6" fill="#ffffff" stroke="#bbf7d0"/>
+      <rect x="10" y="10" width="80" height="24" rx="4" fill="#E9683B"/>
+      <text x="50" y="26" text-anchor="middle" font-family="Consolas, monospace" font-size="10.5" font-weight="700" fill="#ffffff">error.tsx</text>
+      <text x="100" y="22" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5" font-weight="700" fill="#1e293b">Error Boundary Contextual ('use client')</text>
+      <text x="100" y="35" font-family="Plus Jakarta Sans, sans-serif" font-size="9" fill="#166534">Atrapa fallos sin tumbar el layout padre; permite retry con reset().</text>
+    </g>
+
+    <!-- Advantage Box -->
+    <rect x="20" y="210" width="380" height="84" rx="6" fill="#ffffff" stroke="#86efac"/>
+    <text x="32" y="230" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5" font-weight="800" fill="#15803d">Ventajas Clave:</text>
+    <text x="32" y="247" font-family="Plus Jakarta Sans, sans-serif" font-size="9.5" fill="#166534">• Cada carpeta es una isla aislada con su layout, loading y error.</text>
+    <text x="32" y="262" font-family="Plus Jakarta Sans, sans-serif" font-size="9.5" fill="#166534">• Streaming progresivo con React Suspense nativo de fábrica.</text>
+    <text x="32" y="277" font-family="Plus Jakarta Sans, sans-serif" font-size="9.5" fill="#166534">• Colocación privada: utilidades y tests conviven en la misma carpeta.</text>
+  </g>
+</svg>

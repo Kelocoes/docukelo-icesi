@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" width="100%" style="max-width: 960px;" role="img" aria-label="React como librería frente a Next.js como framework">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 13px; fill: #64748b; }
+      .label { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+      .h     { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 15px; font-weight: 700; fill: #0f172a; }
+      .body  { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 12px; font-weight: 600; }
+      .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 10.5px; }
+    </style>
+    <filter id="rvn-shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+    <marker id="rvn-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <rect x="10" y="10" width="940" height="420" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="480" y="42" class="title" text-anchor="middle">React es el motor, Next.js es el vehículo completo</text>
+  <text x="480" y="62" class="sub" text-anchor="middle">Next.js toma React y le agrega las piezas que una aplicación real necesita</text>
+
+  <!-- LEFT: React alone -->
+  <rect x="30" y="84" width="390" height="326" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#rvn-shadow)"/>
+  <rect x="48" y="100" width="150" height="24" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="58" y="116" class="label" fill="#1d4ed8">SOLO REACT · LIBRERÍA</text>
+  <text x="48" y="146" class="h">Tú eliges y ensamblas cada pieza</text>
+
+  <!-- React atom -->
+  <g transform="translate(225,275)">
+    <circle r="62" fill="#0f172a"/>
+    <ellipse rx="44" ry="16" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
+    <ellipse rx="44" ry="16" fill="none" stroke="#38bdf8" stroke-width="2.5" transform="rotate(60)"/>
+    <ellipse rx="44" ry="16" fill="none" stroke="#38bdf8" stroke-width="2.5" transform="rotate(-60)"/>
+    <circle r="7" fill="#38bdf8"/>
+    <text y="50" class="mono" fill="#e2e8f0" text-anchor="middle">UI</text>
+  </g>
+
+  <!-- loose pieces -->
+  <g class="body">
+    <rect x="52" y="168" width="120" height="30" rx="8" fill="#fff7ed" stroke="#fdba74" stroke-dasharray="5 4"/>
+    <text x="112" y="187" class="mono" fill="#9a3412" text-anchor="middle">Router: ?</text>
+    <rect x="280" y="168" width="120" height="30" rx="8" fill="#fff7ed" stroke="#fdba74" stroke-dasharray="5 4"/>
+    <text x="340" y="187" class="mono" fill="#9a3412" text-anchor="middle">Bundler: ?</text>
+    <rect x="48" y="258" width="96" height="30" rx="8" fill="#fff7ed" stroke="#fdba74" stroke-dasharray="5 4"/>
+    <text x="96" y="277" class="mono" fill="#9a3412" text-anchor="middle">SSR: ?</text>
+    <rect x="306" y="258" width="96" height="30" rx="8" fill="#fff7ed" stroke="#fdba74" stroke-dasharray="5 4"/>
+    <text x="354" y="277" class="mono" fill="#9a3412" text-anchor="middle">SEO: ?</text>
+    <rect x="52" y="356" width="120" height="30" rx="8" fill="#fff7ed" stroke="#fdba74" stroke-dasharray="5 4"/>
+    <text x="112" y="375" class="mono" fill="#9a3412" text-anchor="middle">API: ?</text>
+    <rect x="280" y="356" width="120" height="30" rx="8" fill="#fff7ed" stroke="#fdba74" stroke-dasharray="5 4"/>
+    <text x="340" y="375" class="mono" fill="#9a3412" text-anchor="middle">Imágenes: ?</text>
+  </g>
+
+  <!-- middle arrow -->
+  <path d="M432,247 L528,247" fill="none" stroke="#2563eb" stroke-width="2.5" marker-end="url(#rvn-arrow)"/>
+  <rect x="436" y="214" width="88" height="22" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="480" y="229" class="mono" fill="#1d4ed8" text-anchor="middle">convenciones</text>
+
+  <!-- RIGHT: Next.js stack -->
+  <rect x="540" y="84" width="390" height="326" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#rvn-shadow)"/>
+  <rect x="558" y="100" width="164" height="24" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="568" y="116" class="label" fill="#15803d">NEXT.JS · FRAMEWORK</text>
+  <text x="558" y="146" class="h">Piezas integradas y preconfiguradas</text>
+
+  <g>
+    <rect x="558" y="162" width="354" height="32" rx="8" fill="#0f172a"/>
+    <text x="574" y="182" class="body" fill="#e2e8f0">Turbopack</text>
+    <text x="896" y="182" class="mono" fill="#38bdf8" text-anchor="end">next dev / build</text>
+
+    <rect x="558" y="200" width="354" height="32" rx="8" fill="#faf5ff" stroke="#d8b4fe"/>
+    <text x="574" y="220" class="body" fill="#6b21a8">Route Handlers y Server Actions</text>
+    <text x="896" y="220" class="mono" fill="#7e22ce" text-anchor="end">route.ts</text>
+
+    <rect x="558" y="238" width="354" height="32" rx="8" fill="#fff7ed" stroke="#fdba74"/>
+    <text x="574" y="258" class="body" fill="#9a3412">Optimización de assets</text>
+    <text x="896" y="258" class="mono" fill="#c2410c" text-anchor="end">next/image · next/font</text>
+
+    <rect x="558" y="276" width="354" height="32" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="574" y="296" class="body" fill="#166534">Renderizado en servidor</text>
+    <text x="896" y="296" class="mono" fill="#15803d" text-anchor="end">SSR · SSG · Streaming</text>
+
+    <rect x="558" y="314" width="354" height="32" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="574" y="334" class="body" fill="#1e40af">Routing basado en carpetas</text>
+    <text x="896" y="334" class="mono" fill="#1d4ed8" text-anchor="end">app/</text>
+
+    <rect x="558" y="356" width="354" height="38" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="580" cy="375" r="9" fill="none" stroke="#38bdf8" stroke-width="1.8"/>
+    <circle cx="580" cy="375" r="2.5" fill="#38bdf8"/>
+    <text x="598" y="380" class="body" fill="#e2e8f0">React (componentes, hooks, JSX)</text>
+    <text x="896" y="380" class="mono" fill="#38bdf8" text-anchor="end">base</text>
+  </g>
+</svg>

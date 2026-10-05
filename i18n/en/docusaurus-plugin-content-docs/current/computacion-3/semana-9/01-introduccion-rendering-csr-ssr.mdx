@@ -1,0 +1,156 @@
+---
+sidebar_position: 1
+---
+
+# Introduction to Next.js & Rendering Strategies
+
+In modern web architectures, user experience and search engine optimization critically depend on how and where HTML code is generated. For years, the industry standard for building reactive user interfaces consisted of packaging a Single Page Application (SPA) that delegated all computational work to the client's browser.
+
+However, as applications scale in complexity and data volume, this model introduces significant bottlenecks in initial loading times, resource consumption on mobile devices, and organic search ranking (SEO). In this lesson, we explore the foundations of **Next.js**, examine why it transcends React as a full-stack framework, and thoroughly compare **Client-Side Rendering (CSR)** and **Server-Side Rendering (SSR)** strategies.
+
+---
+
+## 1. What is Next.js and Why Use It?
+
+**React** was created strictly as a library focused on the view layer of an application (*User Interface*). When initializing a project with classical bundling tools such as Vite or Create React App, developers receive a clean canvas to create components, but lack built-in solutions for structural production challenges:
+
+- Robust routing system supporting nested and dynamic URLs.
+- Server-side pre-rendering for search indexability and initial performance.
+- Automatic route-based code splitting.
+- Native optimization for typography fonts, images, and third-party scripts.
+- Secure execution of backend code (database queries, secret credential management) without exposing sensitive tokens to the browser.
+
+<img src="/img/computacion-3/nextjs-react-vs-framework.svg" alt="React as a UI library versus Next.js as an integrated full-stack framework" width="100%" />
+
+### Anatomical Comparison
+
+As illustrated in the diagram above:
+
+1. **React as a Library (The Engine)**: Provides the declarative component model, local reactive state (`useState`), component lifecycle hooks (`useEffect`), and JSX syntax. All surrounding architecture (router, bundler, Node.js server runtime, caching policies) must be manually selected, installed, and maintained by the engineering team.
+2. **Next.js as a Framework (The Complete Vehicle)**: Built by the Vercel team in close collaboration with the React core team, Next.js packages the high-performance **Turbopack** compiler (written in Rust), enforces a convention-based filesystem routing architecture, provides hybrid rendering, and enables integrated backend capabilities via **Route Handlers** and **Server Actions**.
+
+:::tip[The Value of Conventions]
+Instead of debating which routing library, bundler, or data-fetching wrapper to install for each new project, Next.js establishes industry-standard conventions. This significantly accelerates onboarding for new software engineers and guarantees architectural optimizations without tedious manual configuration.
+:::
+
+---
+
+## 2. Client-Side Rendering (CSR) vs. Server-Side Rendering (SSR)
+
+To fully grasp the architectural design of Next.js, it is crucial to contrast the HTTP request lifecycle of a traditional SPA against an application with server-side rendering.
+
+<img src="/img/computacion-3/csr-vs-ssr-flow.svg" alt="Comparative rendering flow between CSR and SSR" width="100%" />
+
+### Step-by-Step Flow Breakdown
+
+#### Top Lane: Client-Side Rendering (CSR)
+1. **Step 1 (Empty HTML)**: The user requests a URL (e.g., `localhost:5173`). The web server or CDN immediately returns a nearly blank HTML document, typically consisting of a single container `<div id="root"></div>` and a `<script>` tag referencing the compiled JavaScript bundle (`bundle.js`).
+2. **Step 2 (Download & Execution)**: The client browser downloads the JavaScript bundle. If the application is large, this file can be several megabytes. While the V8 JavaScript engine parses and compiles the script, the user perceives a blank screen or a generic spinner. Once React mounts, a secondary network request (`fetch` or `axios`) is dispatched toward the REST API or backend service.
+3. **Step 3 (Final Paint)**: When the API responds with JSON data, React updates its Virtual DOM and finally paints the visible interactive UI elements.
+
+#### Bottom Lane: Server-Side Rendering (SSR)
+1. **Step 1 (Full HTML on Server)**: When the user requests `localhost:3000`, the Next.js server intercepts the incoming request, executes database queries or external service calls in the Node.js runtime, renders the React component tree, and generates a fully structured HTML document populated with the final content.
+2. **Step 2 (Immediate Visible Content & Hydration)**: The browser receives and renders text, images, and layout immediately. The user can start reading content with zero delay. Concurrently, a minimal JavaScript bundle downloads in the background to attach interactive event listeners (`onClick`, `onChange`); this process is known as **hydration**.
+3. **Step 3 (Full Interactivity)**: Once hydration completes, the interface responds seamlessly to user actions without visual flicker or page layout shifts.
+
+---
+
+## 3. Rendering Strategy Comparison Matrix
+
+| Criterion | Client-Side Rendering (CSR) | Server-Side Rendering (SSR) | Static Site Generation (SSG) |
+| :--- | :--- | :--- | :--- |
+| **Rendering Location** | Client browser | Web server on every request | Build server during compile time (*build time*) |
+| **First Contentful Paint (FCP)** | Slow (bound by JS bundle size and network latency) | Fast (HTML arrives pre-populated with data) | Ultra-fast (pure static HTML served from CDN edges) |
+| **Search Engine Indexing (SEO)** | Suboptimal for crawlers that do not execute heavy JS | Optimal (crawlers parse full content in the very first HTTP response) | Optimal (100% static indexable content) |
+| **Secret Management Security** | Insecure (API keys and access tokens travel to the browser) | Secure (private variables and database connections remain on the server) | Secure (secrets are resolved at build time) |
+| **Server Compute Load** | Minimal (server only serves static assets) | Moderate to High (computes HTML dynamically for each incoming request) | Zero dynamic compute (served as pre-built static files) |
+| **Ideal Use Case** | Authenticated private dashboards behind login gates | Sites with frequent dynamic content dependent on request context | Documentation wikis, blogs, marketing landing pages |
+
+---
+
+## 4. Key Benefits of Developing with Next.js
+
+1. **Core Web Vitals Optimization**:
+   Next.js directly optimizes critical Google performance metrics such as **First Contentful Paint (FCP)** and **Largest Contentful Paint (LCP)**, delivering initial HTML in a fraction of the time required by standard SPAs.
+2. **Data Layer Protection**:
+   By executing business logic and resolving credentials directly on the server, PostgreSQL/MongoDB connections, database passwords, and third-party secret API keys are never exposed in the compiled client-side bundle.
+3. **Intelligent Prefetching**:
+   When a navigation link enters the browser's visible screen area (*viewport*), Next.js silently prefetches the target route's code and payload in the background, ensuring subsequent transitions feel instant.
+4. **Progressive Hybrid Architecture**:
+   A Next.js application is never forced to pick a single rendering strategy. Teams can seamlessly combine static pages for marketing, dynamic SSR pages for user profiles, and interactive CSR subcomponents within the exact same project codebase.
+
+---
+
+## Self-Assessment Quiz
+
+<Quiz id="compu3-s9-01-intro-rendering-quiz">
+  <Question title="What is the fundamental difference between React and Next.js?">
+    <Option>React is a compiled systems programming language, whereas Next.js is an HTTP web server.</Option>
+    <Option correct>React is a library focused on the user interface layer, whereas Next.js is a full-stack framework with built-in routing, compilation, and server rendering capabilities.</Option>
+    <Option>React can only connect to relational SQL databases, whereas Next.js only supports NoSQL.</Option>
+    <Option>Next.js does not use React components and completely replaces JSX syntax.</Option>
+  </Question>
+
+  <Question title="What architectural drawback does a traditional CSR application typically exhibit during the first load?">
+    <Option>The browser rejects HTTP requests if they do not contain Bearer authorization headers.</Option>
+    <Option correct>The user experiences a blank screen while the browser downloads, parses the JavaScript bundle, and dispatches secondary network requests to fetch data.</Option>
+    <Option>The Turbopack compiler aborts the build process if the bundle exceeds 500 KB.</Option>
+    <Option>Database servers crash when compiling the client-side Virtual DOM.</Option>
+  </Question>
+
+  <Question title="In the context of Server-Side Rendering (SSR), what does the term 'hydration' mean?">
+    <Option>Compressing the bundle.js file using gzip algorithms prior to transmission.</Option>
+    <Option>Automatically refreshing the browser tab when a developer saves file changes.</Option>
+    <Option correct>The process in which React attaches interactive event listeners onto the static HTML tree previously rendered by the server.</Option>
+    <Option>Flushing the browser's local cache when a user logs out.</Option>
+  </Question>
+
+  <Question title="Why does Server-Side Rendering (SSR) substantially improve Search Engine Optimization (SEO)?">
+    <Option>Because web servers automatically assign higher-trust SSL certificates.</Option>
+    <Option>Because it blocks automated bot scrapers from consuming network bandwidth.</Option>
+    <Option correct>Because search engine crawlers receive complete HTML text and metadata in the initial HTTP response without having to execute JavaScript.</Option>
+    <Option>Because Next.js automatically submits the domain into Google Search Console.</Option>
+  </Question>
+
+  <Question title="Which rendering strategy is best suited for a technical documentation site that changes infrequently?">
+    <Option>Pure Client-Side Rendering with continuous polling.</Option>
+    <Option correct>Static Site Generation (SSG), as it builds pre-rendered static HTML files at compile time with zero server compute costs.</Option>
+    <Option>Dynamic Server-Side Rendering forcing a database query on every repeat visitor.</Option>
+    <Option>Bidirectional WebSockets with real-time streaming events.</Option>
+  </Question>
+
+  <Question title="What is a critical security advantage of executing code inside Server Components in Next.js?">
+    <Option>Attackers cannot inspect the generated HTML structure from browser DevTools.</Option>
+    <Option correct>Database credentials, secret access tokens, and private API keys remain strictly on the server and are never leaked to the client bundle.</Option>
+    <Option>The framework automatically encrypts all network packets without requiring HTTPS.</Option>
+    <Option>Browser session cookies are disabled to prevent Cross-Site Scripting (XSS) exploits.</Option>
+  </Question>
+
+  <Question title="What is the high-performance bundler and compiler integrated into Next.js to accelerate local development and build pipelines?">
+    <Option>Classic JavaScript-based Babel.</Option>
+    <Option>Webpack 4 with traditional TypeScript loaders.</Option>
+    <Option correct>Turbopack, an incremental bundling engine developed in Rust.</Option>
+    <Option>SWC configured exclusively for Docker production containers.</Option>
+  </Question>
+
+  <Question title="Which Core Web Vital metric measures the time elapsed until the browser renders the first meaningful piece of DOM content?">
+    <Option>Time to First Byte (TTFB).</Option>
+    <Option correct>First Contentful Paint (FCP).</Option>
+    <Option>Cumulative Layout Shift (CLS).</Option>
+    <Option>Interaction to Next Paint (INP).</Option>
+  </Question>
+
+  <Question title="In an application built with Next.js, is it mandatory to choose a single rendering strategy for the entire project?">
+    <Option>Yes, Next.js architecture requires declaring globally whether a project is 100% CSR or 100% SSR.</Option>
+    <Option correct>No, Next.js is a hybrid framework that allows combining static routes (SSG), server-rendered dynamic routes (SSR), and interactive client components (CSR) within the same application.</Option>
+    <Option>Yes, the presence of an app/ directory disables any code execution in the client browser.</Option>
+    <Option>No, but only if an external Apache web server is configured as a reverse proxy.</Option>
+  </Question>
+
+  <Question title="What behavior does Next.js automatically perform when a &lt;Link&gt; component enters the browser viewport?">
+    <Option>Executes an HTTP POST mutation to preheat authentication cookies.</Option>
+    <Option correct>Silently prefetches the destination route's code and payload so that subsequent navigation is practically instantaneous.</Option>
+    <Option>Downloads the entire remote SQL database into the client's IndexedDB storage.</Option>
+    <Option>Reloads the current browser tab to synchronize global application state.</Option>
+  </Question>
+</Quiz>

@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 545" width="100%" style="max-width: 960px;" role="img" aria-label="Anatomía de un proyecto Next.js generado con create-next-app">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 13px; fill: #64748b; }
+      .label { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+      .h     { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 14px; font-weight: 700; }
+      .row   { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 12px; }
+      .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; }
+      .desc  { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 11.5px; fill: #475569; }
+    </style>
+    <filter id="anat-shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <rect x="10" y="10" width="940" height="525" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="480" y="42" class="title" text-anchor="middle">Anatomía de un proyecto Next.js</text>
+  <text x="480" y="62" class="sub" text-anchor="middle">Lo que genera npx create-next-app@latest con las opciones recomendadas</text>
+
+  <!-- ============ EDITOR ============ -->
+  <g filter="url(#anat-shadow)">
+    <rect x="30" y="80" width="420" height="440" rx="10" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+  </g>
+  <path d="M30,90 a10,10 0 0 1 10,-10 h400 a10,10 0 0 1 10,10 v18 h-420 z" fill="#1e293b"/>
+  <circle cx="46" cy="94" r="4" fill="#ef4444"/><circle cx="58" cy="94" r="4" fill="#f59e0b"/><circle cx="70" cy="94" r="4" fill="#10b981"/>
+  <text x="240" y="98" class="mono" fill="#94a3b8" text-anchor="middle">EXPLORER · mi-app-next</text>
+
+  <!-- highlight bands -->
+  <rect x="38" y="135" width="404" height="101" rx="5" fill="#1e3a8a" opacity="0.55"/>
+  <rect x="38" y="255" width="404" height="41" rx="5" fill="#7c2d12" opacity="0.55"/>
+
+  <!-- rows -->
+  <g class="row">
+    <text x="50" y="128" fill="#e2e8f0" font-weight="700">mi-app-next/</text>
+    <text x="70" y="148" fill="#93c5fd" font-weight="700">app/</text>
+    <text x="90" y="168" fill="#cbd5e1">favicon.ico</text>
+    <text x="90" y="188" fill="#cbd5e1">globals.css</text>
+    <text x="90" y="208" fill="#e2e8f0" font-weight="700">layout.tsx</text>
+    <text x="90" y="228" fill="#e2e8f0" font-weight="700">page.tsx</text>
+    <text x="70" y="268" fill="#fdba74" font-weight="700">public/</text>
+    <text x="90" y="288" fill="#cbd5e1">next.svg  vercel.svg  ...</text>
+    <text x="70" y="308" fill="#475569">node_modules/</text>
+    <text x="70" y="328" fill="#94a3b8">AGENTS.md</text>
+    <text x="70" y="348" fill="#d8b4fe">eslint.config.mjs</text>
+    <text x="70" y="368" fill="#94a3b8">next-env.d.ts</text>
+    <text x="70" y="388" fill="#d8b4fe">next.config.ts</text>
+    <text x="70" y="408" fill="#86efac">package.json</text>
+    <text x="70" y="428" fill="#d8b4fe">postcss.config.mjs</text>
+    <text x="70" y="448" fill="#94a3b8">README.md</text>
+    <text x="70" y="468" fill="#d8b4fe">tsconfig.json</text>
+  </g>
+  <!-- markers -->
+  <circle cx="426" cy="344" r="4" fill="#a855f7"/>
+  <circle cx="426" cy="384" r="4" fill="#a855f7"/>
+  <circle cx="426" cy="424" r="4" fill="#a855f7"/>
+  <circle cx="426" cy="464" r="4" fill="#a855f7"/>
+  <circle cx="426" cy="404" r="4" fill="#22c55e"/>
+  <rect x="50" y="486" width="380" height="22" rx="6" fill="#1e293b"/>
+  <text x="62" y="501" class="mono" fill="#4ade80">$ npm run dev</text>
+  <text x="420" y="501" class="mono" fill="#94a3b8" text-anchor="end">Ready on localhost:3000</text>
+
+  <!-- connectors -->
+  <path d="M442,185 C470,185 470,160 500,160" fill="none" stroke="#2563eb" stroke-width="1.8"/>
+  <path d="M442,275 C470,275 470,282 500,282" fill="none" stroke="#ea580c" stroke-width="1.8"/>
+  <path d="M432,404 C470,404 470,388 500,388" fill="none" stroke="#a855f7" stroke-width="1.8"/>
+  <path d="M432,410 C465,410 470,490 500,490" fill="none" stroke="#16a34a" stroke-width="1.8"/>
+
+  <!-- ============ ANNOTATIONS ============ -->
+  <!-- A: app -->
+  <rect x="500" y="88" width="430" height="140" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="1.6"/>
+  <rect x="516" y="100" width="128" height="22" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="526" y="115" class="label" fill="#1d4ed8">APP/ · RUTAS Y UI</text>
+  <text x="516" y="146" class="mono" fill="#1e293b" font-weight="700">layout.tsx</text>
+  <text x="626" y="146" class="desc">Layout raíz: &lt;html&gt; y &lt;body&gt; compartidos</text>
+  <text x="516" y="168" class="mono" fill="#1e293b" font-weight="700">page.tsx</text>
+  <text x="626" y="168" class="desc">La página de la ruta /</text>
+  <text x="516" y="190" class="mono" fill="#1e293b" font-weight="700">globals.css</text>
+  <text x="626" y="190" class="desc">Estilos globales + @import "tailwindcss"</text>
+  <text x="516" y="212" class="mono" fill="#1e293b" font-weight="700">favicon.ico</text>
+  <text x="626" y="212" class="desc">Icono de la pestaña (metadata por archivo)</text>
+
+  <!-- B: public -->
+  <rect x="500" y="242" width="430" height="82" rx="12" fill="#ffffff" stroke="#fdba74" stroke-width="1.6"/>
+  <rect x="516" y="254" width="186" height="22" rx="6" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="526" y="269" class="label" fill="#9a3412">PUBLIC/ · ARCHIVOS ESTÁTICOS</text>
+  <text x="516" y="302" class="mono" fill="#9a3412">public/next.svg</text>
+  <text x="640" y="302" class="mono" fill="#64748b">→</text>
+  <text x="660" y="302" class="mono" fill="#1d4ed8">localhost:3000/next.svg</text>
+
+  <!-- C: config -->
+  <rect x="500" y="338" width="430" height="112" rx="12" fill="#ffffff" stroke="#d8b4fe" stroke-width="1.6"/>
+  <rect x="516" y="350" width="120" height="22" rx="6" fill="#faf5ff" stroke="#d8b4fe"/>
+  <text x="526" y="365" class="label" fill="#7e22ce">CONFIGURACIÓN</text>
+  <text x="516" y="392" class="mono" fill="#1e293b" font-weight="700">next.config.ts</text>
+  <text x="656" y="392" class="desc">Opciones del framework</text>
+  <text x="516" y="414" class="mono" fill="#1e293b" font-weight="700">tsconfig.json</text>
+  <text x="656" y="414" class="desc">TypeScript + alias de imports @/*</text>
+  <text x="516" y="436" class="mono" fill="#1e293b" font-weight="700">eslint · postcss</text>
+  <text x="656" y="436" class="desc">Linter y plugin de Tailwind CSS</text>
+
+  <!-- D: scripts -->
+  <rect x="500" y="464" width="430" height="56" rx="12" fill="#ffffff" stroke="#86efac" stroke-width="1.6"/>
+  <text x="516" y="486" class="label" fill="#15803d">PACKAGE.JSON · SCRIPTS</text>
+  <text x="516" y="508" class="mono" fill="#166534">dev: next dev</text>
+  <text x="640" y="508" class="mono" fill="#166534">build: next build</text>
+  <text x="780" y="508" class="mono" fill="#166534">start: next start</text>
+</svg>

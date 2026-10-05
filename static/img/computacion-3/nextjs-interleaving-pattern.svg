@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 450" width="100%" style="max-width: 960px;" role="img" aria-label="Patrón de intercalado: Server Components dentro de Client Components">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 13px; fill: #64748b; }
+      .label { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+      .comp  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 12px; font-weight: 700; }
+      .code  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; }
+      .desc  { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 11.5px; fill: #475569; }
+      .pill  { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 700; }
+    </style>
+    <filter id="int-shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="int-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <rect x="10" y="10" width="940" height="430" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="480" y="40" class="title" text-anchor="middle">Patrón de Intercalado: Server Components en Client Components</text>
+  <text x="480" y="60" class="sub" text-anchor="middle">Inyectar componentes de servidor como props.children preserva su ejecución en el servidor</text>
+
+  <!-- ============ LEFT: SERVER COMPONENT (EL CONTENIDO) ============ -->
+  <g transform="translate(40,84)" filter="url(#int-shadow)">
+    <rect width="380" height="210" rx="12" fill="#ffffff" stroke="#86efac" stroke-width="1.6"/>
+    <rect x="16" y="16" width="180" height="22" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="26" y="31" class="label" fill="#15803d">1. SE EJECUTA EN SERVIDOR</text>
+    <text x="364" y="31" class="code" fill="#64748b" text-anchor="end">Node.js</text>
+
+    <!-- Node representation -->
+    <rect x="16" y="52" width="348" height="60" rx="8" fill="#0f172a"/>
+    <circle cx="30" cy="72" r="4" fill="#4ade80"/>
+    <text x="42" y="76" class="comp" fill="#4ade80">&lt;ServerDetails /&gt;</text>
+    <text x="42" y="96" class="code" fill="#94a3b8">Consulta DB y emite HTML puro</text>
+
+    <!-- Summary Box -->
+    <rect x="16" y="126" width="348" height="54" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
+    <text x="28" y="148" class="desc" fill="#166534" font-weight="700">Resultado de servidor:</text>
+    <text x="28" y="166" class="desc" fill="#15803d">Genera HTML + RSC Payload (0 KB de JavaScript al cliente)</text>
+  </g>
+
+  <!-- ============ CONNECTOR ARROW ============ -->
+  <path d="M424,189 L536,189" fill="none" stroke="#2563eb" stroke-width="2.2" marker-end="url(#int-arr)"/>
+  <rect x="440" y="156" width="80" height="24" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="480" y="172" class="code" fill="#1d4ed8" text-anchor="middle">Inyección</text>
+
+  <!-- ============ RIGHT: CLIENT CONTAINER (LA RANURA) ============ -->
+  <g transform="translate(540,84)" filter="url(#int-shadow)">
+    <rect width="380" height="210" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="1.6"/>
+    <rect x="16" y="16" width="190" height="22" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="26" y="31" class="label" fill="#1d4ed8">2. CONTENEDOR EN CLIENTE</text>
+    <text x="364" y="31" class="code" fill="#64748b" text-anchor="end">Navegador</text>
+
+    <!-- Client Component with slot -->
+    <rect x="16" y="52" width="348" height="130" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+    <text x="28" y="74" class="comp" fill="#1e293b">&lt;ClientModal&gt; <tspan fill="#64748b" font-weight="400">('use client')</tspan></text>
+    <text x="28" y="92" class="desc" fill="#475569">Maneja eventos locales (abrir, cerrar, clics)</text>
+
+    <!-- Slot children -->
+    <rect x="28" y="104" width="324" height="64" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6" stroke-dasharray="5 4"/>
+    <rect x="38" y="112" width="110" height="18" rx="4" fill="#dcfce7"/>
+    <text x="93" y="125" class="code" fill="#166534" font-weight="700" text-anchor="middle">props.children</text>
+    <text x="38" y="146" class="desc" fill="#15803d">Recibe el HTML del servidor y lo proyecta sin importar su JS</text>
+  </g>
+
+  <!-- ============ BOTTOM COMPARISON BOXES ============ -->
+  <!-- Correct Approach -->
+  <g transform="translate(40,314)">
+    <rect width="420" height="106" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.2"/>
+    <rect x="16" y="14" width="86" height="20" rx="4" fill="#dcfce7"/>
+    <text x="59" y="28" class="pill" fill="#166534" text-anchor="middle">CORRECTO</text>
+    <text x="16" y="56" class="code" fill="#166534" font-weight="700">&lt;ClientModal&gt; &lt;ServerDetails /&gt; &lt;/ClientModal&gt;</text>
+    <text x="16" y="80" class="desc" fill="#15803d">Un Server Component padre compone a ambos y pasa el hijo como slot.</text>
+    <text x="16" y="96" class="desc" fill="#15803d">El hijo permanece 100% en el servidor.</text>
+  </g>
+
+  <!-- Incorrect Approach -->
+  <g transform="translate(500,314)">
+    <rect width="420" height="106" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.2"/>
+    <rect x="16" y="14" width="96" height="20" rx="4" fill="#fee2e2"/>
+    <text x="64" y="28" class="pill" fill="#991b1b" text-anchor="middle">INCORRECTO</text>
+    <text x="16" y="56" class="code" fill="#991b1b" font-weight="700">import ServerDetails from &apos;./ServerDetails&apos;</text>
+    <text x="16" y="80" class="desc" fill="#b91c1c">Importar directamente dentro de un archivo con &apos;use client&apos;.</text>
+    <text x="16" y="96" class="desc" fill="#b91c1c">Fuerza al componente de servidor a empaquetarse en el cliente.</text>
+  </g>
+</svg>
