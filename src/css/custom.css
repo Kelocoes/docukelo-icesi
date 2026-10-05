@@ -406,30 +406,67 @@ div[class*='codeBlockTitle_'] {
   background-color: rgba(255, 255, 255, 0.04);
 }
 
-/* Estilos de resaltado Prism para archivos .properties / ini */
+/* Estilos de resaltado Prism para Docker, YAML, Shell y código general */
 .token.comment,
 .token.prolog,
 .token.doctype,
 .token.cdata {
   color: #6a9955 !important;
-  font-style: italic;
+  font-style: italic !important;
 }
 
-.token.attr-name,
+.token.instruction {
+  color: #e2e8f0 !important;
+}
+
+/* Comandos e instrucciones (FROM, WORKDIR, RUN, COPY, ENV, EXPOSE, CMD) */
+.token.keyword {
+  color: #c586c0 !important;
+  font-weight: 700 !important;
+}
+
+/* Claves de variables de entorno (.env) y propiedades YAML */
 .token.property,
-.token.key {
-  color: #9cdcfe !important;
+.token.attr-name,
+.token.key,
+.token.assign-left {
+  color: #fbbf24 !important; /* Ámbar / Dorado vivo - contraste absoluto */
+  font-weight: 700 !important;
 }
 
-.token.attr-value,
+/* Valores asignados en .env y propiedades */
 .token.value,
-.token.string {
-  color: #ce9178 !important;
+.token.attr-value {
+  color: #4ade80 !important; /* Verde esmeralda nítido */
+  font-weight: 500 !important;
 }
 
-.token.number,
+/* Cadenas de texto entre comillas */
+.token.string {
+  color: #fb923c !important; /* Naranja cálido */
+}
+
+/* Números y puertos (3000, 5432, 10) */
+.token.number {
+  color: #38bdf8 !important; /* Cyan eléctrico */
+  font-weight: 600 !important;
+}
+
+/* Valores booleanos (true / false) */
 .token.boolean {
-  color: #b5cea8 !important;
+  color: #f472b6 !important; /* Rosa / Magenta */
+  font-weight: 700 !important;
+}
+
+/* Variables dinámicas en bash y docker compose (${VAR}) */
+.token.variable {
+  color: #c084fc !important; /* Púrpura suave */
+  font-weight: 600 !important;
+}
+
+.token.punctuation,
+.token.operator {
+  color: #94a3b8 !important;
 }
 
 /* ==========================================================================

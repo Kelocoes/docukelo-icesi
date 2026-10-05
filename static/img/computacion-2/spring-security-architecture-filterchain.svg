@@ -1,0 +1,233 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 530" width="100%" height="auto" style="max-width:1000px; display:block; margin:0 auto;">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; fill: #64748b; }
+      .label { font-family: system-ui, -apple-system, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+      .h-box { font-family: system-ui, -apple-system, sans-serif; font-size: 13.5px; font-weight: 700; fill: #0f172a; }
+      .body  { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; fill: #475569; }
+      .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 10px; }
+      .box   { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; rx: 8px; }
+    </style>
+    <filter id="shadow" x="-3%" y="-4%" width="106%" height="110%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.05"/>
+    </filter>
+    <marker id="arr-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#64748b"/>
+    </marker>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arr-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arr-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#ea580c"/>
+    </marker>
+    <marker id="arr-emerald" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#059669"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="530" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <text class="title" x="30" y="34">Arquitectura Interna de Spring Security</text>
+  <text class="sub" x="30" y="54">Flujo de autenticaci&#243;n: SecurityFilterChain, AuthenticationManager, Providers y UserDetails</text>
+
+  <!-- ========================================================================= -->
+  <!-- ZONA SUPERIOR: HTTP REQUEST & SECURITY FILTER CHAIN -->
+  <!-- ========================================================================= -->
+  <g transform="translate(30, 68)">
+    <!-- External HTTP Request Source -->
+    <g transform="translate(0, 10)">
+      <rect x="0" y="0" width="105" height="54" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+      <text class="label" x="52" y="20" fill="#38bdf8" text-anchor="middle">HTTP CLIENT</text>
+      <text class="mono" x="52" y="35" fill="#e2e8f0" text-anchor="middle">Browser / API</text>
+      <text class="mono" x="52" y="47" fill="#94a3b8" font-size="9px" text-anchor="middle">POST /login</text>
+    </g>
+
+    <!-- Arrow into FilterChain -->
+    <path d="M108,37 L138,37" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arr-blue)"/>
+
+    <!-- Security Filter Chain Boundary -->
+    <rect x="142" y="0" width="550" height="74" rx="10" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="6 5"/>
+    <rect x="152" y="6" width="145" height="16" rx="4" fill="#2563eb"/>
+    <text class="mono" x="224" y="18" fill="#ffffff" font-weight="700" font-size="8.5px" text-anchor="middle">SECURITY FILTER CHAIN</text>
+
+    <!-- Filters Sequence -->
+    <g transform="translate(152, 25)">
+      <!-- Filter 1: Cors/Csrf -->
+      <rect class="box" x="0" y="0" width="120" height="42" filter="url(#shadow)"/>
+      <text class="mono" x="60" y="18" fill="#1e293b" font-weight="700" text-anchor="middle">Cors/CsrfFilter</text>
+      <text class="body" x="60" y="32" font-size="9.5px" text-anchor="middle">Cabeceras y CSRF</text>
+
+      <path d="M122,21 L142,21" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+      <!-- Filter 2: Authentication Filter (Highlighted) -->
+      <rect x="146" y="0" width="200" height="42" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
+      <text class="mono" x="246" y="18" fill="#1e40af" font-weight="700" text-anchor="middle">UsernamePasswordFilter</text>
+      <text class="body" x="246" y="32" font-size="9.5px" fill="#2563eb" text-anchor="middle">Extrae Credenciales</text>
+
+      <path d="M348,21 L368,21" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+      <!-- Filter 3: Authorization Filter -->
+      <rect class="box" x="372" y="0" width="158" height="42" filter="url(#shadow)"/>
+      <text class="mono" x="451" y="18" fill="#1e293b" font-weight="700" text-anchor="middle">AuthorizationFilter</text>
+      <text class="body" x="451" y="32" font-size="9.5px" text-anchor="middle">Verifica Authorities</text>
+    </g>
+
+    <!-- Arrow to DispatcherServlet -->
+    <path d="M694,37 L724,37" fill="none" stroke="#059669" stroke-width="2" marker-end="url(#arr-emerald)"/>
+
+    <!-- Spring MVC Destination -->
+    <g transform="translate(730, 2)">
+      <rect x="0" y="0" width="210" height="70" rx="8" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.5"/>
+      <text class="label" x="105" y="21" fill="#047857" text-anchor="middle">DISPATCHER SERVLET</text>
+      <text class="mono" x="105" y="40" fill="#065f46" font-weight="700" text-anchor="middle">@Controller (MVC)</text>
+      <text class="body" x="105" y="56" font-size="10px" fill="#047857" text-anchor="middle">Petici&#243;n Autorizada (200 OK)</text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- ZONA INTERMEDIA: CONECTORES Y FLECHAS PRINCIPALES -->
+  <!-- ========================================================================= -->
+
+  <!-- Green Dashed Arrow: Leaves directly below AuthFilter at (350, 142) -->
+  <path d="M350,142 C260,146 132,166 132,216" fill="none" stroke="#059669" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arr-emerald)"/>
+  <rect x="155" y="152" width="144" height="22" rx="4" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.2"/>
+  <text class="mono" x="227" y="167" fill="#047857" font-weight="700" font-size="9px" text-anchor="middle">Guarda Authentication</text>
+
+  <!-- Blue Arrow down from AuthFilter to AuthenticationManager -->
+  <path d="M428,142 L410,216" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arr-blue)"/>
+  <rect x="330" y="162" width="168" height="22" rx="4" fill="#ffffff" stroke="#93c5fd" stroke-width="1.2"/>
+  <text class="mono" x="414" y="177" fill="#1e40af" font-weight="700" font-size="9px" text-anchor="middle">authenticate(unauth_token)</text>
+
+  <!-- ========================================================================= -->
+  <!-- ZONA INFERIOR: 3 COLUMNAS MODULARES Y PERFECTAMENTE ALINEADAS -->
+  <!-- ========================================================================= -->
+  <g transform="translate(30, 220)">
+
+    <!-- ========================================== -->
+    <!-- COLUMNA 1 (IZQ): SecurityContextHolder -->
+    <!-- ========================================== -->
+    <g transform="translate(0, 0)">
+      <rect class="box" width="205" height="222" stroke="#059669" stroke-width="1.8" filter="url(#shadow)"/>
+      <rect x="0" y="0" width="205" height="4" rx="2" fill="#059669"/>
+      <text class="label" x="14" y="22" fill="#047857">SESI&#211;N Y CONTEXTO</text>
+      <text class="h-box" x="14" y="42" fill="#065f46">SecurityContextHolder</text>
+      <text class="mono" x="14" y="64" fill="#1e293b">&gt; Almac&#233;n: ThreadLocal</text>
+      <text class="mono" x="14" y="86" fill="#047857">&gt; SecurityContext</text>
+      <text class="mono" x="24" y="108" fill="#059669">&#8226; Authentication (OK)</text>
+      <text class="mono" x="24" y="128" fill="#475569">&#8226; Principal (Usuario)</text>
+      <text class="mono" x="24" y="148" fill="#475569">&#8226; GrantedAuthorities</text>
+
+      <rect x="12" y="170" width="181" height="38" rx="6" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1"/>
+      <text class="body" x="102" y="186" font-size="9.5px" fill="#047857" font-weight="700" text-anchor="middle">Disponible en toda la app</text>
+      <text class="mono" x="102" y="200" font-size="8px" fill="#059669" text-anchor="middle">SecurityContextHolder.getContext()</text>
+    </g>
+
+    <!-- ========================================== -->
+    <!-- COLUMNA 2 (CENTRAL): Manager y Provider -->
+    <!-- ========================================== -->
+
+    <!-- Card 1: AuthenticationManager -->
+    <g transform="translate(245, 0)">
+      <rect class="box" width="270" height="92" stroke="#2563eb" stroke-width="1.8" filter="url(#shadow)"/>
+      <rect x="0" y="0" width="270" height="4" rx="2" fill="#2563eb"/>
+      <text class="label" x="14" y="20" fill="#2563eb">1. COORDINADOR CENTRAL</text>
+      <text class="h-box" x="14" y="40">AuthenticationManager</text>
+      <text class="mono" x="14" y="58" fill="#1e40af">Impl: ProviderManager</text>
+      <text class="body" x="14" y="76">Consulta la lista de proveedores registrados</text>
+    </g>
+
+    <!-- Arrow Manager -> Provider (Clean vertical connector) -->
+    <path d="M380,94 L380,126" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr-purple)"/>
+    <rect x="330" y="101" width="100" height="18" rx="4" fill="#ffffff" stroke="#d8b4fe" stroke-width="1"/>
+    <text class="mono" x="380" y="114" fill="#7c3aed" font-size="8.5px" font-weight="700" text-anchor="middle">Delega validaci&#243;n</text>
+
+    <!-- Card 2: DaoAuthenticationProvider -->
+    <g transform="translate(245, 130)">
+      <rect class="box" width="270" height="92" stroke="#7c3aed" stroke-width="1.8" filter="url(#shadow)"/>
+      <rect x="0" y="0" width="270" height="4" rx="2" fill="#7c3aed"/>
+      <text class="label" x="14" y="20" fill="#7c3aed">2. PROVEEDOR DE AUTENTICACI&#211;N</text>
+      <text class="h-box" x="14" y="38">DaoAuthenticationProvider</text>
+      <text class="body" x="14" y="56">Carga datos v&#237;a UserDetailsService y valida</text>
+      <text class="body" x="14" y="74">la contrase&#241;a ingresada contra el hash BCrypt.</text>
+    </g>
+
+    <!-- ========================================== -->
+    <!-- CONEXIONES ENTRE PROVEEDOR Y COLUMNA DERECHA -->
+    <!-- ========================================== -->
+
+    <!-- Purple Arrow Provider -> UserDetailsService (Smooth S-curve) -->
+    <path d="M515,138 C560,138 565,46 656,46" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr-purple)"/>
+    <!-- Purple Badge: Placed gracefully above arrival at (546, 18) -->
+    <rect x="542" y="18" width="114" height="22" rx="4" fill="#ffffff" stroke="#c084fc" stroke-width="1.2"/>
+    <text class="mono" x="599" y="32" fill="#7c3aed" font-size="8.5px" font-weight="700" text-anchor="middle">loadUserByUsername</text>
+
+    <!-- Orange Arrow Provider -> PasswordEncoder (Horizontal Connection Centered at Y=185) -->
+    <path d="M515,185 L656,185" fill="none" stroke="#ea580c" stroke-width="2" marker-end="url(#arr-orange)"/>
+    <!-- Orange Badge: Placed directly above the line at (542, 158) -->
+    <rect x="542" y="157" width="114" height="22" rx="4" fill="#ffffff" stroke="#fed7aa" stroke-width="1.2"/>
+    <text class="mono" x="599" y="171" fill="#ea580c" font-size="8.5px" font-weight="700" text-anchor="middle">matches(raw, hash)</text>
+
+    <!-- ========================================== -->
+    <!-- COLUMNA 3 (DER): Identidad y BCrypt -->
+    <!-- ========================================== -->
+
+    <!-- Card 3A: UserDetailsService con Integración JPA / BD -->
+    <g transform="translate(662, 0)">
+      <rect class="box" width="308" height="92" stroke="#c084fc" stroke-width="1.8" filter="url(#shadow)"/>
+      <rect x="0" y="0" width="308" height="4" rx="2" fill="#7c3aed"/>
+      <text class="label" x="14" y="20" fill="#7c3aed">3A. CARGA DE IDENTIDAD Y DATOS</text>
+      <text class="h-box" x="14" y="38">UserDetailsService</text>
+      <text class="mono" x="14" y="54" fill="#475569">loadUserByUsername(username)</text>
+
+      <!-- Sub-chip: Acceso a Persistencia JPA -->
+      <rect x="14" y="62" width="280" height="22" rx="4" fill="#0f172a"/>
+      <ellipse cx="28" cy="73" rx="7" ry="3.5" fill="#38bdf8"/>
+      <text class="mono" x="42" y="77" fill="#38bdf8" font-size="9px" font-weight="700">JPA Repository:</text>
+      <text class="mono" x="126" y="77" fill="#e2e8f0" font-size="8.5px">findByUsername &#8594; UserDetails</text>
+    </g>
+
+    <!-- Card 3B: PasswordEncoder (BCrypt) -->
+    <g transform="translate(662, 130)">
+      <rect class="box" width="308" height="92" stroke="#fdba74" stroke-width="1.8" filter="url(#shadow)"/>
+      <rect x="0" y="0" width="308" height="4" rx="2" fill="#ea580c"/>
+      <text class="label" x="14" y="20" fill="#ea580c">3B. VERIFICACI&#211;N CRIPTOGR&#193;FICA</text>
+      <text class="h-box" x="14" y="38">PasswordEncoder</text>
+      <text class="mono" x="14" y="54" fill="#c2410c" font-weight="700">matches(rawPassword, encodedPassword)</text>
+
+      <!-- Sub-chip: Algoritmo BCrypt -->
+      <rect x="14" y="62" width="280" height="22" rx="4" fill="#fff7ed" stroke="#fed7aa" stroke-width="1"/>
+      <text class="mono" x="22" y="77" fill="#9a3412" font-size="8.5px">BCrypt (Salting autom&#225;tico + Work Factor = 12)</text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- BARRA INFERIOR: RESUMEN DEL FLUJO COMPLETO -->
+  <!-- ========================================================================= -->
+  <g transform="translate(30, 475)">
+    <rect x="0" y="0" width="940" height="34" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+    <circle cx="16" cy="17" r="5" fill="#2563eb"/>
+    <text class="mono" x="28" y="21" fill="#1e293b" font-size="10px">
+      <tspan fill="#2563eb" font-weight="700">Flujo:</tspan>
+      <tspan> HTTP &#8594; </tspan>
+      <tspan fill="#2563eb">AuthFilter</tspan>
+      <tspan> &#8594; </tspan>
+      <tspan fill="#1e40af">AuthManager</tspan>
+      <tspan> &#8594; </tspan>
+      <tspan fill="#7c3aed">DaoAuthProvider</tspan>
+      <tspan> &#8594; </tspan>
+      <tspan fill="#7c3aed">UserDetailsService (BD)</tspan>
+      <tspan> &#8594; </tspan>
+      <tspan fill="#ea580c">PasswordEncoder (BCrypt)</tspan>
+      <tspan> &#8594; </tspan>
+      <tspan fill="#059669">SecurityContext</tspan>
+      <tspan> &#8594; </tspan>
+      <tspan fill="#047857" font-weight="700">DispatcherServlet (OK)</tspan>
+    </text>
+  </g>
+</svg>

@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 435" width="100%" height="auto" style="max-width:900px; display:block; margin:0 auto;">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; fill: #64748b; }
+      .label { font-family: system-ui, -apple-system, sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+      .h-card{ font-family: system-ui, -apple-system, sans-serif; font-size: 15px; font-weight: 700; }
+      .body  { font-family: system-ui, -apple-system, sans-serif; font-size: 11.5px; fill: #475569; }
+      .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; }
+      .card  { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; rx: 10px; }
+    </style>
+    <filter id="shadow" x="-3%" y="-4%" width="106%" height="110%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.05"/>
+    </filter>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arr-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="435" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <text class="title" x="32" y="34">GrantedAuthority: Authorities vs. Roles</text>
+  <text class="sub" x="32" y="54">El modelo de control de acceso en Spring Security (Laurentiu Spilca — Lesson 1)</text>
+
+  <!-- ========================================================================= -->
+  <!-- NODO SUPERIOR: USER DETAILS & GRANTED AUTHORITIES -->
+  <!-- ========================================================================= -->
+  <g transform="translate(265, 75)">
+    <!-- User Node -->
+    <rect class="card" x="0" y="0" width="135" height="58" filter="url(#shadow)"/>
+    <text class="label" x="14" y="20" fill="#64748b">ENTIDAD</text>
+    <text class="h-card" x="14" y="40" fill="#0f172a">UserDetails</text>
+
+    <!-- Arrow to GrantedAuthorities -->
+    <path d="M137,29 L175,29" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arr-blue)"/>
+
+    <!-- GrantedAuthorities Node (Corrected text x coordinates to 198) -->
+    <rect class="card" x="182" y="0" width="185" height="58" stroke="#2563eb" stroke-width="1.8" filter="url(#shadow)"/>
+    <text class="label" x="198" y="20" fill="#2563eb">INTERFAZ SPRING</text>
+    <text class="h-card" x="198" y="40" fill="#1e40af">GrantedAuthority</text>
+  </g>
+
+  <!-- Fork Path from Center of GrantedAuthorities (x=540, y=133) to the 2 Lower Cards -->
+  <path d="M540,133 L540,155 L235,155 L235,178" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arr-blue)"/>
+  <path d="M540,155 L665,155 L665,178" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr-purple)"/>
+
+  <!-- ========================================================================= -->
+  <!-- RAMA IZQUIERDA: AUTHORITIES (ACCIONES / PERMISOS ESPECÍFICOS) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(32, 180)">
+    <rect class="card" width="405" height="175" stroke="#93c5fd" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="405" height="4" rx="2" fill="#2563eb"/>
+
+    <g transform="translate(20, 18)">
+      <rect x="0" y="0" width="140" height="22" rx="4" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+      <text class="label" x="70" y="15" fill="#2563eb" text-anchor="middle">ACCIONES PUNTUALES</text>
+
+      <text class="h-card" x="0" y="44" fill="#1e40af">Authorities (What you can DO)</text>
+      <text class="body" x="0" y="62">Permisos at&#243;micos para operaciones individuales:</text>
+
+      <!-- Badges of Authorities -->
+      <g transform="translate(0, 72)">
+        <rect x="0" y="0" width="75" height="26" rx="5" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+        <text class="mono" x="37" y="17" fill="#166534" font-weight="700" text-anchor="middle">READ</text>
+
+        <rect x="85" y="0" width="75" height="26" rx="5" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+        <text class="mono" x="122" y="17" fill="#1e40af" font-weight="700" text-anchor="middle">WRITE</text>
+
+        <rect x="170" y="0" width="85" height="26" rx="5" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+        <text class="mono" x="212" y="17" fill="#991b1b" font-weight="700" text-anchor="middle">DELETE</text>
+
+        <rect x="265" y="0" width="95" height="26" rx="5" fill="#fff7ed" stroke="#fdba74" stroke-width="1"/>
+        <text class="mono" x="312" y="17" fill="#9a3412" font-weight="700" text-anchor="middle">EXECUTE</text>
+      </g>
+
+      <text class="mono" x="0" y="128" fill="#2563eb">Verificaci&#243;n: hasAuthority('WRITE')</text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- RAMA DERECHA: ROLES (QUIÉN ES EL USUARIO / GRUPOS DE PERMISOS) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(463, 180)">
+    <rect class="card" width="405" height="175" stroke="#d8b4fe" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="405" height="4" rx="2" fill="#7c3aed"/>
+
+    <g transform="translate(20, 18)">
+      <rect x="0" y="0" width="135" height="22" rx="4" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1"/>
+      <text class="label" x="67" y="15" fill="#7c3aed" text-anchor="middle">GRUPOS / CARGOS</text>
+
+      <text class="h-card" x="0" y="44" fill="#6b21a8">Roles (Who you ARE)</text>
+      <text class="body" x="0" y="62">Agrupaciones de alto nivel. Usan el prefijo ROLE_:</text>
+
+      <!-- Badges of Roles -->
+      <g transform="translate(0, 72)">
+        <rect x="0" y="0" width="110" height="26" rx="5" fill="#faf5ff" stroke="#d8b4fe" stroke-width="1"/>
+        <text class="mono" x="55" y="17" fill="#6b21a8" font-weight="700" text-anchor="middle">ROLE_ADMIN</text>
+
+        <rect x="120" y="0" width="118" height="26" rx="5" fill="#faf5ff" stroke="#d8b4fe" stroke-width="1"/>
+        <text class="mono" x="179" y="17" fill="#6b21a8" font-weight="700" text-anchor="middle">ROLE_MANAGER</text>
+
+        <rect x="248" y="0" width="110" height="26" rx="5" fill="#faf5ff" stroke="#d8b4fe" stroke-width="1"/>
+        <text class="mono" x="303" y="17" fill="#6b21a8" font-weight="700" text-anchor="middle">ROLE_CLIENT</text>
+      </g>
+
+      <text class="mono" x="0" y="128" fill="#7c3aed">Verificaci&#243;n: hasRole('ADMIN') // Convenci&#243;n</text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- BARRA INFERIOR: REGLA DE ORO (MULTILÍNEA MEDIDA) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(32, 368)">
+    <rect x="0" y="0" width="836" height="48" rx="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+    <circle cx="16" cy="24" r="5" fill="#7c3aed"/>
+    <text class="body" x="30" y="20">
+      <tspan font-weight="700" fill="#1e293b">Regla de Oro en Spring Security: </tspan>
+      <tspan fill="#475569">Un Role es t&#233;cnicamente una GrantedAuthority que comienza con el prefijo ROLE_.</tspan>
+    </text>
+    <text class="body" x="30" y="37">
+      <tspan fill="#2563eb" font-weight="700">Authority: </tspan>
+      <tspan fill="#475569">Acci&#243;n at&#243;mica puntual (permiso). </tspan>
+      <tspan fill="#7c3aed" font-weight="700">Role: </tspan>
+      <tspan fill="#475569">Perfil o cargo organizativo del usuario.</tspan>
+    </text>
+  </g>
+</svg>

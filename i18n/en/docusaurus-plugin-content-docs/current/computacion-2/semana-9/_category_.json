@@ -1,0 +1,8 @@
+{
+    "label": "W9 - Spring Security MVC",
+    "position": 10,
+    "link": {
+        "type": "generated-index",
+        "description": "Conceptual foundations of application-level security, Spring Security internal architecture (Filter Chain, AuthenticationManager, Providers, and UserDetails), password cryptography with BCrypt, and hands-on implementation with JPA and Thymeleaf."
+    }
+}

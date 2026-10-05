@@ -1,0 +1,8 @@
+{
+    "label": "W9 - Deployment with Docker & Railway",
+    "position": 9,
+    "link": {
+        "type": "generated-index",
+        "description": "Web deployment fundamentals, multi-stage Docker containerization and optimization, PostgreSQL database provisioning, and NestJS API production deployment on Railway."
+    }
+}

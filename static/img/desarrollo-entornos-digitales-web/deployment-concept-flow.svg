@@ -1,0 +1,169 @@
+<svg id="depConcept" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="100%" style="max-width:960px;display:block;margin:0 auto" role="img" aria-labelledby="depConcept-ttl depConcept-dsc" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Inter, Roboto, Helvetica, Arial, sans-serif">
+  <title id="depConcept-ttl">El Concepto de Despliegue Web</title>
+  <desc id="depConcept-dsc">Ilustración gráfica de un computador local enviando código a un servidor en la nube accesible por clientes móviles y web.</desc>
+  <defs>
+    <style>
+      #depConcept .title { fill: #161A26; font-size: 22px; font-weight: 700; }
+      #depConcept .sub { fill: #79809A; font-size: 13.5px; }
+      #depConcept .device-body { fill: #2B3245; stroke: #1F2430; stroke-width: 2; }
+      #depConcept .screen-bg { fill: #1E2330; }
+      #depConcept .screen-inner { fill: #0F131D; }
+      #depConcept .lbl { fill: #556074; font-size: 12px; font-weight: 600; }
+      #depConcept .tag-local { fill: #EEF1FF; stroke: #A9B4F2; stroke-width: 1.5; }
+      #depConcept .tag-cloud { fill: #E8F6E3; stroke: #9FD68D; stroke-width: 1.5; }
+      #depConcept .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      #depConcept .glow-green { fill: #22C55E; filter: drop-shadow(0 0 4px #22C55E); }
+      #depConcept .glow-blue { fill: #3B82F6; filter: drop-shadow(0 0 4px #3B82F6); }
+    </style>
+    <marker id="depArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.4,5 Z" fill="#4453C9"/>
+    </marker>
+    <marker id="depArrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.4,5 Z" fill="#16A34A"/>
+    </marker>
+    <filter id="depLift" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0F172A" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Lienzo -->
+  <rect width="960" height="520" rx="16" fill="#FBFBFD"/>
+
+  <!-- Encabezado sintético -->
+  <text class="title" x="48" y="50">¿Qué es Desplegar?</text>
+  <text class="sub" x="48" y="74">De un entorno local aislado a un servidor en la nube accesible 24/7 por el mundo</text>
+
+  <!-- ========================================== -->
+  <!-- 1. COMPUTADOR LOCAL (LAPTOP)              -->
+  <!-- ========================================== -->
+  <g transform="translate(48, 110)" filter="url(#depLift)">
+    <!-- Contenedor suave de zona -->
+    <rect width="280" height="340" rx="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    <rect x="20" y="18" width="130" height="26" rx="6" class="tag-local"/>
+    <text x="85" y="35" text-anchor="middle" font-size="11.5" font-weight="700" fill="#4453C9">ENTORNO LOCAL</text>
+
+    <!-- LAPTOP VECTORIAL -->
+    <!-- Pantalla -->
+    <rect x="35" y="65" width="210" height="135" rx="8" class="device-body"/>
+    <rect x="43" y="73" width="194" height="119" rx="4" class="screen-inner"/>
+
+    <!-- Elementos dentro de la pantalla: Terminal y Código -->
+    <circle cx="55" cy="85" r="3.5" fill="#EF4444"/>
+    <circle cx="65" cy="85" r="3.5" fill="#F59E0B"/>
+    <circle cx="75" cy="85" r="3.5" fill="#10B981"/>
+    <text class="mono" x="55" y="110" font-size="10" fill="#93C5FD">$ npm run start:dev</text>
+    <text class="mono" x="55" y="130" font-size="10" fill="#34D399">&gt; NestJS: 127.0.0.1:3000</text>
+    <text class="mono" x="55" y="150" font-size="10" fill="#CBD5E1">&gt; Postgres: localhost:5432</text>
+    <rect x="55" y="162" width="60" height="16" rx="3" fill="#3B82F6" fill-opacity="0.2"/>
+    <text class="mono" x="85" y="174" text-anchor="middle" font-size="9" fill="#93C5FD">Privado</text>
+
+    <!-- Base / Teclado de la Laptop -->
+    <path d="M15,200 L265,200 L250,225 L30,225 Z" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="1.5"/>
+    <rect x="110" y="202" width="60" height="5" rx="2" fill="#9CA3AF"/>
+    <!-- Trackpad -->
+    <rect x="115" y="210" width="50" height="10" rx="2" fill="#E5E7EB"/>
+
+    <!-- Indicador de estado local -->
+    <rect x="35" y="250" width="210" height="65" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+    <circle cx="55" cy="275" r="6" fill="#F59E0B"/>
+    <text x="70" y="278" font-size="12" font-weight="600" fill="#1E293B">Solo en tu máquina</text>
+    <text x="70" y="296" font-size="11" fill="#64748B">Se apaga al cerrar la tapa</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- 2. FLECHA Y ACCIÓN DE DESPLIEGUE           -->
+  <!-- ========================================== -->
+  <g transform="translate(340, 210)">
+    <!-- Trayectoria con curvatura sutil -->
+    <path d="M0, 50 C 50, 20, 80, 20, 130, 50" fill="none" stroke="#4453C9" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#depArrow)"/>
+
+    <!-- Cohete o Badge de Git Push -->
+    <g transform="translate(65, 10)">
+      <circle cx="0" cy="0" r="26" fill="#EEF1FF" stroke="#A9B4F2" stroke-width="2"/>
+      <!-- Icono de Git / Deploy -->
+      <path d="M-8,-10 L-8,10 M-8,0 C-2,0 8,-4 8,-10 M-8,0 C-2,0 8,4 8,10" fill="none" stroke="#4453C9" stroke-width="2.2" stroke-linecap="round"/>
+      <circle cx="-8" cy="-10" r="3" fill="#4453C9"/>
+      <circle cx="8" cy="-10" r="3" fill="#4453C9"/>
+      <circle cx="8" cy="10" r="3" fill="#4453C9"/>
+    </g>
+
+    <rect x="25" y="55" width="80" height="22" rx="4" fill="#4453C9"/>
+    <text class="mono" x="65" y="70" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">git push</text>
+    <text x="65" y="94" text-anchor="middle" font-size="11" font-weight="600" fill="#556074">Build &amp; Deploy</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- 3. SERVIDOR EN LA NUBE (RAILWAY RACK)     -->
+  <!-- ========================================== -->
+  <g transform="translate(490, 110)" filter="url(#depLift)">
+    <rect width="420" height="340" rx="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    <rect x="20" y="18" width="165" height="26" rx="6" class="tag-cloud"/>
+    <text x="102" y="35" text-anchor="middle" font-size="11.5" font-weight="700" fill="#2B7227">PRODUCCIÓN (NUBE 24/7)</text>
+
+    <!-- RACK DE SERVIDOR VECTORIAL -->
+    <g transform="translate(25, 60)">
+      <!-- Torre / Gabinete del Servidor -->
+      <rect width="180" height="180" rx="8" fill="#1F2430" stroke="#0F131D" stroke-width="2"/>
+      
+      <!-- Bahía 1: Servidor NestJS -->
+      <rect x="10" y="15" width="160" height="42" rx="4" fill="#2B3245"/>
+      <circle cx="26" cy="36" r="4" class="glow-green"/>
+      <rect x="42" y="27" width="55" height="18" rx="3" fill="#3B82F6"/>
+      <text class="mono" x="69" y="39" text-anchor="middle" font-size="9" font-weight="700" fill="#FFFFFF">NestJS</text>
+      <line x1="110" y1="36" x2="160" y2="36" stroke="#4B5563" stroke-width="2" stroke-dasharray="3 2"/>
+
+      <!-- Bahía 2: Docker Engine / Runtime -->
+      <rect x="10" y="68" width="160" height="42" rx="4" fill="#2B3245"/>
+      <circle cx="26" cy="89" r="4" class="glow-blue"/>
+      <text class="mono" x="42" y="93" font-size="10" font-weight="600" fill="#93C5FD">Docker Container</text>
+      <line x1="135" y1="89" x2="160" y2="89" stroke="#4B5563" stroke-width="2"/>
+
+      <!-- Bahía 3: Red y Métricas -->
+      <rect x="10" y="121" width="160" height="44" rx="4" fill="#2B3245"/>
+      <circle cx="26" cy="143" r="4" class="glow-green"/>
+      <rect x="42" y="137" width="3" height="12" fill="#10B981"/>
+      <rect x="48" y="133" width="3" height="16" fill="#10B981"/>
+      <rect x="54" y="139" width="3" height="10" fill="#10B981"/>
+      <text class="mono" x="65" y="146" font-size="9.5" fill="#A7F3D0">Port 3000 (HTTPS)</text>
+    </g>
+
+    <!-- CILINDRO DE BASE DE DATOS POSTGRESQL -->
+    <g transform="translate(240, 75)">
+      <!-- Cilindro 3D estilizado -->
+      <path d="M 0,20 A 45,14 0 0,0 90,20 V 90 A 45,14 0 0,1 0,90 Z" fill="#336791"/>
+      <ellipse cx="45" cy="20" rx="45" ry="14" fill="#4178A7"/>
+      <!-- Bandas metálicas de disco -->
+      <path d="M 0,45 A 45,14 0 0,0 90,45" fill="none" stroke="#254F75" stroke-width="2"/>
+      <path d="M 0,70 A 45,14 0 0,0 90,70" fill="none" stroke="#254F75" stroke-width="2"/>
+      <circle cx="45" cy="20" r="5" fill="#E8F6E3"/>
+      <!-- Etiqueta -->
+      <text class="mono" x="45" y="60" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">PostgreSQL</text>
+      <text class="mono" x="45" y="120" text-anchor="middle" font-size="10" font-weight="600" fill="#336791">Volumen SSD</text>
+    </g>
+
+    <!-- Cable interno de conexión Servidor <-> BD -->
+    <path d="M 195,140 H 240" fill="none" stroke="#10B981" stroke-width="2.5" stroke-dasharray="4 3"/>
+
+    <!-- CLIENTES CONECTÁNDOSE (Abajo) -->
+    <g transform="translate(25, 260)">
+      <rect width="370" height="60" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+      
+      <!-- Icono Smartphone -->
+      <rect x="20" y="12" width="22" height="36" rx="4" fill="#1E293B"/>
+      <rect x="23" y="16" width="16" height="25" rx="2" fill="#3B82F6"/>
+      <circle cx="31" cy="44" r="1.5" fill="#FFFFFF"/>
+
+      <!-- Icono Navegador Web Desktop -->
+      <rect x="60" y="14" width="40" height="32" rx="3" fill="#1E293B"/>
+      <rect x="62" y="18" width="36" height="24" rx="2" fill="#FFFFFF"/>
+      <circle cx="65" cy="16" r="1" fill="#EF4444"/>
+      <circle cx="68" cy="16" r="1" fill="#F59E0B"/>
+
+      <!-- Conexión hacia el servidor -->
+      <path d="M120, 30 H 170" fill="none" stroke="#16A34A" stroke-width="2" marker-end="url(#depArrowGreen)"/>
+      
+      <text x="185" y="27" font-size="11.5" font-weight="700" fill="#166534">Tráfico HTTPS Global</text>
+      <text class="mono" x="185" y="44" font-size="10.5" fill="#4B5563">https://api.tuapp.railway.app</text>
+    </g>
+  </g>
+</svg>
