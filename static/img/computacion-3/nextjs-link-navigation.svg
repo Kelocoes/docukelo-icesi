@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 410" width="100%" style="max-width: 960px;" role="img" aria-label="Navegación tradicional con etiqueta a frente a navegación optimizada con Link">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 13px; fill: #64748b; }
+      .label { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+      .ui    { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 700; }
+      .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 10px; }
+      .chip  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 9.5px; font-weight: 700; }
+      .url   { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 8px; fill: #64748b; }
+    </style>
+    <filter id="nav-shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="nav-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#dc2626"/>
+    </marker>
+    <marker id="nav-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <rect x="10" y="10" width="940" height="390" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="480" y="42" class="title" text-anchor="middle">Navegación: Recarga Completa vs Cliente SPA</text>
+  <text x="480" y="62" class="sub" text-anchor="middle">El componente Link preserva el estado del layout y precarga rutas visibles en el viewport</text>
+
+  <!-- ============ LANE 1: <a> ============ -->
+  <rect x="30" y="80" width="900" height="150" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <rect x="48" y="92" width="130" height="22" rx="6" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="58" y="107" class="label" fill="#b91c1c">&lt;a href="/cursos"&gt;</text>
+
+  <!-- Browser A -->
+  <g transform="translate(60,124)" filter="url(#nav-shadow)">
+    <rect width="166" height="92" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <path d="M0,8 a8,8 0 0 1 8,-8 h150 a8,8 0 0 1 8,8 v10 h-166 z" fill="#f1f5f9"/>
+    <circle cx="10" cy="9" r="2.5" fill="#ef4444"/><circle cx="18" cy="9" r="2.5" fill="#f59e0b"/><circle cx="26" cy="9" r="2.5" fill="#10b981"/>
+    <text x="36" y="12" class="url">localhost:3000/</text>
+    <rect x="10" y="26" width="146" height="16" rx="3" fill="#0f172a"/>
+    <text x="110" y="38" class="ui" fill="#f87171" font-size="9px">Cursos</text>
+    <rect x="10" y="50" width="100" height="7" rx="2" fill="#94a3b8"/>
+    <rect x="10" y="63" width="136" height="6" rx="2" fill="#e2e8f0"/>
+    <rect x="10" y="75" width="116" height="6" rx="2" fill="#e2e8f0"/>
+  </g>
+
+  <!-- Arrow 1 -> Server -->
+  <path d="M230,160 L346,160" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#nav-red)"/>
+  <text x="288" y="151" class="mono" fill="#b91c1c" text-anchor="middle">GET /cursos</text>
+
+  <!-- Server -->
+  <g transform="translate(352,124)" filter="url(#nav-shadow)">
+    <rect width="146" height="92" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+    <rect x="8" y="10" width="130" height="32" rx="5" fill="#1e293b" stroke="#334155"/>
+    <circle cx="20" cy="26" r="3" fill="#10b981"/>
+    <text x="30" y="30" class="mono" fill="#e2e8f0">HTML completo</text>
+    <rect x="8" y="50" width="130" height="32" rx="5" fill="#1e293b" stroke="#334155"/>
+    <circle cx="20" cy="66" r="3" fill="#f59e0b"/>
+    <text x="30" y="70" class="mono" fill="#fbbf24">Recompila JS</text>
+  </g>
+
+  <!-- Arrow Server -> Browser B -->
+  <path d="M502,160 L618,160" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#nav-red)"/>
+  <text x="560" y="151" class="mono" fill="#b91c1c" text-anchor="middle">Nuevo documento</text>
+
+  <!-- Browser B (Reloading) -->
+  <g transform="translate(624,124)" filter="url(#nav-shadow)">
+    <rect width="166" height="92" rx="8" fill="#ffffff" stroke="#fca5a5" stroke-width="1.5"/>
+    <path d="M0,8 a8,8 0 0 1 8,-8 h150 a8,8 0 0 1 8,8 v10 h-166 z" fill="#fef2f2"/>
+    <circle cx="10" cy="9" r="2.5" fill="#ef4444"/><circle cx="18" cy="9" r="2.5" fill="#f59e0b"/><circle cx="26" cy="9" r="2.5" fill="#10b981"/>
+    <text x="36" y="12" class="url">localhost:3000/cursos</text>
+    <path d="M83,38 a14,14 0 1 1 -12,7" fill="none" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/>
+    <path d="M66,40 L72,46 L76,38 Z" fill="#dc2626"/>
+    <text x="83" y="78" class="mono" fill="#b91c1c" text-anchor="middle">Recarga completa</text>
+  </g>
+
+  <!-- Negative consequences badges -->
+  <g transform="translate(802,126)">
+    <rect x="0" y="0" width="116" height="22" rx="6" fill="#fef2f2" stroke="#fca5a5"/>
+    <text x="58" y="15" class="chip" fill="#b91c1c" text-anchor="middle">Pantallazo blanco</text>
+
+    <rect x="0" y="32" width="116" height="22" rx="6" fill="#fef2f2" stroke="#fca5a5"/>
+    <text x="58" y="47" class="chip" fill="#b91c1c" text-anchor="middle">Estado reiniciado</text>
+
+    <rect x="0" y="64" width="116" height="22" rx="6" fill="#fef2f2" stroke="#fca5a5"/>
+    <text x="58" y="79" class="chip" fill="#b91c1c" text-anchor="middle">Mayor latencia</text>
+  </g>
+
+  <!-- ============ LANE 2: <Link> ============ -->
+  <rect x="30" y="242" width="900" height="146" rx="12" fill="#ffffff" stroke="#86efac" stroke-width="1.6"/>
+  <rect x="48" y="254" width="150" height="22" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="58" y="269" class="label" fill="#15803d">&lt;Link href="/cursos"&gt;</text>
+
+  <!-- Browser A' -->
+  <g transform="translate(60,284)" filter="url(#nav-shadow)">
+    <rect width="166" height="92" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <path d="M0,8 a8,8 0 0 1 8,-8 h150 a8,8 0 0 1 8,8 v10 h-166 z" fill="#f1f5f9"/>
+    <circle cx="10" cy="9" r="2.5" fill="#ef4444"/><circle cx="18" cy="9" r="2.5" fill="#f59e0b"/><circle cx="26" cy="9" r="2.5" fill="#10b981"/>
+    <text x="36" y="12" class="url">localhost:3000/</text>
+    <rect x="10" y="26" width="146" height="16" rx="3" fill="#0f172a"/>
+    <rect x="102" y="28" width="42" height="12" rx="6" fill="none" stroke="#4ade80" stroke-width="1.4" stroke-dasharray="3 2"/>
+    <text x="110" y="38" class="ui" fill="#4ade80" font-size="9px">Cursos</text>
+    <rect x="10" y="50" width="100" height="7" rx="2" fill="#94a3b8"/>
+    <rect x="10" y="63" width="136" height="6" rx="2" fill="#e2e8f0"/>
+    <rect x="10" y="75" width="116" height="6" rx="2" fill="#e2e8f0"/>
+  </g>
+
+  <!-- Arrow Prefetch -->
+  <path d="M230,320 L346,320" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#nav-green)"/>
+  <text x="288" y="311" class="mono" fill="#15803d" text-anchor="middle">1. Prefetch</text>
+  <text x="288" y="336" class="mono" fill="#64748b" text-anchor="middle">En viewport</text>
+
+  <!-- Server' -->
+  <g transform="translate(352,284)" filter="url(#nav-shadow)">
+    <rect width="146" height="92" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+    <rect x="8" y="10" width="130" height="32" rx="5" fill="#1e293b" stroke="#334155"/>
+    <circle cx="20" cy="26" r="3" fill="#10b981"/>
+    <text x="30" y="30" class="mono" fill="#4ade80">RSC Payload</text>
+    <rect x="8" y="50" width="130" height="32" rx="5" fill="#1e293b" stroke="#334155"/>
+    <circle cx="20" cy="66" r="3" fill="#38bdf8"/>
+    <text x="30" y="70" class="mono" fill="#38bdf8">Solo segmento</text>
+  </g>
+
+  <!-- Arrow Click -->
+  <path d="M502,320 L618,320" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#nav-green)"/>
+  <text x="560" y="311" class="mono" fill="#15803d" text-anchor="middle">2. Click</text>
+  <text x="560" y="336" class="mono" fill="#64748b" text-anchor="middle">Instantáneo</text>
+
+  <!-- Browser B' (Seamless SPA) -->
+  <g transform="translate(624,284)" filter="url(#nav-shadow)">
+    <rect width="166" height="92" rx="8" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+    <path d="M0,8 a8,8 0 0 1 8,-8 h150 a8,8 0 0 1 8,8 v10 h-166 z" fill="#f0fdf4"/>
+    <circle cx="10" cy="9" r="2.5" fill="#ef4444"/><circle cx="18" cy="9" r="2.5" fill="#f59e0b"/><circle cx="26" cy="9" r="2.5" fill="#10b981"/>
+    <text x="36" y="12" class="url">localhost:3000/cursos</text>
+    <rect x="10" y="26" width="146" height="16" rx="3" fill="#0f172a"/>
+    <text x="110" y="38" class="ui" fill="#38bdf8" font-size="9px">Cursos</text>
+    <rect x="10" y="48" width="146" height="38" rx="5" fill="#eff6ff" stroke="#2563eb" stroke-width="1.4"/>
+    <rect x="18" y="56" width="76" height="6" rx="2" fill="#60a5fa"/>
+    <rect x="18" y="68" width="116" height="5" rx="2" fill="#bfdbfe"/>
+    <rect x="18" y="77" width="96" height="5" rx="2" fill="#bfdbfe"/>
+  </g>
+
+  <!-- Positive consequences badges -->
+  <g transform="translate(802,286)">
+    <rect x="0" y="0" width="116" height="22" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="58" y="15" class="chip" fill="#15803d" text-anchor="middle">Cero recargas</text>
+
+    <rect x="0" y="32" width="116" height="22" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="58" y="47" class="chip" fill="#15803d" text-anchor="middle">Layout preservado</text>
+
+    <rect x="0" y="64" width="116" height="22" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="58" y="79" class="chip" fill="#15803d" text-anchor="middle">Ultra veloz</text>
+  </g>
+</svg>

@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" width="100%" style="max-width: 960px;" role="img" aria-label="Evolución de Data Fetching entre Pages Router y App Router">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 13px; fill: #64748b; }
+      .label { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+      .comp  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11.5px; font-weight: 700; }
+      .code  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 10px; }
+      .badge { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 600; }
+    </style>
+    <filter id="dfe-shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arr-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#dc2626"/>
+    </marker>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <rect x="10" y="10" width="940" height="420" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="480" y="40" class="title" text-anchor="middle">Data Fetching: Monolítico vs Concurrente</text>
+  <text x="480" y="60" class="sub" text-anchor="middle">De una única consulta centralizada a componentes independientes con obtención directa</text>
+
+  <!-- ============ LEFT: PAGES ROUTER ============ -->
+  <rect x="30" y="80" width="440" height="330" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#dfe-shadow)"/>
+  <rect x="46" y="94" width="170" height="22" rx="6" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="56" y="109" class="label" fill="#9a3412">PAGES ROUTER</text>
+  <text x="450" y="109" class="code" fill="#94a3b8" text-anchor="end">Monolítico</text>
+
+  <!-- Root Page Node -->
+  <g transform="translate(60,130)">
+    <rect width="380" height="52" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
+    <text x="14" y="22" class="comp" fill="#9a3412">pages/cursos.tsx</text>
+    <rect x="14" y="28" width="352" height="18" rx="4" fill="#ffedd5"/>
+    <text x="20" y="41" class="code" fill="#c2410c">getServerSideProps() &#8594; consulta todos los datos juntos</text>
+  </g>
+
+  <!-- Prop drilling arrows -->
+  <path d="M110,182 L110,230" fill="none" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#arr-red)"/>
+  <path d="M250,182 L250,230" fill="none" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#arr-red)"/>
+  <path d="M390,182 L390,230" fill="none" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#arr-red)"/>
+
+  <!-- Leaf components -->
+  <g transform="translate(46,232)">
+    <rect width="116" height="54" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.4"/>
+    <text x="58" y="22" class="comp" fill="#334155" text-anchor="middle">UserCard</text>
+    <rect x="14" y="30" width="88" height="16" rx="4" fill="#fee2e2"/>
+    <text x="58" y="42" class="code" fill="#991b1b" text-anchor="middle">props.user</text>
+  </g>
+
+  <g transform="translate(192,232)">
+    <rect width="116" height="54" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.4"/>
+    <text x="58" y="22" class="comp" fill="#334155" text-anchor="middle">CourseList</text>
+    <rect x="14" y="30" width="88" height="16" rx="4" fill="#fee2e2"/>
+    <text x="58" y="42" class="code" fill="#991b1b" text-anchor="middle">props.cursos</text>
+  </g>
+
+  <g transform="translate(338,232)">
+    <rect width="116" height="54" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.4"/>
+    <text x="58" y="22" class="comp" fill="#334155" text-anchor="middle">StatsCard</text>
+    <rect x="14" y="30" width="88" height="16" rx="4" fill="#fee2e2"/>
+    <text x="58" y="42" class="code" fill="#991b1b" text-anchor="middle">props.stats</text>
+  </g>
+
+  <!-- Left Footer Warning Card -->
+  <rect x="46" y="316" width="408" height="74" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.2"/>
+  <rect x="58" y="326" width="88" height="18" rx="4" fill="#fee2e2"/>
+  <text x="102" y="339" class="label" fill="#b91c1c" text-anchor="middle">DESVENTAJA</text>
+  <text x="58" y="362" class="badge" fill="#991b1b">• Cascada bloqueante: el componente más lento frena la página entera.</text>
+  <text x="58" y="378" class="badge" fill="#991b1b">• Prop drilling forzado a lo largo de componentes intermedios.</text>
+
+  <!-- ============ RIGHT: APP ROUTER ============ -->
+  <rect x="490" y="80" width="440" height="330" rx="12" fill="#ffffff" stroke="#86efac" stroke-width="1.6" filter="url(#dfe-shadow)"/>
+  <rect x="506" y="94" width="170" height="22" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="516" y="109" class="label" fill="#15803d">APP ROUTER</text>
+  <text x="910" y="109" class="code" fill="#16a34a" text-anchor="end">Concurrente</text>
+
+  <!-- Root Page Node (Orchestrator) -->
+  <g transform="translate(520,130)">
+    <rect width="380" height="52" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+    <text x="14" y="22" class="comp" fill="#166534">app/cursos/page.tsx</text>
+    <rect x="14" y="28" width="352" height="18" rx="4" fill="#dcfce7"/>
+    <text x="20" y="41" class="code" fill="#15803d">Orquestador visual &#8594; cada hijo resuelve sus propios datos</text>
+  </g>
+
+  <!-- Direct parallel arrows -->
+  <path d="M570,182 L570,230" fill="none" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arr-green)"/>
+  <path d="M710,182 L710,230" fill="none" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arr-green)"/>
+  <path d="M850,182 L850,230" fill="none" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arr-green)"/>
+
+  <!-- Leaf Server Components -->
+  <g transform="translate(506,232)">
+    <rect width="116" height="54" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1.4"/>
+    <text x="58" y="20" class="comp" fill="#4ade80" text-anchor="middle">UserCard</text>
+    <text x="58" y="38" class="code" fill="#38bdf8" text-anchor="middle">await getUser()</text>
+  </g>
+
+  <g transform="translate(652,232)">
+    <rect width="116" height="54" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1.4"/>
+    <text x="58" y="20" class="comp" fill="#4ade80" text-anchor="middle">CourseList</text>
+    <text x="58" y="38" class="code" fill="#38bdf8" text-anchor="middle">await db.find()</text>
+  </g>
+
+  <g transform="translate(798,232)">
+    <rect width="116" height="54" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1.4"/>
+    <text x="58" y="20" class="comp" fill="#4ade80" text-anchor="middle">StatsCard</text>
+    <text x="58" y="38" class="code" fill="#facc15" text-anchor="middle">&lt;Suspense&gt;</text>
+  </g>
+
+  <!-- Right Footer Advantage Card -->
+  <rect x="506" y="316" width="408" height="74" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.2"/>
+  <rect x="518" y="326" width="80" height="18" rx="4" fill="#dcfce7"/>
+  <text x="558" y="339" class="label" fill="#15803d" text-anchor="middle">VENTAJA</text>
+  <text x="518" y="362" class="badge" fill="#166534">• Ejecución concurrente y paralela en el servidor.</text>
+  <text x="518" y="378" class="badge" fill="#166534">• Cero prop drilling y soporte nativo para streaming progresivo.</text>
+</svg>

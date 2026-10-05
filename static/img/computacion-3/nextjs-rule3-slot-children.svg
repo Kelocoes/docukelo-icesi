@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 360" width="100%" height="100%">
+  <defs>
+    <marker id="slot-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#E9683B"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="520" height="360" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <text x="260" y="28" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="14.5" font-weight="800" fill="#E9683B">REGLA 3: PATRÓN DE RANURA (SLOT)</text>
+  <text x="260" y="46" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#64748b">Inyectar Server Components como children dentro de Client Components</text>
+
+  <!-- Top Orchestrator Banner -->
+  <rect x="25" y="60" width="470" height="32" rx="6" fill="#eef2ff" stroke="#5454E9" stroke-width="1.2"/>
+  <text x="260" y="81" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="700" fill="#4338ca">Servidor Padre (app/page.tsx): Ensambla ambos sin acoplar código</text>
+
+  <!-- Left Card: Server Component -->
+  <g transform="translate(25, 106)">
+    <rect width="180" height="152" rx="10" fill="#eef2ff" stroke="#5454E9" stroke-width="2"/>
+    <rect x="14" y="12" width="125" height="20" rx="4" fill="#5454E9"/>
+    <text x="76" y="26" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="9" font-weight="800" fill="#ffffff">SERVER COMPONENT</text>
+    <text x="14" y="52" font-family="Consolas, monospace" font-size="12" font-weight="700" fill="#1e1e2e">&lt;UserProfile /&gt;</text>
+
+    <!-- Mini Feature List -->
+    <circle cx="22" cy="74" r="3.5" fill="#5454E9"/>
+    <text x="32" y="78" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="600" fill="#334155">Consulta directa a BD</text>
+
+    <circle cx="22" cy="98" r="3.5" fill="#5454E9"/>
+    <text x="32" y="102" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="600" fill="#334155">Secretos protegidos</text>
+
+    <circle cx="22" cy="122" r="3.5" fill="#5454E9"/>
+    <text x="32" y="126" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="700" fill="#15803d">0 KB enviado al cliente</text>
+  </g>
+
+  <!-- Injection Flow Arrow -->
+  <path d="M 210 170 C 235 170, 240 185, 260 185" fill="none" stroke="#E9683B" stroke-width="2.5" marker-end="url(#slot-arrow)"/>
+  <rect x="208" y="144" width="60" height="18" rx="4" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="238" y="156" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="8.5" font-weight="800" fill="#c2410c">Inyección</text>
+
+  <!-- Right Card: Client Container with Slot -->
+  <g transform="translate(270, 106)">
+    <rect width="225" height="152" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+    <rect x="14" y="12" width="130" height="20" rx="4" fill="#10b981"/>
+    <text x="79" y="26" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="9" font-weight="800" fill="#ffffff">CLIENT CONTAINER</text>
+    <text x="14" y="52" font-family="Consolas, monospace" font-size="12" font-weight="700" fill="#065f46">&lt;ClientModal&gt;</text>
+
+    <!-- The Slot Box -->
+    <rect x="12" y="66" width="201" height="72" rx="8" fill="#ffffff" stroke="#5454E9" stroke-width="2" stroke-dasharray="4 3"/>
+    <rect x="22" y="74" width="100" height="16" rx="4" fill="#eef2ff"/>
+    <text x="72" y="86" text-anchor="middle" font-family="Consolas, monospace" font-size="9.5" font-weight="700" fill="#5454E9">Ranura {children}</text>
+    <text x="22" y="110" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5" font-weight="700" fill="#334155">El Server entra intacto</text>
+    <text x="22" y="126" font-family="Plus Jakarta Sans, sans-serif" font-size="9.5" font-weight="600" fill="#15803d">Sin contagio a JS cliente</text>
+  </g>
+
+  <!-- Bottom Result Bar -->
+  <g transform="translate(25, 272)">
+    <rect width="470" height="68" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+    <!-- Pill 1 -->
+    <rect x="16" y="14" width="210" height="22" rx="4" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="121" y="29" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="9.5" font-weight="700" fill="#047857">Client: Controla animación y eventos</text>
+
+    <!-- Pill 2 -->
+    <rect x="244" y="14" width="210" height="22" rx="4" fill="#eef2ff" stroke="#c7d2fe"/>
+    <text x="349" y="29" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="9.5" font-weight="700" fill="#4338ca">Server: Mantiene acceso seguro a BD</text>
+
+    <text x="235" y="55" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="600" fill="#475569">ClientModal aloja el espacio ({children}) sin importar el código del servidor.</text>
+  </g>
+</svg>

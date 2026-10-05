@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 500" width="100%" style="max-width: 960px;" role="img" aria-label="Server Components y Client Components en Next.js">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 13px; fill: #64748b; }
+      .label { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+      .cap   { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 12px; font-weight: 600; }
+      .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; }
+      .node  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11.5px; font-weight: 700; }
+    </style>
+    <filter id="scc-shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+    <marker id="scc-arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="scc-arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <rect x="10" y="10" width="940" height="480" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="480" y="42" class="title" text-anchor="middle">Server Components y Client Components</text>
+  <text x="480" y="62" class="sub" text-anchor="middle">Por defecto todo corre en el servidor; solo lo interactivo cruza la frontera hacia el navegador</text>
+
+  <!-- ============ SERVER SIDE ============ -->
+  <rect x="30" y="84" width="400" height="246" rx="12" fill="#ffffff" stroke="#86efac" stroke-width="1.6" filter="url(#scc-shadow)"/>
+  <rect x="48" y="98" width="224" height="24" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="58" y="114" class="label" fill="#15803d">SERVER COMPONENTS · DEFAULT</text>
+
+  <!-- rack -->
+  <g transform="translate(48,136)">
+    <rect width="220" height="146" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+    <rect x="10" y="10" width="200" height="38" rx="5" fill="#1e293b" stroke="#334155"/>
+    <circle cx="24" cy="29" r="3.5" fill="#10b981"/>
+    <text x="36" y="27" class="mono" fill="#4ade80" font-weight="700">layout.tsx</text>
+    <text x="36" y="41" class="mono" fill="#94a3b8">estructura HTML</text>
+    <rect x="10" y="54" width="200" height="38" rx="5" fill="#1e293b" stroke="#334155"/>
+    <circle cx="24" cy="73" r="3.5" fill="#10b981"/>
+    <text x="36" y="71" class="mono" fill="#4ade80" font-weight="700">page.tsx (async)</text>
+    <text x="36" y="85" class="mono" fill="#94a3b8">await getCourses()</text>
+    <rect x="10" y="98" width="200" height="38" rx="5" fill="#1e293b" stroke="#334155"/>
+    <circle cx="24" cy="117" r="3.5" fill="#10b981"/>
+    <text x="36" y="115" class="mono" fill="#4ade80" font-weight="700">CourseList.tsx</text>
+    <text x="36" y="129" class="mono" fill="#94a3b8">renderiza la lista</text>
+  </g>
+
+  <!-- DB cylinder -->
+  <g transform="translate(310,150)">
+    <path d="M0,18 C0,28 80,28 80,18 L80,62 C80,72 0,72 0,62 Z" fill="#0284c7"/>
+    <path d="M0,40 C0,50 80,50 80,40" fill="none" stroke="#38bdf8" stroke-width="1.5"/>
+    <ellipse cx="40" cy="18" rx="40" ry="10" fill="#38bdf8"/>
+    <circle cx="16" cy="56" r="3" fill="#4ade80"/>
+    <text x="26" y="60" class="mono" fill="#ffffff" font-weight="700">DB / API</text>
+  </g>
+  <path d="M302,205 L272,205" fill="none" stroke="#64748b" stroke-width="1.6" marker-end="url(#scc-arrow-gray)"/>
+  <rect x="290" y="240" width="122" height="22" rx="6" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="351" y="255" class="mono" fill="#b91c1c" text-anchor="middle">process.env.SECRET</text>
+
+  <rect x="48" y="294" width="108" height="22" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="102" y="309" class="mono" fill="#166534" text-anchor="middle">async / await</text>
+  <rect x="164" y="294" width="108" height="22" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="218" y="309" class="mono" fill="#166534" text-anchor="middle">acceso directo</text>
+  <rect x="280" y="294" width="132" height="22" rx="6" fill="#0f172a"/>
+  <text x="346" y="309" class="mono" fill="#4ade80" text-anchor="middle">0 KB JS al cliente</text>
+
+  <!-- ============ BOUNDARY ============ -->
+  <line x1="480" y1="92" x2="480" y2="326" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="6 5"/>
+  <rect x="436" y="124" width="88" height="24" rx="12" fill="#1e293b"/>
+  <text x="480" y="140" class="mono" fill="#fbbf24" text-anchor="middle" font-weight="700">'use client'</text>
+  <text x="480" y="170" class="label" fill="#64748b" text-anchor="middle">FRONTERA</text>
+  <path d="M436,212 L524,212" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#scc-arrow-blue)"/>
+  <text x="480" y="234" class="mono" fill="#1d4ed8" text-anchor="middle">HTML +</text>
+  <text x="480" y="248" class="mono" fill="#1d4ed8" text-anchor="middle">RSC Payload</text>
+
+  <!-- ============ CLIENT SIDE ============ -->
+  <rect x="530" y="84" width="400" height="246" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="1.6" filter="url(#scc-shadow)"/>
+  <rect x="548" y="98" width="214" height="24" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="558" y="114" class="label" fill="#1d4ed8">CLIENT COMPONENTS · OPT-IN</text>
+
+  <!-- browser -->
+  <g transform="translate(548,136)">
+    <rect width="364" height="146" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <path d="M0,8 a8,8 0 0 1 8,-8 h348 a8,8 0 0 1 8,8 v14 h-364 z" fill="#f1f5f9"/>
+    <circle cx="12" cy="11" r="3" fill="#ef4444"/><circle cx="22" cy="11" r="3" fill="#f59e0b"/><circle cx="32" cy="11" r="3" fill="#10b981"/>
+    <rect x="46" y="4" width="300" height="14" rx="7" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="56" y="14" class="mono" fill="#64748b" font-size="9px">localhost:3000/cursos</text>
+    <!-- static content from server -->
+    <rect x="14" y="34" width="150" height="10" rx="3" fill="#475569"/>
+    <rect x="14" y="52" width="200" height="6" rx="2" fill="#cbd5e1"/>
+    <rect x="14" y="64" width="180" height="6" rx="2" fill="#cbd5e1"/>
+    <!-- search bar (client) -->
+    <rect x="14" y="84" width="200" height="24" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.6" stroke-dasharray="4 3"/>
+    <text x="24" y="100" class="mono" fill="#94a3b8">Buscar curso...</text>
+    <rect x="222" y="86" width="86" height="20" rx="10" fill="#dbeafe"/>
+    <text x="265" y="100" class="mono" fill="#1d4ed8" text-anchor="middle">SearchBar</text>
+    <!-- like button (client) -->
+    <rect x="14" y="116" width="84" height="22" rx="6" fill="#2563eb" stroke="#1d4ed8" stroke-width="1.6" stroke-dasharray="4 3"/>
+    <text x="56" y="131" class="mono" fill="#ffffff" text-anchor="middle" font-weight="700">Like · 12</text>
+    <rect x="106" y="117" width="88" height="20" rx="10" fill="#dbeafe"/>
+    <text x="150" y="131" class="mono" fill="#1d4ed8" text-anchor="middle">LikeButton</text>
+  </g>
+
+  <rect x="548" y="294" width="112" height="22" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="604" y="309" class="mono" fill="#1d4ed8" text-anchor="middle">useState</text>
+  <rect x="668" y="294" width="112" height="22" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="724" y="309" class="mono" fill="#1d4ed8" text-anchor="middle">onClick</text>
+  <rect x="788" y="294" width="124" height="22" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="850" y="309" class="mono" fill="#1d4ed8" text-anchor="middle">localStorage</text>
+
+  <!-- ============ COMPONENT TREE ============ -->
+  <rect x="30" y="346" width="900" height="130" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="48" y="370" class="label" fill="#475569">ÁRBOL DE COMPONENTES: CLIENTE SOLO EN LAS HOJAS</text>
+
+  <path d="M200,428 L236,428" fill="none" stroke="#64748b" stroke-width="1.6" marker-end="url(#scc-arrow-gray)"/>
+  <path d="M380,428 C410,428 405,402 436,402" fill="none" stroke="#64748b" stroke-width="1.6" marker-end="url(#scc-arrow-gray)"/>
+  <path d="M380,428 C410,428 405,452 436,452" fill="none" stroke="#64748b" stroke-width="1.6" marker-end="url(#scc-arrow-gray)"/>
+  <path d="M590,402 L656,402" fill="none" stroke="#2563eb" stroke-width="1.8" marker-end="url(#scc-arrow-blue)"/>
+  <path d="M590,452 L656,452" fill="none" stroke="#2563eb" stroke-width="1.8" marker-end="url(#scc-arrow-blue)"/>
+
+  <rect x="60" y="413" width="140" height="30" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="130" y="432" class="node" fill="#166534" text-anchor="middle">layout.tsx</text>
+  <rect x="240" y="413" width="140" height="30" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="310" y="432" class="node" fill="#166534" text-anchor="middle">page.tsx</text>
+  <rect x="440" y="387" width="150" height="30" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="515" y="406" class="node" fill="#166534" text-anchor="middle">Header</text>
+  <rect x="440" y="437" width="150" height="30" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="515" y="456" class="node" fill="#166534" text-anchor="middle">CourseList</text>
+  <rect x="660" y="387" width="150" height="30" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+  <text x="735" y="406" class="node" fill="#1d4ed8" text-anchor="middle">SearchBar</text>
+  <rect x="660" y="437" width="150" height="30" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+  <text x="735" y="456" class="node" fill="#1d4ed8" text-anchor="middle">LikeButton</text>
+
+  <rect x="834" y="398" width="14" height="14" rx="3" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="854" y="409" class="cap" fill="#166534">Server</text>
+  <rect x="834" y="430" width="14" height="14" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="854" y="441" class="cap" fill="#1d4ed8">Client</text>
+</svg>
