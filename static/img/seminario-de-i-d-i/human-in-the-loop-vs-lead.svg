@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="880" height="440">
+  <defs>
+    <style>
+      :root {
+        --canvas: #f8fafc;
+        --card: #ffffff;
+        --card-border: #e2e8f0;
+        --text-primary: #0f172a;
+        --text-secondary: #64748b;
+        --accent-indigo: #4f46e5;
+        --accent-orange: #ea580c;
+        --accent-green: #059669;
+        --surface-tint: #f1f5f9;
+        --conveyor: #e2e8f0;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --canvas: #111827;
+          --card: #1f2937;
+          --card-border: #374151;
+          --text-primary: #f9fafb;
+          --text-secondary: #9ca3af;
+          --accent-indigo: #818cf8;
+          --accent-orange: #f97316;
+          --accent-green: #10b981;
+          --surface-tint: #1e293b;
+          --conveyor: #374151;
+        }
+      }
+      .font-sans { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    </style>
+
+    <filter id="subtle-shadow" x="-4%" y="-4%" width="108%" height="110%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas -->
+  <rect width="880" height="440" rx="16" fill="var(--canvas)" stroke="var(--card-border)" stroke-width="1.5"/>
+
+  <!-- LEFT: HUMAN-IN-THE-LOOP (EL PORTERO REACTIVO) -->
+  <g transform="translate(30, 24)">
+    <rect width="395" height="392" rx="12" fill="var(--card)" stroke="var(--card-border)" stroke-width="1.5" filter="url(#subtle-shadow)"/>
+    
+    <!-- Header -->
+    <rect x="20" y="18" width="145" height="24" rx="6" fill="var(--surface-tint)"/>
+    <text x="92" y="34" class="font-sans" font-size="11" font-weight="700" fill="var(--accent-orange)" text-anchor="middle">HUMAN-IN-THE-LOOP</text>
+    <text x="20" y="66" class="font-sans" font-size="16" font-weight="700" fill="var(--text-primary)">El Cuello de Botella Reactivo</text>
+
+    <!-- Visual Metaphor: Conveyor Belt & Rubber Stamp -->
+    <g transform="translate(24, 90)">
+      <!-- AI Hopper generating code blocks -->
+      <path d="M 10 10 L 70 10 L 50 45 L 30 45 Z" fill="var(--surface-tint)" stroke="var(--card-border)" stroke-width="1.5"/>
+      <text x="40" y="28" class="font-mono" font-size="9" font-weight="700" fill="var(--text-secondary)" text-anchor="middle">AI ENGINE</text>
+
+      <!-- Conveyor track -->
+      <rect x="40" y="55" width="290" height="8" rx="4" fill="var(--conveyor)"/>
+      <circle cx="60" cy="59" r="6" fill="var(--text-secondary)" opacity="0.4"/>
+      <circle cx="120" cy="59" r="6" fill="var(--text-secondary)" opacity="0.4"/>
+      <circle cx="180" cy="59" r="6" fill="var(--text-secondary)" opacity="0.4"/>
+      <circle cx="240" cy="59" r="6" fill="var(--text-secondary)" opacity="0.4"/>
+      <circle cx="300" cy="59" r="6" fill="var(--text-secondary)" opacity="0.4"/>
+
+      <!-- Moving code blocks -->
+      <rect x="70" y="28" width="45" height="24" rx="4" fill="var(--card)" stroke="var(--card-border)"/>
+      <rect x="75" y="36" width="30" height="3" rx="1.5" fill="var(--text-secondary)" opacity="0.5"/>
+      <rect x="75" y="42" width="20" height="3" rx="1.5" fill="var(--text-secondary)" opacity="0.5"/>
+
+      <!-- Overwhelmed Human Checkpoint -->
+      <g transform="translate(150, 0)">
+        <path d="M 30 5 L 40 5 L 42 22 L 54 22 L 54 30 L 16 30 L 16 22 L 28 22 Z" fill="#f97316"/>
+        <rect x="12" y="30" width="46" height="4" rx="1" fill="#c2410c"/>
+        <text x="35" y="48" class="font-sans" font-size="10" font-weight="700" fill="var(--accent-orange)" text-anchor="middle">HUMANO</text>
+        
+        <!-- Stamp buttons -->
+        <g transform="translate(0, 75)">
+          <rect x="0" y="0" width="32" height="20" rx="4" fill="#22c55e"/>
+          <text x="16" y="14" class="font-mono" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">y</text>
+          
+          <rect x="38" y="0" width="32" height="20" rx="4" fill="#ef4444"/>
+          <text x="54" y="14" class="font-mono" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">n</text>
+        </g>
+      </g>
+
+      <!-- Pile-up / Warning on right -->
+      <rect x="250" y="24" width="75" height="28" rx="4" fill="#fef2f2" stroke="#f87171" stroke-dasharray="3 2"/>
+      <text x="287" y="42" class="font-sans" font-size="9.5" font-weight="700" fill="#dc2626" text-anchor="middle">DIFF ACUMULADO</text>
+    </g>
+
+    <!-- Structural Consequences Badge -->
+    <g transform="translate(24, 230)">
+      <rect width="346" height="130" rx="8" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+      <text x="16" y="24" class="font-sans" font-size="11" font-weight="700" fill="var(--text-secondary)">SINTOMAS DE OPERACION:</text>
+      
+      <g transform="translate(16, 38)">
+        <circle cx="6" cy="10" r="3" fill="#ea580c"/>
+        <text x="18" y="14" class="font-sans" font-size="11" fill="var(--text-primary)">Fatiga de confirmacion (aprobar sin auditar)</text>
+      </g>
+      <g transform="translate(16, 64)">
+        <circle cx="6" cy="10" r="3" fill="#ea580c"/>
+        <text x="18" y="14" class="font-sans" font-size="11" fill="var(--text-primary)">La IA toma decisiones arquitectonicas al azar</text>
+      </g>
+      
+      <rect x="14" y="90" width="318" height="26" rx="4" fill="#fff7ed" stroke="#fdba74"/>
+      <text x="173" y="107" class="font-sans" font-size="10.5" font-weight="600" fill="#9a3412" text-anchor="middle">El desarrollador es un simple filtro manual</text>
+    </g>
+  </g>
+
+  <!-- RIGHT: HUMAN-IN-THE-LEAD (EL ARQUITECTO DIRECTOR) -->
+  <g transform="translate(455, 24)">
+    <rect width="395" height="392" rx="12" fill="var(--card)" stroke="var(--accent-indigo)" stroke-width="2" filter="url(#subtle-shadow)"/>
+    
+    <!-- Header -->
+    <rect x="20" y="18" width="150" height="24" rx="6" fill="rgba(79, 70, 229, 0.1)"/>
+    <text x="95" y="34" class="font-sans" font-size="11" font-weight="700" fill="var(--accent-indigo)" text-anchor="middle">HUMAN-IN-THE-LEAD</text>
+    <text x="20" y="66" class="font-sans" font-size="16" font-weight="700" fill="var(--text-primary)">Direccion Estrategica y Contrato</text>
+
+    <!-- Visual Metaphor: Architect Drafting Specs & Guided Rover -->
+    <g transform="translate(24, 90)">
+      <!-- Top Control Tower / Blueprint Contract -->
+      <rect width="346" height="56" rx="8" fill="var(--surface-tint)" stroke="var(--accent-indigo)" stroke-width="1.5"/>
+      
+      <!-- Vector Compass Drafting Tool -->
+      <circle cx="28" cy="28" r="14" fill="var(--accent-indigo)"/>
+      <path d="M 28 17 L 33 33 L 28 29 L 23 33 Z" fill="#ffffff"/>
+      
+      <text x="52" y="24" class="font-sans" font-size="11" font-weight="700" fill="var(--text-primary)">Humano: Define Contrato Vivo</text>
+      <text x="52" y="42" class="font-mono" font-size="9.5" fill="var(--accent-indigo)">AGENTS.md &gt; Screen/Page - 100% Stateless - M3</text>
+
+      <!-- Laser Guide Rails / Precision Boundary -->
+      <g transform="translate(40, 62)">
+        <line x1="0" y1="0" x2="0" y2="40" stroke="var(--accent-indigo)" stroke-width="1.8" stroke-dasharray="4 3"/>
+        <line x1="266" y1="0" x2="266" y2="40" stroke="var(--accent-indigo)" stroke-width="1.8" stroke-dasharray="4 3"/>
+        
+        <!-- Paved Road Container -->
+        <rect x="10" y="8" width="246" height="46" rx="6" fill="rgba(79, 70, 229, 0.06)" stroke="var(--accent-indigo)" stroke-width="1"/>
+        
+        <!-- Autonomous Drone / Agent executing inside rails -->
+        <rect x="25" y="16" width="30" height="28" rx="4" fill="var(--card)" stroke="var(--accent-green)" stroke-width="1.4"/>
+        <circle cx="40" cy="26" r="3" fill="var(--accent-green)"/>
+        <line x1="32" y1="36" x2="48" y2="36" stroke="var(--accent-green)" stroke-width="2"/>
+        
+        <text x="68" y="28" class="font-sans" font-size="10.5" font-weight="700" fill="var(--text-primary)">Agente Ejecutor Acotado</text>
+        <text x="68" y="42" class="font-mono" font-size="9" fill="var(--accent-green)">Opera dentro del carril contractual</text>
+      </g>
+    </g>
+
+    <!-- Structural Benefits Badge -->
+    <g transform="translate(24, 230)">
+      <rect width="346" height="130" rx="8" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+      <text x="16" y="24" class="font-sans" font-size="11" font-weight="700" fill="var(--text-secondary)">VENTAJAS ARQUITECTURALES:</text>
+      
+      <g transform="translate(16, 38)">
+        <circle cx="6" cy="10" r="3" fill="var(--accent-green)"/>
+        <text x="18" y="14" class="font-sans" font-size="11" fill="var(--text-primary)">El codigo nace alineado con la arquitectura</text>
+      </g>
+      <g transform="translate(16, 64)">
+        <circle cx="6" cy="10" r="3" fill="var(--accent-green)"/>
+        <text x="18" y="14" class="font-sans" font-size="11" fill="var(--text-primary)">El desarrollador audita intencion, no cada linea</text>
+      </g>
+      
+      <rect x="14" y="90" width="318" height="26" rx="4" fill="#ecfdf5" stroke="#a7f3d0"/>
+      <text x="173" y="107" class="font-sans" font-size="10.5" font-weight="600" fill="#065f46" text-anchor="middle">Direccion Estrategica: El humano lidera la vision</text>
+    </g>
+  </g>
+</svg>

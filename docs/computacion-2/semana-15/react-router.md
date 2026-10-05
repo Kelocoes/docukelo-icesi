@@ -3,7 +3,7 @@ sidebar_position: 1
 ---
 
 
-# React Router — Primeras funcionalidades (Data & Framework)
+# React Router
 
 **Resumen rápido**  
 Este documento muestra, en **modo Data** y **modo Framework**, las funcionalidades iniciales más importantes de **React Router**.

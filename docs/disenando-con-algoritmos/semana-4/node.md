@@ -3,7 +3,7 @@ sidebar_position: 4
 ---
 
 
-# Introducción a Node.js y NPM
+# Node.js y NPM
 
 
 

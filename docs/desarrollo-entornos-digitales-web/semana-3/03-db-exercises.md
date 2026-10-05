@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Ejercicios: del texto al diagrama
+# Ejercicios de Modelado
 
 La mejor manera de aprender diseño de bases de datos es practicar pasando de la descripción de un problema a un diagrama.
 

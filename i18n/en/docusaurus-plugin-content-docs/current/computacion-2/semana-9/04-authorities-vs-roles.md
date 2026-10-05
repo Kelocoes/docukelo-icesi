@@ -3,7 +3,7 @@ sidebar_position: 4
 sidebar_label: "Authorities vs. Roles"
 ---
 
-# The Authorization Model: Authorities vs. Roles
+# Authorities vs. Roles
 
 Once a user is authenticated, Spring Security evaluates their privileges to determine whether they are authorized to access given endpoints or execute specific methods.
 

@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# Deploying Express with MongoDB using Railway
+# Deployment on Railway
 
 Deployment guide for Express and MongoDB on Railway.
 

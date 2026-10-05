@@ -5,7 +5,7 @@ sidebar_position: 1
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Andamiaje, Layout y Composición en Flutter
+# Layout y Composición
 
 En esta sesión aprenderás a maquetar vistas móviles en Flutter: estructurar el andamiaje (`Scaffold` y `SafeArea`), distribuir elementos en pantalla (`Column`, `Row`, `Expanded`), aplicar estilos visuales (`Container` y `Padding`), y solucionar desbordes (*RenderFlex overflow*) con `SingleChildScrollView`.
 

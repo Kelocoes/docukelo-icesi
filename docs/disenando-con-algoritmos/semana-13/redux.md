@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Redux y Flux — introducción y guía práctica
+# Redux y Flux
 
 ## Introducción — el problema inicial que enfrentaba React
 

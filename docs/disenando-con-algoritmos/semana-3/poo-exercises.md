@@ -2,7 +2,7 @@
 sidebar_position: 6
 ---
 
-# Ejercicios de Programación Orientada a Objetos en JavaScript
+# Ejercicios de POO en JavaScript
 
 En este documento encontrarás una serie de ejercicios prácticos diseñados para reforzar los conceptos de programación orientada a objetos (POO) en JavaScript.
 

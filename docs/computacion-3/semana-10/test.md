@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Guía de Testing en NestJS
+# Testing en NestJS
 
 En NestJS, el testing es super importante para asegurar la calidad y estabilidad de tus aplicaciones. Existen dos tipos principales de pruebas:
 

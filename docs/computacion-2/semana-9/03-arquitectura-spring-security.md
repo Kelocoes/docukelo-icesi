@@ -3,7 +3,7 @@ sidebar_position: 3
 sidebar_label: "Arquitectura de Spring Security"
 ---
 
-# Arquitectura Interna de Spring Security
+# Arquitectura de Spring Security
 
 Para dominar Spring Security sin depender de configuraciones mágicas copiadas de internet, debemos entender cómo procesa el framework cada solicitud HTTP que ingresa al contenedor de Servlets (Apache Tomcat):
 

@@ -3,7 +3,7 @@ sidebar_position: 2
 sidebar_label: "Codificación, Encriptación y Hashing"
 ---
 
-# Criptografía en Desarrollo Web: Codificación, Encriptación y Hashing
+# Codificación, Encriptación y Hashing
 
 Uno de los errores conceptuales más frecuentes en el desarrollo de software es utilizar indistintamente los términos *"codificar"*, *"encriptar"* y *"hashear"*. Como destaca **Laurențiu Spilcă** en sus fundamentos de Spring Security, cada uno de estos procesos responde a un propósito matemático y operacional radicalmente diferente:
 

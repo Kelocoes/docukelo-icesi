@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Advanced Injection, Value Injection & SpEL (Spring Expression Language)
+# Advanced Injection and SpEL
 
 In the previous session, we learned to configure beans using stereotype annotations (`@Component`, `@Service`, `@Repository`), manage their lifecycle with `@PostConstruct` and `@PreDestroy`, and replace XML files with `@Configuration` and `@Bean` classes.
 

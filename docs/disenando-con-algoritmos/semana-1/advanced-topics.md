@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# Temas avanzados de git y github
+# Git y GitHub Avanzado
 
 Pull Requests, Merge Conflicts, Squash, Stash y demás.
 

@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="880" height="440">
+  <defs>
+    <style>
+      :root {
+        --canvas: #f8fafc;
+        --card: #ffffff;
+        --card-border: #e2e8f0;
+        --text-primary: #0f172a;
+        --text-secondary: #64748b;
+        --accent-indigo: #4f46e5;
+        --accent-blue: #2563eb;
+        --accent-emerald: #059669;
+        --accent-amber: #d97706;
+        --accent-purple: #7c3aed;
+        --accent-red: #dc2626;
+        --surface-tint: #f1f5f9;
+        --gauge-bg: #e2e8f0;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --canvas: #111827;
+          --card: #1f2937;
+          --card-border: #374151;
+          --text-primary: #f9fafb;
+          --text-secondary: #9ca3af;
+          --accent-indigo: #818cf8;
+          --accent-blue: #3b82f6;
+          --accent-emerald: #10b981;
+          --accent-amber: #f59e0b;
+          --accent-purple: #a855f7;
+          --accent-red: #ef4444;
+          --surface-tint: #1e293b;
+          --gauge-bg: #374151;
+        }
+      }
+      .font-sans { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    </style>
+
+    <filter id="subtle-shadow" x="-4%" y="-4%" width="108%" height="110%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas -->
+  <rect width="880" height="440" rx="16" fill="var(--canvas)" stroke="var(--card-border)" stroke-width="1.5"/>
+
+  <!-- LEFT: PRISMATIC CONTEXT WINDOW -->
+  <g transform="translate(30, 24)">
+    <rect width="470" height="392" rx="12" fill="var(--card)" stroke="var(--card-border)" stroke-width="1.5" filter="url(#subtle-shadow)"/>
+    
+    <!-- Title -->
+    <rect x="20" y="18" width="160" height="24" rx="6" fill="var(--surface-tint)"/>
+    <text x="100" y="34" class="font-sans" font-size="11" font-weight="700" fill="var(--accent-indigo)" text-anchor="middle">VENTANA DE CONTEXTO</text>
+    <text x="20" y="66" class="font-sans" font-size="16" font-weight="700" fill="var(--text-primary)">Capas de la Memoria en Inferencia</text>
+
+    <!-- Context Prism Stack -->
+    <g transform="translate(20, 86)">
+      <!-- Layer 1: System Prompt -->
+      <g transform="translate(0, 0)">
+        <rect width="430" height="48" rx="8" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+        <rect x="10" y="10" width="28" height="28" rx="5" fill="#64748b"/>
+        <text x="24" y="27" class="font-mono" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">&gt;_</text>
+        <text x="48" y="24" class="font-sans" font-size="12" font-weight="700" fill="var(--text-primary)">System Prompt del CLI</text>
+        <text x="48" y="38" class="font-mono" font-size="10" fill="var(--text-secondary)">Tools (view_file, bash, analyze) + Seguridad</text>
+        <rect x="360" y="14" width="58" height="20" rx="4" fill="var(--gauge-bg)"/>
+        <text x="389" y="28" class="font-mono" font-size="9.5" font-weight="600" fill="var(--text-secondary)" text-anchor="middle">~15%</text>
+      </g>
+
+      <!-- Layer 2: AGENTS.md (Vector Document Icon, NO EMOJIS) -->
+      <g transform="translate(0, 56)">
+        <rect width="430" height="52" rx="8" fill="rgba(79, 70, 229, 0.08)" stroke="var(--accent-indigo)" stroke-width="1.8"/>
+        <rect x="10" y="12" width="28" height="28" rx="5" fill="var(--accent-indigo)"/>
+        <!-- Clean Vector Document Lines -->
+        <line x1="18" y1="20" x2="30" y2="20" stroke="#ffffff" stroke-width="2"/>
+        <line x1="18" y1="26" x2="28" y2="26" stroke="#ffffff" stroke-width="2"/>
+        <line x1="18" y1="32" x2="26" y2="32" stroke="#ffffff" stroke-width="2"/>
+        
+        <text x="48" y="26" class="font-sans" font-size="12" font-weight="700" fill="var(--accent-indigo)">Contrato AGENTS.md (Tu Arquitectura)</text>
+        <text x="48" y="42" class="font-mono" font-size="10" fill="var(--accent-indigo)">100% Stateless - Screen vs Page - Material 3</text>
+        <rect x="360" y="16" width="58" height="20" rx="4" fill="var(--accent-indigo)"/>
+        <text x="389" y="30" class="font-mono" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">~10%</text>
+      </g>
+
+      <!-- Layer 3: Chat History (Vector Chat Bubble, NO EMOJIS) -->
+      <g transform="translate(0, 116)">
+        <rect width="430" height="48" rx="8" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+        <rect x="10" y="10" width="28" height="28" rx="5" fill="var(--accent-emerald)"/>
+        <!-- Vector Speech Bubble -->
+        <rect x="16" y="18" width="16" height="11" rx="2" fill="#ffffff"/>
+        <polygon points="18,29 22,29 18,33" fill="#ffffff"/>
+        
+        <text x="48" y="24" class="font-sans" font-size="12" font-weight="700" fill="var(--text-primary)">Historial de Sesion</text>
+        <text x="48" y="38" class="font-mono" font-size="10" fill="var(--text-secondary)">Turnos recientes de conversacion interactiva</text>
+        <rect x="360" y="14" width="58" height="20" rx="4" fill="var(--gauge-bg)"/>
+        <text x="389" y="28" class="font-mono" font-size="9.5" font-weight="600" fill="var(--text-secondary)" text-anchor="middle">~25%</text>
+      </g>
+
+      <!-- Layer 4: Tool Outputs & Files (Vector Folder/File, NO EMOJIS) -->
+      <g transform="translate(0, 172)">
+        <rect width="430" height="48" rx="8" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+        <rect x="10" y="10" width="28" height="28" rx="5" fill="var(--accent-amber)"/>
+        <!-- Vector Terminal Window -->
+        <rect x="16" y="17" width="16" height="14" rx="2" fill="#ffffff"/>
+        <line x1="19" y1="22" x2="22" y2="24" stroke="var(--accent-amber)" stroke-width="1.2"/>
+        <line x1="22" y1="24" x2="19" y2="26" stroke="var(--accent-amber)" stroke-width="1.2"/>
+        
+        <text x="48" y="24" class="font-sans" font-size="12" font-weight="700" fill="var(--text-primary)">Archivos Leidos y Terminal Stdout</text>
+        <text x="48" y="38" class="font-mono" font-size="10" fill="var(--text-secondary)">lib/screens/home_screen.dart + flutter analyze</text>
+        <rect x="360" y="14" width="58" height="20" rx="4" fill="var(--gauge-bg)"/>
+        <text x="389" y="28" class="font-mono" font-size="9.5" font-weight="600" fill="var(--text-secondary)" text-anchor="middle">~35%</text>
+      </g>
+
+      <!-- Layer 5: Output Headroom (Vector Diamond Spark, NO EMOJIS) -->
+      <g transform="translate(0, 228)">
+        <rect width="430" height="48" rx="8" fill="var(--surface-tint)" stroke="var(--card-border)" stroke-dasharray="4 3"/>
+        <rect x="10" y="10" width="28" height="28" rx="5" fill="var(--accent-purple)"/>
+        <!-- Vector Diamond Spark -->
+        <polygon points="24,17 27,24 34,24 28,28 30,35 24,31 18,35 20,28 14,24 21,24" fill="#ffffff"/>
+        
+        <text x="48" y="24" class="font-sans" font-size="12" font-weight="700" fill="var(--text-primary)">Espacio Reservado (Output Tokens)</text>
+        <text x="48" y="38" class="font-mono" font-size="10" fill="var(--text-secondary)">Generacion del diff y respuesta del agente</text>
+        <rect x="360" y="14" width="58" height="20" rx="4" fill="var(--gauge-bg)"/>
+        <text x="389" y="28" class="font-mono" font-size="9.5" font-weight="600" fill="var(--text-secondary)" text-anchor="middle">~15%</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- RIGHT: TELEMETRY & COMMANDS -->
+  <g transform="translate(525, 24)">
+    <rect width="325" height="392" rx="12" fill="var(--card)" stroke="var(--card-border)" stroke-width="1.5" filter="url(#subtle-shadow)"/>
+    
+    <!-- Title -->
+    <rect x="20" y="18" width="130" height="24" rx="6" fill="var(--surface-tint)"/>
+    <text x="85" y="34" class="font-sans" font-size="11" font-weight="700" fill="var(--text-secondary)" text-anchor="middle">TELEMETRIA</text>
+    <text x="20" y="66" class="font-sans" font-size="16" font-weight="700" fill="var(--text-primary)">Control de Consumo</text>
+
+    <!-- Command 1: /context -->
+    <g transform="translate(20, 86)">
+      <rect width="285" height="54" rx="8" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+      <text x="14" y="22" class="font-mono" font-size="12" font-weight="700" fill="var(--accent-blue)">/context</text>
+      <text x="14" y="40" class="font-sans" font-size="10.5" fill="var(--text-secondary)">Audita tokens cargados y archivos activos</text>
+    </g>
+
+    <!-- Command 2: /usage -->
+    <g transform="translate(20, 148)">
+      <rect width="285" height="54" rx="8" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+      <text x="14" y="22" class="font-mono" font-size="12" font-weight="700" fill="var(--accent-emerald)">/usage (o /cost)</text>
+      <text x="14" y="40" class="font-sans" font-size="10.5" fill="var(--text-secondary)">Supervisa tokens de entrada, salida y costo</text>
+    </g>
+
+    <!-- Command 3: /model -->
+    <g transform="translate(20, 210)">
+      <rect width="285" height="54" rx="8" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+      <text x="14" y="22" class="font-mono" font-size="12" font-weight="700" fill="var(--accent-purple)">/model</text>
+      <text x="14" y="40" class="font-sans" font-size="10.5" fill="var(--text-secondary)">Alterna entre modelos ligeros y avanzados</text>
+    </g>
+
+    <!-- Principle G.I.G.O Badge -->
+    <g transform="translate(20, 280)">
+      <rect width="285" height="84" rx="8" fill="#fef2f2" stroke="var(--accent-red)" stroke-width="1.2"/>
+      <text x="14" y="24" class="font-sans" font-size="11" font-weight="700" fill="var(--accent-red)">PRINCIPIO G.I.G.O.</text>
+      <text x="14" y="42" class="font-sans" font-size="10.5" font-weight="600" fill="#991b1b">"Garbage In, Garbage Out"</text>
+      <text x="14" y="60" class="font-sans" font-size="10" fill="#7f1d1d">Contexto saturado = alucinaciones y</text>
+      <text x="14" y="74" class="font-sans" font-size="10" fill="#7f1d1d">violaciones de arquitectura en Flutter.</text>
+    </g>
+  </g>
+</svg>

@@ -5,7 +5,7 @@ sidebar_position: 2
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Practical Challenge: Workout & Fitness Routine App (FitTrack)
+# FitTrack Challenge
 
 In this challenge, you will put your Flutter layout and architecture skills into practice by building the mobile user interface for **FitTrack**, a workout tracking application designed under **Google Material Design 3** guidelines using the Deep Purple (`#6750A4`) seed color.
 

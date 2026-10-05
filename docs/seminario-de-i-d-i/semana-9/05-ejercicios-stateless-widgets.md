@@ -5,7 +5,7 @@ sidebar_position: 5
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Ejercicios Prácticos: Colección de StatelessWidgets
+# Ejercicios: StatelessWidgets
 
 En esta guía pondrás a prueba tu capacidad para estructurar componentes visuales desacoplados en Flutter mediante **10 ejercicios progresivos**, desde elementos atómicos básicos hasta tarjetas compuestas complejas.
 

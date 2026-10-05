@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Express | TypeScript | MongoDB | Docker. Part 1
+# Base API: Express, TypeScript & MongoDB
 
 Guided workshop for building a base project using MongoDB, Express, and TypeScript.
 

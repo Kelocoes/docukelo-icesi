@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Docker Setup Guide
+# Docker Setup
 
 ## Installation and Configuration
 

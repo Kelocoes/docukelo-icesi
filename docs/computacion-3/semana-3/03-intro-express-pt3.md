@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Express | Typescript | Mongodb | Docker. Parte 3
+# Autenticación y Protección de Rutas
 
 Siguiendo los aspectos a mejorar mencionados anteriormente, en esta sección vamos a implementar las siguientes mejoras:
 

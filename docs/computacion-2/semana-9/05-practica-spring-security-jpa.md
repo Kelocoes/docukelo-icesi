@@ -8,7 +8,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import Admonition from '@theme/Admonition';
 
-# Guía Práctica: Implementación de Spring Security con JPA y Thymeleaf
+# Taller: Spring Security y JPA
 
 En las guías conceptuales anteriores ([Autenticación vs. Autorización](./01-autenticacion-vs-autorizacion.md), [Criptografía](./02-criptografia-passwords-hashing.md), [Arquitectura de Spring Security](./03-arquitectura-spring-security.md) y [Authorities vs. Roles](./04-authorities-vs-roles.md)), analizamos los fundamentos teóricos del control de acceso, la cadena de filtros (`SecurityFilterChain`), el rol del `AuthenticationManager` y la validación de hashes con `PasswordEncoder`.
 

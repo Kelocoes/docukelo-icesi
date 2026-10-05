@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="880" height="440">
+  <defs>
+    <style>
+      :root {
+        --canvas: #f8fafc;
+        --card: #ffffff;
+        --card-border: #e2e8f0;
+        --text-primary: #0f172a;
+        --text-secondary: #64748b;
+        --accent-blue: #2563eb;
+        --accent-emerald: #059669;
+        --surface-tint: #f1f5f9;
+        --terminal-bg: #0f172a;
+        --terminal-text: #e2e8f0;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --canvas: #111827;
+          --card: #1f2937;
+          --card-border: #374151;
+          --text-primary: #f9fafb;
+          --text-secondary: #9ca3af;
+          --accent-blue: #3b82f6;
+          --accent-emerald: #10b981;
+          --surface-tint: #1e293b;
+          --terminal-bg: #030712;
+          --terminal-text: #f3f4f6;
+        }
+      }
+      .font-sans { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    </style>
+
+    <filter id="subtle-shadow" x="-4%" y="-4%" width="108%" height="110%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="880" height="440" rx="16" fill="var(--canvas)" stroke="var(--card-border)" stroke-width="1.5"/>
+
+  <!-- TOP WORKSTATION ROOT -->
+  <g transform="translate(190, 20)">
+    <rect width="500" height="60" rx="10" fill="var(--card)" stroke="var(--card-border)" stroke-width="1.5" filter="url(#subtle-shadow)"/>
+    <!-- Folder Vector Icon (No emojis) -->
+    <g transform="translate(20, 16)">
+      <rect width="32" height="26" y="2" rx="3" fill="var(--surface-tint)" stroke="var(--card-border)" stroke-width="1.2"/>
+      <path d="M 0 6 L 12 6 L 16 10 L 32 10 L 32 28 L 0 28 Z" fill="var(--accent-blue)" opacity="0.85"/>
+    </g>
+    
+    <text x="66" y="32" class="font-mono" font-size="12" font-weight="700" fill="var(--text-primary)">dev/flutter/mi_app/ (Raiz del Proyecto)</text>
+    <text x="66" y="48" class="font-sans" font-size="11" fill="var(--text-secondary)">Lanza tu asistente directamente sobre el codigo fuente</text>
+  </g>
+
+  <!-- Branching paths with Direct Vector Arrowheads (NO MARKER BUG) -->
+  <!-- Left Path to agy -->
+  <path d="M 330 80 L 330 110 L 225 110 L 225 124" fill="none" stroke="var(--accent-blue)" stroke-width="2"/>
+  <polygon points="220,123 225,130 230,123" fill="#2563eb"/>
+
+  <!-- Right Path to opencode -->
+  <path d="M 550 80 L 550 110 L 655 110 L 655 124" fill="none" stroke="var(--accent-emerald)" stroke-width="2"/>
+  <polygon points="650,123 655,130 660,123" fill="#059669"/>
+
+  <!-- OPTION 1: ANTIGRAVITY CLI -->
+  <g transform="translate(30, 130)">
+    <rect width="395" height="285" rx="12" fill="var(--card)" stroke="var(--accent-blue)" stroke-width="1.8" filter="url(#subtle-shadow)"/>
+    
+    <!-- Header -->
+    <rect x="20" y="16" width="130" height="22" rx="4" fill="rgba(37, 99, 235, 0.1)"/>
+    <text x="85" y="31" class="font-mono" font-size="10.5" font-weight="700" fill="var(--accent-blue)" text-anchor="middle">$ agy</text>
+    <text x="20" y="58" class="font-sans" font-size="15" font-weight="700" fill="var(--text-primary)">Antigravity CLI</text>
+
+    <!-- Mini Terminal Visual -->
+    <g transform="translate(20, 72)">
+      <rect width="355" height="130" rx="8" fill="var(--terminal-bg)"/>
+      <circle cx="16" cy="14" r="3.5" fill="#ef4444"/>
+      <circle cx="26" cy="14" r="3.5" fill="#f59e0b"/>
+      <circle cx="36" cy="14" r="3.5" fill="#10b981"/>
+      <text x="50" y="17" class="font-mono" font-size="9" fill="var(--text-secondary)">bash - session</text>
+
+      <text x="16" y="42" class="font-mono" font-size="10.5" fill="#38bdf8">&gt; /init</text>
+      <text x="16" y="60" class="font-mono" font-size="9.5" fill="#4ade80">[OK] Genera contrato vivo AGENTS.md</text>
+      <text x="16" y="78" class="font-mono" font-size="10.5" fill="#38bdf8">&gt; /plan Disena vista de detalle</text>
+      <text x="16" y="96" class="font-mono" font-size="9.5" fill="#a78bfa">Subagentes listos (Pro / Flash)</text>
+      <text x="16" y="114" class="font-mono" font-size="10" fill="var(--terminal-text)">&gt; /context - Inspecciona memoria activa</text>
+    </g>
+
+    <!-- Strengths Pill -->
+    <g transform="translate(20, 218)">
+      <rect width="355" height="48" rx="6" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+      <text x="14" y="22" class="font-sans" font-size="10.5" font-weight="700" fill="var(--text-primary)">Fortaleza Clave:</text>
+      <text x="14" y="38" class="font-sans" font-size="10.5" fill="var(--text-secondary)">Slash commands nativos y orquestacion con subagentes</text>
+    </g>
+  </g>
+
+  <!-- OPTION 2: OPENCODE CLI -->
+  <g transform="translate(455, 130)">
+    <rect width="395" height="285" rx="12" fill="var(--card)" stroke="var(--accent-emerald)" stroke-width="1.8" filter="url(#subtle-shadow)"/>
+    
+    <!-- Header -->
+    <rect x="20" y="16" width="130" height="22" rx="4" fill="rgba(5, 150, 105, 0.1)"/>
+    <text x="85" y="31" class="font-mono" font-size="10.5" font-weight="700" fill="var(--accent-emerald)" text-anchor="middle">$ opencode</text>
+    <text x="20" y="58" class="font-sans" font-size="15" font-weight="700" fill="var(--text-primary)">OpenCode TUI</text>
+
+    <!-- Mini Terminal Visual -->
+    <g transform="translate(20, 72)">
+      <rect width="355" height="130" rx="8" fill="var(--terminal-bg)"/>
+      <circle cx="16" cy="14" r="3.5" fill="#ef4444"/>
+      <circle cx="26" cy="14" r="3.5" fill="#f59e0b"/>
+      <circle cx="36" cy="14" r="3.5" fill="#10b981"/>
+      <text x="50" y="17" class="font-mono" font-size="9" fill="var(--text-secondary)">bubbletea TUI</text>
+
+      <text x="16" y="42" class="font-mono" font-size="10.5" fill="#34d399">Provider: Gemini | Claude | GPT-4 | Ollama</text>
+      <text x="16" y="60" class="font-mono" font-size="10" fill="#38bdf8">&gt; @lib/pages/home_page.dart</text>
+      <text x="16" y="78" class="font-mono" font-size="9.5" fill="var(--terminal-text)">Contexto inyectado explicitamente</text>
+      <text x="16" y="98" class="font-mono" font-size="10.5" fill="#fbbf24">$ opencode run "flutter analyze"</text>
+      <text x="16" y="114" class="font-mono" font-size="9.5" fill="#4ade80">[OK] Modo headless para scripts y CI/CD</text>
+    </g>
+
+    <!-- Strengths Pill -->
+    <g transform="translate(20, 218)">
+      <rect width="355" height="48" rx="6" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+      <text x="14" y="22" class="font-sans" font-size="10.5" font-weight="700" fill="var(--text-primary)">Fortaleza Clave:</text>
+      <text x="14" y="38" class="font-sans" font-size="10.5" fill="var(--text-secondary)">Codigo abierto, agnostico a modelos y modo headless</text>
+    </g>
+  </g>
+</svg>

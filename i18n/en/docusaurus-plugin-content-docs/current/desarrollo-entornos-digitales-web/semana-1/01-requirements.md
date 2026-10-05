@@ -1,9 +1,9 @@
 ---
 sidebar_position: 1
-title: Requirements in Software Development
+title: Software Requirements
 ---
 
-# Requirements in Software Development
+# Software Requirements
 
 Requirements describe the needs and constraints that a software product must satisfy to contribute to solving a real-world problem. They act as a medium of communication between stakeholders and the development team, establishing the foundation for technical and management activities throughout the project lifecycle.
 

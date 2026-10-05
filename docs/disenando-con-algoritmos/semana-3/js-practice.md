@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# 50 Ejercicios de Practica de JavaScript
+# Ejercicios de Práctica de JavaScript
 
 ¡Hola! Estos son algunos ejercicios fundamentales para comprender los conceptos básicos de JavaScript, incluyendo variables, hoisting, operadores y salidas por consola. Si tienes dudas no dudes en preguntar.
 

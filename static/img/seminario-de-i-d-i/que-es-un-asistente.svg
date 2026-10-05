@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 440" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 19px; font-weight: 800; fill: #1e293b; }
+      .subtitle { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 13.5px; fill: #64748b; }
+      .box-title { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 15px; font-weight: 700; }
+      .box-desc { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 12.5px; fill: #475569; line-height: 1.4; }
+      .badge { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; }
+    </style>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.06"/>
+    </filter>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#5454E9"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#E9683B"/>
+    </marker>
+  </defs>
+
+  <!-- Fondo general -->
+  <rect width="920" height="440" rx="16" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Encabezado -->
+  <text x="40" y="44" class="title">Arquitectura de un Asistente Tradicional de IA</text>
+  <text x="40" y="68" class="subtitle">Modelo de sugerencia reactiva de texto desacoplado del sistema operativo (ChatGPT / Copilot)</text>
+
+  <!-- 1. Desarrollador -->
+  <g transform="translate(40, 100)" filter="url(#shadow)">
+    <rect width="230" height="230" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+    <rect x="0" y="0" width="230" height="42" rx="12" fill="#EEF2FF"/>
+    <rect x="0" y="30" width="230" height="12" fill="#EEF2FF"/>
+    <text x="16" y="27" class="box-title" fill="#5454E9">1. Programador (Humano)</text>
+    
+    <!-- Contenido caja desarrollador -->
+    <text x="16" y="70" class="box-desc" font-weight="700" fill="#1e293b">Rol: Operador Manual</text>
+    <text x="16" y="92" class="box-desc">• Redacta prompt de solicitud</text>
+    <text x="16" y="112" class="box-desc">• Espera respuesta pasiva</text>
+    
+    <rect x="16" y="130" width="198" height="80" rx="8" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1"/>
+    <text x="26" y="152" class="badge" fill="#C2410C">FRICCIÓN MANUAL</text>
+    <text x="26" y="172" class="box-desc" fill="#9A3412" font-size="11.5px">Copiar código generado →</text>
+    <text x="26" y="188" class="box-desc" fill="#9A3412" font-size="11.5px">Pegar en editor → Probar a mano</text>
+  </g>
+
+  <!-- Flechas hacia el asistente -->
+  <path d="M 270 170 L 350 170" fill="none" stroke="#5454E9" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+  <text x="310" y="160" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11px" font-weight="700" fill="#5454E9">Prompt (Texto)</text>
+
+  <!-- Flecha de retorno -->
+  <path d="M 350 240 L 270 240" fill="none" stroke="#4CB979" stroke-width="2.5" stroke-dasharray="5,4" marker-end="url(#arrow-blue)"/>
+  <text x="310" y="260" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11px" font-weight="700" fill="#059669">Código Sugerido</text>
+
+  <!-- 2. Asistente (Nube) -->
+  <g transform="translate(360, 100)" filter="url(#shadow)">
+    <rect width="250" height="230" rx="12" fill="#FFFFFF" stroke="#865CF0" stroke-width="2"/>
+    <rect x="0" y="0" width="250" height="42" rx="12" fill="#F5F3FF"/>
+    <rect x="0" y="30" width="250" height="12" fill="#F5F3FF"/>
+    <text x="16" y="27" class="box-title" fill="#7C3AED">2. Asistente de IA (Cloud)</text>
+    
+    <text x="16" y="70" class="box-desc" font-weight="700" fill="#1e293b">Naturaleza: Reactiva</text>
+    <text x="16" y="92" class="box-desc">• Chatbot o inline Copilot</text>
+    <text x="16" y="112" class="box-desc">• Solo predice el próximo token</text>
+    <text x="16" y="132" class="box-desc">• Sin memoria persistente del SO</text>
+
+    <rect x="16" y="152" width="218" height="60" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+    <text x="24" y="174" class="box-desc" font-size="11.5px"><strong>Limitación:</strong> No sabe si el</text>
+    <text x="24" y="192" class="box-desc" font-size="11.5px">código compila en Flutter.</text>
+  </g>
+
+  <!-- Muro de Desconexión -->
+  <line x1="645" y1="95" x2="645" y2="345" stroke="#E9683B" stroke-width="2.5" stroke-dasharray="6,5"/>
+  <rect x="625" y="200" width="40" height="40" rx="20" fill="#FEE2E2" stroke="#EF4444" stroke-width="1.5"/>
+  <text x="645" y="225" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="16px" font-weight="900" fill="#DC2626">✕</text>
+
+  <!-- 3. Tu Computadora (Aislada del Asistente) -->
+  <g transform="translate(670, 100)" filter="url(#shadow)">
+    <rect width="210" height="230" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+    <rect x="0" y="0" width="210" height="42" rx="12" fill="#F1F5F9"/>
+    <rect x="0" y="30" width="210" height="12" fill="#F1F5F9"/>
+    <text x="16" y="27" class="box-title" fill="#334155">3. Entorno Local</text>
+
+    <text x="16" y="70" class="box-desc" font-weight="700" fill="#DC2626">Acceso Denegado / Aislado</text>
+    <text x="16" y="92" class="box-desc">• Archivo pubspec.yaml</text>
+    <text x="16" y="112" class="box-desc">• Terminal (flutter run)</text>
+    <text x="16" y="132" class="box-desc">• Analizador de lints</text>
+    <text x="16" y="152" class="box-desc">• Emulador móvil</text>
+
+    <rect x="16" y="172" width="178" height="42" rx="6" fill="#FEF2F2" stroke="#FCA5A5"/>
+    <text x="24" y="196" class="badge" fill="#991B1B">EL ASISTENTE NO VE ESTO</text>
+  </g>
+
+  <!-- Barra de síntesis inferior -->
+  <rect x="40" y="355" width="840" height="55" rx="8" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <text x="56" y="386" font-family="Plus Jakarta Sans" font-size="13px" fill="#334155">
+    <tspan font-weight="800" fill="#5454E9">Resumen:</tspan> Un asistente es un <tspan font-weight="700">consejero pasivo</tspan>. Genera texto pero carece de manos para interactuar con tu entorno de desarrollo.
+  </text>
+</svg>

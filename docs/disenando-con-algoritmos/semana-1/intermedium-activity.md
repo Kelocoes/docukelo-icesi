@@ -2,7 +2,7 @@
 sidebar_position: 6
 ---
 
-# Ejercicio: Explorando Merge, Rebase y Manejo de Historial en Git
+# Ejercicio: Merge, Rebase e Historial
 
 Este ejercicio está diseñado para que practiques operaciones fundamentales en Git relacionadas con ramas, fusiones (`merge`), reescritura de historial (`rebase`) y gestión de errores (eliminar un commit).
 

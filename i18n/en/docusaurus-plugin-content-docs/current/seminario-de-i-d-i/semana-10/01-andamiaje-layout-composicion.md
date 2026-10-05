@@ -5,7 +5,7 @@ sidebar_position: 1
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Scaffolding, Layout, and Composition in Flutter
+# Layout and Composition
 
 In this session, you will learn how to build mobile layouts in Flutter: structuring screen scaffolding (`Scaffold` and `SafeArea`), distributing elements on screen (`Column`, `Row`, `Expanded`), applying visual styling (`Container` and `Padding`), and resolving layout overflows (*RenderFlex overflow*) using `SingleChildScrollView`.
 

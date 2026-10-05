@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Preámbulo e introducción de Javascript
+# Introducción a JavaScript
 
 Aspectos generales del lenguaje y su propósito en el desarrollo Web.
 

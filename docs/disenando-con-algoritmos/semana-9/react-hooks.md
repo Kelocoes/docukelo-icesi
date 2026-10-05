@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Guía de React Hooks
+# React Hooks
 
 Esta guía descargable cubre los conceptos fundamentales de los React Hooks, centrándose en `useState`, `useEffect` y la creación de Custom Hooks. Incluye explicaciones detalladas y ejemplos prácticos resueltos para facilitar el aprendizaje y la aplicación en proyectos reales.
 

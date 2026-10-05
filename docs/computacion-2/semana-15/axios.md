@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Guía Completa de Axios en React
+# Axios en React
 
 ## Introducción
 

@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Despliegue de APIs con NestJS, Docker y PostgreSQL en Railway
+# Despliegue en Railway
 
 Durante las semanas anteriores construimos controladores, servicios, repositorios con TypeORM y mecanismos de autenticación mediante JWT. Todo este desarrollo ocurrió en nuestra máquina de trabajo (`localhost`). Sin embargo, el objetivo final del desarrollo web no es ejecutar software en aislamiento, sino ponerlo a disposición de usuarios reales, clientes móviles y aplicaciones frontend a través de internet de forma confiable, segura y continua.
 

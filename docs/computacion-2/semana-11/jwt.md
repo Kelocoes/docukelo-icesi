@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# Guía para de implementación de JWT en Spring Boot
+# Implementación de JWT
 
 En esta guía podrás encontrar diferentes pasos que te serán útiles en el proceso de implementación de JWT en tu proyecto de Spring Boot. Adicionalmente a esto, se formalizarán algunos aspectos que son necesarios para tener una seguridad adecuada dentro de nuestra aplicación.
 

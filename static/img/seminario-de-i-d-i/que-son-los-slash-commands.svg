@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 440" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 19px; font-weight: 800; fill: #1e293b; }
+      .subtitle { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 13.5px; fill: #64748b; }
+      .box-title { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 15px; font-weight: 700; }
+      .box-desc { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 12.5px; fill: #475569; }
+      .badge { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 800; }
+    </style>
+    <filter id="shadow4" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="920" height="440" rx="16" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <text x="40" y="44" class="title">Slash Commands: Directivas Locales vs Consultas al Modelo</text>
+  <text x="40" y="68" class="subtitle">Cómo el CLI intercepta comandos especiales que se ejecutan en tu máquina sin consumir tokens de inferencia</text>
+
+  <!-- Entrada del Usuario -->
+  <g transform="translate(40, 110)" filter="url(#shadow4)">
+    <rect width="240" height="210" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+    <rect x="0" y="0" width="240" height="40" rx="12" fill="#1E1E2E"/>
+    <text x="16" y="26" font-family="Consolas, monospace" font-size="13px" fill="#A6E3A1">Terminal Prompt</text>
+
+    <!-- Camino A: Prompt Normal -->
+    <rect x="14" y="55" width="212" height="60" rx="8" fill="#EEF2FF" stroke="#C7D2FE"/>
+    <text x="24" y="78" class="badge" fill="#4338CA">CASO A: PROMPT NORMAL</text>
+    <text x="24" y="98" font-family="Consolas, monospace" font-size="11.5px" fill="#1E1E2E">> "Crea la pantalla de perfil"</text>
+
+    <!-- Camino B: Slash Command -->
+    <rect x="14" y="130" width="212" height="65" rx="8" fill="#ECFDF5" stroke="#A7F3D0"/>
+    <text x="24" y="153" class="badge" fill="#047857">CASO B: SLASH COMMAND (/)</text>
+    <text x="24" y="173" font-family="Consolas, monospace" font-size="12px" font-weight="700" fill="#065F46">> /context , > /compact</text>
+  </g>
+
+  <!-- Bifurcación en CLI Runtime -->
+  <!-- Flecha A: Hacia LLM -->
+  <path d="M 285 155 L 430 155" fill="none" stroke="#5454E9" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+  <text x="355" y="145" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11px" font-weight="700" fill="#5454E9">Viaja al LLM</text>
+
+  <!-- Flecha B: Interceptada Localmente -->
+  <path d="M 285 245 L 430 245" fill="none" stroke="#059669" stroke-width="2.5" marker-end="url(#arrow-green)"/>
+  <text x="355" y="235" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11px" font-weight="700" fill="#059669">Interceptado Local</text>
+
+  <!-- Destinos -->
+  <!-- Destino A: Modelo en la Nube -->
+  <g transform="translate(440, 110)" filter="url(#shadow4)">
+    <rect width="440" height="90" rx="10" fill="#FFFFFF" stroke="#5454E9" stroke-width="1.8"/>
+    <text x="18" y="32" class="box-title" fill="#5454E9">Inferencia en el Modelo (Cloud)</text>
+    <text x="18" y="54" class="box-desc">• El prompt se añade al historial de contexto.</text>
+    <text x="18" y="72" class="box-desc">• Consume tokens de entrada y genera tokens de salida (costo USD y latencia).</text>
+  </g>
+
+  <!-- Destino B: Runtime del CLI Local -->
+  <g transform="translate(440, 215)" filter="url(#shadow4)">
+    <rect width="440" height="110" rx="10" fill="#FFFFFF" stroke="#059669" stroke-width="2"/>
+    <text x="18" y="32" class="box-title" fill="#047857">Motor Local del CLI (0 Tokens de Inferencia)</text>
+    <text x="18" y="54" class="box-desc">• <strong>/context:</strong> Lee la memoria local e imprime el peso de tokens en consola.</text>
+    <text x="18" y="74" class="box-desc">• <strong>/compact:</strong> Ejecuta compresión local y poda el historial de turnos.</text>
+    <text x="18" y="94" class="box-desc">• <strong>/cost &amp; /model:</strong> Configura el runtime sin enviar nada al modelo.</text>
+  </g>
+
+  <!-- Barra inferior -->
+  <rect x="40" y="355" width="840" height="55" rx="8" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <text x="56" y="386" font-family="Plus Jakarta Sans" font-size="13px" fill="#334155">
+    <tspan font-weight="800" fill="#047857">Slash Commands:</tspan> Son el <tspan font-weight="700">panel de control del desarrollador</tspan>. Permiten gobernar la sesión, auditar la memoria y calibrar costos en tiempo real.
+  </text>
+</svg>

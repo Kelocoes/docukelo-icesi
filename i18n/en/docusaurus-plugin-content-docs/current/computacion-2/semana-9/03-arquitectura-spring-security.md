@@ -3,7 +3,7 @@ sidebar_position: 3
 sidebar_label: "Spring Security Architecture"
 ---
 
-# Spring Security Internal Architecture
+# Spring Security Architecture
 
 To master Spring Security rather than relying on copy-pasting configurations, we must examine how the framework intercepts and processes every incoming HTTP request inside the Servlet container (Apache Tomcat):
 

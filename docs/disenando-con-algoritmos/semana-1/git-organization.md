@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Git organization
+# Organización en Git
 
 Organizar y trabajar con repositorios usando Git.
 

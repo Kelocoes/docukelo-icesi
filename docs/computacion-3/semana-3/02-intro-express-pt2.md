@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Express | Typescript | Mongodb | Docker. Parte 2
+# Validación de Datos y Middlewares
 
 En esta segunda parte de la introducción a Express, Typescript, Mongodb y Docker, vamos a continuar con la creación de una API RESTful utilizando estas tecnologías. En la primera parte, configuramos el entorno y creamos un servidor básico. Ahora, vamos a añadir más funcionalidades y mejorar nuestra aplicación.
 

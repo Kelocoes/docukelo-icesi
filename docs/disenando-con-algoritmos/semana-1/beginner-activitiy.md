@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# Ejercicio: Colaboración con Git y GitHub
+# Ejercicio: Colaboración en Git
 
 Este ejercicio tiene como objetivo que los estudiantes trabajen en equipo para practicar un flujo de trabajo colaborativo utilizando Git y GitHub. Se desarrollará una historia de forma colaborativa, aplicando buenas prácticas en el uso de ramas, pull requests, revisiones y merges.
 

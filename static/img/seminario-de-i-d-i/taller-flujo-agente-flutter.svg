@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="880" height="440">
+  <defs>
+    <style>
+      :root {
+        --canvas: #f8fafc;
+        --card: #ffffff;
+        --card-border: #e2e8f0;
+        --text-primary: #0f172a;
+        --text-secondary: #64748b;
+        --accent-purple: #7c3aed;
+        --accent-blue: #2563eb;
+        --accent-amber: #d97706;
+        --accent-green: #059669;
+        --surface-tint: #f1f5f9;
+        --pipeline-track: #e2e8f0;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --canvas: #111827;
+          --card: #1f2937;
+          --card-border: #374151;
+          --text-primary: #f9fafb;
+          --text-secondary: #9ca3af;
+          --accent-purple: #a855f7;
+          --accent-blue: #3b82f6;
+          --accent-amber: #f59e0b;
+          --accent-green: #10b981;
+          --surface-tint: #1e293b;
+          --pipeline-track: #374151;
+        }
+      }
+      .font-sans { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    </style>
+
+    <filter id="subtle-shadow" x="-4%" y="-4%" width="108%" height="110%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas -->
+  <rect width="880" height="440" rx="16" fill="var(--canvas)" stroke="var(--card-border)" stroke-width="1.5"/>
+
+  <!-- Main Pipeline Card -->
+  <g transform="translate(30, 24)">
+    <rect width="820" height="392" rx="12" fill="var(--card)" stroke="var(--card-border)" stroke-width="1.5" filter="url(#subtle-shadow)"/>
+    
+    <!-- Title -->
+    <rect x="24" y="18" width="140" height="24" rx="6" fill="var(--surface-tint)"/>
+    <text x="94" y="34" class="font-sans" font-size="11" font-weight="700" fill="var(--accent-purple)" text-anchor="middle">LABORATORIO EN CLASE</text>
+    <text x="24" y="66" class="font-sans" font-size="16" font-weight="700" fill="var(--text-primary)">Ruta de Entrenamiento Agentico en Flutter</text>
+
+    <!-- Pipeline Track Line behind stations -->
+    <rect x="70" y="150" width="680" height="6" rx="3" fill="var(--pipeline-track)"/>
+
+    <!-- 4 STATIONS -->
+    <!-- Station 1 -->
+    <g transform="translate(45, 95)">
+      <circle cx="70" cy="58" r="18" fill="#ef4444"/>
+      <text x="70" y="64" class="font-sans" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">1</text>
+      
+      <rect x="0" y="90" width="140" height="150" rx="8" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+      <text x="70" y="112" class="font-sans" font-size="11" font-weight="700" fill="var(--text-primary)" text-anchor="middle">Test Amnesia</text>
+      <text x="70" y="128" class="font-mono" font-size="9" fill="#ef4444" text-anchor="middle">Sin AGENTS.md</text>
+      
+      <line x1="16" y1="138" x2="124" y2="138" stroke="var(--card-border)"/>
+
+      <text x="16" y="156" class="font-sans" font-size="9.5" fill="var(--text-secondary)">- Prompt a ciegas</text>
+      <text x="16" y="174" class="font-sans" font-size="9.5" fill="var(--text-secondary)">- Scaffold anidado</text>
+      <text x="16" y="192" class="font-sans" font-size="9.5" fill="var(--text-secondary)">- StatefulWidget</text>
+
+      <rect x="12" y="206" width="116" height="22" rx="4" fill="#fef2f2"/>
+      <text x="70" y="221" class="font-sans" font-size="9" font-weight="700" fill="#dc2626" text-anchor="middle">Fallo Arquitectura</text>
+    </g>
+
+    <!-- Station 2 -->
+    <g transform="translate(235, 95)">
+      <circle cx="70" cy="58" r="18" fill="var(--accent-blue)"/>
+      <text x="70" y="64" class="font-sans" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">2</text>
+      
+      <rect x="0" y="90" width="140" height="150" rx="8" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+      <text x="70" y="112" class="font-sans" font-size="11" font-weight="700" fill="var(--text-primary)" text-anchor="middle">El Contrato</text>
+      <text x="70" y="128" class="font-mono" font-size="9" fill="var(--accent-blue)" text-anchor="middle">/init + .agents/</text>
+      
+      <line x1="16" y1="138" x2="124" y2="138" stroke="var(--card-border)"/>
+
+      <text x="16" y="156" class="font-sans" font-size="9.5" fill="var(--text-secondary)">- Meta-Prompt /init</text>
+      <text x="16" y="174" class="font-sans" font-size="9.5" fill="var(--text-secondary)">- Screen vs Page</text>
+      <text x="16" y="192" class="font-sans" font-size="9.5" fill="var(--text-secondary)">- 100% Stateless</text>
+
+      <rect x="12" y="206" width="116" height="22" rx="4" fill="rgba(37, 99, 235, 0.1)"/>
+      <text x="70" y="221" class="font-sans" font-size="9" font-weight="700" fill="var(--accent-blue)" text-anchor="middle">Contrato Activo</text>
+    </g>
+
+    <!-- Station 3 -->
+    <g transform="translate(425, 95)">
+      <circle cx="70" cy="58" r="18" fill="var(--accent-amber)"/>
+      <text x="70" y="64" class="font-sans" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">3</text>
+      
+      <rect x="0" y="90" width="140" height="150" rx="8" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+      <text x="70" y="112" class="font-sans" font-size="11" font-weight="700" fill="var(--text-primary)" text-anchor="middle">RenderFlex Bug</text>
+      <text x="70" y="128" class="font-mono" font-size="9" fill="var(--accent-amber)" text-anchor="middle">Human-in-the-Loop</text>
+      
+      <line x1="16" y1="138" x2="124" y2="138" stroke="var(--card-border)"/>
+
+      <text x="16" y="156" class="font-sans" font-size="9.5" fill="var(--text-secondary)">- Inyectar overflow</text>
+      <text x="16" y="174" class="font-sans" font-size="9.5" fill="var(--text-secondary)">- Agente diagnostica</text>
+      <text x="16" y="192" class="font-sans" font-size="9.5" fill="var(--text-secondary)">- Auditar [y/n] diff</text>
+
+      <rect x="12" y="206" width="116" height="22" rx="4" fill="rgba(217, 119, 6, 0.1)"/>
+      <text x="70" y="221" class="font-sans" font-size="9" font-weight="700" fill="var(--accent-amber)" text-anchor="middle">Auditoria Codigo</text>
+    </g>
+
+    <!-- Station 4 -->
+    <g transform="translate(615, 95)">
+      <circle cx="70" cy="58" r="18" fill="var(--accent-green)"/>
+      <text x="70" y="64" class="font-sans" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">4</text>
+      
+      <rect x="0" y="90" width="140" height="150" rx="8" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+      <text x="70" y="112" class="font-sans" font-size="11" font-weight="700" fill="var(--text-primary)" text-anchor="middle">Feedback Loop</text>
+      <text x="70" y="128" class="font-mono" font-size="9" fill="var(--accent-green)" text-anchor="middle">Documento Vivo</text>
+      
+      <line x1="16" y1="138" x2="124" y2="138" stroke="var(--card-border)"/>
+
+      <text x="16" y="156" class="font-sans" font-size="9.5" fill="var(--text-secondary)">- Detectar error</text>
+      <text x="16" y="174" class="font-sans" font-size="9.5" fill="var(--text-secondary)">- Actualizar AGENTS</text>
+      <text x="16" y="192" class="font-sans" font-size="9.5" fill="var(--text-secondary)">- Commit a Git</text>
+
+      <rect x="12" y="206" width="116" height="22" rx="4" fill="rgba(5, 150, 105, 0.1)"/>
+      <text x="70" y="221" class="font-sans" font-size="9" font-weight="700" fill="var(--accent-green)" text-anchor="middle">Autonomia Madura</text>
+    </g>
+
+    <!-- Bottom summary banner -->
+    <g transform="translate(24, 345)">
+      <rect width="772" height="34" rx="6" fill="var(--surface-tint)" stroke="var(--card-border)"/>
+      <text x="386" y="22" class="font-sans" font-size="11" font-weight="600" fill="var(--text-primary)" text-anchor="middle">
+        Resultado: Un flujo de ingenieria donde el programador conserva el liderazgo cognitivo de la solucion.
+      </text>
+    </g>
+  </g>
+</svg>

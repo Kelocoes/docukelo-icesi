@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Guía de Implementación: Sistema de Autenticación con React Router
+# Autenticación con React Router
 
 Esta guía documenta los cambios realizados para trabajar con React Router. Puedes partir usando este repositorio: https://github.com/Kelocoes/dmi-20252/tree/week-10/react-router
 

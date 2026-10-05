@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# Jest in Express with TypeScript
+# Testing with Jest
 
 Jest is a comprehensive testing framework for JavaScript enabling unit, integration, and end-to-end (E2E) testing. Here, we cover configuring Jest for an Express application written in TypeScript.
 

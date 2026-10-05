@@ -3,7 +3,7 @@ sidebar_position: 4
 sidebar_label: "Authorities vs. Roles"
 ---
 
-# El Modelo de Autorización: Authorities vs. Roles
+# Authorities vs. Roles
 
 Una vez que el usuario está autenticado, Spring Security examina sus privilegios para determinar si tiene autorización para interactuar con las rutas o métodos del sistema.
 

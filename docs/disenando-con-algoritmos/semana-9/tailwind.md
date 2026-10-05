@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# Guía sobre las funcionalidades de Tailwind CSS
+# Tailwind CSS
 
 Tailwind CSS es un framework de CSS "utility-first", lo que significa que aplicas clases predefinidas directamente en tu HTML para construir diseños complejos sin escribir CSS personalizado.
 

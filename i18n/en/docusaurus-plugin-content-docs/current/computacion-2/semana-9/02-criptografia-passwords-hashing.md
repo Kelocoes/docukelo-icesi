@@ -3,7 +3,7 @@ sidebar_position: 2
 sidebar_label: "Encoding, Encryption, and Hashing"
 ---
 
-# Web Cryptography: Encoding, Encryption, and Hashing
+# Encoding, Encryption, and Hashing
 
 One of the most frequent misconceptions in software engineering is using *"encoding"*, *"encryption"*, and *"hashing"* interchangeably. As **Laurențiu Spilcă** highlights in his Spring Security lectures, each of these processes serves a fundamentally different mathematical and operational purpose:
 

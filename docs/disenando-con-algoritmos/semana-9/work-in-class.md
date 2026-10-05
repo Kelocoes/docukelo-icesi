@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# Prueba corta: 3 - React
+# Quiz: React
 
 Esta prueba corta tiene como objetivo aplicar los conocimientos adquiridos en la semana sobre React. Puedes apoyarte en tus apuntes y el material visto en clase para resolverla. El propósito es demostrar tu comprensión de los conceptos básicos de React y cómo se emplean para construir interfaces de usuario interactivas.
 

@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# React introduction
+# Introducción a React
 
 ## Qué es React
 

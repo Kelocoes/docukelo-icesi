@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Desarrollo frontend multiplataforma
+# Frontend Multiplataforma
 
 El desarrollo frontend multiplataforma es un paradigma de ingeniería de software que permite construir aplicaciones para múltiples sistemas operativos (Android, iOS, Web, Windows, macOS y Linux) a partir de una **única base de código compartida**.
 
