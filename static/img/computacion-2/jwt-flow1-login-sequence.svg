@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 450" width="100%" style="max-width:1000px; display:block; margin:0 auto;">
+  <defs>
+    <style>
+      .lane-title { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 700; fill: #ffffff; text-anchor: middle; }
+      .step-num   { font-family: system-ui, -apple-system, sans-serif; font-size: 10px; font-weight: 800; fill: #ffffff; text-anchor: middle; }
+      .msg-txt    { font-family: system-ui, -apple-system, sans-serif; font-size: 10.5px; fill: #0f172a; font-weight: 600; }
+      .msg-sub    { font-family: ui-monospace, Consolas, monospace; font-size: 9.5px; fill: #475569; }
+      .note-txt   { font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; fill: #1e3a8a; font-style: italic; }
+    </style>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arr-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#16a34a"/>
+    </marker>
+    <marker id="arr-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#ea580c"/>
+    </marker>
+    <marker id="arr-ret" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- Fondo general -->
+  <rect width="1000" height="450" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Título del diagrama -->
+  <rect x="20" y="12" width="960" height="30" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="500" y="32" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5px" font-weight="700" fill="#1e40af">
+    Flujo de Inicio de Sesión y Emisión de Token (POST /api/public/auth/login)
+  </text>
+
+  <!-- CABECERAS DE PARTICIPANTES (Swimlanes) -->
+  <!-- 1. Cliente HTTP (x = 75) -->
+  <rect x="20" y="52" width="110" height="32" rx="6" fill="#1e293b"/>
+  <text class="lane-title" x="75" y="72">Cliente HTTP</text>
+  <line x1="75" y1="84" x2="75" y2="430" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- 2. SecurityFilterChain (x = 205) -->
+  <rect x="150" y="52" width="110" height="32" rx="6" fill="#3b82f6"/>
+  <text class="lane-title" x="205" y="72">SecurityFilter</text>
+  <line x1="205" y1="84" x2="205" y2="430" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- 3. AuthController (x = 335) -->
+  <rect x="280" y="52" width="110" height="32" rx="6" fill="#ea580c"/>
+  <text class="lane-title" x="335" y="72">AuthController</text>
+  <line x1="335" y1="84" x2="335" y2="430" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- 4. AuthService (x = 470) -->
+  <rect x="415" y="52" width="110" height="32" rx="6" fill="#7c3aed"/>
+  <text class="lane-title" x="470" y="72">AuthService</text>
+  <line x1="470" y1="84" x2="470" y2="430" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- 5. UserDetails & DB (x = 615) -->
+  <rect x="560" y="52" width="110" height="32" rx="6" fill="#475569"/>
+  <text class="lane-title" x="615" y="72">UserDetails / BD</text>
+  <line x1="615" y1="84" x2="615" y2="430" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- 6. PasswordEncoder (x = 755) -->
+  <rect x="700" y="52" width="110" height="32" rx="6" fill="#059669"/>
+  <text class="lane-title" x="755" y="72">PasswordEncoder</text>
+  <line x1="755" y1="84" x2="755" y2="430" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- 7. JwtService (x = 895) -->
+  <rect x="840" y="52" width="110" height="32" rx="6" fill="#0891b2"/>
+  <text class="lane-title" x="895" y="72">JwtService</text>
+  <line x1="895" y1="84" x2="895" y2="430" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- PASO 1: Cliente -> SecurityFilterChain -->
+  <line x1="75" y1="105" x2="198" y2="105" stroke="#2563eb" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+  <circle cx="92" cy="105" r="7.5" fill="#2563eb"/>
+  <text class="step-num" x="92" y="108.5">1</text>
+  <text class="msg-txt" x="105" y="101">POST /api/public/auth/login</text>
+  <text class="msg-sub" x="105" y="118">{ "username": "juan", "password": "..." }</text>
+
+  <!-- PASO 2: FilterChain evalúa permitAll() y da paso a AuthController -->
+  <rect x="160" y="128" width="90" height="18" rx="4" fill="#dbeafe" stroke="#93c5fd"/>
+  <text class="note-txt" x="205" y="140" text-anchor="middle">permitAll()</text>
+
+  <line x1="205" y1="152" x2="328" y2="152" stroke="#2563eb" stroke-width="1.8" marker-end="url(#arr-blue)"/>
+  <circle cx="222" cy="152" r="7.5" fill="#2563eb"/>
+  <text class="step-num" x="222" y="155.5">2</text>
+  <text class="msg-txt" x="235" y="148">Despacha al @RestController</text>
+
+  <!-- PASO 3: AuthController -> AuthService -->
+  <line x1="335" y1="182" x2="463" y2="182" stroke="#ea580c" stroke-width="1.8" marker-end="url(#arr-orange)"/>
+  <circle cx="352" cy="182" r="7.5" fill="#ea580c"/>
+  <text class="step-num" x="352" y="185.5">3</text>
+  <text class="msg-txt" x="365" y="178">login(LoginRequestDTO)</text>
+
+  <!-- PASO 4: AuthService -> UserDetailsSvc -->
+  <line x1="470" y1="212" x2="608" y2="212" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arr-purple)"/>
+  <circle cx="487" cy="212" r="7.5" fill="#7c3aed"/>
+  <text class="step-num" x="487" y="215.5">4</text>
+  <text class="msg-txt" x="500" y="208">loadUserByUsername("juan")</text>
+
+  <!-- PASO 5: DB -> AuthService (retorna UserDetails) -->
+  <line x1="615" y1="242" x2="477" y2="242" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr-ret)"/>
+  <circle cx="598" cy="242" r="7.5" fill="#64748b"/>
+  <text class="step-num" x="598" y="245.5">5</text>
+  <text class="msg-txt" x="495" y="238">Retorna UserDetails (hash + roles)</text>
+
+  <!-- PASO 6: AuthService -> PasswordEncoder.matches -->
+  <line x1="470" y1="275" x2="748" y2="275" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arr-purple)"/>
+  <circle cx="487" cy="275" r="7.5" fill="#7c3aed"/>
+  <text class="step-num" x="487" y="278.5">6</text>
+  <text class="msg-txt" x="500" y="271">matches(rawPassword, storedHash)</text>
+
+  <!-- PASO 7: PasswordEncoder -> AuthService (true) -->
+  <line x1="755" y1="305" x2="477" y2="305" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr-green)"/>
+  <circle cx="738" cy="305" r="7.5" fill="#16a34a"/>
+  <text class="step-num" x="738" y="308.5">7</text>
+  <text class="msg-txt" x="500" y="301" fill="#15803d">Contraseña válida (true)</text>
+
+  <!-- PASO 8: AuthService -> JwtService.generateToken -->
+  <line x1="470" y1="338" x2="888" y2="338" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arr-purple)"/>
+  <circle cx="487" cy="338" r="7.5" fill="#7c3aed"/>
+  <text class="step-num" x="487" y="341.5">8</text>
+  <text class="msg-txt" x="500" y="334">generateToken(user, authentication)</text>
+  <text class="msg-sub" x="500" y="350">Construye claims y firma con SECRET_KEY</text>
+
+  <!-- PASO 9: JwtService -> AuthService (String token) -->
+  <line x1="895" y1="368" x2="477" y2="368" stroke="#0891b2" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr-ret)"/>
+  <circle cx="878" cy="368" r="7.5" fill="#0891b2"/>
+  <text class="step-num" x="878" y="371.5">9</text>
+  <text class="msg-txt" x="500" y="364">Retorna String accessToken</text>
+
+  <!-- PASO 10: AuthService -> AuthController -> Cliente -->
+  <line x1="470" y1="395" x2="342" y2="395" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr-ret)"/>
+  <circle cx="453" cy="395" r="7.5" fill="#ea580c"/>
+  <text class="step-num" x="453" y="398.5">10</text>
+  <text class="msg-txt" x="355" y="390">TokenResponseDTO</text>
+
+  <line x1="335" y1="420" x2="82" y2="420" stroke="#16a34a" stroke-width="2" marker-end="url(#arr-green)"/>
+  <circle cx="318" cy="420" r="7.5" fill="#16a34a"/>
+  <text class="step-num" x="318" y="423.5">11</text>
+  <text class="msg-txt" x="90" y="415" fill="#15803d">HTTP 200 OK: { "accessToken": "eyJhbGci..." }</text>
+</svg>

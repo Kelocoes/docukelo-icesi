@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 450" width="100%" style="max-width:1000px; display:block; margin:0 auto;">
+  <defs>
+    <style>
+      .lane-title { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 700; fill: #ffffff; text-anchor: middle; }
+      .step-num   { font-family: system-ui, -apple-system, sans-serif; font-size: 10px; font-weight: 800; fill: #ffffff; text-anchor: middle; }
+      .msg-txt    { font-family: system-ui, -apple-system, sans-serif; font-size: 10.5px; fill: #0f172a; font-weight: 600; }
+      .msg-sub    { font-family: ui-monospace, Consolas, monospace; font-size: 9.5px; fill: #475569; }
+      .note-txt   { font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; fill: #047857; font-weight: 600; }
+    </style>
+    <marker id="arr-blue2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arr-purple2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arr-green2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#16a34a"/>
+    </marker>
+    <marker id="arr-teal2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#0d9488"/>
+    </marker>
+    <marker id="arr-ret2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- Fondo general -->
+  <rect width="1000" height="450" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Título del diagrama -->
+  <rect x="20" y="12" width="960" height="30" rx="6" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="500" y="32" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5px" font-weight="700" fill="#6d28d9">
+    Flujo de Consumo de Endpoint Protegido (GET /api/usuarios/10 con Authorization: Bearer token)
+  </text>
+
+  <!-- CABECERAS DE PARTICIPANTES -->
+  <!-- 1. Cliente HTTP (x = 75) -->
+  <rect x="20" y="52" width="110" height="32" rx="6" fill="#1e293b"/>
+  <text class="lane-title" x="75" y="72">Cliente HTTP</text>
+  <line x1="75" y1="84" x2="75" y2="430" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- 2. SecurityFilterChain (x = 215) -->
+  <rect x="160" y="52" width="110" height="32" rx="6" fill="#3b82f6"/>
+  <text class="lane-title" x="215" y="72">SecurityFilter</text>
+  <line x1="215" y1="84" x2="215" y2="430" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- 3. JwtAuthenticationFilter (x = 365) -->
+  <rect x="305" y="52" width="120" height="32" rx="6" fill="#7c3aed"/>
+  <text class="lane-title" x="365" y="72">JwtAuthFilter</text>
+  <line x1="365" y1="84" x2="365" y2="430" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- 4. JwtService (x = 515) -->
+  <rect x="460" y="52" width="110" height="32" rx="6" fill="#0d9488"/>
+  <text class="lane-title" x="515" y="72">JwtService</text>
+  <line x1="515" y1="84" x2="515" y2="430" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- 5. SecurityContextHolder (x = 665) -->
+  <rect x="605" y="52" width="120" height="32" rx="6" fill="#059669"/>
+  <text class="lane-title" x="665" y="72">SecurityContext</text>
+  <line x1="665" y1="84" x2="665" y2="430" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- 6. UsernamePasswordFilter (x = 810) -->
+  <rect x="755" y="52" width="110" height="32" rx="6" fill="#64748b"/>
+  <text class="lane-title" x="810" y="72">UserPassFilter</text>
+  <line x1="810" y1="84" x2="810" y2="430" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- 7. DispatcherServlet / Controller (x = 930) -->
+  <rect x="880" y="52" width="105" height="32" rx="6" fill="#15803d"/>
+  <text class="lane-title" x="932" y="72">@RestController</text>
+  <line x1="932" y1="84" x2="932" y2="430" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- PASO 1: Cliente -> SecurityFilterChain -->
+  <line x1="75" y1="105" x2="208" y2="105" stroke="#2563eb" stroke-width="1.8" marker-end="url(#arr-blue2)"/>
+  <circle cx="92" cy="105" r="7.5" fill="#2563eb"/>
+  <text class="step-num" x="92" y="108.5">1</text>
+  <text class="msg-txt" x="105" y="100">GET /api/usuarios/10</text>
+  <text class="msg-sub" x="105" y="117">Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5c...</text>
+
+  <!-- PASO 2: FilterChain pasa a JwtFilter (addFilterBefore) -->
+  <line x1="215" y1="140" x2="358" y2="140" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arr-purple2)"/>
+  <circle cx="232" cy="140" r="7.5" fill="#7c3aed"/>
+  <text class="step-num" x="232" y="143.5">2</text>
+  <text class="msg-txt" x="245" y="135">Intercepta con addFilterBefore</text>
+
+  <!-- PASO 3: JwtFilter auto-inspecciona la cabecera -->
+  <path d="M 365,160 L 395,160 L 395,180 L 372,180" fill="none" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr-purple2)"/>
+  <circle cx="348" cy="170" r="7.5" fill="#7c3aed"/>
+  <text class="step-num" x="348" y="173.5">3</text>
+  <text class="msg-sub" x="402" y="174">Extrae token con substring(7)</text>
+
+  <!-- PASO 4: JwtFilter -> JwtService.isTokenValid() -->
+  <line x1="365" y1="205" x2="508" y2="205" stroke="#0d9488" stroke-width="1.8" marker-end="url(#arr-teal2)"/>
+  <circle cx="382" cy="205" r="7.5" fill="#0d9488"/>
+  <text class="step-num" x="382" y="208.5">4</text>
+  <text class="msg-txt" x="395" y="200">isTokenValid(token)</text>
+  <text class="msg-sub" x="395" y="217">Verifica firma HMAC con SECRET_KEY y exp &gt; now</text>
+
+  <!-- PASO 5: JwtService -> JwtFilter (true) -->
+  <line x1="515" y1="240" x2="372" y2="240" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr-green2)"/>
+  <circle cx="498" cy="240" r="7.5" fill="#16a34a"/>
+  <text class="step-num" x="498" y="243.5">5</text>
+  <text class="msg-txt" x="395" y="235" fill="#15803d">Firma íntegra y vigente (true)</text>
+
+  <!-- PASO 6: JwtFilter solicita UserDetails / Claims a JwtService -->
+  <line x1="365" y1="270" x2="508" y2="270" stroke="#0d9488" stroke-width="1.8" marker-end="url(#arr-teal2)"/>
+  <circle cx="382" cy="270" r="7.5" fill="#0d9488"/>
+  <text class="step-num" x="382" y="273.5">6</text>
+  <text class="msg-txt" x="395" y="265">getUserDetailsFromToken(token)</text>
+  <text class="msg-sub" x="395" y="282">Extrae Principal (username) y GrantedAuthorities</text>
+
+  <!-- PASO 7: JwtFilter -> SecurityContextHolder.setAuthentication() -->
+  <line x1="365" y1="310" x2="658" y2="310" stroke="#059669" stroke-width="1.8" marker-end="url(#arr-green2)"/>
+  <circle cx="382" cy="310" r="7.5" fill="#059669"/>
+  <text class="step-num" x="382" y="313.5">7</text>
+  <text class="msg-txt" x="395" y="305">setAuthentication(UsernamePasswordAuthenticationToken)</text>
+  <rect x="585" y="325" width="160" height="20" rx="4" fill="#dcfce7" stroke="#86efac"/>
+  <text class="note-txt" x="665" y="339" text-anchor="middle">Autenticado en ThreadLocal</text>
+
+  <!-- PASO 8: JwtFilter -> filterChain.doFilter() -->
+  <line x1="365" y1="365" x2="803" y2="365" stroke="#64748b" stroke-width="1.8" marker-end="url(#arr-ret2)"/>
+  <circle cx="382" cy="365" r="7.5" fill="#64748b"/>
+  <text class="step-num" x="382" y="368.5">8</text>
+  <text class="msg-txt" x="395" y="360">filterChain.doFilter(req, res)</text>
+  <text class="msg-sub" x="395" y="377">Usuario autenticado en contexto: UserPassFilter no bloquea</text>
+
+  <!-- PASO 9: Pasa al @RestController -->
+  <line x1="810" y1="395" x2="925" y2="395" stroke="#15803d" stroke-width="1.8" marker-end="url(#arr-green2)"/>
+  <circle cx="827" cy="395" r="7.5" fill="#15803d"/>
+  <text class="step-num" x="827" y="398.5">9</text>
+  <text class="msg-txt" x="840" y="390">@GetMapping</text>
+
+  <!-- PASO 10: Retorno 200 OK al Cliente -->
+  <line x1="932" y1="425" x2="82" y2="425" stroke="#15803d" stroke-width="2" marker-end="url(#arr-green2)"/>
+  <circle cx="915" cy="425" r="7.5" fill="#15803d"/>
+  <text class="step-num" x="915" y="428.5">10</text>
+  <text class="msg-txt" x="90" y="420" fill="#15803d">HTTP 200 OK con { "id": 10, "nombre": "Juan", "email": "..." }</text>
+</svg>

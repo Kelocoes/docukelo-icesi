@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 340" width="100%" style="max-width:920px; display:block; margin:0 auto;">
+  <defs>
+    <style>
+      .hdr-flow { font-family: system-ui, -apple-system, sans-serif; font-size: 13.5px; font-weight: 700; }
+      .lbl-step { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 700; }
+      .txt-step { font-family: system-ui, -apple-system, sans-serif; font-size: 11.5px; fill: #334155; }
+      .mono-step { font-family: ui-monospace, Consolas, monospace; font-size: 11px; fill: #0f172a; }
+    </style>
+    <marker id="arr-f-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arr-f-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#9333ea"/>
+    </marker>
+  </defs>
+
+  <rect width="920" height="340" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Panel Izquierdo: Flujo 1 - Inicio de Sesión y Emisión de Token -->
+  <rect x="25" y="20" width="425" height="300" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="1.2"/>
+  <rect x="25" y="20" width="425" height="36" rx="12" fill="#eff6ff"/>
+  <rect x="25" y="40" width="425" height="16" fill="#eff6ff"/>
+  <text class="hdr-flow" x="237" y="42" text-anchor="middle" fill="#1d4ed8">Flujo 1: Emisión en Login (POST /auth/login)</text>
+
+  <!-- Paso 1.1 -->
+  <circle cx="50" cy="85" r="12" fill="#dbeafe"/>
+  <text class="lbl-step" x="50" y="89" text-anchor="middle" fill="#1d4ed8">1</text>
+  <text class="txt-step" x="72" y="82"><b>Cliente envía credenciales</b> (JSON body)</text>
+  <text class="mono-step" x="72" y="97">{ "username": "juan", "password": "..." }</text>
+
+  <!-- Paso 1.2 -->
+  <circle cx="50" cy="135" r="12" fill="#dbeafe"/>
+  <text class="lbl-step" x="50" y="139" text-anchor="middle" fill="#1d4ed8">2</text>
+  <text class="txt-step" x="72" y="132"><b>AuthService &amp; UserDetailsService</b></text>
+  <text class="mono-step" x="72" y="147">Carga UserDetails desde DB + PasswordEncoder</text>
+
+  <!-- Paso 1.3 -->
+  <circle cx="50" cy="185" r="12" fill="#dbeafe"/>
+  <text class="lbl-step" x="50" y="189" text-anchor="middle" fill="#1d4ed8">3</text>
+  <text class="txt-step" x="72" y="182"><b>JwtService emite y firma el token</b></text>
+  <text class="mono-step" x="72" y="197">Jwts.builder().signWith(SECRET_KEY).compact()</text>
+
+  <!-- Paso 1.4 -->
+  <circle cx="50" cy="245" r="12" fill="#dcfce7"/>
+  <text class="lbl-step" x="50" y="249" text-anchor="middle" fill="#15803d">4</text>
+  <text class="txt-step" x="72" y="240"><b>Retorno HTTP 200 OK con TokenResponseDTO</b></text>
+  <rect x="72" y="250" width="360" height="26" rx="4" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="mono-step" x="80" y="267" fill="#16a34a">{ "accessToken": "eyJhbGciOiJIUzI1NiIsInR5..." }</text>
+
+  <!-- Panel Derecho: Flujo 2 - Petición Protegida y Autorización -->
+  <rect x="470" y="20" width="425" height="300" rx="12" fill="#ffffff" stroke="#d8b4fe" stroke-width="1.2"/>
+  <rect x="470" y="20" width="425" height="36" rx="12" fill="#faf5ff"/>
+  <rect x="470" y="40" width="425" height="16" fill="#faf5ff"/>
+  <text class="hdr-flow" x="682" y="42" text-anchor="middle" fill="#7e22ce">Flujo 2: Petición Protegida (Bearer Token)</text>
+
+  <!-- Paso 2.1 -->
+  <circle cx="495" cy="85" r="12" fill="#f3e8ff"/>
+  <text class="lbl-step" x="495" y="89" text-anchor="middle" fill="#7e22ce">1</text>
+  <text class="txt-step" x="517" y="82"><b>Cliente envía cabecera HTTP estándar</b></text>
+  <text class="mono-step" x="517" y="97">Authorization: Bearer eyJhbGciOiJIUzI1Ni...</text>
+
+  <!-- Paso 2.2 -->
+  <circle cx="495" cy="135" r="12" fill="#f3e8ff"/>
+  <text class="lbl-step" x="495" y="139" text-anchor="middle" fill="#7e22ce">2</text>
+  <text class="txt-step" x="517" y="132"><b>JwtAuthenticationFilter (addFilterBefore)</b></text>
+  <text class="mono-step" x="517" y="147">Extrae token con substring(7) y verifica prefijo</text>
+
+  <!-- Paso 2.3 -->
+  <circle cx="495" cy="185" r="12" fill="#f3e8ff"/>
+  <text class="lbl-step" x="495" y="189" text-anchor="middle" fill="#7e22ce">3</text>
+  <text class="txt-step" x="517" y="182"><b>JwtService valida firma criptográfica</b></text>
+  <text class="mono-step" x="517" y="197">Revisa exp &gt; now y coincidencia matemática de firma</text>
+
+  <!-- Paso 2.4 -->
+  <circle cx="495" cy="245" r="12" fill="#dcfce7"/>
+  <text class="lbl-step" x="495" y="249" text-anchor="middle" fill="#15803d">4</text>
+  <text class="txt-step" x="517" y="240"><b>SecurityContextHolder en ThreadLocal</b></text>
+  <rect x="517" y="250" width="360" height="26" rx="4" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="mono-step" x="525" y="267" fill="#15803d">setAuthentication(token) ➔ Pasa a @RestController</text>
+</svg>

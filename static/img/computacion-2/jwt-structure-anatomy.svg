@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 280" width="100%" style="max-width:900px; display:block; margin:0 auto;">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 16px; font-weight: 700; }
+      .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; fill: #334155; }
+      .cap   { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 600; fill: #475569; }
+    </style>
+  </defs>
+
+  <rect width="900" height="280" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <rect x="30" y="40" width="240" height="140" rx="12" fill="#ffffff" stroke="#f43f5e" stroke-width="1.5"/>
+  <rect x="30" y="40" width="240" height="38" rx="12" fill="#ffe4e6"/>
+  <rect x="30" y="62" width="240" height="16" fill="#ffe4e6"/>
+  <text class="title" x="150" y="65" text-anchor="middle" fill="#9f1239">Header</text>
+  <text class="mono" x="54" y="112">alg</text>
+  <text class="mono" x="54" y="142">typ</text>
+
+  <circle cx="300" cy="110" r="6" fill="#64748b"/>
+
+  <!-- Payload -->
+  <rect x="330" y="40" width="240" height="140" rx="12" fill="#ffffff" stroke="#9333ea" stroke-width="1.5"/>
+  <rect x="330" y="40" width="240" height="38" rx="12" fill="#f3e8ff"/>
+  <rect x="330" y="62" width="240" height="16" fill="#f3e8ff"/>
+  <text class="title" x="450" y="65" text-anchor="middle" fill="#6b21a8">Payload</text>
+  <text class="mono" x="354" y="108">sub</text>
+  <text class="mono" x="354" y="130">roles</text>
+  <text class="mono" x="354" y="152">exp</text>
+
+  <circle cx="600" cy="110" r="6" fill="#64748b"/>
+
+  <!-- Signature -->
+  <rect x="630" y="40" width="240" height="140" rx="12" fill="#ffffff" stroke="#059669" stroke-width="1.5"/>
+  <rect x="630" y="40" width="240" height="38" rx="12" fill="#d1fae5"/>
+  <rect x="630" y="62" width="240" height="16" fill="#d1fae5"/>
+  <text class="title" x="750" y="65" text-anchor="middle" fill="#065f46">Signature</text>
+  <text class="mono" x="654" y="112">firma</text>
+  <text class="mono" x="654" y="142">clave secreta</text>
+
+  <!-- Brackets -->
+  <path d="M30,205 L30,215 L570,215 L570,205" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <text class="cap" x="300" y="240" text-anchor="middle">Lo puede leer cualquiera</text>
+  <path d="M630,205 L630,215 L870,215 L870,205" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <text class="cap" x="750" y="240" text-anchor="middle">Solo el servidor la valida</text>
+</svg>
