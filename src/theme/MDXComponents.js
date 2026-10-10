@@ -12,6 +12,7 @@ import ZoomableMermaid from '@site/src/components/ZoomableMermaid';
 import { Quiz, Question, Option } from '@site/src/components/Quiz/Quiz';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import DaisyPreview from '@site/src/components/DaisyPreview';
 
 export default {
     // Re-use the default mapping
@@ -33,4 +34,5 @@ export default {
     Option,
     Tabs,
     TabItem,
+    DaisyPreview,
 };
