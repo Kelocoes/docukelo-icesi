@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; fill: #64748b; }
+      .tag   { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+      .label { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12.5px; font-weight: 700; fill: #1e293b; }
+      .meta  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; font-weight: 600; }
+    </style>
+    <filter id="shadow-clean" x="-5%" y="-5%" width="110%" height="114%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas (880x440) -->
+  <rect width="880" height="440" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <g transform="translate(35, 26)">
+    <rect x="0" y="0" width="165" height="20" rx="5" fill="#fef2f2" stroke="#fecaca" stroke-width="1"/>
+    <text x="82.5" y="14" class="tag" fill="#dc2626" text-anchor="middle">RECONSTRUCCIÓN</text>
+    <text x="0" y="44" class="title">Los Tres Árboles y el Marcado Dirty tras setState()</text>
+    <text x="0" y="62" class="sub">Solo el subárbol marcado como sucio se reconstruye y repinta en pantalla</text>
+  </g>
+
+  <!-- 3 PIPELINE STAGES -->
+
+  <!-- STAGE 1: WIDGET TREE -->
+  <g transform="translate(35, 110)">
+    <rect width="250" height="290" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" filter="url(#shadow-clean)"/>
+    <rect x="16" y="16" width="120" height="20" rx="5" fill="#eff6ff"/>
+    <text x="76" y="30" class="tag" fill="#2563eb" text-anchor="middle">1. WIDGET TREE</text>
+    <text x="16" y="58" class="label">Plano Desechable</text>
+
+    <!-- Tree Nodes Graphic -->
+    <g transform="translate(125, 95)">
+      <!-- Root -->
+      <circle cx="0" cy="0" r="14" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+      <text x="0" y="4" class="meta" fill="#1d4ed8" text-anchor="middle">W</text>
+
+      <line x1="-8" y1="12" x2="-45" y2="40" stroke="#cbd5e1" stroke-width="1.5"/>
+      <line x1="8" y1="12" x2="45" y2="40" stroke="#3b82f6" stroke-width="2"/>
+
+      <!-- Clean Sibling -->
+      <circle cx="-45" cy="45" r="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+      <!-- Rebuilt Child -->
+      <circle cx="45" cy="45" r="15" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+      <text x="45" y="49" class="meta" fill="#1d4ed8" text-anchor="middle">W</text>
+
+      <line x1="45" y1="60" x2="25" y2="85" stroke="#3b82f6" stroke-width="1.5"/>
+      <line x1="45" y1="60" x2="65" y2="85" stroke="#3b82f6" stroke-width="1.5"/>
+      <circle cx="25" cy="88" r="7" fill="#dbeafe"/>
+      <circle cx="65" cy="88" r="7" fill="#dbeafe"/>
+    </g>
+
+    <!-- Tech Chip -->
+    <rect x="16" y="215" width="218" height="24" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="125" y="231" class="meta" fill="#64748b" text-anchor="middle">const Widget (Sin costo)</text>
+    <text x="125" y="260" class="sub" text-anchor="middle">Recreado por build()</text>
+  </g>
+
+  <!-- STAGE 2: ELEMENT TREE (DIRTY) -->
+  <g transform="translate(315, 110)">
+    <rect width="250" height="290" rx="12" fill="#ffffff" stroke="#f59e0b" stroke-width="2" filter="url(#shadow-clean)"/>
+    <rect x="16" y="16" width="130" height="20" rx="5" fill="#fffbeb"/>
+    <text x="81" y="30" class="tag" fill="#b45309" text-anchor="middle">2. ELEMENT TREE</text>
+    <text x="16" y="58" class="label">Estructura Viva en RAM</text>
+
+    <!-- Tree Nodes Graphic with DIRTY flag -->
+    <g transform="translate(125, 95)">
+      <!-- Root -->
+      <circle cx="0" cy="0" r="14" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+      <text x="0" y="4" class="meta" fill="#475569" text-anchor="middle">E</text>
+
+      <line x1="-8" y1="12" x2="-45" y2="40" stroke="#cbd5e1" stroke-width="1.5"/>
+      <line x1="8" y1="12" x2="45" y2="40" stroke="#f59e0b" stroke-width="2"/>
+
+      <!-- Clean Sibling -->
+      <circle cx="-45" cy="45" r="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+      <text x="-45" y="49" class="meta" fill="#94a3b8" text-anchor="middle">✓</text>
+
+      <!-- Target DIRTY Node -->
+      <circle cx="45" cy="45" r="17" fill="#fee2e2" stroke="#ef4444" stroke-width="2.5"/>
+      <text x="45" y="49" class="meta" fill="#b91c1c" font-size="9.5px" text-anchor="middle">DIRTY</text>
+
+      <line x1="45" y1="62" x2="25" y2="85" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <line x1="45" y1="62" x2="65" y2="85" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <circle cx="25" cy="88" r="7" fill="#fef2f2" stroke="#ef4444"/>
+      <circle cx="65" cy="88" r="7" fill="#fef2f2" stroke="#ef4444"/>
+    </g>
+
+    <!-- Tech Chip -->
+    <rect x="16" y="215" width="218" height="24" rx="4" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="125" y="231" class="meta" fill="#b45309" text-anchor="middle">setState() =&gt; markNeedsBuild()</text>
+    <text x="125" y="260" class="sub" text-anchor="middle">Retiene State vivo</text>
+  </g>
+
+  <!-- STAGE 3: RENDER TREE -->
+  <g transform="translate(595, 110)">
+    <rect width="250" height="290" rx="12" fill="#ffffff" stroke="#4cb979" stroke-width="2" filter="url(#shadow-clean)"/>
+    <rect x="16" y="16" width="125" height="20" rx="5" fill="#ecfdf5"/>
+    <text x="78.5" y="30" class="tag" fill="#047857" text-anchor="middle">3. RENDER TREE</text>
+    <text x="16" y="58" class="label">Pintado en GPU</text>
+
+    <!-- Render Nodes & Mobile Preview -->
+    <g transform="translate(125, 95)">
+      <!-- Root -->
+      <rect x="-14" y="-14" width="28" height="28" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="0" y="4" class="meta" fill="#475569" text-anchor="middle">R</text>
+
+      <line x1="-8" y1="14" x2="-45" y2="40" stroke="#cbd5e1" stroke-width="1.5"/>
+      <line x1="8" y1="14" x2="45" y2="40" stroke="#4cb979" stroke-width="2"/>
+
+      <!-- Clean Sibling -->
+      <rect x="-56" y="32" width="22" height="22" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+
+      <!-- Repainted Node -->
+      <rect x="34" y="32" width="26" height="26" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+      <text x="47" y="48" class="meta" fill="#15803d" font-size="9px" text-anchor="middle">GPU</text>
+
+      <line x1="47" y1="58" x2="28" y2="85" stroke="#16a34a" stroke-width="1.5"/>
+      <line x1="47" y1="58" x2="66" y2="85" stroke="#16a34a" stroke-width="1.5"/>
+      <rect x="22" y="80" width="12" height="12" rx="2" fill="#86efac"/>
+      <rect x="60" y="80" width="12" height="12" rx="2" fill="#86efac"/>
+    </g>
+
+    <!-- Tech Chip -->
+    <rect x="16" y="215" width="218" height="24" rx="4" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="125" y="231" class="meta" fill="#065f46" text-anchor="middle">Impeller / Skia a 60 FPS</text>
+    <text x="125" y="260" class="sub" text-anchor="middle">Solo repinta nodos dirty</text>
+  </g>
+</svg>
