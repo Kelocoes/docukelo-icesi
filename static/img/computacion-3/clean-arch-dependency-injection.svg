@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="100%" height="100%">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L10,5 L0,9 Z" fill="#7c3aed"/></marker>
+  </defs>
+  <style>
+    .t { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    .title { font-size: 20px; font-weight: 700; fill: #0f172a; }
+    .head { font-size: 12px; font-weight: 800; letter-spacing: .08em; }
+    .mono { font-family: ui-monospace, Consolas, monospace; font-size: 12px; font-weight: 700; }
+  </style>
+  <rect width="880" height="440" rx="16" fill="#f8fafc"/>
+  <text x="32" y="38" class="t title">Composition Root: un interruptor decide la fuente</text>
+
+  <!-- Mock chip (active) -->
+  <g transform="translate(90,150)">
+    <rect x="0" y="-30" width="84" height="60" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/>
+    <g stroke="#16a34a" stroke-width="3" stroke-linecap="round">
+      <path d="M14,-30 V-40 M36,-30 V-40 M58,-30 V-40 M70,-30 V-40 M14,30 V40 M36,30 V40 M58,30 V40 M70,30 V40"/>
+    </g>
+    <text x="42" y="5" class="t mono" fill="#14532d" text-anchor="middle">Mock</text>
+  </g>
+  <!-- API cloud (inactive) -->
+  <g transform="translate(130,325)">
+    <circle cx="-26" cy="6" r="20" fill="#f1f5f9" stroke="#94a3b8" stroke-width="3"/>
+    <circle cx="0" cy="-8" r="27" fill="#f1f5f9" stroke="#94a3b8" stroke-width="3"/>
+    <circle cx="28" cy="6" r="19" fill="#f1f5f9" stroke="#94a3b8" stroke-width="3"/>
+    <rect x="-26" y="2" width="54" height="24" fill="#f1f5f9"/>
+    <line x1="-26" y1="26" x2="28" y2="26" stroke="#94a3b8" stroke-width="3"/>
+    <text x="0" y="12" class="t mono" fill="#475569" text-anchor="middle">API</text>
+  </g>
+
+  <!-- wires -->
+  <path d="M174,150 C250,150 280,215 340,215" stroke="#16a34a" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M170,330 C250,330 280,265 340,265" stroke="#cbd5e1" stroke-width="4" stroke-dasharray="8 7" fill="none" stroke-linecap="round"/>
+
+  <!-- switch -->
+  <circle cx="352" cy="215" r="9" fill="#16a34a"/>
+  <circle cx="352" cy="265" r="9" fill="#cbd5e1"/>
+  <rect x="340" y="190" width="24" height="100" rx="0" fill="none"/>
+  <line x1="352" y1="240" x2="440" y2="240" stroke="#64748b" stroke-width="3"/>
+  <rect x="318" y="196" width="68" height="88" rx="34" fill="#ede9fe" stroke="#7c3aed" stroke-width="3.5"/>
+  <circle cx="352" cy="226" r="20" fill="#7c3aed"/>
+  <text x="352" y="316" class="t head" fill="#7c3aed" text-anchor="middle" font-size="11">COMPOSITION ROOT</text>
+  <text x="352" y="334" class="t mono" fill="#64748b" text-anchor="middle" font-size="10" font-weight="500">USE_MOCK=true</text>
+
+  <!-- output wire -->
+  <path d="M386,240 L480,240" stroke="#7c3aed" stroke-width="4" fill="none" marker-end="url(#a)"/>
+
+  <!-- use cases hexagon -->
+  <polygon points="490,240 530,190 590,190 630,240 590,290 530,290" fill="#ffedd5" stroke="#ea580c" stroke-width="3" stroke-linejoin="round"/>
+  <text x="560" y="237" class="t head" fill="#9a3412" text-anchor="middle" font-size="11">CASOS</text>
+  <text x="560" y="253" class="t head" fill="#9a3412" text-anchor="middle" font-size="11">DE USO</text>
+
+  <path d="M634,240 L700,240" stroke="#7c3aed" stroke-width="4" fill="none" marker-end="url(#a)"/>
+
+  <!-- screen -->
+  <g transform="translate(712,170)">
+    <rect x="0" y="0" width="130" height="140" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="3"/>
+    <line x1="0" y1="24" x2="130" y2="24" stroke="#2563eb" stroke-width="3"/>
+    <circle cx="14" cy="12" r="4" fill="#2563eb"/>
+    <circle cx="28" cy="12" r="4" fill="#2563eb"/>
+    <rect x="16" y="42" width="98" height="16" rx="8" fill="#93c5fd"/>
+    <rect x="16" y="68" width="98" height="16" rx="8" fill="#93c5fd"/>
+    <rect x="16" y="94" width="98" height="16" rx="8" fill="#93c5fd"/>
+  </g>
+  <text x="777" y="340" class="t head" fill="#1e40af" text-anchor="middle" font-size="11">UI</text>
+</svg>

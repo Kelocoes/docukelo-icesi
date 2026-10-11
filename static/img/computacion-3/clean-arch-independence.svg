@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="100%" height="100%">
+  <defs>
+    <marker id="s" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 Z" fill="#64748b"/></marker>
+  </defs>
+  <style>
+    .t { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    .title { font-size: 20px; font-weight: 700; fill: #0f172a; }
+    .head { font-size: 13px; font-weight: 800; letter-spacing: .08em; }
+    .pill { font-size: 12px; font-weight: 700; }
+  </style>
+  <rect width="880" height="440" rx="16" fill="#f8fafc"/>
+  <text x="32" y="38" class="t title">Lo que Clean Architecture permite cambiar sin tocar el núcleo</text>
+
+  <!-- wires -->
+  <g stroke="#a78bfa" stroke-width="4" stroke-linecap="round" fill="none">
+    <path d="M375,205 C320,170 260,150 188,150"/>
+    <path d="M375,255 C320,290 260,310 188,310"/>
+    <path d="M505,205 C560,170 620,150 694,150"/>
+    <path d="M505,255 C560,290 620,310 694,310"/>
+  </g>
+
+  <!-- core -->
+  <circle cx="440" cy="230" r="78" fill="#ede9fe" stroke="#7c3aed" stroke-width="4"/>
+  <text x="440" y="226" class="t head" fill="#581c87" text-anchor="middle">NÚCLEO</text>
+  <text x="440" y="246" class="t head" fill="#7c3aed" text-anchor="middle" font-size="11">reglas de negocio</text>
+  <g fill="#fff" stroke="#7c3aed" stroke-width="3">
+    <circle cx="375" cy="205" r="7"/><circle cx="375" cy="255" r="7"/><circle cx="505" cy="205" r="7"/><circle cx="505" cy="255" r="7"/>
+  </g>
+
+  <!-- UI : top-left -->
+  <g transform="translate(110,150)">
+    <text x="0" y="-52" class="t head" fill="#1e40af" text-anchor="middle">INTERFAZ</text>
+    <rect x="-74" y="-30" width="62" height="60" rx="30" fill="#dbeafe" stroke="#2563eb" stroke-width="3"/>
+    <text x="-43" y="4" class="t pill" fill="#1e3a8a" text-anchor="middle">Web</text>
+    <path d="M-6,0 H6" stroke="#64748b" stroke-width="3" marker-start="url(#s)" marker-end="url(#s)"/>
+    <rect x="12" y="-30" width="62" height="60" rx="30" fill="#f1f5f9" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 5"/>
+    <text x="43" y="4" class="t pill" fill="#475569" text-anchor="middle">CLI</text>
+  </g>
+  <!-- DB : bottom-left -->
+  <g transform="translate(110,310)">
+    <rect x="-74" y="-30" width="62" height="60" rx="30" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/>
+    <text x="-43" y="4" class="t pill" fill="#14532d" text-anchor="middle">SQL</text>
+    <path d="M-6,0 H6" stroke="#64748b" stroke-width="3" marker-start="url(#s)" marker-end="url(#s)"/>
+    <rect x="12" y="-30" width="62" height="60" rx="30" fill="#f1f5f9" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 5"/>
+    <text x="43" y="4" class="t pill" fill="#475569" text-anchor="middle">NoSQL</text>
+    <text x="0" y="62" class="t head" fill="#15803d" text-anchor="middle">BASE DE DATOS</text>
+  </g>
+  <!-- Framework : top-right -->
+  <g transform="translate(770,150)">
+    <text x="0" y="-52" class="t head" fill="#c2410c" text-anchor="middle">FRAMEWORK</text>
+    <rect x="-74" y="-30" width="62" height="60" rx="30" fill="#ffedd5" stroke="#ea580c" stroke-width="3"/>
+    <text x="-43" y="4" class="t pill" fill="#9a3412" text-anchor="middle">Next</text>
+    <path d="M-6,0 H6" stroke="#64748b" stroke-width="3" marker-start="url(#s)" marker-end="url(#s)"/>
+    <rect x="12" y="-30" width="62" height="60" rx="30" fill="#f1f5f9" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 5"/>
+    <text x="43" y="4" class="t pill" fill="#475569" text-anchor="middle">Vite</text>
+  </g>
+  <!-- External : bottom-right -->
+  <g transform="translate(770,310)">
+    <rect x="-74" y="-30" width="62" height="60" rx="30" fill="#fef3c7" stroke="#d97706" stroke-width="3"/>
+    <text x="-43" y="4" class="t pill" fill="#92400e" text-anchor="middle">REST</text>
+    <path d="M-6,0 H6" stroke="#64748b" stroke-width="3" marker-start="url(#s)" marker-end="url(#s)"/>
+    <rect x="12" y="-30" width="62" height="60" rx="30" fill="#f1f5f9" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 5"/>
+    <text x="43" y="4" class="t pill" fill="#475569" text-anchor="middle">Mock</text>
+    <text x="0" y="62" class="t head" fill="#b45309" text-anchor="middle">SERVICIO EXTERNO</text>
+  </g>
+</svg>

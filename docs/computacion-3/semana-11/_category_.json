@@ -1,9 +1,8 @@
 {
-    "label": "S11 - Examenes",
-    "className": "hidden",
+    "label": "S11 - Clean Architecture en Frontend",
     "position": 11,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 11 de computación en internet 3"
+        "description": "Arquitectura limpia en frontend con Next.js y TypeScript: separación de responsabilidades, capas de dominio, casos de uso, patrón repositorio e inyección de dependencias."
     }
 }

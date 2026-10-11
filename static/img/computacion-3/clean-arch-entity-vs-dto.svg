@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="100%" height="100%">
+  <defs>
+    <marker id="g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L10,5 L0,9 Z" fill="#7c3aed"/></marker>
+  </defs>
+  <style>
+    .t { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    .title { font-size: 20px; font-weight: 700; fill: #0f172a; }
+    .head { font-size: 12px; font-weight: 800; letter-spacing: .08em; }
+    .mono { font-family: ui-monospace, Consolas, monospace; font-size: 13px; font-weight: 600; fill: #1e293b; }
+    .fn { font-family: ui-monospace, Consolas, monospace; font-size: 12px; font-weight: 700; }
+  </style>
+  <rect width="880" height="440" rx="16" fill="#f8fafc"/>
+  <text x="32" y="38" class="t title">El Mapper: del JSON irregular a la Entity limpia</text>
+
+  <text x="140" y="92" class="t head" fill="#2563eb" text-anchor="middle">DTO</text>
+  <text x="440" y="92" class="t head" fill="#7c3aed" text-anchor="middle">MAPPER</text>
+  <text x="740" y="92" class="t head" fill="#16a34a" text-anchor="middle">ENTITY</text>
+
+  <!-- irregular shapes in -->
+  <g stroke-width="2.5" stroke-linejoin="round">
+    <polygon points="70,150 96,128 112,158 88,176" fill="#fecaca" stroke="#ef4444"/>
+    <polygon points="75,238 100,214 126,232 112,262 84,264" fill="#fed7aa" stroke="#ea580c"/>
+    <polygon points="82,334 108,306 120,334 104,362 78,356" fill="#fde68a" stroke="#d97706"/>
+  </g>
+  <text x="136" y="158" class="t mono">exercise_name</text>
+  <text x="140" y="244" class="t mono">muscle_group: null</text>
+  <text x="130" y="338" class="t mono">created_at: "2026-…"</text>
+
+  <!-- arrows to funnel -->
+  <g stroke="#7c3aed" stroke-width="2.5" fill="none">
+    <path d="M300,152 C330,152 340,170 366,180" marker-end="url(#g)"/>
+    <path d="M300,240 L360,240" marker-end="url(#g)"/>
+    <path d="M300,334 C330,334 340,310 366,300" marker-end="url(#g)"/>
+  </g>
+
+  <!-- funnel -->
+  <polygon points="370,130 510,130 470,250 470,330 410,330 410,250" fill="#ede9fe" stroke="#7c3aed" stroke-width="3" stroke-linejoin="round"/>
+  <ellipse cx="440" cy="130" rx="70" ry="9" fill="#ddd6fe" stroke="#7c3aed" stroke-width="3"/>
+  <text x="440" y="195" class="t fn" fill="#581c87" text-anchor="middle">toDomain()</text>
+  <text x="440" y="285" class="t fn" fill="#7c3aed" text-anchor="middle">toDto()</text>
+
+  <!-- output arrow -->
+  <path d="M472,300 C520,300 540,240 600,240" stroke="#16a34a" stroke-width="2.5" fill="none" marker-end="url(#g)"/>
+
+  <!-- uniform shapes out -->
+  <g fill="#bbf7d0" stroke="#16a34a" stroke-width="2.5">
+    <circle cx="640" cy="150" r="20"/>
+    <circle cx="640" cy="240" r="20"/>
+    <circle cx="640" cy="330" r="20"/>
+  </g>
+  <g stroke="#16a34a" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M631,150 L637,156 L649,143"/>
+    <path d="M631,240 L637,246 L649,233"/>
+    <path d="M631,330 L637,336 L649,323"/>
+  </g>
+  <text x="674" y="155" class="t mono">name</text>
+  <text x="674" y="245" class="t mono">muscleGroup: CORE</text>
+  <text x="674" y="335" class="t mono">createdAt: Date</text>
+</svg>
