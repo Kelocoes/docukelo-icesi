@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; fill: #64748b; }
+      .tag   { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+      .label { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 700; fill: #1e293b; }
+      .meta  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; font-weight: 600; }
+    </style>
+    <filter id="shadow-clean" x="-5%" y="-5%" width="110%" height="114%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+    <marker id="arrow-flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#64748b"/>
+    </marker>
+    <marker id="arrow-loop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#865cf0"/>
+    </marker>
+  </defs>
+
+  <!-- Canvas (880x440) -->
+  <rect width="880" height="440" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <g transform="translate(35, 26)">
+    <rect x="0" y="0" width="165" height="20" rx="5" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1"/>
+    <text x="82.5" y="14" class="tag" fill="#7c3aed" text-anchor="middle">LIFECYCLE PIPELINE</text>
+    <text x="0" y="44" class="title">Ciclo de Vida de State y Liberación de Controladores</text>
+    <text x="0" y="62" class="sub">Línea temporal estricta para inicializar y evitar fugas de memoria en TextEditingController</text>
+  </g>
+
+  <!-- 3-STAGE HORIZONTAL PIPELINE -->
+
+  <!-- STAGE 1: INICIALIZACIÓN -->
+  <g transform="translate(35, 105)">
+    <rect width="230" height="235" rx="12" fill="#ffffff" stroke="#5454e9" stroke-width="1.8" filter="url(#shadow-clean)"/>
+    <rect x="16" y="16" width="115" height="22" rx="5" fill="#eff6ff"/>
+    <text x="73.5" y="31" class="tag" fill="#2563eb" text-anchor="middle">1. NACIMIENTO</text>
+    <text x="16" y="62" class="label">initState()</text>
+    <text x="16" y="78" class="sub">Exactamente 1 sola vez</text>
+
+    <!-- Visual Socket Plugged In -->
+    <g transform="translate(30, 95)">
+      <rect width="170" height="58" rx="8" fill="#f8fafc" stroke="#93c5fd" stroke-width="1.5"/>
+      <circle cx="28" cy="29" r="13" fill="#5454e9"/>
+      <path d="M 23 29 L 33 29 M 28 24 L 28 34" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="52" y="26" class="meta" fill="#1d4ed8">Instanciación</text>
+      <text x="52" y="41" class="sub">late final ctrl = ...</text>
+    </g>
+
+    <!-- Tech Chip -->
+    <rect x="16" y="180" width="198" height="24" rx="4" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="115" y="196" class="meta" fill="#1d4ed8" text-anchor="middle">super.initState();</text>
+  </g>
+
+  <!-- Arrow 1 -> 2 -->
+  <path d="M 275 220 L 310 220" stroke="#64748b" stroke-width="2.5" fill="none" marker-end="url(#arrow-flow)"/>
+
+  <!-- STAGE 2: BUCLE REACTIVO -->
+  <g transform="translate(320, 105)">
+    <rect width="280" height="235" rx="12" fill="#ffffff" stroke="#865cf0" stroke-width="2" filter="url(#shadow-clean)"/>
+    <rect x="16" y="16" width="115" height="22" rx="5" fill="#faf5ff"/>
+    <text x="73.5" y="31" class="tag" fill="#7c3aed" text-anchor="middle">2. FASE ACTIVA</text>
+    <text x="16" y="62" class="label">build() &amp; setState()</text>
+    <text x="16" y="78" class="sub">Bucle continuo de eventos</text>
+
+    <!-- Reactive Loop Graphic -->
+    <g transform="translate(40, 95)">
+      <rect x="0" y="8" width="80" height="38" rx="6" fill="#faf5ff" stroke="#a78bfa" stroke-width="1.5"/>
+      <text x="40" y="32" class="meta" fill="#6b21a8" text-anchor="middle">build()</text>
+
+      <rect x="120" y="8" width="80" height="38" rx="6" fill="#ede9fe" stroke="#865cf0" stroke-width="1.5"/>
+      <text x="160" y="32" class="meta" fill="#4c1d95" text-anchor="middle">setState()</text>
+
+      <!-- Curves -->
+      <path d="M 80 20 C 92 8, 108 8, 120 20" stroke="#865cf0" stroke-width="2" fill="none"/>
+      <path d="M 120 34 C 108 46, 92 46, 80 34" stroke="#865cf0" stroke-width="2" fill="none" marker-end="url(#arrow-loop)"/>
+    </g>
+
+    <!-- Tech Chip -->
+    <rect x="16" y="180" width="248" height="24" rx="4" fill="#faf5ff" stroke="#ddd6fe"/>
+    <text x="140" y="196" class="meta" fill="#6d28d9" text-anchor="middle">TextField(controller: ctrl)</text>
+  </g>
+
+  <!-- Arrow 2 -> 3 -->
+  <path d="M 610 220 L 645 220" stroke="#64748b" stroke-width="2.5" fill="none" marker-end="url(#arrow-flow)"/>
+
+  <!-- STAGE 3: LIMPIEZA FINAL -->
+  <g transform="translate(655, 105)">
+    <rect width="190" height="235" rx="12" fill="#ffffff" stroke="#ef4444" stroke-width="2" filter="url(#shadow-clean)"/>
+    <rect x="16" y="16" width="115" height="22" rx="5" fill="#fef2f2"/>
+    <text x="73.5" y="31" class="tag" fill="#dc2626" text-anchor="middle">3. DESTRUCCIÓN</text>
+    <text x="16" y="62" class="label">dispose()</text>
+    <text x="16" y="78" class="sub">Widget sale de pantalla</text>
+
+    <!-- Visual Disconnect -->
+    <g transform="translate(25, 95)">
+      <rect width="140" height="58" rx="8" fill="#fff1f2" stroke="#fca5a5" stroke-width="1.5"/>
+      <circle cx="26" cy="29" r="13" fill="#ef4444"/>
+      <line x1="19" y1="29" x2="33" y2="29" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+      <text x="48" y="26" class="meta" fill="#b91c1c">Destrucción</text>
+      <text x="48" y="41" class="sub">ctrl.dispose()</text>
+    </g>
+
+    <!-- Tech Chip -->
+    <rect x="16" y="180" width="158" height="24" rx="4" fill="#fee2e2" stroke="#fca5a5"/>
+    <text x="95" y="196" class="meta" fill="#b91c1c" text-anchor="middle">super.dispose();</text>
+  </g>
+
+  <!-- Bottom Alert: Memory Leak Prevention -->
+  <g transform="translate(35, 360)">
+    <rect width="810" height="55" rx="8" fill="#fee2e2" stroke="#fca5a5" stroke-width="1.2"/>
+    <circle cx="30" cy="27" r="12" fill="#ef4444"/>
+    <text x="30" y="32" class="label" fill="#ffffff" text-anchor="middle">!</text>
+    <text x="54" y="24" class="label" fill="#991b1b">PREVENCIÓN DE MEMORY LEAK</text>
+    <text x="54" y="42" class="sub" fill="#7f1d1d">Omitir controller.dispose() retiene listeners activos en RAM acumulándose en cada navegación.</text>
+  </g>
+</svg>

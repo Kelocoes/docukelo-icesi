@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="100%" style="max-width:900px; display:block; margin:0 auto;">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 16px; font-weight: 700; fill: #0f172a; }
+      .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; fill: #334155; }
+      .cap   { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 600; }
+    </style>
+    <marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="300" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Entidad -->
+  <rect x="40" y="40" width="220" height="190" rx="12" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="40" y="40" width="220" height="38" rx="12" fill="#f1f5f9"/>
+  <rect x="40" y="62" width="220" height="16" fill="#f1f5f9"/>
+  <text class="title" x="150" y="65" text-anchor="middle">Entidad</text>
+  <text class="mono" x="64" y="108">id</text>
+  <text class="mono" x="64" y="138">nombre</text>
+  <text class="mono" x="64" y="168">email</text>
+  <rect x="54" y="184" width="192" height="30" rx="6" fill="#fef2f2" stroke="#fca5a5"/>
+  <text class="mono" x="64" y="204" fill="#b91c1c" style="fill:#b91c1c">passwordHash</text>
+  <text class="cap" x="150" y="262" text-anchor="middle" fill="#475569">Privado</text>
+
+  <!-- Mapper -->
+  <line x1="260" y1="135" x2="338" y2="135" stroke="#64748b" stroke-width="2" marker-end="url(#a-gray)"/>
+  <rect x="340" y="95" width="220" height="80" rx="12" fill="#faf5ff" stroke="#9333ea" stroke-width="1.5"/>
+  <text class="title" x="450" y="142" text-anchor="middle">Mapper</text>
+  <line x1="560" y1="135" x2="638" y2="135" stroke="#64748b" stroke-width="2" marker-end="url(#a-gray)"/>
+
+  <!-- DTO -->
+  <rect x="640" y="40" width="220" height="190" rx="12" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <rect x="640" y="40" width="220" height="38" rx="12" fill="#eff6ff"/>
+  <rect x="640" y="62" width="220" height="16" fill="#eff6ff"/>
+  <text class="title" x="750" y="65" text-anchor="middle">DTO</text>
+  <text class="mono" x="664" y="108">id</text>
+  <text class="mono" x="664" y="138">nombre</text>
+  <text class="mono" x="664" y="168">email</text>
+  <text class="cap" x="750" y="262" text-anchor="middle" fill="#1d4ed8">Público</text>
+</svg>

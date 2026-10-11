@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 340" width="100%" style="max-width:920px; display:block; margin:0 auto;">
+  <defs>
+    <style>
+      .hdr { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 700; fill: #475569; text-transform: uppercase; letter-spacing: 0.05em; }
+      .verb { font-family: ui-monospace, Consolas, monospace; font-size: 13px; font-weight: 700; }
+      .txt { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; fill: #334155; }
+      .badge-yes { font-family: system-ui, sans-serif; font-size: 11px; font-weight: 700; fill: #15803d; }
+      .badge-no  { font-family: system-ui, sans-serif; font-size: 11px; font-weight: 700; fill: #b91c1c; }
+      .status { font-family: ui-monospace, Consolas, monospace; font-size: 12px; font-weight: 700; }
+    </style>
+  </defs>
+
+  <rect width="920" height="340" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Tabla de Verbos HTTP -->
+  <rect x="25" y="20" width="550" height="300" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  
+  <!-- Encabezado tabla verbos -->
+  <rect x="25" y="20" width="550" height="38" rx="12" fill="#f1f5f9"/>
+  <rect x="25" y="42" width="550" height="16" fill="#f1f5f9"/>
+  <text class="hdr" x="45" y="44">Método</text>
+  <text class="hdr" x="125" y="44">Acción Semántica</text>
+  <text class="hdr" x="350" y="44">Idempotente</text>
+  <text class="hdr" x="475" y="44">Seguro</text>
+
+  <!-- Fila GET -->
+  <line x1="25" y1="58" x2="575" y2="58" stroke="#e2e8f0"/>
+  <rect x="40" y="68" width="52" height="24" rx="6" fill="#eff6ff" stroke="#3b82f6"/>
+  <text class="verb" x="66" y="84" text-anchor="middle" fill="#1d4ed8">GET</text>
+  <text class="txt" x="125" y="84">Consulta y lectura de recursos</text>
+  <rect x="350" y="70" width="60" height="20" rx="4" fill="#dcfce7"/>
+  <text class="badge-yes" x="380" y="84" text-anchor="middle">SÍ</text>
+  <rect x="475" y="70" width="60" height="20" rx="4" fill="#dcfce7"/>
+  <text class="badge-yes" x="505" y="84" text-anchor="middle">SÍ</text>
+
+  <!-- Fila POST -->
+  <line x1="25" y1="104" x2="575" y2="104" stroke="#e2e8f0"/>
+  <rect x="40" y="114" width="52" height="24" rx="6" fill="#fef2f2" stroke="#ef4444"/>
+  <text class="verb" x="66" y="130" text-anchor="middle" fill="#b91c1c">POST</text>
+  <text class="txt" x="125" y="130">Creación de nuevos recursos</text>
+  <rect x="350" y="116" width="60" height="20" rx="4" fill="#fee2e2"/>
+  <text class="badge-no" x="380" y="130" text-anchor="middle">NO</text>
+  <rect x="475" y="116" width="60" height="20" rx="4" fill="#fee2e2"/>
+  <text class="badge-no" x="505" y="130" text-anchor="middle">NO</text>
+
+  <!-- Fila PUT -->
+  <line x1="25" y1="150" x2="575" y2="150" stroke="#e2e8f0"/>
+  <rect x="40" y="160" width="52" height="24" rx="6" fill="#fffbeb" stroke="#f59e0b"/>
+  <text class="verb" x="66" y="176" text-anchor="middle" fill="#b45309">PUT</text>
+  <text class="txt" x="125" y="176">Reemplazo total / Creación idemp.</text>
+  <rect x="350" y="162" width="60" height="20" rx="4" fill="#dcfce7"/>
+  <text class="badge-yes" x="380" y="176" text-anchor="middle">SÍ</text>
+  <rect x="475" y="162" width="60" height="20" rx="4" fill="#fee2e2"/>
+  <text class="badge-no" x="505" y="176" text-anchor="middle">NO</text>
+
+  <!-- Fila PATCH -->
+  <line x1="25" y1="196" x2="575" y2="196" stroke="#e2e8f0"/>
+  <rect x="40" y="206" width="52" height="24" rx="6" fill="#faf5ff" stroke="#a855f7"/>
+  <text class="verb" x="66" y="222" text-anchor="middle" fill="#7e22ce">PATCH</text>
+  <text class="txt" x="125" y="222">Actualización parcial de campos</text>
+  <rect x="350" y="208" width="60" height="20" rx="4" fill="#fee2e2"/>
+  <text class="badge-no" x="380" y="222" text-anchor="middle">NO</text>
+  <rect x="475" y="208" width="60" height="20" rx="4" fill="#fee2e2"/>
+  <text class="badge-no" x="505" y="222" text-anchor="middle">NO</text>
+
+  <!-- Fila DELETE -->
+  <line x1="25" y1="242" x2="575" y2="242" stroke="#e2e8f0"/>
+  <rect x="40" y="252" width="52" height="24" rx="6" fill="#f1f5f9" stroke="#64748b"/>
+  <text class="verb" x="66" y="268" text-anchor="middle" fill="#334155">DEL</text>
+  <text class="txt" x="125" y="268">Eliminación por URI de recurso</text>
+  <rect x="350" y="254" width="60" height="20" rx="4" fill="#dcfce7"/>
+  <text class="badge-yes" x="380" y="268" text-anchor="middle">SÍ</text>
+  <rect x="475" y="254" width="60" height="20" rx="4" fill="#fee2e2"/>
+  <text class="badge-no" x="505" y="268" text-anchor="middle">NO</text>
+
+  <!-- Panel Derecho: Códigos HTTP Esenciales -->
+  <rect x="595" y="20" width="300" height="300" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <rect x="595" y="20" width="300" height="38" rx="12" fill="#0f172a"/>
+  <rect x="595" y="42" width="300" height="16" fill="#0f172a"/>
+  <text x="745" y="44" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#f8fafc" letter-spacing="0.05em">STATUS CODES CLAVE</text>
+
+  <!-- 200 OK -->
+  <rect x="610" y="68" width="68" height="24" rx="6" fill="#dcfce7" stroke="#16a34a"/>
+  <text class="status" x="644" y="84" text-anchor="middle" fill="#15803d">200 OK</text>
+  <text class="txt" x="690" y="84">GET / PUT exitosos</text>
+
+  <!-- 201 Created -->
+  <rect x="610" y="102" width="68" height="24" rx="6" fill="#dcfce7" stroke="#16a34a"/>
+  <text class="status" x="644" y="118" text-anchor="middle" fill="#15803d">201</text>
+  <text class="txt" x="690" y="118">POST creación (+Location)</text>
+
+  <!-- 204 No Content -->
+  <rect x="610" y="136" width="68" height="24" rx="6" fill="#f1f5f9" stroke="#64748b"/>
+  <text class="status" x="644" y="152" text-anchor="middle" fill="#334155">204</text>
+  <text class="txt" x="690" y="152">DELETE / sin cuerpo</text>
+
+  <!-- 400 Bad Request -->
+  <rect x="610" y="170" width="68" height="24" rx="6" fill="#fee2e2" stroke="#dc2626"/>
+  <text class="status" x="644" y="186" text-anchor="middle" fill="#b91c1c">400</text>
+  <text class="txt" x="690" y="186">Validación @Valid fallida</text>
+
+  <!-- 401 vs 403 -->
+  <rect x="610" y="204" width="68" height="24" rx="6" fill="#fee2e2" stroke="#dc2626"/>
+  <text class="status" x="644" y="220" text-anchor="middle" fill="#b91c1c">401</text>
+  <text class="txt" x="690" y="220">Sin token / Token inválido</text>
+
+  <rect x="610" y="238" width="68" height="24" rx="6" fill="#fff7ed" stroke="#ea580c"/>
+  <text class="status" x="644" y="254" text-anchor="middle" fill="#c2410c">403</text>
+  <text class="txt" x="690" y="254">Rol / Autoridad insuficiente</text>
+
+  <!-- 404 Not Found -->
+  <rect x="610" y="272" width="68" height="24" rx="6" fill="#fef2f2" stroke="#ef4444"/>
+  <text class="status" x="644" y="288" text-anchor="middle" fill="#b91c1c">404</text>
+  <text class="txt" x="690" y="288">ID de recurso no existe</text>
+</svg>

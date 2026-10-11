@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; fill: #64748b; }
+      .tag   { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+      .card-title { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; font-weight: 700; fill: #0f172a; }
+      .label { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12.5px; font-weight: 700; fill: #1e293b; }
+      .meta  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; font-weight: 600; }
+    </style>
+    <filter id="shadow-clean" x="-5%" y="-5%" width="110%" height="114%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas (880x440) -->
+  <rect width="880" height="440" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <g transform="translate(35, 26)">
+    <rect x="0" y="0" width="150" height="20" rx="5" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+    <text x="75" y="14" class="tag" fill="#1d4ed8" text-anchor="middle">ARQUITECTURA DE UI</text>
+    <text x="0" y="44" class="title">StatelessWidget vs. StatefulWidget</text>
+    <text x="0" y="62" class="sub">Vistas estáticas inmutables frente a vistas con memoria viva y reactividad</text>
+  </g>
+
+  <!-- 2 MAIN COLUMNS WITH PHONE MOCKUPS -->
+
+  <!-- LEFT: STATELESSWIDGET -->
+  <g transform="translate(35, 105)">
+    <rect width="390" height="300" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow-clean)"/>
+    <rect x="18" y="16" width="120" height="20" rx="5" fill="#f1f5f9"/>
+    <text x="78" y="30" class="tag" fill="#64748b" text-anchor="middle">1 SOLA CLASE</text>
+    <text x="18" y="58" class="card-title">StatelessWidget</text>
+
+    <!-- Side-by-side: Phone Mockup + Code Architecture -->
+    <g transform="translate(18, 75)">
+      <!-- Phone Mockup (Fidelidad Media) -->
+      <g transform="translate(0, 0)">
+        <rect width="110" height="195" rx="14" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+        <!-- Notch -->
+        <rect x="35" y="4" width="40" height="5" rx="2" fill="#0f172a"/>
+        <!-- AppBar -->
+        <rect x="2" y="14" width="106" height="22" fill="#64748b"/>
+        <text x="55" y="29" class="meta" fill="#ffffff" font-size="8px" text-anchor="middle">Perfil Fijo</text>
+        
+        <!-- Screen Content -->
+        <circle cx="55" cy="62" r="18" fill="#e2e8f0"/>
+        <rect x="25" y="90" width="60" height="8" rx="2" fill="#cbd5e1"/>
+        <rect x="20" y="104" width="70" height="6" rx="2" fill="#e2e8f0"/>
+        <rect x="15" y="125" width="80" height="20" rx="4" fill="#f1f5f9" stroke="#cbd5e1"/>
+        <text x="55" y="139" class="meta" fill="#64748b" font-size="8px" text-anchor="middle">Solo Lectura</text>
+      </g>
+
+      <!-- Architecture Block (Right) -->
+      <g transform="translate(125, 10)">
+        <rect width="225" height="110" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="16" y="24" class="label">Estructura Interna:</text>
+        
+        <!-- Tech Chips -->
+        <rect x="16" y="34" width="190" height="22" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+        <text x="24" y="49" class="meta" fill="#64748b">@immutable</text>
+        
+        <rect x="16" y="62" width="190" height="22" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+        <text x="24" y="77" class="meta" fill="#64748b">final String nombre;</text>
+
+        <rect x="16" y="90" width="190" height="22" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+        <text x="24" y="105" class="meta" fill="#1d4ed8">Widget build(context)</text>
+      </g>
+
+      <!-- Bottom Status Chip -->
+      <g transform="translate(125, 140)">
+        <rect width="225" height="40" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+        <text x="112.5" y="18" class="label" font-size="11px" text-anchor="middle">Cero Memoria Mutada</text>
+        <text x="112.5" y="32" class="sub" font-size="10px" text-anchor="middle">Se recrea completo si props cambian</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- RIGHT: STATEFULWIDGET -->
+  <g transform="translate(455, 105)">
+    <rect width="390" height="300" rx="12" fill="#ffffff" stroke="#865cf0" stroke-width="2" filter="url(#shadow-clean)"/>
+    <rect x="18" y="16" width="150" height="20" rx="5" fill="#faf5ff"/>
+    <text x="93" y="30" class="tag" fill="#7c3aed" text-anchor="middle">2 CLASES ACOPLADAS</text>
+    <text x="18" y="58" class="card-title">StatefulWidget + State&lt;T&gt;</text>
+
+    <!-- Side-by-side: Phone Mockup + Code Architecture -->
+    <g transform="translate(18, 75)">
+      <!-- Phone Mockup (Fidelidad Media Reactiva) -->
+      <g transform="translate(0, 0)">
+        <rect width="110" height="195" rx="14" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+        <rect x="35" y="4" width="40" height="5" rx="2" fill="#0f172a"/>
+        <!-- AppBar -->
+        <rect x="2" y="14" width="106" height="22" fill="#5454e9"/>
+        <text x="55" y="29" class="meta" fill="#ffffff" font-size="8px" text-anchor="middle">Contador Vivo</text>
+        
+        <!-- Screen Content with Interactive Dial -->
+        <circle cx="55" cy="62" r="18" fill="#eff6ff" stroke="#5454e9" stroke-width="1.5"/>
+        <text x="55" y="67" class="label" fill="#5454e9" font-size="14px" text-anchor="middle">42</text>
+        
+        <!-- Action Button -->
+        <rect x="15" y="95" width="80" height="22" rx="5" fill="#5454e9"/>
+        <text x="55" y="110" class="meta" fill="#ffffff" font-size="8px" text-anchor="middle">+ Clic (+1)</text>
+
+        <rect x="15" y="125" width="80" height="20" rx="4" fill="#faf5ff" stroke="#865cf0"/>
+        <text x="55" y="139" class="meta" fill="#865cf0" font-size="8px" text-anchor="middle">setState()</text>
+      </g>
+
+      <!-- Architecture Block (Right - 2 Coupled Layers) -->
+      <g transform="translate(125, 0)">
+        <!-- Layer 1: Widget (Ephemeral) -->
+        <rect width="225" height="50" rx="6" fill="#f5f3ff" stroke="#865cf0" stroke-width="1.2"/>
+        <text x="12" y="18" class="label" fill="#581c87" font-size="11px">1. Widget (Inmutable)</text>
+        <text x="12" y="36" class="meta" fill="#7c3aed" font-size="9.5px">createState() =&gt; _State();</text>
+
+        <!-- Coupling Link -->
+        <line x1="112" y1="50" x2="112" y2="60" stroke="#865cf0" stroke-width="2"/>
+
+        <!-- Layer 2: State (Persistent RAM) -->
+        <g transform="translate(0, 60)">
+          <rect width="225" height="75" rx="6" fill="#865cf0"/>
+          <text x="12" y="18" class="label" fill="#ffffff" font-size="11px">2. State (Memoria Viva)</text>
+          
+          <rect x="10" y="26" width="205" height="18" rx="3" fill="#6d28d9"/>
+          <text x="16" y="39" class="meta" fill="#ddd6fe" font-size="9.5px">late final / int _contador</text>
+
+          <rect x="10" y="48" width="205" height="18" rx="3" fill="#6d28d9"/>
+          <text x="16" y="61" class="meta" fill="#a7f3d0" font-size="9.5px">setState(() =&gt; _contador++)</text>
+        </g>
+      </g>
+
+      <!-- Bottom Status Chip -->
+      <g transform="translate(125, 148)">
+        <rect width="225" height="38" rx="6" fill="#faf5ff" stroke="#ddd6fe"/>
+        <text x="112.5" y="16" class="label" fill="#4c1d95" font-size="11px" text-anchor="middle">Memoria Persistente</text>
+        <text x="112.5" y="30" class="sub" fill="#7c3aed" font-size="10px" text-anchor="middle">El objeto State sobrevive a los builds</text>
+      </g>
+    </g>
+  </g>
+</svg>

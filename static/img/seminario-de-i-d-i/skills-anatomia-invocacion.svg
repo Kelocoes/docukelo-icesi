@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; fill: #64748b; }
+      .tag   { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+      .label { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12.5px; font-weight: 700; fill: #1e293b; }
+      .meta  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; font-weight: 600; }
+    </style>
+    <filter id="shadow-clean" x="-5%" y="-5%" width="110%" height="114%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 Z" fill="#5454e9"/>
+    </marker>
+  </defs>
+
+  <!-- Canvas (880x440) -->
+  <rect width="880" height="440" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <g transform="translate(35, 26)">
+    <rect x="0" y="0" width="130" height="20" rx="5" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+    <text x="65" y="14" class="tag" fill="#2563eb" text-anchor="middle">PIPELINE AGÉNTICO</text>
+    <text x="0" y="44" class="title">Inyección Modular de Skills en el Agente</text>
+    <text x="0" y="62" class="sub">Carga quirúrgica de memoria procedimental y herramientas en la ventana de contexto</text>
+  </g>
+
+  <!-- 3-STAGE HORIZONTAL PIPELINE -->
+
+  <!-- STAGE 1: PAQUETE EN DISCO -->
+  <g transform="translate(35, 110)">
+    <rect width="230" height="290" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow-clean)"/>
+    <rect x="16" y="16" width="198" height="28" rx="6" fill="#f1f5f9"/>
+    <text x="115" y="34" class="label" text-anchor="middle">1. PAQUETE LOCAL</text>
+
+    <!-- Visual Cartridge / Skill Directory -->
+    <g transform="translate(25, 62)">
+      <rect width="180" height="135" rx="8" fill="#faf5ff" stroke="#865cf0" stroke-width="2"/>
+      
+      <!-- Cartridge Top Ribs -->
+      <line x1="20" y1="16" x2="160" y2="16" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="20" y1="24" x2="160" y2="24" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- Badge Inside -->
+      <rect x="20" y="42" width="140" height="54" rx="6" fill="#865cf0"/>
+      <text x="90" y="65" class="meta" fill="#ffffff" text-anchor="middle">SKILL.md</text>
+      <text x="90" y="82" class="meta" fill="#ede9fe" font-size="9.5px" text-anchor="middle">flutter-helper</text>
+
+      <!-- Pins -->
+      <rect x="30" y="127" width="16" height="10" rx="2" fill="#d97706"/>
+      <rect x="65" y="127" width="16" height="10" rx="2" fill="#d97706"/>
+      <rect x="100" y="127" width="16" height="10" rx="2" fill="#d97706"/>
+      <rect x="134" y="127" width="16" height="10" rx="2" fill="#d97706"/>
+    </g>
+
+    <!-- Tech Chip -->
+    <rect x="25" y="222" width="180" height="24" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="115" y="238" class="meta" fill="#64748b" text-anchor="middle">.agents/skills/flutter/</text>
+    <text x="115" y="266" class="sub" text-anchor="middle">Dormido en disco</text>
+  </g>
+
+  <!-- Flow Connector 1 -> 2 -->
+  <g transform="translate(275, 235)">
+    <path d="M 0 15 L 35 15" stroke="#5454e9" stroke-width="2.5" stroke-dasharray="5 3" fill="none" marker-end="url(#arrow-blue)"/>
+  </g>
+
+  <!-- STAGE 2: INVOCACIÓN EN CLI -->
+  <g transform="translate(320, 110)">
+    <rect width="210" height="290" rx="12" fill="#ffffff" stroke="#5454e9" stroke-width="2" filter="url(#shadow-clean)"/>
+    <rect x="16" y="16" width="178" height="28" rx="6" fill="#eef2ff"/>
+    <text x="105" y="34" class="label" fill="#312e81" text-anchor="middle">2. DISPARO CLI</text>
+
+    <!-- Terminal Window Mockup -->
+    <g transform="translate(20, 65)">
+      <rect width="170" height="130" rx="8" fill="#0f172a"/>
+      <!-- Window controls -->
+      <circle cx="15" cy="14" r="3.5" fill="#ef4444"/>
+      <circle cx="25" cy="14" r="3.5" fill="#f59e0b"/>
+      <circle cx="35" cy="14" r="3.5" fill="#10b981"/>
+
+      <!-- Command Chip inside terminal -->
+      <rect x="12" y="35" width="146" height="28" rx="5" fill="#1e293b"/>
+      <text x="20" y="53" class="meta" fill="#38bdf8">&gt; /skill flutter</text>
+
+      <text x="15" y="85" class="meta" fill="#4ade80" font-size="10px">✓ Loaded Skill</text>
+      <text x="15" y="105" class="meta" fill="#94a3b8" font-size="9.5px">+850 tokens</text>
+    </g>
+
+    <!-- Tech Chip -->
+    <rect x="20" y="222" width="170" height="24" rx="5" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="105" y="238" class="meta" fill="#1d4ed8" text-anchor="middle">Inferencia On-Demand</text>
+    <text x="105" y="266" class="sub" text-anchor="middle">Sin recarga de tokens</text>
+  </g>
+
+  <!-- Flow Connector 2 -> 3 -->
+  <g transform="translate(540, 235)">
+    <path d="M 0 15 L 35 15" stroke="#5454e9" stroke-width="2.5" stroke-dasharray="5 3" fill="none" marker-end="url(#arrow-blue)"/>
+  </g>
+
+  <!-- STAGE 3: MEMORIA ACTIVA -->
+  <g transform="translate(585, 110)">
+    <rect width="260" height="290" rx="12" fill="#ffffff" stroke="#10b981" stroke-width="2" filter="url(#shadow-clean)"/>
+    <rect x="16" y="16" width="228" height="28" rx="6" fill="#ecfdf5"/>
+    <text x="130" y="34" class="label" fill="#065f46" text-anchor="middle">3. CONTEXT WINDOW</text>
+
+    <!-- Context Slots Stack -->
+    <g transform="translate(18, 62)">
+      <!-- Fixed Slot: Base Rules -->
+      <rect x="0" y="0" width="224" height="34" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.2"/>
+      <text x="12" y="21" class="meta" fill="#475569">AGENTS.md (Reglas Fijas)</text>
+
+      <!-- Dynamic Skill Docked Slot -->
+      <rect x="0" y="44" width="224" height="48" rx="6" fill="#faf5ff" stroke="#865cf0" stroke-width="1.8"/>
+      <circle cx="16" cy="68" r="6" fill="#865cf0"/>
+      <text x="30" y="62" class="label" fill="#581c87" font-size="11.5px">Skill Activa: Flutter</text>
+      <text x="30" y="78" class="sub" fill="#7c3aed" font-size="10px">Screen/Page • Dispose • M3</text>
+
+      <!-- Chat History Slot -->
+      <rect x="0" y="102" width="224" height="34" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.2"/>
+      <text x="12" y="123" class="meta" fill="#475569">Historial &amp; Prompt Actual</text>
+    </g>
+
+    <!-- Free Capacity Chip -->
+    <rect x="18" y="222" width="224" height="24" rx="5" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="130" y="238" class="meta" fill="#15803d" text-anchor="middle">Zero Context Bloat</text>
+    <text x="130" y="266" class="sub" text-anchor="middle">Atención óptima del modelo</text>
+  </g>
+</svg>

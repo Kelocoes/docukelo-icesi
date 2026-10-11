@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 700; fill: #0f172a; }
+      .sub   { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; fill: #64748b; }
+      .tag   { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+      .label { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12.5px; font-weight: 700; fill: #1e293b; }
+      .meta  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; font-weight: 600; }
+    </style>
+    <filter id="shadow-clean" x="-5%" y="-5%" width="110%" height="114%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas (880x440) -->
+  <rect width="880" height="440" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <g transform="translate(35, 26)">
+    <rect x="0" y="0" width="160" height="20" rx="5" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+    <text x="80" y="14" class="tag" fill="#166534" text-anchor="middle">TALLER PRÁCTICO</text>
+    <text x="0" y="44" class="title">Agenda de Contactos: Arquitectura Monolítica</text>
+    <text x="0" y="62" class="sub">Toda la lógica de estado, controladores y presentación concentrada en una sola pantalla</text>
+  </g>
+
+  <!-- LEFT: SMARTPHONE MOCKUP (INTERFAZ VISIBLE) -->
+  <g transform="translate(35, 105)">
+    <rect width="250" height="300" rx="16" fill="#ffffff" stroke="#0f172a" stroke-width="2" filter="url(#shadow-clean)"/>
+    
+    <!-- Phone Top Status bar -->
+    <path d="M 0 16 Q 0 0 16 0 L 234 0 Q 250 0 250 16 L 250 38 L 0 38 Z" fill="#5454e9"/>
+    <text x="125" y="24" class="meta" fill="#ffffff" text-anchor="middle">Agenda</text>
+
+    <!-- UI: Form Block -->
+    <g transform="translate(14, 48)">
+      <rect width="222" height="88" rx="6" fill="#f5f3ff" stroke="#ddd6fe"/>
+      <!-- Input 1 -->
+      <rect x="10" y="10" width="202" height="18" rx="3" fill="#ffffff" stroke="#c4b5fd"/>
+      <text x="18" y="23" class="meta" fill="#64748b" font-size="9px">Nombre...</text>
+      <!-- Input 2 -->
+      <rect x="10" y="34" width="202" height="18" rx="3" fill="#ffffff" stroke="#c4b5fd"/>
+      <text x="18" y="47" class="meta" fill="#64748b" font-size="9px">Teléfono...</text>
+      <!-- Button -->
+      <rect x="10" y="58" width="202" height="20" rx="4" fill="#5454e9"/>
+      <text x="111" y="72" class="meta" fill="#ffffff" font-size="9px" text-anchor="middle">+ Agregar Contacto</text>
+    </g>
+
+    <!-- UI: Contact List Block -->
+    <g transform="translate(14, 146)">
+      <!-- Item 1 -->
+      <rect width="222" height="38" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+      <circle cx="20" cy="19" r="11" fill="#e0e7ff"/>
+      <text x="20" y="23" class="meta" fill="#4338ca" font-size="9px" text-anchor="middle">MC</text>
+      <text x="38" y="16" class="label" font-size="10.5px">María Camila</text>
+      <text x="38" y="29" class="sub" font-size="9px">312 456 7890</text>
+      <circle cx="206" cy="19" r="8" fill="#fee2e2"/>
+      <text x="206" y="22" class="meta" fill="#dc2626" font-size="9px" text-anchor="middle">✕</text>
+
+      <!-- Item 2 -->
+      <g transform="translate(0, 44)">
+        <rect width="222" height="38" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+        <circle cx="20" cy="19" r="11" fill="#fef3c7"/>
+        <text x="20" y="23" class="meta" fill="#b45309" font-size="9px" text-anchor="middle">AS</text>
+        <text x="38" y="16" class="label" font-size="10.5px">Alejandro Soto</text>
+        <text x="38" y="29" class="sub" font-size="9px">300 123 9988</text>
+        <circle cx="206" cy="19" r="8" fill="#fee2e2"/>
+        <text x="206" y="22" class="meta" fill="#dc2626" font-size="9px" text-anchor="middle">✕</text>
+      </g>
+    </g>
+
+    <text x="125" y="285" class="sub" font-size="10px" text-anchor="middle">Renderizado con .map()</text>
+  </g>
+
+  <!-- RIGHT: MONOLITHIC STATE CONTAINER -->
+  <g transform="translate(315, 105)">
+    <rect width="530" height="300" rx="14" fill="#ffffff" stroke="#865cf0" stroke-width="2" filter="url(#shadow-clean)"/>
+    <rect x="20" y="18" width="220" height="24" rx="5" fill="#faf5ff"/>
+    <text x="130" y="34" class="tag" fill="#7c3aed" text-anchor="middle">_AgendaPageState (150+ LÍNEAS)</text>
+
+    <!-- 4 Modules Jammed Inside -->
+    <g transform="translate(20, 56)">
+      <!-- Module 1: Data State -->
+      <rect x="0" y="0" width="490" height="42" rx="6" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.2"/>
+      <circle cx="20" cy="21" r="9" fill="#7c3aed"/>
+      <text x="38" y="18" class="label" fill="#4c1d95" font-size="11.5px">1. Memoria de Datos</text>
+      <text x="38" y="32" class="meta" fill="#6d28d9" font-size="10px">List&lt;Contacto&gt; _contactos = [...]</text>
+
+      <!-- Module 2: Controllers -->
+      <rect x="0" y="48" width="490" height="42" rx="6" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.2"/>
+      <circle cx="20" cy="69" r="9" fill="#7c3aed"/>
+      <text x="38" y="66" class="label" fill="#4c1d95" font-size="11.5px">2. Controladores de Texto</text>
+      <text x="38" y="80" class="meta" fill="#6d28d9" font-size="10px">late final TextEditingController + dispose()</text>
+
+      <!-- Module 3: Form UI & Validation -->
+      <rect x="0" y="96" width="490" height="42" rx="6" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.2"/>
+      <circle cx="20" cy="117" r="9" fill="#7c3aed"/>
+      <text x="38" y="114" class="label" fill="#4c1d95" font-size="11.5px">3. Validación y Render de Inputs</text>
+      <text x="38" y="128" class="meta" fill="#6d28d9" font-size="10px">TextFields + FilledButton (setState)</text>
+
+      <!-- Module 4: List Rendering -->
+      <rect x="0" y="144" width="490" height="42" rx="6" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.2"/>
+      <circle cx="20" cy="165" r="9" fill="#7c3aed"/>
+      <text x="38" y="162" class="label" fill="#4c1d95" font-size="11.5px">4. Renderizado del Directorio</text>
+      <text x="38" y="176" class="meta" fill="#6d28d9" font-size="10px">..._contactos.map(...) + removeWhere()</text>
+    </g>
+
+    <!-- Bottom Warning -->
+    <rect x="20" y="250" width="490" height="34" rx="6" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="265" y="272" class="meta" fill="#b45309" text-anchor="middle">⚠️ ALTO ACOPLAMIENTO: 4 responsabilidades mezcladas en un solo archivo</text>
+  </g>
+</svg>

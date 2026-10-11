@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="100%" height="100%">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 Z" fill="#7c3aed"/></marker>
+  </defs>
+  <style>
+    .t { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    .title { font-size: 20px; font-weight: 700; fill: #0f172a; }
+    .year { font-size: 28px; font-weight: 800; fill: #0f172a; }
+    .name { font-size: 15px; font-weight: 800; letter-spacing: .04em; }
+    .who { font-size: 12px; fill: #64748b; }
+  </style>
+  <rect width="880" height="440" rx="16" fill="#f8fafc"/>
+  <text x="32" y="38" class="t title">Una idea que se repite: el dominio al centro</text>
+
+  <!-- axis -->
+  <line x1="60" y1="215" x2="760" y2="215" stroke="#cbd5e1" stroke-width="5" stroke-linecap="round"/>
+  <path d="M740,215 L790,215" stroke="#7c3aed" stroke-width="5" marker-end="url(#a)" fill="none"/>
+
+  <!-- 2005 hexagonal -->
+  <text x="170" y="100" class="t year" text-anchor="middle">2005</text>
+  <circle cx="170" cy="215" r="10" fill="#2563eb"/>
+  <g transform="translate(170,310)">
+    <polygon points="-44,0 -22,-38 22,-38 44,0 22,38 -22,38" fill="#dbeafe" stroke="#2563eb" stroke-width="3.5" stroke-linejoin="round"/>
+    <circle cx="0" cy="0" r="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="3"/>
+    <g fill="#fff" stroke="#2563eb" stroke-width="2.5">
+      <circle cx="-44" cy="0" r="6"/><circle cx="44" cy="0" r="6"/><circle cx="0" cy="-38" r="6"/><circle cx="0" cy="38" r="6"/>
+    </g>
+  </g>
+  <text x="170" y="150" class="t name" fill="#1e40af" text-anchor="middle">HEXAGONAL</text>
+  <text x="170" y="170" class="t who" text-anchor="middle">Alistair Cockburn</text>
+  <text x="170" y="395" class="t who" text-anchor="middle">Puertos y adaptadores</text>
+
+  <!-- 2008 onion -->
+  <text x="440" y="100" class="t year" text-anchor="middle">2008</text>
+  <circle cx="440" cy="215" r="10" fill="#ea580c"/>
+  <g transform="translate(440,310)">
+    <circle r="46" fill="#ffedd5" stroke="#ea580c" stroke-width="3"/>
+    <circle r="30" fill="#fed7aa" stroke="#ea580c" stroke-width="3"/>
+    <circle r="14" fill="#ede9fe" stroke="#7c3aed" stroke-width="3"/>
+  </g>
+  <text x="440" y="150" class="t name" fill="#c2410c" text-anchor="middle">ONION</text>
+  <text x="440" y="170" class="t who" text-anchor="middle">Jeffrey Palermo</text>
+  <text x="440" y="395" class="t who" text-anchor="middle">Capas concéntricas</text>
+
+  <!-- 2012 clean -->
+  <text x="710" y="100" class="t year" text-anchor="middle">2012</text>
+  <circle cx="710" cy="215" r="10" fill="#16a34a"/>
+  <g transform="translate(710,310)">
+    <circle r="52" fill="#dbeafe" stroke="#2563eb" stroke-width="3"/>
+    <circle r="40" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/>
+    <circle r="26" fill="#ffedd5" stroke="#ea580c" stroke-width="3"/>
+    <circle r="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="3"/>
+  </g>
+  <text x="710" y="150" class="t name" fill="#15803d" text-anchor="middle">CLEAN</text>
+  <text x="710" y="170" class="t who" text-anchor="middle">Robert C. Martin</text>
+  <text x="710" y="395" class="t who" text-anchor="middle">4 círculos + regla de dependencia</text>
+</svg>

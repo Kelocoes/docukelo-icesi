@@ -3,6 +3,6 @@
     "position": 11,
     "link": {
         "type": "generated-index",
-        "description": "Extensión del agente mediante Skills, diseño no funcional y fundamentos de StatefulWidget."
+        "description": "Extensión del agente mediante Skills, protocolo MCP, ciclo de vida de State y fundamentos de StatefulWidget."
     }
 }

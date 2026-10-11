@@ -1,0 +1,8 @@
+{
+    "label": "W11 - Frontend Clean Architecture",
+    "position": 11,
+    "link": {
+        "type": "generated-index",
+        "description": "Frontend Clean Architecture with Next.js and TypeScript: separation of concerns, domain layer, use cases, repository pattern, and dependency injection."
+    }
+}

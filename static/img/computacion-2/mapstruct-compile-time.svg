@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 320" width="100%" style="max-width:920px; display:block; margin:0 auto;">
+  <defs>
+    <style>
+      .t-title { font-family: system-ui, -apple-system, sans-serif; font-size: 15px; font-weight: 700; fill: #0f172a; }
+      .t-sub   { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; fill: #475569; }
+      .mono-code { font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+      .tag-good { font-family: system-ui, sans-serif; font-size: 11px; font-weight: 700; fill: #15803d; }
+    </style>
+    <marker id="arr-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#9333ea"/>
+    </marker>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <rect width="920" height="320" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Bloque 1: Código Fuente Declarativo -->
+  <rect x="30" y="50" width="220" height="220" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+  <rect x="30" y="50" width="220" height="36" rx="12" fill="#eff6ff"/>
+  <rect x="30" y="70" width="220" height="16" fill="#eff6ff"/>
+  <text class="t-title" x="140" y="73" text-anchor="middle" fill="#1e3a8a">1. Interfaz Java</text>
+  <rect x="45" y="100" width="190" height="30" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text class="mono-code" x="55" y="120" fill="#2563eb">@Mapper(compModel="spring")</text>
+  <rect x="45" y="140" width="190" height="70" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text class="mono-code" x="55" y="162" fill="#0f172a">public interface</text>
+  <text class="mono-code" x="55" y="180" fill="#0f172a"><b>UsuarioMapper {</b></text>
+  <text class="mono-code" x="55" y="198" fill="#475569">  UsuarioDTO toDTO(..);</text>
+  <text class="t-sub" x="140" y="248" text-anchor="middle">Solo declaras la firma</text>
+
+  <!-- Flecha 1 -->
+  <line x1="250" y1="160" x2="320" y2="160" stroke="#9333ea" stroke-width="2.5" marker-end="url(#arr-purple)"/>
+
+  <!-- Bloque 2: Compilador con mapstruct-processor -->
+  <rect x="325" y="50" width="240" height="220" rx="12" fill="#ffffff" stroke="#d8b4fe" stroke-width="1.5"/>
+  <rect x="325" y="50" width="240" height="36" rx="12" fill="#faf5ff"/>
+  <rect x="325" y="70" width="240" height="16" fill="#faf5ff"/>
+  <text class="t-title" x="445" y="73" text-anchor="middle" fill="#6b21a8">2. Compilación (javac)</text>
+  <rect x="340" y="100" width="210" height="45" rx="6" fill="#fdf4ff" stroke="#f0abfc"/>
+  <text class="mono-code" x="350" y="120" fill="#a21caf"><b>mapstruct-processor</b></text>
+  <text class="t-sub" x="350" y="136">Annotation Processor en Maven</text>
+  <rect x="340" y="155" width="210" height="50" rx="6" fill="#f1f5f9"/>
+  <text class="t-sub" x="350" y="174">Valida tipos de campos</text>
+  <text class="t-sub" x="350" y="192">Genera errores antes de runtime</text>
+  <text class="t-sub" x="445" y="248" text-anchor="middle" font-weight="600" fill="#7e22ce">Zero Reflection Overhead</text>
+
+  <!-- Flecha 2 -->
+  <line x1="565" y1="160" x2="635" y2="160" stroke="#16a34a" stroke-width="2.5" marker-end="url(#arr-green)"/>
+
+  <!-- Bloque 3: Código Generado e Inyección -->
+  <rect x="640" y="50" width="250" height="220" rx="12" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+  <rect x="640" y="50" width="250" height="36" rx="12" fill="#f0fdf4"/>
+  <rect x="640" y="70" width="250" height="16" fill="#f0fdf4"/>
+  <text class="t-title" x="765" y="73" text-anchor="middle" fill="#14532d">3. UsuarioMapperImpl</text>
+  <rect x="655" y="96" width="220" height="75" rx="6" fill="#f8fafc" stroke="#bbf7d0"/>
+  <text class="mono-code" x="665" y="116" fill="#16a34a"><b>@Component</b></text>
+  <text class="mono-code" x="665" y="134" fill="#334155">dto.setId(u.getId());</text>
+  <text class="mono-code" x="665" y="152" fill="#334155">dto.setNombre(u.getNombre());</text>
+  <rect x="655" y="180" width="220" height="32" rx="6" fill="#dcfce7"/>
+  <text class="tag-good" x="765" y="200" text-anchor="middle">Inyectable vía @Autowired</text>
+  <text class="t-sub" x="765" y="248" text-anchor="middle">Máxima velocidad nativa Java</text>
+</svg>

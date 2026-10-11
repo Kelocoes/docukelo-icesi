@@ -1,0 +1,8 @@
+{
+    "label": "W11 - Skills & State Management",
+    "position": 11,
+    "link": {
+        "type": "generated-index",
+        "description": "Extending AI agents through Skills, MCP protocol, State lifecycle, and StatefulWidget fundamentals in Flutter."
+    }
+}

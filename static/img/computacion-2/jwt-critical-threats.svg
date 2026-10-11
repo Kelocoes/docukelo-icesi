@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 340" width="100%" style="max-width:940px; display:block; margin:0 auto;">
+  <defs>
+    <style>
+      .t-card-title { font-family: system-ui, -apple-system, sans-serif; font-size: 13.5px; font-weight: 700; }
+      .badge-risk   { font-family: system-ui, sans-serif; font-size: 10px; font-weight: 700; fill: #ffffff; text-anchor: middle; }
+      .t-problem    { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; fill: #334155; line-height: 15px; }
+      .t-defense    { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; fill: #0f172a; font-weight: 600; }
+      .t-pill-txt   { font-family: system-ui, sans-serif; font-size: 10px; font-weight: 700; fill: #15803d; }
+      .t-pill-blue  { font-family: system-ui, sans-serif; font-size: 10px; font-weight: 700; fill: #1d4ed8; }
+    </style>
+  </defs>
+
+  <rect width="940" height="340" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- TARJETA 1: Token Robado -->
+  <rect x="20" y="20" width="286" height="300" rx="12" fill="#ffffff" stroke="#fca5a5" stroke-width="1.2"/>
+  <rect x="20" y="20" width="286" height="42" rx="12" fill="#fef2f2"/>
+  <rect x="20" y="46" width="286" height="16" fill="#fef2f2"/>
+  
+  <rect x="32" y="28" width="82" height="20" rx="4" fill="#dc2626"/>
+  <text class="badge-risk" x="73" y="42">AMENAZA 1</text>
+  <text class="t-card-title" x="124" y="43" fill="#991b1b">Token Robado</text>
+
+  <!-- Problema 1 -->
+  <rect x="32" y="70" width="262" height="52" rx="6" fill="#fff1f2" stroke="#fecdd3"/>
+  <text class="t-problem" x="42" y="88" fill="#9f1239"><b>Escenario:</b> Interceptación en red (MITM)</text>
+  <text class="t-problem" x="42" y="106" fill="#9f1239">o robo vía XSS en el navegador del cliente.</text>
+
+  <!-- Defensas 1 -->
+  <rect x="32" y="130" width="262" height="175" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text class="t-defense" x="42" y="148" fill="#14532d">Contramedidas en Producción:</text>
+
+  <circle cx="48" cy="170" r="4" fill="#16a34a"/>
+  <text class="t-problem" x="58" y="174"><b>HTTPS Obligatorio (TLS):</b> Cifra el canal.</text>
+
+  <circle cx="48" cy="202" r="4" fill="#16a34a"/>
+  <text class="t-problem" x="58" y="206"><b>TTL Corto (15 a 60 min):</b> Reduce ventana.</text>
+
+  <circle cx="48" cy="234" r="4" fill="#16a34a"/>
+  <text class="t-problem" x="58" y="238"><b>Refresh Tokens en BD:</b> Revocables.</text>
+
+  <circle cx="48" cy="266" r="4" fill="#16a34a"/>
+  <text class="t-problem" x="58" y="270"><b>Cookies HttpOnly:</b> Inmunes a JavaScript.</text>
+
+  <!-- TARJETA 2: Token Manipulado (Tampering) -->
+  <rect x="326" y="20" width="286" height="300" rx="12" fill="#ffffff" stroke="#fed7aa" stroke-width="1.2"/>
+  <rect x="326" y="20" width="286" height="42" rx="12" fill="#fff7ed"/>
+  <rect x="326" y="46" width="286" height="16" fill="#fff7ed"/>
+
+  <rect x="338" y="28" width="82" height="20" rx="4" fill="#ea580c"/>
+  <text class="badge-risk" x="379" y="42">AMENAZA 2</text>
+  <text class="t-card-title" x="430" y="43" fill="#c2410c">Falsificación</text>
+
+  <!-- Problema 2 -->
+  <rect x="338" y="70" width="262" height="52" rx="6" fill="#fff7ed" stroke="#ffedd5"/>
+  <text class="t-problem" x="348" y="88" fill="#9a3412"><b>Escenario:</b> Atacante altera el Payload</text>
+  <text class="t-problem" x="348" y="106" fill="#9a3412">cambiando "ROLE_USER" por "ROLE_ADMIN".</text>
+
+  <!-- Defensas 2 -->
+  <rect x="338" y="130" width="262" height="175" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text class="t-defense" x="348" y="148" fill="#14532d">Garantía Criptográfica:</text>
+
+  <circle cx="354" cy="170" r="4" fill="#16a34a"/>
+  <text class="t-problem" x="364" y="174"><b>Firma HMAC-SHA256:</b> Cada bit importa.</text>
+
+  <circle cx="354" cy="202" r="4" fill="#16a34a"/>
+  <text class="t-problem" x="364" y="206"><b>SECRET_KEY Oculta:</b> Imposible recalcular.</text>
+
+  <circle cx="354" cy="234" r="4" fill="#16a34a"/>
+  <text class="t-problem" x="364" y="238"><b>SignatureException:</b> JJWT rechaza.</text>
+
+  <circle cx="354" cy="266" r="4" fill="#16a34a"/>
+  <text class="t-problem" x="364" y="270"><b>Respuesta HTTP 401:</b> Bloqueo inmediato.</text>
+
+  <!-- TARJETA 3: Stale Claims (Permisos Desactualizados) -->
+  <rect x="632" y="20" width="286" height="300" rx="12" fill="#ffffff" stroke="#ddd6fe" stroke-width="1.2"/>
+  <rect x="632" y="20" width="286" height="42" rx="12" fill="#f5f3ff"/>
+  <rect x="632" y="46" width="286" height="16" fill="#f5f3ff"/>
+
+  <rect x="644" y="28" width="82" height="20" rx="4" fill="#7c3aed"/>
+  <text class="badge-risk" x="685" y="42">AMENAZA 3</text>
+  <text class="t-card-title" x="736" y="43" fill="#6d28d9">Stale Claims</text>
+
+  <!-- Problema 3 -->
+  <rect x="644" y="70" width="262" height="52" rx="6" fill="#faf5ff" stroke="#f3e8ff"/>
+  <text class="t-problem" x="654" y="88" fill="#6b21a8"><b>Escenario:</b> Rol revocado en BD a las 10:05</text>
+  <text class="t-problem" x="654" y="106" fill="#6b21a8">pero token sigue vigente hasta las 11:00.</text>
+
+  <!-- Defensas 3 -->
+  <rect x="644" y="130" width="262" height="175" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text class="t-defense" x="654" y="148" fill="#1e40af">Estrategias Arquitectónicas:</text>
+
+  <circle cx="660" cy="170" r="4" fill="#2563eb"/>
+  <text class="t-problem" x="670" y="174"><b>A: Expiración Corta:</b> Desfase de 10-15 min.</text>
+
+  <circle cx="660" cy="202" r="4" fill="#2563eb"/>
+  <text class="t-problem" x="670" y="206"><b>B: Consulta Ligera:</b> Valida en BD en filtro.</text>
+
+  <circle cx="660" cy="234" r="4" fill="#2563eb"/>
+  <text class="t-problem" x="670" y="238"><b>C: Lista Negra en Redis:</b> Invalidación iat.</text>
+
+  <circle cx="660" cy="266" r="4" fill="#2563eb"/>
+  <text class="t-problem" x="670" y="270"><b>Consistencia vs. Rendimiento:</b> Trade-off.</text>
+</svg>

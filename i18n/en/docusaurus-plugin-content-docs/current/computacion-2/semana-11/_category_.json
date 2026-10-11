@@ -1,0 +1,8 @@
+{
+    "label": "W11 - REST & JWT",
+    "position": 12,
+    "link": {
+        "type": "generated-index",
+        "description": "JWT authentication, stateless architectures, and RESTful API development with Spring Boot"
+    }
+}

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="100%" height="100%">
+  <defs>
+    <marker id="in" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L10,5 L0,9 Z" fill="#7c3aed"/></marker>
+    <marker id="out" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L10,5 L0,9 Z" fill="#dc2626"/></marker>
+  </defs>
+  <style>
+    .t { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    .title { font-size: 20px; font-weight: 700; fill: #0f172a; }
+    .ring { font-size: 12px; font-weight: 800; letter-spacing: .06em; }
+    .chip { font-family: ui-monospace, Consolas, monospace; font-size: 12px; font-weight: 700; fill: #1e3a8a; }
+  </style>
+  <rect width="880" height="440" rx="16" fill="#f8fafc"/>
+  <text x="32" y="38" class="t title">La regla de dependencia: las flechas solo entran</text>
+
+  <!-- rings -->
+  <circle cx="300" cy="250" r="165" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/>
+  <circle cx="300" cy="250" r="112" fill="#ffedd5" stroke="#ea580c" stroke-width="2.5"/>
+  <circle cx="300" cy="250" r="60" fill="#ede9fe" stroke="#7c3aed" stroke-width="3.5"/>
+
+  <text x="300" y="112" class="t ring" fill="#1e40af" text-anchor="middle">UI · API · FRAMEWORK</text>
+  <text x="300" y="165" class="t ring" fill="#c2410c" text-anchor="middle">CASOS DE USO</text>
+  <text x="300" y="248" class="t ring" fill="#581c87" text-anchor="middle" font-size="14">DOMINIO</text>
+  <text x="300" y="266" class="t ring" fill="#7c3aed" text-anchor="middle" font-size="11">Entity</text>
+
+  <!-- inward arrows -->
+  <g stroke="#7c3aed" stroke-width="3" fill="none">
+    <path d="M590,160 L362,228" marker-end="url(#in)"/>
+    <path d="M590,250 L362,250" marker-end="url(#in)"/>
+    <path d="M590,340 L362,272" marker-end="url(#in)"/>
+  </g>
+  <g>
+    <rect x="590" y="143" width="110" height="34" rx="17" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+    <text x="645" y="165" class="chip" text-anchor="middle">React</text>
+    <rect x="590" y="233" width="110" height="34" rx="17" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+    <text x="645" y="255" class="chip" text-anchor="middle">fetch</text>
+    <rect x="590" y="323" width="110" height="34" rx="17" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+    <text x="645" y="345" class="chip" text-anchor="middle">Next.js</text>
+  </g>
+
+  <!-- forbidden outward arrow -->
+  <path d="M236,250 L170,250" stroke="#dc2626" stroke-width="3" stroke-dasharray="6 5" fill="none" marker-end="url(#out)"/>
+  <circle cx="150" cy="250" r="14" fill="#fff" stroke="#dc2626" stroke-width="2.5"/>
+  <path d="M143,243 L157,257 M157,243 L143,257" stroke="#dc2626" stroke-width="2.5"/>
+</svg>

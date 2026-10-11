@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 320" width="100%" style="max-width:920px; display:block; margin:0 auto;">
+  <defs>
+    <style>
+      .t-box-title { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 700; }
+      .t-desc { font-family: system-ui, -apple-system, sans-serif; font-size: 11.5px; fill: #475569; line-height: 16px; }
+      .t-sol { font-family: system-ui, -apple-system, sans-serif; font-size: 11.5px; fill: #15803d; font-weight: 600; }
+      .badge-crit { font-family: system-ui, sans-serif; font-size: 10.5px; font-weight: 700; fill: #b91c1c; }
+    </style>
+  </defs>
+
+  <rect width="920" height="320" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Columna 1: Token Robado -->
+  <rect x="25" y="25" width="270" height="270" rx="12" fill="#ffffff" stroke="#fca5a5" stroke-width="1.2"/>
+  <rect x="25" y="25" width="270" height="36" rx="12" fill="#fef2f2"/>
+  <rect x="25" y="45" width="270" height="16" fill="#fef2f2"/>
+  <text class="t-box-title" x="160" y="48" text-anchor="middle" fill="#b91c1c">1. Token Robado</text>
+
+  <rect x="40" y="75" width="240" height="50" rx="6" fill="#fff1f2" stroke="#fecdd3"/>
+  <text class="t-desc" x="48" y="93" fill="#9f1239"><b>Amenaza:</b> Interceptación MITM</text>
+  <text class="t-desc" x="48" y="111" fill="#9f1239">o robo vía script XSS en cliente.</text>
+
+  <rect x="40" y="135" width="240" height="145" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text class="t-sol" x="48" y="155">Defensas en Producción:</text>
+  <text class="t-desc" x="48" y="175">• <b>HTTPS obligatorio (TLS)</b></text>
+  <text class="t-desc" x="48" y="195">• <b>Expiración corta (15-60 min)</b></text>
+  <text class="t-desc" x="48" y="215">• <b>Refresh Tokens</b> en DB</text>
+  <text class="t-desc" x="48" y="235">• <b>Cookies HttpOnly + Secure</b></text>
+  <text class="t-desc" x="48" y="255">  (bloquea acceso a JavaScript)</text>
+
+  <!-- Columna 2: Token Manipulado (Tampering) -->
+  <rect x="325" y="25" width="270" height="270" rx="12" fill="#ffffff" stroke="#fed7aa" stroke-width="1.2"/>
+  <rect x="325" y="25" width="270" height="36" rx="12" fill="#fff7ed"/>
+  <rect x="325" y="45" width="270" height="16" fill="#fff7ed"/>
+  <text class="t-box-title" x="460" y="48" text-anchor="middle" fill="#c2410c">2. Modificación de Claims</text>
+
+  <rect x="340" y="75" width="240" height="50" rx="6" fill="#fff7ed" stroke="#ffedd5"/>
+  <text class="t-desc" x="348" y="93" fill="#9a3412"><b>Amenaza:</b> Atacante cambia</text>
+  <text class="t-desc" x="348" y="111" fill="#9a3412">"ROLE_USER" por "ROLE_ADMIN".</text>
+
+  <rect x="340" y="135" width="240" height="145" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text class="t-sol" x="348" y="155">Garantía Criptográfica:</text>
+  <text class="t-desc" x="348" y="175">• <b>Firma HMAC-SHA256</b></text>
+  <text class="t-desc" x="348" y="195">• Imposible alterar un bit sin</text>
+  <text class="t-desc" x="348" y="215">  conocer la <b>SECRET_KEY</b>.</text>
+  <text class="t-desc" x="348" y="235">• JJWT lanza <b>SignatureException</b></text>
+  <text class="t-desc" x="348" y="255">• Retorna <b>HTTP 401 Unauthorized</b></text>
+
+  <!-- Columna 3: Stale Claims (Roles revocado en BD) -->
+  <rect x="625" y="25" width="270" height="270" rx="12" fill="#ffffff" stroke="#e9d5ff" stroke-width="1.2"/>
+  <rect x="625" y="25" width="270" height="36" rx="12" fill="#faf5ff"/>
+  <rect x="625" y="45" width="270" height="16" fill="#faf5ff"/>
+  <text class="t-box-title" x="760" y="48" text-anchor="middle" fill="#7e22ce">3. Stale Claims (Desfase)</text>
+
+  <rect x="640" y="75" width="240" height="50" rx="6" fill="#faf5ff" stroke="#f3e8ff"/>
+  <text class="t-desc" x="648" y="93" fill="#6b21a8"><b>Amenaza:</b> Permiso revocado en BD</text>
+  <text class="t-desc" x="648" y="111" fill="#6b21a8">pero token sigue vigente en cliente.</text>
+
+  <rect x="640" y="135" width="240" height="145" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text class="t-sol" x="648" y="155">Estrategias de Solución:</text>
+  <text class="t-desc" x="648" y="175">• <b>A: TTL ultracorto (10 min)</b></text>
+  <text class="t-desc" x="648" y="195">• <b>B: loadUserByUsername()</b></text>
+  <text class="t-desc" x="648" y="215">  en filtro para validar en BD.</text>
+  <text class="t-desc" x="648" y="235">• <b>C: Blacklist / Cache Redis</b></text>
+  <text class="t-desc" x="648" y="255">  con timestamp de revocación.</text>
+</svg>
