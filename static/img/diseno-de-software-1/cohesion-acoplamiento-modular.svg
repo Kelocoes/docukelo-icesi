@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="100%" height="100%">
+  <defs>
+    <marker id="a-slate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,1 L10,5 L0,9 Z" fill="#475569"/>
+    </marker>
+    <marker id="a-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,1 L10,5 L0,9 Z" fill="#7c3aed"/>
+    </marker>
+    <marker id="a-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,1 L10,5 L0,9 Z" fill="#16a34a"/>
+    </marker>
+    <marker id="a-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,1 L10,5 L0,9 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="a-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,1 L10,5 L0,9 Z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <style>
+    .t     { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    .title { font-size: 19px; font-weight: 700; fill: #0f172a; }
+    .head  { font-size: 11.5px; font-weight: 800; letter-spacing: .08em; }
+    .lbl   { font-size: 11.5px; font-weight: 600; fill: #334155; }
+    .mono  { font-family: ui-monospace, Consolas, monospace; font-size: 11px; font-weight: 700; }
+    .tag   { font-size: 10px; font-weight: 800; letter-spacing: .07em; }
+  </style>
+
+  <!-- Background -->
+  <rect width="880" height="440" rx="16" fill="#f8fafc"/>
+
+  <!-- Main Title -->
+  <text x="32" y="38" class="t title">Alta cohesión interna y bajo acoplamiento estructural</text>
+
+  <!-- Central Divider with "vs" -->
+  <line x1="440" y1="70" x2="440" y2="400" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="6 6"/>
+  <circle cx="440" cy="235" r="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="440" y="239" class="t lbl" text-anchor="middle" fill="#94a3b8" font-size="11">vs</text>
+
+  <!-- ==================== LEFT: ANTIPATTERN (LOW COHESION / HIGH COUPLING) ==================== -->
+  <text x="236" y="80" class="t head" fill="#dc2626" text-anchor="middle">ANTIPATRÓN: BAJA COHESIÓN · ALTO ACOPLAMIENTO</text>
+  <text x="236" y="98" class="t tag" fill="#991b1b" text-anchor="middle">RESPONSABILIDADES DISPARES · DEPENDENCIAS ENREDADAS</text>
+
+  <!-- Tangled coupling curves in background -->
+  <g fill="none" stroke="#fca5a5" stroke-width="1.8" opacity="0.75">
+    <path d="M80,150 C210,310 270,120 350,310"/>
+    <path d="M350,150 C230,130 170,350 80,290"/>
+    <path d="M70,230 C190,150 250,330 360,210"/>
+    <path d="M150,115 C310,230 130,350 270,360"/>
+  </g>
+
+  <!-- Monolith Class Container -->
+  <rect x="85" y="120" width="290" height="240" rx="14" fill="#fee2e2" stroke="#ef4444" stroke-width="2.5"/>
+  <text x="230" y="144" class="t mono" fill="#b91c1c" text-anchor="middle" font-size="12">MonolithicBusService (Clase Única)</text>
+
+  <!-- Mixed Disparate Responsibilities inside Monolith -->
+  <!-- 1. GPS Telemetry -->
+  <rect x="105" y="160" width="115" height="72" rx="8" fill="#ffffff" stroke="#f87171" stroke-width="1.8"/>
+  <circle cx="132" cy="188" r="10" fill="#fee2e2" stroke="#ef4444" stroke-width="1.8"/>
+  <text x="132" y="192" class="t tag" fill="#b91c1c" text-anchor="middle">GPS</text>
+  <text x="175" y="188" class="t mono" fill="#7f1d1d" font-size="9.5">Lat / Lon</text>
+  <text x="175" y="204" class="t mono" fill="#991b1b" font-size="9">Haversine()</text>
+
+  <!-- 2. Financial Liquidation -->
+  <rect x="240" y="160" width="115" height="72" rx="8" fill="#ffffff" stroke="#f87171" stroke-width="1.8"/>
+  <polygon points="264,180 274,188 264,196 254,188" fill="#fed7aa" stroke="#ea580c" stroke-width="1.8"/>
+  <text x="306" y="188" class="t mono" fill="#9a3412" font-size="9.5">Multas COP</text>
+  <text x="306" y="204" class="t mono" fill="#c2410c" font-size="9">Liquidación</text>
+
+  <!-- 3. Relational JDBC Persistence -->
+  <rect x="105" y="252" width="115" height="84" rx="8" fill="#ffffff" stroke="#f87171" stroke-width="1.8"/>
+  <path d="M125,282 V306 C125,313 147,313 147,306 V282" fill="#fee2e2" stroke="#ef4444" stroke-width="1.8"/>
+  <ellipse cx="136" cy="282" rx="11" ry="4" fill="#fecaca" stroke="#ef4444" stroke-width="1.8"/>
+  <path d="M125,293 C125,300 147,300 147,293" fill="none" stroke="#ef4444" stroke-width="1.4"/>
+  <text x="178" y="293" class="t mono" fill="#7f1d1d" font-size="9.5">JDBC SQL</text>
+  <text x="178" y="309" class="t mono" fill="#991b1b" font-size="9">DriverManager</text>
+
+  <!-- 4. Text Logs & Presentation -->
+  <rect x="240" y="252" width="115" height="84" rx="8" fill="#ffffff" stroke="#f87171" stroke-width="1.8"/>
+  <rect x="254" y="278" width="20" height="16" rx="2" fill="#f1f5f9" stroke="#ef4444" stroke-width="1.5"/>
+  <line x1="254" y1="284" x2="274" y2="284" stroke="#ef4444" stroke-width="1.2"/>
+  <text x="306" y="293" class="t mono" fill="#7f1d1d" font-size="9.5">Log String</text>
+  <text x="306" y="309" class="t mono" fill="#991b1b" font-size="9">Format Print</text>
+
+  <!-- External rigid dependencies -->
+  <rect x="38" y="300" width="36" height="22" rx="4" fill="#fecaca" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="56" y="315" class="t mono" fill="#7f1d1d" text-anchor="middle" font-size="9">SQL</text>
+  <path d="M74,311 L105,304" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#a-red)"/>
+
+  <rect x="385" y="125" width="40" height="22" rx="4" fill="#fecaca" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="405" y="140" class="t mono" fill="#7f1d1d" text-anchor="middle" font-size="9">HTTP</text>
+  <path d="M385,136 L355,170" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#a-red)"/>
+
+  <!-- Left Bottom Tag -->
+  <rect x="115" y="380" width="230" height="26" rx="6" fill="#fee2e2" stroke="#fca5a5" stroke-width="1"/>
+  <text x="230" y="397" class="t tag" fill="#991b1b" text-anchor="middle">FRÁGIL · RÍGIDO · DAÑOS COLATERALES</text>
+
+
+  <!-- ==================== RIGHT: MODULAR DESIGN (HIGH COHESION / LOW COUPLING) ==================== -->
+  <text x="654" y="80" class="t head" fill="#16a34a" text-anchor="middle">DISEÑO MODULAR: ALTA COHESIÓN · BAJO ACOPLAMIENTO</text>
+  <text x="654" y="98" class="t tag" fill="#166534" text-anchor="middle">MÓDULOS ENFOCADOS · PUERTOS Y ABSTRACCIONES</text>
+
+  <!-- Module 1: Telemetry Service (High Cohesion) -->
+  <g transform="translate(465, 120)">
+    <rect x="0" y="0" width="170" height="106" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/>
+    <text x="85" y="22" class="t head" fill="#581c87" text-anchor="middle">TELEMETRÍA</text>
+    <text x="85" y="37" class="t mono" fill="#7c3aed" text-anchor="middle" font-size="9.5">RefactoredBusService</text>
+    <!-- Internal cohesive elements -->
+    <circle cx="38" cy="65" r="15" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+    <text x="38" y="69" class="t mono" fill="#581c87" text-anchor="middle" font-size="9">Bus</text>
+    <circle cx="85" cy="65" r="15" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+    <text x="85" y="69" class="t mono" fill="#581c87" text-anchor="middle" font-size="9">Speed</text>
+    <circle cx="132" cy="65" r="15" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+    <text x="132" y="69" class="t mono" fill="#581c87" text-anchor="middle" font-size="9">Alert</text>
+    <!-- Internal wires -->
+    <line x1="53" y1="65" x2="70" y2="65" stroke="#7c3aed" stroke-width="2.5"/>
+    <line x1="100" y1="65" x2="117" y2="65" stroke="#7c3aed" stroke-width="2.5"/>
+    <text x="85" y="96" class="t tag" fill="#6b21a8" text-anchor="middle">ACTOR: OPERACIONES (COO)</text>
+  </g>
+
+  <!-- Module 2: Financial Concession Service (High Cohesion) -->
+  <g transform="translate(465, 254)">
+    <rect x="0" y="0" width="170" height="106" rx="10" fill="#ffedd5" stroke="#ea580c" stroke-width="2.5"/>
+    <text x="85" y="22" class="t head" fill="#9a3412" text-anchor="middle">LIQUIDACIÓN</text>
+    <text x="85" y="37" class="t mono" fill="#ea580c" text-anchor="middle" font-size="9.5">ConcessionService</text>
+    <!-- Internal cohesive elements -->
+    <polygon points="38,53 50,65 38,77 26,65" fill="#ffffff" stroke="#ea580c" stroke-width="2"/>
+    <text x="38" y="69" class="t mono" fill="#9a3412" text-anchor="middle" font-size="9">Km</text>
+    <polygon points="85,53 97,65 85,77 73,65" fill="#ffffff" stroke="#ea580c" stroke-width="2"/>
+    <text x="85" y="69" class="t mono" fill="#9a3412" text-anchor="middle" font-size="9">COP</text>
+    <polygon points="132,53 144,65 132,77 120,65" fill="#ffffff" stroke="#ea580c" stroke-width="2"/>
+    <text x="132" y="69" class="t mono" fill="#9a3412" text-anchor="middle" font-size="9">Tarifa</text>
+    <!-- Internal wires -->
+    <line x1="50" y1="65" x2="73" y2="65" stroke="#ea580c" stroke-width="2.5"/>
+    <line x1="97" y1="65" x2="120" y2="65" stroke="#ea580c" stroke-width="2.5"/>
+    <text x="85" y="96" class="t tag" fill="#c2410c" text-anchor="middle">ACTOR: FINANZAS (CFO)</text>
+  </g>
+
+  <!-- Clean Output Ports (Low Coupling Abstractions) -->
+  <!-- Port 1: AlertNotifier -->
+  <g transform="translate(685, 150)">
+    <rect x="0" y="0" width="160" height="50" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <circle cx="16" cy="25" r="7" fill="#ffffff" stroke="#2563eb" stroke-width="2.5"/>
+    <text x="90" y="22" class="t mono" fill="#1e40af" text-anchor="middle" font-size="9.5">&lt;interface&gt;</text>
+    <text x="90" y="38" class="t mono" fill="#1e3a8a" text-anchor="middle" font-size="10.5">AlertNotifier</text>
+  </g>
+
+  <!-- Port 2: TelemetryRepository -->
+  <g transform="translate(685, 275)">
+    <rect x="0" y="0" width="160" height="50" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <circle cx="16" cy="25" r="7" fill="#ffffff" stroke="#16a34a" stroke-width="2.5"/>
+    <text x="90" y="22" class="t mono" fill="#14532d" text-anchor="middle" font-size="9.5">&lt;interface&gt;</text>
+    <text x="90" y="38" class="t mono" fill="#166534" text-anchor="middle" font-size="10">TelemetryRepository</text>
+  </g>
+
+  <!-- Clean Decoupled Arrows (Low Coupling via Ports) -->
+  <path d="M635,175 L677,175" stroke="#2563eb" stroke-width="2.5" fill="none" marker-end="url(#a-blue)"/>
+  <path d="M635,195 C655,195 655,295 677,295" stroke="#16a34a" stroke-width="2.5" fill="none" marker-end="url(#a-green)"/>
+  <path d="M635,310 L677,310" stroke="#16a34a" stroke-width="2.5" fill="none" stroke-dasharray="6 4" marker-end="url(#a-green)"/>
+
+  <!-- Right Bottom Tag -->
+  <rect x="539" y="380" width="230" height="26" rx="6" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+  <text x="654" y="397" class="t tag" fill="#14532d" text-anchor="middle">MANTENIBLE · TESTEABLE · AISLADO</text>
+</svg>

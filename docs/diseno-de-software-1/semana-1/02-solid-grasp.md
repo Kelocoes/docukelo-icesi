@@ -15,7 +15,7 @@ Este fenómeno, categorizado por Robert C. Martin como la *degradación del dise
 1. **Patrones GRASP (General Responsibility Assignment Software Patterns):** Formulados por Craig Larman, orientan el micro-diseño y la asignación inicial de responsabilidades durante la elaboración de diagramas de interacción (*"¿Qué clase debe contener este método o conocer este dato?"*).
 2. **Principios SOLID:** Consolidados por Robert C. Martin (*Uncle Bob*), establecen las directrices de resiliencia arquitectónica para aislar a los actores de negocio y proteger las fronteras del software frente al cambio inevitable (*"¿Qué actor provoca la modificación de este módulo y cómo evitamos daños colaterales?"*).
 
-:::info Código Fuente del Proyecto de Referencia
+:::info[Código Fuente del Proyecto de Referencia]
 El código analizado y testeado a lo largo de esta guía se encuentra implementado y verificado en el proyecto didáctico del curso (`urbantransit-telemetry`).
 
 Estructura modular del proyecto:
@@ -52,16 +52,7 @@ A continuación se presenta la matriz de articulación conceptual entre las heur
 
 Antes de formalizar cualquier catálogo de patrones o principios, es indispensable entender las dos fuerzas métricas fundacionales identificadas por Larry Constantine (1968, 1974) y retomadas por Grady Booch (1994):
 
-```mermaid
-graph LR
-    subgraph "Fuerzas Métricas del Diseño OO"
-        C["Cohesión Funcional<br/>(Enfoque interno)"]
-        A["Acoplamiento Estructural<br/>(Dependencia externa)"]
-    end
-    C -->|Meta: Maximizar| HC["Alta Cohesión<br/>Propósito único y bien delimitado"]
-    A -->|Meta: Minimizar| LC["Bajo Acoplamiento<br/>Dependencia hacia abstracciones estables"]
-    HC <-->|Tensión dialéctica constante| LC
-```
+![Contraste entre Cohesión y Acoplamiento](/img/diseno-de-software-1/cohesion-acoplamiento-modular.svg)
 
 ### 2.1. Cohesión Funcional
 
