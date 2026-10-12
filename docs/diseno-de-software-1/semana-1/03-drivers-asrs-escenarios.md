@@ -32,7 +32,7 @@ mvn clean test
 
 | Sección | Núcleo Temático | Pregunta Central de Ingeniería |
 | :--- | :--- | :--- |
-| **2. Drivers y ASRs** | Los cuatro componentes y criterios de Richards & Ford | ¿Qué requerimientos justifican alterar la estructura global del sistema? |
+| **2. Drivers y ASRs** | Desmitificación RNF vs. Atributo de Calidad vs. ASR, y criterios de Richards & Ford | ¿Qué diferencia a un ASR de un RNF y qué justifica alterar la estructura global? |
 | **3. Taxonomía de Calidad** | Dimensiones operacionales, estructurales y transversales | ¿Cómo clasificar las tensiones en tiempo de ejecución frente al tiempo de diseño? |
 | **4. Modelado de Restricciones** | Restricciones técnicas y de negocio según Michael Keeling | ¿Qué decisiones tienen cero grados de libertad y no admiten compromisos? |
 | **5. Anatomía Hexapartita SEI** | Estructura formal de seis partes (Bass, Clements & Kazman) | ¿Cómo convertir requerimientos vagos en escenarios cuantitativos verificables? |
@@ -68,7 +68,61 @@ flowchart TD
     BUS --> ARQ
 ```
 
-### 2.1. Los Cuatro Componentes de los Drivers de Arquitectura
+### 2.1. Desmitificación Conceptual: RNF vs. Atributo de Calidad vs. ASR
+
+Uno de los tropiezos más comunes en la práctica y aprendizaje de la arquitectura de software consiste en tratar como sinónimos los conceptos de **Requerimiento No Funcional (RNF)**, **Atributo de Calidad (*Quality Attribute - QA*)** y **Requerimiento Arquitectónicamente Significativo (*ASR*)**. Cada uno proviene de tradiciones metodológicas distintas y cumple una función particular en la ingeniería de software:
+
+| Concepto | Origen / Enfoque | Definición Central | Pregunta Clave de Ingeniería |
+| :--- | :--- | :--- | :--- |
+| **Requerimiento No Funcional (RNF)** | Ingeniería de Requisitos Tradicional | Definición *por la negativa*: todo aquello que el software no ejecuta como función directa de negocio, sino cómo debe comportarse. Suele ser vago y aspiracional. | *¿Qué propiedades generales o restricciones tiene el sistema?* |
+| **Atributo de Calidad (QA)** | Software Engineering Institute (SEI) / ISO 25010 | Una **dimensión cualitativa medible** del comportamiento del sistema (Rendimiento, Disponibilidad, Modificabilidad, Seguridad). | *¿Bajo qué dimensión medimos qué tan bien opera el software?* |
+| **ASR (*Architecturally Significant Requirement*)** | Arquitectura Práctica (*Michael Keeling, Richards & Ford*) | Requerimiento (**funcional crítico, de calidad o restricción**) que **fuerza y condiciona decisiones estructurales mayores** en la arquitectura. | *¿Este requerimiento me obliga a cambiar la estructura, partir datos o introducir patrones/estilos?* |
+
+#### El Modelo de Inclusión: Por qué un ASR no es solo un RNF
+
+Es un error conceptual asumir que *"ASR es simplemente el término moderno para llamar a los requerimientos no funcionales"*. La relación entre estos conceptos se comprende a través del siguiente modelo de inclusión:
+
+```mermaid
+flowchart TD
+    subgraph REQ["UNIVERSO DE REQUERIMIENTOS"]
+        FUNC["Requerimientos Funcionales<br/>(Operaciones de negocio y casos de uso)"]
+        QA["Atributos de Calidad<br/>(Dimensiones: Rendimiento, Seguridad, Modificabilidad)"]
+        RES["Restricciones<br/>(Cero grados de libertad: Java 17, hardware OBU)"]
+    end
+
+    subgraph ASR_BOX["REQUERIMIENTOS ARQUITECTÓNICAMENTE SIGNIFICATIVOS (ASRs)"]
+        direction TB
+        F_CRIT["Funcionalidades Críticas<br/>(Architecture Killers / Streaming geoespacial)"]
+        QA_CRIT["Escenarios de Calidad Priorizados<br/>(Tupla Alto, Alto en Utility Tree)"]
+        RES_CRIT["Restricciones Estructurales Inamovibles<br/>(Hardware embebido, red intermitente)"]
+    end
+
+    FUNC -->|Solo las de alta complejidad técnica| F_CRIT
+    QA -->|Solo los escenarios con impacto estructural| QA_CRIT
+    RES -->|Las que delimitan fronteras y tecnologías| RES_CRIT
+
+    style REQ fill:#f8fafc,stroke:#64748b,stroke-width:1.5px
+    style ASR_BOX fill:#eff6ff,stroke:#1d4ed8,stroke-width:2px,color:#1e3a8a
+```
+
+#### Los Dos Grandes Mitos Desmontados
+
+1. **Mito 1: «Todo Atributo de Calidad o RNF es un ASR».**  
+   *Falso.* Que un botón en el portal web de MetroCali cambie de color en menos de 50 milisegundos tras hacer clic es un requerimiento de calidad (*rendimiento/usabilidad de UI*). Sin embargo, **no es un ASR**: se resuelve localmente con CSS/JavaScript en el cliente y tiene **cero impacto** en la arquitectura del backend, la base de datos o los estilos de integración.
+2. **Mito 2: «Los ASR son exclusivamente no funcionales».**  
+   *Falso.* Ciertas funcionalidades de negocio con alta complejidad algorítmica o espacial son el núcleo de los ASRs del sistema (denominadas en la industria como *architecture killers*). En MetroCali MIO, el requerimiento funcional de *«evaluar polígonos de geocercas en memoria y reconciliar trayectorias fuera de orden para 950 buses en streaming»* es una función de negocio, pero su complejidad técnica dicta la selección de estilos asincrónicos, estructuras de datos en memoria y tecnologías de persistencia temporal.
+
+#### La Analogía de la Ingeniería Civil
+
+Para afianzar este principio pedagógico, consideremos la construcción de un edificio:
+- **Funcionalidad ordinaria:** *"Instalar una puerta de madera en la oficina 201."* $\rightarrow$ El carpintero la instala; el arquitecto calculista no modifica los cimientos ni las vigas de carga del edificio.
+- **Requerimiento No Funcional vago:** *"El edificio debe ser resistente y seguro."* $\rightarrow$ No le proporciona ninguna métrica cuantitativa al ingeniero estructural.
+- **Atributo de Calidad:** *"Resistencia sísmica."* $\rightarrow$ Es la categoría o dimensión técnica.
+- **ASR:** *"El edificio se construirá sobre suelo arcilloso blando en zona de falla geológica activa y debe resistir un sismo de magnitud 8.0 Mw sin deformación estructural mayor a 10 cm."* $\rightarrow$ **Esto es un ASR:** condiciona si la cimentación requiere pilotes de 30 metros de profundidad, amortiguadores hidráulicos o disipadores de energía. **Forja la estructura.**
+
+---
+
+### 2.2. Los Cuatro Componentes de los Drivers de Arquitectura
 
 Siguiendo la clasificación metodológica consolidada por Keeling (2020) y Bass et al. (2021), los drivers arquitectónicos abarcan cuatro categorías:
 
@@ -77,7 +131,7 @@ Siguiendo la clasificación metodológica consolidada por Keeling (2020) y Bass 
 3. **Atributos de Calidad (*Quality Attributes*):** Calificadores cuantitativos de la ejecución del software y del ciclo de vida de desarrollo (*las "-ilities"*). Definen cómo de bien el sistema ejecuta sus responsabilidades bajo condiciones de estrés, concurrencia o fallo.
 4. **Metas del Negocio (*Business Goals*):** Los imperativos estratégicos de la organización (reducir costos operacionales, habilitar auditorías contractuales, soportar crecimiento de demanda sin duplicar infraestructura).
 
-### 2.2. Requerimientos Funcionales Ordinarios vs. ASRs
+### 2.3. Criterios de Richards & Ford para Identificar un ASR
 
 No todos los requerimientos que aparecen en un documento de especificación técnica o en un tablero de historias de usuario tienen relevancia para la arquitectura.
 
@@ -99,12 +153,12 @@ graph TD
 2. **Influye en algún aspecto estructural del diseño (*Influences some structural aspect of the design*):** Obliga al arquitecto a introducir un componente, particionar una base de datos, desacoplar un hilo, incorporar una cola de mensajes o adoptar un patrón de arquitectura. Si el requerimiento puede resolverse mediante una función auxiliar o un bloque `if/else` dentro de una clase existente, **no es un ASR**.
 3. **Es crítico o importante para el éxito del producto (*Is critical or important to application success*):** Si la arquitectura no satisface este requerimiento, el sistema fallará ante los usuarios, violará contratos normativos o colapsará bajo demanda real.
 
-### 2.3. Características Explícitas vs. Implícitas
+### 2.4. Características Explícitas vs. Implícitas
 
 - **Explícitas:** Declaradas textualmente en los pliegos o contratos (por ejemplo: *"el sistema debe registrar la velocidad de cada bus cada 3 segundos"*).
 - **Implícitas:** No están redactadas formalmente en los requerimientos del cliente, pero el arquitecto está obligado a descubrirlas mediante el análisis del contexto operacional (por ejemplo: ante zonas de sombra celular prolongadas, la unidad a bordo debe almacenar en memoria local los eventos para evitar pérdidas de telemetría y bloqueos en la liquidación monetaria de concesionarios).
 
-### 2.4. Tabla Comparativa: Funcionalidad Ordinaria vs. ASRs en MetroCali MIO
+### 2.5. Tabla Comparativa: Funcionalidad Ordinaria vs. ASRs en MetroCali MIO
 
 | Requerimiento en MetroCali MIO | Clasificación | Justificación Arquitectónica | Decisión Estructural Inducida |
 | :--- | :--- | :--- | :--- |
@@ -468,7 +522,8 @@ Explica:
 ## 10. Preguntas de Autoevaluación y Criterios de Calidad
 
 1. **Sobre la Diferenciación entre Funcionalidad y Arquitectura:** ¿Por qué un requerimiento como *"generar un reporte PDF de multas por exceso de velocidad"* es un requerimiento funcional ordinario, mientras que *"procesar 320 eventos telemáticos por segundo evaluando geocercas en menos de 500 ms"* es un ASR que condiciona la macroestructura del sistema?
-2. **Sobre Restricciones vs. Atributos de Calidad:** Si la Alcaldía de Cali exige que la plataforma opere sobre servidores locales preexistentes con Java 17 LTS, ¿por qué esta condición constituye una restricción (*constraint*) con cero grados de libertad y no un atributo de calidad sujeto a *trade-offs*?
-3. **Sobre la Ambigüedad en Escenarios de Calidad:** ¿Qué riesgos de ingeniería acarrea redactar que *"el sistema debe ser altamente tolerante a fallas en el túnel del Bulevar del Río"*, y cómo la medida hexapartita del SEI (*"0% de paquetes perdidos y drenado en menos de 10 segundos"*) erradica la subjetividad en las pruebas de aceptación?
-4. **Sobre la Selección de Escenarios Críticos en el Utility Tree:** En la tupla `(Importancia para el Negocio, Dificultad Arquitectónica)`, ¿por qué los escenarios clasificados como `(Alto, Alto)` son los únicos que deben determinar la selección de estilos arquitectónicos y patrones de diseño?
-5. **Sobre el Antipatrón del Navío Vasa:** Si un equipo de arquitectura clasifica diez escenarios diferentes como `(Alto, Alto)` (demandando simultáneamente consistencia estricta, latencia sub-milisegundo, costo mínimo de infraestructura y máxima modificabilidad), ¿qué consecuencias organizacionales y técnicas enfrentará el proyecto?
+2. **Sobre RNF vs. Atributo de Calidad vs. ASR:** ¿Por qué es un error conceptual afirmar que *"ASR es solo el término moderno para Requerimiento No Funcional"*, y en qué circunstancias una funcionalidad de negocio compleja se convierte en el ASR más determinante de una arquitectura?
+3. **Sobre Restricciones vs. Atributos de Calidad:** Si la Alcaldía de Cali exige que la plataforma opere sobre servidores locales preexistentes con Java 17 LTS, ¿por qué esta condición constituye una restricción (*constraint*) con cero grados de libertad y no un atributo de calidad sujeto a *trade-offs*?
+4. **Sobre la Ambigüedad en Escenarios de Calidad:** ¿Qué riesgos de ingeniería acarrea redactar que *"el sistema debe ser altamente tolerante a fallas en el túnel del Bulevar del Río"*, y cómo la medida hexapartita del SEI (*"0% de paquetes perdidos y drenado en menos de 10 segundos"*) erradica la subjetividad en las pruebas de aceptación?
+5. **Sobre la Selección de Escenarios Críticos en el Utility Tree:** En la tupla `(Importancia para el Negocio, Dificultad Arquitectónica)`, ¿por qué los escenarios clasificados como `(Alto, Alto)` son los únicos que deben determinar la selección de estilos arquitectónicos y patrones de diseño?
+6. **Sobre el Antipatrón del Navío Vasa:** Si un equipo de arquitectura clasifica diez escenarios diferentes como `(Alto, Alto)` (demandando simultáneamente consistencia estricta, latencia sub-milisegundo, costo mínimo de infraestructura y máxima modificabilidad), ¿qué consecuencias organizacionales y técnicas enfrentará el proyecto?
