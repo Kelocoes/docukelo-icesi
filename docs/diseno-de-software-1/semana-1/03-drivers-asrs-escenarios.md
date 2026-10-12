@@ -1,42 +1,65 @@
 ---
 sidebar_position: 3
 title: "Drivers de Arquitectura, ASRs y Escenarios de Calidad"
-description: "Guía metodológica paso a paso para la identificación de ASRs, modelado de restricciones, formulación de escenarios hexapartitos del SEI y construcción de Utility Trees en el contexto de MetroCali MIO para el entregable ANL-DIS."
+description: "Guía metodológica paso a paso para la identificación de ASRs, modelado de restricciones, formulación de escenarios hexapartitos del SEI y construcción de Utility Trees en MetroCali MIO."
 ---
 
 # Drivers de Arquitectura, ASRs y Escenarios de Calidad (SEI)
 
-**Curso:** Diseño de Software I (Patrones de Diseño, Estilos y Arquitecturas de Software)  
-**Programa:** Especialización en AI-Powered Software Engineering (AIPSE)  
-**Universidad Icesi** - Facultad de Ingeniería, Diseño y Ciencias Aplicadas  
-**Alineación Pedagógica:** RAA 1, Saberes SC1, SH2, SS1  
-**Entregable Asociado:** ANL-DIS (15% de la evaluación del curso)  
-**Nivel de IAG Recomendado:** Nivel 2 (Asistente de refinamiento y auditor de ambigüedades)  
+## 1. Introducción y Motivación
+
+En la ingeniería de software profesional, uno de los errores más comunes consiste en asumir que la arquitectura de un sistema es una consecuencia directa y exclusiva de sus requerimientos funcionales. La experiencia industrial demuestra lo contrario: **la funcionalidad por sí sola no determina la estructura de un software**.
+
+Tal como argumentan Bass, Clements y Kazman (2021) en la literatura canónica del *Software Engineering Institute* (SEI), si la funcionalidad fuera la única fuerza rectora del diseño, cualquier sistema podría implementarse como un monolito colosal sin modularidad interna ni separación de capas, satisfaciendo estrictamente las entradas y salidas del negocio. Sin embargo, los equipos de ingeniería dividen los sistemas en módulos, capas desacopladas, colas asincrónicas y puertos de abstracción para satisfacer otras fuerzas críticas: escalabilidad, mantenibilidad, disponibilidad, rendimiento, seguridad y modificabilidad.
+
+Estas fuerzas determinantes se denominan **Drivers de Arquitectura** (*Architectural Drivers*). Un driver es cualquier requerimiento, restricción o meta de negocio que ejerce una influencia profunda y estructurante sobre las decisiones de diseño.
+
+:::info[Código Fuente del Proyecto de Referencia]
+Los drivers arquitectónicos y escenarios analizados en esta guía se encuentran directamente plasmados en la arquitectura del proyecto didáctico del curso (`urbantransit-telemetry`).
+
+Articulación entre Drivers de Arquitectura y el código fuente:
+- **Rendimiento y Latencia:** `co.edu.icesi.urbantransit.model.GeoPoint` y `BusTelemetryPacket` modelados como registros inmutables de Java 17+, garantizando cálculos espaciales en memoria sin bloqueos de hilos ni recolección de basura innecesaria.
+- **Modificabilidad y Extensibilidad:** `co.edu.icesi.urbantransit.demo.refactored` aísla el núcleo de aplicación tras contratos de interfaz (`AlertNotifier`, `TelemetryRepository`, `GeoDistanceCalculator`), permitiendo acoplar nuevos sensores IoT sin modificar las clases de negocio.
+- **Auditabilidad Contractual:** `co.edu.icesi.urbantransit.practice.SpeedAuditEngine` y `AuditReport` implementan la verificación determinística y cálculo de penalidades sobre series temporales de telemetría para la liquidación monetaria de concesionarios.
+
+Para compilar el proyecto y verificar la suite de pruebas unitarias:
+```bash
+mvn clean test
+```
+:::
+
+### Mapa de Ruta del Capítulo
+
+| Sección | Núcleo Temático | Pregunta Central de Ingeniería |
+| :--- | :--- | :--- |
+| **2. Drivers y ASRs** | Los cuatro componentes y criterios de Richards & Ford | ¿Qué requerimientos justifican alterar la estructura global del sistema? |
+| **3. Taxonomía de Calidad** | Dimensiones operacionales, estructurales y transversales | ¿Cómo clasificar las tensiones en tiempo de ejecución frente al tiempo de diseño? |
+| **4. Modelado de Restricciones** | Restricciones técnicas y de negocio según Michael Keeling | ¿Qué decisiones tienen cero grados de libertad y no admiten compromisos? |
+| **5. Anatomía Hexapartita SEI** | Estructura formal de seis partes (Bass, Clements & Kazman) | ¿Cómo convertir requerimientos vagos en escenarios cuantitativos verificables? |
+| **6. Escenarios MetroCali MIO** | Fichas formalizadas de Rendimiento, Modificabilidad y Resiliencia | ¿Cómo se traducen las fallas de flota y zonas de sombra en especificaciones de ingeniería? |
+| **7. Árbol de Utilidad (ATAM)** | Priorización sistemática con tuplas (Negocio, Arquitectura) | ¿Cómo resolver los conflictos entre atributos y enfocar el esfuerzo en lo crítico? |
+| **8. ASR Workbook y Navío Vasa** | Documentación ágil y prevención de la sobreespecificación | ¿Por qué intentar satisfacer todos los atributos conduce al colapso arquitectónico? |
+| **9. Guía Entregable ANL-DIS** | Metodología paso a paso y prompts estructurados para IA | ¿Cómo auditar ambigüedades y formalizar el informe técnico de análisis? |
+| **10. Preguntas de Autoevaluación** | Criterios de calidad y juicio de diseño | ¿Cómo evaluar la solidez de las decisiones arquitectónicas frente al cambio? |
 
 ---
 
-## 1. Fundamentos y Concepto de Drivers de Arquitectura
-
-En la ingeniería de software profesional, uno de los errores más comunes consiste en asumir que la arquitectura de un sistema es una consecuencia directa y exclusiva de sus requerimientos funcionales. La experiencia industrial demuestra lo contrario: **la funcionalidad por sí sola no determina la estructura de un software**. 
-
-Tal como argumentan Bass, Clements y Kazman (2021) en la literatura canónica del *Software Engineering Institute* (SEI), si la funcionalidad fuera la única fuerza rectora del diseño, cualquier sistema podría implementarse como un monolito colosal sin modularidad interna ni separación de capas, satisfaciendo estrictamente las entradas y salidas del negocio. Sin embargo, diseñamos sistemas divididos en módulos, capas, componentes desacoplados, colas y servicios para satisfacer otras fuerzas críticas: escalabilidad, mantenibilidad, disponibilidad, rendimiento, seguridad y modificabilidad.
-
-Estas fuerzas determinantes se denominan **Drivers de Arquitectura** (*Architectural Drivers*). Un driver es cualquier requerimiento, restricción o meta de negocio que ejerce una influencia profunda y estructurante sobre la arquitectura de software.
+## 2. Drivers de Arquitectura y Requerimientos Arquitectónicamente Significativos (ASRs)
 
 ```mermaid
 flowchart TD
     subgraph DRIVERS["DRIVERS DE ARQUITECTURA"]
-        FRC["Requerimientos Funcionales Criticos<br/>(Funciones centrales de alto impacto)"]
-        RES["Restricciones No Negociables<br/>(Tecnicas, organizacionales y regulatorias)"]
+        FRC["Requerimientos Funcionales Críticos<br/>(Funciones centrales de alto impacto)"]
+        RES["Restricciones No Negociables<br/>(Técnicas, organizacionales y regulatorias)"]
         QA["Atributos de Calidad<br/>(Escenarios SEI cuantificables)"]
-        BUS["Metas del Negocio<br/>(Drivers estrategicos y valor esperado)"]
+        BUS["Metas del Negocio<br/>(Drivers estratégicos y valor esperado)"]
     end
 
     subgraph ARQ["DECISIONES DE ARQUITECTURA"]
         EST["Estructuras y Particionamiento"]
-        PAT["Estilos y Patrones de Diseno"]
-        CON["Mecanismos de Comunicacion"]
-        POL["Politicas de Tolerancia a Fallos"]
+        PAT["Estilos y Patrones de Diseño"]
+        CON["Mecanismos de Comunicación"]
+        POL["Políticas de Tolerancia a Fallos"]
     end
 
     FRC --> ARQ
@@ -45,54 +68,50 @@ flowchart TD
     BUS --> ARQ
 ```
 
-### 1.1. Los Cuatro Componentes de los Drivers de Arquitectura
+### 2.1. Los Cuatro Componentes de los Drivers de Arquitectura
 
 Siguiendo la clasificación metodológica consolidada por Keeling (2020) y Bass et al. (2021), los drivers arquitectónicos abarcan cuatro categorías:
 
-1. **Requerimientos Funcionales Críticos o Influyentes (*Influential Functional Requirements*):** Aquellas capacidades de negocio que introducen complejidades técnicas inéditas, demandando persistencia distribuida, sincronización fuera de línea, cálculo geoespacial en tiempo real o aislamiento de procesos. En la literatura son conocidos como *arquitecture killers*, porque ignorarlos en las etapas tempranas obliga a demoler y rehacer la solución completa.
+1. **Requerimientos Funcionales Críticos o Influyentes (*Influential Functional Requirements*):** Aquellas capacidades de negocio que introducen complejidades técnicas inéditas, demandando persistencia distribuida, sincronización fuera de línea, cálculo geoespacial en tiempo real o aislamiento de procesos. En la literatura son conocidos como *architecture killers*, porque ignorarlos en las etapas tempranas obliga a demoler y rehacer la solución completa.
 2. **Restricciones de Diseño (*Constraints*):** Decisiones con **cero grados de libertad** impuestas al equipo por el negocio, el entorno regulatorio o la infraestructura preexistente. No están sujetas a negociación técnica.
 3. **Atributos de Calidad (*Quality Attributes*):** Calificadores cuantitativos de la ejecución del software y del ciclo de vida de desarrollo (*las "-ilities"*). Definen cómo de bien el sistema ejecuta sus responsabilidades bajo condiciones de estrés, concurrencia o fallo.
 4. **Metas del Negocio (*Business Goals*):** Los imperativos estratégicos de la organización (reducir costos operacionales, habilitar auditorías contractuales, soportar crecimiento de demanda sin duplicar infraestructura).
 
----
+### 2.2. Requerimientos Funcionales Ordinarios vs. ASRs
 
-## 2. Requerimientos Funcionales Ordinarios vs. ASRs
-
-No todos los requerimientos que aparecen en un documento de especificación técnica o en un tablero de historias de usuario tienen relevancia para la arquitectura. 
+No todos los requerimientos que aparecen en un documento de especificación técnica o en un tablero de historias de usuario tienen relevancia para la arquitectura.
 
 Un **Requerimiento Arquitectónicamente Significativo** (*Architecturally Significant Requirement - ASR*) es aquel que ejerce un impacto determinante y medible sobre la estructura global del sistema, condicionando la selección de estilos, patrones, particiones de datos y fronteras de módulos (Keeling, 2020).
 
-### 2.1. Criterios de Richards & Ford para Identificar un ASR
-
-En *Fundamentals of Software Architecture*, Richards y Ford (2020) establecen tres criterios estrictos que debe cumplir un aspecto del sistema para ser catalogado como una característica o driver arquitectónico:
+En *Fundamentals of Software Architecture*, Mark Richards y Neal Ford (2020) establecen tres criterios estrictos que debe cumplir un aspecto del sistema para ser catalogado como un driver arquitectónico:
 
 ```mermaid
 graph TD
-    A["¿Es una consideracion no circunscrita estrictamente al dominio funcional?"] -->|Si| B["¿Influye directamente en algun aspecto estructural del diseno?"]
+    A["¿Es una consideración no circunscrita estrictamente al dominio funcional?"] -->|Sí| B["¿Influye directamente en algún aspecto estructural del diseño?"]
     A -->|No| R1["Requerimiento Funcional Ordinario"]
-    B -->|Si| C["¿Es critico o determinante para el exito de la aplicacion?"]
-    B -->|No| R2["Detalle de Implementacion / Codigo"]
-    C -->|Si| ASR["REQUERIMIENTO ARQUITECTONICAMENTE SIGNIFICATIVO (ASR)"]
-    C -->|No| R3["Optimizacion Menor o Deseable"]
+    B -->|Sí| C["¿Es crítico o determinante para el éxito de la aplicación?"]
+    B -->|No| R2["Detalle de Implementación / Código"]
+    C -->|Sí| ASR["REQUERIMIENTO ARQUITECTÓNICAMENTE SIGNIFICATIVO (ASR)"]
+    C -->|No| R3["Optimización Menor o Deseable"]
 ```
 
 1. **Especifica una consideración no de dominio (*Specifies a non-domain design consideration*):** Concierne a criterios operacionales, de despliegue o de evolución técnica (cómo opera o escala el software), y no únicamente a una regla algorítmica de negocio.
 2. **Influye en algún aspecto estructural del diseño (*Influences some structural aspect of the design*):** Obliga al arquitecto a introducir un componente, particionar una base de datos, desacoplar un hilo, incorporar una cola de mensajes o adoptar un patrón de arquitectura. Si el requerimiento puede resolverse mediante una función auxiliar o un bloque `if/else` dentro de una clase existente, **no es un ASR**.
 3. **Es crítico o importante para el éxito del producto (*Is critical or important to application success*):** Si la arquitectura no satisface este requerimiento, el sistema fallará ante los usuarios, violará contratos normativos o colapsará bajo demanda real.
 
-### 2.2. Características Explícitas vs. Implícitas
+### 2.3. Características Explícitas vs. Implícitas
 
-- **Explícitas:** Declaradas textualmente en los pliegos o contratos (por ejemplo: *"el sistema debe almacenar las coordenadas satelitales cada 3 segundos"*).
-- **Implícitas:** No están escritas en los requerimientos del cliente, pero el arquitecto está obligado a descubrirlas mediante el análisis del contexto (por ejemplo: ante zonas de sombra celular prolongadas, la unidad a bordo debe almacenar en memoria local los eventos para evitar pérdidas de telemetría y auditabilidad financiera).
+- **Explícitas:** Declaradas textualmente en los pliegos o contratos (por ejemplo: *"el sistema debe registrar la velocidad de cada bus cada 3 segundos"*).
+- **Implícitas:** No están redactadas formalmente en los requerimientos del cliente, pero el arquitecto está obligado a descubrirlas mediante el análisis del contexto operacional (por ejemplo: ante zonas de sombra celular prolongadas, la unidad a bordo debe almacenar en memoria local los eventos para evitar pérdidas de telemetría y bloqueos en la liquidación monetaria de concesionarios).
 
-### 2.3. Tabla Comparativa: Funcionalidad Ordinaria vs. ASRs en MetroCali MIO
+### 2.4. Tabla Comparativa: Funcionalidad Ordinaria vs. ASRs en MetroCali MIO
 
 | Requerimiento en MetroCali MIO | Clasificación | Justificación Arquitectónica | Decisión Estructural Inducida |
 | :--- | :--- | :--- | :--- |
-| El operador del Centro de Control puede consultar la placa, modelo y cédula del conductor asignado a un bus padrón. | **Requerimiento Funcional Ordinario** | Es una consulta estándar (CRUD) sobre una base de datos relacional. No condiciona la estructura global ni impone tensiones de concurrencia extremas. | Servicio de catálogo de vehículos o repositorio relacional estándar. No altera la macroarquitectura. |
-| La plataforma debe procesar eventos telemáticos emitidos cada 3 segundos por 950 buses en hora pico (cerca de 320 eventos/segundo continuos), evaluando geocercas poligonales en menos de 500 ms por paquete. | **ASR (Rendimiento / Latencia)** | Impacta el throughput, el uso de memoria y la velocidad de cómputo geométrico espacial bajo concurrencia sostenida. | Ingesta asincrónica desacoplada mediante colas/eventos, motor de geocercas en memoria y cómputo geoespacial sin bloqueo de hilos. |
+| El operador del Centro de Control puede consultar la placa, modelo y cédula del conductor asignado a un bus padrón. | **Requerimiento Funcional Ordinario** | Es una consulta estándar (CRUD) sobre un repositorio de datos. No condiciona la estructura global ni impone tensiones de concurrencia extremas. | Servicio de catálogo de vehículos o repositorio relacional estándar. Cero alteración de la macroarquitectura. |
+| La plataforma debe procesar eventos telemáticos emitidos cada 3 segundos por 950 buses en hora pico (~320 eventos/segundo continuos), evaluando geocercas en menos de 500 ms por paquete. | **ASR (Rendimiento / Latencia)** | Impacta el throughput, el uso de memoria y la velocidad de cómputo geométrico espacial bajo concurrencia sostenida. | Ingesta asincrónica desacoplada mediante colas/eventos, motor de geocercas en memoria y cómputo geoespacial sin bloqueo de hilos. |
 | El sistema debe permitir incorporar nuevos sensores telemáticos (ej. buses eléctricos con SoC de batería, sensores de conteo de pasajeros APC en puertas) sin reescribir ni reiniciar el motor de despacho y cálculo de demoras. | **ASR (Modificabilidad / Extensibilidad)** | Protege el núcleo del dominio de cambios en la capa de telemetría y formatos de tramas externas de múltiples fabricantes de hardware. | Aplicación de arquitectura hexagonal (Puertos y Adaptadores) y patrones de diseño creacionales/estructurales (*Factory Method*, *Adapter*). |
-| Al registrar un retraso superior a 5 minutos, el sistema debe pintar en rojo la fila correspondiente en la consola web del despachador. | **Requerimiento Funcional Ordinario** | Es un detalle visual y cosmético de la interfaz de usuario (*UI rendering*). Reside en el cliente web. | Manejo de estado o estilos CSS condicionales en el frontend. Cero impacto arquitectónico en el backend. |
+| Al registrar un retraso superior a 5 minutos, el sistema debe pintar en rojo la fila correspondiente en la consola web del despachador. | **Requerimiento Funcional Ordinario** | Es un detalle cosmético de la interfaz de usuario (*UI rendering*). Reside en el cliente web. | Manejo de estado o estilos CSS condicionales en el frontend. Cero impacto arquitectónico en el backend. |
 | Si 100 buses atraviesan el Túnel del Bulevar del Río (zona de sombra celular) durante 2 minutos y emergen al mismo tiempo, la plataforma debe absorber la ráfaga masiva de ~4.000 paquetes acumulados sin pérdida de datos ni bloqueo de la consulta pública. | **ASR (Disponibilidad / Resiliencia)** | Impone una demanda súbita de ingesta concurrente (*burst traffic*) con requerimientos de idempotencia y ordenamiento causal de marcas de tiempo satelitales. | Almacenamiento temporal en la OBU (*store-and-forward*), búfer de absorción de ráfagas en la nube, colas de mensajería con procesamiento particionado. |
 
 ---
@@ -102,32 +121,44 @@ graph TD
 Para estructurar los ASRs, Richards y Ford (2020) dividen las características arquitectónicas en tres grandes dimensiones:
 
 ```mermaid
-mindmap
-  root((Caracteristicas de Arquitectura))
-    Operacionales
-      Rendimiento / Latencia
-      Escalabilidad
-      Disponibilidad
-      Resiliencia / Recuperabilidad
-      Elasticidad
-    Estructurales
-      Modificabilidad
-      Extensibilidad
-      Modularidad
-      Portabilidad
-      Testabilidad
-    Transversales
-      Seguridad
-      Privacidad
-      Auditabilidad contractual
-      Cumplimiento normativo
+flowchart TD
+    ROOT["Dimensiones de Características de Arquitectura<br/>(Richards & Ford, 2020)"]
+
+    subgraph OP["1. Operacionales (Tiempo de Ejecución)"]
+        OP1["Rendimiento y Latencia"]
+        OP2["Escalabilidad de Flota"]
+        OP3["Disponibilidad de Servicio"]
+        OP4["Resiliencia y Recuperación"]
+    end
+
+    subgraph ES["2. Estructurales (Tiempo de Diseño / Mantenimiento)"]
+        ES1["Modificabilidad de Reglas"]
+        ES2["Extensibilidad de Sensores IoT"]
+        ES3["Modularidad de Puertos"]
+        ES4["Testabilidad sin Hardware"]
+    end
+
+    subgraph TR["3. Transversales (Gobernanza y Negocio)"]
+        TR1["Auditabilidad Contractual de Km"]
+        TR2["Integridad y Seguridad de Telemetría"]
+        TR3["Cumplimiento Normativo MetroCali"]
+    end
+
+    ROOT --> OP
+    ROOT --> ES
+    ROOT --> TR
+
+    style ROOT fill:#f8fafc,stroke:#334155,stroke-width:2px,color:#0f172a
+    style OP fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px,color:#1e3a8a
+    style ES fill:#f5f3ff,stroke:#7c3aed,stroke-width:1.5px,color:#5b21b6
+    style TR fill:#ecfdf5,stroke:#059669,stroke-width:1.5px,color:#065f46
 ```
 
 ### 3.1. Características Operacionales
 Atributos que describen el comportamiento del software en tiempo de ejecución (*runtime properties*):
 - **Rendimiento (*Performance*):** Tiempos de respuesta, latencia de procesamiento de eventos telemáticos y utilización óptima de CPU/memoria.
 - **Escalabilidad (*Scalability*):** Capacidad de procesar incrementos en el volumen de buses, rutas o consultas ciudadanas agregando recursos computacionales.
-- **Disponibilidad (*Availability*):** Proporción del tiempo en que el sistema se encuentra en estado operativo y accesible para los centros de control y las estaciones.
+- **Disponibilidad (*Availability*):** Proporción del tiempo en que el sistema se encuentra en estado operativo y accesible para los centros de control y las pantallas en estaciones.
 - **Resiliencia / Recuperabilidad (*Reliability / Recoverability*):** Habilidad para absorber fallos de comunicación celular sin perder información transaccional.
 
 ### 3.2. Características Estructurales
@@ -135,18 +166,18 @@ Atributos vinculados a las propiedades internas del código fuente y su ciclo de
 - **Modificabilidad (*Modifiability*):** Facilidad con la que los ingenieros pueden alterar reglas de negocio (ej. umbral de velocidad en geocercas) con un esfuerzo medible y acotado.
 - **Extensibilidad (*Extensibility*):** Facilidad para acoplar nuevas capacidades (como integración con nuevos tipos de sensores IoT) mediante puntos de extensión limpios.
 - **Portabilidad (*Portability*):** Independencia respecto a proveedores específicos de infraestructura en la nube o dispositivos GPS propietarios.
-- **Testabilidad (*Testability*):** Grado en que la arquitectura facilita la inyección de dobles de prueba y la verificación de invariantes mediante pruebas unitarias y de integración continuas.
+- **Testabilidad (*Testability*):** Grado en que la arquitectura facilita la inyección de dobles de prueba y la verificación de invariantes mediante pruebas unitarias rápidas.
 
 ### 3.3. Características Transversales
 Atributos de gobernanza, seguridad y aspectos legales que cruzan verticalmente toda la solución:
-- **Seguridad e Integridad (*Security*):** Prevención de manipulación maliciosa de geopoints o telemetría para alterar métricas de cumplimiento de rutas.
+- **Seguridad e Integridad (*Security*):** Prevención de manipulación maliciosa de coordenadas satelitales o telemetría para alterar métricas de cumplimiento de rutas.
 - **Auditabilidad Contractual (*Auditability*):** Trazabilidad inalterable de los kilómetros comerciales efectivamente prestados por cada operador concesionario para la liquidación monetaria quincenal.
 
 ---
 
 ## 4. Modelado de Restricciones del Negocio y Técnicas
 
-En la visión de Michael Keeling (2020), una **restricción** (*constraint*) es una decisión de diseño ya tomada que limita severamente las opciones disponibles para el arquitecto. A diferencia de los atributos de calidad, las restricciones no admiten negociación ni compromisos (*trade-offs*): representan condiciones de borde obligatorias.
+En la visión de Michael Keeling (2020), una **restricción** (*constraint*) es una decisión de diseño ya tomada que limita severamente las opciones disponibles para el arquitecto. A diferencia de los atributos de calidad, las restricciones no admiten negociación ni compromisos (*trade-offs*): representan condiciones de borde obligatorias con **cero grados de libertad**.
 
 ### 4.1. Restricciones Técnicas vs. de Negocio en MetroCali MIO
 
@@ -163,7 +194,7 @@ En la visión de Michael Keeling (2020), una **restricción** (*constraint*) es 
 
 Un error pedagógico y profesional recurrente es formular los requerimientos de calidad utilizando adjetivos vagos y aspiracionales: *"el sistema debe ser altamente escalable"*, *"la plataforma debe ser rápida"* o *"la telemetría debe ser tolerante a fallos"*.
 
-Para erradicar la ambigüedad, el *Software Engineering Institute* (SEI) propuso una estructura formal rigurosa compuesta por seis elementos, detallada exhaustivamente por Bass, Clements y Kazman (2021):
+Para erradicar la ambigüedad, el *Software Engineering Institute* (SEI) formuló una estructura rigurosa compuesta por seis elementos, detallada por Bass, Clements y Kazman (2021):
 
 ![Anatomía Hexapartita de un Escenario de Calidad SEI](/img/diseno-de-software-1/sei-quality-scenario-anatomy.svg)
 
@@ -180,7 +211,7 @@ Para erradicar la ambigüedad, el *Software Engineering Institute* (SEI) propuso
 
 ## 6. Formulación de Escenarios Concretos para MetroCali MIO
 
-A continuación se presentan tres escenarios de atributos de calidad plenamente formalizados y contextualizados en los dolores operacionales de MetroCali MIO descritos en el enunciado del caso transversal.
+A continuación se presentan tres escenarios de atributos de calidad formalizados y contextualizados en los dolores operacionales de MetroCali MIO descritos en el enunciado del caso transversal.
 
 ### 6.1. Escenario 1: Rendimiento y Latencia de Procesamiento Telemático (Operacional)
 
@@ -200,7 +231,7 @@ sequenceDiagram
     Ing->>Geo: Evento validado en memoria
     Geo->>Head: Posicion correlacionada con Ruta T31
     Head->>PIU: Notificacion de arribo estimado (Universidades)
-    Note over OBU,PIU: Tiempo total extremo a extremo < 500 ms (p99)
+    Note over OBU,PIU: Tiempo total extremo a extremo inferior a 500 ms (p99)
 ```
 
 #### Ficha del Escenario Hexapartito: Rendimiento / Latencia
@@ -276,10 +307,10 @@ sequenceDiagram
     Bus->>OBU: Acumula ~40 paquetes por bus (4.000 total)
     Note over Bus,Net: Salida a superficie (Avenida Colombia)
     OBU->>Net: Reconexion masiva simultanea
-    Net->>Ingest: Rafaga de 4.000 paquetes en < 2 segundos
+    Net->>Ingest: Rafaga de 4.000 paquetes en menos de 2 segundos
     Note over Ingest: Absorbe en buffer sin colapsar memoria
     Ingest->>DB: Persistencia en orden causal por timestamp UTC
-    Note over Ingest,DB: 0% paquetes perdidos, drenado en < 10 segundos
+    Note over Ingest,DB: 0% paquetes perdidos, drenado en menos de 10 segundos
 ```
 
 #### Ficha del Escenario Hexapartito: Disponibilidad / Resiliencia
@@ -297,17 +328,17 @@ sequenceDiagram
 
 ## 7. Priorización de Drivers: El Árbol de Utilidad (Utility Tree)
 
-En un sistema del mundo real, es materialmente imposible optimizar todas las dimensiones de calidad con la misma intensidad. Intentar maximizar simultáneamente el rendimiento, la disponibilidad, la seguridad, la modificabilidad y la economía de infraestructura genera parálisis por análisis o colapso del diseño.
+En un sistema del mundo real, es inviable optimizar todas las dimensiones de calidad con la misma intensidad. Intentar maximizar simultáneamente el rendimiento, la disponibilidad, la seguridad, la modificabilidad y la economía de infraestructura genera parálisis por análisis o colapso del diseño.
 
 En el método ATAM (*Architecture Tradeoff Analysis Method*) del SEI, Bass et al. (2021) proponen el **Árbol de Utilidad (*Utility Tree*)** como la herramienta canónica para traducir los objetivos de alto nivel del negocio en un conjunto priorizado de escenarios de calidad.
 
 ### 7.1. Estructura del Árbol de Utilidad
 
 1. **Raíz (*Utility*):** Expresa la bondad y adecuación global del sistema de software frente al negocio.
-2. **Nivel 1 (Atributos de Calidad):** Las cualidades de alto nivel requeridas (Rendimiento, Disponibilidad, Modificabilidad, Seguridad, Usabilidad).
-3. **Nivel 2 (Refinamientos del Atributo):** Subcategorías que descomponen el atributo en preocupaciones específicas del problema (ej. Rendimiento refinado en *Latencia de Telemetría* y *Throughput de Ingesta*).
+2. **Nivel 1 (Atributos de Calidad):** Las cualidades de alto nivel requeridas (Rendimiento, Disponibilidad, Modificabilidad, Seguridad, Auditabilidad).
+3. **Nivel 2 (Refinamientos del Atributo):** Subcategorías que descomponen el atributo en preocupaciones específicas del problema (ej. Rendimiento refinado en *Latencia de Telemetría* y *Frecuencia de Headways*).
 4. **Nivel 3 (Hojas - Escenarios Concretos):** Escenarios formalizados del modelo SEI con estímulo y respuesta medible.
-5. **Calificación de Prioridad `(Importancia, Impacto)`:** Cada hoja se evalúa en una tupla de dos dimensiones con escala **Alto (A/H)**, **Medio (M/M)** y **Bajo (B/L)**:
+5. **Calificación de Prioridad `(Importancia, Impacto)`:** Cada hoja se evalúa en una tupla de dos dimensiones con escala **Alto (A)**, **Medio (M)** y **Bajo (B)**:
    - **Dimensión 1: Importancia para el Negocio / Éxito del Producto:** ¿Qué tan grave es para la operación de MetroCali si este escenario no se cumple?
    - **Dimensión 2: Impacto / Dificultad Arquitectónica:** ¿Qué tan difícil, costoso o determinante es estructurar la arquitectura para satisfacer este escenario?
 
@@ -319,23 +350,23 @@ graph TD
     U --> QA4["Auditabilidad"]
 
     QA1 --> R11["Latencia de Procesamiento de Geopoints"]
-    QA1 --> R12["Calculo Continuo de Headways en Estaciones"]
+    QA1 --> R12["Cálculo Continuo de Headways en Estaciones"]
 
-    QA2 --> R21["Absorcion de Rafagas (Zonas de Sombra)"]
-    QA2 --> R22["Tolerancia a Caidas de Red Celular"]
+    QA2 --> R21["Absorción de Ráfagas (Zonas de Sombra)"]
+    QA2 --> R22["Tolerancia a Caídas de Red Celular"]
 
-    QA3 --> R31["Extension de Nuevos Sensores IoT (Buses Electricos / APC)"]
-    QA3 --> R32["Independencia de Proveedores de Cartografia"]
+    QA3 --> R31["Extensión de Nuevos Sensores IoT (Buses Eléctricos / APC)"]
+    QA3 --> R32["Independencia de Proveedores de Cartografía"]
 
-    QA4 --> R41["Liquidacion Inmutable de Kilometros a Concesionarios"]
+    QA4 --> R41["Liquidación Inmutable de Kilómetros a Concesionarios"]
 
-    R11 --> S1["Escenario 1: p99 < 500 ms con 950 buses concurrentes<br/><b>(A, A)</b>"]
-    R12 --> S2["Escenario 4: Recalculo de headway cada 5 seg en Universidades<br/><b>(A, M)</b>"]
-    R21 --> S3["Escenario 3: Drenado de 4.000 paquetes del Bulevar en < 10 seg<br/><b>(A, A)</b>"]
+    R11 --> S1["Escenario 1: p99 inferior a 500 ms con 950 buses<br/><b>(A, A)</b>"]
+    R12 --> S2["Escenario 4: Recálculo de headway cada 5 s en Universidades<br/><b>(A, M)</b>"]
+    R21 --> S3["Escenario 3: Drenado de 4.000 paquetes del Bulevar en menos de 10 s<br/><b>(A, A)</b>"]
     R22 --> S4["Escenario 5: Almacenamiento local en OBU hasta 4 horas sin red<br/><b>(M, M)</b>"]
-    R31 --> S5["Escenario 2: Agregar sensor SoC/APC en <= 3 dias sin tocar Core<br/><b>(M, A)</b>"]
-    R32 --> S6["Escenario 6: Cambiar proveedor de mapas satelitales en <= 5 dias<br/><b>(B, M)</b>"]
-    R41 --> S7["Escenario 7: Cero alteracion de km comerciales auditados en 30 dias<br/><b>(A, M)</b>"]
+    R31 --> S5["Escenario 2: Agregar sensor SoC/APC en máximo 3 días sin tocar Core<br/><b>(M, A)</b>"]
+    R32 --> S6["Escenario 6: Cambiar proveedor de mapas satelitales en máximo 5 días<br/><b>(B, M)</b>"]
+    R41 --> S7["Escenario 7: Cero alteración de km comerciales auditados en 30 días<br/><b>(A, M)</b>"]
 ```
 
 ### 7.2. Matriz de Priorización del Utility Tree para MetroCali MIO
@@ -350,11 +381,11 @@ graph TD
 | **Disponibilidad** | Persistencia local | **Escenario 5:** Unidad de a bordo OBU retiene en memoria flash hasta 4 horas de telemetría ante corte total de red celular. | **Medio** | **Medio** | **(M, M) - Secundario** |
 | **Portabilidad** | Cartografía desacoplada | **Escenario 6:** Migración de proveedor de mapas (de OpenStreetMap a proveedor satelital privado) en menos de 5 días de desarrollo. | **Bajo** | **Medio** | **(B, M) - Diferido** |
 
-> **Regla de Oro Metodológica:** Los escenarios clasificados como **(Alto, Alto)** constituyen los verdaderos núcleos estructurantes de la arquitectura. Son los que justifican la selección de estilos asincrónicos, el diseño de búferes de absorción y los patrones de desacoplamiento. Si un equipo reporta diez escenarios `(Alto, Alto)`, ha incurrido en sobreespecificación y fracasará en cumplir los objetivos del proyecto.
+> **Regla de Oro Metodológica:** Los escenarios clasificados como **(Alto, Alto)** constituyen los núcleos estructurantes de la arquitectura. Son los que justifican la selección de estilos asincrónicos, el diseño de búferes de absorción y los patrones de desacoplamiento. Si un equipo reporta diez escenarios `(Alto, Alto)`, ha incurrido en sobreespecificación y fracasará en cumplir los objetivos del proyecto.
 
 ---
 
-## 8. El ASR Workbook (Cuaderno de Trabajo de Arquitectura)
+## 8. El ASR Workbook y el Riesgo de la Sobreespecificación
 
 Michael Keeling (2020) en *Design It!* recomienda documentar los drivers tempranos en un artefacto vivo denominado **ASR Workbook**. Este cuaderno condensa en pocas páginas el entendimiento compartido entre los ingenieros de software y los actores del negocio.
 
@@ -387,29 +418,29 @@ ASR WORKBOOK: PLATAFORMA METROCALI MIO
 
 Richards y Ford (2020) advierten contra el antipatrón de sobredimensionar los requerimientos de calidad citando la historia del buque de guerra sueco *Vasa* (1628). El rey Gustavo II Adolfo exigió un barco que fuera simultáneamente el mayor transporte de tropas del mundo, que tuviera dos cubiertas de artillería en lugar de una, y que montara cañones del doble de tamaño de los existentes. Al zarpar para su viaje inaugural, una ráfaga de viento hizo escorar el navío; debido al peso excesivo de la cubierta superior, el agua ingresó por las troneras abiertas de los cañones y el buque zozobró en la bahía de Estocolmo a menos de una milla de la costa.
 
-En arquitectura de software, **intentar construir un sistema que soporte todos los atributos de calidad posibles es construir un Vasa digital**. Un sistema no puede ser a la vez ultra-seguro, con latencia sub-milisegundo, costo mínimo, desacoplamiento absoluto y consistencia inmediata distribuida. La labor del ingeniero consiste en elegir las 3 a 5 cualidades verdaderamente críticas y negociar los compromisos (*trade-offs*) restantes.
+En arquitectura de software, **intentar construir un sistema que soporte todos los atributos de calidad posibles es construir un Vasa digital**. Un sistema no puede ser simultáneamente ultra-seguro, con latencia sub-milisegundo, costo mínimo, desacoplamiento absoluto y consistencia inmediata distribuida. La labor del ingeniero consiste en elegir las 3 a 5 cualidades verdaderamente críticas y negociar los compromisos (*trade-offs*) restantes.
 
 ---
 
-## 9. Guía de Ejecución para el Entregable ANL-DIS (15%)
+## 9. Guía Metodológica para el Entregable ANL-DIS
 
-El primer entregable formal del curso, **ANL-DIS (15%)**, evalúa la competencia de los estudiantes para analizar el problema de MetroCali MIO, extraer sus fuerzas en conflicto y estructurar un informe técnico con rigor profesional.
+El entregable formal **ANL-DIS** evalúa la competencia para analizar el problema de MetroCali MIO, extraer sus fuerzas en conflicto y estructurar un informe técnico con rigor profesional.
 
 ### 9.1. Pasos Metodológicos para Desarrollar el Entregable
 
 ```mermaid
 flowchart TD
-    P1["Paso 1: Lectura Critica y Mapeo de Actores<br/>Identificar dolores de la Direccion de Operaciones, Concesionarios y Usuarios"] --> P2["Paso 2: Levantamiento de Restricciones<br/>Separar restricciones inamovibles (Cero grados de libertad)"]
-    P2 --> P3["Paso 3: Formulacion de Escenarios Hexapartitos<br/>Redactar minimo 3 escenarios cuantificables (Rendimiento, Modificabilidad, Disponibilidad)"]
-    P3 --> P4["Paso 4: Construccion del Utility Tree<br/>Estructurar el arbol con ramas y clasificar tuplas (Negocio, Arquitectura)"]
-    P4 --> P5["Paso 5: Bitacora de Prompting e Interaccion con IAG<br/>Documentar prompts, alucinaciones corregidas y analisis critico"]
+    P1["Paso 1: Lectura Crítica y Mapeo de Actores<br/>Identificar dolores de Operaciones, Concesionarios y Usuarios"] --> P2["Paso 2: Levantamiento de Restricciones<br/>Separar restricciones inamovibles (Cero grados de libertad)"]
+    P2 --> P3["Paso 3: Formulación de Escenarios Hexapartitos<br/>Redactar mínimo 3 escenarios cuantificables (Rendimiento, Modificabilidad, Disponibilidad)"]
+    P3 --> P4["Paso 4: Construcción del Utility Tree<br/>Estructurar el árbol con ramas y clasificar tuplas (Negocio, Arquitectura)"]
+    P4 --> P5["Paso 5: Bitácora de Prompting e Interacción con IA<br/>Documentar prompts, alucinaciones corregidas y análisis crítico"]
 ```
 
 1. **Paso 1: Lectura Crítica y Mapeo de Actores:** Identificar quiénes son los interesados del sistema (reguladores de tráfico, usuarios en Estación Universidades, gerentes de concesionarios privados, auditores contractuales de MetroCali) y qué metas persigue cada uno.
 2. **Paso 2: Aislamiento de Restricciones:** Identificar cuáles condiciones son inmodificables (hardware OBU existente, conectividad celular intermitente en Cali, uso de Java 17 LTS, inmutabilidad de la auditoría de kilómetros) y no confundirlas con requerimientos de calidad.
 3. **Paso 3: Redacción de Escenarios Hexapartitos Cuantificables:** Elaborar al menos tres escenarios completos (uno de Rendimiento, uno de Modificabilidad y uno de Disponibilidad/Resiliencia), garantizando que las medidas de respuesta contengan números y unidades verificables (latencia en ms, porcentaje de eventos perdidos, días-hombre de esfuerzo).
 4. **Paso 4: Construcción y Justificación del Utility Tree:** Elaborar el árbol jerárquico y clasificar cada escenario con su tupla `(H, M, L)`. Justificar con argumentos técnicos por qué los escenarios marcados como `(Alto, Alto)` merecen esa designación.
-5. **Paso 5: Bitácora de Interacción con IA Generativa (AIPSE):** Documentar el proceso de trabajo con modelos de lenguaje (ChatGPT, Claude, Gemini). Indicar los prompts empleados, las respuestas iniciales imprecisas o adjetivadas generadas por el modelo, y cómo el estudiante aplicó su criterio ingenieril para forzar la cuantificación de las métricas.
+5. **Paso 5: Bitácora de Interacción con IA Generativa:** Documentar el proceso de trabajo con modelos de lenguaje. Indicar los prompts empleados, las respuestas iniciales imprecisas o adjetivadas generadas por el modelo, y cómo el estudiante aplicó su criterio ingenieril para forzar la cuantificación de las métricas.
 
 ### 9.2. Prompts Recomendados para Refinamiento con IA
 
@@ -446,18 +477,10 @@ Explica:
 
 ---
 
-## 10. Referencias Bibliográficas
+## 10. Preguntas de Autoevaluación y Criterios de Calidad
 
-- **Bass, L., Clements, P., & Kazman, R.** (2021). *Software Architecture in Practice* (4th ed.). Addison-Wesley Professional.
-  - Capítulo 4: *Understanding Quality Attributes* (pp. 59-78).
-  - Capítulo 16: *Architecture and Requirements* (pp. 297-316).
-  - Capítulo 17: *Architecturally Significant Requirements* (pp. 317-338).
-- **Keeling, M.** (2020). *Design It!: From Programmer to Software Architect*. Pragmatic Bookshelf.
-  - Capítulo 4: *Empathize with Stakeholders* (pp. 39-48).
-  - Capítulo 5: *Dig for Architecturally Significant Requirements* (pp. 49-62).
-  - Capítulo 6: *Choose an Architecture (Before It Chooses You)* (pp. 63-78).
-- **Richards, M., & Ford, N.** (2020). *Fundamentals of Software Architecture: An Engineering Approach*. O'Reilly Media.
-  - Capítulo 4: *Architecture Characteristics Defined* (pp. 55-64).
-  - Capítulo 5: *Identifying Architectural Characteristics* (pp. 65-76).
-  - Capítulo 6: *Measuring and Governing Architecture Characteristics* (pp. 77-100).
-- **MetroCali S.A.** (2026). *Plataforma Inteligente de Monitoreo de Flota, Geocercas y Gestión de Demoras: Enunciado de Caso de Estudio Transversal*. Departamento de Computación y Sistemas Inteligentes, Universidad Icesi.
+1. **Sobre la Diferenciación entre Funcionalidad y Arquitectura:** ¿Por qué un requerimiento como *"generar un reporte PDF de multas por exceso de velocidad"* es un requerimiento funcional ordinario, mientras que *"procesar 320 eventos telemáticos por segundo evaluando geocercas en menos de 500 ms"* es un ASR que condiciona la macroestructura del sistema?
+2. **Sobre Restricciones vs. Atributos de Calidad:** Si la Alcaldía de Cali exige que la plataforma opere sobre servidores locales preexistentes con Java 17 LTS, ¿por qué esta condición constituye una restricción (*constraint*) con cero grados de libertad y no un atributo de calidad sujeto a *trade-offs*?
+3. **Sobre la Ambigüedad en Escenarios de Calidad:** ¿Qué riesgos de ingeniería acarrea redactar que *"el sistema debe ser altamente tolerante a fallas en el túnel del Bulevar del Río"*, y cómo la medida hexapartita del SEI (*"0% de paquetes perdidos y drenado en menos de 10 segundos"*) erradica la subjetividad en las pruebas de aceptación?
+4. **Sobre la Selección de Escenarios Críticos en el Utility Tree:** En la tupla `(Importancia para el Negocio, Dificultad Arquitectónica)`, ¿por qué los escenarios clasificados como `(Alto, Alto)` son los únicos que deben determinar la selección de estilos arquitectónicos y patrones de diseño?
+5. **Sobre el Antipatrón del Navío Vasa:** Si un equipo de arquitectura clasifica diez escenarios diferentes como `(Alto, Alto)` (demandando simultáneamente consistencia estricta, latencia sub-milisegundo, costo mínimo de infraestructura y máxima modificabilidad), ¿qué consecuencias organizacionales y técnicas enfrentará el proyecto?

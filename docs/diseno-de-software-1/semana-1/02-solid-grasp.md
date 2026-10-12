@@ -341,11 +341,132 @@ Para resolver esta patología sin duplicar datos, Martin propone separar las ope
 
 ### 4.2. OCP: The Open-Closed Principle (Principio de Abierto/Cerrado)
 
-Acuñado originalmente por Bertrand Meyer en 1988:
+Acuñado originalmente por Bertrand Meyer en 1988 y adaptado a la arquitectura orientada a objetos por Robert C. Martin:
 
 > *"Un artefacto de software debe estar abierto para su extensión, pero cerrado para su modificación."*
 
 El comportamiento de un sistema debe poder extenderse mediante la incorporación de nuevo código fuente (nuevas clases o implementaciones), sin requerir la modificación de clases o componentes previamente existentes y certificados en producción. Se fundamenta en contratos de interfaz e inversión de dependencias.
+
+#### El Antipatrón: Extensión Mediante Modificación (Violación de OCP)
+
+Consideremos el despacho de alertas en el centro de control de MetroCali. Si el canal de notificación se codifica mediante condicionales basados en cadenas o enumeraciones, cada nuevo canal exige abrir la clase de negocio y modificar su lógica interna:
+
+```java
+// ANTIPATRÓN: Violación de OCP
+// Cada nuevo canal exige abrir, editar y re-certificar esta clase en producción
+public class LegacyAlertDispatcher {
+
+    public void dispatchAlert(TransitAlert alert, String channelType) {
+        if ("CONSOLE".equalsIgnoreCase(channelType)) {
+            System.err.println("[CONSOLE ALERT] " + alert.message());
+        } else if ("SLACK".equalsIgnoreCase(channelType)) {
+            // Lógica directa de webhook HTTP a Slack...
+            System.out.println("Enviando webhook a canal #operaciones-mio");
+        } else if ("SMS".equalsIgnoreCase(channelType)) {
+            // ¡PELIGRO! Para soportar SMS a los conductores de guardia,
+            // debemos MODIFICAR esta clase, arriesgando romper Console y Slack.
+            System.out.println("Enviando SMS gateway al conductor del bus " + alert.busId().value());
+        } else {
+            throw new IllegalArgumentException("Canal de alerta no soportado: " + channelType);
+        }
+    }
+}
+```
+
+**Problemas del antipatrón:**
+1. **Fragilidad:** Cada vez que operaciones solicita un nuevo canal (ej. WebSockets para la central de despacho o Kafka para auditoría), el desarrollador debe editar `LegacyAlertDispatcher.java`.
+2. **Riesgo de regresión:** Un error de sintaxis o excepción no controlada en el bloque nuevo inhabilita los canales existentes.
+3. **Colisiones en control de versiones:** Varios desarrolladores editando el mismo archivo con condicionales generan conflictos de merge constantes.
+
+#### La Solución Arquitectónica: Abierto a Extensión, Cerrado a Modificación
+
+En `urbantransit-telemetry`, aplicamos OCP protegiendo el servicio tras el puerto funcional `AlertNotifier`:
+
+```java
+package co.edu.icesi.urbantransit.demo.refactored.port;
+
+import co.edu.icesi.urbantransit.model.TransitAlert;
+
+/**
+ * Contrato OCP: Cerrado a modificaciones volátiles, abierto a infinitas implementaciones.
+ */
+@FunctionalInterface
+public interface AlertNotifier {
+    void notifyAlert(TransitAlert alert);
+}
+```
+
+Las implementaciones existentes en producción permanecen aisladas y estables:
+
+```java
+package co.edu.icesi.urbantransit.demo.refactored.infra;
+
+import co.edu.icesi.urbantransit.demo.refactored.port.AlertNotifier;
+import co.edu.icesi.urbantransit.model.TransitAlert;
+
+public class ConsoleAlertNotifier implements AlertNotifier {
+    @Override
+    public void notifyAlert(TransitAlert alert) {
+        System.out.printf("[%s] ALERTA %s en bus %s: %s%n",
+                alert.occurredAt(), alert.severity(), alert.busId().value(), alert.message());
+    }
+}
+```
+
+Cuando MetroCali adquiere un nuevo canal de contingencia (por ejemplo, notificaciones satelitales o enlace radial con terminales), **no se modifica ninguna clase existente**. Se crea un nuevo archivo fuente:
+
+```java
+package co.edu.icesi.urbantransit.demo.refactored.infra;
+
+import co.edu.icesi.urbantransit.demo.refactored.port.AlertNotifier;
+import co.edu.icesi.urbantransit.model.TransitAlert;
+
+/**
+ * Extensión mediante nuevo código fuente: CERO impacto sobre clases certificadas.
+ */
+public class RadioTelemetryAlertNotifier implements AlertNotifier {
+
+    private final String radioGatewayChannel;
+
+    public RadioTelemetryAlertNotifier(String radioGatewayChannel) {
+        this.radioGatewayChannel = radioGatewayChannel;
+    }
+
+    @Override
+    public void notifyAlert(TransitAlert alert) {
+        // Nueva infraestructura de radiofrecuencia para terminales Andrés Sanín / Menga
+        System.out.println("Despachando por radio (" + radioGatewayChannel + "): " + alert.message());
+    }
+}
+```
+
+El servicio central `RefactoredBusService` permanece **100% cerrado a modificaciones**:
+
+```java
+public class RefactoredBusService {
+    private final AlertNotifier alertNotifier; // Depende del contrato estable
+
+    public RefactoredBusService(
+            TelemetryRepository repository,
+            AlertNotifier alertNotifier,
+            GeoDistanceCalculator distanceCalculator
+    ) {
+        this.repository = Objects.requireNonNull(repository, "repository no puede ser null");
+        this.alertNotifier = Objects.requireNonNull(alertNotifier, "alertNotifier no puede ser null");
+        this.distanceCalculator = Objects.requireNonNull(distanceCalculator, "distanceCalculator no puede ser null");
+    }
+
+    public void processPacket(BusTelemetryPacket packet) {
+        // ...
+        if (packet.instantSpeedKmh() > MAX_TRONCAL_SPEED_KMH) {
+            // Emite la alerta polimórficamente sin saber si viaja a consola, radio o Kafka
+            alertNotifier.notifyAlert(alert);
+        }
+    }
+}
+```
+
+> **Regla de oro de Martin:** Si una nueva solicitud de requerimientos te obliga a modificar el código fuente de un componente de alto nivel, ese componente tiene un defecto arquitectónico de diseño. OCP garantiza que extender el comportamiento del software consiste en **escribir código nuevo, no en editar código viejo**.
 
 ---
 
