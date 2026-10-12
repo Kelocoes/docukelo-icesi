@@ -1,0 +1,8 @@
+{
+    "label": "S3 - Patrones de Comportamiento y Evolución",
+    "position": 3,
+    "link": {
+        "type": "generated-index",
+        "description": "Semana 3: Strategy, Observer, State, refactorización con pruebas automatizadas y entrega de LAB-PAT (20%)."
+    }
+}

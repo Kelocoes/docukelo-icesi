@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 760" width="100%" height="100%" style="background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <style>
+      .title { font-size: 22px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-size: 13px; font-weight: 500; fill: #475569; }
+      .col-header { font-size: 13px; font-weight: 700; fill: #ffffff; letter-spacing: 0.5px; text-transform: uppercase; }
+      .row-title { font-size: 13px; font-weight: 700; fill: #1e293b; }
+      .row-badge { font-size: 11px; font-weight: 600; }
+      .cell-text { font-size: 11.5px; fill: #334155; line-height: 1.4; }
+      .cell-code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 10.5px; fill: #0369a1; background-color: #f0f9ff; }
+      .section-badge { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
+    </style>
+    <filter id="shadow" x="-2%" y="-1%" width="104%" height="104%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Header Banner -->
+  <rect x="30" y="24" width="1000" height="74" rx="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+  <text x="54" y="52" class="title">Matriz de Heurísticas de Diseño OO: GRASP vs. SOLID</text>
+  <text x="54" y="73" class="subtitle">Articulación conceptual entre la asignación inicial de responsabilidades (Larman) y la resiliencia al cambio (Martin)</text>
+
+  <!-- Top Comparative Summary Cards -->
+  <g transform="translate(30, 112)">
+    <!-- GRASP Overview Card -->
+    <rect x="0" y="0" width="490" height="70" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+    <rect x="16" y="12" width="76" height="20" rx="4" fill="#2563eb"/>
+    <text x="24" y="26" class="section-badge" fill="#ffffff">GRASP</text>
+    <text x="100" y="27" font-size="12px" font-weight="700" fill="#1e40af">Responsabilidades en Micro-Diseño (Craig Larman)</text>
+    <text x="16" y="48" font-size="11.5px" fill="#1e3a8a">Enfoque: <tspan font-weight="600">Creación e interacción de objetos</tspan> durante el diseño colaborativo.</text>
+    <text x="16" y="63" font-size="11px" fill="#3b82f6">Pregunta clave: &quot;¿Qué clase debe contener este método o conocer este dato?&quot;</text>
+
+    <!-- SOLID Overview Card -->
+    <rect x="510" y="0" width="490" height="70" rx="8" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1"/>
+    <rect x="526" y="12" width="76" height="20" rx="4" fill="#059669"/>
+    <text x="534" y="26" class="section-badge" fill="#ffffff">SOLID</text>
+    <text x="610" y="27" font-size="12px" font-weight="700" fill="#065f46">Mantenibilidad y Arquitectura (Robert C. Martin)</text>
+    <text x="526" y="48" font-size="11.5px" fill="#064e3b">Enfoque: <tspan font-weight="600">Fronteras modulares y resistencia al cambio</tspan> en el ciclo de vida.</text>
+    <text x="526" y="63" font-size="11px" fill="#10b981">Pregunta clave: &quot;¿Qué actor o variación provoca la modificación de este módulo?&quot;</text>
+  </g>
+
+  <!-- Table Container -->
+  <g transform="translate(30, 196)">
+    <!-- Table Header Background -->
+    <rect x="0" y="0" width="1000" height="38" rx="6" fill="#0f172a"/>
+    <text x="20" y="24" class="col-header">Heurística GRASP</text>
+    <text x="250" y="24" class="col-header">Principio SOLID</text>
+    <text x="490" y="24" class="col-header">Punto de Convergencia y Sinergia</text>
+    <text x="790" y="24" class="col-header">Ejemplo MetroCali MIO / UrbanTransit</text>
+
+    <!-- Row 1: High Cohesion vs SRP -->
+    <g transform="translate(0, 44)">
+      <rect x="0" y="0" width="1000" height="96" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+      <rect x="14" y="12" width="105" height="22" rx="4" fill="#dbeafe"/>
+      <text x="22" y="27" class="row-badge" fill="#1d4ed8">High Cohesion</text>
+      <text x="14" y="52" class="cell-text">Clase enfocada en tareas</text>
+      <text x="14" y="68" class="cell-text">estrechamente relacionadas</text>
+      <text x="14" y="84" class="cell-text">sin delegar en exceso.</text>
+
+      <rect x="246" y="12" width="60" height="22" rx="4" fill="#d1fae5"/>
+      <text x="254" y="27" class="row-badge" fill="#047857">SRP</text>
+      <text x="246" y="52" class="cell-text">Un módulo debe responder</text>
+      <text x="246" y="68" class="cell-text">a un solo actor de negocio</text>
+      <text x="246" y="84" class="cell-text">(razón única de cambio).</text>
+
+      <text x="490" y="32" class="row-title">Cohesión por Actor de Negocio</text>
+      <text x="490" y="52" class="cell-text">SRP refina High Cohesion: no basta con tener métodos</text>
+      <text x="490" y="68" class="cell-text">conceptualmente relacionados; si satisfacen actores distintos,</text>
+      <text x="490" y="84" class="cell-text">se introduce acoplamiento accidental y riesgos de merge.</text>
+
+      <text x="790" y="30" class="cell-code">BusRecordService -&gt; Separación</text>
+      <text x="790" y="50" class="cell-text">Separar despacho operativo (COO)</text>
+      <text x="790" y="66" class="cell-text">de la liquidación de contratos (CFO)</text>
+      <text x="790" y="82" class="cell-text">y mantenimiento mecánico (CTO).</text>
+    </g>
+
+    <!-- Row 2: Protected Variations & Polymorphism vs OCP & LSP -->
+    <g transform="translate(0, 146)">
+      <rect x="0" y="0" width="1000" height="104" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+      <rect x="14" y="10" width="138" height="22" rx="4" fill="#dbeafe"/>
+      <text x="20" y="25" class="row-badge" fill="#1d4ed8">Protected Variations</text>
+      <rect x="14" y="36" width="100" height="20" rx="4" fill="#eff6ff"/>
+      <text x="20" y="50" font-size="10.5px" font-weight="600" fill="#2563eb">+ Polymorphism</text>
+      <text x="14" y="74" class="cell-text">Envolver puntos de inestabilidad</text>
+      <text x="14" y="90" class="cell-text">mediante contratos estables.</text>
+
+      <rect x="246" y="10" width="60" height="22" rx="4" fill="#d1fae5"/>
+      <text x="254" y="25" class="row-badge" fill="#047857">OCP</text>
+      <rect x="314" y="10" width="56" height="22" rx="4" fill="#d1fae5"/>
+      <text x="322" y="25" class="row-badge" fill="#047857">LSP</text>
+      <text x="246" y="52" class="cell-text">Abierto a extensión pero</text>
+      <text x="246" y="68" class="cell-text">cerrado a modificación.</text>
+      <text x="246" y="84" class="cell-text">Subtipos 100% sustituibles.</text>
+
+      <text x="490" y="30" class="row-title">Aislamiento de Variaciones Polimórficas</text>
+      <text x="490" y="50" class="cell-text">Protected Variations es el concepto raíz; OCP es la regla</text>
+      <text x="490" y="66" class="cell-text">arquitectónica que prohíbe tocar código existente, y LSP garantiza</text>
+      <text x="490" y="82" class="cell-text">que cualquier variante respete invariantes sin condicionales if/else.</text>
+
+      <text x="790" y="28" class="cell-code">GeofenceValidator &amp; Subtipos</text>
+      <text x="790" y="48" class="cell-text">Zonas poligonales, circulares o</text>
+      <text x="790" y="64" class="cell-text">corredores viales sustituibles sin</text>
+      <text x="790" y="80" class="cell-text">romper la verificación en ruta.</text>
+    </g>
+
+    <!-- Row 3: Information Expert vs Pure Fabrication -->
+    <g transform="translate(0, 256)">
+      <rect x="0" y="0" width="1000" height="104" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+      <rect x="14" y="10" width="124" height="22" rx="4" fill="#dbeafe"/>
+      <text x="20" y="25" class="row-badge" fill="#1d4ed8">Information Expert</text>
+      <rect x="14" y="36" width="112" height="20" rx="4" fill="#eff6ff"/>
+      <text x="20" y="50" font-size="10.5px" font-weight="600" fill="#2563eb">vs Pure Fabrication</text>
+      <text x="14" y="74" class="cell-text">Asignar a quien tiene los datos</text>
+      <text x="14" y="90" class="cell-text">vs fabricar servicios artificiales.</text>
+
+      <rect x="246" y="10" width="60" height="22" rx="4" fill="#d1fae5"/>
+      <text x="254" y="25" class="row-badge" fill="#047857">SRP</text>
+      <rect x="314" y="10" width="56" height="22" rx="4" fill="#d1fae5"/>
+      <text x="322" y="25" class="row-badge" fill="#047857">ISP</text>
+      <text x="246" y="52" class="cell-text">Separación de conceptos</text>
+      <text x="246" y="68" class="cell-text">de dominio puro frente a</text>
+      <text x="246" y="84" class="cell-text">infraestructura/matemática.</text>
+
+      <text x="490" y="30" class="row-title">Tensión entre Realismo de Dominio y Cohesión</text>
+      <text x="490" y="50" class="cell-text">Expert puro sobrecarga entidades (ej. GeoPoint calculando</text>
+      <text x="490" y="66" class="cell-text">fórmulas geodésicas avanzadas). Pure Fabrication crea servicios</text>
+      <text x="490" y="82" class="cell-text">altamente cohesivos, segregando interfaces matemáticas e I/O.</text>
+
+      <text x="790" y="28" class="cell-code">DistanceCalculator &amp; GeoPoint</text>
+      <text x="790" y="48" class="cell-text">GeoPoint es un Value Object puro;</text>
+      <text x="790" y="64" class="cell-text">DistanceCalculator (Pure Fabrication)</text>
+      <text x="790" y="80" class="cell-text">implementa Haversine y WGS84.</text>
+    </g>
+
+    <!-- Row 4: Indirection & Low Coupling vs DIP -->
+    <g transform="translate(0, 366)">
+      <rect x="0" y="0" width="1000" height="96" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+      <rect x="14" y="10" width="86" height="22" rx="4" fill="#dbeafe"/>
+      <text x="22" y="25" class="row-badge" fill="#1d4ed8">Indirection</text>
+      <rect x="108" y="10" width="98" height="22" rx="4" fill="#eff6ff"/>
+      <text x="114" y="25" font-size="10.5px" font-weight="600" fill="#2563eb">Low Coupling</text>
+      <text x="14" y="52" class="cell-text">Introducir un mediador</text>
+      <text x="14" y="68" class="cell-text">para evitar dependencias</text>
+      <text x="14" y="84" class="cell-text">directas entre colaboradores.</text>
+
+      <rect x="246" y="10" width="60" height="22" rx="4" fill="#d1fae5"/>
+      <text x="254" y="25" class="row-badge" fill="#047857">DIP</text>
+      <text x="246" y="52" class="cell-text">Los módulos de alto nivel</text>
+      <text x="246" y="68" class="cell-text">no dependen de bajo nivel;</text>
+      <text x="246" y="84" class="cell-text">ambos dependen de abstracción.</text>
+
+      <text x="490" y="30" class="row-title">Inversión de Dependencias y Desacoplamiento</text>
+      <text x="490" y="50" class="cell-text">Indirection desacopla la comunicación en tiempo de diseño.</text>
+      <text x="490" y="66" class="cell-text">DIP invierte la dirección de las flechas del código fuente,</text>
+      <text x="490" y="82" class="cell-text">garantizando que la regla de negocio mande sobre la infraestructura.</text>
+
+      <text x="790" y="28" class="cell-code">AlertNotifier &amp; Repositories</text>
+      <text x="790" y="48" class="cell-text">El monitor de telemetría emite alertas</text>
+      <text x="790" y="64" class="cell-text">vía TransitAlertNotifier (interfaz)</text>
+      <text x="790" y="80" class="cell-text">sin conocer WebSocket ni Kafka.</text>
+    </g>
+
+    <!-- Row 5: Creator & Controller vs Factories & Application Architecture -->
+    <g transform="translate(0, 468)">
+      <rect x="0" y="0" width="1000" height="74" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+      <rect x="14" y="10" width="70" height="22" rx="4" fill="#dbeafe"/>
+      <text x="22" y="25" class="row-badge" fill="#1d4ed8">Creator</text>
+      <rect x="92" y="10" width="80" height="22" rx="4" fill="#eff6ff"/>
+      <text x="100" y="25" font-size="10.5px" font-weight="600" fill="#2563eb">Controller</text>
+
+      <rect x="246" y="10" width="112" height="22" rx="4" fill="#d1fae5"/>
+      <text x="254" y="25" class="row-badge" fill="#047857">DIP / Factories</text>
+
+      <text x="490" y="28" class="row-title">Control de Flujo vs Creación Compleja</text>
+      <text x="490" y="48" class="cell-text">Creator asigna creación a agregados (ej. TelemetryMonitor crea TransitAlert);</text>
+      <text x="490" y="64" class="cell-text">cuando la creación se vuelve polimórfica o volátil, se delega en Factories (DIP).</text>
+
+      <text x="790" y="28" class="cell-code">TelemetryIngestionController</text>
+      <text x="790" y="48" class="cell-text">Controlador de caso de uso recibe</text>
+      <text x="790" y="64" class="cell-text">GPS y delega a servicios de dominio.</text>
+    </g>
+  </g>
+</svg>
