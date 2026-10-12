@@ -607,3 +607,76 @@ article.card,
 .hidden {
   display: none !important;
 }
+
+/* ==========================================================================
+   FOCUS MODE (MODO ENFOQUE Y LECTURA SIN DISTRACCIONES)
+   ========================================================================== */
+
+/* 1. Ocultar barra lateral izquierda (Sidebar de navegación) */
+html.focus-mode .theme-doc-sidebar-container,
+html.focus-mode aside[class*='docSidebarContainer'],
+html.focus-mode div[class*='sidebarContainer_'],
+html.focus-mode div[class*='sidebarViewport_'],
+html.focus-mode button[class*='collapseSidebarButton_'] {
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  visibility: hidden !important;
+}
+
+/* 2. Ocultar barra lateral derecha (Tabla de contenidos / TOC) */
+html.focus-mode .theme-doc-toc-desktop,
+html.focus-mode .theme-doc-toc-mobile,
+html.focus-mode div[class*='tableOfContents_'],
+html.focus-mode div[class*='tocCollapsible_'],
+html.focus-mode .col.col--3,
+html.focus-mode .col--3:has(.theme-doc-toc-desktop),
+html.focus-mode .col--3:has([class*='tableOfContents_']),
+html.focus-mode div[class*='col--3']:has([class*='tableOfContents_']) {
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  visibility: hidden !important;
+}
+
+/* 3. Expandir contenedor principal al 100% de la pantalla */
+html.focus-mode main[class*='docMainContainer'],
+html.focus-mode .theme-doc-main-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  flex: 1 1 100% !important;
+  transition: width 0.25s ease;
+}
+
+html.focus-mode main[class*='docMainContainer'] > div[class*='container'] {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+}
+
+/* 4. Centrar la columna del contenido del documento con ancho óptimo de lectura */
+html.focus-mode div[class*='docItemCol'],
+html.focus-mode .col.docItemCol,
+html.focus-mode .theme-doc-item-container {
+  max-width: 960px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  flex: 0 0 100% !important;
+}
+
+html.focus-mode article {
+  max-width: 100% !important;
+  margin: 0 auto !important;
+}

@@ -1,0 +1,8 @@
+{
+    "label": "S2 - Patrones de Creación y Estructura",
+    "position": 2,
+    "link": {
+        "type": "generated-index",
+        "description": "Semana 2: Factory Method, Builder, Adapter, Decorator, Facade y prevención de sobreingeniería."
+    }
+}

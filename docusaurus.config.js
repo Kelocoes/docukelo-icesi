@@ -73,6 +73,12 @@ const config = {
             ({
                 docs: {
                     sidebarPath: './sidebars.js',
+                    // Cursos en desarrollo/internos ocultos durante el despliegue de producción
+                    exclude:
+                        process.env.NODE_ENV === 'production' &&
+                        process.env.SHOW_INTERNAL_COURSES !== 'true'
+                            ? ['diseno-de-software-1/**', '**/_*.{js,jsx,ts,tsx,md,mdx}']
+                            : ['**/_*.{js,jsx,ts,tsx,md,mdx}'],
                     // Please change this to your repo.
                     // Remove this to remove the "edit this page" links.
                     editUrl:
@@ -120,6 +126,10 @@ const config = {
                         sidebarId: 'tutorialSidebar',
                         position: 'left',
                         label: 'Docs',
+                    },
+                    {
+                        type: 'custom-focus-mode',
+                        position: 'right',
                     },
                     {
                         type: 'localeDropdown',
