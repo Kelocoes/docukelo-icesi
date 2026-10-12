@@ -6,17 +6,43 @@ description: "Guía técnica rigurosa sobre asignación de responsabilidades con
 
 # Heurísticas de Diseño Orientado a Objetos: GRASP vs. SOLID
 
-## 1. Encuadre Pedagógico y Resultados de Aprendizaje
+## 1. Introducción y Motivación
 
-El diseño de software orientado a objetos no consiste únicamente en modelar clases que reflejen sustantivos del mundo real, sino en tomar decisiones metodológicas sobre **dónde reside cada responsabilidad** y **cómo se protegen las fronteras del sistema frente al cambio inevitable**. En el marco de la Especialización en AI-Powered Software Engineering (AIPSE) de la Universidad Icesi, este módulo desarrolla las siguientes competencias:
+En el desarrollo de software orientado a objetos, los sistemas rara vez colapsan por limitaciones algorítmicas; colapsan por una **distribución caótica de responsabilidades**. Cuando una clase asume tareas dispares, conoce detalles íntimos de otros módulos o responde simultáneamente a múltiples departamentos organizacionales, cualquier cambio trivial desencadena regresiones imprevistas, colisiones en control de versiones y bloqueos operativos.
 
-- **RAA 1:** Analizar problemas de diseño de software según requerimientos, restricciones, dependencias y atributos de calidad del contexto.
-- **RAA 2:** Aplicar patrones de diseño en soluciones de alcance acotado con criterios de cohesión, acoplamiento, extensibilidad y mantenibilidad.
-- **Lineamiento de Inteligencia Artificial Generativa:** Nivel 3 (Colaboración con verificación crítica humana). Las herramientas de IA pueden asistir en la identificación de violaciones a heurísticas de diseño o en la generación preliminar de refactorizaciones; no obstante, el ingeniero de software debe validar rigurosamente la preservación de invariantes, la no duplicación de lógica entre actores y la coherencia de los límites modulares.
+Este fenómeno, categorizado por Robert C. Martin como la *degradación del diseño*, ocurre cuando los equipos de ingeniería programan guiándose por la intuición inmediata en lugar de aplicar heurísticas formales de diseño. Para combatir esta entropía, la ingeniería de software cuenta con dos catálogos complementarios:
 
-El dominio técnico articulador de esta guía es el sistema de control y monitoreo de transporte masivo **MetroCali MIO (UrbanTransit)**, un entorno distribuido de alta exigencia donde interactúan telemetría GPS en tiempo real, validación de geocercas, despacho operativo de flota y liquidación de contratos de concesión comercial.
+1. **Patrones GRASP (General Responsibility Assignment Software Patterns):** Formulados por Craig Larman, orientan el micro-diseño y la asignación inicial de responsabilidades durante la elaboración de diagramas de interacción (*"¿Qué clase debe contener este método o conocer este dato?"*).
+2. **Principios SOLID:** Consolidados por Robert C. Martin (*Uncle Bob*), establecen las directrices de resiliencia arquitectónica para aislar a los actores de negocio y proteger las fronteras del software frente al cambio inevitable (*"¿Qué actor provoca la modificación de este módulo y cómo evitamos daños colaterales?"*).
 
-A continuación se presenta la matriz de articulación pedagógica que sintetiza la complementariedad entre ambos enfoques:
+:::info Código Fuente del Proyecto de Referencia
+El código analizado y testeado a lo largo de esta guía se encuentra implementado y verificado en el proyecto didáctico del curso (`urbantransit-telemetry`).
+
+Estructura modular del proyecto:
+- `co.edu.icesi.urbantransit.model`: Tipos inmutables y objetos de valor (`GeoPoint`, `BusId`, `BusTelemetryPacket`, `TransitAlert`).
+- `co.edu.icesi.urbantransit.demo.legacy`: Antipatrón monolítico con instanciación rígida y dependencias acopladas (`LegacyBusService`).
+- `co.edu.icesi.urbantransit.demo.refactored`: Arquitectura desacoplada con puertos, inyección por constructor y Raíz de Composición (`RefactoredBusService`, `CompositionRoot`).
+- `co.edu.icesi.urbantransit.practice`: Laboratorio práctico de refactorización guiada para el estudiante (`SpeedAuditEngine`, `AuditReport`).
+
+Para compilar el proyecto y verificar la suite de pruebas unitarias:
+```bash
+mvn clean test
+```
+:::
+
+### Mapa de Ruta del Capítulo
+
+| Sección | Núcleo Temático | Pregunta Central de Ingeniería |
+| :--- | :--- | :--- |
+| **2. Cohesión y Acoplamiento** | Fuerzas fundamentales de Larry Constantine y Grady Booch | ¿Cómo medir la calidad estructural antes de refactorizar? |
+| **3. Patrones GRASP** | Asignación de responsabilidades de Craig Larman | ¿A qué clase le corresponde ejecutar cada comportamiento? |
+| **4. Principios SOLID** | Resiliencia arquitectónica de Robert C. Martin | ¿Cómo blindar el código frente a actores divergentes y cambios técnicos? |
+| **5. Caso UrbanTransit** | Antipatrón en el motor de auditoría (`SpeedAuditEngine`) | ¿Qué daños colaterales genera mezclar telemetría, finanzas y reportes? |
+| **6. Refactorización Java 17+** | Arquitectura desacoplada con registros y puertos | ¿Cómo aplicar Pure Fabrication y DIP en un dominio real? |
+| **7. Matriz GRASP vs. SOLID** | Tabla analítica comparativa | ¿En qué nivel de abstracción y momento opera cada heurística? |
+| **8. Verificación y Pruebas** | Suite de pruebas unitarias con JUnit 5 y AssertJ | ¿Cómo verificar el aislamiento de dependencias en milisegundos? |
+
+A continuación se presenta la matriz de articulación conceptual entre las heurísticas GRASP y los principios SOLID:
 
 ![Matriz GRASP vs SOLID](/img/diseno-de-software-1/solid-grasp-heuristics-matrix.svg)
 
@@ -26,12 +52,23 @@ A continuación se presenta la matriz de articulación pedagógica que sintetiza
 
 Antes de formalizar cualquier catálogo de patrones o principios, es indispensable entender las dos fuerzas métricas fundacionales identificadas por Larry Constantine (1968, 1974) y retomadas por Grady Booch (1994):
 
+```mermaid
+graph LR
+    subgraph "Fuerzas Métricas del Diseño OO"
+        C["Cohesión Funcional<br/>(Enfoque interno)"]
+        A["Acoplamiento Estructural<br/>(Dependencia externa)"]
+    end
+    C -->|Meta: Maximizar| HC["Alta Cohesión<br/>Propósito único y bien delimitado"]
+    A -->|Meta: Minimizar| LC["Bajo Acoplamiento<br/>Dependencia hacia abstracciones estables"]
+    HC <-->|Tensión dialéctica constante| LC
+```
+
 ### 2.1. Cohesión Funcional
 
 La **cohesión** mide el grado en que los elementos internos de un módulo (métodos, atributos, estructuras de datos) colaboran estrechamente para cumplir un propósito conceptual único y bien delimitado.
 
 - **Alta cohesión:** Una clase tiene una cantidad moderada de métodos con responsabilidades fuertemente vinculadas, no ejecuta tareas dispares y delega subtareas a colaboradores especializados.
-- **Baja cohesión:** Una clase mezcla múltiples áreas conceptuales independientes (por ejemplo, cálculo de nómina, persistencia relacional SQL y serialización JSON). Estas clases resultan difíciles de comprender, imposibles de reutilizar de manera aislada y extremadamente frágiles ante modificaciones.
+- **Baja cohesión:** Una clase mezcla múltiples áreas conceptuales independientes (por ejemplo, telemetría GPS, cálculo de tarifas comerciales y persistencia JDBC). Estas clases resultan difíciles de comprender, imposibles de reutilizar de manera aislada y extremadamente frágiles ante modificaciones.
 
 ### 2.2. Acoplamiento
 
@@ -72,7 +109,7 @@ graph TD
         PO["Polymorphism<br/>(Variación por tipo dinámico)"]
     end
 
-    IE -->|Puede degenerar en baja cohesión| PF
+    IE -->|Puede sobrecargar la entidad| PF
     HC <--> LC
     PV --> PO
     PV --> IN
@@ -82,97 +119,115 @@ graph TD
 
 - **Problema:** ¿Cuál es el criterio general para asignar una responsabilidad a una clase?
 - **Solución:** Asignar la responsabilidad a la clase que posee la información necesaria para cumplirla (*"That which knows, does"* o principio *"Do It Myself"*).
-- **Ejemplo en MetroCali MIO:** ¿Quién debe validar si un punto geográfico se encuentra dentro del rango de velocidad permitido? Una entidad `RouteSegment` conoce su velocidad máxima reglamentaria y su trazado; por tanto, es la experta para validar si la velocidad reportada por un vehículo excede el límite del tramo.
-
-#### La Contraindicación de Information Expert
-
-Information Expert puede sugerir decisiones perjudiciales si se aplica de forma aislada. Consideremos el cálculo de la distancia geodésica entre dos coordenadas GPS de un bus del MIO. Una lectura simplista sugeriría colocar el cálculo matemático de Haversine dentro de la clase `GeoPoint`, dado que contiene `latitude` y `longitude`:
+- **Ejemplo en UrbanTransit:** La clase `GeoPoint` conoce su propia latitud y longitud. Por tanto, es la experta para validar si sus coordenadas caen dentro de los límites geográficos válidos del área metropolitana de Cali y para calcular la distancia lineal directa hacia otro punto:
 
 ```java
-// Antipatrón: Sobrecargar GeoPoint con lógica geodésica avanzada
-public class GeoPoint {
-    private final double latitude;
-    private final double longitude;
+package co.edu.icesi.urbantransit.model;
 
-    public GeoPoint(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+import java.time.Instant;
+import java.util.Objects;
+
+/**
+ * Coordenada geografica inmutable en el sistema geodesico WGS84.
+ * Cumple con Information Expert al validar sus propios limites y operar sobre sus datos.
+ */
+public record GeoPoint(double latitude, double longitude, Instant timestamp) {
+
+    public static final double MIN_LAT = 3.2500;
+    public static final double MAX_LAT = 3.5500;
+    public static final double MIN_LON = -76.6000;
+    public static final double MAX_LON = -76.4500;
+
+    public GeoPoint {
+        Objects.requireNonNull(timestamp, "timestamp no puede ser null");
+        if (latitude < MIN_LAT || latitude > MAX_LAT || longitude < MIN_LON || longitude > MAX_LON) {
+            throw new IllegalArgumentException(
+                    String.format("Coordenadas fuera del area metropolitana de Cali: [%f, %f]", latitude, longitude)
+            );
+        }
     }
 
-    // Sobrecarga conceptual: GeoPoint ahora depende de algoritmos de proyección elipsoidal
-    public double calculateHaversineDistance(GeoPoint other) {
-        double earthRadiusKm = 6371.0;
-        double dLat = Math.toRadians(other.latitude - this.latitude);
-        double dLon = Math.toRadians(other.longitude - this.longitude);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                   Math.cos(Math.toRadians(this.latitude)) * Math.cos(Math.toRadians(other.latitude)) *
-                   Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return earthRadiusKm * c;
+    /**
+     * Information Expert: Opera sobre sus propios atributos (latitude, longitude).
+     */
+    public double distanceToInMeters(GeoPoint other) {
+        Objects.requireNonNull(other, "El punto de comparacion no puede ser null");
+        double lat1Rad = Math.toRadians(this.latitude);
+        double lat2Rad = Math.toRadians(other.latitude());
+        double deltaLat = Math.toRadians(other.latitude() - this.latitude);
+        double deltaLon = Math.toRadians(other.longitude() - this.longitude);
+
+        double a = Math.sin(deltaLat / 2.0) * Math.sin(deltaLat / 2.0)
+                + Math.cos(lat1Rad) * Math.cos(lat2Rad)
+                * Math.sin(deltaLon / 2.0) * Math.sin(deltaLon / 2.0);
+
+        double c = 2.0 * Math.atan2(Math.sqrt(a), Math.sqrt(1.0 - a));
+        return 6371000.0 * c;
     }
 }
 ```
 
-Si posteriormente el sistema requiere migrar a cálculos según el elipsoide WGS84, proyecciones UTM locales de Cali o cómputo sobre mallas espaciales espaciales indexadas (como Uber H3 o S2 Geometry), la clase básica `GeoPoint` se contamina con librerías matemáticas complejas, perdiendo su naturaleza de objeto de valor (*Value Object*). Aquí es donde entra en juego la **Fabricación Pura**.
+#### La Contraindicación de Information Expert
+
+Information Expert puede sugerir decisiones perjudiciales si se aplica de forma aislada. Si el sistema requiere evaluar distancias utilizando proyecciones topográficas locales, algoritmos de indexación espacial (Uber H3, Google S2) o modelos de elevación digital para corredores de ladera en Cali, colocar toda esa lógica dentro de `GeoPoint` destruiría su naturaleza de objeto de valor (*Value Object*) ligero e inmutable.
+
+Sobrecargar `GeoPoint` con librerías geoespaciales complejas violaría la **Alta Cohesión** y el **Bajo Acoplamiento**. Para resolver esta tensión, Craig Larman formula la **Fabricación Pura**.
 
 ### 3.2. Pure Fabrication (Fabricación Pura)
 
 - **Problema:** ¿Qué objeto debe asumir la responsabilidad cuando asignar la tarea al Experto en Información violaría la Alta Cohesión, el Bajo Acoplamiento o la reusabilidad?
 - **Solución:** Asignar un conjunto cohesivo de responsabilidades a una clase artificial o de conveniencia que no existe en el modelo del dominio conceptual del mundo real, pero que apoya un diseño limpio y mantenible.
 
-En nuestro caso, creamos un servicio puro y sin estado: `DistanceCalculator` o `GeodesicDistanceService`.
+En `urbantransit-telemetry`, extraemos el cálculo geodésico a un contrato y servicio puro:
 
 ```java
-package co.edu.icesi.metrocali.domain.service;
+package co.edu.icesi.urbantransit.demo.refactored.port;
 
-import co.edu.icesi.metrocali.domain.model.GeoPoint;
+import co.edu.icesi.urbantransit.model.GeoPoint;
 
 /**
- * Pure Fabrication: Abstracción matemática desacoplada del modelo de dominio.
- * Permite cambiar la precisión geodésica sin alterar GeoPoint ni Route.
+ * Contrato de Pure Fabrication (Larman) para calculos geodesicos.
+ * Evita sobrecargar entidades con formulas matematicas complejas.
  */
-public final class DistanceCalculator {
-
-    private static final double EARTH_RADIUS_METERS = 6_371_000.0;
-
-    private DistanceCalculator() {
-        // Constructor privado para clase utilitaria inmutable
-    }
-
-    public static double haversineDistanceMeters(GeoPoint origin, GeoPoint destination) {
-        if (origin == null || destination == null) {
-            throw new IllegalArgumentException("Los puntos de origen y destino no pueden ser nulos");
-        }
-
-        double latDistance = Math.toRadians(destination.latitude() - origin.latitude());
-        double lonDistance = Math.toRadians(destination.longitude() - origin.longitude());
-
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(origin.latitude()))
-                * Math.cos(Math.toRadians(destination.latitude()))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return EARTH_RADIUS_METERS * c;
-    }
+@FunctionalInterface
+public interface GeoDistanceCalculator {
+    double calculateDistanceMeters(GeoPoint from, GeoPoint to);
 }
 ```
 
-`GeoPoint` en Java 17+ se define limpiamente como un `record`, cumpliendo estrictamente con ser un objeto portador de datos inmutable:
+Y su implementación concreta de soporte matemático:
 
 ```java
-package co.edu.icesi.metrocali.domain.model;
+package co.edu.icesi.urbantransit.demo.refactored.service;
 
-import java.time.Instant;
+import co.edu.icesi.urbantransit.demo.refactored.port.GeoDistanceCalculator;
+import co.edu.icesi.urbantransit.model.GeoPoint;
+import java.util.Objects;
 
-public record GeoPoint(double latitude, double longitude, Instant timestamp) {
-    public GeoPoint {
-        if (latitude < -90.0 || latitude > 90.0) {
-            throw new IllegalArgumentException("Latitud fuera de rango [-90, 90]: " + latitude);
-        }
-        if (longitude < -180.0 || longitude > 180.0) {
-            throw new IllegalArgumentException("Longitud fuera de rango [-180, 180]: " + longitude);
-        }
+/**
+ * Implementacion de Pure Fabrication usando la formula de Haversine.
+ * Secreto de Parnas: Oculta la trigonometria esferica de la Tierra al resto del sistema.
+ */
+public class HaversineDistanceCalculator implements GeoDistanceCalculator {
+
+    private static final double EARTH_RADIUS_METERS = 6371000.0;
+
+    @Override
+    public double calculateDistanceMeters(GeoPoint from, GeoPoint to) {
+        Objects.requireNonNull(from, "Punto de origen no puede ser null");
+        Objects.requireNonNull(to, "Punto de destino no puede ser null");
+
+        double lat1Rad = Math.toRadians(from.latitude());
+        double lat2Rad = Math.toRadians(to.latitude());
+        double deltaLat = Math.toRadians(to.latitude() - from.latitude());
+        double deltaLon = Math.toRadians(to.longitude() - from.longitude());
+
+        double a = Math.sin(deltaLat / 2.0) * Math.sin(deltaLat / 2.0)
+                + Math.cos(lat1Rad) * Math.cos(lat2Rad)
+                * Math.sin(deltaLon / 2.0) * Math.sin(deltaLon / 2.0);
+
+        double c = 2.0 * Math.atan2(Math.sqrt(a), Math.sqrt(1.0 - a));
+        return EARTH_RADIUS_METERS * c;
     }
 }
 ```
@@ -186,91 +241,87 @@ public record GeoPoint(double latitude, double longitude, Instant timestamp) {
   3. `B` usa de manera muy cercana a `A`.
   4. `B` tiene los datos de inicialización de `A` que se le pasarán al crearlo (es un Experto con respecto a su creación).
 
-#### Aplicación en MetroCali MIO: Creación de `TransitAlert`
+#### Aplicación en UrbanTransit: Creación de `TransitAlert`
 
-En el sistema MetroCali MIO se generan alertas operativas como `SPEEDING` (exceso de velocidad) o `GEOFENCE_VIOLATION` (salida del corredor asignado). ¿Quién debe instanciar `TransitAlert`?
+En el sistema MetroCali MIO se emiten alertas operacionales ante eventos críticos como `SPEEDING` (exceso de velocidad en carril troncal) o `GEOFENCE_VIOLATION`. ¿Quién debe instanciar `TransitAlert`?
 
-- ¿Debe ser la entidad `Bus`? No. El bus físico es monitoreado; no registra ni administra el catálogo de alertas del centro de control.
-- ¿Debe ser el controlador REST web? No. La lógica de detección y umbrales pertenece al dominio.
-- El candidato ideal es `GeofenceMonitor` o `TelemetryEvaluationEngine`:
-  - Posee la telemetría entrante y las coordenadas de la `GeofenceZone`.
-  - Conoce los datos de inicialización de la alerta (identificador del bus, severidad, instante temporal, zona violada).
-  - Registra temporalmente las alertas para su despacho inmediato.
+- ¿Debe ser la entidad `BusId`? No. Un identificador es un tipo inmutable; no conoce la telemetría ni los umbrales de velocidad.
+- ¿Debe ser el controlador REST web? No. La lógica de evaluación y reglas de umbral operativo pertenecen al núcleo de aplicación.
+- El candidato idóneo según Creator es `RefactoredBusService`:
+  - Posee el paquete de telemetría entrante (`BusTelemetryPacket`).
+  - Conoce los límites reglamentarios (`MAX_TRONCAL_SPEED_KMH = 60.0`).
+  - Tiene todos los datos de inicialización para ensamblar la alerta.
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Controller as TelemetryController
-    participant Monitor as GeofenceMonitor (Creator)
-    participant Calc as DistanceCalculator (Pure Fab)
+    participant Source as GpsSource (Input Port)
+    participant Service as RefactoredBusService (Creator)
+    participant Repo as TelemetryRepository (Output Port)
+    participant Notifier as AlertNotifier (Output Port)
     participant Alert as TransitAlert
 
-    Controller->>Monitor: evaluateBusPosition(busId, currentPoint, zone)
-    Monitor->>Calc: haversineDistanceMeters(currentPoint, zone.center())
-    Calc-->>Monitor: distanceInMeters
-    alt distanceInMeters > zone.radiusMeters()
-        Monitor->>Alert: new TransitAlert(alertId, busId, GEOFENCE_VIOLATION, HIGH, timestamp)
-        Monitor-->>Controller: Optional.of(alert)
-    else Posición normal
-        Monitor-->>Controller: Optional.empty()
+    Source->>Service: processPacket(packet)
+    Service->>Repo: save(packet)
+    opt packet.instantSpeedKmh() > 60.0
+        Service->>Alert: new TransitAlert(UUID, busId, routeId, SPEEDING, WARNING, msg, location, now)
+        Service->>Notifier: notifyAlert(alert)
     end
 ```
 
 ### 3.4. Low Coupling (Bajo Acoplamiento) y High Cohesion (Alta Cohesión)
 
-Larman designa a estos dos patrones como **principios evaluativos subyacentes**. Cada vez que se considera una alternativa de diseño, se debe sopesar:
-- ¿Esta asignación incrementa innecesariamente las dependencias de mi clase? (Low Coupling).
-- ¿Esta asignación obliga a mi clase a asumir responsabilidades no relacionadas con su foco primordial? (High Cohesion).
+Craig Larman designa a estos dos patrones como **principios evaluativos subyacentes**. Cada vez que un diseñador contempla dos alternativas para asignar una responsabilidad, debe evaluar:
+- ¿Esta opción crea dependencias innecesarias hacia clases inestables? (Low Coupling).
+- ¿Esta opción mezcla tareas operativas con persistencia o cálculos matemáticos? (High Cohesion).
 
 ### 3.5. Controller (Controlador)
 
-- **Problema:** ¿Cuál es el primer objeto más allá de la capa de interfaz de usuario (UI / API REST) que recibe y coordina un mensaje de operación del sistema?
+- **Problema:** ¿Cuál es el primer objeto más allá de la capa de interfaz de usuario (UI, endpoints HTTP o brokers de mensajería) que recibe y coordina un mensaje de operación del sistema?
 - **Solución:** Asignar la responsabilidad a una clase que represente:
-  - El sistema global, dispositivo o raíz del subsistema (*Facade Controller*, ej. `MetroCaliSystem`).
+  - El sistema global o dispositivo raíz (*Facade Controller*, ej. `UrbanTransitSystem`).
   - El escenario del caso de uso dentro del cual ocurre el evento (*Use Case Controller*, ej. `IngestTelemetryUseCaseHandler`).
 
-> **Regla de oro de Larman:** La capa de presentación (controladores Spring MVC, endpoints gRPC, vistas JavaFX) **nunca** debe ejecutar lógica de negocio. Debe delegar inmediatamente al Controlador de Dominio o Caso de Uso.
->
-> **Síntoma de Bloated Controller (Controlador Hinchado):** Un controlador que procesa directamente la lógica en lugar de coordinar a los objetos del dominio, convirtiéndose en un monolito incomprensible con baja cohesión.
+> **Regla de oro de Larman:** La capa de presentación **nunca** debe ejecutar lógica de negocio. Debe delegar inmediatamente al Controlador de Caso de Uso o Servicio de Aplicación. Un controlador que procesa directamente la lógica en lugar de coordinar a los objetos del dominio se convierte en un *Bloated Controller* (Controlador Hinchado), degradando la cohesión del sistema.
 
 ### 3.6. Indirection (Indirección) y Protected Variations (Variaciones Protegidas)
 
-- **Indirection:** Asignar una responsabilidad a un objeto intermediario para mediar entre otros componentes, desacoplándolos directamente (ej. un bus de eventos o un publicador de notificaciones).
-- **Protected Variations:** El principio raíz de toda la arquitectura de software. Identificar puntos de inestabilidad o variación previsible y envolverlos mediante interfaces estables y contratos explícitos.
-  - Como documenta Larman (Capítulo 25), Protected Variations formaliza el principio de *Information Hiding* de David Parnas (1972) y es la motivación teórica directa de principios como el OCP y el LSP de SOLID.
+- **Indirection:** Asignar una responsabilidad a un objeto intermediario para mediar entre otros componentes, desacoplándolos directamente (ej. un puerto de notificación o un bus de eventos).
+- **Protected Variations:** El principio fundamental de toda la arquitectura de software. Identificar puntos de inestabilidad o variación previsible y envolverlos mediante interfaces estables y contratos explícitos.
+  - Como documenta Larman (Capítulo 25), Protected Variations formaliza el principio de *Information Hiding* de David Parnas (1972) y constituye la base conceptual directa de principios como el OCP y el LSP de SOLID.
 
 ---
 
 ## 4. Principios SOLID de Robert C. Martin: Resiliencia Arquitectónica
 
-Mientras GRASP se concentra en la asignación de métodos y colaboraciones en tiempo de micro-diseño, los principios **SOLID**, consolidados por Robert C. Martin (*Uncle Bob*) en *Clean Architecture*, abordan la **mantenibilidad, el aislamiento de actores de negocio y la evolución a largo plazo del código fuente**.
+Mientras GRASP se enfoca en la asignación de métodos y colaboraciones en micro-diseño, los principios **SOLID**, consolidados por Robert C. Martin (*Uncle Bob*) en *Clean Architecture*, abordan la **mantenibilidad, el aislamiento de actores organizacionales y la evolución a largo plazo del código fuente**.
 
 ```mermaid
 graph LR
     subgraph "SOLID: Principios de Arquitectura y Mantenibilidad"
         SRP["SRP: Single Responsibility<br/>(1 módulo = 1 actor de negocio)"]
-        OCP["OCP: Open-Closed<br/>(Extensible sin modificar código fuente)"]
+        OCP["OCP: Open-Closed<br/>(Extensible sin modificar código)"]
         LSP["LSP: Liskov Substitution<br/>(Subtipos sustituibles sin romper contratos)"]
         ISP["ISP: Interface Segregation<br/>(Interfaces específicas por cliente)"]
         DIP["DIP: Dependency Inversion<br/>(Depender de abstracciones, no de detalles)"]
     end
 
-    SRP -->|Protege contra| MergeConflicts["Conflictos de Merge y Daño Colateral"]
-    OCP -->|Se implementa con| LSP
-    DIP -->|Invierte dependencias hacia| Inversion["Frontera Arquitectónica Estable"]
+    SRP -->|Previene| MergeConflicts["Colisiones de Merge y Daño Colateral"]
+    OCP -->|Se garantiza mediante| LSP
+    DIP -->|Protege las fronteras de| Architecture["Núcleo de Negocio Independiente"]
 ```
 
 ---
 
 ### 4.1. SRP: The Single Responsibility Principle (Principio de Responsabilidad Única)
 
-En el Capítulo 7 de *Clean Architecture*, Martin enfatiza que el SRP es el principio peor comprendido de toda la suite SOLID debido a su nombre:
+En el Capítulo 7 de *Clean Architecture*, Martin aclara el malentendido más extendido del desarrollo de software:
 
-> *"El principio no significa que cada función deba hacer una sola cosa. Esa es una regla de bajo nivel para refactorizar funciones largas. El SRP histórico decía: 'Un módulo debe tener una, y solo una, razón para cambiar'. Dado que las razones para cambiar provienen de las solicitudes de usuarios y grupos de interés, la definición rigurosa es:*
+> *"El principio no significa que cada función deba hacer una sola cosa. Esa es una regla de bajo nivel para refactorizar funciones largas. La definición rigurosa del SRP es:*
 >
 > **Un módulo debe ser responsable ante uno, y solo uno, actor de negocio.**"
 
-Un **actor** es una persona o grupo de personas cohesivo (un departamento, un rol organizativo) que requiere que el sistema cambie de una forma determinada.
+Un **actor** es una persona o grupo de personas cohesivo (un departamento, un rol directivo o un grupo de interés) que requiere que el sistema cambie de una forma determinada.
 
 #### Las Figuras Canónicas de Martin
 
@@ -278,424 +329,457 @@ En su texto canónico, Martin ilustra el peligro de violar el SRP a través de d
 
 ![Violación de SRP por múltiples actores](/img/diseno-de-software-1/fig_07_01_the_employee_class.jpeg)
 
-*Figura 7.1 de Clean Architecture:* La clase `Employee` responde simultáneamente a tres actores distintos:
+*Figura 7.1 de Clean Architecture:* La clase `Employee` responde simultáneamente a tres actores con intereses contrapuestos:
 1. `calculatePay()`: Definido por el departamento de contabilidad que reporta al Director Financiero (CFO).
 2. `reportHours()`: Definido por recursos humanos que reporta al Director de Operaciones (COO).
 3. `save()`: Definido por los administradores de bases de datos que reportan al Director de Tecnología (CTO).
 
 ![Algoritmo compartido acoplado](/img/diseno-de-software-1/fig_07_02_shared_algorithm.jpeg)
 
-*Figura 7.2 de Clean Architecture:* El síntoma de **duplicación accidental**. Para no duplicar código, los desarrolladores extrajeron un método privado compartido `regularHours()`. Cuando el equipo del CFO solicitó un cambio en el cómputo de horas regulares, el desarrollador modificó `regularHours()` y validó los reportes contables. Semanas después, el COO descubrió que los reportes de recursos humanos arrojaban cifras erróneas con pérdidas millonarias, porque nadie advirtió que el mismo método era compartido por dos actores con objetivos divergentes.
+*Figura 7.2 de Clean Architecture:* El síntoma de **duplicación accidental**. Para no duplicar código, los desarrolladores extrajeron un método privado compartido `regularHours()`. Cuando el equipo del CFO solicitó un cambio en el cómputo de horas regulares, el desarrollador modificó `regularHours()` y verificó únicamente los reportes contables. Semanas después, el COO descubrió que los reportes de operaciones arrojaban cifras erróneas, generando pérdidas económicas porque nadie advirtió que el mismo método era compartido por dos actores con objetivos divergentes.
 
-#### Síntomas Críticos de la Violación del SRP
+#### La Solución Estructural de Martin
 
-1. **Duplicación Accidental:** Colocar en proximidad física código que sirve a distintos actores provoca que modificaciones solicitadas por un actor impacten silenciosamente la lógica operativa de otro.
-2. **Conflictos de Merge (Merge Conflicts):** Cuando el equipo de bases de datos ajusta campos de persistencia y simultáneamente el equipo de operaciones ajusta reglas de validación en el mismo archivo fuente, se producen colisiones de control de versiones de alto riesgo.
+Para resolver esta patología sin duplicar datos, Martin propone separar las operaciones en clases independientes dedicadas a cada actor, las cuales operan sobre una estructura de datos compartida y pasiva:
+
+![Solución estructural al SRP](/img/diseno-de-software-1/fig_07_03_the_three_classes_do_not_know_about_each.jpeg)
+
+*Figura 7.3 de Clean Architecture:* Las clases `PayCalculator` (CFO), `HourReporter` (COO) y `EmployeeSaver` (CTO) no se conocen entre sí. Cada una responde ante un actor único, eliminando los riesgos de colisión de versiones y daños colaterales.
 
 ---
 
 ### 4.2. OCP: The Open-Closed Principle (Principio de Abierto/Cerrado)
 
-Acuñado por Bertrand Meyer en 1988:
+Acuñado originalmente por Bertrand Meyer en 1988:
+
 > *"Un artefacto de software debe estar abierto para su extensión, pero cerrado para su modificación."*
 
-El comportamiento de un sistema debe poder extenderse mediante la creación de nuevo código fuente, sin requerir la modificación de clases o componentes previamente existentes y certificados en producción. Se fundamenta en abstracciones e inversión de dependencias.
+El comportamiento de un sistema debe poder extenderse mediante la incorporación de nuevo código fuente (nuevas clases o implementaciones), sin requerir la modificación de clases o componentes previamente existentes y certificados en producción. Se fundamenta en contratos de interfaz e inversión de dependencias.
 
 ---
 
 ### 4.3. LSP: The Liskov Substitution Principle (Principio de Sustitución de Liskov)
 
 Formalizado por Barbara Liskov en 1988:
+
 > *"Si para cada objeto $o_1$ de tipo $S$ existe un objeto $o_2$ de tipo $T$ tal que para todo programa $P$ expresado en términos de $T$, el comportamiento de $P$ permanece inalterado cuando $o_1$ es sustituido por $o_2$, entonces $S$ es un subtipo de $T$."*
 
+![Conformidad con LSP en Clean Architecture](/img/diseno-de-software-1/fig_09_01_license_and_its_derivatives_conform_to_l.jpeg)
+
+*Figura 9.1 de Clean Architecture:* El componente `Billing` interactúa con el contrato abstracto `License`. Las variantes concretas (`PersonalLicense`, `BusinessLicense`) implementan el cálculo sin romper las expectativas del cliente ni alterar el flujo del sistema.
+
 Reglas clave para preservar LSP en Java:
-- **Precondiciones:** Una subclase no puede fortalecer las precondiciones (no puede exigir más de lo que exige el contrato base).
-- **Postcondiciones:** Una subclase no puede debilitar las postcondiciones (debe garantizar como mínimo lo que garantiza la base).
-- **Invariantes:** Los invariantes de la clase base deben preservarse en todas las subclases.
+- **Precondiciones:** Una subclase no puede fortalecer las precondiciones (no puede exigir más validaciones que las pactadas en el contrato base).
+- **Postcondiciones:** Una subclase no puede debilitar las postcondiciones (debe garantizar como mínimo lo que garantiza la abstracción base).
+- **Invariantes:** Los invariantes de la clase base deben preservarse en todos los subtipos.
 - **Excepciones:** Una subclase no debe arrojar excepciones no esperadas por los clientes de la abstracción (por ejemplo, lanzar `UnsupportedOperationException`).
 
 ---
 
 ### 4.4. ISP: The Interface Segregation Principle (Principio de Segregación de Interfaces)
 
-Martin demuestra que en lenguajes de tipado estático como Java, cuando un cliente depende de una interfaz "gorda" con métodos que no necesita, cualquier cambio en esos métodos no utilizados fuerza la recompilación, reempaquetado y redespliegue de los clientes inocentes.
+Martin demuestra que cuando un cliente depende de una interfaz monolítica con métodos que no necesita, cualquier cambio en esos métodos no consumidos fuerza la recompilación, reempaquetado y redespliegue del cliente:
 
 > *"Los clientes no deben ser forzados a depender de métodos que no consumen."*
 
-La solución consiste en fraccionar interfaces monolíticas en interfaces pequeñas y altamente cohesivas, enfocadas en las necesidades específicas de cada consumidor.
+![Segregación de Interfaces en Clean Architecture](/img/diseno-de-software-1/fig_10_01_the_interface_segregation_principle.jpeg)
+
+*Figura 10.1 de Clean Architecture:* La interfaz `OPS` se segrega en tres interfaces más pequeñas: `U1Ops`, `U2Ops` y `U3Ops`. Cada cliente (`User1`, `User2`, `User3`) depende exclusivamente de la porción del contrato que consume, evitando acoplamientos innecesarios.
 
 ---
 
 ### 4.5. DIP: The Dependency Inversion Principle (Principio de Inversión de Dependencias)
 
-Formulado por Martin como la base de las arquitecturas flexibles:
-1. *"Los módulos de alto nivel (políticas de negocio) no deben depender de los módulos de bajo nivel (detalles técnicos como SQL, Kafka o HTTP). Ambos deben depender de abstracciones."*
+Formulado por Martin como el cimiento de las arquitecturas modulares:
+
+1. *"Los módulos de alto nivel (políticas de negocio) no deben depender de los módulos de bajo nivel (detalles técnicos como SQL, Kafka o sockets). Ambos deben depender de abstracciones."*
 2. *"Las abstracciones no deben depender de los detalles. Los detalles deben depender de las abstracciones."*
 
-En código fuente Java, esto exige que las directivas `import` de las clases del núcleo de negocio apunten únicamente a interfaces o tipos abstractos, nunca a implementaciones concretas volátiles.
+![Inversión de dependencias en código fuente](/img/diseno-de-software-1/fig_05_02_dependency_inversion.jpeg)
+
+*Figura 5.2 de Clean Architecture:* Mediante la introducción de una interfaz intermedia, el sentido de la dependencia del código fuente se invierte en dirección opuesta al flujo de control de tiempo de ejecución, aislando el núcleo del sistema de los detalles periféricos.
 
 ---
 
-## 5. Caso de Estudio MetroCali MIO: El Antipatrón Monolítico de `BusRecordService`
+## 5. Caso de Estudio UrbanTransit: El Antipatrón Monolítico en `SpeedAuditEngine`
 
-A continuación analizaremos un escenario real de ingeniería de software para ilustrar cómo el desconocimiento de GRASP y SOLID degrada rápidamente un sistema de transporte masivo.
+Para analizar el impacto directo de violar estas heurísticas, examinemos el componente de auditoría vehicular incluido en el paquete `co.edu.icesi.urbantransit.practice`.
 
-### 5.1. Contexto Organizacional y Actores del Negocio en MetroCali MIO
+### 5.1. Contexto Organizacional y Actores del Negocio
 
-En la operación del Sistema Integrado de Transporte Masivo de Cali (MIO), coexisten tres actores organizacionales fundamentales:
+En la operación de transporte masivo de MetroCali coexisten tres actores organizacionales fundamentales:
 
 1. **Jefe de Despacho y Operaciones (Actor COO):**
-   - Responsable de monitorear en tiempo real la flota activa, el cumplimiento de frecuencias (headways) y la ejecución de relevos de conductores en patios y estaciones (ej. Terminal Andrés Sanín, Estación Universidades).
-2. **Director de Liquidación y Compensación Contractual (Actor CFO):**
-   - Responsable de liquidar quincenalmente los pagos a los operadores privados de concesión (Blanco y Negro Masivo, GIT Masivo).
-   - Su interés es computar los **kilómetros comerciales efectivamente rodados**, aplicando descuentos por recorridos en vacío (*deadhead* entre patio y ruta) y deduciendo penalizaciones contractuales por desvíos no autorizados.
-3. **Ingeniero de Mantenimiento de Flota (Actor CTO):**
-   - Responsable de la salud mecánica del vehículo: sensores de motor, desgaste de frenos, kilometraje acumulado de odómetro físico para programar cambios de repuestos preventivos, y persistencia en la base de datos relacional de flota.
+   - Su interés es monitorear en tiempo real la velocidad de la flota y garantizar que no se sobrepase el límite máximo en carriles troncales (`60.0 km/h`).
+2. **Director de Liquidación Financiera y Concesiones (Actor CFO):**
+   - Su responsabilidad es auditar quincenalmente el cumplimiento contractual y tasar penalizaciones económicas en pesos colombianos (`PENALTY_PER_INFRACTION_COP = $250.000 COP`) por cada exceso de velocidad detectado.
+3. **Oficial de Auditoría y Control Interno (Actor Stakeholder / Reportes):**
+   - Su función es generar bitácoras de texto formateadas con fecha, hora y coordenadas GPS para responder a requerimientos legales y expedir el `AuditReport`.
 
-### 5.2. El Código Problemático: Violación Múltiple de SRP, Low Coupling e Information Expert
+### 5.2. El Código Problemático: Violación Múltiple de SRP, Pure Fabrication y DIP
 
-Un equipo inexperto centralizó todas las operaciones asociadas a los buses en una única clase monolítica `BusRecordService`:
+La clase `SpeedAuditEngine` centralizó arbitrariamente todas estas funciones en un único bloque de código:
 
 ```java
-package co.edu.icesi.metrocali.antipattern;
+package co.edu.icesi.urbantransit.practice;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import co.edu.icesi.urbantransit.model.BusId;
+import co.edu.icesi.urbantransit.model.BusTelemetryPacket;
+import co.edu.icesi.urbantransit.model.GeoPoint;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * ANTIPATRÓN: Violación flagrante de SRP, High Cohesion, Low Coupling y DIP.
- * Esta clase responde simultáneamente al Jefe de Operaciones (COO),
- * al Director Financiero (CFO) y al Ingeniero de Mantenimiento (CTO).
+ * ANTIPATRÓN DIDÁCTICO: SpeedAuditEngine
+ * Mezcla cálculo geodésico, reglas financieras de multas en COP,
+ * formateo de logs de presentación y almacenamiento en memoria sin contratos.
  */
-public class BusRecordService {
+public class SpeedAuditEngine {
 
-    // 1. Acoplamiento directo con infraestructura técnica JDBC (Violación de DIP y Pure Fabrication)
-    private Connection obtainDatabaseConnection() throws Exception {
-        return DriverManager.getConnection("jdbc:postgresql://db.metrocali.gov.co:5432/mio_telemetry", "postgres", "secret");
+    // Constantes quemadas que violan DIP y OCP
+    public static final double DEFAULT_SPEED_LIMIT_KMH = 60.0;
+    public static final BigDecimal PENALTY_PER_INFRACTION_COP = BigDecimal.valueOf(250000.00);
+    private static final double EARTH_RADIUS = 6371000.0;
+
+    private final List<BusTelemetryPacket> auditedPackets = new ArrayList<>();
+    private final List<String> formattedAlertLogs = new ArrayList<>();
+
+    public SpeedAuditEngine() {
+        // Constructor por defecto sin inyección de dependencias (Code Smell)
     }
 
-    // 2. Método solicitado por el ACTOR COO (Operaciones y Despacho en tiempo real)
-    public void processRealtimeTelemetry(String busId, double lat, double lon, double speedKmH) {
-        System.out.println("Despacho COO: Verificando bus " + busId + " a velocidad " + speedKmH + " km/h");
-        if (speedKmH > 60.0) {
-            System.err.println("ALERTA OPERATIVA: Bus " + busId + " excedió el límite del carril solo-bus");
+    public void ingestPacket(BusTelemetryPacket packet) {
+        Objects.requireNonNull(packet, "packet no puede ser null");
+        auditedPackets.add(packet);
+    }
+
+    /**
+     * CODE SMELL: Método con múltiples razones para cambiar (Violación de SRP).
+     */
+    public AuditReport generateAuditReport(BusId busId, String routeId) {
+        Objects.requireNonNull(busId, "busId no puede ser null");
+        Objects.requireNonNull(routeId, "routeId no puede ser null");
+
+        List<BusTelemetryPacket> relevantPackets = auditedPackets.stream()
+                .filter(p -> p.busId().equals(busId) && p.routeId().equalsIgnoreCase(routeId))
+                .toList();
+
+        if (relevantPackets.isEmpty()) {
+            return new AuditReport(busId, routeId, 0, 0.0, 0, BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), Instant.now());
         }
-        // Llamado a un algoritmo compartido de cálculo de distancia
-        double distanceDelta = calculateOdometerDelta(lat, lon);
-        System.out.println("Delta operativo calculado: " + distanceDelta + " km");
-    }
 
-    // 3. Método solicitado por el ACTOR CFO (Liquidación Financiera de Concesión)
-    public double calculateMonthlyConcessionLiquidation(String busId, double tariffPerKm, List<Double[]> routePoints) {
-        System.out.println("Finanzas CFO: Liquidando compensación por km para concesionario...");
-        double totalKm = 0.0;
-        for (Double[] point : routePoints) {
-            // El CFO reutiliza el método "compartido" de odómetro
-            totalKm += calculateOdometerDelta(point[0], point[1]);
+        // 1. CÁLCULO DE DISTANCIA TOTAL (Violación de Information Expert y Pure Fabrication)
+        // Re-implementación manual de Haversine dentro del servicio de auditoría
+        double totalDistanceMeters = 0.0;
+        for (int i = 0; i < relevantPackets.size() - 1; i++) {
+            GeoPoint p1 = relevantPackets.get(i).location();
+            GeoPoint p2 = relevantPackets.get(i + 1).location();
+            totalDistanceMeters += calculateDistanceHaversineManual(p1, p2);
         }
-        // Supongamos que el CFO aplica una retención de ley del 4%
-        return totalKm * tariffPerKm * 0.96;
-    }
+        double totalDistanceKm = totalDistanceMeters / 1000.0;
 
-    // 4. ALGORITMO COMPARTIDO ACOPLADO (Síntoma de Duplicación Accidental - Clean Architecture Fig 7.2)
-    // Inicialmente calculaba la distancia lineal entre lecturas sucesivas.
-    private double calculateOdometerDelta(double currentLat, double currentLon) {
-        // En una refactorización, el equipo del CFO solicitó restar un 10% por 'recorridos en vacío' (deadhead)
-        // El desarrollador modificó este método común para complacer al CFO:
-        double rawDelta = 0.85; // Simulación de distancia geodésica entre pings
-        double factorLiquidacionCFO = 0.90; // Descuento de deadhead comercial
-        return rawDelta * factorLiquidacionCFO; 
-        // ¡CATASTROFE! Al alterar este método común, el sistema de Despacho (COO) ahora cree
-        // que los buses han recorrido un 10% menos de distancia, descalibrando los relevos de conductores!
-    }
-
-    // 5. Método solicitado por el ACTOR CTO (Mantenimiento y Persistencia de Sensores)
-    public void persistMaintenanceDiagnostic(String busId, int engineTemperature, double brakeWearPercentage) {
-        System.out.println("Mantenimiento CTO: Guardando telemetría de motor...");
-        try (Connection conn = obtainDatabaseConnection();
-             PreparedStatement ps = conn.prepareStatement("INSERT INTO bus_diagnostics VALUES (?, ?, ?, ?)")) {
-            ps.setString(1, busId);
-            ps.setInt(2, engineTemperature);
-            ps.setDouble(3, brakeWearPercentage);
-            ps.setObject(4, Instant.now());
-            ps.executeUpdate();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        // 2. EVALUACIÓN DE INFRACCIONES (Actor COO)
+        int speedInfractions = 0;
+        for (BusTelemetryPacket packet : relevantPackets) {
+            if (packet.instantSpeedKmh() > DEFAULT_SPEED_LIMIT_KMH) {
+                speedInfractions++;
+                // CODE SMELL: Acoplamiento con formateo de presentación para bitácoras
+                String logEntry = String.format(java.util.Locale.US,
+                        "[INFRACTION] Bus %s excedio %.1f km/h a las %s en [%.4f, %.4f]",
+                        busId.value(), packet.instantSpeedKmh(), packet.location().timestamp(),
+                        packet.location().latitude(), packet.location().longitude());
+                formattedAlertLogs.add(logEntry);
+            }
         }
+
+        // 3. CÁLCULO FINANCIERO DE MULTAS (Actor CFO)
+        BigDecimal totalPenalties = PENALTY_PER_INFRACTION_COP
+                .multiply(BigDecimal.valueOf(speedInfractions))
+                .setScale(2, RoundingMode.HALF_UP);
+
+        return new AuditReport(
+                busId, routeId, relevantPackets.size(),
+                roundTwoDecimals(totalDistanceKm), speedInfractions, totalPenalties, Instant.now()
+        );
+    }
+
+    /**
+     * CODE SMELL: Trigonometría esferica incrustada como método privado.
+     */
+    private double calculateDistanceHaversineManual(GeoPoint from, GeoPoint to) {
+        double lat1Rad = Math.toRadians(from.latitude());
+        double lat2Rad = Math.toRadians(to.latitude());
+        double deltaLat = Math.toRadians(to.latitude() - from.latitude());
+        double deltaLon = Math.toRadians(to.longitude() - from.longitude());
+
+        double a = Math.sin(deltaLat / 2.0) * Math.sin(deltaLat / 2.0)
+                + Math.cos(lat1Rad) * Math.cos(lat2Rad)
+                * Math.sin(deltaLon / 2.0) * Math.sin(deltaLon / 2.0);
+
+        double c = 2.0 * Math.atan2(Math.sqrt(a), Math.sqrt(1.0 - a));
+        return EARTH_RADIUS * c;
+    }
+
+    private double roundTwoDecimals(double value) {
+        return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }
 ```
 
 ### 5.3. Análisis de las Fallas del Antipatrón
 
-| Aspecto | Diagnóstico Técnico | Impacto en MetroCali MIO |
+| Aspecto | Diagnóstico Técnico | Impacto en la Operación de MetroCali |
 | :--- | :--- | :--- |
-| **Actor Responsable (SRP)** | Mezcla tres directores organizacionales: COO (Despacho), CFO (Liquidación) y CTO (Mantenimiento). | Conflictos de merge constantes cuando el equipo financiero y el operativo editan `BusRecordService.java`. |
-| **Duplicación Accidental** | El método `calculateOdometerDelta()` comparte lógica aritmética entre el cálculo de liquidación comercial y la telemetría operativa de odómetro. | Alteraciones en la fórmula de penalización comercial descalibran la telemetría en tiempo real y el control de frecuencias de buses. |
-| **Cohesión y Acoplamiento** | Baja cohesión (`Connection` JDBC mezclada con lógica de tarifas y validación de velocidad). Alto acoplamiento a librerías de infraestructura. | Imposibilidad de probar unitariamente las reglas de liquidación sin levantar un servidor de PostgreSQL. |
-| **Violación de DIP** | La clase de lógica depende de detalles concretos (`DriverManager`, SQL crudo) en lugar de un repositorio abstracto. | Imposibilidad de cambiar el almacenamiento a una base de series de tiempo (ej. InfluxDB/TimescaleDB) sin romper la lógica de negocio. |
+| **Actor Responsable (SRP)** | Mezcla tres actores organizacionales: el COO (operación), el CFO (penalizaciones en COP) y el Auditor (formato de texto). | Si el equipo financiero ajusta la tarifa de penalización o aplica descuentos contractuales, modifica el mismo archivo que utiliza operaciones para auditar excesos físicos. |
+| **Pure Fabrication & Expert** | `calculateDistanceHaversineManual()` re-implementa la trigonometría esférica en un método privado. | Duplicación accidental del cálculo de distancias; imposibilidad de cambiar a proyecciones WGS84 o mallas espaciales sin modificar la clase de auditoría. |
+| **Inversión de Dependencias (DIP)** | El servicio no recibe abstracciones de notificación ni persistencia; utiliza listas internas mutables (`auditedPackets`). | Imposible probar el motor con almacenamiento distribuido o fuentes de eventos en tiempo real sin alterar la clase. |
+| **Abierto/Cerrado (OCP)** | El límite de velocidad (`60.0 km/h`) y el valor de la sanción (`$250.000`) están cableados como constantes estáticas. | Para variar el límite en rutas alimentadoras (`50.0 km/h`) o troncales exclusivas (`70.0 km/h`), se debe abrir y recompilar la clase. |
 
 ---
 
 ## 6. Refactorización Guiada en Java 17+: Aplicación Paso a Paso de GRASP y SOLID
 
-A continuación rediseñamos la arquitectura del subsistema separando los actores, fabricando abstracciones puras e invirtiendo dependencias.
+A continuación rediseñamos la arquitectura separando responsabilidades por actor, fabricando abstracciones puras para cálculos geodésicos e invirtiendo dependencias mediante puertos.
 
 ```mermaid
 classDiagram
     direction TB
 
-    class GeoPoint {
+    class BusTelemetryPacket {
         <<record>>
-        +double latitude
-        +double longitude
-        +Instant timestamp
+        +BusId busId
+        +String routeId
+        +GeoPoint location
+        +double instantSpeedKmh
     }
 
-    class DistanceCalculator {
+    class TransitAlert {
+        <<record>>
+        +UUID alertId
+        +BusId busId
+        +String routeId
+        +AlertType alertType
+        +AlertSeverity severity
+        +String message
+        +GeoPoint location
+        +Instant occurredAt
+    }
+
+    class GeoDistanceCalculator {
+        <<interface - Pure Fabrication>>
+        +calculateDistanceMeters(GeoPoint, GeoPoint) double
+    }
+
+    class HaversineDistanceCalculator {
         <<Pure Fabrication>>
-        +haversineDistanceMeters(GeoPoint, GeoPoint) double
+        +calculateDistanceMeters(GeoPoint, GeoPoint) double
     }
 
-    class BusOperationalDispatchService {
-        <<Application Service - Actor COO>>
-        -DistanceCalculator distanceCalculator
-        -AlertPublisher alertPublisher
-        +processTelemetry(BusId, GeoPoint, double) void
-    }
-
-    class ConcessionLiquidationService {
-        <<Application Service - Actor CFO>>
-        -DistanceCalculator distanceCalculator
-        -ConcessionContractRepository contractRepository
-        +liquidateCommercialPeriod(BusId, YearMonth) ConcessionLiquidationResult
-    }
-
-    class BusDiagnosticService {
-        <<Application Service - Actor CTO>>
-        -BusTelemetryRepository telemetryRepository
-        +recordMechanicalHealth(BusId, MechanicalDiagnostic) void
-    }
-
-    class AlertPublisher {
+    class AlertNotifier {
         <<interface - DIP / Protected Variations>>
-        +publishAlert(TransitAlert) void
+        +notifyAlert(TransitAlert) void
     }
 
-    class KafkaAlertPublisher {
-        <<Infrastructure Adapter>>
-        +publishAlert(TransitAlert) void
+    class TelemetryRepository {
+        <<interface - DIP>>
+        +save(BusTelemetryPacket) void
+        +findAll() List
     }
 
-    BusOperationalDispatchService --> GeoPoint
-    BusOperationalDispatchService --> DistanceCalculator
-    BusOperationalDispatchService --> AlertPublisher
-    ConcessionLiquidationService --> DistanceCalculator
-    KafkaAlertPublisher ..|> AlertPublisher
+    class RefactoredBusService {
+        <<Application Service - Actor COO>>
+        -TelemetryRepository repository
+        -AlertNotifier alertNotifier
+        -GeoDistanceCalculator distanceCalculator
+        +processPacket(BusTelemetryPacket) void
+        +processStream(GpsSource, int) int
+    }
+
+    GeoDistanceCalculator <|.. HaversineDistanceCalculator
+    RefactoredBusService --> TelemetryRepository
+    RefactoredBusService --> AlertNotifier
+    RefactoredBusService --> GeoDistanceCalculator
+    RefactoredBusService ..> TransitAlert : Creator
+    RefactoredBusService ..> BusTelemetryPacket : Uses
 ```
 
 ### 6.1. Definición del Modelo de Dominio Inmutable
 
-Utilizamos `records` de Java 17 para definir entidades y objetos de valor inmutables, con validación de invariantes en constructores compactos.
+Definimos tipos inmutables utilizando `records` de Java 17, asegurando la integridad de invariantes en constructores compactos:
 
 ```java
-package co.edu.icesi.metrocali.domain.model;
+package co.edu.icesi.urbantransit.model;
 
-import java.time.Instant;
 import java.util.Objects;
 
 public record BusId(String value) {
     public BusId {
-        Objects.requireNonNull(value, "El identificador de bus no puede ser nulo");
-        if (!value.matches("^(MC|BYN|GIT)-\\d{4}$")) {
-            throw new IllegalArgumentException("Formato de placa/código inválido para MetroCali: " + value);
+        Objects.requireNonNull(value, "El valor del identificador no puede ser null");
+        if (value.isBlank()) {
+            throw new IllegalArgumentException("El identificador del bus no puede estar vacio");
         }
     }
 }
 ```
 
 ```java
-package co.edu.icesi.metrocali.domain.model;
+package co.edu.icesi.urbantransit.model;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 public record TransitAlert(
         UUID alertId,
         BusId busId,
+        String routeId,
         AlertType alertType,
         AlertSeverity severity,
         String message,
+        GeoPoint location,
         Instant occurredAt
 ) {
-    public enum AlertType { SPEEDING, GEOFENCE_VIOLATION, MECHANICAL_FAILURE }
+    public enum AlertType { SPEEDING, GEOFENCE_VIOLATION, HEADWAY_GAP, EXCESSIVE_IDLE }
     public enum AlertSeverity { INFO, WARNING, CRITICAL }
 
     public TransitAlert {
         Objects.requireNonNull(alertId, "alertId requerido");
         Objects.requireNonNull(busId, "busId requerido");
+        Objects.requireNonNull(routeId, "routeId requerido");
         Objects.requireNonNull(alertType, "alertType requerido");
         Objects.requireNonNull(severity, "severity requerida");
+        Objects.requireNonNull(message, "message requerido");
+        Objects.requireNonNull(location, "location requerida");
         Objects.requireNonNull(occurredAt, "occurredAt requerido");
     }
 }
 ```
 
-### 6.2. Abstracciones e Inversión de Dependencias (DIP & ISP)
+### 6.2. Puertos de Abstracción e Inversión de Dependencias (DIP)
 
-Definimos interfaces segregadas para notificaciones y persistencia, garantizando que el dominio no dependa de infraestructura.
+Definimos interfaces específicas para notificación y persistencia:
 
 ```java
-package co.edu.icesi.metrocali.domain.port;
+package co.edu.icesi.urbantransit.demo.refactored.port;
 
-import co.edu.icesi.metrocali.domain.model.TransitAlert;
+import co.edu.icesi.urbantransit.model.TransitAlert;
 
 /**
- * DIP / Protected Variations: Puerto de salida para publicación de alertas.
- * Aísla al dominio de mecanismos concretos (Kafka, WebSockets, RabbitMQ).
+ * Puerto de salida para emision de alertas operacionales (DIP).
+ * Oculta el canal de notificacion (Slack, Kafka, SMS, WebSockets, Consola).
  */
 @FunctionalInterface
-public interface AlertPublisher {
-    void publish(TransitAlert alert);
+public interface AlertNotifier {
+    void notifyAlert(TransitAlert alert);
 }
 ```
 
 ```java
-package co.edu.icesi.metrocali.domain.port;
+package co.edu.icesi.urbantransit.demo.refactored.port;
 
-import co.edu.icesi.metrocali.domain.model.BusId;
-import java.time.YearMonth;
+import co.edu.icesi.urbantransit.model.BusTelemetryPacket;
+import java.util.List;
 
-public interface ConcessionContractRepository {
-    double getTariffPerCommercialKm(BusId busId, YearMonth period);
-    double getContractualPenaltyRate(BusId busId);
+public interface TelemetryRepository {
+    void save(BusTelemetryPacket packet);
+    List<BusTelemetryPacket> findAll();
+    int count();
 }
 ```
 
-### 6.3. Servicio del Actor COO: Despacho y Monitoreo Operativo en Tiempo Real
+### 6.3. Servicio Refactorizado del Actor COO: `RefactoredBusService`
 
-Esta clase tiene una **única razón para cambiar**: modificaciones en los protocolos operativos del Centro de Control de MetroCali.
+Este servicio responde ante un único actor: el **Jefe de Operaciones del Centro de Control de MetroCali**. Aplica Pure DI mediante constructor estricto y el patrón Creator para las alertas:
 
 ```java
-package co.edu.icesi.metrocali.application;
+package co.edu.icesi.urbantransit.demo.refactored.service;
 
-import co.edu.icesi.metrocali.domain.model.*;
-import co.edu.icesi.metrocali.domain.port.AlertPublisher;
-import co.edu.icesi.metrocali.domain.service.DistanceCalculator;
+import co.edu.icesi.urbantransit.demo.refactored.port.AlertNotifier;
+import co.edu.icesi.urbantransit.demo.refactored.port.GeoDistanceCalculator;
+import co.edu.icesi.urbantransit.demo.refactored.port.GpsSource;
+import co.edu.icesi.urbantransit.demo.refactored.port.TelemetryRepository;
+import co.edu.icesi.urbantransit.model.BusTelemetryPacket;
+import co.edu.icesi.urbantransit.model.TransitAlert;
 
 import java.time.Instant;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Servicio enfocado exclusivamente en el ACTOR COO (Despacho y Operaciones).
- * Cumple con SRP, High Cohesion y utiliza Pure Fabrication para cálculos de distancia.
+ * Servicio de procesamiento de telemetria refactorizado.
+ *
+ * Principios y patrones aplicados:
+ * 1. DIP: Depende unicamente de puertos de interfaz (AlertNotifier, TelemetryRepository, GeoDistanceCalculator).
+ * 2. Inyeccion por Constructor (Pure DI): Campos final e inmutables.
+ * 3. SRP: Responde exclusivamente ante politicas operacionales del Centro de Control (Actor COO).
+ * 4. GRASP Creator: Instancia 'TransitAlert' con el contexto del incidente.
+ * 5. Testabilidad: 100% verificable en milisegundos sin infraestructura externa.
  */
-public class BusOperationalDispatchService {
+public class RefactoredBusService {
 
-    private static final double MAX_TRUNK_SPEED_KMH = 60.0;
-    private final AlertPublisher alertPublisher;
+    public static final double MAX_TRONCAL_SPEED_KMH = 60.0;
 
-    public BusOperationalDispatchService(AlertPublisher alertPublisher) {
-        this.alertPublisher = Objects.requireNonNull(alertPublisher, "AlertPublisher no puede ser nulo");
+    private final TelemetryRepository repository;
+    private final AlertNotifier alertNotifier;
+    private final GeoDistanceCalculator distanceCalculator;
+
+    public RefactoredBusService(
+            TelemetryRepository repository,
+            AlertNotifier alertNotifier,
+            GeoDistanceCalculator distanceCalculator
+    ) {
+        this.repository = Objects.requireNonNull(repository, "repository no puede ser null");
+        this.alertNotifier = Objects.requireNonNull(alertNotifier, "alertNotifier no puede ser null");
+        this.distanceCalculator = Objects.requireNonNull(distanceCalculator, "distanceCalculator no puede ser null");
     }
 
-    public void processTelemetryPing(BusId busId, GeoPoint currentPoint, GeoPoint previousPoint, double currentSpeedKmH) {
-        Objects.requireNonNull(busId, "busId no puede ser nulo");
-        Objects.requireNonNull(currentPoint, "currentPoint no puede ser nulo");
+    public void processPacket(BusTelemetryPacket packet) {
+        Objects.requireNonNull(packet, "El paquete de telemetria no puede ser null");
 
-        // 1. Delegación a Pure Fabrication para distancia geodésica sin acoplamiento
-        double deltaMeters = 0.0;
-        if (previousPoint != null) {
-            deltaMeters = DistanceCalculator.haversineDistanceMeters(previousPoint, currentPoint);
-        }
+        // 1. Persistencia mediante abstraccion (DIP)
+        repository.save(packet);
 
-        // 2. Evaluación de reglas operativas del COO
-        if (currentSpeedKmH > MAX_TRUNK_SPEED_KMH) {
-            // Aplicación del patrón Creator: Este servicio posee la información de inicialización completa
+        // 2. Evaluacion de politica de exceso de velocidad troncal (Actor COO)
+        if (packet.instantSpeedKmh() > MAX_TRONCAL_SPEED_KMH) {
+            // GRASP Creator: El servicio compone la alerta con la informacion del incidente
             TransitAlert alert = new TransitAlert(
                     UUID.randomUUID(),
-                    busId,
+                    packet.busId(),
+                    packet.routeId(),
                     TransitAlert.AlertType.SPEEDING,
                     TransitAlert.AlertSeverity.WARNING,
-                    String.format("Bus %s excedió velocidad máxima en carril troncal: %.2f km/h", busId.value(), currentSpeedKmH),
+                    String.format(Locale.US, "Bus %s supero el limite troncal en ruta %s: %.1f km/h (Limite: %.1f km/h)",
+                            packet.busId().value(), packet.routeId(), packet.instantSpeedKmh(), MAX_TRONCAL_SPEED_KMH),
+                    packet.location(),
                     Instant.now()
             );
-            // Publicación a través del puerto desacoplado (DIP)
-            alertPublisher.publish(alert);
+
+            // Emision mediante abstraccion (DIP)
+            alertNotifier.notifyAlert(alert);
         }
     }
-}
-```
 
-### 6.4. Servicio del Actor CFO: Liquidación de Contratos de Concesión
+    public int processStream(GpsSource source, int maxPackets) {
+        Objects.requireNonNull(source, "La fuente de telemetria no puede ser null");
+        int processedCount = 0;
 
-Esta clase responde exclusivamente a las normas de auditoría y facturación de MetroCali S.A. No comparte código fuente ni dependencias con el servicio de despacho operativo.
-
-```java
-package co.edu.icesi.metrocali.application;
-
-import co.edu.icesi.metrocali.domain.model.BusId;
-import co.edu.icesi.metrocali.domain.model.GeoPoint;
-import co.edu.icesi.metrocali.domain.port.ConcessionContractRepository;
-import co.edu.icesi.metrocali.domain.service.DistanceCalculator;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.YearMonth;
-import java.util.List;
-import java.util.Objects;
-
-/**
- * Servicio enfocado exclusivamente en el ACTOR CFO (Liquidación y Contratos).
- * Posee sus propias reglas de negocio para deducciones por vacío y penalizaciones.
- */
-public class ConcessionLiquidationService {
-
-    private final ConcessionContractRepository contractRepository;
-
-    public ConcessionLiquidationService(ConcessionContractRepository contractRepository) {
-        this.contractRepository = Objects.requireNonNull(contractRepository, "contractRepository no puede ser nulo");
-    }
-
-    public record LiquidationResult(
-            BusId busId,
-            YearMonth period,
-            double grossKm,
-            double commercialKm,
-            BigDecimal netPayoutPesos
-    ) {}
-
-    public LiquidationResult liquidateBusPeriod(BusId busId, YearMonth period, List<GeoPoint> certifiedTelemetryPoints) {
-        Objects.requireNonNull(busId, "busId no puede ser nulo");
-        Objects.requireNonNull(period, "period no puede ser nulo");
-
-        // 1. Cómputo de distancia bruta usando la Fabricación Pura sin dependencias de operaciones
-        double totalGrossMeters = 0.0;
-        for (int i = 0; i < certifiedTelemetryPoints.size() - 1; i++) {
-            totalGrossMeters += DistanceCalculator.haversineDistanceMeters(
-                    certifiedTelemetryPoints.get(i),
-                    certifiedTelemetryPoints.get(i + 1)
-            );
+        for (int i = 0; i < maxPackets; i++) {
+            Optional<BusTelemetryPacket> packetOpt = source.readPacket();
+            if (packetOpt.isEmpty()) {
+                break;
+            }
+            processPacket(packetOpt.get());
+            processedCount++;
         }
 
-        double grossKm = totalGrossMeters / 1000.0;
-
-        // 2. Regla propia del CFO: Descuento contractual de recorridos no comerciales (Deadhead)
-        // Esta regla NO afecta al equipo de operaciones porque está aislada en esta clase.
-        double deadheadDiscountFactor = 0.92; // 8% deducible por tránsitos hacia patio
-        double commercialKm = grossKm * deadheadDiscountFactor;
-
-        double tariffPerKm = contractRepository.getTariffPerCommercialKm(busId, period);
-        BigDecimal subtotal = BigDecimal.valueOf(commercialKm * tariffPerKm);
-
-        // Deducción de retención de garantía contractual
-        BigDecimal netPayout = subtotal.multiply(BigDecimal.valueOf(0.96)).setScale(2, RoundingMode.HALF_UP);
-
-        return new LiquidationResult(busId, period, grossKm, commercialKm, netPayout);
+        return processedCount;
     }
 }
 ```
@@ -717,15 +801,21 @@ public class ConcessionLiquidationService {
 
 ## 8. Verificación Práctica y Pruebas Unitarias en Java 17+
 
-Para asegurar que la refactorización preserva el comportamiento deseado y que los actores permanecen desacoplados, implementamos pruebas unitarias limpias utilizando JUnit 5 y mocks orientados a interfaces.
+Para asegurar que la refactorización preserva el comportamiento deseado y que los actores permanecen desacoplados, implementamos pruebas unitarias limpias utilizando JUnit 5 y AssertJ con dobles de prueba funcionales en memoria:
 
 ```java
-package co.edu.icesi.metrocali.application;
+package co.edu.icesi.urbantransit.demo;
 
-import co.edu.icesi.metrocali.domain.model.BusId;
-import co.edu.icesi.metrocali.domain.model.GeoPoint;
-import co.edu.icesi.metrocali.domain.model.TransitAlert;
-import co.edu.icesi.metrocali.domain.port.AlertPublisher;
+import co.edu.icesi.urbantransit.demo.refactored.infra.InMemoryTelemetryRepository;
+import co.edu.icesi.urbantransit.demo.refactored.port.AlertNotifier;
+import co.edu.icesi.urbantransit.demo.refactored.port.GeoDistanceCalculator;
+import co.edu.icesi.urbantransit.demo.refactored.service.HaversineDistanceCalculator;
+import co.edu.icesi.urbantransit.demo.refactored.service.RefactoredBusService;
+import co.edu.icesi.urbantransit.model.BusId;
+import co.edu.icesi.urbantransit.model.BusTelemetryPacket;
+import co.edu.icesi.urbantransit.model.GeoPoint;
+import co.edu.icesi.urbantransit.model.TransitAlert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -733,52 +823,66 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-class BusOperationalDispatchServiceTest {
+@DisplayName("Pruebas Unitarias: RefactoredBusService con Inyeccion de Dependencias")
+class RefactoredBusServiceTest {
 
-    @Test
-    @DisplayName("Debe emitir alerta SPEEDING cuando la velocidad supera los 60 km/h en carril troncal")
-    void shouldEmitAlertWhenSpeedExceedsLimit() {
-        // Arrange
-        List<TransitAlert> publishedAlerts = new ArrayList<>();
-        AlertPublisher mockPublisher = publishedAlerts::add; // Implementación lambda del puerto funcional (DIP)
+    private InMemoryTelemetryRepository repository;
+    private List<TransitAlert> capturedAlerts;
+    private AlertNotifier alertNotifier;
+    private GeoDistanceCalculator distanceCalculator;
+    private RefactoredBusService busService;
 
-        BusOperationalDispatchService service = new BusOperationalDispatchService(mockPublisher);
+    @BeforeEach
+    void setUp() {
+        repository = new InMemoryTelemetryRepository();
+        capturedAlerts = new ArrayList<>();
+        // Doble de prueba funcional (Spy en memoria mediante lambda)
+        alertNotifier = capturedAlerts::add;
+        distanceCalculator = new HaversineDistanceCalculator();
 
-        BusId busId = new BusId("MC-1042");
-        GeoPoint p1 = new GeoPoint(3.4516, -76.5320, Instant.now());
-        GeoPoint p2 = new GeoPoint(3.4520, -76.5322, Instant.now());
-        double overspeedKmH = 68.5;
-
-        // Act
-        service.processTelemetryPing(busId, p2, p1, overspeedKmH);
-
-        // Assert
-        assertEquals(1, publishedAlerts.size(), "Debe haberse generado exactamente una alerta");
-        TransitAlert alert = publishedAlerts.get(0);
-        assertEquals(busId, alert.busId());
-        assertEquals(TransitAlert.AlertType.SPEEDING, alert.alertType());
-        assertEquals(TransitAlert.AlertSeverity.WARNING, alert.severity());
-        assertTrue(alert.message().contains("68.50 km/h"));
+        busService = new RefactoredBusService(repository, alertNotifier, distanceCalculator);
     }
 
     @Test
-    @DisplayName("No debe emitir alerta cuando la velocidad se mantiene en los límites permitidos")
-    void shouldNotEmitAlertWhenSpeedIsWithinLimits() {
+    @DisplayName("Debe emitir alerta SPEEDING y persistir el paquete cuando la velocidad supera 60 km/h")
+    void shouldEmitAlertAndPersistWhenSpeedExceedsTroncalLimit() {
         // Arrange
-        List<TransitAlert> publishedAlerts = new ArrayList<>();
-        BusOperationalDispatchService service = new BusOperationalDispatchService(publishedAlerts::add);
-
-        BusId busId = new BusId("GIT-2001");
-        GeoPoint p1 = new GeoPoint(3.4300, -76.5200, Instant.now());
-        GeoPoint p2 = new GeoPoint(3.4305, -76.5201, Instant.now());
+        BusId busId = new BusId("MC-1042");
+        GeoPoint location = new GeoPoint(3.4350, -76.5300, Instant.now());
+        BusTelemetryPacket packet = new BusTelemetryPacket(busId, "T31", location, 68.5);
 
         // Act
-        service.processTelemetryPing(busId, p2, p1, 45.0);
+        busService.processPacket(packet);
+
+        // Assert: 1. Paquete guardado en repositorio
+        assertThat(repository.count()).isEqualTo(1);
+        assertThat(repository.findAll()).containsExactly(packet);
+
+        // Assert: 2. Alerta generada y emitida
+        assertThat(capturedAlerts).hasSize(1);
+        TransitAlert alert = capturedAlerts.get(0);
+        assertThat(alert.busId()).isEqualTo(busId);
+        assertThat(alert.alertType()).isEqualTo(TransitAlert.AlertType.SPEEDING);
+        assertThat(alert.severity()).isEqualTo(TransitAlert.AlertSeverity.WARNING);
+        assertThat(alert.message()).contains("68.5 km/h");
+    }
+
+    @Test
+    @DisplayName("No debe emitir alerta cuando la velocidad no excede el limite troncal")
+    void shouldNotEmitAlertWhenSpeedIsWithinLimits() {
+        // Arrange
+        BusId busId = new BusId("MC-2001");
+        GeoPoint location = new GeoPoint(3.4350, -76.5300, Instant.now());
+        BusTelemetryPacket packet = new BusTelemetryPacket(busId, "T31", location, 54.0);
+
+        // Act
+        busService.processPacket(packet);
 
         // Assert
-        assertTrue(publishedAlerts.isEmpty(), "No deben emitirse alertas a velocidad reglamentaria");
+        assertThat(repository.count()).isEqualTo(1);
+        assertThat(capturedAlerts).isEmpty();
     }
 }
 ```
@@ -787,24 +891,7 @@ class BusOperationalDispatchServiceTest {
 
 ## 9. Preguntas de Autoevaluación y Criterios de Calidad
 
-1. **Sobre SRP y Actores:** ¿Por qué la definición de Robert C. Martin de SRP centrada en "un solo actor de negocio" es más precisa para la arquitectura de software que la noción tradicional de "hacer una sola cosa"?
-2. **Sobre GRASP y Pure Fabrication:** Si la entidad `Route` conoce todas sus estaciones intermedias, ¿por qué es aconsejable delegar el cálculo topológico y la estimación de tiempos de llegada a un servicio externo de Fabricación Pura en lugar de codificarlo dentro de `Route`?
-3. **Sobre LSP y Contratos:** Si se diseña una jerarquía de vehículos donde `ElectricBus` hereda de `Bus`, pero `ElectricBus` arroja una excepción no comprobada al invocarse el método `getFuelLevelLiters()`, ¿qué regla del Principio de Sustitución de Liskov se está infringiendo y cómo debe refactorizarse mediante Segregación de Interfaces (ISP)?
-4. **Sobre DIP y Frameworks:** ¿Por qué la inyección de dependencias (DI) mediante constructores explícitos en clases de dominio puro es superior a depender de anotaciones directas de frameworks (como `@Autowired` de Spring) dentro del núcleo de la lógica de negocio?
-
----
-
-## 10. Referencias Bibliográficas Canónicas
-
-- **Larman, C. (2004).** *Applying UML and Patterns: An Introduction to Object-Oriented Analysis and Design and Iterative Development* (3rd ed.). Prentice Hall.
-  - Capítulo 17: GRASP: Designing Objects with Responsibilities (pp. 271-314).
-  - Capítulo 25: GRASP: More Objects with Responsibilities (pp. 413-440).
-- **Martin, R. C. (2017).** *Clean Architecture: A Craftsman's Guide to Software Structure and Design*. Prentice Hall.
-  - Capítulo 7: SRP: The Single Responsibility Principle (pp. 61-68).
-  - Capítulo 8: OCP: The Open-Closed Principle (pp. 69-74).
-  - Capítulo 9: LSP: The Liskov Substitution Principle (pp. 75-82).
-  - Capítulo 10: ISP: The Interface Segregation Principle (pp. 83-86).
-  - Capítulo 11: DIP: The Dependency Inversion Principle (pp. 87-92).
-- **Liskov, B. (1988).** *Data Abstraction and Hierarchy*. SIGPLAN Notices, 23(5), 17-34.
-- **Meyer, B. (1988).** *Object-Oriented Software Construction*. Prentice Hall.
-- **Constantine, L. L., & Yourdon, E. (1979).** *Structured Design: Fundamentals of a Discipline of Computer Program and Systems Design*. Prentice Hall.
+1. **Sobre SRP y Actores Organizacionales:** ¿Por qué la definición de Robert C. Martin de SRP centrada en "un solo actor de negocio" es más rigurosa para la arquitectura de software que la noción tradicional de "hacer una sola cosa"?
+2. **Sobre la Tensión Expert vs. Pure Fabrication:** Si la entidad `GeoPoint` conoce su propia latitud y longitud, ¿bajo qué condiciones seguir aplicando Information Expert degrada el diseño y exige introducir una Fabricación Pura como `GeoDistanceCalculator`?
+3. **Sobre LSP y Precondiciones:** Si una subclase `ElectricBusTelemetryValidator` reduce el límite de velocidad permitida a `40.0 km/h` mientras el contrato base establece `60.0 km/h`, ¿qué regla del Principio de Sustitución de Liskov se está infringiendo y cómo afecta a los clientes polimórficos?
+4. **Sobre DIP y Pure DI:** ¿Por qué la inyección de dependencias estricta por constructor en clases como `RefactoredBusService` es superior a la instanciación directa o al uso de contenedores mágicos con reflexión para pruebas unitarias de alta velocidad?
