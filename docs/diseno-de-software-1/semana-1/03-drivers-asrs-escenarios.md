@@ -121,37 +121,25 @@ graph TD
 Para estructurar los ASRs, Richards y Ford (2020) dividen las características arquitectónicas en tres grandes dimensiones:
 
 ```mermaid
-flowchart TD
-    ROOT["Dimensiones de Características de Arquitectura<br/>(Richards & Ford, 2020)"]
-
-    subgraph OP["1. Operacionales (Tiempo de Ejecución)"]
-        OP1["Rendimiento y Latencia"]
-        OP2["Escalabilidad de Flota"]
-        OP3["Disponibilidad de Servicio"]
-        OP4["Resiliencia y Recuperación"]
-    end
-
-    subgraph ES["2. Estructurales (Tiempo de Diseño / Mantenimiento)"]
-        ES1["Modificabilidad de Reglas"]
-        ES2["Extensibilidad de Sensores IoT"]
-        ES3["Modularidad de Puertos"]
-        ES4["Testabilidad sin Hardware"]
-    end
-
-    subgraph TR["3. Transversales (Gobernanza y Negocio)"]
-        TR1["Auditabilidad Contractual de Km"]
-        TR2["Integridad y Seguridad de Telemetría"]
-        TR3["Cumplimiento Normativo MetroCali"]
-    end
-
-    ROOT --> OP
-    ROOT --> ES
-    ROOT --> TR
-
-    style ROOT fill:#f8fafc,stroke:#334155,stroke-width:2px,color:#0f172a
-    style OP fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px,color:#1e3a8a
-    style ES fill:#f5f3ff,stroke:#7c3aed,stroke-width:1.5px,color:#5b21b6
-    style TR fill:#ecfdf5,stroke:#059669,stroke-width:1.5px,color:#065f46
+mindmap
+  root((Características de Arquitectura))
+    Operacionales
+      Rendimiento / Latencia
+      Escalabilidad
+      Disponibilidad
+      Resiliencia / Recuperabilidad
+      Elasticidad
+    Estructurales
+      Modificabilidad
+      Extensibilidad
+      Modularidad
+      Portabilidad
+      Testabilidad
+    Transversales
+      Seguridad
+      Privacidad
+      Auditabilidad contractual
+      Cumplimiento normativo
 ```
 
 ### 3.1. Características Operacionales
