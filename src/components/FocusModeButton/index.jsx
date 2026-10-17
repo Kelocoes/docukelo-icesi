@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import clsx from 'clsx';
 import { useLocation } from '@docusaurus/router';
 import styles from './styles.module.css';
@@ -6,7 +6,9 @@ import styles from './styles.module.css';
 const STORAGE_KEY = 'docukelo_focus_mode';
 const FOCUS_CLASS = 'focus-mode';
 const FOCUS_ATTR = 'data-focus-mode';
+const FOCUS_ANIMATING_ATTR = 'data-focus-animating';
 const DESKTOP_MIN_WIDTH = 997;
+const ANIMATION_DURATION_MS = 360;
 
 function isDesktop() {
   return typeof window !== 'undefined' && window.innerWidth >= DESKTOP_MIN_WIDTH;
@@ -29,6 +31,10 @@ function applyFocusMode(active) {
 export default function FocusModeButton({ className }) {
   const [isFocus, setIsFocus] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const isTransitioningRef = useRef(false);
+  const fadeOutTimerRef = useRef(null);
+  const holdTimerRef = useRef(null);
+  const fadeInTimerRef = useRef(null);
   const location = useLocation();
 
   // Inicialización segura en cliente
@@ -45,7 +51,49 @@ export default function FocusModeButton({ className }) {
   }, []);
 
   const toggleFocusMode = useCallback(() => {
-    setIsFocus((prev) => !prev);
+    if (isTransitioningRef.current) return;
+
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement;
+      isTransitioningRef.current = true;
+      const willBeFocus = !isFocus;
+
+      // Limpiar temporizadores anteriores si los hubiera
+      if (fadeOutTimerRef.current) clearTimeout(fadeOutTimerRef.current);
+      if (holdTimerRef.current) clearTimeout(holdTimerRef.current);
+      if (fadeInTimerRef.current) clearTimeout(fadeInTimerRef.current);
+
+      // 1. Fase 1: Desvanecer el texto central completamente a 0 (220ms)
+      root.setAttribute('data-focus-phase', 'fading-out');
+
+      fadeOutTimerRef.current = setTimeout(() => {
+        // 2. Fase 2: Con el texto 100% invisible, cambiar el estado y layout (las barras se deslizan)
+        // Mantenemos el texto invisible durante el desplazamiento lateral (~320ms)
+        root.setAttribute('data-focus-phase', 'holding');
+        setIsFocus(willBeFocus);
+
+        holdTimerRef.current = setTimeout(() => {
+          // 3. Fase 3: Con las barras ya en posición y el layout quieto, hacer fade-in suave del texto (320ms)
+          root.setAttribute('data-focus-phase', 'fading-in');
+
+          fadeInTimerRef.current = setTimeout(() => {
+            root.removeAttribute('data-focus-phase');
+            isTransitioningRef.current = false;
+          }, 340);
+        }, 320);
+      }, 220);
+    } else {
+      setIsFocus((prev) => !prev);
+    }
+  }, [isFocus]);
+
+  // Limpieza de temporizadores de animación al desmontar
+  useEffect(() => {
+    return () => {
+      if (fadeOutTimerRef.current) clearTimeout(fadeOutTimerRef.current);
+      if (holdTimerRef.current) clearTimeout(holdTimerRef.current);
+      if (fadeInTimerRef.current) clearTimeout(fadeInTimerRef.current);
+    };
   }, []);
 
   // Sincronizar DOM, observer y localStorage cuando cambia isFocus
