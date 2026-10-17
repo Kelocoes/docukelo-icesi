@@ -1,22 +1,43 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import clsx from 'clsx';
+import { useLocation } from '@docusaurus/router';
 import styles from './styles.module.css';
 
 const STORAGE_KEY = 'docukelo_focus_mode';
 const FOCUS_CLASS = 'focus-mode';
+const FOCUS_ATTR = 'data-focus-mode';
+const DESKTOP_MIN_WIDTH = 997;
+
+function isDesktop() {
+  return typeof window !== 'undefined' && window.innerWidth >= DESKTOP_MIN_WIDTH;
+}
+
+function applyFocusMode(active) {
+  if (typeof document === 'undefined') return;
+  const root = document.documentElement;
+  if (active) {
+    root.setAttribute(FOCUS_ATTR, 'true');
+    if (!root.classList.contains(FOCUS_CLASS)) {
+      root.classList.add(FOCUS_CLASS);
+    }
+  } else {
+    root.removeAttribute(FOCUS_ATTR);
+    root.classList.remove(FOCUS_CLASS);
+  }
+}
 
 export default function FocusModeButton({ className }) {
   const [isFocus, setIsFocus] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const location = useLocation();
 
-  // Inicialización segura en cliente (evita discrepancias de SSR)
+  // Inicialización segura en cliente
   useEffect(() => {
     setIsMounted(true);
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved === 'true') {
         setIsFocus(true);
-        document.documentElement.classList.add(FOCUS_CLASS);
       }
     } catch (e) {
       // Ignorar errores en navegadores con localStorage restringido
@@ -24,27 +45,54 @@ export default function FocusModeButton({ className }) {
   }, []);
 
   const toggleFocusMode = useCallback(() => {
-    setIsFocus((prev) => {
-      const next = !prev;
-      try {
-        if (next) {
-          document.documentElement.classList.add(FOCUS_CLASS);
-          localStorage.setItem(STORAGE_KEY, 'true');
-        } else {
-          document.documentElement.classList.remove(FOCUS_CLASS);
-          localStorage.setItem(STORAGE_KEY, 'false');
-        }
-      } catch (e) {
-        // Fallback
-      }
-      return next;
-    });
+    setIsFocus((prev) => !prev);
   }, []);
 
-  // Atajo de teclado: Alt + F para alternar modo enfoque rápidamente
+  // Sincronizar DOM, observer y localStorage cuando cambia isFocus
+  useEffect(() => {
+    if (!isMounted) return;
+
+    if (isFocus) {
+      applyFocusMode(true);
+      try {
+        localStorage.setItem(STORAGE_KEY, 'true');
+      } catch (e) {}
+
+      const observer = new MutationObserver(() => {
+        const root = document.documentElement;
+        const hasAttr = root.getAttribute(FOCUS_ATTR) === 'true';
+        const hasClass = root.classList.contains(FOCUS_CLASS);
+        if (!hasAttr || !hasClass) {
+          applyFocusMode(true);
+        }
+      });
+
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', FOCUS_ATTR],
+      });
+
+      return () => observer.disconnect();
+    } else {
+      applyFocusMode(false);
+      try {
+        localStorage.setItem(STORAGE_KEY, 'false');
+      } catch (e) {}
+    }
+  }, [isFocus, isMounted]);
+
+  // Re-aplicar modo enfoque en navegaciones de página (Docusaurus SPA routing)
+  useEffect(() => {
+    if (isMounted && isFocus) {
+      applyFocusMode(true);
+    }
+  }, [location.pathname, isFocus, isMounted]);
+
+  // Atajo de teclado: Alt + F para alternar modo enfoque rápidamente (solo en desktop)
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.altKey && (event.key === 'f' || event.key === 'F')) {
+        if (!isDesktop()) return;
         event.preventDefault();
         toggleFocusMode();
       }

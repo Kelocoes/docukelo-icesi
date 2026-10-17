@@ -67,3 +67,11 @@
   background-color: var(--icesi-blue, #5454e9) !important;
   border-color: var(--icesi-blue-lighter, #7c7cf4) !important;
 }
+
+/* Ocultar en dispositivos móviles o pantallas menores a desktop */
+@media (max-width: 996px) {
+  .focusButton {
+    display: none !important;
+  }
+}
+
