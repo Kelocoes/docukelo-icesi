@@ -33,6 +33,15 @@ const config = {
     projectName: 'docukelo-icesi', // Usually your repo name.
 
     onBrokenLinks: 'throw',
+    headTags: [
+        {
+            tagName: 'script',
+            attributes: {
+                type: 'text/javascript',
+            },
+            innerHTML: `(function(){try{if(localStorage.getItem('docukelo_focus_mode')==='true'&&window.innerWidth>996){document.documentElement.setAttribute('data-focus-mode','true');document.documentElement.classList.add('focus-mode');}}catch(e){}})();`,
+        },
+    ],
     markdown: {
         hooks: {
             onBrokenMarkdownLinks: 'warn',

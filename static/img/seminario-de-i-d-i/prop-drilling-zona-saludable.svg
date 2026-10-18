@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 260" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 17px; font-weight: 700; fill: #0f172a; }
+      .tag   { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+      .label { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13.5px; font-weight: 700; fill: #1e293b; }
+      .sub   { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11.5px; fill: #64748b; }
+      .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; font-weight: 600; }
+    </style>
+    <filter id="shadow-clean" x="-5%" y="-5%" width="110%" height="114%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.05"/>
+    </filter>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 8 5 L 0 9 Z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <!-- Canvas -->
+  <rect width="880" height="260" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Title & Tag -->
+  <g transform="translate(32, 22)">
+    <rect x="0" y="0" width="175" height="20" rx="4" fill="#f0fdf4" stroke="#bbf7d0"/>
+    <text x="87" y="14" class="tag" fill="#166534" text-anchor="middle">ZONA SALUDABLE (1 - 2 NIVELES)</text>
+    <text x="0" y="42" class="title">Flujo Directo: Cada widget consume los datos que recibe</text>
+  </g>
+
+  <!-- Connectors (behind nodes) -->
+  <line x1="265" y1="145" x2="350" y2="145" stroke="#16a34a" stroke-width="3" marker-end="url(#arrow-green)"/>
+  <rect x="272" y="125" width="70" height="18" rx="4" fill="#ffffff" stroke="#86efac"/>
+  <text x="307" y="138" class="mono" fill="#15803d" text-anchor="middle">contactos</text>
+
+  <line x1="565" y1="145" x2="650" y2="145" stroke="#16a34a" stroke-width="3" marker-end="url(#arrow-green)"/>
+  <rect x="576" y="125" width="62" height="18" rx="4" fill="#ffffff" stroke="#86efac"/>
+  <text x="607" y="138" class="mono" fill="#15803d" text-anchor="middle">contacto</text>
+
+  <!-- NODE 1: AgendaPage (State Source) -->
+  <g transform="translate(55, 95)" filter="url(#shadow-clean)">
+    <rect width="210" height="100" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+    <text x="105" y="36" class="label" fill="#1e3a8a" text-anchor="middle">AgendaPage</text>
+    <rect x="25" y="48" width="160" height="20" rx="4" fill="#dbeafe"/>
+    <text x="105" y="62" class="mono" fill="#1d4ed8" text-anchor="middle">Posee: _contactos</text>
+    <text x="105" y="84" class="sub" text-anchor="middle">Fuente de la verdad</text>
+  </g>
+
+  <!-- NODE 2: ContactoList (Consumer & Distributor) -->
+  <g transform="translate(355, 95)" filter="url(#shadow-clean)">
+    <rect width="210" height="100" rx="12" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+    <text x="105" y="36" class="label" fill="#14532d" text-anchor="middle">ContactoList</text>
+    <rect x="25" y="48" width="160" height="20" rx="4" fill="#dcfce7"/>
+    <text x="105" y="62" class="mono" fill="#15803d" text-anchor="middle">Mapea a tarjetas</text>
+    <text x="105" y="84" class="sub" text-anchor="middle">Usa los datos recibidos</text>
+  </g>
+
+  <!-- NODE 3: ContactoCard (Leaf Consumer) -->
+  <g transform="translate(655, 95)" filter="url(#shadow-clean)">
+    <rect width="180" height="100" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+    <text x="90" y="36" class="label" fill="#14532d" text-anchor="middle">ContactoCard</text>
+    <rect x="20" y="48" width="140" height="20" rx="4" fill="#dcfce7"/>
+    <text x="90" y="62" class="mono" fill="#15803d" text-anchor="middle">Dibuja ListTile</text>
+    <text x="90" y="84" class="sub" text-anchor="middle">Muestra avatar y telefono</text>
+  </g>
+
+  <!-- Bottom Insight Badge -->
+  <g transform="translate(55, 215)">
+    <text x="0" y="16" class="sub" fill="#15803d" font-weight="600">✓ Trazabilidad directa con Go to Definition, sin intermediarios pasantes y con cero dependencias externas.</text>
+  </g>
+</svg>

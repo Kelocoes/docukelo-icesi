@@ -609,74 +609,287 @@ article.card,
 }
 
 /* ==========================================================================
-   FOCUS MODE (MODO ENFOQUE Y LECTURA SIN DISTRACCIONES)
+   FOCUS MODE (MODO ENFOQUE Y LECTURA SIN DISTRACCIONES) - SOLO DESKTOP (> 996px)
    ========================================================================== */
 
-/* 1. Ocultar barra lateral izquierda (Sidebar de navegación) */
-html.focus-mode .theme-doc-sidebar-container,
-html.focus-mode aside[class*='docSidebarContainer'],
-html.focus-mode div[class*='sidebarContainer_'],
-html.focus-mode div[class*='sidebarViewport_'],
-html.focus-mode button[class*='collapseSidebarButton_'] {
-  display: none !important;
-  width: 0 !important;
-  min-width: 0 !important;
-  max-width: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: none !important;
-  visibility: hidden !important;
+@media (min-width: 997px) {
+  /* Evitar cualquier scroll horizontal durante la animación de desplazamiento hacia los extremos */
+  body,
+  .main-wrapper,
+  main[class*='docMainContainer'] {
+    overflow-x: clip;
+  }
+
+  /* Evitar saltos de línea (wrap) ÚNICAMENTE en la fila directa que divide el artículo central y la TOC */
+  .row:has(> div[class*='docItemCol']),
+  .row:has(> .docItemCol) {
+    flex-wrap: nowrap !important;
+  }
+
+  /* Asegurar que las listas de tarjetas (carpetas de categorías) y grids de contenido SIEMPRE permitan dos columnas */
+  section.row,
+  main[class*='docMainContainer'] section.row,
+  main[class*='docMainContainer'] .col .row,
+  .row:has([class*='cardContainer_']),
+  .row:has(.card) {
+    flex-wrap: wrap !important;
+  }
+
+  /* Transición base para barra lateral izquierda (al salir de Focus Mode: se desliza limpiamente desde la izquierda) */
+  .theme-doc-sidebar-container,
+  aside[class*='docSidebarContainer'],
+  div[class*='sidebarContainer_'] {
+    width: var(--doc-sidebar-width, 300px) !important;
+    min-width: var(--doc-sidebar-width, 300px) !important;
+    margin-left: 0 !important;
+    opacity: 1;
+    visibility: visible;
+    border-right: 1px solid var(--ifm-toc-border-color);
+    transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.28s ease,
+                border-color 0.25s ease,
+                visibility 0s linear 0s !important;
+    will-change: margin-left, opacity;
+  }
+
+  /* El viewport interno mantiene su ancho fijo para evitar deformaciones */
+  div[class*='sidebarViewport_'] {
+    width: var(--doc-sidebar-width, 300px) !important;
+    min-width: var(--doc-sidebar-width, 300px) !important;
+  }
+
+  /* 1. Al activar Focus Mode: la barra lateral se desplaza a la izquierda y se repliega de forma lineal y continua */
+  html[data-focus-mode='true'] .theme-doc-sidebar-container,
+  html.focus-mode .theme-doc-sidebar-container,
+  html[data-focus-mode='true'] aside[class*='docSidebarContainer'],
+  html.focus-mode aside[class*='docSidebarContainer'],
+  html[data-focus-mode='true'] div[class*='sidebarContainer_'],
+  html.focus-mode div[class*='sidebarContainer_'],
+  html[data-focus-mode='true'] button[class*='collapseSidebarButton_'],
+  html.focus-mode button[class*='collapseSidebarButton_'] {
+    margin-left: calc(-1 * var(--doc-sidebar-width, 300px)) !important;
+    opacity: 0 !important;
+    border-color: transparent !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease,
+                border-color 0.25s ease,
+                visibility 0s linear 0.35s !important;
+  }
+
+  /* Transición base para la columna de la TOC derecha (al salir de Focus Mode) */
+  .col--3:has(.theme-doc-toc-desktop),
+  .col--3:has([class*='tableOfContents_']),
+  .col--3:has([class*='tocCollapsible_']),
+  div[class*='col--3']:has(.theme-doc-toc-desktop),
+  div[class*='col--3']:has([class*='tableOfContents_']),
+  div[class*='col--3']:has([class*='tocCollapsible_']) {
+    flex: 0 0 25% !important;
+    max-width: 25% !important;
+    width: 25% !important;
+    opacity: 1;
+    visibility: visible;
+    transition: flex 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                margin 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.28s ease,
+                visibility 0s linear 0s !important;
+    will-change: flex, max-width, width, opacity;
+  }
+
+  /* El contenido interno de la TOC tiene ancho estable y se desliza suavemente sin latigazo */
+  .theme-doc-toc-desktop,
+  div[class*='tableOfContents_'],
+  div[class*='tocCollapsible_'] {
+    width: 280px !important;
+    min-width: 280px !important;
+    transform: translateX(0);
+    opacity: 1;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.28s ease !important;
+    will-change: transform, opacity;
+  }
+
+  /* 2. Al activar Focus Mode: la columna repliega su ancho en perfecta sincronía mientras la TOC se desliza hacia la derecha */
+  html[data-focus-mode='true'] .col--3:has(.theme-doc-toc-desktop),
+  html.focus-mode .col--3:has(.theme-doc-toc-desktop),
+  html[data-focus-mode='true'] .col--3:has([class*='tableOfContents_']),
+  html.focus-mode .col--3:has([class*='tableOfContents_']),
+  html[data-focus-mode='true'] .col--3:has([class*='tocCollapsible_']),
+  html.focus-mode .col--3:has([class*='tocCollapsible_']),
+  html[data-focus-mode='true'] div[class*='col--3']:has(.theme-doc-toc-desktop),
+  html.focus-mode div[class*='col--3']:has(.theme-doc-toc-desktop),
+  html[data-focus-mode='true'] div[class*='col--3']:has([class*='tableOfContents_']),
+  html.focus-mode div[class*='col--3']:has([class*='tableOfContents_']),
+  html[data-focus-mode='true'] div[class*='col--3']:has([class*='tocCollapsible_']),
+  html.focus-mode div[class*='col--3']:has([class*='tocCollapsible_']) {
+    flex: 0 0 0% !important;
+    max-width: 0 !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    transition: flex 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                min-width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                margin 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease,
+                visibility 0s linear 0.35s !important;
+  }
+
+  html[data-focus-mode='true'] .theme-doc-toc-desktop,
+  html.focus-mode .theme-doc-toc-desktop,
+  html[data-focus-mode='true'] div[class*='tableOfContents_'],
+  html.focus-mode div[class*='tableOfContents_'],
+  html[data-focus-mode='true'] div[class*='tocCollapsible_'],
+  html.focus-mode div[class*='tocCollapsible_'] {
+    transform: translateX(60px) !important;
+    opacity: 0 !important;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease !important;
+  }
+
+  /* Transición sincronizada para contenedor principal y columna de lectura central */
+  main[class*='docMainContainer'],
+  .theme-doc-main-container,
+  main[class*='docMainContainer'] > div[class*='container'],
+  div[class*='docItemCol'],
+  .col.docItemCol,
+  .theme-doc-item-container {
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                flex 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* 3. Expandir contenedor principal al 100% de la pantalla */
+  html[data-focus-mode='true'] main[class*='docMainContainer'],
+  html.focus-mode main[class*='docMainContainer'],
+  html[data-focus-mode='true'] .theme-doc-main-container,
+  html.focus-mode .theme-doc-main-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    flex: 1 1 100% !important;
+  }
+
+  html[data-focus-mode='true'] main[class*='docMainContainer'] > div[class*='container'],
+  html.focus-mode main[class*='docMainContainer'] > div[class*='container'] {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+  }
+
+  /* Centrar horizontalmente la fila del artículo mediante Flexbox */
+  html[data-focus-mode='true'] .row:has(> div[class*='docItemCol']),
+  html.focus-mode .row:has(> div[class*='docItemCol']),
+  html[data-focus-mode='true'] .row:has(> .docItemCol),
+  html.focus-mode .row:has(> .docItemCol) {
+    justify-content: center !important;
+  }
 }
 
-/* 2. Ocultar barra lateral derecha (Tabla de contenidos / TOC) */
-html.focus-mode .theme-doc-toc-desktop,
-html.focus-mode .theme-doc-toc-mobile,
-html.focus-mode div[class*='tableOfContents_'],
-html.focus-mode div[class*='tocCollapsible_'],
-html.focus-mode .col.col--3,
-html.focus-mode .col--3:has(.theme-doc-toc-desktop),
-html.focus-mode .col--3:has([class*='tableOfContents_']),
-html.focus-mode div[class*='col--3']:has([class*='tableOfContents_']) {
-  display: none !important;
-  width: 0 !important;
-  min-width: 0 !important;
-  max-width: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: none !important;
-  visibility: hidden !important;
+/* ==========================================================================
+   4. CONTROL DE CAPA (CSS CASCADE LAYERS): SOBRESCRIBIR .docItemCol EN FOCUS MODE
+   Docusaurus 3 encapsula su tema en @layer docusaurus.theme-classic.
+   Para que max-width: 960px !important prevalezca sobre el max-width: 75% !important
+   del tema sin deformar el texto en Focus Mode, debe residir dentro de la misma capa.
+   ========================================================================== */
+@layer docusaurus.theme-classic {
+  @media (min-width: 997px) {
+    html[data-focus-mode='true'] div[class*='docItemCol'],
+    html.focus-mode div[class*='docItemCol'],
+    html[data-focus-mode='true'] .col.docItemCol,
+    html.focus-mode .col.docItemCol,
+    html[data-focus-mode='true'] .theme-doc-item-container,
+    html.focus-mode .theme-doc-item-container {
+      max-width: 960px !important;
+      width: 100% !important;
+      flex: 0 0 100% !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+
+    html[data-focus-mode='true'] div[class*='docItemCol'] article,
+    html.focus-mode div[class*='docItemCol'] article,
+    html[data-focus-mode='true'] .theme-doc-item-container article,
+    html.focus-mode .theme-doc-item-container article {
+      max-width: 100% !important;
+      margin: 0 auto !important;
+    }
+  }
 }
 
-/* 3. Expandir contenedor principal al 100% de la pantalla */
-html.focus-mode main[class*='docMainContainer'],
-html.focus-mode .theme-doc-main-container {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin-left: 0 !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  flex: 1 1 100% !important;
-  transition: width 0.25s ease;
-}
+/* ==========================================================================
+   5. ANIMACIÓN DE FUNDIDO SECUENCIAL (FADE-OUT -> HOLD EN OSCURIDAD -> FADE-IN)
+   Oculta por completo la reorganización y el salto de líneas del texto central:
+   1. Fase fading-out: Se desvanece a opacidad 0 de forma perceptible y suave (220ms).
+   2. Fase holding: Se mantiene en opacidad 0 mientras las barras laterales se deslizan
+      y el layout se reorganiza por completo en la oscuridad (320ms).
+   3. Fase fading-in: El texto reaparece suavemente en 320ms ya asentado en su posición final.
+   ========================================================================== */
+@media (min-width: 997px) {
+  /* Fase 1: Desvanecimiento suave del artículo hacia 0 antes de mover el layout */
+  html[data-focus-phase='fading-out'] div[class*='docItemCol'] article,
+  html[data-focus-phase='fading-out'] .theme-doc-markdown,
+  html[data-focus-phase='fading-out'] [class*='docItemContainer'] {
+    opacity: 0 !important;
+    transform: scale(0.995);
+    transition: opacity 0.22s ease-out, transform 0.22s ease-out !important;
+    pointer-events: none !important;
+  }
 
-html.focus-mode main[class*='docMainContainer'] > div[class*='container'] {
-  max-width: 100% !important;
-  width: 100% !important;
-  padding-left: 2rem !important;
-  padding-right: 2rem !important;
-}
+  /* Fase 2: Mantener invisible mientras las barras laterales terminan su desplazamiento */
+  html[data-focus-phase='holding'] div[class*='docItemCol'] article,
+  html[data-focus-phase='holding'] .theme-doc-markdown,
+  html[data-focus-phase='holding'] [class*='docItemContainer'] {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
 
-/* 4. Centrar la columna del contenido del documento con ancho óptimo de lectura */
-html.focus-mode div[class*='docItemCol'],
-html.focus-mode .col.docItemCol,
-html.focus-mode .theme-doc-item-container {
-  max-width: 960px !important;
-  width: 100% !important;
-  margin: 0 auto !important;
-  flex: 0 0 100% !important;
-}
+  /* Fase 3: Reaparición suave y elegante en la nueva posición ya estabilizada */
+  @keyframes focusContentFadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(3px) scale(0.995);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
 
-html.focus-mode article {
-  max-width: 100% !important;
-  margin: 0 auto !important;
+  html[data-focus-phase='fading-in'] div[class*='docItemCol'] article,
+  html[data-focus-phase='fading-in'] .theme-doc-markdown,
+  html[data-focus-phase='fading-in'] [class*='docItemContainer'] {
+    animation: focusContentFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    will-change: opacity, transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html[data-focus-phase='fading-out'] div[class*='docItemCol'] article,
+    html[data-focus-phase='fading-out'] .theme-doc-markdown,
+    html[data-focus-phase='holding'] div[class*='docItemCol'] article,
+    html[data-focus-phase='holding'] .theme-doc-markdown,
+    html[data-focus-phase='fading-in'] div[class*='docItemCol'] article,
+    html[data-focus-phase='fading-in'] .theme-doc-markdown {
+      opacity: 1 !important;
+      animation: none !important;
+      transition: none !important;
+    }
+  }
 }
