@@ -78,9 +78,14 @@ sequenceDiagram
 
 To resolve this issue, Spring's `ApplicationContext` must be instantiated **once** when the web server (Tomcat) starts the application, stored as an attribute of the servlet context (`ServletContext`), and destroyed when the application shuts down.
 
-<div style={{textAlign: 'center', margin: '25px 0'}}>
-  <img src="/img/computacion-2/spring-tomcat-catalina-ioc.svg" width="100%" alt="Horizontal Architecture of Tomcat, Catalina, ServletContext and Spring IoC Container" />
-</div>
+Walk through the following diagram step by step to see how Tomcat, Catalina, the ServletContext, and the Spring IoC container are connected through the ContextLoaderListener.
+
+<iframe
+  src="/interactive/computacion-2/semana-2/spring-en-tomcat/index.html"
+  title="Interactive diagram of Spring IoC inside Tomcat: Catalina, ServletContext and ContextLoaderListener"
+  style={{ width: '100%', height: 700, border: 0 }}
+  loading="lazy"
+/>
 
 ### Layer Breakdown in the Web Server
 

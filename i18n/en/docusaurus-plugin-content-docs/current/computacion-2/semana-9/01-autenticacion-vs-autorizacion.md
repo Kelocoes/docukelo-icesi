@@ -27,13 +27,14 @@ A network firewall can verify that an incoming request arrives from an allowed I
 
 Every access control system is founded on strictly and sequentially answering two separate questions:
 
-<div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
-  <img
-    src="/img/computacion-2/authn-vs-authz-conceptual.svg"
-    alt="Authentication vs Authorization"
-    style={{ width: "100%", maxWidth: "920px" }}
-  />
-</div>
+Walk through the diagram step by step: first the two questions, then the example with ana. Turn on the switches to see how each gate fails (401 and 403).
+
+<iframe
+  src="/interactive/computacion-2/semana-9/authn-vs-authz/index.html"
+  title="Authentication and authorization: two gates in order, with their 401 and 403 errors"
+  style={{ width: '100%', height: 660, border: 0 }}
+  loading="lazy"
+/>
 
 ### A. Authentication — *Who are you?*
 The process of **verifying the identity claimed** by an external user, system, or service.

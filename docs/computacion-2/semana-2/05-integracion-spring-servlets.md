@@ -76,9 +76,14 @@ public class EstudianteServletError extends HttpServlet {
 
 Para solucionar este problema, el `ApplicationContext` de Spring debe instanciarse **una sola vez** cuando el servidor web (Tomcat) inicia la aplicación, guardarse como un atributo del contexto del servlet (`ServletContext`) y destruirse cuando la aplicación se apaga.
 
-<div style={{textAlign: 'center', margin: '25px 0'}}>
-  <img src="/img/computacion-2/spring-tomcat-catalina-ioc.svg" width="100%" alt="Arquitectura Horizontal de Tomcat, Catalina, ServletContext y Spring IoC Container" />
-</div>
+Recorre el siguiente diagrama paso a paso para ver cómo Tomcat, Catalina, el ServletContext y el contenedor IoC de Spring se conectan mediante el ContextLoaderListener.
+
+<iframe
+  src="/interactive/computacion-2/semana-2/spring-en-tomcat/index.html"
+  title="Diagrama interactivo de Spring IoC dentro de Tomcat: Catalina, ServletContext y ContextLoaderListener"
+  style={{ width: '100%', height: 700, border: 0 }}
+  loading="lazy"
+/>
 
 ### Desglose de Capas en el Servidor Web
 

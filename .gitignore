@@ -28,4 +28,5 @@ yarn-error.log*
 output-skills/
 .agents/spec/
 .playwright-mcp/
+svg-redesign/
 

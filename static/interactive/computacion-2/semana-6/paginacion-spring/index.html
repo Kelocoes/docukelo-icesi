@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paginación en Spring Data JPA</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-table.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Paginación en Spring Data JPA: solo DATOS. Entidad Product (id, name, price) como en el capitulo. */
+(function () {
+  var NAMES = ['Teclado', 'Mouse', 'Monitor', 'Laptop', 'Impresora', 'Webcam', 'Micrófono', 'Audífonos', 'Parlante', 'Disco SSD', 'Memoria RAM', 'Router',
+    'Cable HDMI', 'Tablet', 'Smartphone', 'Cargador', 'Mochila', 'Silla gamer', 'Escritorio', 'Lámpara', 'Hub USB', 'Pendrive', 'Proyector'];
+  var PRICES = [120, 45, 380, 2200, 410, 95, 150, 130, 85, 190, 110, 140, 15, 520, 1300, 35, 70, 360, 280, 40, 28, 18, 640];
+  var ROWS = NAMES.map(function (n, i) { return { id: i + 1, name: n, price: PRICES[i] }; });
+  var BIG = 1450000;
+
+  var page = function (p, size, sort) { return { mode: 'page', page: p, size: size, sort: sort || null }; };
+  var meter = function (label, value, max, text, tone) { return { label: label, value: value, max: max, text: text, tone: tone }; };
+  var step = function (phase, title, caption, view, code, extra) { var s = { phase: phase, title: title, caption: caption, view: view, code: code, msgs: [] }; for (var k in extra) s[k] = extra[k]; return s; };
+
+  var steps = [
+    // ---- Fase 1: sin paginar ----
+    step(0, 'Una tabla grande',
+      '¿Qué pasa si hay miles de productos? findAll() trae TODAS las filas. Aquí hay 23 de ejemplo; en producción pueden ser 1.450 o un millón.',
+      { mode: 'all' }, [1, 2]),
+    step(0, 'Todo viaja de golpe',
+      'Todas las filas viajan en una sola respuesta: más red, más memoria en la JVM y una pantalla interminable. Con un millón de filas llega el OutOfMemoryError.',
+      { mode: 'all' }, [2], { meters: [meter('Filas que viajan', 23, 23, '23 de 23', 'err')] }),
+
+    // ---- Fase 2: paginar ----
+    step(1, 'Pedir una página',
+      'Con Pageable pides solo un trozo: la página 0 con 5 elementos. Spring lo traduce a LIMIT y OFFSET.',
+      page(0, 5), [5, 6], { meters: [meter('Filas que viajan', 5, 23, '5 de 23', 'ack')] }),
+    step(1, 'Ir a otra página',
+      'Cambiar page cambia el OFFSET: la página 1 se salta las primeras 5 filas. Las páginas se cuentan desde 0.',
+      page(1, 5), [5], { meters: [meter('Filas que viajan', 5, 23, '5 de 23', 'ack')] }),
+    step(1, 'Qué devuelve Page<T>',
+      'Page no trae solo las filas (getContent): también calcula metadatos con un COUNT(*), como el total de elementos y de páginas. Con eso el frontend dibuja el paginador.',
+      page(1, 5), [6, 11, 12, 13], { focusMeta: true }),
+
+    // ---- Fase 3: configurar ----
+    step(2, 'Tamaño de página (size)',
+      'size decide cuántas filas trae cada página. Con 10 hay menos páginas (3), pero cada respuesta pesa más.',
+      page(0, 10), [5], { meters: [meter('Filas que viajan', 10, 23, '10 de 23', 'ack')] }),
+    step(2, 'Orden (Sort)',
+      'Sort ordena ANTES de cortar la página: por eso el ORDER BY va en el SQL y las páginas siguen un orden estable (aquí, del más caro al más barato).',
+      page(0, 5, { key: 'price', dir: 'desc' }), [9]),
+    step(2, 'Cuándo usarla',
+      'Úsala siempre que una tabla pueda crecer: la respuesta pesa lo mismo con 100 que con un millón de registros, porque solo viaja una página.',
+      page(0, 10), [1, 5], { meters: [meter('Sin paginación', BIG, BIG, '1.450.000 filas', 'err'), meter('Con paginación (size 10)', 10, BIG, '10 filas', 'ack')] }),
+  ];
+
+  var CODE = [
+    '// Sin paginación: trae TODAS las filas',
+    'List<Product> todos = productRepository.findAll();',
+    '',
+    '// Con paginación: solo una página',
+    'Pageable pageable = PageRequest.of(page, size);',
+    'Page<Product> pagina = productRepository.findAll(pageable);',
+    '',
+    '// Con orden',
+    'Pageable ordenado = PageRequest.of(page, size, Sort.by("price").descending());',
+    '',
+    'pagina.getContent();        // las filas de esta página',
+    'pagina.getTotalElements();  // el total (hace un COUNT(*))',
+    'pagina.getTotalPages();     // cuántas páginas hay',
+  ].join('\n');
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Paginación en Spring Data JPA: consulta sin paginar frente a consulta por páginas, con tamaño, orden y metadatos de Page',
+    phases: ['Sin paginar', 'Paginar', 'Configurar'],
+    scene: function (svg, stage) {
+      return DK.table({ stage: stage, table: 'products', entity: 'Product', rows: ROWS,
+        columns: [{ key: 'id', label: 'id' }, { key: 'name', label: 'name' }, { key: 'price', label: 'price', align: 'right' }] });
+    },
+    build: function () { return steps; },
+    code: { title: 'ProductService.java', text: CODE },
+    kicker: function (p) { return ['Fase 1 · Sin paginar', 'Fase 2 · Paginar', 'Fase 3 · Configurar'][p]; },
+    intro: {
+      kicker: 'Paginación en Spring Data JPA', title: 'Antes de empezar',
+      text: 'Esta tabla tiene 23 productos. Pulsa "Siguiente" para ver qué pasa cuando los pides todos de golpe y cómo cambia con paginación, tamaño de página y orden.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

@@ -5,54 +5,22 @@ sidebar_label: "Spring Security Architecture"
 
 # Spring Security Architecture
 
-To master Spring Security rather than relying on copy-pasting configurations, we must examine how the framework intercepts and processes every incoming HTTP request inside the Servlet container (Apache Tomcat):
-
-<div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
-  <img
-    src="/img/computacion-2/spring-security-architecture-filterchain.svg"
-    alt="Spring Security Internal Architecture"
-    style={{ width: "100%", maxWidth: "980px" }}
-  />
-</div>
+To master Spring Security rather than relying on copy-pasting configurations, we must examine how the framework intercepts and processes every incoming HTTP request inside the Servlet container (Apache Tomcat).
 
 ---
 
 ## 1. The HTTP Request Lifecycle in Detail
 
-When a client sends a request to an endpoint in our application, the request interacts sequentially with the components of Spring Security. Trace the step-by-step lifecycle below:
+When a client sends a request to an endpoint in our application, the request interacts sequentially with the components of Spring Security.
 
-<ZoomableMermaid value={`sequenceDiagram
-    autonumber
-    actor Client as HTTP Client (Browser)
-    participant FilterChain as SecurityFilterChain<br/>(FilterChainProxy)
-    participant AuthFilter as UsernamePassword<br/>AuthenticationFilter
-    participant AuthManager as AuthenticationManager<br/>(ProviderManager)
-    participant AuthProvider as DaoAuthenticationProvider
-    participant UserDetailsSvc as CustomUserDetailsService
-    participant DB as Database (JPA)
-    participant PasswordEnc as PasswordEncoder<br/>(BCrypt)
-    participant SecurityCtx as SecurityContextHolder<br/>(ThreadLocal)
-    participant Dispatcher as DispatcherServlet<br/>(@Controller)
+Walk through the diagram step by step: first you meet each piece, then you follow a numbered login and, finally, a request that is already authenticated.
 
-    Client->>FilterChain: 1. POST /login (username, password)
-    FilterChain->>AuthFilter: 2. Intercepts and extracts credentials
-    AuthFilter->>AuthManager: 3. authenticate(unauthenticatedToken)
-    AuthManager->>AuthProvider: 4. authenticate(token)
-    AuthProvider->>UserDetailsSvc: 5. loadUserByUsername(username)
-    UserDetailsSvc->>DB: 6. Query user record by username
-    DB-->>UserDetailsSvc: 7. Returns User database entity
-    UserDetailsSvc-->>AuthProvider: 8. Returns UserDetails (hash + roles)
-    AuthProvider->>PasswordEnc: 9. matches(rawPassword, storedHash)
-    PasswordEnc-->>AuthProvider: 10. true (password matches)
-    AuthProvider-->>AuthManager: 11. Returns Authentication (validated)
-    AuthManager-->>AuthFilter: 12. Returns completed Authentication
-    AuthFilter->>SecurityCtx: 13. setAuthentication(auth)
-    AuthFilter-->>Client: 14. Successful redirect (302 to /mvc/users)
-    Note over Client,Dispatcher: Subsequent requests from authenticated user:
-    Client->>FilterChain: 15. GET /mvc/users (JSESSIONID cookie)
-    FilterChain->>SecurityCtx: 16. Validates Principal & GrantedAuthorities
-    FilterChain->>Dispatcher: 17. Dispatches to Controller (200 OK)
-`} />
+<iframe
+  src="/interactive/computacion-2/semana-9/spring-security-filterchain/index.html"
+  title="Spring Security architecture: filter chain, AuthenticationManager, provider, UserDetailsService and SecurityContext"
+  style={{ width: '100%', height: 780, border: 0 }}
+  loading="lazy"
+/>
 
 ---
 

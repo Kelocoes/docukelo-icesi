@@ -13,7 +13,14 @@ You could imagine it as a courier service that requires delivery confirmation: i
 
 For this reason, TCP is fundamental in applications where **data integrity is essential**, such as *web pages*, *emails*, and *file transfers*.
 
-<img src="/img/computacion-2/TCP.webp" alt="TCP Protocol" width="800" />
+Walk through the diagram step by step: each message travels between the client and the server, and you can simulate what happens when a packet is lost.
+
+<iframe
+  src="/interactive/computacion-2/semana-1/tcp-en-accion/index.html"
+  title="TCP in action: connect, transfer and close"
+  style={{ width: '100%', height: 740, border: 0 }}
+  loading="lazy"
+/>
 
 #### Three-Way Handshake
 
@@ -38,7 +45,14 @@ This protocol is mainly used in applications where **speed is more important tha
 
 If a packet is lost during transmission, communication continues without interruption.
 
-<img src="/img/computacion-2/TCP_UDP.jpg" alt="UDP Protocol" width="800" />
+Compare both protocols in the same scenario: what each one does when opening the communication, when sending data, and when a packet is lost.
+
+<iframe
+  src="/interactive/computacion-2/semana-1/tcp-vs-udp/index.html"
+  title="TCP versus UDP: open, send, and what happens if a packet is lost"
+  style={{ width: '100%', height: 700, border: 0 }}
+  loading="lazy"
+/>
 
 ## Web Servers
 
@@ -53,7 +67,14 @@ HTTP protocols consist of different parts, presented below:
 - **Headers**: Additional information about the request, such as accepted content type or cookies.
 - **Request Body**: Contains data sent to the server, if necessary (for example, in a `POST` request).
 
-<img src="/img/computacion-2/HTTP_protocol.png" alt="HTTP Protocol" width="500" />
+Explore a real request part by part: each step focuses on one element of the message and explains what it is for. You can turn on the example with a body (POST) to see how it changes.
+
+<iframe
+  src="/interactive/computacion-2/semana-1/peticion-http/index.html"
+  title="The parts of an HTTP request: method, URL, version, headers and body"
+  style={{ width: '100%', height: 560, border: 0 }}
+  loading="lazy"
+/>
 
 ---
 

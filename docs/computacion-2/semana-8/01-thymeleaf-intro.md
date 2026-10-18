@@ -16,13 +16,14 @@ Para comprender el funcionamiento de Thymeleaf, es indispensable derribar un mit
 
 La siguiente ilustración detalla el ciclo completo de procesamiento en Spring Boot MVC:
 
-<div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
-    <img
-        src="/img/computacion-2/spring-thymeleaf-ssr-flow.svg"
-        alt="Ciclo de transformación y Server Side Rendering en Spring Boot y Thymeleaf"
-        style={{ width: "100%", maxWidth: "960px" }}
-    />
-</div>
+Recorre el diagrama paso a paso: sigue una petición desde el navegador hasta que vuelve convertida en HTML y fíjate cómo viajan los datos entre los componentes.
+
+<iframe
+  src="/interactive/computacion-2/semana-8/flujo-ssr-thymeleaf/index.html"
+  title="Flujo de una petición en Spring Boot con Thymeleaf: DispatcherServlet, controlador, Model y motor de plantillas"
+  style={{ width: '100%', height: 760, border: 0 }}
+  loading="lazy"
+/>
 
 #### Explicación Detallada de los Componentes del Flujo
 
@@ -30,6 +31,7 @@ La siguiente ilustración detalla el ciclo completo de procesamiento en Spring B
     - El usuario solicita una ruta web (por ejemplo, `GET /mvc/users`) desde la barra de direcciones o mediante un hipervínculo.
     - El navegador espera un documento de tipo `text/html`.
 2. **Controlador Web (`@Controller`)**:
+    - Antes de llegar al controlador, la petición la recibe el `DispatcherServlet`, el servlet de Spring MVC, que busca qué método atiende esa ruta y lo invoca. Luego recibe de vuelta el nombre de la vista.
     - La clase `UserMVCController` intercepta la petición HTTP mediante `@GetMapping("/mvc/users")`.
     - A diferencia de un `@RestController` (que serializa datos directamente en formato JSON o XML), un `@Controller` tradicional orquesta la vista devolviendo una cadena con el nombre lógico de la plantilla (`"users/list"`).
 3. **Capa de Lógica de Negocio y Persistencia (Service, Repository y Base de Datos)**:
@@ -44,7 +46,7 @@ La siguiente ilustración detalla el ciclo completo de procesamiento en Spring B
     - El motor analiza el árbol sintáctico (DOM) del template, detecta los atributos del dialecto estándar (`th:text`, `th:each`, `th:if`) y evalúa sus expresiones contra los datos presentes en el `Model`.
 6. **Transformación y Emisión de HTML Puro (Server Side Rendering)**:
     - El motor reemplaza el contenido de prueba por los valores reales de las entidades de la base de datos y **remueve por completo todos los atributos de Thymeleaf (`th:*`)**.
-    - El servidor escribe el flujo de texto resultante (HTML5 válido) en el cuerpo de la respuesta HTTP (`HttpServletResponse`) con código de estado 200 OK.
+    - El servidor escribe el flujo de texto resultante (HTML5 válido) en el cuerpo de la respuesta HTTP (`HttpServletResponse`) con código de estado 200 OK. Esa respuesta sale por el `DispatcherServlet` hacia el navegador: el motor de plantillas nunca habla directamente con el cliente.
     - **Resultado en el Cliente**: El usuario final recibe únicamente etiquetas estándar (`<table>`, `<tr>`, `<td>`), garantizando que la estructura interna de la base de datos y la lógica Java permanezcan completamente aisladas del cliente.
 
 ---

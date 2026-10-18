@@ -13,7 +13,14 @@ Podrías imaginarlo como un servicio de mensajería que requiere confirmación d
 
 Por esta razón, TCP es fundamental en aplicaciones donde **la integridad de los datos es esencial**, como *páginas web*, *correos electrónicos* y *transferencias de archivos*.
 
-<img src="/img/computacion-2/TCP.webp" alt="Protocolo TCP" width="800" />
+Recorre el diagrama paso a paso: cada mensaje viaja entre el cliente y el servidor, y puedes simular qué pasa cuando un paquete se pierde.
+
+<iframe
+  src="/interactive/computacion-2/semana-1/tcp-en-accion/index.html"
+  title="TCP en acción: conectar, transferir y cerrar"
+  style={{ width: '100%', height: 740, border: 0 }}
+  loading="lazy"
+/>
 
 #### Three-Way Handshake
 
@@ -38,7 +45,14 @@ Este protocolo se utiliza principalmente en aplicaciones donde **la velocidad es
 
 Si se pierde un paquete durante la transmisión, la comunicación continúa sin interrupciones.
 
-<img src="/img/computacion-2/TCP_UDP.jpg" alt="Protocolo UDP" width="800" />
+Compara los dos protocolos con el mismo escenario: qué hace cada uno al abrir la comunicación, al enviar los datos y cuando un paquete se pierde.
+
+<iframe
+  src="/interactive/computacion-2/semana-1/tcp-vs-udp/index.html"
+  title="TCP frente a UDP: abrir, enviar y qué pasa si se pierde un paquete"
+  style={{ width: '100%', height: 700, border: 0 }}
+  loading="lazy"
+/>
 
 ## Servidores web
 
@@ -53,7 +67,14 @@ Los protocolos HTTP se componen de diferentes partes, las cuales se presentan a 
 - **Encabezados**: Información adicional sobre la solicitud, como el tipo de contenido aceptado o las cookies.
 - **Cuerpo de la solicitud**: Contiene los datos que se envían al servidor, si es necesario (por ejemplo, en una solicitud `POST`).
 
-<img src="/img/computacion-2/HTTP_protocol.png" alt="Protocolo HTTP" width="500" />
+Explora una petición real parte por parte: cada paso enfoca un elemento del mensaje y te explica para qué sirve. Puedes activar el ejemplo con cuerpo (POST) para ver cómo cambia.
+
+<iframe
+  src="/interactive/computacion-2/semana-1/peticion-http/index.html"
+  title="Las partes de una petición HTTP: método, URL, versión, encabezados y cuerpo"
+  style={{ width: '100%', height: 560, border: 0 }}
+  loading="lazy"
+/>
 
 ---
 

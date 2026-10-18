@@ -1,0 +1,53 @@
+{
+  "id": "caOrigins",
+  "title": "Una idea que se repite: el dominio al centro",
+  "loop": true,
+  "groups": {
+    "titulo": "text:Una idea",
+    "eje": "@3",
+    "flecha": "@4",
+    "dominio": ["@9", "@23", "@33"]
+  },
+  "steps": [
+    {
+      "title": "Una línea de tiempo",
+      "caption": "Tres autores, en tres años distintos, llegaron a la misma conclusión. Sigamos la línea de tiempo.",
+      "do": [
+        { "target": "titulo", "fx": "fade" },
+        { "target": "eje", "fx": "draw", "dur": 0.9, "delay": 0.2 },
+        { "target": "flecha", "fx": "fade", "dur": 0.4, "delay": 1.0 }
+      ]
+    },
+    {
+      "title": "2005 · Hexagonal",
+      "caption": "Alistair Cockburn propone puertos y adaptadores: el dominio queda en el centro y todo lo externo se conecta por puertos.",
+      "do": [
+        { "target": "after:2005 hexagonal", "only": "text", "fx": "rise", "stagger": 0.18 },
+        { "target": "after:2005 hexagonal", "only": "circle,g", "fx": "pop", "stagger": 0.18 }
+      ]
+    },
+    {
+      "title": "2008 · Onion",
+      "caption": "Jeffrey Palermo lo dibuja como capas concéntricas: cada capa solo conoce a las que tiene más adentro.",
+      "do": [
+        { "target": "after:2008 onion", "only": "text", "fx": "rise", "stagger": 0.18 },
+        { "target": "after:2008 onion", "only": "circle,g", "fx": "pop", "stagger": 0.18 }
+      ]
+    },
+    {
+      "title": "2012 · Clean",
+      "caption": "Robert C. Martin lo resume en cuatro círculos y una única regla: las dependencias solo apuntan hacia adentro.",
+      "do": [
+        { "target": "after:2012 clean", "only": "text", "fx": "rise", "stagger": 0.18 },
+        { "target": "after:2012 clean", "only": "circle,g", "fx": "pop", "stagger": 0.18 }
+      ]
+    },
+    {
+      "title": "Lo que se repite",
+      "caption": "En las tres versiones, el círculo morado del centro es el dominio de negocio. Cambia el dibujo; la idea es la misma.",
+      "do": [
+        { "target": "dominio", "fx": "pulse", "dur": 1.0, "stagger": 0.25 }
+      ]
+    }
+  ]
+}

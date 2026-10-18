@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arquitectura de Spring Security</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Arquitectura de Spring Security: solo DATOS. Sigue el orden del diagrama de secuencia del capítulo:
+ * pasos 1 a 14 (POST /login) y 15 a 17 (GET /mvc/users con la cookie de sesión). Cada paso lleva su número. */
+(function () {
+  var msg = function (path, label, kind, extra) { var m = { path: path, label: label, kind: kind }; for (var k in extra) m[k] = extra[k]; return m; };
+  var L = { labelSide: 'left' };
+
+  var nodes = [
+    { id: 'client', kind: 'actor', icon: 'browser', label: 'Navegador', x: 28, y: 34, w: 120, h: 84 },
+    { id: 'ctx', kind: 'box', icon: 'card', label: 'SecurityContextHolder', sub: 'vacío', x: 4, y: 190, w: 172, h: 84 },
+    { id: 'disp', kind: 'box', icon: 'server', label: 'DispatcherServlet', sub: 'y tu @Controller', x: 4, y: 350, w: 172, h: 84 },
+
+    { id: 'chain', kind: 'outer', label: 'SecurityFilterChain', sub: 'FilterChainProxy', x: 246, y: 8, w: 200, h: 438 },
+    { id: 'f1', kind: 'box', icon: 'filter', label: 'CsrfFilter', sub: 'protege contra CSRF', x: 260, y: 70, w: 172, h: 80 },
+    { id: 'f2', kind: 'box', icon: 'filter', label: 'UsernamePassword', sub: 'AuthenticationFilter', x: 260, y: 210, w: 172, h: 80 },
+    { id: 'f3', kind: 'box', icon: 'filter', label: 'AuthorizationFilter', sub: 'revisa los permisos', x: 260, y: 350, w: 172, h: 80 },
+
+    { id: 'uds', kind: 'box', icon: 'database', label: 'UserDetailsService', sub: 'carga el usuario', x: 576, y: 8, w: 220, h: 84 },
+    { id: 'mgr', kind: 'outer', label: 'AuthenticationManager', sub: 'ProviderManager', x: 576, y: 190, w: 220, h: 160 },
+    { id: 'prov', kind: 'box', icon: 'gear', label: 'DaoAuthenticationProvider', sub: 'verifica la clave', x: 588, y: 246, w: 196, h: 84 },
+    { id: 'enc', kind: 'box', icon: 'lock', label: 'PasswordEncoder', sub: 'BCrypt', x: 576, y: 430, w: 220, h: 84 },
+  ];
+
+  var steps = [
+    // ---- Fase 1: las piezas (sin movimiento) ----
+    { phase: 0, title: 'Una fila de filtros antes del controlador', focus: ['chain', 'f1', 'f2', 'f3'], msgs: [],
+      caption: 'Cada petición pasa por una fila de filtros, el SecurityFilterChain, antes de llegar a tu controlador. Cada filtro hace una sola tarea y pasa la petición al siguiente.' },
+    { phase: 0, title: 'Tres filtros bastan para seguir el flujo', focus: ['f1', 'f2', 'f3'], msgs: [],
+      caption: 'CsrfFilter protege los formularios, UsernamePasswordAuthenticationFilter atiende el login y AuthorizationFilter revisa permisos. La cadena real tiene más filtros; estos son los que importan aquí.' },
+    { phase: 0, title: 'Quién verifica la identidad', focus: ['mgr', 'prov'], msgs: [],
+      caption: 'El filtro de login no verifica la clave él mismo: se la pasa al AuthenticationManager, y este a un AuthenticationProvider (DaoAuthenticationProvider, para usuarios en base de datos).' },
+    { phase: 0, title: 'Sus dos ayudantes', focus: ['uds', 'enc'], msgs: [],
+      caption: 'El provider necesita dos colaboradores: el UserDetailsService, que trae al usuario de la base de datos, y el PasswordEncoder (BCrypt), que compara la contraseña con el hash guardado.' },
+    { phase: 0, title: 'Dónde queda el resultado', focus: ['ctx'], msgs: [],
+      caption: 'Si todo sale bien, el Authentication queda guardado en el SecurityContextHolder, ligado al hilo de la petición. Desde ahí cualquier parte de la aplicación puede saber quién está conectado.' },
+    { phase: 0, title: 'Y al final, tu controlador', focus: ['disp'], msgs: [],
+      caption: 'Solo si la petición supera todos los filtros llega al DispatcherServlet y a tu @Controller.' },
+
+    // ---- Fase 2: iniciar sesión (pasos 1 a 14 del diagrama de secuencia) ----
+    { phase: 1, title: '1 · El navegador envía el formulario', focus: ['client', 'f1'],
+      msgs: [msg([148, 100, 260, 100], 'POST /login', 'data')],
+      caption: 'ana envía su usuario y contraseña a /login. La petición entra por el primer filtro de la cadena.' },
+    { phase: 1, title: '2 · Pasa el filtro CSRF', focus: ['f1', 'f2'],
+      msgs: [msg([346, 150, 346, 210], 'pasa', 'ctl')],
+      caption: 'CsrfFilter comprueba el token del formulario y deja pasar la petición al siguiente filtro.' },
+    { phase: 1, title: '3 · El filtro de login lee las credenciales', focus: ['f2'], msgs: [],
+      caption: 'UsernamePasswordAuthenticationFilter reconoce que es un POST a /login y lee usuario y contraseña. Con ellos arma un token todavía sin autenticar.' },
+    { phase: 1, title: '4 · Pide autenticar al manager', focus: ['f2', 'mgr'],
+      msgs: [msg([432, 236, 576, 236], 'authenticate()', 'ctl')],
+      caption: 'El filtro le entrega ese token al AuthenticationManager: "comprueba si estas credenciales son válidas".' },
+    { phase: 1, title: '5 · El manager delega en el provider', focus: ['mgr', 'prov'], msgs: [],
+      caption: 'El manager no verifica nada: es un coordinador. Recorre sus providers hasta encontrar el que sabe tratar este tipo de credencial.' },
+    { phase: 1, title: '6 · El provider busca al usuario', focus: ['prov', 'uds'], sub: { uds: 'consulta la BD (JPA)' },
+      msgs: [msg([770, 246, 770, 92], 'loadUserByUsername()', 'ctl', { labelAt: 0.7, labelSide: 'left' })],
+      caption: 'DaoAuthenticationProvider llama a loadUserByUsername("ana"). Tu implementación consulta la base de datos con un repositorio JPA.' },
+    { phase: 1, title: '7 · Llegan el hash y los roles', focus: ['uds', 'prov'], sub: { uds: 'UserDetails de ana', prov: 'tiene hash y roles' },
+      msgs: [msg([770, 92, 770, 246], 'UserDetails', 'ack', { labelAt: 0.15, labelSide: 'left' })],
+      caption: 'El servicio devuelve un UserDetails con el hash guardado de la contraseña y los roles de ana. Todavía no se comparó nada.' },
+    { phase: 1, title: '8 · Compara la contraseña', focus: ['prov', 'enc'], sub: { enc: 'BCrypt compara' },
+      msgs: [msg([770, 330, 770, 430], 'matches()', 'ctl', { labelAt: 0.3, labelSide: 'left' })],
+      caption: 'El provider pide al PasswordEncoder que compare la contraseña escrita con el hash guardado: matches(raw, hash). BCrypt nunca "descifra" el hash; lo recalcula y compara.' },
+    { phase: 1, title: '9 · La contraseña coincide', focus: ['enc', 'prov'], sub: { enc: 'BCrypt: coincide', prov: 'clave correcta' },
+      msgs: [msg([770, 430, 770, 330], 'true', 'ack', { labelAt: 0.3, labelSide: 'left' })],
+      caption: 'matches devuelve true. Si fuera false, el provider lanzaría una excepción y el login fallaría con 401.' },
+    { phase: 1, title: '10 · Vuelve un Authentication autenticado', focus: ['mgr', 'f2'], sub: { prov: 'ana: autenticada' },
+      msgs: [msg([576, 270, 432, 270], 'Authentication', 'ack')],
+      caption: 'El provider construye un Authentication completo (el Principal ana y sus authorities) y lo devuelve por el manager hasta el filtro.' },
+    { phase: 1, title: '11 · Se guarda en el SecurityContext', focus: ['f2', 'ctx'], sub: { ctx: 'ana · ROLE_ADMIN' },
+      msgs: [msg([260, 250, 176, 250], 'guarda', 'ack')],
+      caption: 'El filtro guarda el Authentication con setAuthentication(auth). Para las siguientes peticiones queda asociado a la sesión HTTP (cookie JSESSIONID).' },
+    { phase: 1, title: '12 · Redirección a la página protegida', focus: ['f2', 'client'],
+      msgs: [msg([260, 224, 148, 118], '302', 'ack')],
+      caption: 'Con el login exitoso, el filtro responde con una redirección 302 a /mvc/users y el navegador la sigue.' },
+
+    // ---- Fase 3: una petición ya autenticada (pasos 15 a 17) ----
+    { phase: 2, title: '13 · Nueva petición con la cookie de sesión', focus: ['client', 'f1'],
+      msgs: [msg([148, 100, 260, 100], 'GET /mvc/users', 'data')],
+      caption: 'El navegador pide /mvc/users y envía la cookie JSESSIONID. Con ella Spring recupera de la sesión el Authentication que se guardó en el login.' },
+    { phase: 2, title: '14 · Los filtros la dejan pasar', focus: ['f1', 'f2', 'f3'],
+      msgs: [msg([346, 150, 346, 210], 'pasa', 'ctl'), msg([346, 290, 346, 350], 'pasa', 'ctl')],
+      caption: 'No es un POST a /login, así que el filtro de login no hace nada y la petición sigue su camino hasta el filtro de autorización.' },
+    { phase: 2, title: '15 · AuthorizationFilter lee quién eres', focus: ['f3', 'ctx'],
+      msgs: [msg([260, 372, 150, 274], 'lee', 'ctl')],
+      caption: 'El filtro consulta el SecurityContext para saber quién hace la petición y con qué authorities.' },
+    { phase: 2, title: '16 · Revisa los permisos', focus: ['f3', 'ctx'], msgs: [],
+      caption: 'Compara las authorities de ana con la regla configurada para /mvc/users. Si no alcanzaran, la respuesta sería 403 Forbidden y la petición no pasaría de aquí.' },
+    { phase: 2, title: '17 · Llega al controlador', focus: ['f3', 'disp'],
+      msgs: [msg([260, 410, 176, 410], 'permite', 'ack')],
+      caption: 'La petición queda autorizada: sale de la cadena de filtros, la recibe el DispatcherServlet y este invoca a tu controlador.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Arquitectura de Spring Security: la cadena de filtros, el AuthenticationManager, el provider, el UserDetailsService, el PasswordEncoder y el SecurityContext, con el recorrido de un login y de una petición posterior',
+    phases: ['Las piezas', 'Iniciar sesión', 'Petición autenticada'],
+    scene: function (svg) { return DK.layers({ svg: svg, width: 800, height: 530, nodes: nodes, trail: 'phase', labels: 'smart' }); },
+    build: function () { return steps; },
+    kicker: function (p) { return ['Fase 1 · Las piezas', 'Fase 2 · Iniciar sesión (POST /login)', 'Fase 3 · Una petición ya autenticada (GET /mvc/users)'][p]; },
+    intro: {
+      kicker: 'Spring Security por dentro', title: 'Antes de empezar',
+      text: 'Este diagrama tiene muchas piezas, así que se recorre despacio. Pulsa "Siguiente": primero conoces cada pieza, luego sigues un login numerado paso a paso y, al final, una petición posterior ya autenticada.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

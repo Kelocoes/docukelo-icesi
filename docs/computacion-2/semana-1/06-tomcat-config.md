@@ -114,15 +114,25 @@ Asegúrate de tener instalado lo siguiente:
     ```
 A este punto es bueno hablar sobre lo que significa un Servlet. Un Servlet es una clase Java que maneja solicitudes y respuestas HTTP, permitiendo crear aplicaciones web dinámicas. En este ejemplo, el Servlet `HelloServlet` responde a las solicitudes GET con un mensaje "Hello World!".
 
-A continuación te muestro una gráfica que expone la ubicación de un servlet dentro de un proyecto web:
+A continuación te muestro un diagrama que expone la ubicación de un servlet dentro de un proyecto web. Recórrelo paso a paso: primero conoces las piezas y luego sigues el viaje de una solicitud hasta el servlet y de vuelta.
 
-<img src="/img/computacion-2/servlet.png" alt="Ubicación de un Servlet en un proyecto web" width="600"/>
+<iframe
+  src="/interactive/computacion-2/semana-1/servlet-en-tomcat/index.html"
+  title="El servlet dentro de Tomcat: Coyote, Catalina y los servlets"
+  style={{ width: '100%', height: 640, border: 0 }}
+  loading="lazy"
+/>
 
 Como puedes observar, los servlet se encuentran usualmente dentro del Web Server, en este caso Tomcat, y son invocados por el contenedor de servlets cuando se recibe una solicitud HTTP que coincide con su configuración.
 
-En el ciclo de vida de un servlet, puedes observar lo siguiente:
+En el ciclo de vida de un servlet, puedes observar lo siguiente. Mientras avanzas por el diagrama, fíjate qué línea del código de `HelloServlet` se ejecuta en cada paso:
 
-<img src="/img/computacion-2/ciclo-vida-servlet.png" alt="Ciclo de vida de un Servlet" width="500"/>
+<iframe
+  src="/interactive/computacion-2/semana-1/ciclo-vida-servlet/index.html"
+  title="Ciclo de vida de un servlet: init, doGet y destroy"
+  style={{ width: '100%', height: 880, border: 0 }}
+  loading="lazy"
+/>
 
 - El servlet es cargado en el Web Container cuando se recibe una solicitud.
 - Luego se crea una instancia de dicho servlet.

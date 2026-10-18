@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cómo fluyen los datos con Thymeleaf</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Flujo de una petición con Thymeleaf (Server Side Rendering): solo DATOS.
+ * El HTML NO sale del motor directo al navegador: el motor lo escribe en la respuesta y la entrega el DispatcherServlet. */
+(function () {
+  var msg = function (path, label, kind) { return { path: path, label: label, kind: kind }; };
+
+  var nodes = [
+    { id: 'browser', kind: 'actor', icon: 'browser', label: 'Navegador', x: 4, y: 48, w: 72, h: 84 },
+    { id: 'app', kind: 'outer', label: 'Aplicación Spring Boot', sub: 'Spring MVC + Thymeleaf', x: 96, y: 8, w: 700, h: 364 },
+    // fila superior: la peticion entra
+    { id: 'disp', kind: 'box', icon: 'server', label: 'DispatcherServlet', sub: 'servlet de Spring MVC', x: 140, y: 56, w: 160, h: 84 },
+    { id: 'ctrl', kind: 'box', icon: 'classbox', label: 'UserMVCController', sub: '@Controller', x: 370, y: 56, w: 160, h: 84 },
+    { id: 'data', kind: 'box', icon: 'database', label: 'Negocio y BD', sub: 'Service + JPA', x: 610, y: 56, w: 160, h: 84 },
+    // fila inferior: se arma la vista
+    { id: 'template', kind: 'box', icon: 'filecode', label: 'users/list.html', sub: 'plantilla con th:*', x: 140, y: 250, w: 160, h: 84 },
+    { id: 'engine', kind: 'box', icon: 'gear', label: 'Motor Thymeleaf', sub: 'SpringTemplateEngine', x: 370, y: 250, w: 160, h: 84 },
+    { id: 'model', kind: 'box', icon: 'bag', label: 'Model', sub: 'vacío', x: 610, y: 250, w: 160, h: 84 },
+  ];
+
+  var steps = [
+    // ---- Fase 1: las piezas ----
+    { phase: 0, title: 'DispatcherServlet: la puerta de Spring MVC', focus: ['disp'], msgs: [],
+      caption: 'Es el servlet de Spring MVC: recibe todas las peticiones, decide qué controlador las atiende y, al final, entrega la respuesta al navegador.' },
+    { phase: 0, title: 'Controlador y negocio', focus: ['ctrl', 'data'], msgs: [],
+      caption: 'El controlador (@Controller) pide los datos al servicio (que usa el repositorio JPA y la base de datos) y los deja en el Model. No devuelve HTML: devuelve el nombre de una vista.' },
+    { phase: 0, title: 'Model, Thymeleaf y plantilla', focus: ['model', 'engine', 'template'], msgs: [],
+      caption: 'El Model guarda los datos para la vista. El motor Thymeleaf toma la plantilla (users/list.html) y la mezcla con esos datos.' },
+
+    // ---- Fase 2: la solicitud ----
+    { phase: 1, title: 'El navegador pide la página', focus: ['browser', 'disp'],
+      msgs: [msg([76, 98, 140, 98], 'GET', 'data')],
+      caption: 'El navegador envía GET /mvc/users a la aplicación; la recibe el DispatcherServlet.' },
+    { phase: 1, title: 'El DispatcherServlet llama al controlador', focus: ['disp', 'ctrl'],
+      msgs: [msg([300, 86, 370, 86], 'invoca', 'ctl')],
+      caption: 'Busca qué método atiende esa ruta (el que tiene @GetMapping("/mvc/users")) y lo invoca.' },
+
+    // ---- Fase 3: los datos ----
+    { phase: 2, title: 'El controlador pide los datos', focus: ['ctrl', 'data'],
+      msgs: [msg([530, 86, 610, 86], 'findAll()', 'ctl'), msg([610, 112, 530, 112], 'users', 'ack')],
+      caption: 'Delega en UserService.findAll(): el servicio consulta el repositorio JPA, que ejecuta el SELECT, y los datos regresan como objetos Java (List<User>).' },
+    { phase: 2, title: 'Se guardan en el Model', focus: ['ctrl', 'model'], sub: { model: 'users = lista' },
+      msgs: [msg([510, 140, 640, 250], 'addAttribute', 'data')],
+      caption: 'model.addAttribute("users", lista): ahora los datos están disponibles para la vista bajo el nombre "users".' },
+
+    // ---- Fase 4: la vista ----
+    { phase: 3, title: 'El controlador devuelve el nombre de la vista', focus: ['ctrl', 'disp'],
+      msgs: [msg([370, 116, 300, 116], 'users/list', 'ctl')],
+      caption: 'El controlador responde con el texto "users/list": solo el nombre de la plantilla, no HTML. Se lo devuelve al DispatcherServlet.' },
+    { phase: 3, title: 'Thymeleaf mezcla plantilla y datos', focus: ['disp', 'engine', 'template', 'model'], sub: { engine: 'plantilla + Model = HTML' },
+      msgs: [{ path: [260, 140, 390, 250], label: 'render', kind: 'ctl', labelSide: 'left' }, msg([370, 292, 300, 292], 'lee', 'ctl'), msg([610, 292, 530, 292], 'datos', 'ack')],
+      caption: 'El DispatcherServlet le pide al motor que genere la vista. El motor lee la plantilla, evalúa th:each y th:text contra el Model y reemplaza el contenido de prueba por los valores reales.' },
+    { phase: 3, title: 'El HTML vuelve por el DispatcherServlet', focus: ['engine', 'disp', 'browser'],
+      msgs: [msg([440, 250, 310, 140], 'HTML', 'ack'), msg([140, 122, 76, 122], 'HTML', 'ack')],
+      caption: 'El motor escribe el HTML (sin atributos th:*) en la respuesta HTTP; la respuesta pasa por el DispatcherServlet y sale hacia el navegador con código 200. El motor nunca habla directo con el navegador.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Flujo de una petición en Spring Boot con Thymeleaf: navegador, DispatcherServlet, controlador, negocio y base de datos, Model, motor Thymeleaf y plantilla',
+    phases: ['Las piezas', 'La solicitud', 'Los datos', 'La vista'],
+    scene: function (svg) { return DK.layers({ svg: svg, width: 800, height: 380, nodes: nodes, trail: 'phase', labels: 'smart' }); },
+    build: function () { return steps; },
+    kicker: function (p) { return ['Fase 1 · Las piezas', 'Fase 2 · La solicitud', 'Fase 3 · Los datos', 'Fase 4 · La vista'][p]; },
+    intro: {
+      kicker: 'Server Side Rendering con Thymeleaf', title: 'Antes de empezar',
+      text: 'Este diagrama sigue una petición desde el navegador hasta que vuelve convertida en HTML. Pulsa "Siguiente": primero conoces las piezas y luego ves cómo viajan los datos.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

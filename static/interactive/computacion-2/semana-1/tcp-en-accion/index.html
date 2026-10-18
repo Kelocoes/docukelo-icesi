@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es" class="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TCP en acción</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* TCP en acción: solo DATOS. El motor (dibujo, animación, controles, tema) vive en _shared/. */
+(function () {
+  var C = 'client', S = 'server';
+  var msg = function (from, to, label, kind, extra) { var m = { from: from, to: to, label: label, kind: kind }; for (var k in extra) m[k] = extra[k]; return m; };
+  var pieces = function (lostNo) { return [1, 2, 3, 4].map(function (n) { return msg(C, S, 'Pieza ' + n, 'data', { piece: n, lost: n === lostNo }); }); };
+
+  function build(opt) {
+    var loss = opt.loss, steps = [];
+    var step = function (phase, title, caption, msgs, state, tray) { steps.push({ phase: phase, title: title, caption: caption, msgs: msgs, state: state, tray: tray }); };
+    var both = function (c, s) { return { client: c, server: s }; };
+    var sent = [1, 2, 3, 4];
+
+    // Fase 1: conectar (Three-Way Handshake)
+    step(0, 'Paso 1 · SYN', 'El Cliente pide abrir la conexión. Es como tocar la puerta: "quiero hablar contigo, ¿estás ahí?".',
+      [msg(C, S, 'SYN', 'ctl')], both('Conectando', 'Escuchando'));
+    step(0, 'Paso 2 · SYN-ACK', 'El Servidor responde que sí: "te escucho y acepto". Con SYN-ACK confirma el pedido y a la vez pide el suyo.',
+      [msg(S, C, 'SYN-ACK', 'ctl')], both('Conectando', 'Conectando'));
+    step(0, 'Paso 3 · ACK', 'El Cliente confirma. Ahora los dos saben que el otro está listo: la conexión queda abierta y recién ahí se envían datos.',
+      [msg(C, S, 'ACK', 'ack')], both('Conectado', 'Conectado'));
+
+    // Fase 2: transferir
+    if (!loss) {
+      step(1, 'Enviar los datos', 'El mensaje se parte en piezas numeradas y viaja pieza por pieza. La numeración permite volver a armarlo en orden.',
+        pieces(0), both('Conectado', 'Conectado'), { client: sent, server: [1, 2, 3, 4] });
+      step(1, 'Confirmar la entrega', 'El Servidor confirma con un ACK que recibió todo. Mientras no haya confirmación, el Cliente no da el envío por terminado.',
+        [msg(S, C, 'ACK 1-4', 'ack')], both('Conectado', 'Conectado'), { client: sent, server: [1, 2, 3, 4] });
+    } else {
+      step(1, 'Enviar los datos', 'Las piezas viajan, pero la pieza 3 se pierde en el camino (la X roja). El Servidor recibe las demás.',
+        pieces(3), both('Conectado', 'Conectado'), { client: sent, server: [1, 2, 4] });
+      step(1, 'El Servidor avisa qué falta', 'El Servidor solo confirma lo que tiene seguido: ACK hasta la pieza 2. Como no llegó confirmación de la 3, el Cliente sabe que debe reenviarla.',
+        [msg(S, C, 'ACK hasta 2', 'ack')], both('Conectado', 'Conectado'), { client: sent, server: [1, 2, 4] });
+      step(1, 'Reenviar lo perdido', 'El Cliente reenvía la pieza 3. TCP no se rinde: repite hasta que llegue.',
+        [msg(C, S, 'Pieza 3 (reenvío)', 'data', { piece: 3 })], both('Conectado', 'Conectado'), { client: sent, server: [1, 2, 3, 4] });
+      step(1, 'Confirmar la entrega', 'Ahora el Servidor tiene las 4 piezas completas y en orden, y lo confirma. Esa es la "confiabilidad" de TCP.',
+        [msg(S, C, 'ACK 1-4', 'ack')], both('Conectado', 'Conectado'), { client: sent, server: [1, 2, 3, 4] });
+    }
+
+    // Fase 3: cerrar
+    step(2, 'El Cliente cierra', 'Cuando el Cliente no tiene más que enviar, avisa con FIN. El Servidor lo confirma con un ACK. La conversación del Cliente al Servidor termina.',
+      [msg(C, S, 'FIN', 'ctl'), msg(S, C, 'ACK', 'ack')], both('Cerrando', 'Cerrando'), { client: sent, server: [1, 2, 3, 4] });
+    step(2, 'El Servidor cierra', 'Cuando el Servidor termina lo suyo, también envía su FIN y el Cliente confirma. La conexión queda cerrada por ambos lados.',
+      [msg(S, C, 'FIN', 'ctl'), msg(C, S, 'ACK', 'ack')], both('Cerrado', 'Cerrado'), { client: sent, server: [1, 2, 3, 4] });
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Diagrama de secuencia de una comunicación TCP entre un cliente y un servidor',
+    phases: ['Conectar', 'Transferir', 'Cerrar'],
+    scene: function (svg) {
+      return DK.sequence({
+        svg: svg, trayCount: 4, idleState: 'Sin conexión', phases: ['Conectar', 'Transferir', 'Cerrar'],
+        actors: [{ id: C, label: 'Cliente', icon: 'laptop', tray: 'mensaje a enviar' }, { id: S, label: 'Servidor', icon: 'server', tray: 'piezas recibidas' }],
+      });
+    },
+    build: build,
+    toggles: [{ key: 'loss', label: 'Simular que se pierde un paquete', affectsPhase: 1 }],
+    kicker: function (p) { return ['Fase 1 · Conectar', 'Fase 2 · Transferir', 'Fase 3 · Cerrar'][p]; },
+    intro: {
+      kicker: 'Comunicación TCP en 3 fases', title: 'Antes de empezar',
+      text: 'El Cliente y el Servidor todavía no están conectados. Pulsa "Siguiente" y sigue el viaje de cada mensaje, fase por fase.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

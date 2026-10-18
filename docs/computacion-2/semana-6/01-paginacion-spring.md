@@ -10,13 +10,14 @@ En sistemas empresariales con miles o millones de registros, realizar consultas 
 
 ## 1. Conceptos y Fundamentos Teóricos
 
-<div style={{textAlign: 'center', marginBottom: '1.5rem'}}>
-  <img 
-    src="/img/computacion-2/spring-pagination-overview.svg" 
-    alt="Comparativa entre consulta masiva sin paginación y consulta segmentada con Pageable" 
-    style={{width: '90%', maxWidth: '820px'}}
-  />
-</div>
+Recorre el diagrama paso a paso: primero ves qué pasa cuando pides todos los registros de golpe y luego cómo cambia con paginación, tamaño de página y orden.
+
+<iframe
+  src="/interactive/computacion-2/semana-6/paginacion-spring/index.html"
+  title="Paginación en Spring Data JPA: consulta completa frente a consulta por páginas"
+  style={{ width: '100%', height: 900, border: 0 }}
+  loading="lazy"
+/>
 
 ### Componentes de la Arquitectura de Paginación
 

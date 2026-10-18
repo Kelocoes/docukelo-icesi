@@ -27,13 +27,14 @@ La **seguridad a nivel de aplicación** evalúa el contexto semántico de cada i
 
 Cualquier sistema de control de acceso se fundamenta en responder de manera estricta y secuencial a dos preguntas distintas:
 
-<div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
-  <img
-    src="/img/computacion-2/authn-vs-authz-conceptual.svg"
-    alt="Autenticación vs Autorización"
-    style={{ width: "100%", maxWidth: "920px" }}
-  />
-</div>
+Recorre el diagrama paso a paso: primero las dos preguntas, luego el ejemplo de ana. Activa los interruptores para ver cómo falla cada puerta (401 y 403).
+
+<iframe
+  src="/interactive/computacion-2/semana-9/authn-vs-authz/index.html"
+  title="Autenticación y autorización: dos puertas en orden, con sus errores 401 y 403"
+  style={{ width: '100%', height: 660, border: 0 }}
+  loading="lazy"
+/>
 
 ### A. Autenticación (Authentication) — *¿Quién eres?*
 Es el proceso de **verificar la identidad declarada** por un usuario, sistema o servicio externo.

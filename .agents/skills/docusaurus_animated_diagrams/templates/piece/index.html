@@ -1,0 +1,61 @@
+<!doctype html>
+<!--
+  PLANTILLA de pieza interactiva paso a paso (diagrama de secuencia por fases).
+  Copiar a static/interactive/<curso>/<semana>/<slug>/index.html (o, mientras se revisa,
+  a .agents/memory/svg-redesign/candidates/static/interactive/<curso>/<semana>/<slug>/index.html)
+  y cambiar SOLO los DATOS de abajo: actores, fases, textos y build().
+  No copiar ni reescribir logica del kit: vive en static/interactive/_shared/ (ver references/kit-api.md).
+  Las rutas ../../../_shared/ asumen la profundidad <curso>/<semana>/<slug>/.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TITULO DE LA PIEZA</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var A = 'a', B = 'b'; // ids de los actores
+  var PHASES = ['Fase uno', 'Fase dos'];
+  var msg = function (from, to, label, kind, extra) { var m = { from: from, to: to, label: label, kind: kind }; for (var k in extra) m[k] = extra[k]; return m; };
+
+  // Los pasos son datos. Ver el formato completo en references/kit-api.md.
+  function build(opt) {
+    var steps = [];
+    var step = function (phase, title, caption, msgs, state, tray) { steps.push({ phase: phase, title: title, caption: caption, msgs: msgs, state: state, tray: tray }); };
+    step(0, 'Paso 1', 'Que ocurre y por que importa, en una o dos frases.', [msg(A, B, 'MENSAJE', 'ctl')], { a: 'Estado A', b: 'Estado B' });
+    step(0, 'Paso 2', 'La respuesta.', [msg(B, A, 'RESPUESTA', 'ack')], { a: 'Estado A2', b: 'Estado B2' });
+    step(1, 'Paso 3', 'Datos.', [msg(A, B, 'Dato 1', 'data', { piece: 1 })], { a: 'Estado A3', b: 'Estado B3' }, { a: [1], b: [1] });
+    // if (opt.fallo) { ... pasos del caso alterno, con lost: true ... }
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'DESCRIPCION del diagrama para lectores de pantalla',
+    phases: PHASES,
+    scene: function (svg) {
+      return DK.sequence({
+        svg: svg, trayCount: 4, idleState: 'Estado inicial', phases: PHASES,
+        actors: [{ id: A, label: 'Actor A', icon: 'laptop', tray: 'bandeja A' }, { id: B, label: 'Actor B', icon: 'server', tray: 'bandeja B' }],
+      });
+    },
+    build: build,
+    // toggles: [{ key: 'fallo', label: 'Simular un fallo', affectsPhase: 1 }],   // opcional: el caso avanzado va detras de un control
+    intro: { kicker: 'TEMA EN N FASES', title: 'Antes de empezar', text: 'Pulsa "Siguiente" y sigue cada mensaje, fase por fase.' },
+  });
+})();
+</script>
+</body>
+</html>

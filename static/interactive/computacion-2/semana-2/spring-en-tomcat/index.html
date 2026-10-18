@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spring dentro de Tomcat</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Spring dentro de Tomcat: solo DATOS. Cada paso trae una frase corta; el detalle sale de recorrer el diagrama. */
+(function () {
+  var msg = function (path, label, kind) { return { path: path, label: label, kind: kind }; };
+
+  var nodes = [
+    { id: 'browser', kind: 'actor', icon: 'browser', label: 'Navegador', x: 0, y: 190, w: 80, h: 84 },
+    { id: 'tomcat', kind: 'outer', label: 'Apache Tomcat', sub: 'servidor web', x: 160, y: 8, w: 636, h: 430 },
+    { id: 'catalina', kind: 'outer', label: 'Catalina', sub: 'motor de servlets', x: 176, y: 56, w: 604, h: 366 },
+    { id: 'war', kind: 'outer', label: 'mi-app.war', sub: 'tu aplicación web', x: 192, y: 104, w: 572, h: 302 },
+    { id: 'listener', kind: 'box', icon: 'gear', label: 'ContextLoaderListener', x: 508, y: 156, w: 236, h: 48 },
+    { id: 'sc', kind: 'box', icon: 'bag', label: 'ServletContext', sub: 'memoria compartida', x: 240, y: 156, w: 200, h: 84 },
+    { id: 'servlet', kind: 'box', icon: 'classbox', label: 'EstudianteServlet', sub: 'atiende /estudiantes', x: 240, y: 316, w: 200, h: 84 },
+    { id: 'spring', kind: 'outer', label: 'Spring IoC', sub: 'WebApplicationContext', x: 508, y: 252, w: 236, h: 150 },
+    { id: 'svc', kind: 'box', icon: 'gear', label: 'Servicio', sub: 'bean', x: 520, y: 304, w: 100, h: 84 },
+    { id: 'repo', kind: 'box', icon: 'database', label: 'Repositorio', sub: 'bean', x: 632, y: 304, w: 100, h: 84 },
+  ];
+
+  var steps = [
+    // ---- Fase 1: el mapa ----
+    { phase: 0, title: 'Tomcat y Catalina', focus: ['tomcat', 'catalina'], msgs: [],
+      caption: 'Tomcat es el servidor web y Catalina su motor de servlets: recibe las peticiones y decide a qué aplicación (.war) enviarlas.' },
+    { phase: 0, title: 'Tu aplicación: mi-app.war', focus: ['war', 'servlet'], msgs: [],
+      caption: 'Tu aplicación web, desplegada dentro de Catalina. En ella vive el servlet que atiende las URLs.' },
+    { phase: 0, title: 'ServletContext: la memoria compartida', focus: ['sc'], msgs: [],
+      caption: 'Cada aplicación web tiene un ServletContext: un espacio de memoria que comparten todos sus servlets y que vive mientras la aplicación esté arriba.' },
+    { phase: 0, title: 'El contexto de Spring vive dentro', focus: ['spring', 'svc', 'repo'], msgs: [],
+      caption: 'El contenedor de Spring (WebApplicationContext) con tus beans vive dentro de la aplicación, no fuera. El servlet lo alcanza porque se guarda en el ServletContext.' },
+
+    // ---- Fase 2: el arranque (una sola vez) ----
+    { phase: 1, title: 'Tomcat despliega la aplicación', focus: ['listener'],
+      msgs: [msg([626, 60, 626, 156], 'arranca', 'ctl')],
+      caption: 'Al desplegar el .war, Tomcat avisa al ContextLoaderListener, que configuraste en web.xml.' },
+    { phase: 1, title: 'El listener crea el contexto', focus: ['listener', 'spring'],
+      msgs: [msg([626, 204, 626, 252], 'crea', 'ctl')],
+      caption: 'El listener crea el WebApplicationContext leyendo applicationContext.xml: nacen los beans de servicio y repositorio. Ocurre UNA sola vez, al arrancar.' },
+    { phase: 1, title: 'Se guarda en el ServletContext', focus: ['sc', 'spring'],
+      msgs: [{ path: [508, 300, 440, 214], label: 'guarda', kind: 'ack', labelSide: 'left' }],
+      caption: 'El contexto queda guardado como atributo del ServletContext, para que cualquier servlet de la aplicación lo encuentre.' },
+
+    // ---- Fase 3: la petición ----
+    { phase: 2, title: 'El navegador envía la petición', focus: ['browser', 'tomcat'],
+      msgs: [msg([80, 230, 160, 230], 'GET', 'data')],
+      caption: 'GET /estudiantes llega al puerto 8080 de Tomcat.' },
+    { phase: 2, title: 'Catalina la lleva hasta el servlet', focus: ['catalina', 'war', 'servlet'],
+      msgs: [msg([160, 358, 240, 358], 'doGet()', 'ctl')],
+      caption: 'Catalina encuentra la aplicación y el servlet que atiende /estudiantes, y llama a su doGet().' },
+    { phase: 2, title: 'El servlet pide el bean', focus: ['servlet', 'sc', 'spring'],
+      msgs: [msg([440, 340, 520, 340], 'getBean', 'ctl')],
+      caption: 'El servlet busca el contexto en el ServletContext (con WebApplicationContextUtils) y le pide el servicio. No crea nada ni vuelve a leer el XML.' },
+    { phase: 2, title: 'Recibe el bean que ya existía', focus: ['spring', 'svc'],
+      msgs: [msg([520, 370, 440, 370], 'mismo bean', 'ack')],
+      caption: 'El contexto entrega el servicio que ya estaba creado: es la misma instancia para todas las peticiones (singleton).' },
+    { phase: 2, title: 'La respuesta vuelve al navegador', focus: ['servlet', 'catalina'],
+      msgs: [msg([240, 386, 160, 386], 'HTML', 'ack'), msg([160, 262, 80, 262], '200 OK', 'ack')],
+      caption: 'El servlet arma la respuesta con lo que devolvió el servicio; Catalina y Tomcat la envían de vuelta al navegador.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Spring dentro de Tomcat: el navegador, Tomcat, Catalina, la aplicación mi-app.war con su ServletContext, el servlet y el contexto de Spring con sus beans',
+    phases: ['El mapa', 'El arranque', 'La petición'],
+    scene: function (svg) { return DK.layers({ svg: svg, width: 800, height: 446, nodes: nodes, trail: 'phase', labels: 'smart' }); },
+    build: function () { return steps; },
+    kicker: function (p) { return ['Fase 1 · El mapa', 'Fase 2 · El arranque (una sola vez)', 'Fase 3 · Una petición'][p]; },
+    intro: {
+      kicker: 'Spring dentro de un servidor web', title: 'Antes de empezar',
+      text: 'Este diagrama muestra dónde vive el contexto de Spring dentro de Tomcat. Pulsa "Siguiente": conoces las piezas, ves cómo arranca el contexto una sola vez y sigues una petición hasta el bean y de vuelta.',
+    },
+  });
+})();
+</script>
+</body>
+</html>
