@@ -180,3 +180,27 @@ DocuKelo natively renders Mermaid diagrams. Keep diagram layouts clean and style
 * **Admonition Syntax**: Use `:::type[Title]` syntax when specifying an admonition title (e.g., `:::note[Optional Title]`). Do not place the title string on the line immediately below `:::type`. Admonitions without custom titles can simply use `:::type`.
 
 
+
+---
+
+## 8. Interactive and Animated Graphics
+
+Some explanations are understood better by **moving and touching** than by looking at a still image (protocol flows, request lifecycles, architectures, comparisons). For those, use an **interactive piece** instead of a static `.svg`/`.png`.
+
+* **Always start from the skill**: [`.agents/skills/docusaurus_animated_diagrams/SKILL.md`](../skills/docusaurus_animated_diagrams/SKILL.md). It defines the analysis you must do first (what the student must understand, which level of interactivity is justified), the build process, the quality checklist and the lessons learned. Do not write a piece from scratch.
+* **Where things live**
+  * Shared kit (single master copy, plain JS/CSS, theme-aware): `static/interactive/_shared/` (`dk-base.css`, `dk-theme.js`, `dk-kit.js`, `dk-icons.js`, `dk-flow.js`, `dk-sequence.js`, `dk-compare.js`, `dk-layers.js`, `dk-anatomy.js`, `dk-table.js`, `dk-player.js`). API: `.agents/skills/docusaurus_animated_diagrams/references/kit-api.md`.
+  * Each piece: `static/interactive/<course>/<week>/<slug>/index.html`, written mostly as **data** (steps, captions, actors) on top of the kit. Copy `.agents/skills/docusaurus_animated_diagrams/templates/piece/index.html`.
+  * Plain `.svg` diagrams still go in `static/img/<course>/` as described above.
+* **How to embed (do not use `IframeWindow`, it fixes the height to 300 px and draws a browser frame)**:
+  ```mdx
+  <iframe
+    src="/interactive/<course>/<week>/<slug>/index.html"
+    title="Accessible title"
+    style={{ width: '100%', height: 700, border: 0 }}
+    loading="lazy"
+  />
+  ```
+  The declared height is only a fallback: the piece resizes its own iframe to its content (`DK.autoHeight`).
+* **Rules that always apply**: it must work in light and dark theme (use the kit tokens, never raw hex colors), no emojis, texts in Spanish with technical terms in English, and the written explanation of the chapter stays around the piece (the piece accompanies the text, it does not replace it).
+* **Review workflow**: new pieces are first built as candidates and reviewed by the teacher before they replace anything in `docs/` (see the skill, step 2 and 4).

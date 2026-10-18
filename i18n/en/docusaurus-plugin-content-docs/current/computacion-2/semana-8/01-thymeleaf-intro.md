@@ -16,13 +16,14 @@ To understand how Thymeleaf operates, it is essential to dispel a common misconc
 
 The following diagram illustrates the complete processing lifecycle in Spring Boot MVC:
 
-<div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
-    <img
-        src="/img/computacion-2/spring-thymeleaf-ssr-flow.svg"
-        alt="Transformation cycle and Server Side Rendering in Spring Boot and Thymeleaf"
-        style={{ width: "100%", maxWidth: "960px" }}
-    />
-</div>
+Walk through the diagram step by step: follow a request from the browser until it returns converted into HTML, and watch how the data travels between the components.
+
+<iframe
+  src="/interactive/computacion-2/semana-8/flujo-ssr-thymeleaf/index.html"
+  title="Request flow in Spring Boot with Thymeleaf: DispatcherServlet, controller, Model and template engine"
+  style={{ width: '100%', height: 760, border: 0 }}
+  loading="lazy"
+/>
 
 #### Detailed Explanation of the Flow Components
 
@@ -30,6 +31,7 @@ The following diagram illustrates the complete processing lifecycle in Spring Bo
     - The user issues a request for a web route (for example, `GET /mvc/users`) from the browser address bar or via a hyperlink.
     - The browser expects a `text/html` document in response.
 2. **Web Controller (`@Controller`)**:
+    - Before reaching the controller, the request is received by the `DispatcherServlet`, Spring MVC's servlet, which looks up which method handles that route and invokes it. It then receives the view name back.
     - The `UserMVCController` class intercepts the HTTP request using `@GetMapping("/mvc/users")`.
     - Unlike a `@RestController` (which serializes data directly into JSON or XML format), a traditional `@Controller` orchestrates the view by returning a string containing the logical template name (`"users/list"`).
 3. **Business Logic and Persistence Layer (Service, Repository, and Database)**:
@@ -44,7 +46,7 @@ The following diagram illustrates the complete processing lifecycle in Spring Bo
     - The engine parses the template Document Object Model (DOM), detects standard dialect attributes (`th:text`, `th:each`, `th:if`), and evaluates expressions against the data present in the `Model`.
 6. **Transformation and Pure HTML Emission (Server Side Rendering)**:
     - The engine replaces placeholder dummy text with actual values from database entities and **completely removes all Thymeleaf attributes (`th:*`)**.
-    - The server streams the resulting valid HTML5 text into the HTTP response body (`HttpServletResponse`) with status code 200 OK.
+    - The server streams the resulting valid HTML5 text into the HTTP response body (`HttpServletResponse`) with status code 200 OK. That response leaves through the `DispatcherServlet` towards the browser: the template engine never talks directly to the client.
     - **Client Outcome**: The end user receives only standard HTML elements (`<table>`, `<tr>`, `<td>`), ensuring that internal database schemas and Java business logic remain completely isolated and inaccessible from the client.
 
 ---

@@ -10,13 +10,14 @@ En aplicaciones backend que gestionan operaciones críticas (como pagos bancario
 
 ## 1. Conceptos y Fundamentos Teóricos
 
-<div style={{textAlign: 'center', marginBottom: '1.5rem'}}>
-  <img 
-    src="/img/computacion-2/spring-transactions-rollback.svg" 
-    alt="Ciclo de vida de una transacción en Spring Boot: Commit versus Rollback" 
-    style={{width: '90%', maxWidth: '820px'}}
-  />
-</div>
+Prueba una transferencia entre dos cuentas: recórrela con @Transactional y luego usa los interruptores para quitar la anotación o simular un fallo y ver cuándo ocurre el commit y cuándo el rollback.
+
+<iframe
+  src="/interactive/computacion-2/semana-6/transaccion-transferencia/index.html"
+  title="@Transactional en una transferencia entre dos cuentas: commit y rollback"
+  style={{ width: '100%', height: 840, border: 0 }}
+  loading="lazy"
+/>
 
 ### Propiedades ACID
 

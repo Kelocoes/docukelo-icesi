@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Las partes de una petición HTTP</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-anatomy.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Las partes de una petición HTTP: solo DATOS (el mensaje, las partes, los pasos y sus explicaciones). */
+(function () {
+  var PARTS = {
+    method:  { label: 'Método',                color: 'p1' },
+    url:     { label: 'URL (ruta)',            color: 'p2' },
+    version: { label: 'Versión del protocolo', color: 'p3' },
+    headers: { label: 'Encabezados',           color: 'p4' },
+    body:    { label: 'Cuerpo',                color: 'p5' },
+  };
+
+  function build(opt) {
+    var post = opt.post;
+    // el mensaje: lineas de segmentos [texto, parte?]
+    var doc = [
+      [[post ? 'POST' : 'GET', 'method'], [' '], ['/productos', 'url'], [' '], ['HTTP/1.1', 'version']],
+      [['Host: localhost:8080', 'headers']],
+      post ? [['Content-Type: application/json', 'headers']] : [['Accept-Language: es', 'headers']],
+    ];
+    if (post) doc.push([['']], [['{"nombre": "Teclado"}', 'body']]);
+
+    var toServer = { path: [118, 26, 522, 26], label: 'Solicitud HTTP', kind: 'data' };
+    var toClient = { path: [522, 46, 118, 46], label: 'Respuesta: 200 OK', kind: 'ack' };
+    var step = function (phase, title, caption, focus, callout, msgs) { return { phase: phase, title: title, caption: caption, doc: doc, focus: focus, callout: callout, msgs: msgs || [] }; };
+
+    var steps = [
+      step(0, 'Una petición es un mensaje de texto',
+        'El navegador arma un texto con una forma fija y lo envía al servidor por la conexión TCP.', null,
+        { text: 'Este recuadro es la petición tal cual viaja. Tiene una estructura fija: cada parte ocupa un lugar y tiene una función. En los siguientes pasos las vamos enfocando una por una.' },
+        [toServer]),
+
+      step(1, 'Método', 'El método le dice al servidor qué acción quieres hacer.', 'method',
+        { text: 'Siempre va primero. Es una palabra en mayúsculas que indica la intención de la petición.',
+          examples: ['GET: pedir datos', 'POST: enviar datos para crear algo', 'PUT / DELETE: actualizar o borrar'] }),
+      step(1, 'URL (ruta)', 'La URL dice sobre qué recurso quieres actuar.', 'url',
+        { text: 'Es la dirección del recurso dentro del servidor. El servidor (en Spring, tu controlador) usa esta ruta para decidir quién atiende la petición.',
+          examples: ['/productos: la lista de productos', '/productos/7: el producto 7'] }),
+      step(1, 'Versión del protocolo', 'La versión indica qué dialecto de HTTP habla el cliente.', 'version',
+        { text: 'Cierra la primera línea. Sirve para que ambos lados se entiendan: cliente y servidor deben hablar la misma versión de HTTP.',
+          examples: ['HTTP/1.1: la más usada en el curso'] }),
+      step(1, 'Encabezados', 'Los encabezados llevan información extra sobre la petición.', 'headers',
+        { text: 'Cada encabezado va en su propia línea con el formato nombre: valor. Dicen cosas como a qué servidor va la petición o en qué formato llegan los datos.',
+          examples: post ? ['Host: a qué servidor va', 'Content-Type: formato del cuerpo (aquí, JSON)'] : ['Host: a qué servidor va', 'Accept-Language: idioma preferido', 'Cookie: datos de sesión'] }),
+    ];
+    if (post) {
+      steps.push(step(1, 'Cuerpo', 'El cuerpo contiene los datos que se envían al servidor.', 'body',
+        { text: 'Va después de una línea en blanco. Solo existe cuando hace falta enviar datos (por ejemplo en un POST). En un GET va vacío.',
+          examples: ['{"nombre": "Teclado"}: el producto a crear'] }));
+    }
+    steps.push(step(2, 'El servidor responde', 'El servidor lee cada parte de la petición y devuelve su respuesta.', null,
+      { text: 'El método dice qué hacer, la URL sobre qué recurso, los encabezados cómo, y el cuerpo con qué datos. La respuesta también tiene sus partes: un código de estado (200 OK), encabezados y un cuerpo con lo que pediste.' },
+      [toClient]));
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Anatomía de una petición HTTP: método, URL, versión, encabezados y cuerpo',
+    phases: ['El mensaje', 'Sus partes', 'La respuesta'],
+    scene: function (svg, stage) { return DK.anatomy({ stage: stage, parts: PARTS, clientLabel: 'Cliente (navegador)', serverLabel: 'Servidor' }); },
+    build: build,
+    toggles: [{ key: 'post', label: 'Ver ejemplo con cuerpo (POST)', affectsPhase: 1 }],
+    intro: {
+      kicker: 'Petición HTTP', title: 'Antes de empezar',
+      text: 'Una petición HTTP es un texto con partes bien definidas. Pulsa "Siguiente" y mira cómo se enfoca cada una, con su explicación a la derecha.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

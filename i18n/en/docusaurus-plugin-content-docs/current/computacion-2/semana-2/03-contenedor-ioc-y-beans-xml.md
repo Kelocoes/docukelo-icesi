@@ -83,9 +83,14 @@ A **Spring Bean** is any object whose instantiation, assembly, and lifecycle are
 
 Unlike classes instantiated manually with `new`, Spring Beans coexist within the container as living components. The IoC container in the JVM handles connecting and injecting the **Service Bean** with the **Repository Bean** via **Dependency Injection (DI)**.
 
-<div style={{textAlign: 'center', margin: '20px 0'}}>
-  <img src="/img/computacion-2/ioc-beans-container.svg" width="90%" alt="Abstract Diagram of Spring Beans in the IoC Container within the JVM" />
-</div>
+Walk through the following diagram step by step to see how the IoC container creates, stores, and delivers beans inside the JVM.
+
+<iframe
+  src="/interactive/computacion-2/semana-2/contenedor-ioc-y-beans/index.html"
+  title="Interactive diagram of the Spring IoC container and its beans inside the JVM"
+  style={{ width: '100%', height: 680, border: 0 }}
+  loading="lazy"
+/>
 
 ### Ways to Register a Bean in XML
 

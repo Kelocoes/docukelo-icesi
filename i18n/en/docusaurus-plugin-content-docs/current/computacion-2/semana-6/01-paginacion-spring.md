@@ -10,13 +10,14 @@ In enterprise systems handling thousands or millions of records, executing uncon
 
 ## 1. Concepts and Theoretical Foundations
 
-<div style={{textAlign: 'center', marginBottom: '1.5rem'}}>
-  <img 
-    src="/img/computacion-2/spring-pagination-overview.svg" 
-    alt="Comparison between unpaginated query and segmented query with Pageable" 
-    style={{width: '90%', maxWidth: '820px'}}
-  />
-</div>
+Walk through the diagram step by step: first see what happens when you request all the records at once, then how it changes with pagination, page size, and sorting.
+
+<iframe
+  src="/interactive/computacion-2/semana-6/paginacion-spring/index.html"
+  title="Pagination in Spring Data JPA: full query versus paged query"
+  style={{ width: '100%', height: 900, border: 0 }}
+  loading="lazy"
+/>
 
 ### Core Pagination Architecture Components
 

@@ -10,13 +10,14 @@ In backend systems managing mission-critical workflows (such as banking transfer
 
 ## 1. Concepts and Theoretical Foundations
 
-<div style={{textAlign: 'center', marginBottom: '1.5rem'}}>
-  <img 
-    src="/img/computacion-2/spring-transactions-rollback.svg" 
-    alt="Transaction lifecycle in Spring Boot: Commit versus Rollback" 
-    style={{width: '90%', maxWidth: '820px'}}
-  />
-</div>
+Try a transfer between two accounts: walk through it with @Transactional, then use the switches to remove the annotation or simulate a failure and see when the commit happens and when the rollback happens.
+
+<iframe
+  src="/interactive/computacion-2/semana-6/transaccion-transferencia/index.html"
+  title="@Transactional in a transfer between two accounts: commit and rollback"
+  style={{ width: '100%', height: 840, border: 0 }}
+  loading="lazy"
+/>
 
 ### ACID Properties
 

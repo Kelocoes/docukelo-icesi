@@ -79,9 +79,14 @@ Un **Spring Bean** es cualquier objeto cuya instanciación, ensamblaje y ciclo d
 
 A diferencia de las clases instanciadas de forma manual con `new`, los Spring Beans coexisten dentro del contenedor como componentes vivos (representados orgánicamente como los *beans* o frijoles de Spring). El contenedor IoC en la JVM se encarga de conectar e inyectar el **Bean de Servicio** con el **Bean de Repositorio** mediante **Inyección de Dependencias (DI)**.
 
-<div style={{textAlign: 'center', margin: '20px 0'}}>
-  <img src="/img/computacion-2/ioc-beans-container.svg" width="90%" alt="Esquema Abstracto de Frijoles Spring en el Contenedor IoC dentro de la JVM" />
-</div>
+Recorre el siguiente diagrama paso a paso para ver cómo el contenedor IoC crea, almacena y entrega los beans dentro de la JVM.
+
+<iframe
+  src="/interactive/computacion-2/semana-2/contenedor-ioc-y-beans/index.html"
+  title="Diagrama interactivo del contenedor IoC de Spring y sus beans dentro de la JVM"
+  style={{ width: '100%', height: 680, border: 0 }}
+  loading="lazy"
+/>
 
 ### Formas de Registrar un Bean en XML
 
