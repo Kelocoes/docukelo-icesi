@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>makeStore frente a Singleton en Next.js</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var msg = function (path, label, kind, extra) {
+    var m = { path: path, label: label, kind: kind };
+    for (var k in extra) m[k] = extra[k];
+    return m;
+  };
+
+  var CODE = [
+    '// 1. Store Singleton (¡VULNERABLE EN SERVIDOR!)',
+    '// En Node.js una variable global se comparte entre todos los clientes:',
+    'export const store = configureStore({',
+    '    reducer: { routines: routinesReducer },',
+    '});',
+    '',
+    '// 2. Fábrica makeStore (PATRÓN OFICIAL NEXT.JS)',
+    '// Cada petición SSR o cliente crea una instancia aislada y limpia:',
+    'export const makeStore = () => {',
+    '    return configureStore({',
+    '        reducer: { routines: routinesReducer },',
+    '    });',
+    '};',
+  ].join('\n');
+
+  var nodes = [
+    // Lado Izquierdo: Singleton (x: 12, w: 506)
+    { id: 'box_singleton', kind: 'outer', label: 'Store Singleton (Vulnerable en Servidor)', sub: 'export const store = configureStore(...)', x: 12, y: 10, w: 506, h: 370 },
+    { id: 'user_a1', kind: 'box', icon: 'user', label: 'Usuario A', sub: 'Petición SSR (Token A)', x: 32, y: 65, w: 160, h: 74 },
+    { id: 'store_singleton', kind: 'box', icon: 'bag', label: 'Store Singleton', sub: 'Variable global en RAM', x: 342, y: 165, w: 160, h: 76 },
+    { id: 'user_b1', kind: 'box', icon: 'user', label: 'Usuario B', sub: 'Petición concurrente', x: 32, y: 265, w: 160, h: 74 },
+
+    // Lado Derecho: makeStore (x: 538, w: 510)
+    { id: 'box_makestore', kind: 'outer', label: 'Fábrica makeStore (Patrón Oficial)', sub: 'export const makeStore = () => configureStore(...)', x: 538, y: 10, w: 510, h: 370 },
+    { id: 'user_a2', kind: 'box', icon: 'user', label: 'Usuario A', sub: 'Petición SSR (Token A)', x: 558, y: 65, w: 160, h: 74 },
+    { id: 'store_a2', kind: 'box', icon: 'bag', label: 'Store A', sub: 'Instancia 1 (Aislada)', x: 868, y: 65, w: 160, h: 74 },
+    { id: 'user_b2', kind: 'box', icon: 'user', label: 'Usuario B', sub: 'Petición concurrente', x: 558, y: 265, w: 160, h: 74 },
+    { id: 'store_b2', kind: 'box', icon: 'bag', label: 'Store B', sub: 'Instancia 2 (Limpia)', x: 868, y: 265, w: 160, h: 74 },
+  ];
+
+  var steps = [
+    // Paso 0: Visión General
+    {
+      phase: 0,
+      title: 'Arquitectura de Memoria en Servidor (SSR)',
+      focus: ['box_singleton', 'box_makestore', 'store_singleton', 'store_a2', 'store_b2'],
+      msgs: [],
+      code: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+      caption: 'En Next.js App Router con Server Components, el servidor Node.js atiende múltiples peticiones concurrentes. Analicemos qué ocurre si usamos un Store Singleton frente a la fábrica makeStore.'
+    },
+
+    // Paso 1: Petición A
+    {
+      phase: 0,
+      title: 'Usuario A entra al servidor',
+      focus: ['user_a1', 'store_singleton', 'user_a2', 'store_a2'],
+      msgs: [
+        msg([192, 102, 342, 185], 'GET (A)', 'data'),
+        msg([718, 102, 868, 102], 'makeStore()', 'data', { labelDy: -8 })
+      ],
+      code: [3, 9],
+      caption: 'El Usuario A (autenticado) solicita sus rutinas. En Singleton se accede a la variable global. Con makeStore() se invoca la fábrica creando una instancia exclusiva para la petición de A.'
+    },
+
+    // Paso 2: Servidor responde a A
+    {
+      phase: 0,
+      title: 'El servidor responde al Usuario A',
+      focus: ['store_singleton', 'user_a1', 'store_a2', 'user_a2'],
+      msgs: [
+        msg([342, 202, 192, 120], 'HTML de A', 'ack'),
+        msg([868, 102, 718, 102], 'HTML de A', 'ack', { labelDy: -8 })
+      ],
+      sub: {
+        store_singleton: 'Retiene datos de A en RAM!',
+        store_a2: 'Petición A finalizada'
+      },
+      caption: 'El servidor genera el HTML para A. ¡Peligro en Singleton!: el store global retiene en la memoria RAM del proceso los datos privados de A. En makeStore, la instancia finaliza su ciclo de vida.'
+    },
+
+    // Paso 3: Petición B
+    {
+      phase: 1,
+      title: 'Usuario B realiza petición concurrente',
+      focus: ['user_b1', 'store_singleton', 'user_b2', 'store_b2'],
+      msgs: [
+        msg([192, 285, 342, 218], 'GET (B)', 'data'),
+        msg([718, 302, 868, 302], 'makeStore()', 'data', { labelDy: -8 })
+      ],
+      caption: 'En ese mismo instante, el Usuario B (un invitado no autenticado) solicita la misma página. En Singleton, el servidor reutiliza el store que YA CONTIENE datos de A. Con makeStore(), B recibe su propio store limpio.'
+    },
+
+    // Paso 4: Fuga vs Aislamiento
+    {
+      phase: 2,
+      title: 'Resultado: Fuga de Datos vs Aislamiento Total',
+      focus: ['store_singleton', 'user_b1', 'store_b2', 'user_b2'],
+      msgs: [
+        msg([342, 230, 192, 302], 'HTML con datos A!', 'err'),
+        msg([868, 302, 718, 302], 'HTML limpio de B', 'ack', { labelDy: -8 })
+      ],
+      sub: {
+        store_singleton: 'ESTADO CONTAMINADO (Leak)',
+        user_b1: 'FUGA: Recibe rutinas de A!',
+        user_b2: 'CORRECTO: Vista de invitado',
+        store_b2: 'Instancia limpia para B'
+      },
+      caption: '¡VULNERABILIDAD GRAVE EN SINGLETON!: El Usuario B recibe el HTML con las rutinas privadas del Usuario A (Cross-Request State Pollution). Con makeStore(), cada usuario tiene aislamiento absoluto y datos seguros.'
+    }
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    wide: true,
+    ariaLabel: 'Comparación entre Store Singleton y Fábrica makeStore en Next.js App Router',
+    phases: ['Petición A', 'Petición B Concurrente', 'Seguridad y Aislamiento'],
+    scene: function (svg) {
+      return DK.layers({
+        svg: svg,
+        width: 1060,
+        height: 390,
+        nodes: nodes,
+        labels: 'smart',
+        trail: 'phase'
+      });
+    },
+    build: function () { return steps; },
+    code: { title: 'Patrón de Configuración en Next.js', text: CODE },
+    intro: {
+      kicker: 'Por qué no usar Singleton en Servidores',
+      title: 'makeStore vs Singleton en SSR',
+      text: 'En Node.js, una variable global se comparte entre todos los clientes concurrentes. Observa el riesgo de fuga de datos (Cross-Request State Pollution) frente al aislamiento de makeStore().'
+    }
+  });
+})();
+</script>
+</body>
+</html>

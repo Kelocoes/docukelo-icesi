@@ -44,6 +44,10 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--dk-ctl); ou
 .dk-tabs button.done b { background: var(--dk-ack); color: #fff; }
 .dk-stage { overflow-x: auto; }
 .dk-stage svg { display: block; width: 100%; min-width: 520px; max-width: 640px; margin: 0 auto; height: auto; }
+/* DK.player({ wide: true }): la pieza usa todo el ancho del iframe (en modo enfoque del sitio crece con la columna).
+   El !important gana al tope inline que pone dk-layers.js en figuras anchas. */
+.dk-card.dk-wide { max-width: none; }
+.dk-card.dk-wide .dk-stage svg { max-width: none !important; }
 .dk-dots { display: flex; gap: 5px; margin-top: 8px; }
 .dk-dots i { height: 5px; flex: 1; border-radius: 3px; background: var(--dk-line); transition: background .3s; }
 .dk-dots i.past { background: var(--dk-ctl); opacity: .55; } .dk-dots i.cur { background: var(--dk-ctl); }
@@ -100,6 +104,18 @@ svg text { font-family: inherit; fill: var(--dk-ink); }
 /* nodo de error (tone: 'err'): salida de fallo, p. ej. HTTP 401 / 403 */
 .dk-node.tone-err rect { stroke: var(--dk-err); }
 .dk-node.tone-err.on rect { stroke: var(--dk-err); fill: color-mix(in srgb, var(--dk-err) 16%, var(--dk-card)); }
+/* arbol de componentes + estado (dk-tree.js): el color del rol vive en --rc y lo usan el nodo, su etiqueta y la leyenda */
+.dk-tedge { stroke: var(--dk-line); stroke-width: 2; }
+.dk-tnode { --rc: var(--dk-muted); transition: opacity .35s; }
+.dk-tnode rect { fill: var(--dk-card); stroke: var(--dk-line); stroke-width: 2; transition: fill .35s, stroke .35s; }
+.dk-tnode.role-owner { --rc: var(--dk-ctl); } .dk-tnode.role-pass { --rc: var(--dk-p5); } .dk-tnode.role-use { --rc: var(--dk-ack); }
+.dk-tnode.role-provider { --rc: var(--dk-data); } .dk-tnode.role-need { --rc: var(--dk-err); }
+.dk-tnode[class*='role-'] rect { stroke: var(--rc); stroke-width: 2.5; fill: color-mix(in srgb, var(--rc) 12%, var(--dk-card)); }
+.dk-tnode.role-pass rect, .dk-tnode.role-need rect { stroke-dasharray: 7 4; }
+.dk-tnode.role-dim { opacity: .35; } .dk-tnode.role-dim rect { stroke: var(--dk-line); fill: var(--dk-card); }
+.dk-tnode.on rect { stroke-width: 3; }
+.dk-ttag rect { stroke-width: 1.5; }
+.dk-ttag text { font-size: 11px; font-weight: 700; fill: var(--dk-ink); text-anchor: middle; }
 .dk-nlabel { font-size: 13px; font-weight: 700; } .dk-nlabel.mid { text-anchor: middle; }
 .dk-nsub { font-size: 11px; fill: var(--dk-muted); } .dk-nsub.mid { text-anchor: middle; }
 
@@ -134,6 +150,17 @@ svg text { font-family: inherit; fill: var(--dk-ink); }
 .dk-callout.swap { animation: dk-in .35s ease-out; }
 @keyframes dk-in { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: none; } }
 @media (max-width: 560px) { .dk-anatomy { grid-template-columns: 1fr; } }
+/* opciones layout: 'stack' (codigo a todo el ancho, explicacion debajo) y code: true (sintaxis coloreada, sin saltos) */
+.dk-anatomy.stack { grid-template-columns: 1fr; gap: 14px; }
+.dk-anatomy.stack .dk-callout { min-height: 0; }
+.dk-msg.code { white-space: pre; word-break: normal; overflow-x: auto; padding: 12px 0; font-size: 13.5px; line-height: 1.75; }
+.dk-msg.code .ln { padding: 0 18px; border-left: 3px solid transparent; }
+.dk-msg.code .ln[data-part] { margin: 0; border-radius: 0; border-bottom: 0; }
+.dk-msg.code.has-focus .ln[data-part] { opacity: .45; }
+.dk-msg.code.has-focus .ln[data-part].on { opacity: 1; border-left-color: var(--pc); background: color-mix(in srgb, var(--pc) 12%, transparent); }
+.dk-msg.code .kw { color: var(--dk-s-kw); font-weight: 700; } .dk-msg.code .ty { color: var(--dk-s-ty); font-weight: 600; } .dk-msg.code .fn { color: var(--dk-s-fn); }
+.dk-msg.code .ob { color: var(--dk-s-ob); } .dk-msg.code .st { color: var(--dk-s-st); } .dk-msg.code .nu { color: var(--dk-s-nu); } .dk-msg.code .an { color: var(--dk-s-an); }
+.dk-msg.code .cm { color: var(--dk-muted); font-style: italic; }
 
 /* ---------- tabla de datos con estado (dk-table.js) ---------- */
 .dk-tblwrap { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 12px; align-items: start; }

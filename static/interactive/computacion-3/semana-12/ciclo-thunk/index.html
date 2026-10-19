@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ciclo de vida de un createAsyncThunk</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var CODE = [
+    '// 1. Definición del Async Thunk',                                   // 1
+    'export const fetchRoutines = createAsyncThunk(',                     // 2
+    '  "routines/fetchAll",',                                             // 3
+    '  async (_, { rejectWithValue }) => {',                             // 4
+    '    try {',                                                          // 5
+    '      const entities = await routineContainer.getRoutines.execute();',// 6
+    '      return entities.map(RoutineViewModelMapper.toViewModel);',     // 7
+    '    } catch (err: unknown) {',                                       // 8
+    '      return rejectWithValue("Error al cargar rutinas");',           // 9
+    '    }',                                                              // 10
+    '  }',                                                                // 11
+    ');',                                                                 // 12
+    '',                                                                   // 13
+    '// 2. Manejo en extraReducers (routines.slice.ts)',                  // 14
+    'builder',                                                            // 15
+    '  .addCase(fetchRoutines.pending, (state) => {',                     // 16
+    '    state.isLoading = true;',                                        // 17
+    '    state.errorMessage = null;',                                     // 18
+    '  })',                                                               // 19
+    '  .addCase(fetchRoutines.fulfilled, (state, action) => {',           // 20
+    '    state.isLoading = false;',                                       // 21
+    '    state.items = action.payload;',                                  // 22
+    '  })',                                                               // 23
+    '  .addCase(fetchRoutines.rejected, (state, action) => {',            // 24
+    '    state.isLoading = false;',                                       // 25
+    '    state.errorMessage = action.payload as string;',                 // 26
+    '  });',                                                              // 27
+  ].join('\n');
+
+  var nodes = [
+    { id: 'comp',    kind: 'box', icon: 'browser',  label: 'Componente UI',      sub: 'RoutineList',         x: 50,  y: 40,  w: 180, h: 76 },
+    { id: 'thunk',   kind: 'box', icon: 'gear',     label: 'Async Thunk',        sub: 'fetchRoutines',       x: 410, y: 40,  w: 180, h: 76 },
+    { id: 'usecase', kind: 'box', icon: 'server',   label: 'Caso de Uso + Repo', sub: 'GetRoutinesUseCase',  x: 770, y: 40,  w: 180, h: 76 },
+    { id: 'slice',   kind: 'box', icon: 'filecode', label: 'routinesSlice',      sub: 'extraReducers',       x: 410, y: 260, w: 180, h: 76 },
+    { id: 'store',   kind: 'box', icon: 'database', label: 'Redux Store',        sub: 'Estado global',       x: 50,  y: 260, w: 180, h: 76 },
+  ];
+
+  function build(opt) {
+    var fail = opt && opt.fail;
+    var steps = [
+      {
+        phase: 0,
+        title: 'La UI despacha el thunk asíncrono',
+        focus: ['comp', 'thunk'],
+        code: [2, 3, 4],
+        msgs: [{ from: 'comp', to: 'thunk', label: 'dispatch(fetchRoutines)', kind: 'ctl' }],
+        sub: { thunk: 'Inicia middleware', store: 'Cargando: false' },
+        caption: 'El componente o hook fachada invoca dispatch(fetchRoutines()). El middleware de Redux Thunk intercepta la acción antes de que toque los reducers síncronos.'
+      },
+      {
+        phase: 0,
+        title: 'El thunk emite la acción pending hacia el Store',
+        focus: ['thunk', 'slice', 'store'],
+        code: [15, 16, 17, 18, 19],
+        msgs: [
+          { from: 'thunk', to: 'slice', label: 'fetchRoutines.pending', kind: 'ctl' },
+          { from: 'slice', to: 'store', label: 'isLoading = true', kind: 'ctl' }
+        ],
+        sub: { thunk: 'pending emitido', slice: 'isLoading = true', store: 'Cargando: true' },
+        caption: 'Automáticamente se despacha la acción pending. extraReducers reacciona encendiendo isLoading = true y limpiando mensajes de error anteriores en el Store.'
+      },
+      {
+        phase: 1,
+        title: 'El thunk invoca el Caso de Uso (Clean Architecture)',
+        focus: ['thunk', 'usecase'],
+        code: [5, 6],
+        msgs: [{ path: [590, 60, 770, 60], label: 'getRoutines.execute()', kind: 'data', labelDy: -8 }],
+        sub: { thunk: 'await Caso de Uso', usecase: 'Consultando API / Mock', store: 'Cargando: true' },
+        caption: 'El thunk no realiza llamadas HTTP directas ni manipula URLs. Cumpliendo Clean Architecture, delega la operación al Caso de Uso inyectado en el contenedor.'
+      }
+    ];
+
+    if (!fail) {
+      steps.push({
+        phase: 2,
+        title: 'El Caso de Uso resuelve exitosamente',
+        focus: ['usecase', 'thunk'],
+        code: [6, 7],
+        msgs: [{ path: [770, 96, 590, 96], label: 'domainEntities[] (200 OK)', kind: 'ack', labelDy: 16 }],
+        sub: { usecase: 'Resuelto (3 rutinas)', thunk: 'Mapea a ViewModels', store: 'Cargando: true' },
+        caption: 'El repositorio devuelve las entidades puras. El thunk las transforma a ViewModels para la presentación y resuelve la promesa exitosamente.'
+      });
+      steps.push({
+        phase: 2,
+        title: 'Se emite fulfilled y se actualiza el estado',
+        focus: ['thunk', 'slice', 'store'],
+        code: [20, 21, 22, 23],
+        msgs: [
+          { from: 'thunk', to: 'slice', label: 'fetchRoutines.fulfilled', kind: 'ack' },
+          { from: 'slice', to: 'store', label: 'state.items = payload', kind: 'ack' }
+        ],
+        sub: { thunk: 'fulfilled completado', slice: 'isLoading = false', store: '3 rutinas, sin error', comp: 'Lista actualizada' },
+        caption: 'El thunk emite fulfilled con las rutinas en action.payload. extraReducers apaga el spinner (isLoading = false) y almacena las rutinas en el Store global.'
+      });
+    } else {
+      steps.push({
+        phase: 2,
+        title: 'Fallo en la red o servidor: captura del error',
+        focus: ['usecase', 'thunk'],
+        code: [8, 9, 10],
+        msgs: [{ path: [770, 96, 590, 96], label: 'Error HTTP 500 / Network', kind: 'err', labelDy: 16 }],
+        sub: { usecase: 'Fallo de conexión', thunk: 'rejectWithValue()', store: 'Cargando: true' },
+        caption: 'La red falla o el servidor devuelve error. El bloque catch intercepta la excepción e invoca rejectWithValue("Error al cargar rutinas") para normalizar el payload.'
+      });
+      steps.push({
+        phase: 2,
+        title: 'Se emite rejected y se resguarda el mensaje de error',
+        focus: ['thunk', 'slice', 'store'],
+        code: [24, 25, 26, 27],
+        msgs: [
+          { from: 'thunk', to: 'slice', label: 'fetchRoutines.rejected', kind: 'err' },
+          { from: 'slice', to: 'store', label: 'state.errorMessage = payload', kind: 'err' }
+        ],
+        sub: { thunk: 'rejected controlado', slice: 'isLoading = false', store: 'Error: Fallo al cargar', comp: 'Alerta visible' },
+        caption: 'El thunk emite rejected con el mensaje en action.payload. extraReducers apaga isLoading y fija errorMessage en el Store. La UI muestra la alerta sin colapsar la aplicación.'
+      });
+    }
+
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Ciclo de vida de un createAsyncThunk con casos de éxito y fallo',
+    wide: true,
+    phases: ['Inicio y Acción Pending', 'Invocación del Dominio', 'Resolución y Estado Final'],
+    scene: function (svg) {
+      return DK.layers({
+        svg: svg,
+        width: 1000,
+        height: 380,
+        nodes: nodes,
+        labels: 'smart'
+      });
+    },
+    build: build,
+    toggles: [{ key: 'fail', label: 'Simular error en red o API', affectsPhase: 2 }],
+    code: { title: 'routines.slice.ts (Thunk + extraReducers)', text: CODE },
+    intro: {
+      kicker: 'Operaciones Asíncronas',
+      title: 'El ciclo de vida de un Async Thunk',
+      text: 'Los reducers deben ser puros y síncronos. Los thunks gestionan la asincronía emitiendo acciones pending, fulfilled y rejected. Activa el interruptor para comparar el camino feliz frente a un fallo.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

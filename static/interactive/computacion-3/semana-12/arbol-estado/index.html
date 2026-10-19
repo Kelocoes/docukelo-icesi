@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El estado en el árbol de componentes</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-tree.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // La página de rutinas como árbol: cada nodo es un componente; cada rama, "este componente renderiza a este otro".
+  var NODES = [
+    { id: 'page', label: 'RoutinesPage', sub: 'página' },
+    { id: 'layout', label: 'DashboardLayout', parent: 'page', sub: 'maquetación' },
+    { id: 'header', label: 'Header', parent: 'layout' },
+    { id: 'sidebar', label: 'SidebarNavigation', parent: 'layout', sub: 'barra lateral' },
+    { id: 'links', label: 'NavLinks', parent: 'sidebar' },
+    { id: 'counter', label: 'RoutineCounter', parent: 'sidebar', sub: 'muestra el total' },
+    { id: 'main', label: 'MainContent', parent: 'page', sub: 'área principal' },
+    { id: 'form', label: 'RoutineForm', parent: 'main', sub: 'crea rutinas' },
+    { id: 'list', label: 'RoutineList', parent: 'main', sub: 'lista rutinas' },
+    { id: 'card', label: 'RoutineCard', parent: 'list' },
+  ];
+
+  var step = function (phase, title, caption, extra) {
+    var s = { phase: phase, title: title, caption: caption, msgs: [] };
+    for (var k in extra) s[k] = extra[k];
+    return s;
+  };
+
+  var steps = [
+    // ---- Fase 1: estado local ----
+    step(0, 'La página es un árbol',
+      'Cada caja es un componente y cada línea une a un padre con el hijo que renderiza. Los datos en React solo bajan por estas ramas, de padre a hijo, como props.',
+      {}),
+    step(0, 'El estado vive en RoutineForm',
+      'RoutineForm guarda la lista con useState. RoutineCounter, en otra rama, necesita el total, pero no hay un camino lateral entre ramas: el dato no le llega.',
+      { roles: { form: 'owner', counter: 'need' }, tags: { form: 'useState(routines)', counter: '¿total?' },
+        msgs: [{ from: 'form', to: 'counter', label: 'no hay camino', kind: 'err', lost: true }] }),
+
+    // ---- Fase 2: lifting state up ----
+    step(1, 'Subir el estado al ancestro común',
+      'El ancestro común más cercano de RoutineForm y RoutineCounter es RoutinesPage. Ahí se mueve el useState: la página pasa a ser la dueña del estado.',
+      { roles: { page: 'owner', form: 'dim', counter: 'need' }, tags: { page: 'useState(routines)' } }),
+    step(1, 'Los datos bajan como props',
+      'La página entrega la lista hacia abajo. Para llegar a RoutineList pasa primero por MainContent.',
+      { roles: { page: 'owner', main: 'pass', list: 'use' }, tags: { page: 'useState(routines)', list: 'props.routines' },
+        msgs: [{ path: ['page', 'main', 'list'], label: 'routines', kind: 'data' }] }),
+    step(1, 'Los cambios suben como callbacks',
+      'RoutineForm no modifica la lista: llama a la función que recibió por props (onCreate) y esa función, definida en la página, actualiza el estado.',
+      { roles: { page: 'owner', main: 'pass', form: 'use' }, tags: { page: 'setRoutines(...)', form: 'onCreate(rutina)' },
+        msgs: [{ path: ['form', 'main', 'page'], label: 'onCreate', kind: 'ctl' }] }),
+
+    // ---- Fase 3: prop drilling ----
+    step(2, 'El total viaja nivel por nivel',
+      'RoutineCounter está a tres niveles de la página. El total tiene que atravesar DashboardLayout y SidebarNavigation, que no lo usan: solo lo reenvían.',
+      { roles: { page: 'owner', layout: 'pass', sidebar: 'pass', counter: 'use' },
+        tags: { page: 'useState(routines)', layout: 'no lo usa', sidebar: 'no lo usa', counter: 'total: 3' },
+        msgs: [{ path: ['page', 'layout', 'sidebar', 'counter'], label: 'total', kind: 'data' }] }),
+    step(2, 'El costo del prop drilling',
+      'Los intermedios quedan acoplados a una prop que no les importa: renombrarla obliga a tocar tres componentes. Y como el estado vive en la página, cada cambio vuelve a renderizar la página y todo lo que cuelga de ella.',
+      { roles: { page: 'owner', layout: 'pass', sidebar: 'pass', counter: 'use' },
+        tags: { page: 're-render', layout: 're-render', header: 're-render', sidebar: 're-render', links: 're-render', counter: 're-render',
+                main: 're-render', form: 're-render', list: 're-render', card: 're-render' } }),
+
+    // ---- Fase 4: Context ----
+    step(3, 'Context: un salto directo',
+      'Con Context, la página envuelve el árbol en un Provider y cada consumidor lee el dato con useContext, sin pasar por los intermedios. Layout y Sidebar ya no reciben props que no usan.',
+      { roles: { page: 'provider', counter: 'use', form: 'use' }, tags: { page: 'RoutinesContext.Provider', counter: 'useContext', form: 'useContext' },
+        msgs: [{ from: 'page', to: 'counter', direct: true, label: 'total', kind: 'ack' },
+               { from: 'page', to: 'form', direct: true, label: 'onCreate', kind: 'ack' }] }),
+    step(3, 'El límite de Context',
+      'Cuando cambia el value del Provider, se re-renderizan todos los consumidores, aunque usen solo una parte: RoutineForm se vuelve a pintar aunque solo necesita onCreate. Ese es el punto donde conviene un store global.',
+      { roles: { page: 'provider', counter: 'use', form: 'use' }, tags: { page: 'value cambia', counter: 're-render', form: 're-render (innecesario)' } }),
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Árbol de componentes de la página de rutinas: estado local, lifting state up, prop drilling y Context',
+    phases: ['Estado local', 'Lifting state up', 'Prop drilling', 'Context'],
+    wide: true,
+    scene: function (svg) {
+      return DK.tree({ svg: svg, width: 1000, nodes: NODES, legend: ['owner', 'pass', 'use', 'provider', 'need'] });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Árbol de componentes',
+      title: 'Cómo viaja el estado por el árbol',
+      text: 'Recorre la página de rutinas como lo que es: un árbol de componentes. Verás dónde vive el estado, cómo se comparte subiéndolo al ancestro común, por qué aparece el prop drilling y cómo Context lo evita.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

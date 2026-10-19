@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" width="100%" height="100%">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,2 L8,5 L0,8 Z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <style>
+    .t { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    .title { font-size: 20px; font-weight: 700; fill: #f8fafc; }
+    .fold { font-family: ui-monospace, Consolas, monospace; font-size: 13px; font-weight: 700; }
+    .leaf { font-family: ui-monospace, Consolas, monospace; font-size: 12px; font-weight: 600; }
+    .badge { font-family: system-ui, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.05em; }
+    .desc { font-family: system-ui, sans-serif; font-size: 11px; fill: #94a3b8; }
+  </style>
+
+  <!-- Background -->
+  <rect width="960" height="440" rx="16" fill="#0f172a"/>
+  <text x="32" y="38" class="t title">Estructura de Carpetas: Redux Toolkit en Clean Architecture</text>
+
+  <!-- Connectors from Root (src/) -->
+  <g stroke="#334155" stroke-width="2.5" fill="none" stroke-linecap="round">
+    <!-- To app/ -->
+    <path d="M130,110 C160,110 160,85 190,85"/>
+    <!-- To src/store/ -->
+    <path d="M130,220 C160,220 160,165 190,165"/>
+    <!-- To presentation/ -->
+    <path d="M130,220 C160,220 160,255 190,255"/>
+    <!-- To domain & infra -->
+    <path d="M130,220 C160,220 160,345 190,345"/>
+
+    <!-- Leaves horizontal connectors -->
+    <path d="M350,85 L380,85"/>
+    <path d="M350,165 L370,165"/>
+    <path d="M430,255 L450,255"/>
+    <path d="M440,345 L460,345"/>
+  </g>
+
+  <!-- Root: app/ -->
+  <g transform="translate(32, 65)">
+    <path d="M0,6 Q0,0 6,0 H26 L32,6 H94 Q100,6 100,12 V34 Q100,40 94,40 H6 Q0,40 0,34 Z" fill="#1e293b" stroke="#64748b" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="50" y="26" class="fold" fill="#f8fafc" text-anchor="middle">app/</text>
+  </g>
+
+  <!-- Root: src/ -->
+  <g transform="translate(32, 200)">
+    <path d="M0,6 Q0,0 6,0 H26 L32,6 H94 Q100,6 100,12 V34 Q100,40 94,40 H6 Q0,40 0,34 Z" fill="#1e293b" stroke="#64748b" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="50" y="26" class="fold" fill="#f8fafc" text-anchor="middle">src/</text>
+  </g>
+
+  <!-- Node 1: app/layout.tsx -->
+  <g transform="translate(190, 65)">
+    <rect width="160" height="40" rx="8" fill="#451a03" stroke="#f59e0b" stroke-width="2"/>
+    <text x="14" y="25" class="leaf" fill="#fde68a">layout.tsx</text>
+    <rect x="104" y="12" width="46" height="16" rx="4" fill="#f59e0b"/>
+    <text x="127" y="24" class="badge" fill="#451a03" text-anchor="middle">MODIF</text>
+  </g>
+  <text x="385" y="90" class="desc">Envuelve la app con &lt;StoreProvider&gt; (Interleaving RSC)</text>
+
+  <!-- Node 2: src/store/ (Transversal) -->
+  <g transform="translate(190, 145)">
+    <path d="M0,6 Q0,0 6,0 H34 L40,6 H154 Q160,6 160,12 V34 Q160,40 154,40 H6 Q0,40 0,34 Z" fill="#3b0764" stroke="#a855f7" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="80" y="26" class="fold" fill="#e9d5ff" text-anchor="middle">store/ (Global)</text>
+  </g>
+
+  <!-- Leaves of src/store/ -->
+  <g class="leaf" transform="translate(370, 145)">
+    <!-- store.ts -->
+    <g transform="translate(0, -10)">
+      <rect width="140" height="30" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.5"/>
+      <text x="12" y="20" fill="#a7f3d0">store.ts</text>
+      <rect x="86" y="7" width="46" height="16" rx="4" fill="#10b981"/>
+      <text x="109" y="19" class="badge" fill="#064e3b" text-anchor="middle">NUEVO</text>
+    </g>
+    <!-- hooks.ts -->
+    <g transform="translate(150, -10)">
+      <rect width="140" height="30" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.5"/>
+      <text x="12" y="20" fill="#a7f3d0">hooks.ts</text>
+      <rect x="86" y="7" width="46" height="16" rx="4" fill="#10b981"/>
+      <text x="109" y="19" class="badge" fill="#064e3b" text-anchor="middle">NUEVO</text>
+    </g>
+    <!-- StoreProvider.tsx -->
+    <g transform="translate(300, -10)">
+      <rect width="210" height="30" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.5"/>
+      <text x="12" y="20" fill="#a7f3d0">StoreProvider.tsx</text>
+      <rect x="154" y="7" width="46" height="16" rx="4" fill="#10b981"/>
+      <text x="177" y="19" class="badge" fill="#064e3b" text-anchor="middle">NUEVO</text>
+    </g>
+    <text x="0" y="42" class="desc">Fábrica makeStore(), tipos RootState/AppDispatch y contexto de cliente ('use client')</text>
+  </g>
+
+  <!-- Node 3: routines/presentation/ -->
+  <g transform="translate(190, 235)">
+    <path d="M0,6 Q0,0 6,0 H46 L52,6 H234 Q240,6 240,12 V34 Q240,40 234,40 H6 Q0,40 0,34 Z" fill="#172554" stroke="#3b82f6" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="120" y="26" class="fold" fill="#bfdbfe" text-anchor="middle">routines/presentation/</text>
+  </g>
+
+  <!-- Leaves of presentation -->
+  <g class="leaf" transform="translate(450, 235)">
+    <!-- routines.slice.ts -->
+    <g transform="translate(0, -10)">
+      <rect width="245" height="30" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.5"/>
+      <text x="12" y="20" fill="#a7f3d0">store/routines.slice.ts</text>
+      <rect x="188" y="7" width="48" height="16" rx="4" fill="#10b981"/>
+      <text x="212" y="19" class="badge" fill="#064e3b" text-anchor="middle">NUEVO</text>
+    </g>
+    <!-- use-routines.ts -->
+    <g transform="translate(260, -10)">
+      <rect width="220" height="30" rx="6" fill="#451a03" stroke="#f59e0b" stroke-width="1.5"/>
+      <text x="12" y="20" fill="#fde68a">hooks/use-routines.ts</text>
+      <rect x="164" y="7" width="46" height="16" rx="4" fill="#f59e0b"/>
+      <text x="187" y="19" class="badge" fill="#451a03" text-anchor="middle">MODIF</text>
+    </g>
+    <text x="0" y="42" class="desc">Slice (thunks + reducers) y Hook Fachada (adaptador Redux a la vista)</text>
+  </g>
+
+  <!-- Node 4: domain/ & infra/ (Intacto) -->
+  <g transform="translate(190, 325)">
+    <path d="M0,6 Q0,0 6,0 H46 L52,6 H244 Q250,6 250,12 V34 Q250,40 244,40 H6 Q0,40 0,34 Z" fill="#1e293b" stroke="#475569" stroke-width="2.5" stroke-linejoin="round"/>
+    <text x="125" y="26" class="fold" fill="#cbd5e1" text-anchor="middle">domain/ , infra/ , di/</text>
+  </g>
+
+  <!-- Leaves of domain & infra -->
+  <g class="leaf" transform="translate(460, 325)">
+    <g transform="translate(0, -10)">
+      <rect width="220" height="30" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="12" y="20" fill="#94a3b8">usecases / entities</text>
+      <rect x="154" y="7" width="56" height="16" rx="4" fill="#334155"/>
+      <text x="182" y="19" class="badge" fill="#cbd5e1" text-anchor="middle">INTACTO</text>
+    </g>
+    <g transform="translate(235, -10)">
+      <rect width="270" height="30" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="12" y="20" fill="#94a3b8">repositories / datasources</text>
+      <rect x="204" y="7" width="56" height="16" rx="4" fill="#334155"/>
+      <text x="232" y="19" class="badge" fill="#cbd5e1" text-anchor="middle">INTACTO</text>
+    </g>
+    <text x="0" y="42" class="desc">Cero cambios: el Dominio y la Infraestructura no conocen si existe Redux</text>
+  </g>
+
+  <!-- Legend at bottom -->
+  <g transform="translate(32, 405)" class="badge">
+    <text x="0" y="13" fill="#94a3b8" font-size="11">CONVENCIONES:</text>
+    <g transform="translate(110, 0)">
+      <rect width="70" height="18" rx="4" fill="#10b981" stroke="#059669"/>
+      <text x="35" y="13" fill="#064e3b" text-anchor="middle">NUEVO</text>
+    </g>
+    <g transform="translate(195, 0)">
+      <rect width="85" height="18" rx="4" fill="#f59e0b" stroke="#d97706"/>
+      <text x="42" y="13" fill="#451a03" text-anchor="middle">MODIFICADO</text>
+    </g>
+    <g transform="translate(295, 0)">
+      <rect width="180" height="18" rx="4" fill="#334155" stroke="#64748b"/>
+      <text x="90" y="13" fill="#cbd5e1" text-anchor="middle">INTACTO (0 LÍNEAS TOCADAS)</text>
+    </g>
+    <text x="500" y="13" class="desc">Clean Architecture: Redux queda confinado a la capa de Presentación</text>
+  </g>
+</svg>

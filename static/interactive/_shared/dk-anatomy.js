@@ -9,6 +9,8 @@
  *       stage: stage,
  *       parts: { method: { label: 'Método', color: 'p1' }, url: { label: 'URL', color: 'p2' } },   // color: p1..p5
  *       clientLabel: 'Cliente (navegador)', serverLabel: 'Servidor',                                 // franja de cable
+ *       code: true,        // opcional: el doc es codigo; colorea la sintaxis con DK.highlight (sin saltos de linea)
+ *       layout: 'stack',   // opcional: codigo a todo el ancho y explicacion debajo (para codigo con lineas largas)
  *     });
  *   }
  *
@@ -38,10 +40,10 @@ DK.anatomy = function (o) {
   var wireBox = el('div', { class: 'dk-wire' }, wire);
 
   // ---- mensaje y explicacion ----
-  var msgBox = el('pre', { class: 'dk-msg', 'aria-label': 'Mensaje de ejemplo' });
+  var msgBox = el('pre', { class: 'dk-msg' + (o.code ? ' code' : ''), 'aria-label': o.code ? 'Código de ejemplo' : 'Mensaje de ejemplo' });
   var tag = el('span', { class: 'tag' }), title = el('h4'), text = el('p'), list = el('ul');
   var callout = el('div', { class: 'dk-callout' }, tag, title, text, list);
-  var wrap = el('div', { class: 'dk-anatomy' }, wireBox, msgBox, callout);
+  var wrap = el('div', { class: 'dk-anatomy' + (o.layout === 'stack' ? ' stack' : '') }, wireBox, msgBox, callout);
   o.stage.replaceChildren(wrap);
   var spans = [];
 
@@ -53,12 +55,17 @@ DK.anatomy = function (o) {
     doc.forEach(function (line) {
       var ln = el('span', { class: 'ln' });
       line.forEach(function (seg) {
-        if (seg[1]) {
-          var s = el('span', { 'data-part': seg[1], text: seg[0] });
-          s.style.setProperty('--pc', colorVar(seg[1]));
-          spans.push(s);
-          ln.appendChild(s);
-        } else ln.appendChild(document.createTextNode(seg[0]));
+        var s = el('span');
+        if (o.code) s.innerHTML = DK.highlight(seg[0]);
+        else s.textContent = seg[0];
+        // en codigo se enfoca la linea completa (no cada segmento) para que el bloque se lea continuo
+        var target = o.code ? ln : s;
+        if (seg[1] && !target.hasAttribute('data-part')) {
+          target.setAttribute('data-part', seg[1]);
+          target.style.setProperty('--pc', colorVar(seg[1]));
+          spans.push(target);
+        }
+        ln.appendChild(s);
       });
       msgBox.appendChild(ln);
     });

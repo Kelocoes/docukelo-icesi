@@ -64,6 +64,7 @@ Una animación no es decoración: cada movimiento debe revelar un **orden** o un
 | Qué trae una consulta (paginación, orden, filtros) con SQL y costo | N3 | Kit: `DK.player` + `DK.table` (ejemplo: `paginacion-spring`) |
 | Qué cambia el resultado según decisiones (con/sin anotación, con/sin fallo) | N3 | Kit: `DK.layers` con `sub`, `code` función y varios interruptores (ejemplo: `transaccion-transferencia`) |
 | Qué método/línea se ejecuta cuándo (ciclo de vida) | N3 | Kit: `DK.player` + `DK.sequence` con la opción `code` (ejemplo: `ciclo-vida-servlet`) |
+| Dónde vive el estado en un árbol de componentes y cómo viaja (lifting, prop drilling, Context, store) | N3 | Kit: `DK.player` + `DK.tree` (ejemplo: `arbol-estado`) |
 | Algo que se entiende provocándolo (estado, fallos, parámetros) | N3 | Kit; escena nueva si no existe el patrón (ver `patterns.md`) |
 
 ### 2. Construir en `candidates/`, nunca directo en `docs/` ni `static/img`
@@ -142,4 +143,4 @@ El player generado usa los tokens de `dk-base.css` y sigue el tema claro/oscuro 
 ## Decisiones abiertas
 
 1. **Mermaid:** mantenerlos o reemplazarlos por SVG animados en los capítulos clave.
-2. **Escenas por construir** (ver `patterns.md`): máquina de estados, árbol + estado. Ya existen: secuencia, comparación A/B, arquitectura recorrida, código sincronizado, anatomía explorable y tabla de datos con estado.
+2. **Escenas por construir** (ver `patterns.md`): máquina de estados. Ya existen: secuencia, comparación A/B, arquitectura recorrida, código sincronizado, anatomía explorable, tabla de datos con estado y árbol de componentes + estado.

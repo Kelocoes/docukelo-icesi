@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ciclo de Vida de useState y la Regla de Inmutabilidad</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var COMP = 'comp';
+  var REACT = 'react';
+  var DOM = 'dom';
+
+  var PHASES = ['Inmutable', 'Mutación', 'Funcional'];
+  var msg = function (from, to, label, kind, extra) {
+    var m = { from: from, to: to, label: label, kind: kind };
+    for (var k in extra) m[k] = extra[k];
+    return m;
+  };
+
+  function build() {
+    var steps = [];
+    var step = function (phase, title, caption, msgs, state) {
+      steps.push({ phase: phase, title: title, caption: caption, msgs: msgs, state: state });
+    };
+
+    // Fase 0: Actualización Inmutable Correcta
+    step(0, 'Disparo de setState con nueva referencia',
+      'El usuario hace clic en "Crear". El componente ejecuta setRoutines([...prev, newRoutine]) generando un nuevo array en memoria.',
+      [msg(COMP, REACT, 'setState([..])', 'ctl')],
+      { comp: 'Clic en Guardar', react: 'Nuevo array ref B', dom: 'DOM: 2 rutinas' }
+    );
+    step(0, 'Comparación Object.is y re-render',
+      'React compara la referencia anterior A con la nueva B: Object.is(A, B) es false. Se activa la reconciliación y el re-render.',
+      [msg(REACT, COMP, 'Re-render', 'data')],
+      { comp: 'Ejecuta JSX', react: 'Diffing VDOM', dom: 'DOM: 2 rutinas' }
+    );
+    step(0, 'Fase de commit en el DOM',
+      'React aplica únicamente los parches requeridos al DOM del navegador. La nueva rutina aparece renderizada en pantalla.',
+      [msg(REACT, DOM, 'Commit DOM', 'ack')],
+      { comp: 'UI actualizada', react: 'Completado', dom: 'DOM: 3 rutinas' }
+    );
+
+    // Fase 1: Error: Mutación Directa
+    step(1, 'Mutación en el sitio (in-place)',
+      'El desarrollador ejecuta routines.push(item) mutando el array en memoria, y pasa esa misma referencia a setRoutines.',
+      [msg(COMP, REACT, 'setState(mismo)', 'err')],
+      { comp: 'Mutó array A', react: 'Recibe ref A', dom: 'DOM: 2 rutinas' }
+    );
+    step(1, 'Object.is es true: aborto silencioso',
+      'React compara ambas referencias: Array A === Array A. Concluye que nada cambió, aborta el re-render y cancela el commit.',
+      [msg(REACT, DOM, 'Bail out', 'err', { lost: true })],
+      { comp: 'UI desactualizada', react: 'Bail out', dom: 'Sin cambios (Bug)' }
+    );
+
+    // Fase 2: Actualización Funcional y Batching
+    step(2, 'Primera actualización funcional encolada',
+      'Ante eventos rápidos o asíncronos, llamar setCount(c => c + 1) encola la función transformadora en React sin asumir el estado actual.',
+      [msg(COMP, REACT, 'set(c => c + 1)', 'ctl')],
+      { comp: 'Evento 1', react: 'Cola: 1 función', dom: 'count = 0' }
+    );
+    step(2, 'Segunda actualización funcional agrupada',
+      'Llega un segundo evento inmediato. React agrupa (batching) las actualizaciones y encadena el resultado del primer cálculo.',
+      [msg(COMP, REACT, 'set(c => c + 1)', 'ctl')],
+      { comp: 'Evento 2', react: 'Cola: 2 funciones', dom: 'count = 0' }
+    );
+    step(2, 'Un solo commit con valor acumulado',
+      'React resuelve la cadena funcional (0 -> 1 -> 2) y despacha un único commit eficiente al DOM del navegador.',
+      [msg(REACT, DOM, 'Commit count=2', 'ack')],
+      { comp: 'count = 2', react: '1 re-render', dom: 'count = 2' }
+    );
+
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Ciclo de actualización de useState en React: inmutabilidad, mutación directa y actualización funcional',
+    phases: PHASES,
+    wide: true,
+    scene: function (svg) {
+      return DK.sequence({
+        svg: svg,
+        phases: PHASES,
+        trayCount: 0,
+        idleState: 'En reposo',
+        width: 960,
+        actors: [
+          { id: COMP, label: 'Componente UI', icon: 'filecode' },
+          { id: REACT, label: 'React Core', icon: 'gear' },
+          { id: DOM, label: 'DOM Navegador', icon: 'browser' }
+        ]
+      });
+    },
+    build: build,
+    intro: {
+      kicker: 'Mecánica Interna de React',
+      title: 'El Ciclo de useState y la Inmutabilidad',
+      text: 'Explora cómo reacciona React ante una actualización de estado: por qué mutar un array en el sitio destruye la reactividad y cómo la actualización funcional protege tus datos en procesos concurrentes.'
+    }
+  });
+})();
+</script>
+</body>
+</html>
