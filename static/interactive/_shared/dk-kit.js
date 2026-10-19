@@ -85,7 +85,7 @@ window.DK = (function () {
    * el resto en minuscula = objeto/variable. Devuelve HTML seguro para innerHTML. */
   var KW = {};
   ('public private protected class interface extends implements void return new throws throw import static final abstract if else for while do switch case ' +
-   'try catch finally this super const let var function package instanceof null true false').split(' ').forEach(function (k) { KW[k] = 1; });
+   'try catch finally this super const let var function package instanceof null true false export async await').split(' ').forEach(function (k) { KW[k] = 1; });
   function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function highlight(line) {
     var out = '', last = 0, prev = '', m;

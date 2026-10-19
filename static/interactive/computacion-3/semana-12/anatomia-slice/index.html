@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomía de un Slice en Redux Toolkit</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-anatomy.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var PARTS = {
+    name:          { label: 'name',          color: 'p1' },
+    initialState:  { label: 'initialState',  color: 'p2' },
+    reducers:      { label: 'reducers',      color: 'p3' },
+    extraReducers: { label: 'extraReducers', color: 'p4' },
+    exports:       { label: 'exportaciones', color: 'p5' },
+  };
+
+  var DOC = [
+    [['const routinesSlice = createSlice({']],
+    [['  '], ['name: "routines",', 'name']],
+    [['  '], ['initialState: {', 'initialState']],
+    [['    '], ['items: [],', 'initialState']],
+    [['    '], ['isLoading: false,', 'initialState']],
+    [['    '], ['errorMessage: null,', 'initialState']],
+    [['  '], ['},', 'initialState']],
+    [['  '], ['reducers: {', 'reducers']],
+    [['    '], ['clearError: (state) => {', 'reducers']],
+    [['      '], ['state.errorMessage = null;', 'reducers']],
+    [['    '], ['},', 'reducers']],
+    [['  '], ['},', 'reducers']],
+    [['  '], ['extraReducers: (builder) => {', 'extraReducers']],
+    [['    '], ['builder', 'extraReducers']],
+    [['      '], ['.addCase(fetchRoutines.pending, (state) => {', 'extraReducers']],
+    [['        '], ['state.isLoading = true;', 'extraReducers']],
+    [['      '], ['})', 'extraReducers']],
+    [['      '], ['.addCase(fetchRoutines.fulfilled, (state, action) => {', 'extraReducers']],
+    [['        '], ['state.isLoading = false;', 'extraReducers']],
+    [['        '], ['state.items = action.payload;', 'extraReducers']],
+    [['      '], ['});', 'extraReducers']],
+    [['  '], ['},', 'extraReducers']],
+    [['});']],
+    [['']],
+    [['export const { clearError } = routinesSlice.actions;', 'exports']],
+    [['export const routinesReducer = routinesSlice.reducer;', 'exports']],
+  ];
+
+  var step = function (phase, title, caption, focus, callout) {
+    return {
+      phase: phase,
+      title: title,
+      caption: caption,
+      doc: DOC,
+      focus: focus,
+      callout: callout,
+      msgs: []
+    };
+  };
+
+  var steps = [
+    step(0, 'createSlice: La unidad de estado en RTK',
+      'Un slice encapsula en un único archivo la identidad, el estado inicial y toda la lógica de cambio de una característica.',
+      null,
+      {
+        text: 'En el Redux clásico debías mantener constantes de tipos de acción, funciones action creator y funciones reducer repartidas en múltiples archivos. createSlice unifica todo bajo un diseño cohesivo y mantenible.',
+        examples: [
+          'Agrupa lógica de la misma funcionalidad (Feature)',
+          'Menos archivos y menos código repetido que el Redux clásico'
+        ]
+      }
+    ),
+    step(0, 'name: Identidad y prefijo de acciones',
+      'Identifica de forma unívoca la rebanada de estado y genera el prefijo de cada acción.',
+      'name',
+      {
+        text: 'Redux Toolkit concatena este valor con los nombres de las funciones en reducers para producir el type de cada acción síncrona (por ejemplo, "routines/clearError"). En contraste, el type de un thunk asíncrono ("routines/fetchAll/pending") se origina en el prefijo asignado a createAsyncThunk, no en el name del slice.',
+        examples: [
+          'Genera automáticamente los types de los reducers internos ("routines/clearError")',
+          'Evita colisiones entre acciones de diferentes módulos en Redux DevTools'
+        ]
+      }
+    ),
+    step(0, 'initialState: La estructura inicial',
+      'Define el valor de partida y el tipado TypeScript para este pedazo de estado.',
+      'initialState',
+      {
+        text: 'Al arrancar la aplicación, el store necesita un valor inicial consistente. En nuestro módulo de rutinas incluye los ítems descargados, el indicador de carga y el posible error.',
+        examples: [
+          'Previene errores de tipo undefined en el primer render',
+          'Garantiza autocompletado en selectores y componentes'
+        ]
+      }
+    ),
+    step(1, 'reducers: Acciones internas y síncronas',
+      'Funciones puras para cambios locales inmediatos con Action Creators autogenerados.',
+      'reducers',
+      {
+        text: 'Cada método declarado aquí genera automáticamente un creador de acciones accesible en slice.actions. Gracias a Immer, puedes escribir asignaciones directas como state.errorMessage = null sin mutar realmente el estado.',
+        examples: [
+          'Genera automáticamente slice.actions.clearError()',
+          'Estrictamente síncrono: no debe realizar peticiones de red ni efectos colaterales'
+        ]
+      }
+    ),
+    step(1, 'extraReducers: Escucha de thunks y acciones externas',
+      'Responde a acciones originadas fuera del slice, como el ciclo de vida de promesas asíncronas.',
+      'extraReducers',
+      {
+        text: 'Permite que el slice reaccione a createAsyncThunk (pending, fulfilled, rejected) o a acciones de otros slices (como vaciar la lista si ocurre auth/logout). Utiliza la notación oficial builder.addCase.',
+        examples: [
+          'No genera nuevos action creators (solo escucha acciones existentes)',
+          'Separa nítidamente la lógica síncrona local de la asincronía de la API'
+        ]
+      }
+    ),
+    step(2, 'Exportaciones limpias',
+      'Expone las acciones para la interfaz y el reducer principal para el store.',
+      'exports',
+      {
+        text: 'Los componentes visuales solo importan las acciones que necesitan despachar (clearError). El reducer combinado (routinesReducer) se conecta una sola vez en el store global.',
+        examples: [
+          'actions: utilizadas por useDispatch() o hooks fachada',
+          'reducer: registrado en configureStore({ reducer: { routines: routinesReducer } })'
+        ]
+      }
+    )
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Anatomía interactiva de un Slice en Redux Toolkit: name, initialState, reducers, extraReducers y exportaciones',
+    wide: true,
+    phases: ['Identidad y Estado', 'Reducers y Asincronía', 'Exportaciones'],
+    scene: function (svg, stage) {
+      return DK.anatomy({
+        stage: stage,
+        parts: PARTS,
+        code: true,
+        layout: 'stack'
+      });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Redux Toolkit',
+      title: 'Anatomía de createSlice',
+      text: 'createSlice es el corazón de cualquier feature en Redux Toolkit. Pulsa "Siguiente" para explorar cada una de sus secciones y entender su responsabilidad técnica.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,9 +1,8 @@
 {
-    "label": "S12 - React Fundamentals",
-    "className": "hidden",
+    "label": "S12 - Estado Global con Redux",
     "position": 12,
     "link": {
         "type": "generated-index",
-        "description": "Aquí encontrarás algunos de los temas que se ven en la semana 12 de computación en internet 3"
+        "description": "Estado en React, Redux Toolkit, thunks y su integración con Clean Architecture en Next.js, además de navegación y estilos."
     }
 }

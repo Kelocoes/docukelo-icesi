@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 320" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="twGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="daisyGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+    <linearGradient id="appGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <filter id="shadowDark" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="820" height="320" rx="16" fill="url(#bgDark)" stroke="#334155" stroke-width="1"/>
+
+  <!-- Header Section -->
+  <text x="410" y="42" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="800" fill="#f8fafc" letter-spacing="-0.02em">
+    Arquitectura de Capas: De las Utilidades a los Componentes
+  </text>
+  <text x="410" y="64" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#94a3b8">
+    Analogía culinaria: los ingredientes atómicos se transforman en platos preparados para la interfaz
+  </text>
+
+  <!-- Step 1: Tailwind CSS (Ingredientes) -->
+  <g transform="translate(40, 95)" filter="url(#shadowDark)">
+    <rect width="210" height="185" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="210" height="6" rx="3" fill="url(#twGradDark)"/>
+    
+    <!-- Badge -->
+    <rect x="16" y="20" width="105" height="22" rx="11" fill="#0c4a6e"/>
+    <text x="68" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#38bdf8">INGREDIENTES</text>
+
+    <!-- Title -->
+    <text x="16" y="65" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#f8fafc">Tailwind CSS v4</text>
+    <text x="16" y="84" font-family="system-ui, sans-serif" font-size="12" fill="#94a3b8">Clases atómicas utilitarias</text>
+
+    <!-- Code pill samples -->
+    <g transform="translate(16, 102)">
+      <rect width="80" height="24" rx="6" fill="#0f172a"/>
+      <text x="40" y="16" text-anchor="middle" font-family="monospace" font-size="11" font-weight="600" fill="#cbd5e1">flex</text>
+
+      <rect x="88" width="90" height="24" rx="6" fill="#0f172a"/>
+      <text x="133" y="16" text-anchor="middle" font-family="monospace" font-size="11" font-weight="600" fill="#cbd5e1">p-4</text>
+    </g>
+    <g transform="translate(16, 134)">
+      <rect width="86" height="24" rx="6" fill="#0f172a"/>
+      <text x="43" y="16" text-anchor="middle" font-family="monospace" font-size="11" font-weight="600" fill="#cbd5e1">rounded-xl</text>
+
+      <rect x="94" width="84" height="24" rx="6" fill="#0f172a"/>
+      <text x="136" y="16" text-anchor="middle" font-family="monospace" font-size="11" font-weight="600" fill="#cbd5e1">bg-blue-600</text>
+    </g>
+  </g>
+
+  <!-- Arrow 1 -> 2 -->
+  <g transform="translate(262, 180)">
+    <circle cx="16" cy="0" r="16" fill="#1e293b" stroke="#475569" stroke-width="1.5" filter="url(#shadowDark)"/>
+    <path d="M12 -5 L19 0 L12 5" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Step 2: daisyUI 5 (Platos preparados) -->
+  <g transform="translate(305, 95)" filter="url(#shadowDark)">
+    <rect width="210" height="185" rx="12" fill="#1e293b" stroke="#818cf8" stroke-width="2"/>
+    <rect width="210" height="6" rx="3" fill="url(#daisyGradDark)"/>
+    
+    <!-- Badge -->
+    <rect x="16" y="20" width="125" height="22" rx="11" fill="#312e81"/>
+    <text x="78" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#c7d2fe">PLATOS PREPARADOS</text>
+
+    <!-- Title -->
+    <text x="16" y="65" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#f8fafc">daisyUI 5</text>
+    <text x="16" y="84" font-family="system-ui, sans-serif" font-size="12" fill="#94a3b8">Componentes semánticos CSS</text>
+
+    <!-- Component pill samples -->
+    <g transform="translate(16, 102)">
+      <rect width="84" height="24" rx="6" fill="#2e1065"/>
+      <text x="42" y="16" text-anchor="middle" font-family="monospace" font-size="11" font-weight="700" fill="#c084fc">.btn</text>
+
+      <rect x="92" width="86" height="24" rx="6" fill="#2e1065"/>
+      <text x="135" y="16" text-anchor="middle" font-family="monospace" font-size="11" font-weight="700" fill="#c084fc">.card</text>
+    </g>
+    <g transform="translate(16, 134)">
+      <rect width="84" height="24" rx="6" fill="#2e1065"/>
+      <text x="42" y="16" text-anchor="middle" font-family="monospace" font-size="11" font-weight="700" fill="#c084fc">.navbar</text>
+
+      <rect x="92" width="86" height="24" rx="6" fill="#2e1065"/>
+      <text x="135" y="16" text-anchor="middle" font-family="monospace" font-size="11" font-weight="700" fill="#c084fc">.fieldset</text>
+    </g>
+  </g>
+
+  <!-- Arrow 2 -> 3 -->
+  <g transform="translate(527, 180)">
+    <circle cx="16" cy="0" r="16" fill="#1e293b" stroke="#475569" stroke-width="1.5" filter="url(#shadowDark)"/>
+    <path d="M12 -5 L19 0 L12 5" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Step 3: Next.js App (El Banquete) -->
+  <g transform="translate(570, 95)" filter="url(#shadowDark)">
+    <rect width="210" height="185" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="210" height="6" rx="3" fill="url(#appGradDark)"/>
+    
+    <!-- Badge -->
+    <rect x="16" y="20" width="105" height="22" rx="11" fill="#064e3b"/>
+    <text x="68" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#6ee7b7">EXPERIENCIA</text>
+
+    <!-- Title -->
+    <text x="16" y="65" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#f8fafc">App Next.js</text>
+    <text x="16" y="84" font-family="system-ui, sans-serif" font-size="12" fill="#94a3b8">UI limpia y temas dinámicos</text>
+
+    <!-- Value propositions -->
+    <g transform="translate(16, 104)">
+      <circle cx="6" cy="6" r="4" fill="#34d399"/>
+      <text x="16" y="9" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#e2e8f0">Marcado JSX compacto</text>
+    </g>
+    <g transform="translate(16, 128)">
+      <circle cx="6" cy="6" r="4" fill="#34d399"/>
+      <text x="16" y="9" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#e2e8f0">Temas con data-theme</text>
+    </g>
+    <g transform="translate(16, 152)">
+      <circle cx="6" cy="6" r="4" fill="#34d399"/>
+      <text x="16" y="9" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#e2e8f0">Sobreescritura ágil</text>
+    </g>
+  </g>
+</svg>

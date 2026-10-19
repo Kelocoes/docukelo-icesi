@@ -4,6 +4,6 @@
     "position": 11,
     "link": {
         "type": "generated-index",
-        "description": "Qué es Next.js y por qué usarlo, estrategias de renderizado (CSR, SSR, SSG), App Router vs Pages Router, Server y Client Components, estructura de proyecto y práctica de 20 componentes reutilizables con Tailwind, DaisyUI y React Server Components."
+        "description": "Qué es Next.js y por qué usarlo, estrategias de renderizado (CSR, SSR, SSG), App Router vs Pages Router, Server y Client Components y estructura de proyecto."
     }
 }

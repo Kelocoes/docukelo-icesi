@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estructura por Tipo frente a Estructura por Feature</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Geometría: dos columnas de 520 de ancho. Cada carpeta lleva su rótulo arriba (48 px)
+  // y los archivos debajo, en filas de 44 px, para que ningún texto se pise.
+  var FILE_W = 234, FILE_H = 44, PAD = 14, HEAD = 48, GAP = 12;
+  var nodes = [];
+
+  function column(id, x, label, sub, h) {
+    nodes.push({ id: id, kind: 'outer', label: label, sub: sub, x: x, y: 10, w: 520, h: h });
+  }
+
+  // Una carpeta con sus archivos (2 por fila). Devuelve el alto usado.
+  function folder(id, x, y, label, files) {
+    var rows = Math.ceil(files.length / 2);
+    var h = HEAD + rows * FILE_H + (rows - 1) * 8 + PAD;
+    nodes.push({ id: id, kind: 'outer', label: label, x: x, y: y, w: 496, h: h });
+    files.forEach(function (f, i) {
+      nodes.push({
+        id: f.id, kind: 'box', icon: f.icon, label: f.label, sub: f.sub,
+        x: x + PAD + (i % 2) * (FILE_W + 10),
+        y: y + HEAD + Math.floor(i / 2) * (FILE_H + 8),
+        w: FILE_W, h: FILE_H
+      });
+    });
+    return h;
+  }
+
+  // Columna izquierda: por tipo
+  var LX = 24, y = 70;
+  y += folder('t_comp', LX, y, 'components/', [
+    { id: 't_login', icon: 'filecode', label: 'LoginForm.tsx', sub: 'formulario de login' },
+    { id: 't_card', icon: 'filecode', label: 'UserCard.tsx', sub: 'tarjeta de usuario' }
+  ]) + GAP;
+  y += folder('t_hooks', LX, y, 'hooks/', [
+    { id: 't_useauth', icon: 'gear', label: 'useAuth.ts', sub: 'estado de sesión' },
+    { id: 't_useusers', icon: 'gear', label: 'useUsers.ts', sub: 'lista de usuarios' }
+  ]) + GAP;
+  y += folder('t_serv', LX, y, 'services/', [
+    { id: 't_authsvc', icon: 'server', label: 'authService.ts', sub: 'POST /auth/login' },
+    { id: 't_usersvc', icon: 'server', label: 'userService.ts', sub: 'GET /users' }
+  ]) + GAP;
+  y += folder('t_types', LX, y, 'types/', [
+    { id: 't_authtypes', icon: 'filecode', label: 'auth.ts', sub: 'LoginInput' },
+    { id: 't_usertypes', icon: 'filecode', label: 'user.ts', sub: 'User' }
+  ]);
+  column('col_tipo', 10, 'Estructura por tipo', 'cada carpeta mezcla todas las pantallas', y + 14 - 10);
+  // la columna se declara al final del arreglo de carpetas; la movemos al inicio para que quede detrás
+  nodes.unshift(nodes.pop());
+
+  // Columna derecha: por feature
+  var RX = 566, y2 = 70;
+  y2 += folder('f_auth', RX, y2, 'src/features/auth/', [
+    { id: 'f_login', icon: 'filecode', label: 'LoginForm.tsx', sub: 'components/' },
+    { id: 'f_useauth', icon: 'gear', label: 'useAuth.ts', sub: 'hooks/' },
+    { id: 'f_authsvc', icon: 'server', label: 'auth.service.ts', sub: 'services/' },
+    { id: 'f_authtypes', icon: 'filecode', label: 'types.ts', sub: 'contratos' }
+  ]) + GAP;
+  y2 += folder('f_users', RX, y2, 'src/features/users/', [
+    { id: 'f_card', icon: 'filecode', label: 'UserCard.tsx', sub: 'components/' },
+    { id: 'f_usersvc', icon: 'server', label: 'user.service.ts', sub: 'services/' }
+  ]) + GAP;
+  y2 += folder('f_shared', RX, y2, 'src/shared/', [
+    { id: 'f_api', icon: 'server', label: 'lib/api.ts', sub: 'cliente fetch' },
+    { id: 'f_button', icon: 'classbox', label: 'ui/Button.tsx', sub: 'botón base' }
+  ]);
+  nodes.splice(0, 0, { id: 'col_feature', kind: 'outer', label: 'Estructura por features', sub: 'cada carpeta es una funcionalidad completa', x: 556, y: 10, w: 520, h: y2 + 14 - 10 });
+
+  var H = Math.max(y, y2) + 20;
+
+  var TIPO_LOGIN = ['t_comp', 't_login', 't_hooks', 't_useauth', 't_serv', 't_authsvc', 't_types', 't_authtypes'];
+  var FEAT_LOGIN = ['f_auth', 'f_login', 'f_useauth', 'f_authsvc', 'f_authtypes'];
+
+  var steps = [
+    {
+      phase: 0,
+      title: 'Dos formas de ordenar el armario',
+      focus: ['col_tipo', 'col_feature'],
+      msgs: [],
+      caption: 'Por tipo: todas las camisetas en un cajón y todos los pantalones en otro. Por feature: cada conjunto completo en su propio lugar. Es la misma aplicación con dos estructuras.'
+    },
+    {
+      phase: 1,
+      title: 'El cambio: agregar "Recordarme" al login',
+      focus: ['t_login', 't_useauth', 't_authsvc', 't_authtypes', 'f_login', 'f_useauth', 'f_authsvc', 'f_authtypes'],
+      msgs: [],
+      sub: { t_login: 'cambia', t_useauth: 'cambia', t_authsvc: 'cambia', t_authtypes: 'cambia', f_login: 'cambia', f_useauth: 'cambia', f_authsvc: 'cambia', f_authtypes: 'cambia' },
+      caption: 'Para este cambio hay que tocar cuatro archivos: el formulario, el hook, el service y los tipos. Los mismos cuatro archivos en las dos estructuras.'
+    },
+    {
+      phase: 2,
+      title: 'Por tipo: cuatro carpetas abiertas',
+      focus: TIPO_LOGIN,
+      msgs: [],
+      sub: { t_login: '1 · carpeta components/', t_useauth: '2 · carpeta hooks/', t_authsvc: '3 · carpeta services/', t_authtypes: '4 · carpeta types/' },
+      caption: 'Hay que saltar entre cuatro carpetas y buscar el archivo correcto entre los de otras pantallas (UserCard, useUsers, userService...). Es fácil olvidar uno.'
+    },
+    {
+      phase: 3,
+      title: 'Por feature: una sola carpeta',
+      focus: FEAT_LOGIN,
+      msgs: [],
+      sub: { f_login: 'misma carpeta', f_useauth: 'misma carpeta', f_authsvc: 'misma carpeta', f_authtypes: 'misma carpeta' },
+      caption: 'Abres src/features/auth/ y los cuatro archivos están a la vista. Nada de users ni de shared se toca: el cambio queda contenido en una carpeta.'
+    },
+    {
+      phase: 4,
+      title: 'Prueba del borrado: quitar el login',
+      focus: TIPO_LOGIN.concat(['f_auth']),
+      msgs: [],
+      sub: { f_login: 'se va con la carpeta', f_useauth: 'se va con la carpeta', f_authsvc: 'se va con la carpeta', f_authtypes: 'se va con la carpeta', t_login: 'buscar y borrar', t_useauth: 'buscar y borrar', t_authsvc: 'buscar y borrar', t_authtypes: 'buscar y borrar' },
+      caption: 'Si el login desaparece del producto: por feature se borra una carpeta; por tipo hay que cazar sus archivos en cuatro carpetas sin llevarse los de otras pantallas.'
+    }
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Comparación interactiva de estructura por tipo y por features',
+    phases: ['Dos filosofías', 'Cambio', 'Por tipo', 'Por feature', 'Borrado'],
+    wide: true,
+    scene: function (svg) {
+      return DK.layers({ svg: svg, width: 1100, height: H, labels: 'smart', nodes: nodes });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Carpetas en Next.js',
+      title: 'Por tipo frente a por features',
+      text: 'La misma aplicación organizada de dos formas. Avanza para ver cuántas carpetas hay que abrir para cambiar el login.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

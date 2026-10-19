@@ -6,17 +6,120 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import DaisyPreview from '@site/src/components/DaisyPreview';
 
-# Ejercicios: Componentes Reutilizables con DaisyUI, Tailwind & RSC
+# Actividad: Componentes con daisyUI
 
-En esta guía pondrás a prueba tu capacidad para estructurar y modularizar interfaces web modernas en **Next.js (App Router)** mediante **20 ejercicios progresivos**, utilizando **Tailwind CSS** y la biblioteca de componentes semánticos **DaisyUI** bajo la identidad visual institucional oficial de la **Universidad Icesi** (Manual de Marca 2026: Azul Icesi `#5454e9`, Morado `#865cf0`, Verde `#4cb979`, Naranja `#e9683b` y Amarillo `#e4eb60`).
+En esta actividad práctica construirás e integrarás una biblioteca de componentes modulares, accesibles y responsivos para Next.js (App Router), combinando la velocidad de las clases de utilidad de **Tailwind CSS v4** con la semántica visual de **daisyUI 5** y los lineamientos de diseño institucional de la Universidad Icesi.
 
-Cada ejercicio se organiza en dos pestañas:
-1. **Componente & Vista**: Despliega el componente interactivo en vivo maquetado con DaisyUI y Tailwind CSS junto a su descripción funcional.
-2. **Consejos & Guía**: Especifica la ruta recomendada del archivo, su propósito arquitectónico, paleta/tema de DaisyUI sugerido, interfaz de contratos de *props*, clases base recomendadas y una lista de buenas prácticas sobre **qué usar** y **qué evitar (anti-patrones)**.
+Como diseñadores y desarrolladores de entornos digitales, el objetivo no es solo maquetar interfaces atractivas, sino organizar el código de manera profesional: componentes reutilizables, contratos de *props* tipados con TypeScript, jerarquía visual coherente y separación estricta entre responsabilidades.
+
+<CardGrid cols={3}>
+  <Card
+    title="03. Tailwind CSS"
+    description="Tokens de diseño, utilidades de espaciado, flexbox, grid y enfoque mobile-first en Tailwind CSS v4."
+    link="./03-tailwind-css.md"
+  />
+  <Card
+    title="04. daisyUI"
+    description="Componentes semánticos, modificadores visuales, estados de interacción y temas en daisyUI 5."
+    link="./04-daisyui.md"
+  />
+  <Card
+    title="Catálogo oficial daisyUI"
+    description="Documentación oficial y ejemplos en vivo de botones, badges, modales, navegación y formularios."
+    link="https://daisyui.com/components/"
+  />
+</CardGrid>
 
 ---
 
-## Nivel 1: Átomos Visuales (Fácil)
+## 1. Consigna
+
+### Objetivo
+
+Diseñar, maquetar y modularizar componentes de interfaz web siguiendo las especificaciones técnicas de diseño atómico y los principios arquitectónicos del curso:
+
+1. **Semántica y accesibilidad**: aprovechar las etiquetas nativas HTML y las clases semánticas de daisyUI en lugar de anidar elementos genéricos sin significado.
+2. **Modularidad y tipado**: aislar cada elemento en su propio archivo con contratos de *props* explícitos en TypeScript (`interface Props`).
+3. **Mobile-first**: garantizar que cada componente se adapte con naturalidad desde pantallas móviles (360 px) hasta monitores de escritorio.
+4. **Organización por features**: ubicar cada archivo en la estructura de carpetas por *features* y *shared* explicada en [01. Estructura por Features](./01-estructura-por-features.md).
+
+### Regla de estructura y colocación
+
+Cada componente debe vivir en un **archivo propio e independiente**. Está estrictamente prohibido acumular múltiples componentes en un solo archivo o crear carpetas globales "por tipo" desordenadas:
+
+* **Componentes genéricos reutilizables** (botones base, badges de estado, alertas, modales de confirmación, indicadores de métrica): deben ubicarse en `src/shared/components/ui/<nombre-componente>.tsx`.
+* **Componentes ligados a una funcionalidad específica** (tarjetas de curso, panel de backlog, formulario de tutoría, tarjetas de perfil docente): deben ubicarse dentro de su feature correspondiente en `src/features/<feature>/components/<nombre-componente>.tsx`.
+
+```text title="Estructura por features y shared"
+src/
+├── features/
+│   ├── auth/
+│   │   └── components/       # Componentes de login y register
+│   ├── courses/
+│   │   └── components/       # course-card.tsx
+│   ├── tutoring/
+│   │   └── components/       # tutoring-request-form.tsx
+│   └── projects/
+│       └── components/       # sprint-accordion-panel.tsx
+└── shared/
+    └── components/
+        └── ui/               # action-button.tsx, status-badge.tsx, alert-banner.tsx, etc.
+```
+
+---
+
+## 2. Qué se califica
+
+El catálogo de esta guía contiene **20 ejercicios progresivos** organizados en tres niveles de complejidad. Para aprobar la actividad debes entregar una **selección mínima de 7 componentes**, distribuida con el siguiente criterio técnico:
+
+### Selección requerida (7 componentes)
+
+1. **Nivel 1 — Átomos Visuales (2 componentes a elección):**
+   * *Recomendados:* **01. Botón de Acción** (`src/shared/components/ui/action-button.tsx`) y **03. Banner de Alerta** (`src/shared/components/ui/alert-banner.tsx`).
+   * *Alternativas válidas:* 02 (Insignia de Estado), 04 (Avatar con Anillo), 05 (Píldora Kbd), 06 (Calificación Visual) o 07 (Métrica Bento Stat).
+2. **Nivel 2 — Moléculas e Información (3 componentes a elección):**
+   * *Recomendados:* **08. Tarjeta de Asignatura** (`src/features/courses/components/course-card.tsx`), **10. Notificación Flotante Toast** (`src/shared/components/ui/toast-notification.tsx`) y **13. Rastreador de Hitos por Pasos** (`src/shared/components/ui/step-progress-tracker.tsx`).
+   * *Alternativas válidas:* 09 (Panel Bento Multi-Métrica), 11 (Globo de Conversación), 12 (Fila de Directorio) o 14 (Selector de Etiquetas).
+3. **Nivel 3 — Organismos Complejos (2 componentes a elección):**
+   * *Recomendados:* **16. Barra de Navegación con Menú** (`src/shared/components/ui/academic-app-navbar.tsx`) y **18. Diálogo Modal de Confirmación** (`src/shared/components/ui/submission-confirm-modal.tsx`).
+   * *Alternativas válidas:* 15 (Tarjeta de Evento con Countdown), 17 (Formulario de Tutoría), 19 (Perfil Docente con Tabs) o 20 (Backlog en Acordeón).
+
+:::tip[Opción de integración en el caso de estudio]
+Si deseas un flujo de trabajo más integrado con el proyecto del curso, puedes conectar al menos **2 de tus componentes seleccionados** directamente en las pantallas de Login y Register desarrolladas en [02. Caso de Estudio: Login y Register](./02-caso-de-estudio-login-register.md):
+* Utiliza el `ActionButton` (Ejercicio 01) como botón principal con estado de carga interactivo (`isLoading`).
+* Utiliza el `AlertBanner` (Ejercicio 03) para desplegar mensajes de error o confirmación de credenciales.
+* Utiliza el `SubmissionConfirmModal` (Ejercicio 18) para solicitar confirmación antes de restablecer o enviar el formulario.
+:::
+
+:::note[Bonificación técnica]
+La implementación de componentes adicionales más allá de los 7 obligatorios, o la finalización de los 20 ejercicios, se considerará como bonificación práctica en la evaluación.
+:::
+
+---
+
+## 3. Entrega y rúbrica
+
+### Modalidad de entrega
+
+1. Sube tu proyecto a un **repositorio privado dentro de la organización del curso** en GitHub.
+2. Incluye en la raíz del proyecto un archivo `README.md` que indique claramente cuáles componentes implementaste y la ruta de cada uno dentro de la arquitectura de carpetas.
+3. Entrega el enlace de tu repositorio en la plataforma del curso.
+4. El tiempo de desarrollo y entrega lo indica el profesor en la sesión.
+
+### Rúbrica de evaluación
+
+| Criterio | Descripción | Peso |
+| :--- | :--- | :---: |
+| **Fidelidad visual** | Respeto riguroso de proporciones, jerarquía tipográfica, espaciados y paleta cromática institucional Icesi (Azul `#5454e9`, Morado `#865cf0`, Verde `#4cb979`, Naranja `#e9683b`, Amarillo `#e4eb60`). | **30%** |
+| **Uso correcto de daisyUI y Tailwind** | Aplicación efectiva de clases semánticas de daisyUI combinadas con utilidades de Tailwind sin duplicación de CSS ni estilos inline manuales. | **25%** |
+| **Responsive mobile-first** | Comportamiento fluido y sin desbordamientos en pantallas móviles (360 px), escalando ordenadamente hacia tablets y monitores de escritorio. | **15%** |
+| **Reutilización de componentes y props tipadas** | Contratos de *props* en TypeScript bien tipados, valores por defecto limpios y uso adecuado de Server/Client Components (sin directivas `'use client'` innecesarias). | **15%** |
+| **Organización de carpetas por features** | Estructura de archivos coherente con [01. Estructura por Features](./01-estructura-por-features.md), ubicando cada componente en `src/shared/components/ui/` o en su feature correspondiente. | **15%** |
+| **Total** | Cumplimiento integral de los requerimientos y estándares de calidad de la actividad. | **100%** |
+
+---
+
+## 4. Nivel 1: Átomos
 
 Elementos de interfaz de propósito único, altamente reutilizables y con dependencias mínimas.
 
@@ -32,7 +135,7 @@ Botón de acción interactivo que combina un icono vectorial, etiqueta descripti
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/ui/action-button.tsx`
+* **Ubicación sugerida:** `src/shared/components/ui/action-button.tsx`
 * **Propósito:** Proveer un botón base estandarizado para toda la aplicación con soporte para estados visuales (normal, cargando, deshabilitado) sin duplicar código CSS.
 * **Estilo DaisyUI sugerido:** Tema institucional `icesi` con variante principal `btn-primary` (Azul Icesi `#5454e9`) y badge contextual en `badge-secondary` (Morado Icesi `#865cf0`).
 * **Contrato de Props sugerido (TypeScript):**
@@ -71,7 +174,7 @@ Micro-componente en forma de píldora que combina un punto luminoso parpadeante 
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/ui/status-badge.tsx`
+* **Ubicación sugerida:** `src/shared/components/ui/status-badge.tsx`
 * **Propósito:** Mostrar de manera inmediata el ciclo de vida o condición de una entidad sin sobrecargar la interfaz.
 * **Estilo DaisyUI sugerido:** Modificadores de estado semánticos con la paleta complementaria Icesi: Verde Icesi (`#4cb979` / `badge-success`), Morado Icesi (`#865cf0` / `badge-secondary`) y Naranja Icesi (`#e9683b` / `badge-error`).
 * **Contrato de Props sugerido (TypeScript):**
@@ -110,7 +213,7 @@ Bloque de notificación destacado que presenta un icono vectorial informativo en
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/ui/alert-banner.tsx`
+* **Ubicación sugerida:** `src/shared/components/ui/alert-banner.tsx`
 * **Propósito:** Desplegar anuncios institucionales importantes (aperturas de matrícula, avisos de sistema, mantenimiento programado) en la cabecera de las vistas.
 * **Estilo DaisyUI sugerido:** Componente `alert` combinado con `alert-info` en tonos de Azul Icesi (`#5454e9` / `bg-[#f0f0fd]`).
 * **Contrato de Props sugerido (TypeScript):**
@@ -148,7 +251,7 @@ Conjunto atómico que incluye fotografía circular del usuario con anillo exteri
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/ui/user-avatar.tsx`
+* **Ubicación sugerida:** `src/shared/components/ui/user-avatar.tsx`
 * **Propósito:** Identificar visualmente a profesores, monitores de laboratorio o compañeros de equipo en paneles de contacto y listas de tutoría.
 * **Estilo DaisyUI sugerido:** Clases `avatar online` (u `offline`) combinadas con `ring ring-primary ring-offset-2`.
 * **Contrato de Props sugerido (TypeScript):**
@@ -188,7 +291,7 @@ Fila compacta con etiqueta descriptiva a la izquierda y teclas físicas simulada
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/ui/shortcut-pill.tsx`
+* **Ubicación sugerida:** `src/shared/components/ui/shortcut-pill.tsx`
 * **Propósito:** Informar al usuario de atajos rápidos de teclado para potenciar la productividad y accesibilidad.
 * **Estilo DaisyUI sugerido:** Clases `kbd kbd-sm` con fondo blanco y sombra sutil sobre un contenedor neutro `bg-base-200` y borde en Gris 2 (`#cecfd4`).
 * **Contrato de Props sugerido (TypeScript):**
@@ -223,7 +326,7 @@ Componente visual de valoración que despliega estrellas con soporte para medias
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/ui/rating-display.tsx`
+* **Ubicación sugerida:** `src/shared/components/ui/rating-display.tsx`
 * **Propósito:** Mostrar calificaciones de asignaturas, talleres o valoraciones docentes en catálogos y fichas de curso.
 * **Estilo DaisyUI sugerido:** Componente `rating rating-sm rating-half` con máscaras `mask mask-star-2 bg-[#e9683b]` (Naranja Icesi) o amarillo institucional.
 * **Contrato de Props sugerido (TypeScript):**
@@ -260,7 +363,7 @@ Tarjeta informativa estilo bento que presenta un indicador cuantitativo principa
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/ui/metric-bento-stat.tsx`
+* **Ubicación sugerida:** `src/shared/components/ui/metric-bento-stat.tsx`
 * **Propósito:** Presentar KPIs académicos en paneles de control y dashboards de estudiante o profesor.
 * **Estilo DaisyUI sugerido:** Componente `stat` con fondo blanco, bordes en Gris 2 (`#cecfd4`) y textos en Azul Icesi `text-primary` (`#5454e9`).
 * **Contrato de Props sugerido (TypeScript):**
@@ -287,7 +390,7 @@ Tarjeta informativa estilo bento que presenta un indicador cuantitativo principa
 
 ---
 
-## Nivel 2: Moléculas Modulares (Media)
+## 5. Nivel 2: Moléculas
 
 Componentes compuestos que agrupan múltiples átomos y gestionan estructuras de datos complejas.
 
@@ -303,7 +406,7 @@ Tarjeta modular que resume la información de un curso universitario: cabecera c
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/modules/course-card.tsx`
+* **Ubicación sugerida:** `src/features/courses/components/course-card.tsx`
 * **Propósito:** Tarjeta principal para la grilla del catálogo de asignaturas matriculadas del estudiante.
 * **Estilo DaisyUI sugerido:** `card bg-base-100 shadow-sm border border-[#cecfd4]`, barra `progress progress-primary` y botones de acción en `card-actions`.
 * **Contrato de Props sugerido (TypeScript):**
@@ -344,7 +447,7 @@ Panel horizontal que acopla múltiples indicadores de rendimiento académico en 
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/modules/analytics-bento-grid.tsx`
+* **Ubicación sugerida:** `src/shared/components/ui/analytics-bento-grid.tsx`
 * **Propósito:** Mostrar una vista sinóptica del progreso curricular del estudiante en la cabecera del portal académico.
 * **Estilo DaisyUI sugerido:** Agrupador `stats stats-horizontal shadow-sm border border-[#cecfd4] bg-base-100`.
 * **Contrato de Props sugerido (TypeScript):**
@@ -387,7 +490,7 @@ Tarjeta flotante de confirmación de eventos con icono circular de éxito en Ver
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/ui/toast-notification.tsx`
+* **Ubicación sugerida:** `src/shared/components/ui/toast-notification.tsx`
 * **Propósito:** Notificar al estudiante cuando una entrega de laboratorio ha sido recibida y confirmada exitosamente.
 * **Estilo DaisyUI sugerido:** `alert alert-success shadow-md rounded-2xl` con fondo blanco y acentos en Verde Icesi (`#4cb979`).
 * **Contrato de Props sugerido (TypeScript):**
@@ -424,7 +527,7 @@ Hilo de mensajería asincrónica que posiciona los mensajes del estudiante a la 
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/modules/advisor-chat-bubble.tsx`
+* **Ubicación sugerida:** `src/features/advising/components/advisor-chat-bubble.tsx`
 * **Propósito:** Estructurar canales de consulta y retroalimentación académica uno a uno entre estudiantes y docentes.
 * **Estilo DaisyUI sugerido:** Componentes `chat chat-start` y `chat chat-end` con burbuja docente en `chat-bubble chat-bubble-primary` (`#5454e9`).
 * **Contrato de Props sugerido (TypeScript):**
@@ -464,7 +567,7 @@ Fila de tabla de datos administrativos que organiza avatar con máscara de esqui
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/modules/student-table-row.tsx`
+* **Ubicación sugerida:** `src/features/students/components/student-table-row.tsx`
 * **Propósito:** Renderizar cada elemento de una lista tabular de inscritos o participantes de un laboratorio.
 * **Estilo DaisyUI sugerido:** `table table-sm` con efecto `hover:bg-slate-50`, máscara `mask mask-squircle` en el avatar y botón `btn-ghost btn-xs text-primary`.
 * **Contrato de Props sugerido (TypeScript):**
@@ -504,7 +607,7 @@ Línea de tiempo secuencial que ilustra los hitos o sprints de un proyecto de de
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/modules/step-progress-tracker.tsx`
+* **Ubicación sugerida:** `src/shared/components/ui/step-progress-tracker.tsx`
 * **Propósito:** Ofrecer retroalimentación visual clara sobre el flujo de entregables de un proyecto integrador o taller.
 * **Estilo DaisyUI sugerido:** Lista no ordenada `<ul className="steps steps-horizontal">` con pasos activos en `step-primary` (`#5454e9`).
 * **Contrato de Props sugerido (TypeScript):**
@@ -545,7 +648,7 @@ Grupo interactivo de filtros temáticos presentados como píldoras de insignia (
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/modules/tag-filter-group.tsx`
+* **Ubicación sugerida:** `src/shared/components/ui/tag-filter-group.tsx`
 * **Propósito:** Permitir al estudiante o docente filtrar recursos, módulos o temas de estudio por categorías tecnológicas.
 * **Estilo DaisyUI sugerido:** `badge badge-lg` estilizados como controles de formulario mediante el truco CSS `peer-checked`.
 * **Contrato de Props sugerido (TypeScript):**
@@ -575,7 +678,7 @@ Grupo interactivo de filtros temáticos presentados como píldoras de insignia (
 
 ---
 
-## Nivel 3: Organismos Complejos (Alta)
+## 6. Nivel 3: Organismos
 
 Estructuras completas de interfaz que orquestan múltiples moléculas, layouts y flujos de acción.
 
@@ -591,7 +694,7 @@ Tarjeta de convocatoria institucional que incluye distintivo de evento, indicado
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/organisms/event-countdown-card.tsx`
+* **Ubicación sugerida:** `src/features/events/components/event-countdown-card.tsx`
 * **Propósito:** Promover talleres extracurriculares, retos de desarrollo y eventos de la facultad de ingeniería.
 * **Estilo DaisyUI sugerido:** `card bg-base-100 border border-[#cecfd4]`, componente `countdown font-mono` y botón prominente `btn-primary` (`#5454e9`).
 * **Contrato de Props sugerido (TypeScript):**
@@ -635,7 +738,7 @@ Barra de cabecera que unifica el logo institucional en Azul Icesi (`#5454e9`), n
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/organisms/academic-app-navbar.tsx`
+* **Ubicación sugerida:** `src/shared/components/ui/academic-app-navbar.tsx`
 * **Propósito:** Cabecera principal persistente para la navegación del portal dentro de los layouts (`layout.tsx`) de Next.js.
 * **Estilo DaisyUI sugerido:** `navbar bg-base-100 border-b border-[#cecfd4]`, indicador de notificaciones `indicator` con `badge-secondary` (`#865cf0`).
 * **Contrato de Props sugerido (TypeScript):**
@@ -677,7 +780,7 @@ Formulario en tarjeta modular que incluye selector desplegable de tema de asesor
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/organisms/tutoring-request-form.tsx`
+* **Ubicación sugerida:** `src/features/tutoring/components/tutoring-request-form.tsx`
 * **Propósito:** Permitir a los estudiantes agendar asesorías de apoyo técnico con monitores o profesores de la asignatura.
 * **Estilo DaisyUI sugerido:** `card bg-base-100 border border-[#cecfd4]`, campos `select select-bordered select-sm` y `textarea textarea-bordered textarea-sm`.
 * **Contrato de Props sugerido (TypeScript):**
@@ -694,7 +797,7 @@ Formulario en tarjeta modular que incluye selector desplegable de tema de asesor
   ```
 * **Clases base de DaisyUI sugeridas:** `form-control`, `label`, `label-text`, `select select-bordered`, `textarea textarea-bordered`, `btn btn-primary btn-sm`.
 * **Qué usar:**
-  * En Next.js 15, puedes conectar este formulario directamente con una **Server Action** mediante `<form action={...}>` utilizando el atributo de acción sin requerir `'use client'` ni `preventDefault()`.
+  * En Next.js 16, puedes conectar este formulario directamente con una **Server Action** mediante `<form action={...}>` utilizando el atributo de acción sin requerir `'use client'` ni `preventDefault()`.
   * Utiliza los atributos semánticos `required`, `placeholder` y `name` en cada campo para que el objeto `FormData` se procese de forma nativa en el servidor.
 * **Qué EVITAR:**
   * **No** utilices `onChange` con un `useState` para cada campo de texto a menos que requieras validación en vivo carácter por carácter.
@@ -717,7 +820,7 @@ Cuadro de diálogo de confirmación que advierte sobre una acción irreversible,
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/organisms/submission-confirm-modal.tsx`
+* **Ubicación sugerida:** `src/shared/components/ui/submission-confirm-modal.tsx`
 * **Propósito:** Prevenir envíos accidentales o sustituciones de archivo en entregables calificados.
 * **Estilo DaisyUI sugerido:** Componente modal `modal-box bg-base-100 border border-[#cecfd4] shadow-xl` y barra `modal-action`.
 * **Contrato de Props sugerido (TypeScript):**
@@ -755,7 +858,7 @@ Tarjeta de presentación de profesor que integra avatar con anillo en Azul Icesi
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/organisms/faculty-profile-card.tsx`
+* **Ubicación sugerida:** `src/features/faculty/components/faculty-profile-card.tsx`
 * **Propósito:** Mostrar la ficha completa de profesores del departamento de TI en el portal de la carrera.
 * **Estilo DaisyUI sugerido:** `card bg-base-100 border border-[#cecfd4]`, `tabs tabs-boxed bg-slate-100` y pestaña activa `tab-active text-primary` (`#5454e9`).
 * **Contrato de Props sugerido (TypeScript):**
@@ -800,7 +903,7 @@ Acordeón colapsable compuesto mediante el componente `join` de DaisyUI, que agr
 </TabItem>
 <TabItem value="consejos" label="Consejos & Guía">
 
-* **Ubicación sugerida:** `src/components/organisms/sprint-accordion-panel.tsx`
+* **Ubicación sugerida:** `src/features/projects/components/sprint-accordion-panel.tsx`
 * **Propósito:** Organizar el backlog de sprints del proyecto semestral permitiendo expandir y contraer fases de entrega.
 * **Estilo DaisyUI sugerido:** Contenedor unificado `join join-vertical w-full` con bloques `collapse collapse-arrow join-item border border-[#cecfd4]`.
 * **Contrato de Props sugerido (TypeScript):**
@@ -835,7 +938,7 @@ Acordeón colapsable compuesto mediante el componente `join` de DaisyUI, que agr
 
 ---
 
-## Matriz Resumen de Buenas Prácticas
+## 7. Buenas prácticas
 
 Aplica esta matriz de decisión antes de programar cada uno de tus componentes en Next.js:
 

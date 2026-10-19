@@ -13,6 +13,7 @@
  *     code: { title: 'HelloServlet.java', text: '...codigo...' },   // opcional: panel de código (o una función (opts) => {title, text}
  *                                                                    // si el código cambia con los interruptores); cada paso resalta
  *                                                                    // sus líneas con step.code = [5, 6, 7] (desde 1)
+ *     wide: true,   // opcional: sin topes de 760/640 px; la pieza ocupa todo el ancho del iframe (dibujar con viewBox ~1000)
  *   });
  *
  * - affectsPhase: al cambiar el interruptor, los pasos se reconstruyen y la pieza vuelve al final de la fase
@@ -75,7 +76,7 @@ DK.player = function (o) {
   }
   fillCode();
 
-  o.mount.replaceChildren(el('div', { class: 'dk-card' },
+  o.mount.replaceChildren(el('div', { class: 'dk-card' + (o.wide ? ' dk-wide' : '') },
     tabs, stage, codeBox, dots,
     el('div', { class: 'dk-cap', 'aria-live': 'polite' }, ph, ttl, txt), bar));
 

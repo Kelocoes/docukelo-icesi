@@ -1,8 +1,9 @@
 {
-    "label": "S12 - Tailwind",
+    "label": "S12 - Features, Navegación y Estilos",
+    "key": "desarrollo-entornos-digitales-web-semana-12",
     "position": 12,
     "link": {
         "type": "generated-index",
-        "description": "Recursos y materiales de la semana 12 del curso de Computación 3, enfocados en Tailwind CSS."
+        "description": "Estructura de carpetas por features en Next.js, caso de estudio de login y register con navegación y consumo de API, y estilos con Tailwind CSS y daisyUI."
     }
 }

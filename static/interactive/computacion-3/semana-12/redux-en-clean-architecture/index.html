@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redux Toolkit en Clean Architecture</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var msg = function (path, label, kind, extra) {
+    var m = { path: path, label: label, kind: kind };
+    for (var k in extra) m[k] = extra[k];
+    return m;
+  };
+
+  var CODE = [
+    '// 1. Componente UI (RoutineForm.tsx)',                     // 1
+    'const onSubmit = async (data: FormValues) => {',           // 2
+    '    await createRoutine(data);',                           // 3
+    '};',                                                       // 4
+    '',                                                         // 5
+    '// 2. Hook fachada (use-routines.ts)',                     // 6
+    'const createRoutine = async (params: CreateRoutineParams) => {', // 7
+    '    const action = await dispatch(createRoutineMutation(params));', // 8
+    '    return createRoutineMutation.fulfilled.match(action);', // 9
+    '};',                                                       // 10
+    '',                                                         // 11
+    '// 3. Async Thunk (routines.slice.ts)',                    // 12
+    'export const createRoutineMutation = createAsyncThunk(',   // 13
+    '    "routines/create",',                                   // 14
+    '    async (params: CreateRoutineParams, { rejectWithValue }) => {', // 15
+    '        const entity = await routineContainer.createRoutine.execute(params);', // 16
+    '        return RoutineViewModelMapper.toViewModel(entity);', // 17
+    '    }',                                                    // 18
+    ');',                                                       // 19
+    '',                                                         // 20
+    '// 4. Caso de Uso (create-routine.usecase.ts)',            // 21
+    'export class CreateRoutineUseCase {',                      // 22
+    '    async execute(params: CreateRoutineParams): Promise<Routine> {', // 23
+    '        const routine = Routine.create(params);',          // 24
+    '        return await this.repository.save(routine);',      // 25
+    '    }',                                                    // 26
+    '}',                                                        // 27
+    '',                                                         // 28
+    '// 5. Reducer (routines.slice.ts extraReducers)',          // 29
+    'builder.addCase(createRoutineMutation.fulfilled, (state, action) => {', // 30
+    '    state.isMutating = false;',                            // 31
+    '    state.items.unshift(action.payload); // Nuevo ViewModel', // 32
+    '});',                                                      // 33
+    '',                                                         // 34
+    '// 6. Selector reactivo (use-routines.ts)',                // 35
+    'const routines = useAppSelector((state) => state.routines.items);', // 36
+  ].join('\n');
+
+  // Ancho total 1116, 4 capas bien distribuidas:
+  // Capa Presentación: x=10, w=384 (2 columnas: hook y thunk separados por 116 unidades de flecha)
+  // Composition Root: x=482, w=148 (entre thunk y container hay 116 unidades limpias)
+  // Capa de Dominio: x=718, w=148 (entre container y usecase hay 116 unidades limpias)
+  // Infraestructura: x=954, w=148 (entre usecase y repo hay 116 unidades limpias)
+  // Recuadros de w=120, nombres partidos rótulo/sub para evitar cortes de texto.
+  var nodes = [
+    { id: 'presentation', kind: 'outer', label: 'Capa Presentación', sub: 'React + Redux Toolkit', x: 10, y: 10, w: 384, h: 420 },
+    { id: 'di', kind: 'outer', label: 'Composition Root', sub: 'di/ (Inyector de Dependencias)', x: 482, y: 10, w: 148, h: 420 },
+    { id: 'domain', kind: 'outer', label: 'Capa de Dominio', sub: 'TypeScript Puro (Reglas)', x: 718, y: 10, w: 148, h: 420 },
+    { id: 'infra', kind: 'outer', label: 'Infraestructura', sub: 'Datasources y Red', x: 954, y: 10, w: 148, h: 420 },
+
+    { id: 'comp', kind: 'box', icon: 'browser', label: 'RoutineForm / Card', sub: 'Componentes JSX', x: 24, y: 50, w: 120, h: 72 },
+    { id: 'hook', kind: 'box', icon: 'gear', label: 'useRoutines()', sub: 'Hook Adaptador', x: 24, y: 165, w: 120, h: 72 },
+    { id: 'thunk', kind: 'box', icon: 'filecode', label: 'createRoutine', sub: 'Mutation (thunk)', x: 260, y: 165, w: 120, h: 72 },
+    { id: 'store', kind: 'box', icon: 'bag', label: 'Redux Store', sub: 'routines.slice', x: 260, y: 325, w: 120, h: 72 },
+
+    { id: 'container', kind: 'box', icon: 'filter', label: 'routineContainer', sub: 'Composition Root', x: 496, y: 165, w: 120, h: 72 },
+
+    { id: 'usecase', kind: 'box', icon: 'classbox', label: 'CreateRoutine', sub: 'UseCase (Dominio)', x: 732, y: 165, w: 120, h: 72 },
+    { id: 'entity', kind: 'box', icon: 'card', label: 'Routine', sub: 'Entidad Dominio', x: 732, y: 325, w: 120, h: 72 },
+
+    { id: 'repo', kind: 'box', icon: 'server', label: 'RoutineRepository', sub: 'Implementación', x: 968, y: 165, w: 120, h: 72 },
+    { id: 'data', kind: 'box', icon: 'database', label: 'RoutineDatasource', sub: 'Mock / API', x: 968, y: 325, w: 120, h: 72 },
+  ];
+
+  var steps = [
+    // Fase 0: Las Capas
+    {
+      phase: 0,
+      title: 'Capa de Presentación (UI y Redux)',
+      focus: ['presentation', 'comp', 'hook', 'thunk', 'store'],
+      msgs: [],
+      code: [1, 2, 3, 4],
+      caption: 'Redux pertenece exclusivamente a la Capa de Presentación. Los componentes visuales (RoutineForm, RoutineCard) no conocen Redux: consumen únicamente el Hook Fachada useRoutines().'
+    },
+    {
+      phase: 0,
+      title: 'Composition Root e Inversión de Dependencias',
+      focus: ['di', 'container'],
+      msgs: [],
+      caption: 'El Composition Root (routine.container.ts en di/) ensambla los casos de uso inyectando las fuentes de datos. Vive entre la presentación y el dominio sin contaminar las reglas de negocio.'
+    },
+    {
+      phase: 0,
+      title: 'Capa de Dominio (TypeScript Puro)',
+      focus: ['domain', 'usecase', 'entity'],
+      msgs: [],
+      code: [21, 22, 23, 24, 25, 26, 27],
+      caption: 'El Dominio es completamente agnóstico: no conoce React, ni Next.js, ni Redux. Los Casos de Uso operan con Entidades puras y validan sus invariantes.'
+    },
+    {
+      phase: 0,
+      title: 'Capa de Infraestructura (Persistencia)',
+      focus: ['infra', 'repo', 'data'],
+      msgs: [],
+      caption: 'La Infraestructura implementa los contratos de repositorio definidos por el dominio y dialoga con la fuente física (Mock o API NestJS). Tampoco conoce a Redux.'
+    },
+
+    // Fase 1: Solicitud (Ida hacia el Dominio)
+    {
+      phase: 1,
+      title: 'El formulario invoca al hook fachada',
+      focus: ['comp', 'hook'],
+      msgs: [msg([84, 122, 84, 165], 'createRoutine', 'ctl')],
+      code: [2, 3],
+      caption: 'El usuario envía el formulario en RoutineForm. El componente ejecuta createRoutine(params) provisto por useRoutines(). La vista no despacha acciones ni sabe qué gestor de estado existe.'
+    },
+    {
+      phase: 1,
+      title: 'El hook fachada despacha el Async Thunk',
+      focus: ['hook', 'thunk'],
+      msgs: [msg([144, 201, 260, 201], 'dispatch()', 'ctl')],
+      code: [7, 8, 9],
+      caption: 'useRoutines ejecuta dispatch(createRoutineMutation(params)). Se dispara la acción "routines/create/pending" hacia el store y se activa isMutating = true.'
+    },
+    {
+      phase: 1,
+      title: 'El Thunk llama al caso de uso vía DI',
+      focus: ['thunk', 'container', 'usecase'],
+      msgs: [
+        msg([380, 201, 496, 201], 'container', 'ctl'),
+        msg([616, 201, 732, 201], 'execute()', 'ctl')
+      ],
+      code: [16],
+      caption: 'El Thunk no realiza peticiones HTTP directas ni consulta datasources: le delega el trabajo a routineContainer.createRoutine.execute(params), respetando Clean Architecture.'
+    },
+    {
+      phase: 1,
+      title: 'El Caso de Uso valida y persiste la entidad',
+      focus: ['usecase', 'entity', 'repo', 'data'],
+      msgs: [
+        msg([792, 237, 792, 325], 'Routine.create()', 'ctl'),
+        msg([852, 201, 968, 201], 'save()', 'data'),
+        msg([1028, 237, 1028, 325], 'persist', 'data', { labelSide: 'right' })
+      ],
+      code: [24, 25],
+      caption: 'CreateRoutineUseCase crea la entidad Routine validando sus invariantes de negocio y le ordena a RoutineRepository persistirla en el datasource.'
+    },
+
+    // Fase 2: Respuesta y Estado (Vuelta a la UI)
+    {
+      phase: 2,
+      title: 'El datasource confirma y devuelve la entidad',
+      focus: ['data', 'repo', 'usecase'],
+      msgs: [
+        msg([1028, 325, 1028, 237], '201 Created', 'ack', { labelSide: 'left' }),
+        msg([968, 201, 852, 201], 'Routine', 'ack')
+      ],
+      caption: 'La fuente física confirma la persistencia. El repositorio reconstruye la entidad de dominio y la retorna intacta hacia el Caso de Uso.'
+    },
+    {
+      phase: 2,
+      title: 'El Thunk mapea la entidad a ViewModel',
+      focus: ['usecase', 'container', 'thunk'],
+      msgs: [msg([732, 275, 380, 275], 'toViewModel()', 'data', { labelAt: 0.5 })],
+      code: [16, 17],
+      caption: 'En la aduana de retorno, el Thunk transforma la entidad en un RoutineItemViewModel plano mediante RoutineViewModelMapper. Solo datos serializables entran a Redux.'
+    },
+    {
+      phase: 2,
+      title: 'extraReducers actualiza el Store en fulfilled',
+      focus: ['thunk', 'store'],
+      msgs: [msg([320, 237, 320, 325], 'fulfilled', 'ack', { labelSide: 'right' })],
+      code: [30, 31, 32, 33],
+      caption: 'La acción createRoutineMutation.fulfilled llega al reducer. Se actualiza el estado inmutable: isMutating = false y state.items.unshift(action.payload).'
+    },
+    {
+      phase: 2,
+      title: 'useAppSelector reacciona y la UI se actualiza',
+      focus: ['store', 'hook', 'comp'],
+      msgs: [
+        msg([260, 355, 144, 215], 'useAppSelector', 'ack', { labelAt: 0.45 }),
+        msg([84, 165, 84, 122], 're-render', 'ack')
+      ],
+      code: [36],
+      caption: 'useAppSelector detecta el nuevo array de rutinas y actualiza el hook useRoutines. React re-renderiza RoutineCard en pantalla sin que el componente JSX haya cambiado una sola línea.'
+    }
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    wide: true,
+    ariaLabel: 'Flujo completo de Redux Toolkit en Clean Architecture con las capas de Presentación, Composition Root, Dominio e Infraestructura',
+    phases: ['Capas Arquitectónicas', 'Solicitud (Ida al Dominio)', 'Respuesta y Estado (Vuelta)'],
+    scene: function (svg) {
+      return DK.layers({
+        svg: svg,
+        width: 1116,
+        height: 440,
+        dur: 450,
+        nodes: nodes,
+        labels: 'smart',
+        trail: 'phase'
+      });
+    },
+    build: function () { return steps; },
+    code: { title: 'Flujo de Ejecución (Clean Architecture + Redux)', text: CODE },
+    intro: {
+      kicker: 'Clean Architecture y Redux Toolkit',
+      title: 'El Viaje de una Mutación',
+      text: 'Descubre cómo viaja una acción "Crear Rutina" desde los componentes de React hasta la base de datos y de vuelta al Store global, manteniendo el Dominio puro.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

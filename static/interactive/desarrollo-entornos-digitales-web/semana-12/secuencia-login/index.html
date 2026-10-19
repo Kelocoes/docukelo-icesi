@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Secuencia de un Login con JWT</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var F = 'form', S = 'service', A = 'api';
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+  var both = function (f, s, a) { return { form: f, service: s, api: a }; };
+
+  var CODE = [
+    'const handleSubmit = async (e: React.FormEvent) => {', // 1
+    '  e.preventDefault();',                                // 2
+    '  setIsLoading(true);',                                // 3
+    '  setError(null);',                                    // 4
+    '  try {',                                              // 5
+    '    await authService.login({ email, password });',    // 6
+    '    router.replace("/dashboard");',                    // 7
+    '  } catch (err) {',                                    // 8
+    '    setError(err instanceof Error ? err.message : "Error");', // 9
+    '  } finally {',                                        // 10
+    '    setIsLoading(false);',                             // 11
+    '  }',                                                  // 12
+    '};',                                                   // 13
+  ].join('\n');
+
+  function build(opt) {
+    var fail = opt && opt.fail;
+    var steps = [];
+
+    // FASE 0: Envío y validación
+    steps.push({
+      phase: 0,
+      title: 'Disparo de onSubmit',
+      code: [1, 2, 3, 4],
+      msgs: [msg(F, S, 'login(email, password)', 'ctl')],
+      state: both('Envía credenciales', 'Inicia login()', 'En reposo'),
+      caption: 'El usuario presiona "Iniciar sesión". El manejador onSubmit previene la recarga del navegador con e.preventDefault(), activa el indicador de carga y delega en authService.login().'
+    });
+
+    // FASE 1: Petición HTTP y Token
+    steps.push({
+      phase: 1,
+      title: 'Petición POST al backend',
+      code: [6],
+      msgs: [msg(S, A, 'POST /auth/login', 'data')],
+      state: both('Espera respuesta', 'apiFetch("/auth/login")', 'Recibe credenciales'),
+      caption: 'authService llama a apiFetch enviando el correo y la contraseña al endpoint de NestJS en el puerto 4000.'
+    });
+
+    if (!fail) {
+      steps.push({
+        phase: 1,
+        title: 'Verificación y firma de token',
+        code: [6],
+        msgs: [msg(A, S, '201 · token JWT', 'ack')],
+        state: both('Espera respuesta', 'Recibe token', 'Verifica y firma JWT'),
+        caption: 'NestJS valida al usuario con bcrypt.compare(), genera el JWT con el rol y los permisos del usuario, y responde con el token en texto plano.'
+      });
+
+      // FASE 2: Almacenamiento y Redirección
+      steps.push({
+        phase: 2,
+        title: 'Almacenar token en sesión',
+        code: [6],
+        msgs: [msg(S, F, 'session.setToken(jwt)', 'ctl')],
+        state: both('Token guardado', 'session.setToken()', 'En reposo'),
+        caption: 'El servicio guarda el JWT en localStorage mediante lib/session.ts para que esté disponible en las siguientes peticiones HTTP.'
+      });
+
+      steps.push({
+        phase: 2,
+        title: 'Redirección con router.replace',
+        code: [7],
+        msgs: [],
+        state: both('Navega a /dashboard', 'Completado', 'En reposo'),
+        caption: 'Al resolver la promesa de login, el formulario ejecuta router.replace("/dashboard"). Next.js sustituye la ruta activa sin añadir el login al historial del navegador.'
+      });
+    } else {
+      steps.push({
+        phase: 1,
+        title: 'Credenciales inválidas (401)',
+        code: [8],
+        msgs: [msg(A, S, '401 · Credenciales invalidas', 'err')],
+        state: both('Espera respuesta', 'Error capturado', 'Rechaza acceso'),
+        caption: 'El backend no encuentra el usuario o la contraseña no coincide con el hash. Responde con código HTTP 401 y el mensaje "Credenciales invalidas".'
+      });
+
+      // FASE 2: Alerta sin navegar
+      steps.push({
+        phase: 2,
+        title: 'Manejo del error en UI',
+        code: [9, 10, 11],
+        msgs: [msg(S, F, 'throw new Error(msg)', 'err')],
+        state: both('Muestra mensaje de error', 'Error en UI', 'En reposo'),
+        caption: 'apiFetch lanza una excepción, el formulario entra al bloque catch, guarda el mensaje en el estado setError(...) y desactiva el estado de carga. La pantalla no navega y los datos se conservan.'
+      });
+    }
+
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    wide: true,
+    ariaLabel: 'Secuencia interactiva del flujo de autenticación login con token JWT y redirección',
+    phases: ['Envío', 'Petición', 'Respuesta'],
+    scene: function (svg) {
+      return DK.sequence({
+        svg: svg,
+        width: 900,
+        margin: 160,
+        idleState: 'En reposo',
+        phases: ['Envío', 'Petición', 'Respuesta'],
+        actors: [
+          { id: F, label: 'Formulario (LoginForm)', icon: 'browser' },
+          { id: S, label: 'Servicio (auth.service)', icon: 'laptop' },
+          { id: A, label: 'Backend NestJS', icon: 'server' },
+        ],
+      });
+    },
+    build: build,
+    toggles: [{ key: 'fail', label: 'Credenciales inválidas (simular error 401)', affectsPhase: 1 }],
+    code: { title: 'LoginForm.tsx y auth.service.ts', text: CODE },
+    kicker: function (p) {
+      return [
+        'El formulario envía',
+        'Consumo de API REST',
+        'Resultado y navegación'
+      ][p];
+    },
+    intro: {
+      kicker: 'Secuencia de Login',
+      title: 'Del formulario al backend',
+      text: 'Observa paso a paso cómo viajan los datos desde el formulario de cliente hasta el backend NestJS, cómo se guarda el token JWT y por qué se usa router.replace("/dashboard"). Activa el interruptor para ver cómo se maneja un error 401.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

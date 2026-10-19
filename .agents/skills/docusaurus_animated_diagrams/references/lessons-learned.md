@@ -83,3 +83,10 @@ Cada entrada: **qué pasó → causa → qué hacer**. Agregar una entrada nueva
 - **Los interruptores que cortan el recorrido** (contraseña incorrecta = 401) deben dejar la fase siguiente con **un paso que explique por qué no se llega**, no vacía: `build` tiene que devolver al menos un paso por fase.
 - **Probar las piezas candidatas sin tocar `static/`:** servir una copia temporal con `python -m http.server` en una carpeta que tenga `interactive/_shared/` y las piezas con su misma profundidad de ruta (`interactive/<curso>/<semana>/<slug>/`), y capturar con Playwright. Así no se ensucia `static/` ni se depende del visor.
 - **Un heredoc de bash con muchas comillas y acentos puede fallar entero con `unexpected EOF` y no ejecutar nada** (volvió a pasar al documentar esta misma sección). Para bloques largos de JS, HTML o documentación usar la herramienta Write y ejecutar el script desde archivo.
+
+## Piezas de Redux (Computación 3, semana 12)
+
+- **`DK.sequence` con 4 o 5 actores es ilegible:** los carriles quedan a ~90 px, la etiqueta del mensaje es más ancha que la flecha y la tapa, y el mensaje que sale del carril izquierdo pisa el título de la fase. → Máximo 3 actores a ancho completo (y en cada mitad de `DK.compare`, 3 actores con etiquetas de 12 caracteres o menos). Un flujo lineal por 4 o más componentes (dispatch → reducer → store → selector) va con `DK.layers`.
+- **Los nombres de fase no llevan número:** el kit ya los numera y "1. Despacho" sale como "1 · 1. Despacho".
+- **`DK.anatomy` sobre código se veía todo negro y angosto** (sin sintaxis, en dos columnas y con saltos de línea). → Opciones `code: true` y `layout: 'stack'` (ver `kit-api.md`).
+- **Playwright bloquea `file://`:** las piezas se prueban sirviendo `static/` con `python -m http.server`.

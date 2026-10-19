@@ -16,6 +16,7 @@ Orden de carga en el `index.html` de una pieza (rutas relativas, para que funcio
 <script src="../../../_shared/dk-compare.js"></script>   <!-- escena: comparación A/B (necesita dk-sequence) -->
 <script src="../../../_shared/dk-anatomy.js"></script>   <!-- escena: anatomía explorable (enfoca partes de un mensaje) -->
 <script src="../../../_shared/dk-table.js"></script>     <!-- escena: tabla de datos con estado (paginación, orden, SQL) -->
+<script src="../../../_shared/dk-tree.js"></script>      <!-- escena: árbol de componentes + estado (props, callbacks, Context) -->
 <script src="../../../_shared/dk-player.js"></script>
 ```
 
@@ -34,6 +35,7 @@ Todo es JavaScript plano (scripts clásicos, sin módulos ni dependencias) y exp
 | `dk-layers.js` | `DK.layers`: arquitectura recorrida (componentes anidados, mensajes que viajan, resaltado por paso) | Explicar dónde vive algo y por dónde pasa una solicitud (Tomcat/Catalina/servlets) |
 | `dk-table.js` | `DK.table`: tabla de datos reales con estado por paso (todas las filas o una página, orden, SQL generado, metadatos de `Page<T>`, medidores de costo) | Paginación, orden, filtros, `LIMIT/OFFSET`: "qué trae esta consulta" |
 | `dk-anatomy.js` | `DK.anatomy`: un mensaje o documento real en una caja; cada paso enfoca una parte y a la derecha aparece su explicación | Explicar la estructura de algo (petición HTTP, JWT, JSON, URL) |
+| `dk-tree.js` | `DK.tree`: un árbol de componentes de verdad (nodos y ramas, distribuido solo); cada paso marca roles y hace viajar datos por las ramas o en salto directo | Estado en React/Flutter: lifting state up, prop drilling, Context, store global, re-renders |
 | `dk-compare.js` | `DK.compare`: dos o más diagramas de secuencia lado a lado, sincronizados paso a paso, con contador y nota por panel | Contrastar alternativas (TCP/UDP, con/sin caché, stateful/stateless) |
 | `dk-player.js` | `DK.player`: pestañas por fase, leyenda, controles, interruptores | Cualquier pieza paso a paso |
 
@@ -172,8 +174,40 @@ Un paso (todos comparten el mismo `doc`):
 - Un segmento con varias líneas de la misma parte (los encabezados) se enfoca completo a la vez: usa el mismo id de parte en cada línea.
 - Los colores `p1`..`p5` son **categóricos** (distinguen partes; no significan control/éxito/error). Están definidos en `dk-base.css` con variante oscura.
 - La estructura que cambia con un interruptor (por ejemplo "con cuerpo (POST)") se resuelve en `build(opts)` devolviendo otro `doc` y otros pasos.
+- **Para código** (un `createSlice`, una clase): `code: true` colorea la sintaxis con `DK.highlight` (mismos roles que el panel de código), no parte las líneas y enfoca la **línea completa** con un borde del color de la parte. `layout: 'stack'` pone el código a todo el ancho y la explicación debajo; úsalo cuando las líneas pasan de ~45 caracteres. Las dos opciones son opcionales y no cambian las piezas existentes. Ejemplo: `static/interactive/computacion-3/semana-12/anatomia-slice/`.
 
 Pieza de referencia: `candidates/static/interactive/computacion-2/semana-1/peticion-http/index.html`.
+
+## dk-tree.js: `DK.tree(opciones)`
+
+Escena para `DK.player` que dibuja una **jerarquía real** (raíz arriba, ramas que unen padre e hijo) en lugar de cajas anidadas. Se pasan solo los nodos con su `parent`; la posición se calcula sola: las hojas se reparten a lo ancho y cada padre queda centrado sobre sus hijos.
+
+```js
+scene: function (svg) {
+  return DK.tree({ svg, width: 1000,                     // con DK.player({ wide: true })
+    nodes: [ { id: 'page', label: 'RoutinesPage', sub: 'página' },
+             { id: 'layout', label: 'DashboardLayout', parent: 'page' },
+             { id: 'counter', label: 'RoutineCounter', parent: 'layout' } ],
+    legend: ['owner', 'pass', 'use', 'provider', 'need'] });   // opcional
+}
+```
+
+Un paso (cada paso se describe completo; roles, etiquetas y `sub` no se heredan):
+
+```js
+{ phase: 2, title: '...', caption: '...',
+  roles: { page: 'owner', layout: 'pass', counter: 'use' },   // owner | pass | use | provider | need | dim
+  tags:  { page: 'useState(routines)', layout: 'no lo usa' },  // pastilla sobre el nodo, del color del rol
+  sub:   { counter: 'total: 3' },
+  msgs: [ { path: ['page', 'layout', 'counter'], label: 'total', kind: 'data' },          // rama por rama (abajo o arriba)
+          { from: 'page', to: 'counter', direct: true, label: 'total', kind: 'ack' },     // salto curvo (Context, store)
+          { from: 'form', to: 'counter', label: 'no hay camino', kind: 'err', lost: true } ] }   // recta cortada
+```
+
+- Colores de rol: `owner` = control (dueño del estado), `pass` = `p5` punteado (solo reenvía), `use` = éxito (consume), `provider` = datos (Provider de Context), `need` = fallo punteado (necesita el dato y no le llega), `dim` = atenuado.
+- Un `path` con varios saltos etiqueta cada rama con el mismo `label`: es justo lo que enseña el prop drilling (la misma prop pasando nivel por nivel).
+- Solo se dibujan las flechas del paso actual.
+- Opciones de tamaño: `nodeW` (168), `nodeH` (52), `levelGap` (118), `top` (40). Con 5 hojas a `width: 1000` caben nombres de ~18 caracteres.
 
 ## dk-compare.js: `DK.compare(opciones)`
 
@@ -220,6 +254,8 @@ DK.player({
   ariaLabel: '...',
 });
 ```
+
+**Pieza ancha** (opción `wide: true`): quita los topes de la tarjeta (760 px) y del dibujo (640 px, o 732 px en `DK.layers`), así la pieza ocupa todo el ancho del iframe y crece con la columna del sitio (en modo enfoque llega a ~1100 px). Para que eso se traduzca en **más espacio** y no solo en todo más grande, dibuja con un `viewBox` de ~1000 de ancho y separa más los recuadros (140 a 200 unidades entre recuadros conectados). Opcional: las piezas sin `wide` no cambian. Ejemplos: piezas de `static/interactive/computacion-3/semana-12/`.
 
 `affectsPhase`: al cambiar el interruptor, `build` se vuelve a ejecutar y la pieza regresa al final de la fase anterior a esa (o se queda si aún no la había alcanzado). **Panel de código sincronizado** (opción `code`): muestra el código real que se explica y resalta, en cada paso, las líneas que se ejecutan.
 

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" width="960" height="440" role="img" aria-label="Flujo de consumo de API: componente, hook, service, cliente api.ts y backend">
+<style>text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}.mono{font-family:ui-monospace,Consolas,monospace}</style>
+<rect width="960" height="440" rx="16" fill="#1b1b1d"/>
+<text x="32" y="42" font-size="20" font-weight="700" fill="#e6e6e8">Cómo viaja una petición desde el componente hasta el backend</text>
+<text x="32" y="66" font-size="13" fill="#a3a7ae">Cada capa hace una sola cosa. Solo el cliente compartido llama a fetch.</text>
+<rect x="18" y="100" width="160" height="168" rx="12" fill="#242526" stroke="#3d3e41" stroke-width="1.5"/>
+<rect x="18" y="100" width="160" height="6" rx="3" fill="#9a9aff"/>
+<circle cx="42" cy="134" r="14" fill="#9a9aff"/>
+<text x="42" y="139" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">1</text>
+<text x="64" y="139" font-size="15" font-weight="700" fill="#e6e6e8">Componente</text>
+<text x="32" y="170" class="mono" font-size="11.5" font-weight="600" fill="#9a9aff">LoginForm.tsx</text>
+<text x="32" y="196" font-size="12.5" fill="#a3a7ae">Captura el formulario</text>
+<text x="32" y="213" font-size="12.5" fill="#a3a7ae">y el evento onSubmit.</text>
+<text x="32" y="230" font-size="12.5" fill="#a3a7ae">No conoce la URL.</text>
+<line x1="98.0" y1="268" x2="98.0" y2="294" stroke="#3d3e41" stroke-width="2"/>
+<rect x="209" y="100" width="160" height="168" rx="12" fill="#242526" stroke="#3d3e41" stroke-width="1.5"/>
+<rect x="209" y="100" width="160" height="6" rx="3" fill="#b79bff"/>
+<circle cx="233" cy="134" r="14" fill="#b79bff"/>
+<text x="233" y="139" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">2</text>
+<text x="255" y="139" font-size="15" font-weight="700" fill="#e6e6e8">Hook</text>
+<text x="223" y="170" class="mono" font-size="11.5" font-weight="600" fill="#b79bff">useAuth.ts</text>
+<text x="223" y="196" font-size="12.5" fill="#a3a7ae">Guarda isLoading y</text>
+<text x="223" y="213" font-size="12.5" fill="#a3a7ae">error con useState y</text>
+<text x="223" y="230" font-size="12.5" fill="#a3a7ae">avisa a la vista.</text>
+<line x1="289.0" y1="268" x2="289.0" y2="294" stroke="#3d3e41" stroke-width="2"/>
+<rect x="400" y="100" width="160" height="168" rx="12" fill="#242526" stroke="#3d3e41" stroke-width="1.5"/>
+<rect x="400" y="100" width="160" height="6" rx="3" fill="#5fd08f"/>
+<circle cx="424" cy="134" r="14" fill="#5fd08f"/>
+<text x="424" y="139" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">3</text>
+<text x="446" y="139" font-size="15" font-weight="700" fill="#e6e6e8">Service</text>
+<text x="414" y="170" class="mono" font-size="11.5" font-weight="600" fill="#5fd08f">auth.service.ts</text>
+<text x="414" y="196" font-size="12.5" fill="#a3a7ae">Conoce los endpoints</text>
+<text x="414" y="213" font-size="12.5" fill="#a3a7ae">de la feature: login()</text>
+<text x="414" y="230" font-size="12.5" fill="#a3a7ae">y register().</text>
+<line x1="480.0" y1="268" x2="480.0" y2="294" stroke="#3d3e41" stroke-width="2"/>
+<rect x="591" y="100" width="160" height="168" rx="12" fill="#242526" stroke="#3d3e41" stroke-width="1.5"/>
+<rect x="591" y="100" width="160" height="6" rx="3" fill="#ff8a5c"/>
+<circle cx="615" cy="134" r="14" fill="#ff8a5c"/>
+<text x="615" y="139" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">4</text>
+<text x="637" y="139" font-size="15" font-weight="700" fill="#e6e6e8">Cliente</text>
+<text x="605" y="170" class="mono" font-size="11.5" font-weight="600" fill="#ff8a5c">shared/lib/api.ts</text>
+<text x="605" y="196" font-size="12.5" fill="#a3a7ae">Único lugar con fetch:</text>
+<text x="605" y="213" font-size="12.5" fill="#a3a7ae">URL base, headers,</text>
+<text x="605" y="230" font-size="12.5" fill="#a3a7ae">token y errores.</text>
+<line x1="671.0" y1="268" x2="671.0" y2="294" stroke="#3d3e41" stroke-width="2"/>
+<rect x="782" y="100" width="160" height="168" rx="12" fill="#242526" stroke="#3d3e41" stroke-width="1.5"/>
+<rect x="782" y="100" width="160" height="6" rx="3" fill="#e5b84d"/>
+<circle cx="806" cy="134" r="14" fill="#e5b84d"/>
+<text x="806" y="139" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">5</text>
+<text x="828" y="139" font-size="15" font-weight="700" fill="#e6e6e8">Backend</text>
+<text x="796" y="170" class="mono" font-size="11.5" font-weight="600" fill="#e5b84d">NestJS</text>
+<text x="796" y="186" class="mono" font-size="11" fill="#a3a7ae">POST /auth/login</text>
+<text x="796" y="212" font-size="12.5" fill="#a3a7ae">Valida con bcrypt</text>
+<text x="796" y="229" font-size="12.5" fill="#a3a7ae">y firma el JWT o</text>
+<text x="796" y="246" font-size="12.5" fill="#a3a7ae">responde con error.</text>
+<line x1="862.0" y1="268" x2="862.0" y2="294" stroke="#3d3e41" stroke-width="2"/>
+<text x="18" y="284" font-size="12" font-weight="700" fill="#a3a7ae">IDA</text>
+<line x1="106.0" y1="294" x2="272.0" y2="294" stroke="#a3a7ae" stroke-width="2.5"/>
+<path d="M281.0,294 L270.0,288 L270.0,300 Z" fill="#a3a7ae"/>
+<text x="193.5" y="285" text-anchor="middle" class="mono" font-size="12" fill="#e6e6e8">onSubmit</text>
+<line x1="297.0" y1="294" x2="463.0" y2="294" stroke="#a3a7ae" stroke-width="2.5"/>
+<path d="M472.0,294 L461.0,288 L461.0,300 Z" fill="#a3a7ae"/>
+<text x="384.5" y="285" text-anchor="middle" class="mono" font-size="12" fill="#e6e6e8">login(datos)</text>
+<line x1="488.0" y1="294" x2="654.0" y2="294" stroke="#a3a7ae" stroke-width="2.5"/>
+<path d="M663.0,294 L652.0,288 L652.0,300 Z" fill="#a3a7ae"/>
+<text x="575.5" y="285" text-anchor="middle" class="mono" font-size="12" fill="#e6e6e8">apiFetch(ruta)</text>
+<line x1="679.0" y1="294" x2="845.0" y2="294" stroke="#a3a7ae" stroke-width="2.5"/>
+<path d="M854.0,294 L843.0,288 L843.0,300 Z" fill="#a3a7ae"/>
+<text x="766.5" y="285" text-anchor="middle" class="mono" font-size="12" fill="#e6e6e8">HTTP POST</text>
+<text x="18" y="340" font-size="12" font-weight="700" fill="#5fd08f">VUELTA</text>
+<line x1="98.0" y1="294" x2="98.0" y2="350" stroke="#5fd08f" stroke-width="2" stroke-dasharray="5 4"/>
+<line x1="862.0" y1="294" x2="862.0" y2="350" stroke="#5fd08f" stroke-width="2" stroke-dasharray="5 4"/>
+<line x1="862.0" y1="350" x2="108.0" y2="350" stroke="#5fd08f" stroke-width="2.5" stroke-dasharray="7 5"/>
+<path d="M98.0,350 L109.0,344 L109.0,356 Z" fill="#5fd08f"/>
+<rect x="290.0" y="337" width="380" height="26" rx="13" fill="#1b1b1d" stroke="#5fd08f" stroke-width="1.5"/>
+<text x="480.0" y="355" text-anchor="middle" font-size="12.5" font-weight="700" fill="#5fd08f">token JWT (texto) o error con message</text>
+<rect x="18" y="380" width="924" height="34" rx="10" fill="#3a2a24" stroke="#ff8a5c" stroke-width="1.5"/>
+<text x="480.0" y="402" text-anchor="middle" font-size="13" font-weight="700" fill="#ff8a5c">Regla: un componente nunca llama a fetch ni escribe la URL del backend.</text>
+</svg>

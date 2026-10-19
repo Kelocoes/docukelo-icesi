@@ -1,0 +1,9 @@
+{
+    "label": "W12 - Features, Navigation & Styles",
+    "key": "desarrollo-entornos-digitales-web-semana-12",
+    "position": 12,
+    "link": {
+        "type": "generated-index",
+        "description": "Feature-based folder structure in Next.js, a login and register case study with navigation and API consumption, and styling with Tailwind CSS and daisyUI."
+    }
+}

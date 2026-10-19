@@ -1,0 +1,8 @@
+{
+    "label": "W12 - Global State with Redux",
+    "position": 12,
+    "link": {
+        "type": "generated-index",
+        "description": "State in React, Redux Toolkit, thunks and their integration with Clean Architecture in Next.js, plus navigation and styling."
+    }
+}

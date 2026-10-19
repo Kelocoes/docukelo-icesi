@@ -1,19 +1,147 @@
 ---
-sidebar_position: 1
+sidebar_position: 3
 ---
 
-import BrowserWindow from "@site/src/components/BrowserWindow";
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
-# Tailwind
+# Tailwind CSS
 
-Tailwind CSS es un framework de CSS que permite construir interfaces de usuario de manera rápida y eficiente
-utilizando clases utilitarias predefinidas. A diferencia de otros frameworks como Bootstrap, Tailwind no
-proporciona componentes preconstruidos, sino que ofrece una amplia gama de clases que puedes combinar
-para diseñar tus propios componentes.
+En las lecciones anteriores organizamos la estructura de nuestra aplicación web por *features* y aprendimos a comunicar la interfaz con servicios de backend. Sin embargo, para crear experiencias digitales memorables y profesionales, necesitamos un sistema de diseño visual ágil, mantenible y consistente.
 
-Aquí hay algunos ejemplos de los elementos principales que tienes que considerar al usar Tailwind CSS:
+En esta lección exploraremos **Tailwind CSS v4**, el motor de estilos utilitarios más moderno para la web. Como diseñadores de entornos digitales, descubrirás cómo Tailwind traduce los fundamentos del diseño (escalas tipográficas, ritmos de espaciado, paletas cromáticas coherentes y diseño responsivo *mobile-first*) directamente al código de tus interfaces, sin necesidad de escribir hojas de estilo complejas ni lidiar con nombres de clases arbitrarios.
 
-## Espaciado
+---
+
+## 1. Utility-first
+
+El paradigma de Tailwind CSS se denomina **Utility-First** (*utilidades primero*). En lugar de escribir selectores CSS personalizados para cada clase de componente (como en BEM tradicional) o de inyectar estilos imperativos directamente en el DOM, Tailwind proporciona clases atómicas altamente especializadas (por ejemplo, `p-4`, `flex`, `bg-blue-600`, `rounded-xl`) que componen el diseño directamente en el marcado JSX.
+
+Es común que los desarrolladores que recién conocen Tailwind pregunten: *¿acaso usar clases utilitarias no es lo mismo que volver a los estilos en línea (`style={{ ... }}`)?* La respuesta técnica es un rotundo **no**. Existen diferencias arquitectónicas fundamentales entre ambos enfoques:
+
+| Característica | Estilos en Línea (`style={{ ... }}`) | CSS Tradicional / BEM (`.css`) | Utility-First (Tailwind CSS v4) |
+| :--- | :--- | :--- | :--- |
+| **Escala de Diseño** | Valores arbitrarios dispersos (`padding: 15px`, `18px`). Inconsistencia visual. | Definida manualmente mediante variables CSS (`--spacing-4`). | Escala numérica estandarizada basada en múltiplos de 4px (`p-1`, `p-2`, `p-4`). |
+| **Pseudo-clases** | Imposible usar `:hover`, `:focus`, `:active` o `:disabled` sin JavaScript. | Soporte nativo escribiendo reglas para cada selector. | Prefijos declarativos directos (`hover:bg-blue-700`, `focus:ring-2`, `active:scale-95`). |
+| **Diseño Responsivo** | Imposible usar Media Queries en el atributo `style`. | Requiere bloques `@media` dispersos en múltiples archivos. | Modificadores de pantalla integrados (`sm:`, `md:`, `lg:`, `xl:`) con enfoque mobile-first. |
+| **Peso en Producción** | Duplicación masiva en el DOM HTML por cada nodo. | El CSS crece continuamente a medida que el proyecto añade pantallas. | **Zero-runtime y Purga Automática**: el compilador genera únicamente las clases usadas (~15-20 KB). |
+| **Caché del Navegador** | Cada elemento envía sus propios bytes; sin caché. | Cacheado como archivo `.css` estático independiente. | Archivo CSS estático global altamente comprimible y cacheable en CDN. |
+
+### Componente de Referencia: Tarjeta de Usuario
+
+Para ilustrar el enfoque en el dominio del curso, observemos cómo se compone una tarjeta de usuario (`UserCard`) combinando clases utilitarias para espaciado, tipografía, bordes, estados y transiciones suaves:
+
+```tsx title="Ejemplo: tarjeta de usuario con utilidades de Tailwind" showLineNumbers
+// Tarjeta de usuario estilizada íntegramente con clases utilitarias de Tailwind CSS v4
+interface UserCardProps {
+  id: string;
+  name: string;
+  role: string;
+  email: string;
+  isActive: boolean;
+  onToggleStatus: (id: string) => void;
+}
+
+export function UserCard({
+  id,
+  name,
+  role,
+  email,
+  isActive,
+  onToggleStatus,
+}: UserCardProps) {
+  return (
+    <article className="flex flex-col justify-between p-6 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200">
+      <div>
+        {/* Encabezado: Avatar y Rol */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-300 flex items-center justify-center font-bold text-sm">
+              {name.slice(0, 2).toUpperCase()}
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-gray-900 dark:text-white leading-tight">
+                {name}
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {email}
+              </p>
+            </div>
+          </div>
+          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300">
+            {role}
+          </span>
+        </div>
+
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          Miembro registrado en el sistema con permisos de visualización.
+        </p>
+      </div>
+
+      {/* Pie de tarjeta: Estado y Acción */}
+      <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
+        <span
+          className={`text-xs font-semibold ${
+            isActive
+              ? 'text-emerald-600 dark:text-emerald-400'
+              : 'text-amber-600 dark:text-amber-400'
+          }`}
+        >
+          {isActive ? 'Activo' : 'Inactivo'}
+        </span>
+        <button
+          onClick={() => onToggleStatus(id)}
+          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 active:scale-95 rounded-lg transition-transform cursor-pointer"
+        >
+          {isActive ? 'Suspender' : 'Activar'}
+        </button>
+      </div>
+    </article>
+  );
+}
+```
+
+:::tip[Claridad de Declaración]
+Nota cómo no fue necesario crear un archivo `UserCard.module.css` con nombres de clases inventados (`.card-footer-action-button-active`). La tarjeta describe con precisión matemática su geometría, sus colores en modo claro y oscuro, y sus estados interactivos directamente en el elemento JSX.
+:::
+
+---
+
+## 2. Configuración en Next.js
+
+Al inicializar un proyecto moderno de Next.js mediante el comando oficial `npx create-next-app@latest`, el entorno se configura automáticamente con **Tailwind CSS v4** y **Next.js 16 (App Router)**. En versiones anteriores (Tailwind v3), la configuración requería mantener un archivo `tailwind.config.js` con rutas `content` para que el escáner detectara las clases, además de configurar plugins en arreglos de JavaScript.
+
+En **Tailwind CSS v4**, la arquitectura se simplificó radicalmente con el motor **Oxide** (construido en Rust y Lightning CSS):
+
+1. **Configuración CSS-First**: Ya no existe `tailwind.config.js`. Todo se configura directamente en la hoja de estilos principal (`src/app/globals.css` o `app/globals.css`).
+2. **Detección Automática de Fuentes**: Tailwind v4 detecta automáticamente todos los archivos de plantilla y componentes (`.tsx`, `.jsx`, `.ts`, `.html`) sin necesidad de especificar un array `content`.
+3. **Integración con PostCSS**: Se conecta mediante el paquete oficial `@tailwindcss/postcss`.
+
+Observemos la configuración estándar en el archivo de estilos globales:
+
+```css title="src/app/globals.css" showLineNumbers
+@import "tailwindcss";
+```
+
+Y su respectivo archivo de configuración de PostCSS en la raíz del proyecto:
+
+```javascript title="postcss.config.mjs" showLineNumbers
+const config = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};
+
+export default config;
+```
+
+:::note[Tailwind v4: El cambio a @import "tailwindcss"]
+En Tailwind v3 se utilizaban tres directivas separadas: `@tailwind base;`, `@tailwind components;` y `@tailwind utilities;`. En Tailwind v4, estas directivas fueron reemplazadas por una única sentencia estándar de CSS: `@import "tailwindcss";`.
+:::
+
+---
+
+## 3. Espaciado
 
 El espaciado en Tailwind se controla mediante clases de margin y padding. Tailwind usa una escala numérica donde cada número representa un múltiplo de 0.25rem (4px).
 
@@ -114,7 +242,7 @@ El padding controla el espacio **interior** de un elemento (entre el contenido y
     </div>
 </BrowserWindow>
 
-## Dimensiones
+## 4. Dimensiones
 
 Las dimensiones en Tailwind te permiten controlar el ancho y alto de los elementos. Tailwind ofrece clases utilitarias para tamaños fijos, porcentajes, y tamaños especiales como viewport.
 
@@ -360,7 +488,7 @@ Tailwind permite establecer límites mínimos y máximos para las dimensiones:
     </div>
 </BrowserWindow>
 
-## Tipografía
+## 5. Tipografía
 
 La tipografía en Tailwind te permite controlar el aspecto visual del texto mediante clases utilitarias. Puedes modificar el tamaño, peso, alineación, color, y más propiedades de tus textos.
 
@@ -585,7 +713,7 @@ La altura de línea controla el espaciado vertical entre líneas de texto:
     </div>
 </BrowserWindow>
 
-## Colores
+## 6. Colores
 
 Los colores en Tailwind son fundamentales para dar vida a tus diseños. Tailwind ofrece una paleta extensa de colores con diferentes intensidades que puedes aplicar a fondos, textos, bordes y más.
 
@@ -763,6 +891,7 @@ Los bordes también pueden tener color usando `border-{color}-{intensidad}`. Rec
 -   `border`: borde de 1px
 -   `border-2`: borde de 2px
 -   `border-4`: borde de 4px
+-   `border-8`: borde de 8px
 
 **Ejemplo:**
 
@@ -782,23 +911,23 @@ Los bordes también pueden tener color usando `border-{color}-{intensidad}`. Rec
         </div>
         <div
             style={{
-                border: "3px solid #3b82f6",
+                border: "4px solid #3b82f6",
                 padding: "16px",
                 marginBottom: "12px",
                 borderRadius: "4px",
             }}
         >
-            border-4 border-blue-500: Borde azul
+            border-4 border-blue-500: Borde azul de 4px
         </div>
         <div
             style={{
-                border: "4px solid #22c55e",
+                border: "8px solid #22c55e",
                 padding: "16px",
                 marginBottom: "12px",
                 borderRadius: "4px",
             }}
         >
-            border-4 border-green-500: Borde verde grueso
+            border-8 border-green-500: Borde verde grueso de 8px
         </div>
         <div
             style={{
@@ -864,17 +993,22 @@ Puedes controlar la opacidad de colores de fondo, texto y bordes usando el modif
                 borderRadius: "4px",
             }}
         >
-            bg-blue-500/25: Opacidad 25%" (muy transparente)
+            bg-blue-500/25: Opacidad 25% (muy transparente)
         </div>
     </div>
 </BrowserWindow>
 
 ### Gradientes
 
-Tailwind permite crear gradientes de forma sencilla usando múltiples clases:
+:::note[Tailwind v4: Nueva Nomenclatura bg-linear-*]
+En **Tailwind CSS v4**, las utilidades de gradientes lineales se renombraron de `bg-gradient-to-*` a **`bg-linear-to-*`** (`bg-linear-to-r`, `bg-linear-to-b`, `bg-linear-to-br`, etc.) para converger con la especificación estándar de CSS (`linear-gradient`). La sintaxis previa de v3 sigue siendo común en proyectos existentes, pero en proyectos modernos como el del curso se utiliza `bg-linear-to-*`.
+:::
 
--   `bg-gradient-to-r`: gradiente de izquierda a derecha
--   `bg-gradient-to-b`: gradiente de arriba hacia abajo
+Tailwind permite crear gradientes lineales de forma intuitiva combinando la dirección con los puntos de parada de color:
+
+-   `bg-linear-to-r`: gradiente lineal de izquierda a derecha
+-   `bg-linear-to-b`: gradiente lineal de arriba hacia abajo
+-   `bg-linear-to-br`: gradiente lineal hacia la esquina inferior derecha
 -   `from-{color}`: color inicial
 -   `to-{color}`: color final
 -   `via-{color}`: color intermedio (opcional)
@@ -893,7 +1027,7 @@ Tailwind permite crear gradientes de forma sencilla usando múltiples clases:
                 textAlign: "center",
             }}
         >
-            bg-gradient-to-r from-blue-500 to-purple-500
+            bg-linear-to-r from-blue-500 to-purple-500 (v3: bg-gradient-to-r)
         </div>
         <div
             style={{
@@ -905,7 +1039,7 @@ Tailwind permite crear gradientes de forma sencilla usando múltiples clases:
                 textAlign: "center",
             }}
         >
-            bg-gradient-to-b from-red-500 to-amber-500
+            bg-linear-to-b from-red-500 to-amber-500 (v3: bg-gradient-to-b)
         </div>
         <div
             style={{
@@ -918,7 +1052,7 @@ Tailwind permite crear gradientes de forma sencilla usando múltiples clases:
                 textAlign: "center",
             }}
         >
-            bg-gradient-to-r from-green-500 via-blue-500 to-purple-500
+            bg-linear-to-r from-green-500 via-blue-500 to-purple-500
         </div>
         <div
             style={{
@@ -929,18 +1063,14 @@ Tailwind permite crear gradientes de forma sencilla usando múltiples clases:
                 textAlign: "center",
             }}
         >
-            bg-gradient-to-br from-pink-500 to-purple-500
+            bg-linear-to-br from-pink-500 to-purple-500
         </div>
     </div>
 </BrowserWindow>
 
-## Flexbox y Grid
+## 7. Flexbox
 
-Flexbox y Grid son sistemas de diseño fundamentales en CSS que Tailwind hace muy fáciles de usar. Te permiten crear layouts complejos y responsivos de manera eficiente.
-
-## Flexbox
-
-Flexbox es ideal para organizar elementos en una dirección (horizontal o vertical) y controlar cómo se distribuyen y alinean.
+Flexbox y Grid son sistemas de diseño fundamentales en CSS que Tailwind hace muy fáciles de usar. Te permiten crear layouts complejos y responsivos de manera eficiente. Flexbox es ideal para organizar elementos en una dirección (horizontal o vertical) y controlar cómo se distribuyen y alinean.
 
 ### Flex Direction (Dirección del flex)
 
@@ -1385,7 +1515,7 @@ El gap crea espacio entre elementos flex sin necesidad de margins:
     </div>
 </BrowserWindow>
 
-## Grid
+## 8. Grid
 
 Grid es perfecto para crear layouts bidimensionales complejos con filas y columnas.
 
@@ -1827,7 +1957,7 @@ Similar a Flexbox, Grid también usa gap para espaciar elementos:
     </div>
 </BrowserWindow>
 
-## Positions
+## 9. Posicionamiento
 
 El posicionamiento en Tailwind controla cómo se ubica un elemento en la página. Esto es fundamental para crear layouts complejos, modales, menús flotantes, y más.
 
@@ -2071,7 +2201,7 @@ El z-index controla qué elementos aparecen encima de otros:
     </div>
 </BrowserWindow>
 
-## Estados y Pseudo-clases
+## 10. Estados y pseudo-clases
 
 Los estados y pseudo-clases en Tailwind permiten aplicar estilos cuando el usuario interactúa con elementos o cuando se cumplen ciertas condiciones.
 
@@ -2242,7 +2372,7 @@ El estado active se aplica cuando estás haciendo clic en un elemento:
                     transition: "all 0.15s",
                 }}
                 onMouseDown={(e) =>
-                    (e.currentTarget.style.transform = "translateY(2px)")
+                    (e.currentTarget.style.transform = "translateY(4px)")
                 }
                 onMouseUp={(e) =>
                     (e.currentTarget.style.transform = "translateY(0)")
@@ -2395,7 +2525,7 @@ Group hover aplica estilos a un elemento cuando se hace hover sobre su contenedo
     </div>
 </BrowserWindow>
 
-## Personalización
+## 11. Personalización
 
 Tailwind CSS permite personalizar valores más allá de su escala predefinida usando **valores arbitrarios**. Esto te da la flexibilidad de usar valores exactos cuando los necesites, sin salir del sistema de utilidades de Tailwind.
 
@@ -2403,7 +2533,7 @@ Tailwind CSS permite personalizar valores más allá de su escala predefinida us
 
 Los valores arbitrarios te permiten especificar valores personalizados para cualquier clase de Tailwind usando corchetes `[]`.
 
-#### Colores Personalizados
+#### 6. Colores, Bordes, Opacidad y Gradientes Personalizados
 
 Puedes usar cualquier color en formato hexadecimal, RGB, HSL, o incluso nombres de color CSS:
 
@@ -2511,7 +2641,7 @@ Puedes especificar dimensiones exactas en px, rem, em, %, vw, vh, etc.:
     </div>
 </BrowserWindow>
 
-#### Espaciado Personalizado
+#### 3. Espaciado: Margin y Padding Personalizado
 
 Crea espaciados exactos para margin y padding:
 
@@ -2634,6 +2764,13 @@ Define radios de borde exactos:
 </BrowserWindow>
 
 #### Sombras Personalizadas
+
+:::note[Tailwind v4: Reorganización de las Escalas de Bordes y Sombras]
+En Tailwind CSS v4, la escala de sombras y bordes fue reajustada para mayor consistencia:
+- La clase base `shadow` de v3 ahora se llama `shadow-sm`, mientras que el antiguo `shadow-sm` se convirtió en `shadow-xs`.
+- La escala moderna incluye `shadow-2xs`, `shadow-xs`, `shadow-sm`, `shadow-md`, `shadow-lg`, `shadow-xl` y `shadow-2xl`.
+- Para radios de borde ocurre lo mismo: el antiguo `rounded-sm` es ahora `rounded-xs`, y `rounded` equivale a `rounded-sm`.
+:::
 
 Crea efectos de sombra personalizados:
 
@@ -2999,36 +3136,198 @@ Tailwind también permite usar propiedades CSS completamente personalizadas con 
     </div>
 </BrowserWindow>
 
-## Breakpoints y Responsividad
+### Configuración de Tokens con la Directiva @theme (Tailwind v4)
 
-Los breakpoints en Tailwind te permiten crear diseños responsivos que se adaptan a diferentes tamaños de pantalla. Tailwind usa un enfoque mobile-first, lo que significa que los estilos sin prefijo se aplican en todos los tamaños, y agregas prefijos para pantallas más grandes.
+:::note[Tailwind v4: Adiós a tailwind.config.js]
+En versiones anteriores de Tailwind (v3), la personalización de temas requería un archivo JavaScript `tailwind.config.js` con un objeto `theme.extend`. En **Tailwind CSS v4**, la configuración es **100% nativa en CSS** mediante la directiva `@theme`. Esto elimina la necesidad de archivos de configuración externos, mejora los tiempos de compilación gracias al motor Oxide y expone automáticamente los tokens como variables CSS nativas.
+:::
 
-### Breakpoints Predefinidos
+Puedes definir colores de marca, fuentes y nuevos breakpoints directamente en `app/globals.css`:
 
-Tailwind tiene 5 breakpoints predefinidos:
+```css title="app/globals.css" showLineNumbers
+@import "tailwindcss";
 
--   **sin prefijo**: Todos los tamaños (0px en adelante) - Mobile first
--   `sm:`: Small devices (640px en adelante) - Tablets pequeñas
--   `md:`: Medium devices (768px en adelante) - Tablets
--   `lg:`: Large devices (1024px en adelante) - Laptops
--   `xl:`: Extra large devices (1280px en adelante) - Desktops
--   `2xl:`: 2X Extra large (1536px en adelante) - Pantallas grandes
+/* Definición de tokens de diseño del proyecto */
+@theme {
+  /* Nuevos colores semánticos accesibles como bg-brand-primary, text-brand-primary */
+  --color-brand-primary: #2563eb;
+  --color-brand-secondary: #0d9488;
+  --color-brand-accent: #f59e0b;
+  --color-surface-card: #f8fafc;
 
-**Tabla de referencia:**
+  /* Tipografías personalizadas */
+  --font-display: "Inter", system-ui, sans-serif;
 
-| Prefijo | Tamaño mínimo | Descripción          |
-| ------- | ------------- | -------------------- |
-| (none)  | 0px           | Mobile (por defecto) |
-| `sm:`   | 640px         | Tablet pequeña       |
-| `md:`   | 768px         | Tablet               |
-| `lg:`   | 1024px        | Laptop               |
-| `xl:`   | 1280px        | Desktop              |
-| `2xl:`  | 1536px        | Pantalla grande      |
+  /* Breakpoint personalizado para monitores ultra-anchos */
+  --breakpoint-3xl: 1920px;
+}
+```
 
-### Sintaxis Básica
+Al declarar `--color-brand-primary`, Tailwind genera automáticamente toda la familia de utilidades correspondientes: `bg-brand-primary`, `text-brand-primary`, `border-brand-primary`, `ring-brand-primary` y variantes de opacidad como `bg-brand-primary/80`.
 
-La sintaxis es simple: `{breakpoint}:{clase}`
 
--   `md:text-center`: Texto centrado desde 768px en adelante
--   `lg:bg-blue-500`: Fondo azul desde 1024px en adelante
--   `sm:flex`: Display flex desde 640px en adelante
+
+---
+
+## 12. Breakpoints y responsive
+
+El diseño responsivo en Tailwind CSS está fundamentado en la filosofía **Mobile-First** (*móvil primero*). Esto significa que **cualquier clase aplicada sin prefijo de breakpoint se aplica a todos los dispositivos, comenzando desde la pantalla más pequeña (0px en adelante)**. Los prefijos (`sm:`, `md:`, `lg:`, `xl:`, `2xl:`) representan puntos de quiebre donde se aplican mejoras progresivas mediante reglas `@media (min-width: ...)`.
+
+### Breakpoints Predefinidos del Sistema
+
+Tailwind CSS v4 incluye cinco breakpoints predefinidos estándar:
+
+| Prefijo | Tamaño Mínimo (`min-width`) | Tipo de Dispositivo Típico | Consulta CSS Generada |
+| :--- | :--- | :--- | :--- |
+| *(sin prefijo)* | `0px` | Teléfonos móviles en vertical | Regla base general |
+| `sm:` | `640px` | Teléfonos grandes / Tablets en vertical | `@media (min-width: 640px)` |
+| `md:` | `768px` | Tablets en horizontal / Laptops compactas | `@media (min-width: 768px)` |
+| `lg:` | `1024px` | Laptops estándar y pantallas de escritorio | `@media (min-width: 1024px)` |
+| `xl:` | `1280px` | Monitores de escritorio amplios | `@media (min-width: 1280px)` |
+| `2xl:` | `1536px` | Monitores de alta resolución y gran formato | `@media (min-width: 1536px)` |
+
+### Cómo se aplican los breakpoints
+
+Toma `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`. Cada clase aplica **desde su ancho en adelante**, y cuando dos chocan gana la de prefijo mayor. Arriba ves desde dónde aplica cada una; abajo, qué columnas ve cada pantalla:
+
+<ThemedImage
+  alt="Cascada de Breakpoints Mobile-First en Tailwind CSS"
+  sources={{
+    light: useBaseUrl('/img/computacion-3/s12-tailwind-mobile-first-light.svg'),
+    dark: useBaseUrl('/img/computacion-3/s12-tailwind-mobile-first-dark.svg'),
+  }}
+/>
+
+#### Desglose Técnico del Diagrama
+
+1. **Base Móvil (`0px+`)**: Establece la estructura mínima indispensable. Por ejemplo, una sola columna (`grid-cols-1`), ancho completo (`w-full`) y tamaños de fuente compactos (`text-sm`).
+2. **Activación Progresiva (`min-width`)**: A diferencia de los enfoques *desktop-first* antiguos que usaban `max-width` para ocultar o encoger elementos, el enfoque *mobile-first* añade complejidad gradualmente.
+3. **Sobreescritura Específica**: Si declaras `text-sm md:text-base lg:text-lg`, un móvil de 390px leerá `text-sm`; una tablet de 800px aplicará `text-base`; y un monitor de 1440px aplicará `text-lg`.
+
+:::important[Error Frecuente: Pensar en Desktop-First]
+Un error muy común al comenzar con Tailwind es escribir `sm:grid-cols-1 md:grid-cols-2`. El prefijo `sm:` para una columna es redundante y dañino: en pantallas móviles menores a 640px el elemento quedaría sin regla de columna definida. Lo correcto es escribir **`grid-cols-1 md:grid-cols-2`**, dejando la regla base sin prefijo.
+:::
+
+### Ejemplo de Implementación: Directorio Responsivo de Usuarios
+
+Veamos cómo construir una cuadrícula completa de perfiles de usuario que se adapta fluidamente desde un teléfono móvil hasta un monitor de escritorio:
+
+```tsx title="Ejemplo: cuadrícula responsiva de usuarios" showLineNumbers
+// Cuadrícula responsiva que escala de 1 columna (móvil) a 4 columnas (pantalla grande)
+import { UserCard } from './UserCard';
+
+interface UserItem {
+  id: string;
+  name: string;
+  role: string;
+  email: string;
+  isActive: boolean;
+}
+
+interface UserGridProps {
+  users: UserItem[];
+  onToggleStatus: (id: string) => void;
+}
+
+export function UserGrid({ users, onToggleStatus }: UserGridProps) {
+  return (
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Encabezado con disposición responsiva: columna en móvil, fila en tablet/desktop */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+            Directorio de Usuarios
+          </h2>
+          <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">
+            Gestiona los miembros registrados en la plataforma y supervisa sus roles
+          </p>
+        </div>
+
+        {/* Acciones: ancho completo en móvil, auto en escritorio */}
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <button className="w-full md:w-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-colors cursor-pointer">
+            Nuevo Usuario
+          </button>
+        </div>
+      </div>
+
+      {/* Cuadrícula responsiva adaptativa:
+          - Móvil (< 768px): 1 columna (grid-cols-1)
+          - Tablet (≥ 768px): 2 columnas (md:grid-cols-2)
+          - Laptop (≥ 1024px): 3 columnas (lg:grid-cols-3)
+          - Escritorio Amplio (≥ 1280px): 4 columnas (xl:grid-cols-4)
+      */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {users.map((user) => (
+          <UserCard
+            key={user.id}
+            id={user.id}
+            name={user.name}
+            role={user.role}
+            email={user.email}
+            isActive={user.isActive}
+            onToggleStatus={onToggleStatus}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+```
+
+En el siguiente documento exploraremos **daisyUI 5**, una librería de componentes semánticos construida sobre Tailwind que nos permitirá acelerar aún más el desarrollo con botones, tarjetas, formularios y sistemas de temas listos para usar.
+
+---
+
+## Cuestionario de Autoevaluación
+
+<Quiz id="dedw-s12-tailwind-quiz">
+  <Question title="¿Cuál es la principal diferencia técnica entre las clases utilitarias de Tailwind CSS y los estilos en línea (style={{ ... }}) en React?">
+    <Option>Los estilos en línea solo funcionan en Server Components mientras que Tailwind es exclusivo de Client Components.</Option>
+    <Option correct>Tailwind soporta pseudo-clases, media queries responsivas, escala de diseño y purga en compilación; los estilos en línea no admiten media queries ni pseudo-clases y saturan el DOM.</Option>
+    <Option>Los estilos en línea generan archivos CSS externos en tiempo de ejecución mientras que Tailwind inyecta estilos directamente en los atributos HTML.</Option>
+    <Option>Tailwind no permite definir colores hexadecimales personalizados mientras que los estilos en línea sí lo permiten.</Option>
+  </Question>
+  <Question title="¿Cómo se configura Tailwind CSS v4 en un proyecto Next.js moderno generado con create-next-app?">
+    <Option>Creando un archivo tailwind.config.js con un arreglo content que apunte a las rutas de las páginas.</Option>
+    <Option>Importando el archivo tailwind.min.css desde una red de distribución de contenidos (CDN) en el archivo layout.tsx.</Option>
+    <Option correct>Declarando @import &#34;tailwindcss&#34;; en app/globals.css y conectando @tailwindcss/postcss en postcss.config.mjs, sin necesidad de tailwind.config.js.</Option>
+    <Option>Instalando un componente especial llamado TailwindProvider y envolviendo el árbol de React en el layout.</Option>
+  </Question>
+  <Question title="¿Cuál es la nueva nomenclatura introducida en Tailwind CSS v4 para definir gradientes lineales de izquierda a derecha?">
+    <Option>gradient-horizontal from-blue-500 to-purple-500</Option>
+    <Option correct>bg-linear-to-r from-blue-500 to-purple-500</Option>
+    <Option>background-gradient-right from-blue-500 to-purple-500</Option>
+    <Option>linear-gradient-to-r from-blue-500 to-purple-500</Option>
+  </Question>
+  <Question title="En la directiva de diseño mobile-first de Tailwind, ¿qué pantalla afecta una clase declarada como md:grid-cols-2?">
+    <Option>Únicamente a pantallas con un ancho exacto de 768 píxeles.</Option>
+    <Option>A todas las pantallas con un ancho inferior a 768 píxeles (pantallas móviles).</Option>
+    <Option correct>A todas las pantallas con un ancho mínimo de 768 píxeles en adelante (tablets y pantallas superiores).</Option>
+    <Option>A pantallas que se encuentren en orientación vertical independientemente de su resolución.</Option>
+  </Question>
+  <Question title="En la escala numérica de espaciado y dimensiones de Tailwind (por ejemplo, p-4, w-16), ¿a cuántos píxeles equivale cada unidad numérica?">
+    <Option>1 unidad equivale exactamente a 1 píxel (p-4 equivale a 4px).</Option>
+    <Option correct>1 unidad equivale a 0.25rem (4 píxeles en la configuración base de 16px), por lo que p-4 equivale a 16px.</Option>
+    <Option>1 unidad equivale a 1 porcentaje relativo al ancho de la ventana gráfica (viewport width).</Option>
+    <Option>1 unidad equivale a 8 píxeles (p-4 equivale a 32px).</Option>
+  </Question>
+  <Question title="¿Cómo se deben declarar nuevos tokens de diseño (como colores corporativos o fuentes) en Tailwind CSS v4?">
+    <Option>En la sección theme.extend del archivo tailwind.config.js usando código JavaScript.</Option>
+    <Option correct>Directamente en el archivo CSS principal utilizando la directiva @theme y declarando variables CSS como --color-brand-primary.</Option>
+    <Option>Creando un archivo theme.json en la raíz del repositorio de Next.js.</Option>
+    <Option>Modificando directamente el código fuente dentro del paquete node_modules/tailwindcss.</Option>
+  </Question>
+  <Question title="¿Cuál es la principal diferencia conceptual entre Flexbox (flex) y Grid (grid) al maquetar con Tailwind CSS?">
+    <Option>Flexbox solo funciona en pantallas móviles y Grid solo en monitores de escritorio.</Option>
+    <Option correct>Flexbox está diseñado para distribuir elementos en un solo eje o dimensión (filas o columnas lineales), mientras que Grid gestiona la disposición en dos dimensiones simultáneas (filas y columnas).</Option>
+    <Option>Grid requiere definir hojas de estilo CSS externas, mientras que Flexbox funciona con clases utilitarias.</Option>
+    <Option>Flexbox no permite controlar el espaciado (gap) entre elementos, mientras que Grid sí lo permite.</Option>
+  </Question>
+  <Question title="¿Cómo se aplica un color con opacidad del 50% o una pseudo-clase de interacción en Tailwind CSS?">
+    <Option>Escribiendo un bloque de estilos en línea mediante el atributo style.</Option>
+    <Option>Creando una regla CSS personalizada con la propiedad opacity y un selector :hover en un archivo .module.css.</Option>
+    <Option correct>Utilizando la sintaxis de barra inclinada para opacidad (por ejemplo, bg-blue-600/50) y prefijos declarativos para pseudo-clases (por ejemplo, hover:bg-blue-700 o focus:ring-2).</Option>
+    <Option>Definiendo variables JavaScript dentro del componente React y pasándolas como props.</Option>
+  </Question>
+</Quiz>
