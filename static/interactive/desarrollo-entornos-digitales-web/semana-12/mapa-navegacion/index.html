@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapa de navegación de la aplicación</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var msg = function (path, label, kind, extra) {
+    var m = { path: path, label: label, kind: kind };
+    for (var k in extra) m[k] = extra[k];
+    return m;
+  };
+
+  // Lienzo de 1100 x 440. Grupo (auth) a la izquierda, grupo (app) a la derecha,
+  // con 270 px libres entre ambos para las flechas que cruzan de un grupo al otro.
+  var nodes = [
+    { id: 'g_auth', kind: 'outer', label: 'Route Group (auth)', sub: 'layout centrado, sin barra de navegación', x: 10, y: 10, w: 330, h: 420 },
+    { id: 'g_app', kind: 'outer', label: 'Route Group (app)', sub: 'layout con navegación y AuthGuard', x: 610, y: 10, w: 480, h: 420 },
+
+    { id: 'login', kind: 'box', icon: 'browser', label: '/login', sub: 'LoginForm', x: 60, y: 110, w: 230, h: 64 },
+    { id: 'register', kind: 'box', icon: 'browser', label: '/register', sub: 'RegisterForm', x: 60, y: 300, w: 230, h: 64 },
+
+    { id: 'guard', kind: 'box', icon: 'user', label: 'AuthGuard', sub: 'revisa el token', x: 665, y: 84, w: 370, h: 56 },
+    { id: 'dash', kind: 'box', icon: 'browser', label: '/dashboard', sub: 'lista de usuarios', x: 665, y: 190, w: 370, h: 64 },
+    { id: 'detail', kind: 'box', icon: 'browser', label: '/users/[id]', sub: 'detalle de un usuario', x: 665, y: 330, w: 370, h: 64 }
+  ];
+
+  var steps = [
+    {
+      phase: 0,
+      title: 'Entre pantallas públicas: Link',
+      focus: ['g_auth', 'login', 'register'],
+      msgs: [msg([100, 174, 100, 300], 'Link a /register', 'ctl')],
+      caption: 'Un enlace entre login y register es una decisión del usuario: se usa <Link>. Navega sin recargar la página y deja la entrada en el historial. En register hay otro Link de vuelta al login.'
+    },
+    {
+      phase: 1,
+      title: 'Registro exitoso: router.push',
+      focus: ['register', 'login'],
+      msgs: [msg([250, 300, 250, 174], "push('/login')", 'data')],
+      caption: 'Al terminar el registro se navega por código. Aquí usamos push: si el usuario retrocede, vuelve al formulario de registro y no pasa nada grave.'
+    },
+    {
+      phase: 1,
+      title: 'Login exitoso: router.replace',
+      focus: ['login', 'dash', 'g_app'],
+      msgs: [msg([290, 142, 665, 222], "router.replace('/dashboard')", 'data', { labelAt: 0.68 })],
+      caption: 'Con credenciales válidas se guarda el token y se reemplaza /login por /dashboard en el historial. Así el botón Atrás no regresa a un login que ya no sirve.'
+    },
+    {
+      phase: 2,
+      title: 'Dentro de la app: Link con parámetro',
+      focus: ['dash', 'detail'],
+      msgs: [msg([760, 254, 760, 330], 'Link a /users/7', 'ctl')],
+      caption: 'Cada tarjeta de usuario enlaza a /users/[id]. El segmento dinámico se escribe entre corchetes en el nombre de la carpeta y el id llega en params.'
+    },
+    {
+      phase: 2,
+      title: 'Volver al listado: router.back',
+      focus: ['detail', 'dash'],
+      msgs: [msg([960, 330, 960, 254], 'router.back()', 'ack')],
+      caption: 'El botón "Volver" usa router.back(): retrocede una entrada en el historial, igual que el botón Atrás del navegador.'
+    },
+    {
+      phase: 3,
+      title: 'Sin token: AuthGuard expulsa',
+      focus: ['guard', 'login'],
+      msgs: [msg([665, 112, 290, 130], "router.replace('/login')", 'err', { labelAt: 0.5 })],
+      caption: 'Si alguien escribe /dashboard directamente sin haber iniciado sesión, el AuthGuard no encuentra el token y lo envía al login con replace.'
+    },
+    {
+      phase: 3,
+      title: 'Cerrar sesión: limpiar y replace',
+      focus: ['dash', 'login'],
+      msgs: [msg([665, 240, 290, 160], "logout + replace('/login')", 'data', { labelAt: 0.3 })],
+      caption: 'Al salir se borra el token y se reemplaza la entrada del historial. Con Atrás no se puede volver al panel privado.'
+    }
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Mapa de navegación entre login, register, dashboard y detalle de usuario',
+    phases: ['Pantallas públicas', 'Registro y login', 'Dentro de la app', 'Seguridad y salida'],
+    wide: true,
+    scene: function (svg) {
+      return DK.layers({ svg: svg, width: 1100, height: 440, labels: 'smart', nodes: nodes });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Navegación en Next.js',
+      title: 'Mapa de pantallas del caso de estudio',
+      text: 'Cada flecha es una forma de navegar. Avanza para ver cuál se usa en cada situación.'
+    }
+  });
+})();
+</script>
+</body>
+</html>
