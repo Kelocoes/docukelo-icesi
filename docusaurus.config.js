@@ -12,14 +12,20 @@ import coursesPlugin from './src/plugins/courses-data/index.js';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
-// Despliegue oficial: GitHub Pages (ver .github/workflows/deploy.yml y Dockerfile).
-// El sitio vive en https://kelocoes.github.io/docukelo-icesi/, asi que el build de produccion usa
-// ese baseUrl. En desarrollo (`npm start`) se sirve en la raiz. Ambos se pueden forzar con las
-// variables SITE_URL y BASE_URL (por ejemplo BASE_URL=/ para probar la imagen Docker en local).
-const siteUrl = process.env.SITE_URL || 'https://kelocoes.github.io';
+// Despliegues: el sitio se publica en dos lugares con la misma rama (main).
+//   - GitHub Pages (oficial): https://kelocoes.github.io/docukelo-icesi/  -> baseUrl /docukelo-icesi/
+//     (ver .github/workflows/deploy.yml y Dockerfile).
+//   - Render: https://docukelo-icesi.onrender.com  -> baseUrl /  (se detecta sola con la variable
+//     RENDER que Render define en cada build, asi que no hay que configurar nada alli).
+// En desarrollo (`npm start`) el sitio se sirve en la raiz. Todo se puede forzar con las variables
+// SITE_URL y BASE_URL (por ejemplo BASE_URL=/ para probar la imagen Docker en local).
+const isRender = Boolean(process.env.RENDER);
+const siteUrl =
+    process.env.SITE_URL ||
+    (isRender ? process.env.RENDER_EXTERNAL_URL || 'https://docukelo-icesi.onrender.com' : 'https://kelocoes.github.io');
 const baseUrl =
     process.env.BASE_URL ||
-    (process.env.NODE_ENV === 'production' ? '/docukelo-icesi/' : '/');
+    (isRender ? '/' : process.env.NODE_ENV === 'production' ? '/docukelo-icesi/' : '/');
 
 // Autor que Docusaurus muestra en "Ultima actualizacion". Por defecto es Kevin Rodriguez, salvo
 // las rutas listadas aqui. Un `last_update.author` explicito en el frontmatter siempre gana.
