@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Learn the types of automated tests in NestJS and run unit tests with Jest, using dependency injection to isolate and mock components."
 ---
 
 # Testing in NestJS

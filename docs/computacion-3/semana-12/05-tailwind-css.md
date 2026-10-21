@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Aprende a estilizar interfaces con Tailwind CSS y daisyUI usando clases utilitarias de espaciado, dimensiones y más en Next.js."
 ---
 
 import ThemedImage from '@theme/ThemedImage';
@@ -3288,7 +3289,7 @@ A medida que una aplicación crece, construir cada botón, campo de formulario, 
 
 Proporciona **nombres de clase semánticos** (como `btn`, `card`, `navbar`, `input`, `badge`, `alert`) que encapsulan estilos profesionales y accesibles construidos sobre variables CSS y utilidades de Tailwind:
 
-```html
+```html title="¿Qué es daisyUI"
 <!-- En lugar de escribir 12 utilidades para un botón primario accesible: -->
 <button class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
   Guardar
@@ -3445,7 +3446,7 @@ export function RoutineNavbar() {
 
 En daisyUI 5 los campos ya traen borde (desaparecieron `input-bordered` y `select-bordered`) y los formularios se agrupan con `fieldset`, `fieldset-legend` y `label` (reemplazan a `form-control` y `label-text` de la versión 4):
 
-```tsx title="Ejemplo de campo de texto accesible" showLineNumbers
+```tsx title="Campos de Entrada" showLineNumbers
 <fieldset className="fieldset w-full max-w-sm">
   <legend className="fieldset-legend">Nombre de la rutina</legend>
   <input

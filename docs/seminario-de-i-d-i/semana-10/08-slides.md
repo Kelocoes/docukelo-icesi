@@ -1,5 +1,6 @@
 ---
 sidebar_position: 8
+description: "Consulta las diapositivas de la semana 10 sobre maquetación en Flutter, agentes de IA en consola, contexto y contratos AGENTS.md."
 ---
 
 # Slides de la semana

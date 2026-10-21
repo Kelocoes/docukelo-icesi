@@ -1,0 +1,6 @@
+{
+  "interactive": ".agents/memory/svg-redesign/candidates/static/interactive/computacion-2/semana-1/peticion-http/index.html",
+  "height": 640,
+  "finalPath": "static/interactive/computacion-2/semana-1/peticion-http/",
+  "embed": "<iframe src=\"/interactive/computacion-2/semana-1/peticion-http/index.html\" title=\"Las partes de una peticion HTTP\" style={{ width: '100%', height: 640, border: 0 }} loading=\"lazy\" />"
+}

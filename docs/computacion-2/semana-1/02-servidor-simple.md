@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Construye paso a paso un servidor web simple en Java usando sockets para recibir peticiones y responder a un cliente."
 ---
 
 # Servidor Simple
@@ -19,7 +20,7 @@ A continuación se explica brevemente para qué se usan estas librerías:
 - `java.net`: Permite trabajar con redes, sockets y conexiones TCP/IP.
 - `java.util`: Incluye utilidades como colecciones y clases para manipular strings, por ejemplo, `StringTokenizer`.
 
-```java
+```java title="Importar los paquetes necesarios"
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -29,7 +30,7 @@ import java.util.*;
 
 Declare la clase principal y el método `main`:
 
-```java
+```java title="Definir la clase principal"
 public class ServidorWebSimple {
     public static void main(String argv[]) throws Exception {
         // El código irá acá
@@ -41,7 +42,7 @@ public class ServidorWebSimple {
 
 Dentro del método `main`, agregue el código para crear el socket que escuchará en el puerto 6789:
 
-```java
+```java title="Crear el socket del servidor"
 ServerSocket socketdeEscucha = new ServerSocket(6789);
 Socket socketdeConexion = socketdeEscucha.accept();
 ```
@@ -50,7 +51,7 @@ Socket socketdeConexion = socketdeEscucha.accept();
 
 Agregue el siguiente código para leer la solicitud HTTP enviada por el navegador:
 
-```java
+```java title="Leer la solicitud del cliente"
 BufferedReader mensajeDesdeCliente =
     new BufferedReader(new InputStreamReader(socketdeConexion.getInputStream()));
 String lineaDeLaSolicitudHttp = mensajeDesdeCliente.readLine();
@@ -62,7 +63,7 @@ Nota: `BufferedReader` utiliza un buffer interno para leer datos de manera efici
 
 Utilice `StringTokenizer` para extraer el nombre del archivo solicitado:
 
-```java
+```java title="Procesar la solicitud y obtener"
 StringTokenizer lineaSeparada = new StringTokenizer(lineaDeLaSolicitudHttp);
 if (lineaSeparada.nextToken().equals("GET")) {
     String nombreArchivo = lineaSeparada.nextToken();
@@ -84,7 +85,7 @@ El siguiente código implementa el algoritmo que permite al servidor leer el arc
 
 El uso de `writeBytes` para los encabezados y el salto de línea final `\r\n` es relevante porque la especificación HTTP requiere que los encabezados terminen con una línea vacía antes de enviar el cuerpo del mensaje. Esto indica al navegador que los encabezados han terminado y que a continuación viene el contenido solicitado.
 
-```java
+```java title="Leer el archivo solicitado y preparar"
 File archivo = new File(nombreArchivo);
 FileInputStream archivoDeEntrada = new FileInputStream(nombreArchivo);
 int cantidadDeBytes = (int) archivo.length();

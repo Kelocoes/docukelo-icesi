@@ -1,6 +1,7 @@
 ---
 sidebar_position: 7
 unlisted: true
+description: "Write the agentic contract for your Flutter app and solve problems in the terminal with an agent, iterating on the contract."
 ---
 
 # AI Agents Workshop

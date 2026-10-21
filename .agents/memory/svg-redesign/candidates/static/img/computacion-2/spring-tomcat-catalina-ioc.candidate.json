@@ -1,0 +1,6 @@
+{
+  "interactive": ".agents/memory/svg-redesign/candidates/static/interactive/computacion-2/semana-2/spring-en-tomcat/index.html",
+  "height": 700,
+  "finalPath": "static/interactive/computacion-2/semana-2/spring-en-tomcat/",
+  "embed": "<iframe src=\"/interactive/computacion-2/semana-2/spring-en-tomcat/index.html\" title=\"Spring dentro de Tomcat\" style={{ width: '100%', height: 700, border: 0 }} loading=\"lazy\" />"
+}

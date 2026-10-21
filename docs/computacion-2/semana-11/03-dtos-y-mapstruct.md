@@ -1,6 +1,7 @@
 ---
 sidebar_position: 3
 sidebar_label: "DTOs (Data Transfer Objects)"
+description: "Aplica el patrón DTO para aislar las entidades de la capa de persistencia y automatiza el mapeo con MapStruct."
 ---
 
 # DTOs (Data Transfer Objects)

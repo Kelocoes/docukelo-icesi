@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Resuelve ambigüedades de inyección con @Qualifier y @Primary e inyecta propiedades externas con @Value y SpEL."
 ---
 
 # Inyección Avanzada y SpEL
@@ -100,7 +101,7 @@ public class UsuarioController {
 
 También podemos asignar un identificador personalizado directamente en la anotación `@Service`:
 
-```java
+```java title="B. Solución 1"
 @Service("emailService")
 public class NotificacionEmailServiceImpl implements NotificacionService { ... }
 

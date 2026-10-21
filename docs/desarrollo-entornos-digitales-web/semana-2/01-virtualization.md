@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Comprende las máquinas virtuales, los hipervisores y los contenedores Docker, y en qué se diferencian sus ventajas y desventajas."
 ---
 
 # Contenedores

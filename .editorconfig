@@ -1,0 +1,17 @@
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# En Markdown dos espacios al final de la linea son un salto de linea intencional.
+[*.{md,mdx}]
+trim_trailing_whitespace = false
+
+[*.{json,yml,yaml}]
+indent_size = 2
+
+[Dockerfile]
+indent_size = 4

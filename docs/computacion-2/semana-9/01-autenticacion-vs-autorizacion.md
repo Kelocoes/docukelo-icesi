@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 sidebar_label: "Autenticación vs Autorización"
+description: "Distingue autenticación de autorización y comprende el papel de la seguridad a nivel de aplicación en el control de acceso."
 ---
 
 # Autenticación vs. Autorización

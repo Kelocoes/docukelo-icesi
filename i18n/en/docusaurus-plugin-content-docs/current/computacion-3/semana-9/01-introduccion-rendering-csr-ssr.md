@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Compare client-side and server-side rendering in Next.js and learn how each strategy affects user experience and search engine optimization."
 ---
 
 # Rendering Strategies: CSR & SSR

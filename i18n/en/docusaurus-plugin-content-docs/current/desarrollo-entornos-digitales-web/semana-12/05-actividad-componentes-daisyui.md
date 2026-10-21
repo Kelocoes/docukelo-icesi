@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Complete a hands-on activity building components with daisyUI following the feature-based structure, with delivery criteria and a rubric."
 ---
 
 import Tabs from '@theme/Tabs';
@@ -139,7 +140,7 @@ Interactive action button combining a vector icon, descriptive label, an informa
 * **Purpose:** Provide a standardized base button for the entire application with support for visual states (normal, loading, disabled) without duplicating CSS code.
 * **Suggested daisyUI style:** Institutional `icesi` theme with primary variant `btn-primary` (Icesi Blue `#5454e9`) and contextual badge in `badge-secondary` (Icesi Purple `#865cf0`).
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/action-button.tsx"
   interface ActionButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     label: string;
     icon?: React.ReactNode;
@@ -178,7 +179,7 @@ Pill-shaped micro-component combining a pulsing luminous dot (*pulsing dot*) wit
 * **Purpose:** Display an entity's lifecycle or condition immediately without cluttering the interface.
 * **Suggested daisyUI style:** Semantic status modifiers with the complementary Icesi palette: Icesi Green (`#4cb979` / `badge-success`), Icesi Purple (`#865cf0` / `badge-secondary`), and Icesi Orange (`#e9683b` / `badge-error`).
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/status-badge.tsx"
   type BadgeStatus = 'active' | 'pending' | 'danger' | 'neutral';
 
   interface StatusBadgeProps {
@@ -217,7 +218,7 @@ Prominent notification block featuring an informative vector icon in Icesi Blue 
 * **Purpose:** Display important institutional announcements (registration openings, system notices, scheduled maintenance) in view headers.
 * **Suggested daisyUI style:** `alert` component combined with `alert-info` in shades of Icesi Blue (`#5454e9` / `bg-[#f0f0fd]`).
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/alert-banner.tsx"
   interface AlertBannerProps {
     title: string;
     description: string;
@@ -255,7 +256,7 @@ Atomic set that includes a circular user photograph with an outer ring (*ring*) 
 * **Purpose:** Visually identify professors, lab monitors, or team members in contact panels and tutoring rosters.
 * **Suggested daisyUI style:** Classes `avatar online` (or `offline`) combined with `ring ring-primary ring-offset-2`.
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/user-avatar.tsx"
   interface UserAvatarProps {
     name: string;
     role: string;
@@ -295,7 +296,7 @@ Compact row with a descriptive label on the left and simulated physical keys usi
 * **Purpose:** Inform the user of keyboard shortcuts to boost productivity and accessibility.
 * **Suggested daisyUI style:** Classes `kbd kbd-sm` with white background and subtle shadow on a neutral container `bg-base-200` and border in Gray 2 (`#cecfd4`).
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/shortcut-pill.tsx"
   interface ShortcutPillProps {
     label: string;
     keys: string[]; // E.g.: ['⌘ Cmd', 'K'] or ['Ctrl', 'Shift', 'P']
@@ -330,7 +331,7 @@ Visual rating component that displays stars with support for half ratings (*half
 * **Purpose:** Display ratings for courses, workshops, or faculty evaluations in catalogs and course sheets.
 * **Suggested daisyUI style:** Component `rating rating-sm rating-half` with masks `mask mask-star-2 bg-[#e9683b]` (Icesi Orange) or institutional yellow.
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/rating-display.tsx"
   interface RatingDisplayProps {
     score: number; // E.g.: 4.8 out of 5.0
     totalReviews?: number;
@@ -367,7 +368,7 @@ Bento-style informative card featuring a primary quantitative indicator (e.g., C
 * **Purpose:** Present academic KPIs in dashboards and panels for students or faculty.
 * **Suggested daisyUI style:** Component `stat` with white background, borders in Gray 2 (`#cecfd4`), and text in Icesi Blue `text-primary` (`#5454e9`).
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/metric-bento-stat.tsx"
   interface MetricBentoStatProps {
     title: string;
     value: string | number;
@@ -410,7 +411,7 @@ Modular card summarizing course information: header with institutional gradient 
 * **Purpose:** Main card for the grid of enrolled courses in the student catalog.
 * **Suggested daisyUI style:** `card bg-base-100 shadow-sm border border-[#cecfd4]`, bar `progress progress-primary`, and action buttons in `card-actions`.
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/features/courses/components/course-card.tsx"
   interface CourseCardProps {
     courseCode: string;
     title: string;
@@ -451,7 +452,7 @@ Horizontal panel coupling multiple academic performance indicators into a single
 * **Purpose:** Display a bird's-eye view of curricular progress in the academic portal header.
 * **Suggested daisyUI style:** Group container `stats stats-horizontal shadow-sm border border-[#cecfd4] bg-base-100`.
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/analytics-bento-grid.tsx"
   interface StatItem {
     label: string;
     value: string | number;
@@ -494,7 +495,7 @@ Floating event confirmation card with a circular success icon in Icesi Green (`#
 * **Purpose:** Notify the student when a lab submission has been successfully received and confirmed.
 * **Suggested daisyUI style:** `alert alert-success shadow-md rounded-2xl` with white background and accents in Icesi Green (`#4cb979`).
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/toast-notification.tsx"
   interface ToastNotificationProps {
     title: string;
     message: string;
@@ -531,7 +532,7 @@ Asynchronous messaging thread positioning student messages on the left and instr
 * **Purpose:** Structure one-on-one academic consultation and feedback channels between students and instructors.
 * **Suggested daisyUI style:** Components `chat chat-start` and `chat chat-end` with instructor bubble in `chat-bubble chat-bubble-primary` (`#5454e9`).
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/features/advising/components/advisor-chat-bubble.tsx"
   interface ChatMessageProps {
     senderName: string;
     senderRole?: string;
@@ -571,7 +572,7 @@ Administrative data table row arranging an avatar with squircle mask (*squircle*
 * **Purpose:** Render each element in a tabular roster of enrolled students or lab participants.
 * **Suggested daisyUI style:** `table table-sm` with `hover:bg-slate-50` effect, `mask mask-squircle` on avatar, and button `btn-ghost btn-xs text-primary`.
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/features/students/components/student-table-row.tsx"
   interface StudentTableRowProps {
     studentId: string;
     studentCode: string;
@@ -611,7 +612,7 @@ Sequential timeline illustrating milestones or sprints in a development project,
 * **Purpose:** Provide clear visual feedback on the deliverables flow of a capstone project or workshop.
 * **Suggested daisyUI style:** Unordered list `<ul className="steps steps-horizontal">` with active steps in `step-primary` (`#5454e9`).
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/step-progress-tracker.tsx"
   interface StepItem {
     label: string;
     isCompleted: boolean;
@@ -652,7 +653,7 @@ Interactive filter group presented as selectable badge pills (*badges*), where s
 * **Purpose:** Allow students or instructors to filter resources, modules, or study topics by technological category.
 * **Suggested daisyUI style:** `badge badge-lg` styled as form controls via the CSS `peer-checked` trick.
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/tag-filter-group.tsx"
   interface TagOption {
     id: string;
     name: string;
@@ -698,7 +699,7 @@ Institutional event announcement card featuring an event badge, remaining spots 
 * **Purpose:** Promote extracurricular workshops, development challenges, and engineering faculty events.
 * **Suggested daisyUI style:** `card bg-base-100 border border-[#cecfd4]`, `countdown font-mono` component, and prominent `btn-primary` (`#5454e9`) button.
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/features/events/components/event-countdown-card.tsx"
   interface EventCountdownCardProps {
     eventTitle: string;
     categoryTag: string;
@@ -742,7 +743,7 @@ Header bar unifying the institutional logo in Icesi Blue (`#5454e9`), portal nam
 * **Purpose:** Persistent main navigation header for portal layouts (`layout.tsx`) in Next.js.
 * **Suggested daisyUI style:** `navbar bg-base-100 border-b border-[#cecfd4]`, notification indicator `indicator` with `badge-secondary` (`#865cf0`).
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="layout.tsx"
   interface UserSessionData {
     name: string;
     avatarUrl: string;
@@ -784,7 +785,7 @@ Modular card form featuring a dropdown selector for advising topic, multiline te
 * **Purpose:** Allow students to schedule technical support sessions with lab monitors or course instructors.
 * **Suggested daisyUI style:** `card bg-base-100 border border-[#cecfd4]`, fields `select select-bordered select-sm` and `textarea textarea-bordered textarea-sm`.
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/features/tutoring/components/tutoring-request-form.tsx"
   interface TutoringTopicOption {
     id: string;
     label: string;
@@ -824,7 +825,7 @@ Confirmation dialog warning about an irreversible action, featuring a warning ic
 * **Purpose:** Prevent accidental submissions or file overwrites in graded deliverables.
 * **Suggested daisyUI style:** Modal component `modal-box bg-base-100 border border-[#cecfd4] shadow-xl` and action bar `modal-action`.
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/submission-confirm-modal.tsx"
   interface SubmissionConfirmModalProps {
     isOpen: boolean;
     assignmentName: string;
@@ -862,7 +863,7 @@ Faculty introduction card integrating an avatar with ring in Icesi Blue (`#5454e
 * **Purpose:** Display the full faculty profile for IT department professors on the degree portal.
 * **Suggested daisyUI style:** `card bg-base-100 border border-[#cecfd4]`, `tabs tabs-boxed bg-slate-100`, and active tab `tab-active text-primary` (`#5454e9`).
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/features/faculty/components/faculty-profile-card.tsx"
   interface FacultyTabContent {
     id: string;
     label: string;
@@ -907,7 +908,7 @@ Collapsible accordion composed using daisyUI's `join` component, grouping course
 * **Purpose:** Organize the semester project sprint backlog, allowing delivery phases to expand and collapse.
 * **Suggested daisyUI style:** Unified container `join join-vertical w-full` with blocks `collapse collapse-arrow join-item border border-[#cecfd4]`.
 * **Suggested Props Contract (TypeScript):**
-  ```typescript
+  ```typescript title="src/features/projects/components/sprint-accordion-panel.tsx"
   interface SprintTask {
     description: string;
     isDone: boolean;

@@ -1,6 +1,7 @@
 ---
 sidebar_position: 3
 sidebar_label: "Arquitectura de Spring Security"
+description: "Conoce la arquitectura interna de Spring Security: SecurityFilterChain, AuthenticationManager y el ciclo de una petición HTTP."
 ---
 
 # Arquitectura de Spring Security
@@ -43,7 +44,7 @@ Es el componente que contiene la **lógica concreta de verificación**. Para apl
 
 ### E. UserDetailsService y UserDetails
 - **`UserDetailsService`:** Es una interfaz funcional con un único método:
-  ```java
+  ```java title="UserDetailsService y UserDetails"
   UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
   ```
   Actúa como el adaptador entre el motor de Spring Security y tu capa de persistencia (JPA Repositories).
@@ -55,7 +56,7 @@ Es el componente que contiene la **lógica concreta de verificación**. Para apl
 
 ### F. PasswordEncoder
 Interfaz responsable de procesar y validar contraseñas:
-```java
+```java title="PasswordEncoder"
 public interface PasswordEncoder {
     String encode(CharSequence rawPassword);
     boolean matches(CharSequence rawPassword, String encodedPassword);
@@ -65,11 +66,11 @@ En entornos de producción modernos, la implementación obligatoria es `BCryptPa
 
 ### G. SecurityContextHolder y SecurityContext
 Una vez que el usuario ha sido autenticado exitosamente, el filtro almacena el objeto `Authentication` validado dentro del `SecurityContextHolder`:
-```java
+```java title="SecurityContextHolder y SecurityContext"
 SecurityContextHolder.getContext().setAuthentication(authenticatedToken);
 ```
 El `SecurityContextHolder` almacena esta información utilizando **`ThreadLocal`**, lo que significa que el contexto de seguridad está ligado al hilo de ejecución de la petición actual. Gracias a esto, cualquier controlador o servicio puede consultar en cualquier momento quién es el usuario logueado:
-```java
+```java title="SecurityContextHolder y SecurityContext"
 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 String currentUsername = auth.getName();
 ```

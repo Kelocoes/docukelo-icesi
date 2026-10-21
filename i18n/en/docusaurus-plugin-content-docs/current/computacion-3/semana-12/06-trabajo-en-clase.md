@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Build the login and register screens, header, and navigation bar of the routines app with Tailwind CSS in this in-class assignment."
 ---
 
 # In-Class Assignment

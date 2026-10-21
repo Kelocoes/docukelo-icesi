@@ -1,0 +1,364 @@
+{
+  "mermaid:docs/desarrollo-entornos-digitales-web/semana-3/03-db-exercises.md#1": {
+    "brief": {},
+    "updatedAt": "2026-10-18T00:58:32.500Z"
+  },
+  "static/img/computacion-2/TCP.webp": {
+    "status": "hecho",
+    "priority": 1,
+    "comments": [
+      {
+        "id": "c-tcp-1",
+        "at": "2026-10-17T20:30:00.000Z",
+        "type": "contenido",
+        "text": "BORRADOR DE CLAUDE (editar o borrar). La imagen actual muestra un mensaje partido en 4 piezas de rompecabezas (Capa 1 a 4) que viajan Emisor -> Servidor -> Receptor. Es bonita, pero no muestra nada de lo que el texto de al lado afirma: ni la confirmacion de entrega (ACK), ni la retransmision de lo perdido, ni el orden, ni el Three-Way Handshake que se explica justo debajo. Ademas dice 'Capa 1..4', que se confunde con las capas del modelo OSI/TCP-IP. Es raster (WEBP 1920x1440, fondo blanco), no se adapta al tema oscuro."
+      },
+      {
+        "id": "c-tcp-2",
+        "at": "2026-10-17T20:30:01.000Z",
+        "type": "animacion",
+        "text": "BORRADOR DE CLAUDE (editar o borrar). Conservar la metafora de las piezas de rompecabezas, que ya es la del curso. Hacerla un simulador interactivo (nivel N3) en dos partes, en una misma pieza HTML: (A) Handshake: el estudiante pulsa 'Conectar' y ve SYN, SYN-ACK, ACK como mensajes que viajan entre Cliente y Servidor, con la leyenda de cada paso. (B) Envio: el estudiante pulsa 'Enviar mensaje' y 4 piezas salen del Emisor; con el interruptor 'Perder una pieza' una se pierde en el camino, no llega el ACK, el Emisor espera, la reenvia y el Receptor arma el rompecabezas completo y en orden. Con un selector TCP / UDP: en UDP la pieza perdida no se reenvia y el rompecabezas del Receptor queda con un hueco. Eso tambien cubre la imagen TCP_UDP.jpg de mas abajo."
+      },
+      {
+        "id": "mvd4u58w",
+        "at": "2026-10-18T01:14:07.760Z",
+        "type": "comentario",
+        "text": "Buscamos un diagrama interactivo onde le estudiante pueda recordar o conocer los pasos (sin entrar tanto en el detalle) de como funcoina la comunicacion por tcp, las fasees que en el suceden."
+      }
+    ],
+    "brief": {
+      "concepto": "TCP es confiable porque confirma cada entrega (ACK), reenvia lo perdido y entrega todo completo y en orden; antes de enviar datos abre la conexion con el Three-Way Handshake (SYN, SYN-ACK, ACK).",
+      "problema": "La imagen es una ilustracion decorativa en raster: no muestra confirmacion, perdida ni reenvio, que es justo lo que hace a TCP 'el mensajero confiable'. 'Capa 1..4' induce a pensar en capas de red. No se adapta al tema oscuro.",
+      "interaccion": "Simulador en 2 partes: handshake paso a paso y envio de 4 piezas con interruptor 'Perder una pieza' (el ACK que no llega, el reenvio, el rompecabezas que se completa). Selector TCP/UDP para contrastar. Boton Reiniciar, modo paso a paso y leyenda por paso. Adaptable a tema claro/oscuro. Reemplazaria al <img> TCP.webp (linea 16 de docs/computacion-2/semana-1/01-protocolos-servidores.md); queda como alternativa estatica.",
+      "formato": "HTML interactivo autocontenido (N3), embebido con <iframe> desde static/interactive/computacion-2/semana-1/tcp-en-accion/"
+    },
+    "updatedAt": "2026-10-18T01:32:45.362Z"
+  },
+  "static/img/computacion-2/TCP_UDP.jpg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T01:52:06.173Z",
+    "brief": {
+      "concepto": "La diferencia en forma abstracta entre tcp y udp",
+      "problema": "Estático, no hay textos breves cortos explicativos.",
+      "interaccion": "Mostrar los flujos de datos de forma animado",
+      "formato": "Player paso a paso."
+    },
+    "comments": [
+      {
+        "id": "mvd5raob",
+        "at": "2026-10-18T01:39:54.443Z",
+        "type": "comentario",
+        "text": "La imagen es ilustrativa, pero no está animada, no se acomoda al tema de la plataforma, podría usarse los colores de la aplicación."
+      }
+    ]
+  },
+  "static/interactive/computacion-2/semana-1/tcp-en-accion/index.html": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T01:47:13.865Z"
+  },
+  "static/img/computacion-2/HTTP_protocol.png": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T02:15:27.044Z",
+    "brief": {
+      "concepto": "Estructra y proposito de cada parte de una solicitud http",
+      "problema": "Pixelada y falta explicacion",
+      "interaccion": "Que vaya como una caja enfocadndo cada aspecto y a la derecha aparezca por ejemplo la explciación breve con una animación. también puede haber un proceso de un cliente servidor que se envia un paquete ."
+    },
+    "comments": [
+      {
+        "id": "mvd68fux",
+        "at": "2026-10-18T01:53:14.313Z",
+        "type": "comentario",
+        "text": "La imagen esta en baja definición, podría mostrar con más claridad su información"
+      }
+    ]
+  },
+  "static/img/computacion-2/tomcat-jakarta-1.png": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T01:47:55.604Z"
+  },
+  "static/img/computacion-2/tomcat-jakarta-2.png": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T01:47:57.268Z"
+  },
+  "static/img/computacion-2/tomcat-jakarta-3.png": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T01:48:00.479Z"
+  },
+  "static/img/computacion-2/tomcat-jakarta-4.png": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T01:48:03.096Z"
+  },
+  "static/img/computacion-2/tomcat-jakarta-vscode-1.png": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T01:48:05.466Z"
+  },
+  "static/img/computacion-2/servlet.png": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T02:05:14.164Z",
+    "brief": {
+      "concepto": "Contexto de un servlet dentro e una aplicación web, especialmente tomcat.",
+      "problema": "Estatico, poco explicativo, no se contextualiza que es tomcat o catalina y como se involucran ahí",
+      "interaccion": "Mostrar como paquetes se mueven entree los flujos."
+    },
+    "comments": [
+      {
+        "id": "mvd64wye",
+        "at": "2026-10-18T01:50:29.846Z",
+        "type": "comentario",
+        "text": "Me gusta lo que muestra, pero proviene de una imagen externa, quiero la mia, no tiene porque seguir los colroes de la aplicación, aunruqe podría ser.  Y me gustaría que tuviera el step by step de cómo funciona la comunicacion con los servlets."
+      }
+    ]
+  },
+  "static/img/computacion-2/ciclo-vida-servlet.png": {
+    "brief": {
+      "concepto": "FUNCIONAMIENTO DE UN servlet, segun sus metodos."
+    },
+    "updatedAt": "2026-10-18T02:06:25.244Z",
+    "comments": [
+      {
+        "id": "mvd65lzw",
+        "at": "2026-10-18T01:51:02.300Z",
+        "type": "comentario",
+        "text": "Interesante pero poco animado, vale la pena que se explique que hace cada parte y como se mueve la información"
+      }
+    ],
+    "status": "hecho"
+  },
+  "static/img/computacion-2/tomcat-jakarta-vscode-2.png": {
+    "brief": {},
+    "updatedAt": "2026-10-18T01:56:39.554Z",
+    "status": "hecho"
+  },
+  "static/img/computacion-2/tomcat-jakarta-vscode-3.png": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T01:57:27.118Z",
+    "brief": {}
+  },
+  "static/img/computacion-2/tomcat-jakarta-vscode-4.png": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T01:57:27.366Z",
+    "comments": []
+  },
+  "static/interactive/computacion-2/semana-1/tcp-vs-udp/index.html": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T02:05:22.683Z"
+  },
+  "static/interactive/computacion-2/semana-1/servlet-en-tomcat/index.html": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T02:13:29.310Z"
+  },
+  "static/interactive/computacion-2/semana-1/ciclo-vida-servlet/index.html": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T02:13:31.230Z"
+  },
+  "static/files/computacion-2/semana-2/spring-ecosystem.png": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T02:45:15.473Z"
+  },
+  "static/img/computacion-2/ioc-beans-container.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T02:58:08.705Z",
+    "brief": {
+      "concepto": "Qué es un bean, como se lreaciona con otros y este termino de inyección de dependencia.",
+      "problema": "Estatico, sencillo pero no hay una explicación de qué significa inyectar, podría explicarse más, poner más beans incluso, ¿",
+      "interaccion": "Se pueden usar figuras similares pero un spring context más grande, explicando cada parte, cómo interactúan los beans y así."
+    },
+    "comments": [
+      {
+        "id": "mvd85g0y",
+        "at": "2026-10-18T02:46:53.794Z",
+        "type": "comentario",
+        "text": "Me gusta lo que presenta este grafico, sin embargo hay informacion que se sale de los margenes de los elementos, además no muestra como los beans interactúan y quién los puede usar, se debe de revisaar la documentación de cómo se puede explifcar la información ."
+      }
+    ]
+  },
+  "static/img/computacion-2/spring-tomcat-catalina-ioc.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T02:58:43.865Z",
+    "brief": {
+      "problema": "Esta bien estructurado, pero no se muestra el flujo de la aplicación entre los elementos, no se juega bien con los elementos en la pantalla, hay mucho texto en cada parte,",
+      "concepto": "Donde se encuentra el contexto de spring, dentro deu ncontenedor, el war, y como el usuario interactúa y como llega la petición y por donde pasa hasta llegar al respecivo bean y como se devuelve.",
+      "formato": "INteractivo."
+    }
+  },
+  "static/img/computacion-2/spring-pagination-overview.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:26:07.114Z",
+    "brief": {
+      "concepto": "Qué involucra la paginacio, que elementospuede configurar, y cuando usarlo",
+      "problema": "Lleno de información, poco claro, mucha inforamción que no es nada intractiva.",
+      "interaccion": "Podría ser una lista de elementos o algo así, que sea \"larga\" y mostrar como funciona cuando tiene paginaccion y cuando no, y mostrar el codigo de Spring JPA como se podnmría con y sin, y que cosas le podriá configurar."
+    },
+    "comments": [
+      {
+        "id": "mvd8eopm",
+        "at": "2026-10-18T02:54:04.954Z",
+        "type": "comentario",
+        "text": "Este apartado busca explicar la paginacion, pero siento que no lo completa para el estudiante, no muestra un ejemplo claro, solo pone la información y ya está que hace parte de una paginacion y cuando no"
+      }
+    ]
+  },
+  "static/img/computacion-2/spring-transactions-rollback.svg": {
+    "brief": {
+      "concepto": "cOMO FUNCIONAN los transactional en springboot y que hace el commit y rollback",
+      "problema": "Sea interactivo, un paso a paso por los conceptos.",
+      "interaccion": "Podría ser ejemplificando una transacción de un pago entre dos dispostivos, abajo el código y mostrar que pasa cuando tenemos transactional y cuando no, cuando sucede el commit y cuando se generan excepciones y como sucede el rollback."
+    },
+    "comments": [
+      {
+        "id": "mvd8ghdf",
+        "at": "2026-10-18T02:55:28.755Z",
+        "type": "comentario",
+        "text": "Esto busca mostrar como funciona una transaccion y el rollback, sin embargo no muestra como un paso a paso de algo, sino qeu simplemente enumera cosas."
+      }
+    ],
+    "updatedAt": "2026-10-18T03:26:08.554Z",
+    "status": "hecho"
+  },
+  "static/img/computacion-2/spring-proxy-transactional.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T02:55:42.033Z"
+  },
+  "static/img/computacion-2/spring-thymeleaf-ssr-flow.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:26:10.339Z",
+    "brief": {
+      "concepto": "Como es la arquitectuard e una app y como fluyen los datos cuando los involucras con thymeleaf.",
+      "problema": "Como una animación y una reducción en la complejidad de cada bloque."
+    },
+    "comments": [
+      {
+        "id": "mvd8i7g4",
+        "at": "2026-10-18T02:56:49.204Z",
+        "type": "comentario",
+        "text": "Me gusta mucho el diseño, sin embargo cre oqeu en algunos hay mucho texto e inforamción. Podría mostrarse como se mueven los datos entree cada componente."
+      }
+    ]
+  },
+  "static/interactive/computacion-2/semana-1/peticion-http/index.html": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T02:57:46.493Z"
+  },
+  "static/files/computacion-2/semana-2/spring-ecosystem copy.png": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:03:20.877Z"
+  },
+  "static/interactive/computacion-2/semana-2/contenedor-ioc-y-beans/index.html": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:09:07.008Z"
+  },
+  "static/interactive/computacion-2/semana-2/spring-en-tomcat/index.html": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:09:09.798Z"
+  },
+  "static/img/computacion-2/thymeleaf-natural-templating.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:26:03.095Z"
+  },
+  "static/img/computacion-2/encoding-encryption-hashing-comparison.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:29:05.498Z"
+  },
+  "static/img/computacion-2/authn-vs-authz-conceptual.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:55:23.227Z",
+    "brief": {
+      "concepto": "Diferentcia entre autenticación y autorización, qué compone cada una y cqué mecanismos existen.",
+      "problema": "Denso de información, no hay una organiación clara, no explica con claridad que primerova autenticacción y eso ya permite la autorización. No da ejemplos solo muestra información.",
+      "interaccion": "Re organizar los elementos, jugar con el espacio vertical también. Enfocadr cadaa aspecto y subrayarlo o enfocarlo."
+    },
+    "comments": [
+      {
+        "id": "mvd9re93",
+        "at": "2026-10-18T03:31:57.543Z",
+        "type": "comentario",
+        "text": "Creo que al inforamcion que valiosa es valiosa, pero esta lleno de información y no todo es autoexplicable, hay muchos colores que nosabemos si signifcan cosas nuevas."
+      }
+    ]
+  },
+  "static/img/computacion-2/spring-security-architecture-filterchain.svg": {
+    "comments": [
+      {
+        "id": "mvd9se50",
+        "at": "2026-10-18T03:32:44.052Z",
+        "type": "comentario",
+        "text": "Es un diagrama super interesante, sin embarfgo tiene demasaida inforamción, que aunque es valiosa, verla de golpe es demasiado, podría ser que el graico poco a poco vaya mostrando la inforamción, tampoco es claro como es el flujo ded atos, que paso va primero o después"
+      }
+    ],
+    "updatedAt": "2026-10-18T03:55:23.229Z",
+    "status": "hecho"
+  },
+  "static/img/computacion-2/spring-security-authorities-roles.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:33:03.350Z"
+  },
+  "mermaid:docs/computacion-2/semana-9/05-practica-spring-security-jpa.md#1": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:33:25.048Z"
+  },
+  "static/img/computacion-2/dto-layer-abstraction.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:34:20.381Z"
+  },
+  "static/img/computacion-2/jwt-structure-anatomy.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:34:23.666Z"
+  },
+  "static/img/computacion-2/rest-stateful-vs-stateless.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:34:25.834Z"
+  },
+  "static/img/computacion-2/spring-jwt-implementation-architecture.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:34:28.616Z"
+  },
+  "static/img/computacion-2/ioc-container.png": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:34:53.301Z"
+  },
+  "static/img/computacion-2/http-methods-matrix.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:35:01.498Z"
+  },
+  "static/img/computacion-2/jwt-critical-threats.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:35:05.338Z"
+  },
+  "static/img/computacion-2/jwt-security-rules.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:35:17.152Z"
+  },
+  "static/img/computacion-2/jwt-sequence-flows.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:35:19.521Z"
+  },
+  "static/img/computacion-2/mapstruct-compile-time.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:35:24.835Z"
+  },
+  "static/img/computacion-2/rest-request-anatomy.svg": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:35:28.053Z"
+  },
+  "static/img/computacion-2/stateful-stateless.png": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:35:35.853Z"
+  },
+  "static/img/computacion-2/vms.png": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T03:35:38.703Z"
+  },
+  "static/interactive/computacion-2/semana-6/paginacion-spring/index.html": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T04:08:31.701Z"
+  },
+  "static/interactive/computacion-2/semana-6/transaccion-transferencia/index.html": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T04:08:33.861Z"
+  },
+  "static/interactive/computacion-2/semana-8/flujo-ssr-thymeleaf/index.html": {
+    "status": "hecho",
+    "updatedAt": "2026-10-18T04:08:35.631Z"
+  }
+}

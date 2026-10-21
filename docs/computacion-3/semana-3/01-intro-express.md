@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Sigue un taller guiado para crear una API base con Express, TypeScript y MongoDB, entendiendo por qué usar cada tecnología."
 ---
 
 # API Base: Express, TypeScript y MongoDB
@@ -57,7 +58,7 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente en tu máquina:
 
 Para facilitar la creación de la base de datos, usaremos Docker Compose para definir y ejecutar un contenedor de MongoDB. Crea un archivo llamado `docker-compose.yml` en la raíz de tu proyecto con el siguiente contenido:
 
-```yaml
+```yaml title="docker-compose.yml"
 services:
     mongo:
         image: mongo:8.0.12
@@ -129,7 +130,7 @@ Esto generará un archivo `tsconfig.json` en tu proyecto. Puedes personalizarlo 
 
 El archivo configuración `tsconfig.json` debería verse algo así:
 
-```json
+```json title="tsconfig.json"
 {
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
@@ -186,7 +187,7 @@ dist/
 
 Finalmente modificaremos el archivo `package.json` para agregar un script que nos permita ejecutar nuestro proyecto con TypeScript y Nodemon. Agrega lo siguiente en la sección de scripts:
 
-```json
+```json title="package.json"
 "scripts": {
     "start": "ts-node ./src/index.ts",
     "dev": "nodemon ./src/index.ts",
@@ -236,7 +237,7 @@ Además he adicionado un archivo `.env` para manejar las variables de entorno, c
 
 Ahora que tenemos la estructura del proyecto y las dependencias instaladas, vamos a crear el servidor Express. Abre el archivo `src/index.ts` y agrega el siguiente código:
 
-```typescript
+```typescript title="src/index.ts"
 import express, { Express, Request, Response } from 'express';
 
 import { db } from './config/connectionDB'; // Aún no está creado
@@ -277,7 +278,7 @@ Para mantener una conexión a la base de datos MongoDB, crearemos un archivo de 
 
 Crea el archivo `src/config/connectionDB.ts` y agrega el siguiente código:
 
-```typescript
+```typescript title="src/config/connectionDB.ts"
 import mongoose from "mongoose";
 
 process.loadEnvFile();
@@ -313,13 +314,13 @@ Ahora que tenemos el servidor funcionando, vamos a crear un modelo de datos para
 
 Crea el archivo `src/models/index.ts` y agrega el siguiente código:
 
-```typescript
+```typescript title="src/models/index.ts"
 export * from "./user.model";
 ```
 
 Luego, crearemos el modelo de datos para los usuarios en un archivo llamado `user.model.ts` dentro de la carpeta `models`. Crea el archivo `src/models/user.model.ts` y agrega el siguiente código:
 
-```typescript
+```typescript title="src/models/user.model.ts"
 import mongoose from "mongoose";
 import { UserInput } from "../interfaces"; // TODO
 
@@ -353,7 +354,7 @@ Dentro del contexto de esta aplicación de juegos de mesa, es fundamental contar
 
 Crea el archivo `src/models/game.model.ts` y agrega el siguiente código:
 
-```typescript
+```typescript title="src/models/game.model.ts"
 import mongoose from "mongoose";
 import { UserDocument } from "./user.model";
 
@@ -379,7 +380,7 @@ export const GameModel = mongoose.model<GameDocument>("Game", gameSchema);
 
 Recuerda adicionar la exportación del modelo en el archivo `src/models/index.ts`:
 
-```typescript
+```typescript title="src/models/index.ts"
 export * from "./user.model";
 export * from "./game.model";
 ```
@@ -392,7 +393,7 @@ Manteniendo una estructura similar a la de Spring, crearemos un servicio para ma
 
 En el apartado de servicios, aunque en Javascript no es regla manejar todas las funcionalidades por medio de constantes o functiones, las clases son una buena forma de encapsular la lógica de negocio. Por lo que crearemos un archivo `user.service.ts` dentro de la carpeta `services` y agregaremos el siguiente código:
 
-```typescript
+```typescript title="user.service.ts"
 import bcrypt from "bcrypt";
 
 import { UserInput } from "../interfaces";
@@ -426,7 +427,7 @@ Primero, revisemos el método que permitirá crear nuevos usuarios.
 #### 8.1.1 Método create
 Para implementar el método `create`, debemos asegurarnos de que la contraseña del usuario se almacene de forma segura. Para ello, utilizaremos `bcrypt` para hashear la contraseña antes de guardarla en la base de datos. Aquí está la implementación del método `create`:
 
-```typescript
+```typescript title="Método create"
 public async create(userInput: UserInput): Promise<UserDocument> {
 
         process.loadEnvFile();
@@ -449,7 +450,7 @@ Además, el uso de `ReferenceError` para lanzar un error si el usuario ya existe
 #### 8.1.2 Método findByEmail
 El método `findByEmail` se encargará de buscar un usuario por su correo electrónico. Aquí está la plantilla del método:
 
-```typescript
+```typescript title="Método findByEmail"
 public findByEmail(email: string): ? {
     return UserModel.?
 }
@@ -460,7 +461,7 @@ Tu tarea será completar este método para que busque un usuario por su correo e
 #### 8.1.3 Método update
 El método `update` se encargará de actualizar la información de un usuario existente. Aquí está la plantilla del método:
 
-```typescript
+```typescript title="Método update"
 public async update(id: string, userInput: UserInputUpdate): Promise<UserDocument | null>{
     try {
         const user: UserDocument | null = await UserModel.findOneAndUpdate(
@@ -483,7 +484,7 @@ Como puedes observar, mongoose nos ofrece el método `findOneAndUpdate` que nos 
 #### 8.1.4 Método getAll
 El método `getAll` se encargará de obtener todos los usuarios de la base de datos.
 
-```typescript
+```typescript title="Método getAll"
 public getAll(): Promise<UserDocument[]> {
     return UserModel.find();
 }
@@ -494,7 +495,7 @@ Este método utiliza el método `find` de Mongoose para recuperar todos los docu
 #### 8.1.5 Método getById
 El método `getById` se encargará de obtener un usuario por su ID. Aquí está la plantilla del método:
 
-```typescript
+```typescript title="Método getById"
 public getById(id: string): Promise<UserDocument | null> {
     return UserModel.findById(id);
 }
@@ -509,7 +510,7 @@ Ahora que tenemos el servicio `UserService` implementado, vamos a crear un contr
 
 Crea un archivo `user.controller.ts` junto al archivo `index.ts` dentro de la carpeta `controllers` y agrega el siguiente código:
 
-```typescript
+```typescript title="index.ts"
 import { Request, Response } from "express";
 import { UserDocument } from "../models";
 import { userService } from "../services";
@@ -540,7 +541,7 @@ Como manejaremos las solicitudes, cada método del controlador recibirá un obje
 #### 9.1.1 Método create
 El método `create` se encargará de crear un nuevo usuario. Aquí está la implementación del método:
 
-```typescript
+```typescript title="Método create (2)"
 public async create(req: Request, res: Response) {
     try {
         const userInput: UserInput = req.body;
@@ -562,7 +563,7 @@ Por el momento, su funcionalidad es limitada, por lo que lo usaríamos como un d
 #### 9.1.2 Método getAll
 El método `getAll` se encargará de obtener todos los usuarios. Aquí está la implementación del método:
 
-```typescript
+```typescript title="Método getAll (2)"
 public async getAll(req: Request, res: Response) {
     try {
         const users: UserDocument[] = ?;
@@ -576,7 +577,7 @@ public async getAll(req: Request, res: Response) {
 #### 9.1.3 Método getOne
 El método `getOne` se encargará de obtener un usuario por su ID, por lo que desearíamos recibirlo como un parámetro de la solicitud. Aquí está la implementación del método:
 
-```typescript
+```typescript title="Método getOne"
 public async getOne(req: Request, res: Response) {
     try {
         const id: string = req.params.id || "";
@@ -603,7 +604,7 @@ A diferencia de Spring, donde las rutas de los endpoints se definen directamente
 
 Crea el archivo `src/routes/user.route.ts` y agrega el siguiente código:
 
-```typescript
+```typescript title="src/routes/user.route.ts"
 import express, { Request, Response } from "express";
 import { userController } from "../controllers";
 
@@ -624,7 +625,7 @@ De esta manera express nos permite especificar las rutas de la aplicación de ma
 
 Para integrar las rutas de usuarios en nuestro servidor Express, debemos importar el router que acabamos de crear y usarlo en el archivo `src/index.ts`. Agrega el siguiente código después de la configuración del middleware:
 
-```typescript
+```typescript title="src/index.ts"
 import { router as userRouter } from "./routes/user.route";
 
 app.use("/api/users", userRouter);
@@ -645,7 +646,7 @@ npm run dev
 Para mantener simple el despliegue de nuestro servicio de docker, realizaremos un archivo `Dockerfile` en la raíz del proyecto. Este archivo se encargará de construir una imagen de Docker para nuestra aplicación Express. Posterior a esto la agregaremos en el archivo `docker-compose.yml` para que se ejecute junto con el contenedor de MongoDB.
 Crea el archivo `Dockerfile` en la raíz del proyecto y agrega el siguiente contenido:
 
-```bash
+```bash title="Dockerfile"
 # Usamos la imagen oficial de Node.js como base
 FROM node:22
 # Establecemos el directorio de trabajo dentro del contenedor
@@ -664,7 +665,7 @@ CMD ["npm", "run", "dev"]
 
 Posterior a esto, modificaremos el archivo `docker-compose.yml` para incluir nuestro servicio de Express. Agrega lo siguiente al archivo:
 
-```yaml
+```yaml title="docker-compose.yml"
 services:
   mongo:
     image: mongo:8.0.12

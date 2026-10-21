@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Compara el paradigma imperativo con el declarativo y los enfoques de desarrollo multiplataforma, con foco en Flutter frente a JavaFX."
 ---
 
 # Frontend Multiplataforma

@@ -9,5 +9,5 @@ Allow: /
 Disallow: /build/
 Disallow: /node_modules/
 
-# Sitemap (actualiza con tu URL real cuando despliegues)
-# Sitemap: https://tu-dominio.com/sitemap.xml
+# Sitemap (sitio principal: Render)
+Sitemap: https://docukelo-icesi.onrender.com/sitemap.xml

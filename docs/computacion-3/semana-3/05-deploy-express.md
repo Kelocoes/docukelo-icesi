@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Despliega tu API Express en Railway: crea la base de datos MongoDB, enlaza el repositorio y genera un dominio público."
 ---
 
 # Despliegue en Railway
@@ -31,7 +32,7 @@ Despliegue en Railway
 
 > **Nota:** Es posible que la aplicación que deseas desplegar sea la creada usando las guías de este curso, no obstante hay algunas correcciones que debo de remarcar:
 - En el archivo `package.json`, asegúrate de tener un script para transpilar el código TypeScript a JavaScript. Por ejemplo:
-  ```json
+  ```json title="package.json"
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js"
@@ -42,7 +43,7 @@ Despliegue en Railway
   npm install dotenv
   ```
 - En tu archivo principal (por ejemplo, `index.ts`), asegúrate de cargar las variables de entorno al inicio del archivo:
-  ```typescript
+  ```typescript title="index.ts"
     import dotenv from 'dotenv';
     dotenv.config();
   ```
@@ -53,7 +54,7 @@ Despliegue en Railway
   npm install -D @types/cors
   ```
   Y en tu archivo principal:
-  ```typescript
+  ```typescript title="Enlaza tu repositorio de Express"
   import cors from 'cors';
   app.use(cors());
   ```

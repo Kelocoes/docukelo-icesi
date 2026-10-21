@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 sidebar_label: "Spring Boot"
+description: "Learn the Spring Boot architecture, how a request flows through the DispatcherServlet and its multilayer project structure."
 ---
 
 # Spring Boot

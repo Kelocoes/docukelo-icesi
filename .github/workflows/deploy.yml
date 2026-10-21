@@ -1,0 +1,58 @@
+name: Deploy to GitHub Pages
+
+# Solo se construye y publica cuando hay un push a main (es decir, al hacer merge de un PR).
+# Los pull requests no ejecutan nada. `workflow_dispatch` permite relanzarlo a mano desde la
+# pestaña Actions.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Una sola publicacion a la vez; si llega otra, espera en vez de cancelar la que va en curso.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (historial completo para "Ultima actualizacion")
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      # Ejecuta los stages deps -> build -> export del Dockerfile y deja el sitio estatico en ./build
+      - name: Build site (Dockerfile multi-stage)
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          target: export
+          outputs: type=local,dest=./build
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Manage transactions with @Transactional, understand the ACID properties and control when commit or rollback happens."
 ---
 
 # Managing Transactions with @Transactional and Rollback
@@ -58,13 +59,13 @@ By default in Spring, **only unchecked exceptions** (subclasses of `RuntimeExcep
 
 To ensure checked business exceptions trigger rollbacks, declare `rollbackFor`:
 
-```java
+```java title="Default Rollback Rules vs. rollbackFor"
 @Transactional(rollbackFor = Exception.class)
 ```
 
 Conversely, to prevent specific non-fatal exceptions from canceling a transaction, use `noRollbackFor`:
 
-```java
+```java title="Default Rollback Rules vs. rollbackFor"
 @Transactional(noRollbackFor = EmailNotificationFailedException.class)
 ```
 
@@ -320,7 +321,7 @@ class TransferServiceTest {
 
 :::caution[Beware of Self-Invocation]
 If a method within a `@Service` bean calls another `@Transactional` method in the **same class**, transaction interception **will NOT trigger**:
-```java
+```java title="Common Pitfalls with @Transactional"
 public void processBatch() {
     // ❌ Direct 'this' invocation bypasses the Spring AOP Proxy
     this.executeTransaction();

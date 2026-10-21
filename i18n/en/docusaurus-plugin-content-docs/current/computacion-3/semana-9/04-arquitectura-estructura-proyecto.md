@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Explore the structure of a Next.js project, its special convention files in the app directory, and how the nested rendering hierarchy works."
 ---
 
 # Architecture & Structure in Next.js

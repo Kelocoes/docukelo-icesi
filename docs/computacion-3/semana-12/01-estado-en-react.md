@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Distingue estado y props en React, y aprende estado local y compartido, elevación de estado y el problema del prop drilling."
 ---
 
 import ThemedImage from '@theme/ThemedImage';

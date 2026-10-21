@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Learn when to use React Server Components or Client Components in Next.js and what the use client directive means for your code."
 ---
 
 # Server Components vs. Client Components

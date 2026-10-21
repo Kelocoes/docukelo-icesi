@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Tell design principles from design patterns, review SOLID and see how Spring applies DIP and inversion of control."
 ---
 
 # Principles, Patterns, and Dependency Injection

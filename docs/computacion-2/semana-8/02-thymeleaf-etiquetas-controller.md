@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Usa las expresiones y etiquetas th:* de Thymeleaf junto con controladores MVC y el patrón Post/Redirect/Get."
 ---
 
 # Etiquetas y Controladores MVC

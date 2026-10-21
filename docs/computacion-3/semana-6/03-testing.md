@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Aprende los tipos de pruebas en NestJS, ejecuta Jest, mide la cobertura y escribe pruebas unitarias de un servicio."
 ---
 
 # Testing en NestJS

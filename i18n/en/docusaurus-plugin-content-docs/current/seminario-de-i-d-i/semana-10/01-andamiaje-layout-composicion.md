@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Learn to lay out Flutter screens with Scaffold, SafeArea, Row, Column, Expanded, Container, and SingleChildScrollView."
 ---
 
 import Tabs from '@theme/Tabs';

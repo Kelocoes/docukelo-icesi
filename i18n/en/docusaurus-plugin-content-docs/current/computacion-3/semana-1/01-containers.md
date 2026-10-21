@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Understand how virtual machines and containers differ, why containers emerged, and test your understanding with a self-assessment quiz."
 ---
 
 # Containers

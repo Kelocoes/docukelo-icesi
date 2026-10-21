@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Consulta los comandos básicos de Docker y Docker Compose y la estructura de un Dockerfile y un docker-compose.yml, con un cuestionario."
 ---
 
 # Comandos de Docker
@@ -30,7 +31,7 @@ Al utilizar docker, tendremos en cuenta múltiples áreas donde realizar bloques
 
 Un Dockerfile es un archivo de texto que contiene una serie de instrucciones para construir una imagen de Docker. A continuación, se presenta la estructura básica de un Dockerfile:
 
-```bash
+```bash title="Estructura de un Dockerfile"
 # Dockerfile
 FROM <nombre-imagen-base>:<tag>  # Imagen base
 MAINTAINER <nombre> <email>  # Información del mantenedor
@@ -49,7 +50,7 @@ CMD y ENTRYPOINT son dos instrucciones en un Dockerfile que definen el comando q
 
 Un archivo `docker-compose.yml` permite definir y ejecutar aplicaciones multi-contenedor. A continuación, se presenta la estructura básica de un archivo `docker-compose.yml`:
 
-```yaml
+```yaml title="docker-compose.yml"
 version: "3.9"
 services:
     backendnode:

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Learn what NestJS is, its modular architecture and core concepts, and review them with a cheatsheet and a self-assessment quiz."
 ---
 
 import PdfViewer from "@site/src/components/PdfViewer/PdfViewer";

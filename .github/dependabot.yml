@@ -1,0 +1,45 @@
+# Dependabot: avisa de dependencias desactualizadas o vulnerables y abre pull requests.
+# Los PR van contra main; revisalos con `npm run build` y `npm run lint:docs` antes de fusionar.
+# Al fusionar un PR a main se despliega el sitio (Render y GitHub Pages).
+version: 2
+
+updates:
+  # Dependencias de npm (Docusaurus, React, KaTeX...)
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      # Todo @docusaurus/* sube junto: sus versiones deben coincidir entre si
+      docusaurus:
+        patterns:
+          - "@docusaurus/*"
+      # Resto de actualizaciones menores y de parche en un solo PR
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "@docusaurus/*"
+    ignore:
+      # Un cambio de version mayor de React o de Docusaurus se hace a mano
+      - dependency-name: react
+        update-types: ["version-update:semver-major"]
+      - dependency-name: react-dom
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@docusaurus/*"
+        update-types: ["version-update:semver-major"]
+
+  # Acciones de GitHub usadas por el workflow de despliegue
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+
+  # Imagenes base del Dockerfile (node, nginx)
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: monthly

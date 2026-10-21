@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende los fundamentos de las bases de datos relacionales: tablas, llaves primarias y foráneas, diagramas ER y tipos de relaciones."
 ---
 
 # Bases de datos relacionales

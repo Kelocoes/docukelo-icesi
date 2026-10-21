@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Explore the Spring ecosystem and the Model, Repository and Service layered architecture with their responsibilities."
 ---
 
 # Spring Ecosystem and Layered Architecture

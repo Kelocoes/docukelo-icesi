@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Construye paso a paso una agenda de contactos monolítica en Flutter y reflexiona sobre las limitaciones de esa arquitectura."
 ---
 
 import Tabs from '@theme/Tabs';

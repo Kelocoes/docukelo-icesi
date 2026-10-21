@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Refactoriza la agenda de contactos con elevación de estado, callbacks desacoplados y modelos inmutables con copyWith."
 ---
 
 import Tabs from '@theme/Tabs';
@@ -100,7 +101,7 @@ class ContactoForm extends StatefulWidget {
 
 Cuando el usuario presiona el botón, el formulario simplemente ejecuta:
 
-```dart showLineNumbers
+```dart title="Formulario hijo con callback" showLineNumbers
 // El hijo no sabe si el padre guarda en SQLite, en memoria o en Supabase:
 // Solo cumple con su contrato de avisar que hay un nuevo contacto listo.
 widget.onAgregar(nuevo);
@@ -144,7 +145,7 @@ class Contacto {
 
 Si en una versión posterior permites al usuario editar el número telefónico de un contacto existente, en lugar de hacer una mutación destructiva (`contacto.telefono = '300...'`), creas un nuevo objeto clonado de manera inmutable:
 
-```dart showLineNumbers
+```dart title="Uso de copyWith" showLineNumbers
 final contactoActualizado = contactoOriginal.copyWith(
   telefono: '310 999 0011',
 );
@@ -152,7 +153,7 @@ final contactoActualizado = contactoOriginal.copyWith(
 
 Y en la lista de la página, reemplazas el elemento produciendo una nueva colección:
 
-```dart showLineNumbers
+```dart title="Actualizar la lista" showLineNumbers
 setState(() {
   _contactos = _contactos.map((c) {
     return c.id == idObjetivo ? c.copyWith(telefono: nuevoTelefono) : c;

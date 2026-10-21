@@ -3,6 +3,6 @@
     "position": 2,
     "link": {
         "type": "generated-index",
-        "description": "Contenido y documentación en apoyo de la asignatura de Computación de Internet 2."
+        "description": "Backend con Java y Spring: servlets, Tomcat, inyección de dependencias, Spring Boot, JPA, Spring Security, APIs REST y JWT."
     }
 }

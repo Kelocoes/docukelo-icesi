@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Una idea que se repite: el dominio al centro</title>
+<style>
+:root{--bg:#FBFBFD;--ink:#1C1B1F;--muted:#5F6368;--line:#E3E3EA;--accent:#5454e9;--accent-soft:#e8e8fc}
+*{box-sizing:border-box}
+body{margin:0;background:transparent;font:15px/1.5 'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink)}
+.dkp{max-width:960px;margin:0 auto;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:16px}
+.dkp .fig svg{display:block;width:100%;height:auto}
+.dkp .cap{min-height:64px;margin:12px 4px 4px}
+.dkp .cap b{display:block;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);margin-bottom:2px}
+.dkp .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-top:8px}
+.dkp .dots{display:flex;gap:6px}
+.dkp .dots button{width:12px;height:12px;border-radius:50%;border:1px solid var(--accent);background:#fff;padding:0;cursor:pointer}
+.dkp .dots button.on{background:var(--accent)}
+.dkp .dots button.past{background:var(--accent-soft)}
+.dkp .ctl{display:flex;gap:8px}
+.dkp .ctl button{font:500 13px inherit;font-family:inherit;border:1px solid var(--accent);background:#fff;color:var(--accent);border-radius:20px;padding:6px 14px;cursor:pointer}
+.dkp .ctl button.solid{background:var(--accent);color:#fff}
+.dkp .ctl button:disabled{opacity:.45;cursor:default}
+</style></head><body>
+<div class="dkp" id="dkp">
+  <div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="100%" height="100%" id="caOrigins">
+  <style>
+#caOrigins .dkw{transform-box:fill-box;transform-origin:center;transition:opacity .55s ease,transform .55s cubic-bezier(.2,.8,.2,1)}
+#caOrigins .dkcaOrigins-w1.dk-off{opacity:0}
+#caOrigins .dkcaOrigins-e2{stroke-dasharray:1;transition:stroke-dashoffset .8s ease} #caOrigins .dkcaOrigins-e2.dk-off{stroke-dashoffset:1}
+#caOrigins .dkcaOrigins-w3.dk-off{opacity:0}
+#caOrigins .dkcaOrigins-w4.dk-off{opacity:0;transform:translateY(14px)}
+#caOrigins .dkcaOrigins-w5.dk-off{opacity:0;transform:translateY(14px)}
+#caOrigins .dkcaOrigins-w6.dk-off{opacity:0;transform:translateY(14px)}
+#caOrigins .dkcaOrigins-w7.dk-off{opacity:0;transform:translateY(14px)}
+#caOrigins .dkcaOrigins-w8.dk-off{opacity:0;transform:scale(.6)}
+#caOrigins .dkcaOrigins-w9.dk-off{opacity:0;transform:scale(.6)}
+#caOrigins .dkcaOrigins-w10.dk-off{opacity:0;transform:translateY(14px)}
+#caOrigins .dkcaOrigins-w11.dk-off{opacity:0;transform:translateY(14px)}
+#caOrigins .dkcaOrigins-w12.dk-off{opacity:0;transform:translateY(14px)}
+#caOrigins .dkcaOrigins-w13.dk-off{opacity:0;transform:translateY(14px)}
+#caOrigins .dkcaOrigins-w14.dk-off{opacity:0;transform:scale(.6)}
+#caOrigins .dkcaOrigins-w15.dk-off{opacity:0;transform:scale(.6)}
+#caOrigins .dkcaOrigins-w16.dk-off{opacity:0;transform:translateY(14px)}
+#caOrigins .dkcaOrigins-w17.dk-off{opacity:0;transform:translateY(14px)}
+#caOrigins .dkcaOrigins-w18.dk-off{opacity:0;transform:translateY(14px)}
+#caOrigins .dkcaOrigins-w19.dk-off{opacity:0;transform:translateY(14px)}
+#caOrigins .dkcaOrigins-w20.dk-off{opacity:0;transform:scale(.6)}
+#caOrigins .dkcaOrigins-w21.dk-off{opacity:0;transform:scale(.6)}
+#caOrigins .dk-pulse{animation:dkcaOrigins-pulse .9s ease-in-out}
+@keyframes dkcaOrigins-pulse{50%{transform:scale(1.14)}}
+@keyframes dkcaOrigins-flow{to{stroke-dashoffset:-18}}
+@media (prefers-reduced-motion:reduce){#caOrigins *{transition:none!important;animation:none!important}}
+</style><defs>
+    <marker id="caOrigins-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 Z" fill="#7c3aed" /></marker>
+  </defs>
+  <style>
+    .t { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    .title { font-size: 20px; font-weight: 700; fill: #0f172a; }
+    .year { font-size: 28px; font-weight: 800; fill: #0f172a; }
+    .name { font-size: 15px; font-weight: 800; letter-spacing: .04em; }
+    .who { font-size: 12px; fill: #64748b; }
+  </style>
+  <rect width="880" height="440" rx="16" fill="#f8fafc" />
+  <g class="dkw dkcaOrigins-w1 dk-off" data-dk-step="0"><text x="32" y="38" class="t title">Una idea que se repite: el dominio al centro</text>
+
+  </g><!-- axis -->
+  <line x1="60" y1="215" x2="760" y2="215" stroke="#cbd5e1" stroke-width="5" stroke-linecap="round" class="dkcaOrigins-e2 dk-off" pathLength="1" data-dk-step="0" />
+  <g class="dkw dkcaOrigins-w3 dk-off" data-dk-step="0"><path d="M740,215 L790,215" stroke="#7c3aed" stroke-width="5" marker-end="url(#caOrigins-a)" fill="none" />
+
+  </g><!-- 2005 hexagonal -->
+  <g class="dkw dkcaOrigins-w4 dk-off" data-dk-step="1"><text x="170" y="100" class="t year" text-anchor="middle">2005</text>
+  </g><g class="dkw dkcaOrigins-w8 dk-off" data-dk-step="1"><circle cx="170" cy="215" r="10" fill="#2563eb" />
+  </g><g class="dkw dkcaOrigins-w9 dk-off" data-dk-step="1"><g transform="translate(170,310)">
+    <polygon points="-44,0 -22,-38 22,-38 44,0 22,38 -22,38" fill="#dbeafe" stroke="#2563eb" stroke-width="3.5" stroke-linejoin="round" />
+    <g class="dkw dkcaOrigins-w22"><circle cx="0" cy="0" r="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="3" />
+    </g><g fill="#fff" stroke="#2563eb" stroke-width="2.5">
+      <circle cx="-44" cy="0" r="6" /><circle cx="44" cy="0" r="6" /><circle cx="0" cy="-38" r="6" /><circle cx="0" cy="38" r="6" />
+    </g>
+  </g>
+  </g><g class="dkw dkcaOrigins-w5 dk-off" data-dk-step="1"><text x="170" y="150" class="t name" fill="#1e40af" text-anchor="middle">HEXAGONAL</text>
+  </g><g class="dkw dkcaOrigins-w6 dk-off" data-dk-step="1"><text x="170" y="170" class="t who" text-anchor="middle">Alistair Cockburn</text>
+  </g><g class="dkw dkcaOrigins-w7 dk-off" data-dk-step="1"><text x="170" y="395" class="t who" text-anchor="middle">Puertos y adaptadores</text>
+
+  </g><!-- 2008 onion -->
+  <g class="dkw dkcaOrigins-w10 dk-off" data-dk-step="2"><text x="440" y="100" class="t year" text-anchor="middle">2008</text>
+  </g><g class="dkw dkcaOrigins-w14 dk-off" data-dk-step="2"><circle cx="440" cy="215" r="10" fill="#ea580c" />
+  </g><g class="dkw dkcaOrigins-w15 dk-off" data-dk-step="2"><g transform="translate(440,310)">
+    <circle r="46" fill="#ffedd5" stroke="#ea580c" stroke-width="3" />
+    <circle r="30" fill="#fed7aa" stroke="#ea580c" stroke-width="3" />
+    <g class="dkw dkcaOrigins-w23"><circle r="14" fill="#ede9fe" stroke="#7c3aed" stroke-width="3" />
+  </g></g>
+  </g><g class="dkw dkcaOrigins-w11 dk-off" data-dk-step="2"><text x="440" y="150" class="t name" fill="#c2410c" text-anchor="middle">ONION</text>
+  </g><g class="dkw dkcaOrigins-w12 dk-off" data-dk-step="2"><text x="440" y="170" class="t who" text-anchor="middle">Jeffrey Palermo</text>
+  </g><g class="dkw dkcaOrigins-w13 dk-off" data-dk-step="2"><text x="440" y="395" class="t who" text-anchor="middle">Capas concéntricas</text>
+
+  </g><!-- 2012 clean -->
+  <g class="dkw dkcaOrigins-w16 dk-off" data-dk-step="3"><text x="710" y="100" class="t year" text-anchor="middle">2012</text>
+  </g><g class="dkw dkcaOrigins-w20 dk-off" data-dk-step="3"><circle cx="710" cy="215" r="10" fill="#16a34a" />
+  </g><g class="dkw dkcaOrigins-w21 dk-off" data-dk-step="3"><g transform="translate(710,310)">
+    <circle r="52" fill="#dbeafe" stroke="#2563eb" stroke-width="3" />
+    <circle r="40" fill="#dcfce7" stroke="#16a34a" stroke-width="3" />
+    <circle r="26" fill="#ffedd5" stroke="#ea580c" stroke-width="3" />
+    <g class="dkw dkcaOrigins-w24"><circle r="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="3" />
+  </g></g>
+  </g><g class="dkw dkcaOrigins-w17 dk-off" data-dk-step="3"><text x="710" y="150" class="t name" fill="#15803d" text-anchor="middle">CLEAN</text>
+  </g><g class="dkw dkcaOrigins-w18 dk-off" data-dk-step="3"><text x="710" y="170" class="t who" text-anchor="middle">Robert C. Martin</text>
+  </g><g class="dkw dkcaOrigins-w19 dk-off" data-dk-step="3"><text x="710" y="395" class="t who" text-anchor="middle">4 círculos + regla de dependencia</text>
+</g></svg></div>
+  <div class="cap" aria-live="polite"><b id="dkt"></b><span id="dkc"></span></div>
+  <div class="bar"><div class="dots" id="dkd" aria-label="Pasos"></div>
+    <div class="ctl"><button id="prev">Anterior</button><button id="play" class="solid">Reproducir</button><button id="next">Siguiente</button><button id="reset">Reiniciar</button></div></div>
+</div>
+<script>
+(function(){
+  var STEPS=[{"title": "Una línea de tiempo", "caption": "Tres autores, en tres años distintos, llegaron a la misma conclusión. Sigamos la línea de tiempo.", "dwell": 2.6, "pulse": []}, {"title": "2005 · Hexagonal", "caption": "Alistair Cockburn propone puertos y adaptadores: el dominio queda en el centro y todo lo externo se conecta por puertos.", "dwell": 2.6, "pulse": []}, {"title": "2008 · Onion", "caption": "Jeffrey Palermo lo dibuja como capas concéntricas: cada capa solo conoce a las que tiene más adentro.", "dwell": 2.6, "pulse": []}, {"title": "2012 · Clean", "caption": "Robert C. Martin lo resume en cuatro círculos y una única regla: las dependencias solo apuntan hacia adentro.", "dwell": 2.6, "pulse": []}, {"title": "Lo que se repite", "caption": "En las tres versiones, el círculo morado del centro es el dominio de negocio. Cambia el dibujo; la idea es la misma.", "dwell": 2.6, "pulse": ["dkcaOrigins-w22", "dkcaOrigins-w23", "dkcaOrigins-w24"]}], PID="caOrigins";
+  var root=document.getElementById(PID), cur=-1, timer=null;
+  var nodes=[].slice.call(root.querySelectorAll('[data-dk-step]'));
+  var dots=document.getElementById('dkd');
+  STEPS.forEach(function(s,i){var b=document.createElement('button');b.title=s.title||('Paso '+(i+1));b.onclick=function(){stop();go(i)};dots.appendChild(b)});
+  function go(n){
+    cur=Math.max(-1,Math.min(STEPS.length-1,n));
+    nodes.forEach(function(el){
+      var on=Number(el.getAttribute('data-dk-step'))<=cur;
+      el.classList.toggle('dk-off',!on);
+    });
+    (STEPS[cur]&&STEPS[cur].pulse||[]).forEach(function(c){var el=root.querySelector('.'+c);if(el){el.classList.remove('dk-pulse');void el.getBoundingClientRect();el.classList.add('dk-pulse')}});
+    document.getElementById('dkt').textContent=cur<0?'':(STEPS[cur].title||'Paso '+(cur+1)+' de '+STEPS.length);
+    document.getElementById('dkc').textContent=cur<0?'Pulsa Siguiente o Reproducir para ver el diagrama paso a paso.':STEPS[cur].caption;
+    [].forEach.call(dots.children,function(b,i){b.className=i===cur?'on':(i<cur?'past':'')});
+    document.getElementById('prev').disabled=cur<0;
+    document.getElementById('next').disabled=cur>=STEPS.length-1;
+  }
+  function stop(){if(timer){clearTimeout(timer);timer=null}document.getElementById('play').textContent='Reproducir'}
+  function play(){
+    document.getElementById('play').textContent='Pausar';
+    (function tick(){
+      if(cur>=STEPS.length-1){stop();return}
+      go(cur+1);timer=setTimeout(tick,(STEPS[cur].dwell||2.6)*1000);
+    })();
+  }
+  document.getElementById('prev').onclick=function(){stop();go(cur-1)};
+  document.getElementById('next').onclick=function(){stop();go(cur+1)};
+  document.getElementById('reset').onclick=function(){stop();go(-1)};
+  document.getElementById('play').onclick=function(){if(timer){stop()}else{if(cur>=STEPS.length-1)go(-1);play()}};
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){stop();go(cur+1)}if(e.key==='ArrowLeft'){stop();go(cur-1)}});
+  go(-1);
+})();
+</script></body></html>

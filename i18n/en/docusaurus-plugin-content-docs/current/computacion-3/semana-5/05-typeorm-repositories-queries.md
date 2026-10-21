@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Use the Repository pattern in NestJS with TypeORM to inject repositories, run CRUD operations, and query related data such as authors and books."
 ---
 
 # Repositories and Queries with TypeORM
@@ -166,7 +167,7 @@ The `Repository<T>` class provides built-in persistence methods:
 
 ### Key Distinction: `create()` vs. `save()`
 
-```typescript
+```typescript title="Key Distinction: create() vs. save()"
 // 1. create() only instantiates the object in TypeScript memory (validates types)
 const bookInstance = this.bookRepository.create({
   title: 'One Hundred Years of Solitude',
@@ -189,7 +190,7 @@ const savedBook = await this.bookRepository.save(bookInstance);
 
 The `find()` method accepts a `FindManyOptions` configuration object with expressive declarative options:
 
-```typescript
+```typescript title="Declarative Queries with FindOptions"
 const books = await this.bookRepository.find({
   // 1. select: Project specific columns (avoids SELECT *)
   select: {

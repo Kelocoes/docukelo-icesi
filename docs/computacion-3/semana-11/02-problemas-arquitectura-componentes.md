@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Identifica el antipatrón del componente monolítico en Next.js y aprende a separar capas aplicando principios SOLID en el frontend."
 ---
 
 # El Antipatrón del Componente Monolítico

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Aprende el patrón repositorio e inyecta repositorios de TypeORM en NestJS para consultar y guardar autores y libros relacionados."
 ---
 
 # Repositorios TypeORM
@@ -166,7 +167,7 @@ La clase `Repository<T>` de TypeORM expone un conjunto de métodos listos para u
 
 ### Diferencia clave: `create()` frente a `save()`
 
-```typescript
+```typescript title="Diferencia clave: create() frente"
 // 1. create() solo crea la instancia en memoria (valida tipos en TypeScript)
 const bookInstance = this.bookRepository.create({
     title: "Cien años de soledad",
@@ -189,7 +190,7 @@ const savedBook = await this.bookRepository.save(bookInstance);
 
 El método `find()` acepta un objeto de configuración (`FindManyOptions`) con propiedades declarativas para controlar la consulta:
 
-```typescript
+```typescript title="Consultas Avanzadas con FindOptions"
 const books = await this.bookRepository.find({
     // 1. select: Proyección de columnas específicas (evita SELECT *)
     select: {
@@ -241,7 +242,7 @@ Para aplicar filtros más expresivos que la simple igualdad, TypeORM incluye ope
 
 ### Ejemplo con Operadores Combinados
 
-```typescript title="Ejemplo de consulta con operadores" showLineNumbers
+```typescript title="Ejemplo con Operadores Combinados" showLineNumbers
 import { Between, ILike, In, MoreThan } from "typeorm";
 
 // Buscar libros de Ciencia Ficción o Novela, con precio entre 20 y 70 USD,

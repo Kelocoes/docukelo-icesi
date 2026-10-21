@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Consulta las diapositivas de la semana 11 sobre Next.js, renderizado y componentes de servidor y cliente con un visor de PDF."
 ---
 
 # Slides de la semana

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 8
+description: "Browse the week 1 slides on networks, web protocols, Java sockets, Apache Tomcat and servlets."
 ---
 
 # Weekly Slides

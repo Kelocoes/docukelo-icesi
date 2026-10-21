@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Conecta el dominio con la interfaz usando inyección de dependencias, custom hooks como presenters y la pantalla anfitriona en Next.js."
 ---
 
 # Inyección de Dependencias, Presenters y Next.js

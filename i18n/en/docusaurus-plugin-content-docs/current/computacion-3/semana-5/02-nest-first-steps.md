@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Install the NestJS CLI, bootstrap a project, and build your first module, controller, and service following a step-by-step guide."
 ---
 
 # First Steps with NestJS

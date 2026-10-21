@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Escribe pruebas unitarias y de integración con JUnit 5 y Mockito, aislando capas y aplicando el patrón Arrange-Act-Assert."
 ---
 
 # Pruebas Unitarias y de Integración con JUnit 5 y Mockito

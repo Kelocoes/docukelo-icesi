@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Build a web module for user and role management step by step with Spring Boot and Thymeleaf templates."
 ---
 
 # Lab: User Management

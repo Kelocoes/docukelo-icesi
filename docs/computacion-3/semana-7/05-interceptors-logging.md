@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Aprende a registrar eventos con un logger personalizado y a usar Interceptors en NestJS, con un caso de cifrado AES-256-CBC."
 ---
 
 # Interceptors y Logging
@@ -242,7 +243,7 @@ Inspirados en la Programación Orientada a Aspectos (AOP), los **Interceptors** 
 
 Todo interceptor implementa la interfaz `NestInterceptor`:
 
-```typescript
+```typescript title="La Interfaz NestInterceptor"
 export interface NestInterceptor<T = any, R = any> {
   intercept(context: ExecutionContext, next: CallHandler<T>): Observable<R>;
 }
@@ -419,7 +420,7 @@ La técnica estándar en la industria para resolver este problema es inyectar un
   <Step number="2" title="Mejorar el AppLogger para Trazabilidad">
     Modifica `AppLogger` para permitir que cualquier mensaje registrado en cualquier servicio de la aplicación pueda asociar opcionalmente el identificador de correlación:
     - Agrega un método con soporte para contexto o añade una firma sobrecargada:
-      ```typescript
+      ```typescript title="Objetivos de la Tarea"
       logWithTrace(correlationId: string, level: string, message: string): void
       ```
     - O implementa almacenamiento de contexto asíncrono con [`AsyncLocalStorage`](https://nodejs.org/api/async_context.html#class-asynclocalstorage) de Node.js para que todos los llamados a `this.logger.debug(...)` dentro del ciclo de la petición incluyan automáticamente el ID sin tener que pasarlo como argumento manual en cada función.

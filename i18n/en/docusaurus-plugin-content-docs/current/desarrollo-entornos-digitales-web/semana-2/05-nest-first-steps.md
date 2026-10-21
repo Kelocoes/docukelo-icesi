@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Take your first steps with NestJS: learn about modules, controllers and services and create your first project step by step."
 ---
 
 # First Steps with NestJS
@@ -63,7 +64,7 @@ graph TB
     npm install -g @nestjs/cli
     ```
 
-    :::tip Why use the CLI
+    :::tip[Why use the CLI]
     The CLI avoids manual configuration of TypeScript, Webpack/SWC, ESLint, and Jest, while maintaining a clean and standardized structure across projects.
     :::
   </Step>
@@ -118,7 +119,7 @@ graph TB
 
     Open your browser at `http://localhost:3000` to verify the application responds correctly.
 
-    :::info Changing port in main.ts
+    :::info[Changing port in main.ts]
     If port 3000 is occupied on your machine, you can modify `src/main.ts`:
 
     ```typescript title="src/main.ts" showLineNumbers
@@ -163,7 +164,7 @@ graph TB
       </TabItem>
     </Tabs>
 
-    :::tip CLI Shortcuts
+    :::tip[CLI Shortcuts]
     You can use short command aliases in terminal: `nest g mo users`, `nest g co users`, and `nest g s users`.
     :::
   </Step>

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Distingue entre asistentes y agentes de IA en consola, su bucle ReAct y los niveles de autonomía con los que se operan."
 ---
 
 import Tabs from '@theme/Tabs';

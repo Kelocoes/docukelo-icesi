@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Comprende la inyección de dependencias y los providers en NestJS, y la diferencia entre acoplamiento fuerte e inversión de control."
 ---
 
 # Inyección de Dependencias y Providers

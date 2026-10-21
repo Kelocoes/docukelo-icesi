@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Learn to organize a Next.js project by features, keep thin pages in app and separate API consumption into layers."
 ---
 
 import ThemedImage from '@theme/ThemedImage';
@@ -278,7 +279,7 @@ export type { LoginInput, AuthState } from './types';
 
 One of the most serious mistakes in beginner projects is invoking `fetch()` directly inside the `onClick` or `onSubmit` event of a button:
 
-```tsx
+```tsx title="Where API Consumption Lives"
 // Anti-pattern: direct fetch inside the UI component
 <button onClick={() => fetch('http://localhost:4000/auth/login', { method: 'POST', body: ... })}>
 ```

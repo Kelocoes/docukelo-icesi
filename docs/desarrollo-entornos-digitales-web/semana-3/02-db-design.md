@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Aplica las reglas del buen diseño de bases de datos para evitar redundancia y anomalías y obtener un modelo limpio y consistente."
 ---
 
 # Diseño de Bases de Datos

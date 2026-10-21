@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Aprende cuándo usar Server Components y Client Components en Next.js, la directiva use client y los patrones de composición."
 ---
 
 # Server Components vs. Client Components

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Review the week 9 slides on deploying a NestJS backend to Railway using the embedded PDF viewer."
 ---
 
 # Slides of the Week

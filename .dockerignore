@@ -1,0 +1,20 @@
+# Dependencias y salidas de build (se regeneran dentro de la imagen)
+node_modules
+build
+.docusaurus
+.cache-loader
+
+# No debe ir en la imagen
+temp
+output-skills
+.playwright-mcp
+.agents
+*.log
+.env*
+
+# Docker
+Dockerfile
+.dockerignore
+nginx.conf
+
+# OJO: .git se deja dentro del contexto a proposito (Docusaurus lo usa para "Ultima actualizacion").

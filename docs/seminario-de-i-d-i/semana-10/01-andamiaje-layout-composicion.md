@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende a maquetar pantallas en Flutter con Scaffold, SafeArea, Row, Column, Expanded, Container y SingleChildScrollView."
 ---
 
 import Tabs from '@theme/Tabs';

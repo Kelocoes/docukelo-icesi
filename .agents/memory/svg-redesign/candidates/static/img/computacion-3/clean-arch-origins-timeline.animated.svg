@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="100%" height="100%" id="caOrigins">
+  <style>
+#caOrigins .dkw{transform-box:fill-box;transform-origin:center}
+@keyframes dkcaOrigins-w1{0%{opacity:0;animation-timing-function:cubic-bezier(.2,.8,.2,1)}4.91%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0}}
+#caOrigins .dkcaOrigins-w1{animation:dkcaOrigins-w1 12.22s linear infinite}
+#caOrigins .dkcaOrigins-e2{stroke-dasharray:1}
+@keyframes dkcaOrigins-e2-draw{0%{stroke-dashoffset:1}1.637%{stroke-dashoffset:1;animation-timing-function:cubic-bezier(.2,.8,.2,1)}9.002%{stroke-dashoffset:0}80.36%{stroke-dashoffset:0}100%{stroke-dashoffset:1}}
+#caOrigins .dkcaOrigins-e2{animation:dkcaOrigins-e2-draw 12.22s linear infinite}
+@keyframes dkcaOrigins-w3{0%{opacity:0}8.183%{opacity:0;animation-timing-function:cubic-bezier(.2,.8,.2,1)}11.457%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0}}
+#caOrigins .dkcaOrigins-w3{animation:dkcaOrigins-w3 12.22s linear infinite}
+@keyframes dkcaOrigins-w4{0%{opacity:0;transform:translateY(14px)}17.185%{opacity:0;transform:translateY(14px);animation-timing-function:cubic-bezier(.2,.8,.2,1)}22.095%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:translateY(14px)}}
+#caOrigins .dkcaOrigins-w4{animation:dkcaOrigins-w4 12.22s linear infinite}
+@keyframes dkcaOrigins-w5{0%{opacity:0;transform:translateY(14px)}18.658%{opacity:0;transform:translateY(14px);animation-timing-function:cubic-bezier(.2,.8,.2,1)}23.568%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:translateY(14px)}}
+#caOrigins .dkcaOrigins-w5{animation:dkcaOrigins-w5 12.22s linear infinite}
+@keyframes dkcaOrigins-w6{0%{opacity:0;transform:translateY(14px)}20.131%{opacity:0;transform:translateY(14px);animation-timing-function:cubic-bezier(.2,.8,.2,1)}25.041%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:translateY(14px)}}
+#caOrigins .dkcaOrigins-w6{animation:dkcaOrigins-w6 12.22s linear infinite}
+@keyframes dkcaOrigins-w7{0%{opacity:0;transform:translateY(14px)}21.604%{opacity:0;transform:translateY(14px);animation-timing-function:cubic-bezier(.2,.8,.2,1)}26.514%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:translateY(14px)}}
+#caOrigins .dkcaOrigins-w7{animation:dkcaOrigins-w7 12.22s linear infinite}
+@keyframes dkcaOrigins-w8{0%{opacity:0;transform:scale(.6)}17.185%{opacity:0;transform:scale(.6);animation-timing-function:cubic-bezier(.2,.8,.2,1)}22.095%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:scale(.6)}}
+#caOrigins .dkcaOrigins-w8{animation:dkcaOrigins-w8 12.22s linear infinite}
+@keyframes dkcaOrigins-w9{0%{opacity:0;transform:scale(.6)}18.658%{opacity:0;transform:scale(.6);animation-timing-function:cubic-bezier(.2,.8,.2,1)}23.568%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:scale(.6)}}
+#caOrigins .dkcaOrigins-w9{animation:dkcaOrigins-w9 12.22s linear infinite}
+@keyframes dkcaOrigins-w10{0%{opacity:0;transform:translateY(14px)}32.242%{opacity:0;transform:translateY(14px);animation-timing-function:cubic-bezier(.2,.8,.2,1)}37.152%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:translateY(14px)}}
+#caOrigins .dkcaOrigins-w10{animation:dkcaOrigins-w10 12.22s linear infinite}
+@keyframes dkcaOrigins-w11{0%{opacity:0;transform:translateY(14px)}33.715%{opacity:0;transform:translateY(14px);animation-timing-function:cubic-bezier(.2,.8,.2,1)}38.625%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:translateY(14px)}}
+#caOrigins .dkcaOrigins-w11{animation:dkcaOrigins-w11 12.22s linear infinite}
+@keyframes dkcaOrigins-w12{0%{opacity:0;transform:translateY(14px)}35.188%{opacity:0;transform:translateY(14px);animation-timing-function:cubic-bezier(.2,.8,.2,1)}40.098%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:translateY(14px)}}
+#caOrigins .dkcaOrigins-w12{animation:dkcaOrigins-w12 12.22s linear infinite}
+@keyframes dkcaOrigins-w13{0%{opacity:0;transform:translateY(14px)}36.661%{opacity:0;transform:translateY(14px);animation-timing-function:cubic-bezier(.2,.8,.2,1)}41.571%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:translateY(14px)}}
+#caOrigins .dkcaOrigins-w13{animation:dkcaOrigins-w13 12.22s linear infinite}
+@keyframes dkcaOrigins-w14{0%{opacity:0;transform:scale(.6)}32.242%{opacity:0;transform:scale(.6);animation-timing-function:cubic-bezier(.2,.8,.2,1)}37.152%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:scale(.6)}}
+#caOrigins .dkcaOrigins-w14{animation:dkcaOrigins-w14 12.22s linear infinite}
+@keyframes dkcaOrigins-w15{0%{opacity:0;transform:scale(.6)}33.715%{opacity:0;transform:scale(.6);animation-timing-function:cubic-bezier(.2,.8,.2,1)}38.625%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:scale(.6)}}
+#caOrigins .dkcaOrigins-w15{animation:dkcaOrigins-w15 12.22s linear infinite}
+@keyframes dkcaOrigins-w16{0%{opacity:0;transform:translateY(14px)}47.3%{opacity:0;transform:translateY(14px);animation-timing-function:cubic-bezier(.2,.8,.2,1)}52.209%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:translateY(14px)}}
+#caOrigins .dkcaOrigins-w16{animation:dkcaOrigins-w16 12.22s linear infinite}
+@keyframes dkcaOrigins-w17{0%{opacity:0;transform:translateY(14px)}48.773%{opacity:0;transform:translateY(14px);animation-timing-function:cubic-bezier(.2,.8,.2,1)}53.682%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:translateY(14px)}}
+#caOrigins .dkcaOrigins-w17{animation:dkcaOrigins-w17 12.22s linear infinite}
+@keyframes dkcaOrigins-w18{0%{opacity:0;transform:translateY(14px)}50.245%{opacity:0;transform:translateY(14px);animation-timing-function:cubic-bezier(.2,.8,.2,1)}55.155%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:translateY(14px)}}
+#caOrigins .dkcaOrigins-w18{animation:dkcaOrigins-w18 12.22s linear infinite}
+@keyframes dkcaOrigins-w19{0%{opacity:0;transform:translateY(14px)}51.718%{opacity:0;transform:translateY(14px);animation-timing-function:cubic-bezier(.2,.8,.2,1)}56.628%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:translateY(14px)}}
+#caOrigins .dkcaOrigins-w19{animation:dkcaOrigins-w19 12.22s linear infinite}
+@keyframes dkcaOrigins-w20{0%{opacity:0;transform:scale(.6)}47.3%{opacity:0;transform:scale(.6);animation-timing-function:cubic-bezier(.2,.8,.2,1)}52.209%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:scale(.6)}}
+#caOrigins .dkcaOrigins-w20{animation:dkcaOrigins-w20 12.22s linear infinite}
+@keyframes dkcaOrigins-w21{0%{opacity:0;transform:scale(.6)}48.773%{opacity:0;transform:scale(.6);animation-timing-function:cubic-bezier(.2,.8,.2,1)}53.682%{opacity:1;transform:none}80.36%{opacity:1;transform:none}100%{opacity:0;transform:scale(.6)}}
+#caOrigins .dkcaOrigins-w21{animation:dkcaOrigins-w21 12.22s linear infinite}
+@keyframes dkcaOrigins-w22{0%{opacity:1;transform:none}62.357%{opacity:1;transform:none;animation-timing-function:ease-in-out}66.448%{opacity:1;transform:scale(1.14);animation-timing-function:ease-in-out}70.54%{opacity:1;transform:none}100%{opacity:1;transform:none}}
+#caOrigins .dkcaOrigins-w22{animation:dkcaOrigins-w22 12.22s linear infinite}
+@keyframes dkcaOrigins-w23{0%{opacity:1;transform:none}64.403%{opacity:1;transform:none;animation-timing-function:ease-in-out}68.494%{opacity:1;transform:scale(1.14);animation-timing-function:ease-in-out}72.586%{opacity:1;transform:none}100%{opacity:1;transform:none}}
+#caOrigins .dkcaOrigins-w23{animation:dkcaOrigins-w23 12.22s linear infinite}
+@keyframes dkcaOrigins-w24{0%{opacity:1;transform:none}66.448%{opacity:1;transform:none;animation-timing-function:ease-in-out}70.54%{opacity:1;transform:scale(1.14);animation-timing-function:ease-in-out}74.632%{opacity:1;transform:none}100%{opacity:1;transform:none}}
+#caOrigins .dkcaOrigins-w24{animation:dkcaOrigins-w24 12.22s linear infinite}
+@keyframes dkcaOrigins-flow{to{stroke-dashoffset:-18}}
+@media (prefers-reduced-motion:reduce){#caOrigins .dkw,#caOrigins [class*="dkcaOrigins-"]{animation:none!important;opacity:1!important;transform:none!important;stroke-dashoffset:0!important}}
+</style><defs>
+    <marker id="caOrigins-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 Z" fill="#7c3aed" /></marker>
+  </defs>
+  <style>
+    .t { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    .title { font-size: 20px; font-weight: 700; fill: #0f172a; }
+    .year { font-size: 28px; font-weight: 800; fill: #0f172a; }
+    .name { font-size: 15px; font-weight: 800; letter-spacing: .04em; }
+    .who { font-size: 12px; fill: #64748b; }
+  </style>
+  <rect width="880" height="440" rx="16" fill="#f8fafc" />
+  <g class="dkw dkcaOrigins-w1"><text x="32" y="38" class="t title">Una idea que se repite: el dominio al centro</text>
+
+  </g><!-- axis -->
+  <line x1="60" y1="215" x2="760" y2="215" stroke="#cbd5e1" stroke-width="5" stroke-linecap="round" class="dkcaOrigins-e2" pathLength="1" />
+  <g class="dkw dkcaOrigins-w3"><path d="M740,215 L790,215" stroke="#7c3aed" stroke-width="5" marker-end="url(#caOrigins-a)" fill="none" />
+
+  </g><!-- 2005 hexagonal -->
+  <g class="dkw dkcaOrigins-w4"><text x="170" y="100" class="t year" text-anchor="middle">2005</text>
+  </g><g class="dkw dkcaOrigins-w8"><circle cx="170" cy="215" r="10" fill="#2563eb" />
+  </g><g class="dkw dkcaOrigins-w9"><g transform="translate(170,310)">
+    <polygon points="-44,0 -22,-38 22,-38 44,0 22,38 -22,38" fill="#dbeafe" stroke="#2563eb" stroke-width="3.5" stroke-linejoin="round" />
+    <g class="dkw dkcaOrigins-w22"><circle cx="0" cy="0" r="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="3" />
+    </g><g fill="#fff" stroke="#2563eb" stroke-width="2.5">
+      <circle cx="-44" cy="0" r="6" /><circle cx="44" cy="0" r="6" /><circle cx="0" cy="-38" r="6" /><circle cx="0" cy="38" r="6" />
+    </g>
+  </g>
+  </g><g class="dkw dkcaOrigins-w5"><text x="170" y="150" class="t name" fill="#1e40af" text-anchor="middle">HEXAGONAL</text>
+  </g><g class="dkw dkcaOrigins-w6"><text x="170" y="170" class="t who" text-anchor="middle">Alistair Cockburn</text>
+  </g><g class="dkw dkcaOrigins-w7"><text x="170" y="395" class="t who" text-anchor="middle">Puertos y adaptadores</text>
+
+  </g><!-- 2008 onion -->
+  <g class="dkw dkcaOrigins-w10"><text x="440" y="100" class="t year" text-anchor="middle">2008</text>
+  </g><g class="dkw dkcaOrigins-w14"><circle cx="440" cy="215" r="10" fill="#ea580c" />
+  </g><g class="dkw dkcaOrigins-w15"><g transform="translate(440,310)">
+    <circle r="46" fill="#ffedd5" stroke="#ea580c" stroke-width="3" />
+    <circle r="30" fill="#fed7aa" stroke="#ea580c" stroke-width="3" />
+    <g class="dkw dkcaOrigins-w23"><circle r="14" fill="#ede9fe" stroke="#7c3aed" stroke-width="3" />
+  </g></g>
+  </g><g class="dkw dkcaOrigins-w11"><text x="440" y="150" class="t name" fill="#c2410c" text-anchor="middle">ONION</text>
+  </g><g class="dkw dkcaOrigins-w12"><text x="440" y="170" class="t who" text-anchor="middle">Jeffrey Palermo</text>
+  </g><g class="dkw dkcaOrigins-w13"><text x="440" y="395" class="t who" text-anchor="middle">Capas concéntricas</text>
+
+  </g><!-- 2012 clean -->
+  <g class="dkw dkcaOrigins-w16"><text x="710" y="100" class="t year" text-anchor="middle">2012</text>
+  </g><g class="dkw dkcaOrigins-w20"><circle cx="710" cy="215" r="10" fill="#16a34a" />
+  </g><g class="dkw dkcaOrigins-w21"><g transform="translate(710,310)">
+    <circle r="52" fill="#dbeafe" stroke="#2563eb" stroke-width="3" />
+    <circle r="40" fill="#dcfce7" stroke="#16a34a" stroke-width="3" />
+    <circle r="26" fill="#ffedd5" stroke="#ea580c" stroke-width="3" />
+    <g class="dkw dkcaOrigins-w24"><circle r="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="3" />
+  </g></g>
+  </g><g class="dkw dkcaOrigins-w17"><text x="710" y="150" class="t name" fill="#15803d" text-anchor="middle">CLEAN</text>
+  </g><g class="dkw dkcaOrigins-w18"><text x="710" y="170" class="t who" text-anchor="middle">Robert C. Martin</text>
+  </g><g class="dkw dkcaOrigins-w19"><text x="710" y="395" class="t who" text-anchor="middle">4 círculos + regla de dependencia</text>
+</g></svg>

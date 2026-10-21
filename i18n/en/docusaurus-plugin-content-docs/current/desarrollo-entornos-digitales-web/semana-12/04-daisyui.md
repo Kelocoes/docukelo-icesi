@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Learn to use daisyUI on top of Tailwind in Next.js: installation and a catalog of essential components such as buttons, cards and forms."
 ---
 
 import ThemedImage from '@theme/ThemedImage';

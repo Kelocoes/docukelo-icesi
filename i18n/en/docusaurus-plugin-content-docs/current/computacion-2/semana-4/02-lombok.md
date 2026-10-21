@@ -1,6 +1,7 @@
 ---
 sidebar_position: 2
 sidebar_label: "Project Lombok"
+description: "Cut boilerplate in Java by using Project Lombok annotations for getters, setters and constructors."
 ---
 
 # Project Lombok
@@ -221,7 +222,7 @@ Avoid placing `@Data` on classes annotated with JPA `@Entity` if they contain bi
 
 **Recommendation:**  
 Use explicit annotations on JPA entities:
-```java
+```java title="Warnings and Best Practices with JPA"
 @Entity
 @Getter
 @Setter

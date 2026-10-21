@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Conoce los fundamentos y la arquitectura de NestJS, incluido el ciclo de vida de una solicitud, y comprueba lo aprendido con un cuestionario."
 ---
 
 import PdfViewer from "@site/src/components/PdfViewer/PdfViewer";

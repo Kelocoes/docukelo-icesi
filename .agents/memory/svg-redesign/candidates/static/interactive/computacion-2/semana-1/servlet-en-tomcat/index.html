@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El servlet dentro de Tomcat</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El servlet dentro de Tomcat: solo DATOS (piezas, pasos y leyendas). El motor vive en _shared/. */
+(function () {
+  var msg = function (path, label, kind, extra) { var m = { path: path, label: label, kind: kind }; for (var k in extra) m[k] = extra[k]; return m; };
+  var SERVLETS = ['servlet1', 'servlet2', 'servlet3'];
+
+  var nodes = [
+    { id: 'browser', kind: 'actor', icon: 'browser', label: 'Navegador', x: 4, y: 130, w: 84, h: 84 },
+    { id: 'tomcat', kind: 'outer', label: 'Apache Tomcat', sub: 'servidor web', x: 150, y: 8, w: 646, h: 316 },
+    { id: 'coyote', kind: 'box', icon: 'gear', label: 'Coyote', sub: 'conector HTTP', x: 178, y: 130, w: 130, h: 84 },
+    { id: 'catalina', kind: 'outer', label: 'Catalina', sub: 'contenedor de servlets', x: 440, y: 50, w: 346, h: 262 },
+    { id: 'servlet1', kind: 'box', icon: 'classbox', label: 'HelloServlet', sub: '/hello-servlet', x: 456, y: 130, w: 314, h: 48 },
+    { id: 'servlet2', kind: 'box', icon: 'classbox', label: 'ProductosServlet', sub: '/productos', x: 456, y: 186, w: 314, h: 48 },
+    { id: 'servlet3', kind: 'box', icon: 'classbox', label: 'LoginServlet', sub: '/login', x: 456, y: 242, w: 314, h: 48 },
+  ];
+
+  var steps = [
+    { phase: 0, title: 'Apache Tomcat: el servidor web', focus: ['tomcat'], msgs: [],
+      caption: 'Apache Tomcat es el servidor web: escucha conexiones y ejecuta aplicaciones web escritas en Java. Todo lo que ves dentro del recuadro punteado es Tomcat.' },
+    { phase: 0, title: 'Coyote: el conector HTTP', focus: ['coyote'], msgs: [],
+      caption: 'Coyote es la puerta de entrada: entiende el protocolo HTTP, lee lo que llega por el puerto y arma la respuesta que vuelve al navegador.' },
+    { phase: 0, title: 'Catalina: el contenedor de servlets', focus: ['catalina'].concat(SERVLETS), msgs: [],
+      caption: 'Catalina es el contenedor de servlets: los carga, los crea y llama a sus métodos en el momento justo (su ciclo de vida). Un mismo Tomcat puede tener muchos servlets; cada uno atiende una URL.' },
+
+    { phase: 1, title: 'El navegador envía una solicitud', focus: ['browser', 'coyote'],
+      msgs: [msg([88, 156, 178, 156], 'GET', 'data')],
+      caption: 'Escribes http://localhost:8080/hello-servlet y el navegador envía una solicitud GET. Llega a Coyote, que está escuchando en el puerto 8080.' },
+    { phase: 1, title: 'Coyote se la pasa a Catalina', focus: ['coyote', 'catalina'],
+      msgs: [msg([308, 156, 440, 156], 'request, response', 'ctl')],
+      caption: 'Coyote convierte el texto HTTP en dos objetos Java: HttpServletRequest (lo que pidió el navegador) y HttpServletResponse (donde se escribirá la respuesta). Se los entrega a Catalina.' },
+    { phase: 1, title: 'Catalina elige el servlet', focus: ['catalina', 'servlet1'],
+      msgs: [msg([620, 94, 620, 130], 'doGet()', 'ctl')],
+      caption: 'Catalina compara la URL con las que declaran los servlets (@WebServlet("/hello-servlet")), elige HelloServlet y llama a su método doGet().' },
+
+    { phase: 2, title: 'El servlet arma la respuesta', focus: ['servlet1', 'catalina'],
+      msgs: [msg([700, 130, 700, 94], 'HTML', 'ack')],
+      caption: 'doGet() escribe el HTML en el objeto response ("Hello World!") y termina. El servlet no habla con el navegador directamente: le devuelve el resultado a Catalina.' },
+    { phase: 2, title: 'La respuesta vuelve al navegador', focus: ['catalina', 'coyote', 'browser'],
+      msgs: [msg([440, 190, 308, 190], 'response', 'ack'), msg([178, 190, 88, 190], '200 OK', 'ack')],
+      caption: 'Catalina devuelve el control a Coyote, que convierte el objeto response en una respuesta HTTP 200 y la envía por la misma conexión. El navegador dibuja el HTML.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Arquitectura de Apache Tomcat: el navegador, el conector Coyote, el contenedor Catalina y los servlets, con el recorrido de una solicitud HTTP',
+    phases: ['Las piezas', 'La solicitud', 'La respuesta'],
+    scene: function (svg) { return DK.layers({ svg: svg, width: 800, height: 336, nodes: nodes, labels: 'smart' }); },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Un servlet dentro de Tomcat', title: 'Antes de empezar',
+      text: 'Este es el mapa de una aplicación web Java. Pulsa "Siguiente": primero conoces las piezas y luego sigues el viaje de una solicitud hasta el servlet y de vuelta.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

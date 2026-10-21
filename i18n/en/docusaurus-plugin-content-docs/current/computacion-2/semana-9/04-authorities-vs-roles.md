@@ -1,6 +1,7 @@
 ---
 sidebar_position: 4
 sidebar_label: "Authorities vs. Roles"
+description: "Tell authorities from roles in Spring Security and apply good permission design practices in complex systems."
 ---
 
 # Authorities vs. Roles
@@ -24,7 +25,7 @@ All privileges in Spring Security are represented through the `GrantedAuthority`
 Represent **fine-grained actions or granular operations** on domain entities. They specify precisely what the user can execute:
 - Examples: `READ`, `WRITE`, `DELETE_USER`, `EXPORT_REPORT`.
 - Checked in path configurations or security annotations via `hasAuthority()`:
-  ```java
+  ```java title="Authorities"
   .requestMatchers(HttpMethod.DELETE, "/mvc/users/**").hasAuthority("DELETE_USER")
   ```
 
@@ -36,7 +37,7 @@ Represent **high-level user profiles** that aggregate a set of authorities.
 - Examples: Administrator, Manager, Customer, SalesRep.
 - **The `ROLE_` Prefix Convention:** In Spring Security, a role is technically a `GrantedAuthority` prefixed with `ROLE_` (e.g., `ROLE_ADMIN`, `ROLE_USER`).
 - When checking a role with `hasRole("ADMIN")`, Spring Security automatically appends the `ROLE_` prefix under the hood:
-  ```java
+  ```java title="Roles"
   // Both expressions evaluate identically:
   .requestMatchers("/mvc/admin/**").hasRole("ADMIN")
   .requestMatchers("/mvc/admin/**").hasAuthority("ROLE_ADMIN")

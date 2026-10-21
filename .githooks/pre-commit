@@ -1,0 +1,10 @@
+#!/bin/sh
+# Hook de pre-commit de DocuKelo: revisa los documentos modificados contra las reglas de la guia
+# (.agents/memory/docusaurus-guidelines.md, seccion 10). Para ver el detalle de un fallo:
+#   npm run lint:docs -- --changed --verbose
+# Para saltarlo en un commit puntual (no recomendado): git commit --no-verify
+node scripts/lint-docs.mjs --check --changed || {
+    echo ""
+    echo "pre-commit: corrige los incumplimientos de arriba (o corre 'npm run lint:docs -- --changed --verbose')."
+    exit 1
+}

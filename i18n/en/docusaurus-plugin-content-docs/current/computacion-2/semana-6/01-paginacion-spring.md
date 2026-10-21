@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Implement pagination and sorting in Spring Data JPA with Pageable, Sort and Page to avoid massive queries."
 ---
 
 # Pagination and Sorting in Spring Data JPA
@@ -291,7 +292,7 @@ public class ProductController {
 
 :::tip[Direct Pageable Injection in Controller Parameters]
 Spring MVC can bind `Pageable` directly as a controller parameter:
-```java
+```java title="Practical Guide: Step-by-Step"
 @GetMapping
 public ResponseEntity<Page<Product>> listProducts(Pageable pageable) {
     return ResponseEntity.ok(productRepository.findAll(pageable));

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Review the week 2 slides on containers and Docker, with an interactive viewer and a self-assessment quiz."
 ---
 
 # Presentation Slides of the Week

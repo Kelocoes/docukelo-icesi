@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Desarrolla paso a paso un módulo web de gestión de usuarios y roles con Spring Boot y plantillas Thymeleaf."
 ---
 
 # Taller: Gestión de Usuarios

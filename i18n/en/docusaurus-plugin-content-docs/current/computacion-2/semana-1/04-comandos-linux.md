@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Review basic Linux commands that are useful for deploying web applications and managing servers."
 ---
 
 # Linux Commands

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Recorre la estructura de un proyecto Flutter y main.dart, y aprende a leer una pantalla como un árbol de widgets."
 ---
 
 # Estructura, main.dart y Widgets
@@ -447,7 +448,7 @@ Las imágenes en Flutter pueden originarse localmente en el paquete de la aplica
          - assets/images/
      ```
   3. Carga el widget en tu código:
-     ```dart showLineNumbers
+     ```dart title="Image.asset" showLineNumbers
      Image.asset(
        'assets/images/logo.png',
        width: 120,
@@ -458,7 +459,7 @@ Las imágenes en Flutter pueden originarse localmente en el paquete de la aplica
 
 - **`Image.network()` (Recursos Remotos)**:
   Se utiliza cuando la URL proviene de una base de datos o API externa (como perfiles de usuario o fotos de productos en Supabase):
-  ```dart showLineNumbers
+  ```dart title="Image.network" showLineNumbers
   Image.network(
     'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600',
     height: 180,
@@ -484,7 +485,7 @@ En Material 3 disponemos de tres variantes principales de botones, cada una dise
 | **`OutlinedButton`** | Media             | Acciones secundarias (Cancelar, Volver, Filtros alternativos).  |
 | **`TextButton`**     | Baja / Sutil      | Acciones terciarias en tarjetas o diálogos (Ver más, Términos). |
 
-```dart title="Ejemplo de Botones Material 3" showLineNumbers
+```dart title="C. Botones de Material 3" showLineNumbers
 // Botón con acción definida
 ElevatedButton.icon(
   onPressed: () {

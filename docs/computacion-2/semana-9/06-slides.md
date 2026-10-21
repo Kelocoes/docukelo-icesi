@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Consulta las diapositivas de la semana 9 sobre Spring Security, autenticación, autorización, hashing con BCrypt y SecurityFilterChain."
 ---
 
 # Slides de la semana

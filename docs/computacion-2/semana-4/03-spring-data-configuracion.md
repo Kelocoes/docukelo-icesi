@@ -1,6 +1,7 @@
 ---
 sidebar_position: 3
 sidebar_label: "Spring Data JPA"
+description: "Configura Spring Data JPA, el datasource y application.properties para conectar una aplicación Spring Boot con PostgreSQL."
 ---
 
 # Spring Data JPA

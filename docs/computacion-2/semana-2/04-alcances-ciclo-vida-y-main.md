@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Comprende los alcances singleton y prototype y el ciclo de vida de los beans de Spring configurados con XML."
 ---
 
 # Alcances y Ciclo de Vida del Bean

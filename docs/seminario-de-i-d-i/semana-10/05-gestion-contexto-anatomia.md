@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Comprende las capas de la ventana de contexto de un agente, sus riesgos de amnesia y sobrecarga, y los comandos para inspeccionarla."
 ---
 
 import Tabs from '@theme/Tabs';
@@ -64,7 +65,7 @@ Los entornos de terminal profesionales ofrecen comandos rápidos (*Slash Command
 ### 1. `/context`: ¿Qué tiene el agente en la cabeza?
 Permite visualizar la lista exacta de archivos cargados en memoria y el porcentaje de la ventana de contexto utilizado:
 
-```yaml
+```yaml title="Comando context"
 # Auditoría de memoria activa en consola
 > /context
 Active Context Tokens: 14250 / 128000 (11%)
@@ -78,7 +79,7 @@ Loaded Files:
 ### 2. `/usage` (o `/cost`): Monitoreo de recursos y gasto
 Muestra el consumo acumulado de tokens durante la sesión:
 
-```yaml
+```yaml title="Comando usage"
 # Métricas de consumo y costos en tiempo real
 > /usage
 Session Usage:
@@ -91,7 +92,7 @@ Session Usage:
 ### 3. `/model`: Selección del motor adecuado
 Te permite alternar entre modelos según la complejidad técnica de la tarea:
 
-```yaml
+```yaml title="Comando model"
 # Selector interactivo de motor agéntico
 > /model
 Available Models:

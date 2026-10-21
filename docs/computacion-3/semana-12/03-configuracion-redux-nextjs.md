@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Configura Redux Toolkit en un proyecto Next.js con Clean Architecture, ubicando cada pieza en su capa y siguiendo una guía paso a paso."
 ---
 
 import ThemedImage from '@theme/ThemedImage';
@@ -317,7 +318,7 @@ export const useAppStore: () => AppStore = useStore;
 
 :::tip[Nota sobre Redux Toolkit 2.0+ y .withTypes]
 En versiones recientes de Redux Toolkit (v2.0+) y React-Redux (v9.0+), se introdujo el método de conveniencia `.withTypes`:
-```typescript
+```typescript title="Guía Paso a Paso de Configuración"
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 export const useAppSelector = useSelector.withTypes<RootState>();
 ```

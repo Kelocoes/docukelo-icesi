@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Browse the week 8 slides on server-side rendering, Thymeleaf expressions and web forms."
 ---
 
 # Weekly Slides

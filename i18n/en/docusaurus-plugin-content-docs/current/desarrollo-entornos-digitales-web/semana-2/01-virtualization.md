@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Understand virtual machines, hypervisors and Docker containers, and how their advantages and disadvantages differ."
 ---
 
 # Containers

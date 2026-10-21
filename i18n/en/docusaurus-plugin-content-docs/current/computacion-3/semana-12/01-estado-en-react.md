@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Learn what state is in React, how it differs from props, and when to use local state, lifted state, or shared state."
 ---
 
 import ThemedImage from '@theme/ThemedImage';

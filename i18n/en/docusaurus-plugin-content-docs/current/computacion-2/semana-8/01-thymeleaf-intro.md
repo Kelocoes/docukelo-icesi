@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Understand server-side rendering with Thymeleaf, natural templating and the differences between SSR and CSR."
 ---
 
 # Thymeleaf and SSR

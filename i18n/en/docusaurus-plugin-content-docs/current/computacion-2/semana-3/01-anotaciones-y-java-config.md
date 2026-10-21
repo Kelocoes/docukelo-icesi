@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Move from XML to stereotype annotations and Java Config to declare beans, scopes and lifecycle in Spring."
 ---
 
 # Annotations and Java Config

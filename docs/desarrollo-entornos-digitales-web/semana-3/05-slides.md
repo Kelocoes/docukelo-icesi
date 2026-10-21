@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Consulta las diapositivas de la semana 3 sobre bases de datos relacionales, diseño y TypeORM con un visor de PDF integrado."
 ---
 
 # Slides de la semana

@@ -1,6 +1,7 @@
 ---
 sidebar_position: 2
 sidebar_label: "Proyecto Lombok"
+description: "Reduce el código repetitivo en Java usando las anotaciones de Project Lombok para getters, setters y constructores."
 ---
 
 # Proyecto Lombok
@@ -227,7 +228,7 @@ Evita colocar `@Data` en clases anotadas con `@Entity` de JPA si contienen relac
 
 **Recomendación:**  
 En entidades JPA, utiliza anotaciones explícitas:
-```java
+```java title="Advertencias y Buenas Prácticas con JPA"
 @Entity
 @Getter
 @Setter

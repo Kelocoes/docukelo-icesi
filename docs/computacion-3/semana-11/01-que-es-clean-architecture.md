@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Comprende la definición, los objetivos y la Regla de Dependencia de Clean Architecture antes de aplicarla en el frontend."
 ---
 
 # ¿Qué es Clean Architecture?

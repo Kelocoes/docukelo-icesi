@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Get to know Next.js and compare client-side (CSR) and server-side (SSR) rendering strategies to choose the right one."
 ---
 
 # Rendering Strategies: CSR & SSR

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Conoce qué es Apache Tomcat, cómo está organizado y los comandos básicos para iniciar y detener el servidor."
 ---
 
 # Servidor Tomcat

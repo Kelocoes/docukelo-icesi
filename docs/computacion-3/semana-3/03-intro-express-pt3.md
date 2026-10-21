@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Implementa autenticación y autorización con JWT y protege las rutas de tu API Express mediante middlewares."
 ---
 
 # Autenticación y Protección de Rutas
@@ -15,7 +16,7 @@ Antes de implementar la autenticación y autorización, nos aseguraremos de que 
 
 Primero, modificaremos el archivo `user.model.ts` para incluir el campo `role`:
 
-```typescript
+```typescript title="user.model.ts"
 export interface UserDocument extends UserInput, mongoose.Document {
     createdAt: Date,
     updatedAt: Date,
@@ -45,7 +46,7 @@ npm install jsonwebtoken
 ### Creación del servicio de autenticación
 Ahora crearemos un servicio de autenticación que maneje el registro, inicio de sesión y generación de tokens JWT. Crearemos un nuevo archivo `auth.service.ts` en la carpeta `services`:
 
-```typescript
+```typescript title="auth.service.ts"
 class AuthService {
     public async login(userLogin: UserLoginInput): Promise<UserLoginOutput> {
         // Buscar el usuario por correo
@@ -64,7 +65,7 @@ Dentro de este servicio, implementaremos los métodos `login` y `generateToken`.
 
 Empecemos con el login:
 
-```typescript
+```typescript title="Creación del servicio de autenticación"
 public async login(userLogin: UserLoginInput): Promise<UserLoginOutput> {
         const userExists: UserDocument | null = await userService.findByEmail(userLogin.email);
         if (userExists === null) {
@@ -88,7 +89,7 @@ Como puedes ver, primero buscamos al usuario por su correo electrónico. Si no e
 
 No obstante, necesitamos estandarizar las interfaces `UserLoginInput` y `UserLoginOutput`. Crearemos un nuevo archivo `auth.interface.ts` en la carpeta `interfaces`:
 
-```typescript
+```typescript title="auth.interface.ts"
 export interface UserLoginInput {
     email: string;
     password: string;
@@ -103,7 +104,7 @@ export interface UserLoginOutput {
 
 Ahora, implementemos el método `generateToken`:
 
-```typescript
+```typescript title="Creación del servicio (2)"
 public async generateToken(user: UserDocument): Promise<string> {
         const payload = {
             id: user.id,
@@ -120,7 +121,7 @@ En este método, creamos un payload que incluye el ID y los roles del usuario. L
 ### Creación del controlador de autenticación
 A continuación, crearemos un controlador para manejar las solicitudes de autenticación. Crearemos un nuevo archivo `auth.controller.ts` en la carpeta `controllers`:
 
-```typescript
+```typescript title="auth.controller.ts"
 class AuthController {
     public async login(req: Request, res: Response, next: Function) {
         try {
@@ -144,7 +145,7 @@ No olvides exportar el controlador de autenticación usando el archivo `index.ts
 ### Creación de rutas de autenticación
 Finalmente, crearemos las rutas para manejar las solicitudes de autenticación. Crearemos un nuevo archivo `auth.route.ts` en la carpeta `routes`:
 
-```typescript
+```typescript title="auth.route.ts"
 import express from "express";
 import { authController } from "../controllers";
 
@@ -155,7 +156,7 @@ router.post("/login", authController.login);
 
 Por último, asegúrate de importar y usar estas rutas en tu archivo principal `index.ts`:
 
-```typescript
+```typescript title="index.ts"
 import { router as authRoutes } from "./routes/auth.route";
 
 app.use("/api/auth", authRoutes);
@@ -168,7 +169,7 @@ app.use("/api/auth", authRoutes);
 
 Para proteger las rutas que requieren autenticación, crearemos un middleware que verifique el token JWT en las solicitudes entrantes. Crearemos un nuevo archivo `auth.middleware.ts` en la carpeta `middlewares`:
 
-```typescript
+```typescript title="auth.middleware.ts"
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
@@ -197,7 +198,7 @@ Ya a este punto, no es realmente un middleware complejo, ni mucho menos de de au
 
 Para aplicar este middleware a las rutas que requieren autenticación, simplemente lo importamos y lo usamos en las rutas correspondientes. Por ejemplo, si tenemos una ruta protegida para obtener información del usuario, la definiríamos así:
 
-```typescript
+```typescript title="Aplicación del middleware"
 import express from "express";
 import authMiddleware from "../middlewares/auth.middleware";
 

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Aprende el ciclo de vida de State y a usar TextEditingController evitando fugas de memoria en formularios con validación."
 ---
 
 import Tabs from '@theme/Tabs';

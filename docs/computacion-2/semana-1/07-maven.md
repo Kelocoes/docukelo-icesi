@@ -1,5 +1,6 @@
 ---
 sidebar_position: 7
+description: "Instala Apache Maven y comprende su ciclo de vida, el archivo pom.xml y la gestión de dependencias en proyectos Java."
 ---
 
 # Maven: Ciclo de Vida
@@ -19,7 +20,7 @@ Para utilizar Maven en tu entorno local, asegúrate de contar primero con una in
 
 ### Opción A: Mediante gestores de paquetes (Recomendado)
 Si utilizas **Scoop** o **Chocolatey** en PowerShell:
-```powershell
+```powershell title="Opción A"
 # Usando Scoop
 scoop install maven
 

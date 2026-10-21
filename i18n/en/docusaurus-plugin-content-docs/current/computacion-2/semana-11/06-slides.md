@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Browse the week 11 slides on REST APIs, HTTP status codes, DTOs and JWT security."
 ---
 
 # Weekly Slides

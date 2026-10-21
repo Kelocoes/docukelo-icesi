@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Practice database modeling with graded exercises, from a simple blog to social networks and course systems."
 ---
 
 # Exercises: From Text to Diagram

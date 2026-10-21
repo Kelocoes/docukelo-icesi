@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Consulta las diapositivas de la semana 11 sobre Clean Architecture en el frontend con Next.js y TypeScript."
 ---
 
 # Slides de la semana

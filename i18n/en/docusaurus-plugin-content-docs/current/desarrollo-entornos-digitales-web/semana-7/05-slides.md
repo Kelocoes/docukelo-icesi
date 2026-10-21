@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Review the week 7 slides on authentication, JWT, guards and permissions using the embedded PDF viewer."
 ---
 
 # Slides of the Week

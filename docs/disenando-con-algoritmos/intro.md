@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Conoce el contenido, el syllabus y el cronograma del curso Diseñando con Algoritmos sobre programación web del lado del cliente."
 ---
 import PdfViewer from '@site/src/components/PdfViewer/PdfViewer';
 

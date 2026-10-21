@@ -1,6 +1,7 @@
 ---
 sidebar_position: 2
 sidebar_label: "Encoding, Encryption, and Hashing"
+description: "Tell encoding, encryption and hashing apart, and learn why to use salt and BCrypt to store passwords."
 ---
 
 # Encoding, Encryption, and Hashing

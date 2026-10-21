@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Desarrolla una actividad practica construyendo componentes con daisyUI y siguiendo la estructura por features, con criterios de entrega y rúbrica."
 ---
 
 import Tabs from '@theme/Tabs';
@@ -139,7 +140,7 @@ Botón de acción interactivo que combina un icono vectorial, etiqueta descripti
 * **Propósito:** Proveer un botón base estandarizado para toda la aplicación con soporte para estados visuales (normal, cargando, deshabilitado) sin duplicar código CSS.
 * **Estilo DaisyUI sugerido:** Tema institucional `icesi` con variante principal `btn-primary` (Azul Icesi `#5454e9`) y badge contextual en `badge-secondary` (Morado Icesi `#865cf0`).
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/action-button.tsx"
   interface ActionButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     label: string;
     icon?: React.ReactNode;
@@ -178,7 +179,7 @@ Micro-componente en forma de píldora que combina un punto luminoso parpadeante 
 * **Propósito:** Mostrar de manera inmediata el ciclo de vida o condición de una entidad sin sobrecargar la interfaz.
 * **Estilo DaisyUI sugerido:** Modificadores de estado semánticos con la paleta complementaria Icesi: Verde Icesi (`#4cb979` / `badge-success`), Morado Icesi (`#865cf0` / `badge-secondary`) y Naranja Icesi (`#e9683b` / `badge-error`).
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/status-badge.tsx"
   type BadgeStatus = 'active' | 'pending' | 'danger' | 'neutral';
 
   interface StatusBadgeProps {
@@ -217,7 +218,7 @@ Bloque de notificación destacado que presenta un icono vectorial informativo en
 * **Propósito:** Desplegar anuncios institucionales importantes (aperturas de matrícula, avisos de sistema, mantenimiento programado) en la cabecera de las vistas.
 * **Estilo DaisyUI sugerido:** Componente `alert` combinado con `alert-info` en tonos de Azul Icesi (`#5454e9` / `bg-[#f0f0fd]`).
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/alert-banner.tsx"
   interface AlertBannerProps {
     title: string;
     description: string;
@@ -255,7 +256,7 @@ Conjunto atómico que incluye fotografía circular del usuario con anillo exteri
 * **Propósito:** Identificar visualmente a profesores, monitores de laboratorio o compañeros de equipo en paneles de contacto y listas de tutoría.
 * **Estilo DaisyUI sugerido:** Clases `avatar online` (u `offline`) combinadas con `ring ring-primary ring-offset-2`.
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/user-avatar.tsx"
   interface UserAvatarProps {
     name: string;
     role: string;
@@ -295,7 +296,7 @@ Fila compacta con etiqueta descriptiva a la izquierda y teclas físicas simulada
 * **Propósito:** Informar al usuario de atajos rápidos de teclado para potenciar la productividad y accesibilidad.
 * **Estilo DaisyUI sugerido:** Clases `kbd kbd-sm` con fondo blanco y sombra sutil sobre un contenedor neutro `bg-base-200` y borde en Gris 2 (`#cecfd4`).
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/shortcut-pill.tsx"
   interface ShortcutPillProps {
     label: string;
     keys: string[]; // Ej: ['⌘ Cmd', 'K'] o ['Ctrl', 'Shift', 'P']
@@ -330,7 +331,7 @@ Componente visual de valoración que despliega estrellas con soporte para medias
 * **Propósito:** Mostrar calificaciones de asignaturas, talleres o valoraciones docentes en catálogos y fichas de curso.
 * **Estilo DaisyUI sugerido:** Componente `rating rating-sm rating-half` con máscaras `mask mask-star-2 bg-[#e9683b]` (Naranja Icesi) o amarillo institucional.
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/rating-display.tsx"
   interface RatingDisplayProps {
     score: number; // Ej: 4.8 sobre 5.0
     totalReviews?: number;
@@ -367,7 +368,7 @@ Tarjeta informativa estilo bento que presenta un indicador cuantitativo principa
 * **Propósito:** Presentar KPIs académicos en paneles de control y dashboards de estudiante o profesor.
 * **Estilo DaisyUI sugerido:** Componente `stat` con fondo blanco, bordes en Gris 2 (`#cecfd4`) y textos en Azul Icesi `text-primary` (`#5454e9`).
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/metric-bento-stat.tsx"
   interface MetricBentoStatProps {
     title: string;
     value: string | number;
@@ -410,7 +411,7 @@ Tarjeta modular que resume la información de un curso universitario: cabecera c
 * **Propósito:** Tarjeta principal para la grilla del catálogo de asignaturas matriculadas del estudiante.
 * **Estilo DaisyUI sugerido:** `card bg-base-100 shadow-sm border border-[#cecfd4]`, barra `progress progress-primary` y botones de acción en `card-actions`.
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/features/courses/components/course-card.tsx"
   interface CourseCardProps {
     courseCode: string;
     title: string;
@@ -451,7 +452,7 @@ Panel horizontal que acopla múltiples indicadores de rendimiento académico en 
 * **Propósito:** Mostrar una vista sinóptica del progreso curricular del estudiante en la cabecera del portal académico.
 * **Estilo DaisyUI sugerido:** Agrupador `stats stats-horizontal shadow-sm border border-[#cecfd4] bg-base-100`.
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/analytics-bento-grid.tsx"
   interface StatItem {
     label: string;
     value: string | number;
@@ -494,7 +495,7 @@ Tarjeta flotante de confirmación de eventos con icono circular de éxito en Ver
 * **Propósito:** Notificar al estudiante cuando una entrega de laboratorio ha sido recibida y confirmada exitosamente.
 * **Estilo DaisyUI sugerido:** `alert alert-success shadow-md rounded-2xl` con fondo blanco y acentos en Verde Icesi (`#4cb979`).
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/toast-notification.tsx"
   interface ToastNotificationProps {
     title: string;
     message: string;
@@ -531,7 +532,7 @@ Hilo de mensajería asincrónica que posiciona los mensajes del estudiante a la 
 * **Propósito:** Estructurar canales de consulta y retroalimentación académica uno a uno entre estudiantes y docentes.
 * **Estilo DaisyUI sugerido:** Componentes `chat chat-start` y `chat chat-end` con burbuja docente en `chat-bubble chat-bubble-primary` (`#5454e9`).
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/features/advising/components/advisor-chat-bubble.tsx"
   interface ChatMessageProps {
     senderName: string;
     senderRole?: string;
@@ -571,7 +572,7 @@ Fila de tabla de datos administrativos que organiza avatar con máscara de esqui
 * **Propósito:** Renderizar cada elemento de una lista tabular de inscritos o participantes de un laboratorio.
 * **Estilo DaisyUI sugerido:** `table table-sm` con efecto `hover:bg-slate-50`, máscara `mask mask-squircle` en el avatar y botón `btn-ghost btn-xs text-primary`.
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/features/students/components/student-table-row.tsx"
   interface StudentTableRowProps {
     studentId: string;
     studentCode: string;
@@ -611,7 +612,7 @@ Línea de tiempo secuencial que ilustra los hitos o sprints de un proyecto de de
 * **Propósito:** Ofrecer retroalimentación visual clara sobre el flujo de entregables de un proyecto integrador o taller.
 * **Estilo DaisyUI sugerido:** Lista no ordenada `<ul className="steps steps-horizontal">` con pasos activos en `step-primary` (`#5454e9`).
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/step-progress-tracker.tsx"
   interface StepItem {
     label: string;
     isCompleted: boolean;
@@ -652,7 +653,7 @@ Grupo interactivo de filtros temáticos presentados como píldoras de insignia (
 * **Propósito:** Permitir al estudiante o docente filtrar recursos, módulos o temas de estudio por categorías tecnológicas.
 * **Estilo DaisyUI sugerido:** `badge badge-lg` estilizados como controles de formulario mediante el truco CSS `peer-checked`.
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/tag-filter-group.tsx"
   interface TagOption {
     id: string;
     name: string;
@@ -698,7 +699,7 @@ Tarjeta de convocatoria institucional que incluye distintivo de evento, indicado
 * **Propósito:** Promover talleres extracurriculares, retos de desarrollo y eventos de la facultad de ingeniería.
 * **Estilo DaisyUI sugerido:** `card bg-base-100 border border-[#cecfd4]`, componente `countdown font-mono` y botón prominente `btn-primary` (`#5454e9`).
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/features/events/components/event-countdown-card.tsx"
   interface EventCountdownCardProps {
     eventTitle: string;
     categoryTag: string;
@@ -742,7 +743,7 @@ Barra de cabecera que unifica el logo institucional en Azul Icesi (`#5454e9`), n
 * **Propósito:** Cabecera principal persistente para la navegación del portal dentro de los layouts (`layout.tsx`) de Next.js.
 * **Estilo DaisyUI sugerido:** `navbar bg-base-100 border-b border-[#cecfd4]`, indicador de notificaciones `indicator` con `badge-secondary` (`#865cf0`).
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="layout.tsx"
   interface UserSessionData {
     name: string;
     avatarUrl: string;
@@ -784,7 +785,7 @@ Formulario en tarjeta modular que incluye selector desplegable de tema de asesor
 * **Propósito:** Permitir a los estudiantes agendar asesorías de apoyo técnico con monitores o profesores de la asignatura.
 * **Estilo DaisyUI sugerido:** `card bg-base-100 border border-[#cecfd4]`, campos `select select-bordered select-sm` y `textarea textarea-bordered textarea-sm`.
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/features/tutoring/components/tutoring-request-form.tsx"
   interface TutoringTopicOption {
     id: string;
     label: string;
@@ -824,7 +825,7 @@ Cuadro de diálogo de confirmación que advierte sobre una acción irreversible,
 * **Propósito:** Prevenir envíos accidentales o sustituciones de archivo en entregables calificados.
 * **Estilo DaisyUI sugerido:** Componente modal `modal-box bg-base-100 border border-[#cecfd4] shadow-xl` y barra `modal-action`.
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/shared/components/ui/submission-confirm-modal.tsx"
   interface SubmissionConfirmModalProps {
     isOpen: boolean;
     assignmentName: string;
@@ -862,7 +863,7 @@ Tarjeta de presentación de profesor que integra avatar con anillo en Azul Icesi
 * **Propósito:** Mostrar la ficha completa de profesores del departamento de TI en el portal de la carrera.
 * **Estilo DaisyUI sugerido:** `card bg-base-100 border border-[#cecfd4]`, `tabs tabs-boxed bg-slate-100` y pestaña activa `tab-active text-primary` (`#5454e9`).
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/features/faculty/components/faculty-profile-card.tsx"
   interface FacultyTabContent {
     id: string;
     label: string;
@@ -907,7 +908,7 @@ Acordeón colapsable compuesto mediante el componente `join` de DaisyUI, que agr
 * **Propósito:** Organizar el backlog de sprints del proyecto semestral permitiendo expandir y contraer fases de entrega.
 * **Estilo DaisyUI sugerido:** Contenedor unificado `join join-vertical w-full` con bloques `collapse collapse-arrow join-item border border-[#cecfd4]`.
 * **Contrato de Props sugerido (TypeScript):**
-  ```typescript
+  ```typescript title="src/features/projects/components/sprint-accordion-panel.tsx"
   interface SprintTask {
     description: string;
     isDone: boolean;

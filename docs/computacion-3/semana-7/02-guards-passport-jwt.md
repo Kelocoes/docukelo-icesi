@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Comprende cómo se integran los Guards, Passport y los JSON Web Tokens para asegurar una API en NestJS."
 ---
 
 # Guards, Passport y JSON Web Tokens (JWT)
@@ -45,7 +46,7 @@ Tienen acceso al objeto `ExecutionContext`, lo que les permite inspeccionar:
 
 Todo Guard debe declarar el método `canActivate`:
 
-```typescript
+```typescript title="La Interfaz CanActivate"
 export interface CanActivate {
   canActivate(
     context: ExecutionContext,
@@ -115,7 +116,7 @@ Un token JWT consta de tres cadenas de texto separadas por puntos (`.`):
 
 $$\text{JWT} = \text{Header} \,.\, \text{Payload} \,.\, \text{Signature}$$
 
-```text title="Ejemplo de Token JWT Codificado"
+```text title="Anatomía de un Token JWT"
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImFuYUBpY2VzaS5lZHUuY28ifQ.k7G_X9R7q0LwE58vY6pZaM1o9TuQeWd8xP
 ```
 
@@ -156,7 +157,7 @@ El Header y el Payload están simplemente codificados en **Base64Url**, no cifra
 #### 3. Signature (Firma Criptográfica)
 La firma garantiza la **integridad** y la **autenticidad** del token. Se genera combinando el Header codificado, el Payload codificado y una clave secreta conocida únicamente por el servidor de backend (`JWT_SECRET`):
 
-```javascript
+```javascript title="Signature (Firma Criptográfica)"
 HMACSHA256(
   base64UrlEncode(header) + "." + base64UrlEncode(payload),
   JWT_SECRET

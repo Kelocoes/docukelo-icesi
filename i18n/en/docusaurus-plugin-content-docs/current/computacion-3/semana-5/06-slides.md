@@ -1,5 +1,6 @@
-﻿---
+---
 sidebar_position: 6
+description: "Review the official slides of Week 5 on NestJS, providers and dependency injection, and persistence with TypeORM."
 ---
 
 # Slides of the Week

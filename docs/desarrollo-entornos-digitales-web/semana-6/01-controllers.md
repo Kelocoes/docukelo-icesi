@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende a crear controladores en NestJS: rutas, decoradores HTTP, parametros, respuestas y manejo de excepciones en una API REST."
 ---
 
 # Controladores en NestJS
@@ -160,7 +161,7 @@ export class FilesController {
 
 Por defecto, NestJS responde con formato JSON y código `200 OK` (o `201 CREATED` para `POST`). Cuando ocurre una falla, NestJS cuenta con una capa de **Exception Filters** que intercepta excepciones estándar y devuelve una estructura JSON consistente.
 
-```typescript title="Ejemplo de lanzamiento de excepción HTTP" showLineNumbers
+```typescript title="Manejo de Respuestas y Excepciones HTTP" showLineNumbers
 import { BadRequestException } from '@nestjs/common';
 
 throw new BadRequestException('Datos inválidos en el formulario', {
@@ -171,7 +172,7 @@ throw new BadRequestException('Datos inválidos en el formulario', {
 
 El cliente recibe una respuesta uniforme con el código correspondiente:
 
-```json
+```json title="Manejo de Respuestas y Excepciones HTTP (2)"
 {
   "message": "Datos inválidos en el formulario",
   "error": "El correo electrónico ya está registrado",

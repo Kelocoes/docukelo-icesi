@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Learn to deploy a NestJS backend with PostgreSQL on Railway using Docker, environment variables and production configuration."
 ---
 
 # Deployment on Railway
