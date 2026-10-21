@@ -43,6 +43,8 @@ const RULES = {
     emoji: { severity: 'error', text: 'Emoji en el contenido (prohibido por la guia)' },
     'inline-svg': { severity: 'error', text: 'SVG embebido en el documento; guardalo en static/img/<curso>/' },
     'admonition-title': { severity: 'error', text: 'Titulo de admonition sin corchetes; usa :::tipo[Titulo]' },
+    'i18n-orphan': { severity: 'error', text: 'Traduccion en i18n/en sin original en docs/ (misma ruta y nombre)' },
+    'i18n-position': { severity: 'error', text: 'sidebar_position o category (position/key) distinto entre original y traduccion' },
 };
 
 function toPosix(p) {
@@ -156,6 +158,62 @@ function lintText(file, text) {
     return issues;
 }
 
+// Paridad entre docs/ (espanol) e i18n/en/ (ingles): misma ruta, mismo sidebar_position y categorias iguales.
+const EN_ROOT = ROOTS[1];
+
+function esTwin(enFile) {
+    return 'docs/' + enFile.slice(EN_ROOT.length + 1);
+}
+
+function sidebarPositionOf(text) {
+    const m = text.replace(/^\uFEFF/, '').match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    const p = m && m[1].match(/^sidebar_position:\s*(\d+)/m);
+    return p ? Number(p[1]) : null;
+}
+
+function readJson(rel) {
+    try {
+        return JSON.parse(fs.readFileSync(path.join(REPO_ROOT, rel), 'utf8').replace(/^\uFEFF/, ''));
+    } catch {
+        return null;
+    }
+}
+
+function lintI18nParity(files) {
+    const issues = [];
+    const exists = (rel) => fs.existsSync(path.join(REPO_ROOT, rel));
+    const enDocs = files.filter((f) => f.startsWith(EN_ROOT + '/'));
+    for (const file of enDocs) {
+        const twin = esTwin(file);
+        if (!exists(twin)) {
+            issues.push({ file, rule: 'i18n-orphan', line: 1, detail: 'falta ' + twin });
+            continue;
+        }
+        const a = sidebarPositionOf(fs.readFileSync(path.join(REPO_ROOT, twin), 'utf8'));
+        const b = sidebarPositionOf(fs.readFileSync(path.join(REPO_ROOT, file), 'utf8'));
+        if (a !== b) issues.push({ file, rule: 'i18n-position', line: 1, detail: `sidebar_position es=${a} en=${b}` });
+    }
+    // categorias: las de ingles deben tener original con la misma position/key, y las carpetas con
+    // documentos en ingles deben tener su _category_.json si el original lo tiene
+    const dirs = new Set(enDocs.map((f) => path.posix.dirname(f)));
+    for (const dir of dirs) {
+        const enCat = dir + '/_category_.json';
+        const esCat = esTwin(enCat);
+        if (!exists(enCat)) {
+            if (exists(esCat)) issues.push({ file: enCat, rule: 'i18n-position', line: 1, detail: 'falta _category_.json en ingles' });
+            continue;
+        }
+        const en = readJson(enCat);
+        const es = exists(esCat) ? readJson(esCat) : null;
+        if (!es) {
+            issues.push({ file: enCat, rule: 'i18n-orphan', line: 1, detail: 'categoria sin original en espanol' });
+        } else if (es.position !== en?.position || es.key !== en?.key) {
+            issues.push({ file: enCat, rule: 'i18n-position', line: 1, detail: `category position es=${es.position} en=${en?.position}, key es=${es.key} en=${en?.key}` });
+        }
+    }
+    return issues;
+}
+
 function changedFiles() {
     const run = (args) => execFileSync('git', args, { cwd: REPO_ROOT, encoding: 'utf8' }).split('\n').filter(Boolean);
     const set = new Set([
@@ -191,6 +249,7 @@ function main() {
     for (const file of files) {
         issues.push(...lintText(file, fs.readFileSync(path.join(REPO_ROOT, file), 'utf8')));
     }
+    issues.push(...lintI18nParity(files));
     if (onlyRules.length) issues = issues.filter((x) => onlyRules.includes(x.rule));
 
     if (flag('--update-baseline')) {
@@ -198,6 +257,7 @@ function main() {
         for (const file of listLessonFiles()) {
             all.push(...lintText(file, fs.readFileSync(path.join(REPO_ROOT, file), 'utf8')));
         }
+        all.push(...lintI18nParity(listLessonFiles()));
         fs.writeFileSync(BASELINE_FILE, JSON.stringify(countByFileRule(all), null, 1) + '\n');
         console.log(`Linea base guardada en scripts/lint-docs.baseline.json (${all.length} incumplimientos en ${Object.keys(countByFileRule(all)).length} archivos).`);
         return 0;

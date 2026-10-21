@@ -1,0 +1,8 @@
+{
+  "label": "Week 1: Dart Fundamentals",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Basics of the Dart programming language: typing, variables, functions, collections and control flow."
+  }
+}

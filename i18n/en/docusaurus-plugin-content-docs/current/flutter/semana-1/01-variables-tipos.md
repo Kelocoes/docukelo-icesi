@@ -1,6 +1,7 @@
 ---
 title: Variables and Types
 sidebar_label: Variables and Types
+sidebar_position: 1
 description: "Learn how to declare variables in Dart, use final and const, and take advantage of type inference and sound null safety."
 ---
 

@@ -239,10 +239,13 @@ Some explanations are understood better by **moving and touching** than by looki
 | `emoji` | Sin emojis en el contenido (fuera de bloques de codigo) | error |
 | `inline-svg` | Sin `<svg>` dentro del documento (van en `static/img/<curso>/`) | error |
 | `admonition-title` | `:::tipo[Titulo]`, no `:::tipo Titulo` | error |
+| `i18n-orphan` | Todo documento o categoria en `i18n/en/` debe tener original en `docs/` con la misma ruta y nombre | error |
+| `i18n-position` | `sidebar_position` y `_category_.json` (`position`, `key`) iguales en original y traduccion; toda carpeta con traducciones lleva su `_category_.json` | error |
 | `missing-description` | `description:` en el frontmatter | aviso |
 | `code-title` | `title="..."` en cada bloque de codigo (los bloques de shell de 3 lineas o menos y `mermaid`/`text`/`output`/`diff` estan exentos) | aviso |
 
 Comandos: `npm run lint:docs` (resumen), `-- --verbose` (archivo:linea), `-- --rule=emoji`, `-- --changed` (solo lo modificado segun git), `-- --check` (falla si algun archivo empeora frente a la linea base) y `-- --update-baseline`.
 
 * **Linea base**: `scripts/lint-docs.baseline.json` guarda cuantos incumplimientos tiene hoy cada archivo. Lo antiguo se tolera; lo nuevo debe nacer limpio. Cuando arregles contenido o renombres/muevas archivos, vuelve a correr `npm run lint:docs -- --update-baseline` para actualizarla.
+* **Traducciones**: si mueves o renombras un documento en `docs/`, mueve tambien su traduccion en `i18n/en/` (si no, `i18n-orphan` lo detecta). Las traducciones pendientes no son error: solo faltan por hacer. El estado por curso se puede regenerar con un analisis de paridad (ver `temp/` del autor).
 * Antes de dar por terminado un documento nuevo o editado, corre `npm run lint:docs -- --changed --verbose` y corrige lo que reporte.
