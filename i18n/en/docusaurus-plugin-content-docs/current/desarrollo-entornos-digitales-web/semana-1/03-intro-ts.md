@@ -1,69 +1,68 @@
 ---
 sidebar_position: 3
-title: Introduction to TypeScript
 description: "Learn to install and use TypeScript: basic types, functions, interfaces, classes, generics and modules to write safer JavaScript code."
 ---
 
 # TypeScript
 
-TypeScript is a **superset of JavaScript** developed by Microsoft that adds **static typing** and modern language features to improve code quality, maintainability, and scalability. This means **all valid JavaScript code is also valid TypeScript code**, while TypeScript provides additional development tooling.
+TypeScript is a **superset of JavaScript** developed by Microsoft that adds **static typing** and other modern features to improve the quality, maintainability and scalability of your code. This means that **all valid JavaScript code is also valid TypeScript code**, and TypeScript also gives you additional tools.
 
-## 1. Why Use TypeScript?
+## 1. Why use TypeScript?
 
-JavaScript is flexible and dynamic, but that flexibility can lead to errors that are difficult to catch. TypeScript helps prevent them **before executing code** through static typing and editor tooling.
+JavaScript is a flexible and dynamic language, but that flexibility can lead to errors that are hard to detect. TypeScript helps you prevent them **before running the code** thanks to static typing and more powerful development tools.
 
-**Key Advantages:**
+**Main advantages:**
 
 - Static typing (prevents common type errors).
-- Autocompletion and editor support in VS Code.
-- Compile-time error detection.
-- Modern JavaScript features enabled across browser environments.
-- Maintainable and readable codebase.
+- Autocompletion and better support in editors such as VS Code.
+- Error detection at compile time.
+- Use of modern JavaScript features even before they are supported by all browsers.
+- Code that is easier to maintain.
 
-**Example Issue in JavaScript:**
+**Example of a problem in JavaScript:**
 
-```javascript title="Why Use TypeScript"
-function add(a, b) {
+```javascript title="Why use TypeScript"
+function sumar(a, b) {
   return a + b;
 }
 
-console.log(add(5, "10")); // "510" instead of 15
+console.log(sumar(5, "10")); // "510" instead of 15
 ```
 
-**TypeScript Solution:**
+**Solution in TypeScript:**
 
-```typescript title="Why Use TypeScript (solution)"
-function add(a: number, b: number): number {
+```typescript title="Why use TypeScript (solution)"
+function sumar(a: number, b: number): number {
   return a + b;
 }
 
-// console.log(add(5, "10")); // Error: Argument of type 'string' is not assignable to parameter of type 'number'.
-console.log(add(5, 10)); // 15
+// console.log(sumar(5, "10")); // Error: Argument of type 'string' is not assignable to parameter of type 'number'.
+console.log(sumar(5, 10)); // 15
 ```
 
 ---
 
-## 2. Basic Setup and Installation
+## 2. Basic installation and setup
 
-### 2.1 Global Installation
+### 2.1 Global installation
 
-Requires Node.js and npm installed.
+We need Node.js and npm installed.
 
 ```bash
 npm install -g typescript
 ```
 
-Verify installation:
+Verify the installation:
 
 ```bash
 tsc -v
 ```
 
-### 2.2 Initialize a TypeScript Project
+### 2.2 Initialize a project with TypeScript
 
-```bash title="Initialize a TypeScript Project"
-mkdir ts-project
-cd ts-project
+```bash title="Initialize a project with TypeScript"
+mkdir proyecto-ts
+cd proyecto-ts
 npm init -y
 npm install typescript --save-dev
 ```
@@ -74,25 +73,25 @@ Generate the `tsconfig.json` configuration file:
 npx tsc --init
 ```
 
-Key compiler settings in `tsconfig.json`:
+This will create a file with many commented options. The most important ones to get started:
 
-```json title="tsconfig.json"
+```json title="Initialize a project (solution)"
 {
   "compilerOptions": {
-    "target": "es6",               // Target JS version
-    "module": "commonjs",          // Module resolution system
+    "target": "es6",               // JS version to generate
+    "module": "commonjs",          // Module system
     "outDir": "./dist",            // Output folder
     "rootDir": "./src",            // Source code folder
-    "strict": true,                 // Enable strict type checks
-    "esModuleInterop": true         // Module compatibility
+    "strict": true,                 // Enable all strict checks
+    "esModuleInterop": true         // Better module compatibility
   }
 }
 ```
 
-Recommended folder structure:
+Recommended project structure:
 
 ```
-ts-project/
+proyecto-ts/
 ├── src/
 │   └── index.ts
 ├── dist/
@@ -100,7 +99,7 @@ ts-project/
 └── tsconfig.json
 ```
 
-### 2.3 Compile and Run
+### 2.3 Compile and run
 
 To compile:
 
@@ -108,13 +107,15 @@ To compile:
 npx tsc
 ```
 
+This will generate `.js` files in `dist/`.
+
 To run:
 
 ```bash
 node dist/index.js
 ```
 
-Or using `ts-node` directly:
+If we want to compile and run in a single step, we can use `ts-node`:
 
 ```bash
 npm install -D ts-node
@@ -123,103 +124,120 @@ npx ts-node src/index.ts
 
 ---
 
-## 3. Basic Types in TypeScript
+## 3. Basic types in TypeScript
 
-TypeScript adds explicit types:
+TypeScript adds static types that let us define what kind of data we expect.
 
-```typescript title="Basic Types in TypeScript"
-let name: string = "Kevin";
-let age: number = 25;
-let active: boolean = true;
-let unassigned: undefined = undefined;
-let empty: null = null;
-let flexible: any = "Hello"; // Avoid when possible
+```typescript title="Basic types in TypeScript"
+let nombre: string = "Kevin";
+let edad: number = 25;
+let activo: boolean = true;
+let indefinido: undefined = undefined;
+let nulo: null = null;
+let cualquiera: any = "Hello"; // Avoid whenever possible
 ```
 
 **Arrays:**
 
-```typescript title="Basic Types in TypeScript (solution)"
-let numbers: number[] = [1, 2, 3];
-let letters: Array<string> = ["a", "b", "c"];
+```typescript title="Basic types in TypeScript (solution)"
+let numeros: number[] = [1, 2, 3];
+let letras: Array<string> = ["a", "b", "c"];
 ```
 
 **Tuples:**
 
-```typescript title="Basic Types in TypeScript (3)"
-let person: [string, number] = ["Kevin", 25];
+```typescript title="Basic types in TypeScript (3)"
+let persona: [string, number] = ["Kevin", 25];
 ```
 
 **Enums:**
 
-```typescript title="Basic Types in TypeScript (4)"
+```typescript title="Basic types in TypeScript (4)"
 enum Color {
-  Red = "RED",
-  Green = "GREEN",
-  Blue = "BLUE"
+  Rojo = "ROJO",
+  Verde = "VERDE",
+  Azul = "AZUL"
 }
 
-let favColor: Color = Color.Green;
-console.log(favColor); // "GREEN"
+let colorFav: Color = Color.Verde;
+console.log(colorFav); // "VERDE"
 ```
 
-**Union Types:**
+**Union types:**
 
-```typescript title="Basic Types in TypeScript (5)"
+```typescript title="Basic types in TypeScript (5)"
 let id: string | number;
 id = "ABC123";
 id = 42;
 ```
 
-**Type Aliases:**
+**Type aliases:**
 
-```typescript title="Basic Types in TypeScript (6)"
+```typescript title="Basic types in TypeScript (6)"
 type ID = string | number;
-let userID: ID = 101;
+let usuarioID: ID = 101;
 ```
 
 ---
 
 ## 4. Functions in TypeScript
 
-Typing parameters and return values:
+We can type parameters and return values.
 
 ```typescript title="Functions in TypeScript"
-function greet(name: string): string {
-  return `Hello, ${name}`;
+function saludar(nombre: string): string {
+  return `Hello, ${nombre}`;
 }
 
-console.log(greet("Kevin"));
+console.log(saludar("Kevin"));
 ```
 
 Optional and default parameters:
 
 ```typescript title="Functions in TypeScript (solution)"
-function multiply(a: number, b: number = 2, message?: string): number {
-  if (message) console.log(message);
+function multiplicar(a: number, b: number = 2, mensaje?: string): number {
+  if (mensaje) console.log(mensaje);
   return a * b;
 }
 
-console.log(multiply(3));
-console.log(multiply(3, 4, "Calculating..."));
+console.log(multiplicar(3));
+console.log(multiplicar(3, 4, "Calculating..."));
+```
+
+Arrow functions:
+
+```typescript title="Functions in TypeScript (3)"
+const dividir = (a: number, b: number): number => a / b;
 ```
 
 ---
 
 ## 5. Interfaces and Objects
 
-Interfaces define the shape of an object:
+Interfaces define the shape of an object.
 
 ```typescript title="Interfaces and Objects"
-interface User {
+interface Usuario {
   id: number;
-  name: string;
-  active?: boolean; // optional
+  nombre: string;
+  activo?: boolean; // optional
 }
 
-let user1: User = {
+let user1: Usuario = {
   id: 1,
-  name: "Kevin"
+  nombre: "Kevin"
 };
+```
+
+Interfaces with functions:
+
+```typescript title="Interfaces and Objects (solution)"
+interface Operacion {
+  (a: number, b: number): number;
+}
+
+const sumar: Operacion = (x, y) => x + y;
+console.log(sumar(5, 3));
 ```
 
 ---
@@ -227,46 +245,87 @@ let user1: User = {
 ## 6. Classes in TypeScript
 
 ```typescript title="Classes in TypeScript"
-class Person {
-  private name: string;
-  protected age: number;
-  public active: boolean;
+class Persona {
+  private nombre: string;
+  protected edad: number;
+  public activo: boolean;
 
-  constructor(name: string, age: number, active: boolean) {
-    this.name = name;
-    this.age = age;
-    this.active = active;
+  constructor(nombre: string, edad: number, activo: boolean) {
+    this.nombre = nombre;
+    this.edad = edad;
+    this.activo = activo;
   }
 
-  greet(): string {
-    return `Hello, I am ${this.name}`;
+  saludar(): string {
+    return `Hello, I am ${this.nombre}`;
   }
 }
 
-const p1 = new Person("Kevin", 25, true);
-console.log(p1.greet());
+const p1 = new Persona("Kevin", 25, true);
+console.log(p1.saludar());
+```
+
+Inheritance:
+
+```typescript title="Classes in TypeScript (solution)"
+class Estudiante extends Persona {
+  curso: string;
+  constructor(nombre: string, edad: number, activo: boolean, curso: string) {
+    super(nombre, edad, activo);
+    this.curso = curso;
+  }
+}
 ```
 
 ---
 
-## 7. Advanced Types: Generics and Intersections
+## 7. Modules in TypeScript
+
+**Export:**
+
+```typescript title="utils.ts"
+// file: utils.ts
+export function sumar(a: number, b: number): number {
+  return a + b;
+}
+```
+
+**Import:**
+
+```typescript title="index.ts"
+// file: index.ts
+import { sumar } from "./utils";
+console.log(sumar(3, 4));
+```
+
+---
+
+## 8. Advanced types
 
 **Generics:**
 
-```typescript title="Advanced Types: Generics"
-function identity<T>(value: T): T {
-  return value;
+Generics, just like in Java, let us create functions and classes that can work with different data types without losing type safety.
+In them we specify a generic type denoted by `<T>`, which we can use in place of a specific type.
+
+```typescript title="Advanced types"
+function identidad<T>(valor: T): T {
+  return valor;
 }
 
-console.log(identity<string>("Hello"));
-console.log(identity<number>(123));
+console.log(identidad<string>("Hello"));
+console.log(identidad<number>(123));
 ```
 
-**Intersection Types:**
+The previous example shows a function that receives a value of generic type `T` and returns it without modifying it. This makes the function flexible and reusable with different data types.
 
-```typescript title="Advanced Types: Generics (solution)"
+**Intersection types:**
+
+These types let you combine multiple types into a single one, creating a new type that has all the properties of the combined types.
+
+```typescript title="Advanced types (solution)"
 interface A { a: string; }
 interface B { b: number; }
+// Same as interface C { a: string; b: number; }
 
 type AB = A & B;
 let obj: AB = { a: "Hello", b: 42 };
@@ -274,10 +333,76 @@ let obj: AB = { a: "Hello", b: 42 };
 
 ---
 
-## 8. Interface vs. Type Alias
+## 9. Running in the browser
 
-- **Interfaces**: Designed primarily to describe object shapes and contracts. Can be extended or merged.
-- **Type Aliases**: Flexible declarations that support union types, primitive aliases, and tuples.
+To use TypeScript in the browser:
+
+1. Compile to JavaScript.
+2. Include the `.js` file in the HTML.
+
+Example:
+
+```typescript title="src/app.ts"
+// src/app.ts
+const mensaje: string = "Hello from TS";
+console.log(mensaje);
+```
+
+```html title="index.html"
+<!-- index.html -->
+<script src="dist/app.js"></script>
+```
+
+---
+
+## 10. Interface vs Type Alias
+
+In TypeScript, both interfaces and type aliases are used to define types, but they have some key differences:
+
+- **Interfaces**: Used mainly to define the shape of an object. They can be extended and are ideal for defining clear contracts between different parts of the code.
+
+```typescript title="Interface vs Type Alias"
+interface Usuario {
+  id: number;
+  nombre: string;
+}
+```
+
+- **Type Aliases**: Used to define more complex types, including unions, tuples and primitive types. They cannot be extended like interfaces, but they are more flexible.
+
+```typescript title="Interface vs Type Alias (solution)"
+type ID = string | number;
+type Usuario = {
+  id: ID;
+  nombre: string;
+};
+```
+
+### Example: Something you can do with `type` but not with `interface`
+
+`type aliases` let you define type unions, something that is not directly possible with `interface`.
+
+```typescript title="Example: Something you can do"
+type Resultado = string | number;
+
+let respuesta: Resultado;
+respuesta = "Success";
+respuesta = 42;
+
+// This cannot be done with `interface`.
+```
+
+In this case, `Resultado` can be a `string` or a `number`, which makes it more flexible for certain scenarios. Interfaces, on the other hand, are designed to describe the shape of objects and do not support type unions.
+
+---
+
+## 11. Recommendations
+
+- Enable `strict` in `tsconfig.json`.
+- Avoid using `any`.
+- Use interfaces and types to define clear contracts.
+- Take advantage of the editor's autocompletion and static analysis.
+- Compile frequently to detect errors early.
 
 ---
 
@@ -296,7 +421,7 @@ let obj: AB = { a: "Hello", b: 42 };
     <Option>At runtime when a user clicks an element.</Option>
     <Option>Only when restarting the web server.</Option>
   </Question>
-  <Question title="What happens in TypeScript if you declare 'let name = &quot;Kevin&quot;' and later attempt 'name = 42'?">
+  <Question title="What happens in TypeScript if you declare 'let nombre = &quot;Kevin&quot;' and later attempt 'nombre = 42'?">
     <Option>It dynamically updates the variable type to number without warnings.</Option>
     <Option correct>It throws a compilation error due to static Type Inference.</Option>
     <Option>It automatically converts 42 to the string &quot;42&quot;.</Option>
@@ -392,12 +517,13 @@ let obj: AB = { a: "Hello", b: 42 };
     <Option>Because web browsers throw fatal exceptions when encountering the word 'any'.</Option>
     <Option>Because it is only allowed inside JSON files.</Option>
   </Question>
-  <Question title="How do you export and import a 'add' function between modules using standard ES Modules syntax?">
-    <Option>export = &#123; add &#125;; / const add = require('./utils');</Option>
-    <Option correct>export function add(...) &#123; ... &#125; / import &#123; add &#125; from './utils';</Option>
-    <Option>module.exports = add; / include './utils';</Option>
-    <Option>public add() / fetch('./utils');</Option>
+  <Question title="How do you export and import a 'sumar' function between modules using standard ES Modules syntax?">
+    <Option>export = &#123; sumar &#125;; / const sumar = require('./utils');</Option>
+    <Option correct>export function sumar(...) &#123; ... &#125; / import &#123; sumar &#125; from './utils';</Option>
+    <Option>module.exports = sumar; / include './utils';</Option>
+    <Option>public sumar() / fetch('./utils');</Option>
   </Question>
+
   <Question title="What happens when you transpile a .ts file to JavaScript and run it in a web browser?">
     <Option>The browser directly executes TypeScript type annotations.</Option>
     <Option correct>The 'tsc' compiler strips away all type annotations, producing standard JavaScript compatible with browsers.</Option>
@@ -405,3 +531,5 @@ let obj: AB = { a: "Hello", b: 42 };
     <Option>The generated file can only run on Windows servers.</Option>
   </Question>
 </Quiz>
+
+

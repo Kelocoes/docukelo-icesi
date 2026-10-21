@@ -1,11 +1,11 @@
 ---
 sidebar_position: 3
-description: "Build a complete REST API in Go with JWT authentication, role-based access control, and PostgreSQL persistence, from setup to Docker deployment."
+description: "Learn how to build a REST API in Go with JWT authentication, role-based access control and a PostgreSQL database."
 ---
 
 # Complete Guide: REST API with Go from Scratch
 
-This guide teaches you how to build a complete REST API in Go with JWT authentication, Role-Based Access Control (RBAC), and PostgreSQL database persistence.
+This guide will teach you how to build a complete REST API in Go with JWT authentication, role-based access control (RBAC) and a PostgreSQL database.
 
 ## Table of Contents
 
@@ -16,55 +16,56 @@ This guide teaches you how to build a complete REST API in Go with JWT authentic
 5. [Models and Database](#models-and-database)
 6. [Controllers and Routes](#controllers-and-routes)
 7. [Middlewares](#middlewares)
-8. [Testing](#testing)
+8. [Tests](#tests)
 9. [Endpoint Examples](#endpoint-examples)
 10. [Running the Project](#running-the-project)
-11. [Deployment with Docker](#deployment-with-docker)
-12. [Summary & Best Practices](#summary--best-practices)
+11. [Deployment](#deployment)
+12. [Best Practices](#best-practices)
 
 ## Prerequisites
 
-### 1. Go Installation
+### 1. Installing Go
 
 **Recommended version:** Go 1.21 or higher
 
 **Windows:**
-```bash title="Go Installation"
+```bash title="Installing Go"
 # Download from https://golang.org/dl/
-# Or via Chocolatey
+# Or use Chocolatey
 choco install golang
 
-# Verify installation
+# Verify the installation
 go version
 ```
 
-**Linux / macOS:**
-```bash title="Go Installation 2"
-# Ubuntu / Debian
+**Linux/macOS:**
+```bash title="Installing Go (2)"
+# Use the official installer or a package manager
+# Ubuntu/Debian
 sudo apt update
 sudo apt install golang-go
 
 # macOS with Homebrew
 brew install go
 
-# Verify installation
+# Verify the installation
 go version
 ```
 
-### 2. Dependency Installation
+### 2. Installing Dependencies
 
 **PostgreSQL:**
-```bash title="Dependency Installation"
+```bash title="Installing Dependencies"
 # Windows
 # Download from https://www.postgresql.org/download/windows/
 
-# Ubuntu / Debian
+# Ubuntu/Debian
 sudo apt install postgresql postgresql-contrib
 
 # macOS
 brew install postgresql
 
-# Start service
+# Start the service
 sudo systemctl start postgresql  # Linux
 brew services start postgresql   # macOS
 ```
@@ -76,17 +77,17 @@ brew services start postgresql   # macOS
 # macOS: brew install git
 ```
 
-### 3. Environment Variables Setup
+### 3. Environment Variables Configuration
 
 Create a `.env` file:
-```env title="Environment Variables Setup"
+```env title=".env"
 # Database
 DATABASE_URL=postgres://postgres:password@localhost:5432/user_management?sslmode=disable
 
-# JWT Secret
+# JWT
 JWT_SECRET=your-very-secure-secret-key-change-in-production
 
-# Server Port
+# Server
 PORT=8080
 
 # Environment
@@ -98,10 +99,10 @@ ENV=development
 ```
 user-management-api/
 ├── main.go                    # Server entry point
-├── go.mod                     # Go module file
+├── go.mod                     # Go module
 ├── go.sum                     # Dependency checksums
 ├── .env                       # Environment variables
-├── .gitignore                 # Files ignored by Git
+├── .gitignore                 # Files to ignore in Git
 ├── README.md                  # Project documentation
 ├── models/                    # Data models
 │   ├── user.go
@@ -111,25 +112,25 @@ user-management-api/
 │   ├── user_repository.go
 │   ├── role_repository.go
 │   └── permission_repository.go
-├── handlers/                  # HTTP Handlers / Controllers
+├── handlers/                  # HTTP controllers
 │   ├── auth_handler.go
 │   ├── user_handler.go
 │   ├── role_handler.go
 │   └── permission_handler.go
-├── middleware/                # HTTP Middlewares
+├── middleware/                # HTTP middlewares
 │   ├── auth.go
 │   ├── cors.go
 │   └── logging.go
-├── utils/                     # Helper utilities
+├── utils/                     # Utilities
 │   └── jwt.go
-├── tests/                     # Unit test suites
+├── tests/                     # Tests
 │   ├── auth_test.go
 │   └── user_test.go
-├── scripts/                   # SQL Utility scripts
+├── scripts/                   # Utility scripts
 │   ├── init_db.sql
 │   └── seed_data.sql
-├── Dockerfile                 # Container setup
-├── docker-compose.yml         # Container orchestration
+├── Dockerfile                 # For containers
+├── docker-compose.yml         # Service orchestration
 └── docs/                      # Additional documentation
     └── api.md
 ```
@@ -138,9 +139,12 @@ user-management-api/
 
 ### 1. Create the Module
 
-```bash
+```bash title="Create the Module"
+# Create the project directory
 mkdir user-management-api
 cd user-management-api
+
+# Initialize the Go module
 go mod init user-management-api
 ```
 
@@ -154,11 +158,12 @@ go get github.com/golang-jwt/jwt/v5@v5.2.1
 go get github.com/joho/godotenv@v1.5.1
 go get golang.org/x/crypto@v0.26.0
 
-# Development / testing dependencies
+# Development dependencies
 go get github.com/stretchr/testify@v1.8.4
+go get github.com/gorilla/mux@v1.8.1
 ```
 
-### 3. Create Folder Structure
+### 3. Create the Folder Structure
 
 ```bash
 mkdir models repository handlers middleware utils tests scripts docs
@@ -166,9 +171,9 @@ mkdir models repository handlers middleware utils tests scripts docs
 
 ## Base Configuration
 
-### 1. Main Server Entrypoint (`main.go`)
+### 1. Main File (main.go)
 
-```go title="main.go"
+```go title="Main File (main.go)"
 package main
 
 import (
@@ -195,13 +200,13 @@ func main() {
 	// Load environment variables
 	err := godotenv.Load()
 	if err != nil {
-		log.Printf("Could not load .env file: %v", err)
+		log.Printf("Could not load .env: %v", err)
 	}
 
-	// Initialize database
+	// Initialize the database
 	db, err := initDB()
 	if err != nil {
-		log.Fatal("Error connecting to database:", err)
+		log.Fatal("Error connecting to the database:", err)
 	}
 	defer db.Close()
 
@@ -216,7 +221,7 @@ func main() {
 	roleHandler := handlers.NewRoleHandler(roleRepo)
 	permissionHandler := handlers.NewPermissionHandler(permissionRepo)
 
-	// Configure router
+	// Configure the router
 	router := mux.NewRouter()
 
 	// Global middlewares
@@ -244,17 +249,17 @@ func main() {
 		w.Write([]byte("OK"))
 	}).Methods("GET")
 
-	// Initialize schema tables
+	// Initialize tables
 	if err := initTables(db); err != nil {
 		log.Fatal("Error initializing tables:", err)
 	}
 
-	// Seed default data
+	// Create default data
 	if err := createDefaultData(db); err != nil {
 		log.Fatal("Error creating default data:", err)
 	}
 
-	// Configure server
+	// Configure the server
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
@@ -268,11 +273,11 @@ func main() {
 		IdleTimeout:  60 * time.Second,
 	}
 
-	// Start server asynchronously
+	// Start the server
 	go func() {
-		log.Printf("Server listening on port %s", port)
+		log.Printf("Server started on port %s", port)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatal("Server startup error:", err)
+			log.Fatal("Error starting server:", err)
 		}
 	}()
 
@@ -293,7 +298,7 @@ func main() {
 func initDB() (*sql.DB, error) {
 	connStr := os.Getenv("DATABASE_URL")
 	if connStr == "" {
-		return nil, fmt.Errorf("DATABASE_URL is not set")
+		return nil, fmt.Errorf("DATABASE_URL not configured")
 	}
 
 	db, err := sql.Open("postgres", connStr)
@@ -305,7 +310,7 @@ func initDB() (*sql.DB, error) {
 		return nil, err
 	}
 
-	// Configure connection pool
+	// Configure the connection pool
 	db.SetMaxOpenConns(25)
 	db.SetMaxIdleConns(25)
 	db.SetConnMaxLifetime(5 * time.Minute)
@@ -314,6 +319,7 @@ func initDB() (*sql.DB, error) {
 }
 
 func initTables(db *sql.DB) error {
+	// Create the users table
 	_, err := db.Exec(`
 		CREATE TABLE IF NOT EXISTS users (
 			id SERIAL PRIMARY KEY,
@@ -331,6 +337,7 @@ func initTables(db *sql.DB) error {
 }
 
 func createDefaultData(db *sql.DB) error {
+	// Create the default admin user
 	hashedPassword, err := models.HashPassword("admin123")
 	if err != nil {
 		return err
@@ -346,9 +353,9 @@ func createDefaultData(db *sql.DB) error {
 }
 ```
 
-### 2. `.gitignore` File
+### 2. .gitignore File
 
-```gitignore title="gitignore File"
+```gitignore title=".gitignore File"
 # Binaries
 *.exe
 *.exe~
@@ -359,7 +366,7 @@ func createDefaultData(db *sql.DB) error {
 *.out
 bin/
 
-# Go Workspaces
+# Go files
 go.work
 go.work.sum
 
@@ -368,14 +375,16 @@ go.work.sum
 .env.local
 .env.production
 
-# IDEs
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Logs & Databases
+# Logs
 *.log
+
+# Database
 *.db
 *.sqlite
 
@@ -386,13 +395,13 @@ Thumbs.db
 
 ## Models and Database
 
-### 1. User Model (`models/user.go`)
+### 1. User Model (models/user.go)
 
-```go title="models/user.go"
+```go title="User Model (models/user.go)"
 package models
 
 import (
-	"fmt"
+	"encoding/json"
 	"time"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -440,16 +449,19 @@ type UserResponse struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// HashPassword hashes a password using bcrypt
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	return string(bytes), err
 }
 
+// CheckPassword checks if a password matches the hash
 func (u *User) CheckPassword(password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
 	return err == nil
 }
 
+// ToResponse converts User to UserResponse
 func (u *User) ToResponse() UserResponse {
 	return UserResponse{
 		ID:        u.ID,
@@ -463,6 +475,7 @@ func (u *User) ToResponse() UserResponse {
 	}
 }
 
+// Validate checks if the user data is valid
 func (u *UserCreate) Validate() error {
 	if len(u.Username) < 3 || len(u.Username) > 50 {
 		return fmt.Errorf("username must be between 3 and 50 characters")
@@ -480,9 +493,9 @@ func (u *UserCreate) Validate() error {
 }
 ```
 
-### 2. JWT Utilities (`utils/jwt.go`)
+### 2. JWT Utilities (utils/jwt.go)
 
-```go title="utils/jwt.go"
+```go title="JWT Utilities (utils/jwt.go)"
 package utils
 
 import (
@@ -563,9 +576,9 @@ func GetTokenFromHeader(authHeader string) (string, error) {
 
 ## Controllers and Routes
 
-### Auth Handler (`handlers/auth_handler.go`)
+### 1. Authentication Handler (handlers/auth_handler.go)
 
-```go title="handlers/auth_handler.go"
+```go title="Authentication Handler"
 package handlers
 
 import (
@@ -597,18 +610,21 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Check whether the user already exists
 	existingUser, _ := h.userRepo.GetUserByUsername(userCreate.Username)
 	if existingUser != nil {
 		middleware.SendErrorResponse(w, http.StatusConflict, "Username already exists")
 		return
 	}
 
+	// Create the user
 	user, err := h.userRepo.CreateUser(&userCreate)
 	if err != nil {
 		middleware.SendErrorResponse(w, http.StatusInternalServerError, "Failed to create user")
 		return
 	}
 
+	// Generate the JWT token
 	token, err := utils.GenerateToken(user.ID, user.Username, []string{})
 	if err != nil {
 		middleware.SendErrorResponse(w, http.StatusInternalServerError, "Failed to generate token")
@@ -635,6 +651,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Get the user
 	user, err := h.userRepo.GetUserByUsername(loginData.Username)
 	if err != nil {
 		middleware.SendErrorResponse(w, http.StatusUnauthorized, "Invalid credentials")
@@ -646,11 +663,13 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Verify the password
 	if !user.CheckPassword(loginData.Password) {
 		middleware.SendErrorResponse(w, http.StatusUnauthorized, "Invalid credentials")
 		return
 	}
 
+	// Generate the JWT token
 	token, err := utils.GenerateToken(user.ID, user.Username, []string{})
 	if err != nil {
 		middleware.SendErrorResponse(w, http.StatusInternalServerError, "Failed to generate token")
@@ -668,14 +687,13 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 ## Middlewares
 
-### 1. Authentication Middleware (`middleware/auth.go`)
+### 1. Authentication Middleware (middleware/auth.go)
 
-```go title="middleware/auth.go"
+```go title="Authentication Middleware"
 package middleware
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"user-management-api/utils"
 )
@@ -716,6 +734,13 @@ func AuthMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+func GetUserFromContext(ctx context.Context) *utils.Claims {
+	if user, ok := ctx.Value(UserContextKey).(*utils.Claims); ok {
+		return user
+	}
+	return nil
+}
+
 type Response struct {
 	Success bool        `json:"success"`
 	Message string      `json:"message,omitempty"`
@@ -747,9 +772,9 @@ func SendErrorResponse(w http.ResponseWriter, statusCode int, message string) {
 }
 ```
 
-### 2. CORS Middleware (`middleware/cors.go`)
+### 2. CORS Middleware (middleware/cors.go)
 
-```go title="middleware/cors.go"
+```go title="CORS Middleware (middleware/cors.go)"
 package middleware
 
 import "net/http"
@@ -770,9 +795,9 @@ func CORSMiddleware(next http.Handler) http.Handler {
 }
 ```
 
-### 3. Logging Middleware (`middleware/logging.go`)
+### 3. Logging Middleware (middleware/logging.go)
 
-```go title="middleware/logging.go"
+```go title="Logging Middleware"
 package middleware
 
 import (
@@ -804,11 +829,11 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 }
 ```
 
-## Testing
+## Tests
 
-### Unit Test (`tests/auth_test.go`)
+### 1. Authentication Test (tests/auth_test.go)
 
-```go title="tests/auth_test.go"
+```go title="Authentication Test"
 package tests
 
 import (
@@ -823,9 +848,11 @@ import (
 )
 
 func TestRegister(t *testing.T) {
-	userRepo := &repository.UserRepository{}
+	// Setup
+	userRepo := &repository.UserRepository{} // Mock repository
 	authHandler := handlers.NewAuthHandler(userRepo)
 
+	// Test data
 	userCreate := models.UserCreate{
 		Username:  "testuser",
 		Email:     "test@example.com",
@@ -841,8 +868,10 @@ func TestRegister(t *testing.T) {
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(authHandler.Register)
 
+	// Execute
 	handler.ServeHTTP(rr, req)
 
+	// Assert
 	if status := rr.Code; status != http.StatusCreated {
 		t.Errorf("Expected status %d, got %d", http.StatusCreated, status)
 	}
@@ -851,8 +880,9 @@ func TestRegister(t *testing.T) {
 
 ## Endpoint Examples
 
-### 1. Register User
-```bash title="Register User"
+### 1. User Registration
+
+```bash title="User Registration"
 curl -X POST http://localhost:8080/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
@@ -865,6 +895,7 @@ curl -X POST http://localhost:8080/api/auth/register \
 ```
 
 ### 2. Login
+
 ```bash title="Login"
 curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
@@ -874,7 +905,8 @@ curl -X POST http://localhost:8080/api/auth/login \
   }'
 ```
 
-### 3. Get Users (Protected Route)
+### 3. Get Users (with token)
+
 ```bash
 curl -X GET http://localhost:8080/api/users \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -882,26 +914,60 @@ curl -X GET http://localhost:8080/api/users \
 
 ## Running the Project
 
-```bash title="Running the Project"
-# Create PostgreSQL database
+### 1. Configure the Database
+
+```bash title="Configure the Database"
+# Create the database
 createdb user_management
 
-# Development run
+# Or using psql
+psql -U postgres -c "CREATE DATABASE user_management;"
+```
+
+### 2. Run the Server
+
+```bash title="Run the Server"
+# Development
 go run main.go
 
-# Compile binary
+# Build
 go build -o bin/user-management-api main.go
+
+# Run the binary
 ./bin/user-management-api
 ```
 
-## Deployment with Docker
+### 3. Utility Scripts
 
-### Dockerfile
+**run.sh (Linux/macOS):**
+```bash title="Utility Scripts"
+#!/bin/bash
+export DATABASE_URL="postgres://postgres:password@localhost:5432/user_management?sslmode=disable"
+export JWT_SECRET="your-secret-key"
+export PORT="8080"
+go run main.go
+```
+
+**run.bat (Windows):**
+```batch title="Utility Scripts (2)"
+@echo off
+set DATABASE_URL=postgres://postgres:password@localhost:5432/user_management?sslmode=disable
+set JWT_SECRET=your-secret-key
+set PORT=8080
+go run main.go
+```
+
+## Deployment
+
+### 1. Dockerfile
+
 ```dockerfile title="Dockerfile"
 FROM golang:1.21-alpine AS builder
+
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
+
 COPY . .
 RUN go build -o main .
 
@@ -912,7 +978,8 @@ COPY --from=builder /app/main .
 CMD ["./main"]
 ```
 
-### docker-compose.yml
+### 2. docker-compose.yml
+
 ```yaml title="docker-compose.yml"
 version: '3.8'
 
@@ -943,10 +1010,125 @@ volumes:
   postgres_data:
 ```
 
-## Summary & Best Practices
+### 3. Production Deployment
 
-- JWT Authentication & Password Hashing via bcrypt
-- Clean layered architecture (models, repository, handlers, middleware)
-- PostgreSQL database driver (`lib/pq`) with connection pooling
-- CORS, Logging, and Auth Middlewares
-- Unit testing with `httptest`
+**Heroku:**
+```bash title="Production Deployment"
+# Install the Heroku CLI
+# Create the app
+heroku create your-app-name
+
+# Set variables
+heroku config:set DATABASE_URL=your-database-url
+heroku config:set JWT_SECRET=your-secret-key
+
+# Deploy
+git push heroku main
+```
+
+**Railway:**
+```bash title="Production Deployment (2)"
+# Install the Railway CLI
+npm install -g @railway/cli
+
+# Log in and deploy
+railway login
+railway init
+railway up
+```
+
+## Best Practices
+
+### 1. Code Versioning
+
+```bash title="Code Versioning"
+# Initialize Git
+git init
+git add .
+git commit -m "Initial commit"
+
+# Create feature branches
+git checkout -b feature/user-authentication
+git checkout -b feature/role-management
+```
+
+### 2. API Documentation
+
+Use Swagger/OpenAPI:
+
+```go title="API Documentation"
+//go:generate swag init
+// @title User Management API
+// @version 1.0
+// @description API for user management with JWT authentication
+
+// @host localhost:8080
+// @BasePath /api
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Type "Bearer" followed by a space and JWT token.
+```
+
+### 3. Testing
+
+```bash title="Testing"
+# Run all tests
+go test ./...
+
+# With coverage
+go test -cover ./...
+
+# Specific tests
+go test ./handlers -v
+```
+
+### 4. Linting and Formatting
+
+```bash title="Linting and Formatting"
+# Install tools
+go install golang.org/x/lint/golint@latest
+go install golang.org/x/tools/cmd/goimports@latest
+
+# Format code
+go fmt ./...
+
+# Linting
+golint ./...
+```
+
+### 5. Production Configuration
+
+```env title=".env.production"
+# .env.production
+DATABASE_URL=postgres://user:password@prod-db:5432/user_management?sslmode=require
+JWT_SECRET=very-secure-secret-key-for-production
+PORT=8080
+ENV=production
+LOG_LEVEL=error
+```
+
+## Conclusion
+
+This guide gives you a solid foundation for building REST APIs in Go. The project includes:
+
+- JWT authentication
+- Role-based access control
+- PostgreSQL database
+- Middlewares for CORS, logging and authentication
+- Organized project structure
+- Unit tests
+- Complete documentation
+- Deployment scripts
+
+To keep developing, you can add:
+- Rate limiting
+- Redis caching
+- Structured logging
+- Metrics with Prometheus
+- Automatic documentation with Swagger
+- Integration tests
+- CI/CD with GitHub Actions
+
+Happy coding!
