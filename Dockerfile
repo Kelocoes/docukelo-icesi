@@ -46,7 +46,7 @@ RUN git config --global --add safe.directory /app \
 FROM scratch AS export
 COPY --from=build /app/build /
 
-FROM nginx:1.27-alpine AS serve
+FROM nginx:1.31-alpine AS serve
 ARG BASE_URL=/docukelo-icesi/
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 # El sitio se coloca bajo su baseUrl para que las rutas coincidan con las del build.
