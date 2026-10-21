@@ -47,14 +47,13 @@ export function notifyProgressChanged() {
     window.dispatchEvent(new Event(PROGRESS_EVENT));
 }
 
-// Enlaces (hrefs) de todas las paginas dentro de una lista de items del sidebar
+// Enlaces (hrefs) de las paginas con casilla dentro de una lista de items del sidebar. Se omiten las
+// paginas indice de las categorias (semanas y carpetas): no tienen casilla, asi que contarlas haria
+// que "n/m" nunca pudiera llegar a completarse.
 export function collectLinkHrefs(items, out = []) {
     for (const item of items ?? []) {
         if (item.type === 'link' && item.href) out.push(item.href);
-        else if (item.type === 'category') {
-            if (item.href) out.push(item.href);
-            collectLinkHrefs(item.items, out);
-        }
+        else if (item.type === 'category') collectLinkHrefs(item.items, out);
     }
     return out;
 }

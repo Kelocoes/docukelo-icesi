@@ -27,8 +27,10 @@ const TEXT = {
     },
 };
 
-function CourseCard({ course, docsBase, text, completed }) {
-    const percent = course.docs > 0 ? Math.min(100, Math.round((completed / course.docs) * 100)) : 0;
+function CourseCard({ course, docsBase, text, completed: rawCompleted }) {
+    // Marcas de paginas que ya no existen (renombradas o borradas) no deben superar el total
+    const completed = Math.min(rawCompleted, course.docs);
+    const percent = course.docs > 0 ? Math.round((completed / course.docs) * 100) : 0;
     return (
         <Link to={course.path} className={styles.card}>
             <h3 className={styles.title}>{course.label}</h3>
