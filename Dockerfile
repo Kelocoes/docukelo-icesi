@@ -20,6 +20,8 @@ ARG NODE_VERSION=22
 FROM node:${NODE_VERSION}-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
+# `npm ci` ejecuta el script "prepare" (activa los hooks de git); su script debe existir en esta capa.
+COPY scripts/install-hooks.mjs ./scripts/install-hooks.mjs
 RUN --mount=type=cache,target=/root/.npm npm ci
 
 FROM node:${NODE_VERSION}-alpine AS build
