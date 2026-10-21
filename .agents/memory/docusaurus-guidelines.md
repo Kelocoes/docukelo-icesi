@@ -261,3 +261,13 @@ Comandos: `npm run lint:docs` (resumen), `-- --verbose` (archivo:linea), `-- --r
 * **Crear una semana nueva**: `npm run scaffold-week -- --course <curso> --week <n> --topics "Tema uno, Tema dos" [--slides] [--label "Nombre"] [--dry-run]` crea la carpeta, el `_category_.json` (posicion automatica) y un documento por tema con la estructura base de la guia. No sobrescribe semanas existentes. La traduccion a `i18n/en` se hace despues, con la misma ruta y nombre.
 * **Revisar en celular**: Edge/Chrome headless no baja de ~500 px de ventana; para ver el diseno movil real, incrusta la pagina en un `<iframe>` de 390 px y captura eso. Titulos grandes deben usar tamanos fluidos (`clamp(...)`), no tamanos fijos, y las filas de botones llevan `flex-wrap`.
 
+---
+
+## 12. Dependencias y vulnerabilidades
+
+* `package.json` tiene `overrides` que fuerzan versiones corregidas de paquetes transitivos con avisos de seguridad que Docusaurus 3.10 aun no actualiza: `serialize-javascript`, `proxy-addr`, `shell-quote`, `launch-editor`, `dompurify`, `mermaid` (11.17.x) y `tinypool` (2.x). Cuando Docusaurus publique una version nueva, revisa con `npm ls <paquete>` si el override sigue haciendo falta y quitalo si no.
+* Despues de tocar `overrides` o de aceptar un PR de Dependabot: `npm install`, `npm run build` (estricto) y revisa en el navegador una pagina con diagrama Mermaid.
+* **No uses `npm audit fix --force`**: baja Docusaurus a 3.7.0 y rehype-katex a 1.2.0 y rompe el sitio.
+* Dependabot (`.github/dependabot.yml`) abre PR semanales de npm (agrupados: `@docusaurus/*` juntos y el resto de menores/parches), y mensuales de GitHub Actions y de las imagenes del Dockerfile. Las versiones mayores de React y Docusaurus se actualizan a mano.
+* La auditoria del 2026-10-20 dejo 68 avisos (0 criticos, 41 altos, 22 moderados, 5 bajos), todos en herramientas de build/desarrollo salvo `katex` (bajo).
+
