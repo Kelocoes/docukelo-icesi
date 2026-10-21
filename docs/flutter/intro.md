@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Punto de partida del espacio de Flutter y Dart: qué encontrarás en las guías de la primera semana para construir apps móviles."
 ---
 
 # Desarrollo con Flutter y Dart

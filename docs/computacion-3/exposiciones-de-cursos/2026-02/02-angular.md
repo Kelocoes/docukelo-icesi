@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Estudia la arquitectura de Angular con componentes standalone, bindings, control flow y servicios, y aplícala en una demostración práctica."
 ---
 
 # Angular: Arquitectura y Desarrollo de Aplicaciones Web Modernas

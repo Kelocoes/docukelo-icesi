@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Learn HTMX and hypermedia architecture (HATEOAS) to build interactive server-driven interfaces without writing custom JavaScript."
 ---
 
 # HTMX and Hypermedia Architecture

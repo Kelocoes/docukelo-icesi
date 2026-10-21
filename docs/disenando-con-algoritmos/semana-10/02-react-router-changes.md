@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Sigue paso a paso la implementación de autenticación con React Router, desde el contexto hasta las rutas protegidas."
 ---
 
 # Autenticación con React Router
@@ -12,7 +13,7 @@ Esta guía documenta los cambios realizados para trabajar con React Router. Pued
 
 Crear el archivo `src/layout/Auth/Auth.tsx`:
 
-```tsx
+```tsx title="src/layout/Auth/Auth.tsx"
 import {
     createContext,
     useContext,
@@ -113,7 +114,7 @@ export default function Auth() {
 
 Crear el archivo `src/router/Router.tsx`:
 
-```tsx
+```tsx title="src/router/Router.tsx"
 import { createBrowserRouter, Navigate } from "react-router";
 
 import Landing from "../pages/landing/Landing";
@@ -155,7 +156,7 @@ export default router;
 
 #### Página de Login (`src/pages/login/Login.tsx`)
 
-```tsx
+```tsx title="src/pages/login/Login.tsx"
 import { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { useAuth } from "../../layout/Auth/Auth";
@@ -206,7 +207,7 @@ export default function Login() {
 
 #### Página de Registro (`src/pages/register/Register.tsx`)
 
-```tsx
+```tsx title="src/pages/register/Register.tsx"
 import { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { useAuth } from "../../layout/Auth/Auth";
@@ -267,7 +268,7 @@ export default function Register() {
 
 #### Página Protegida - Feed (`src/pages/feed/Feed.tsx`)
 
-```tsx
+```tsx title="src/pages/feed/Feed.tsx"
 import { Navigate } from "react-router";
 import { useAuth } from "../../layout/Auth/Auth";
 
@@ -301,7 +302,7 @@ export default function Feed() {
 
 Modificar `src/main.tsx`:
 
-```tsx
+```tsx title="src/main.tsx"
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router";
@@ -347,7 +348,7 @@ createRoot(document.getElementById("root")!).render(
 
 ### Manejo de Redirecciones
 
-```tsx
+```tsx title="Ejemplo: Manejo de Redirecciones"
 // ✅ Uso correcto de Navigate con replace
 if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

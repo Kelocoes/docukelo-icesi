@@ -1,5 +1,6 @@
 ---
 sidebar_position: 7
+description: "Review the official slides of Week 12 on React state, Redux Toolkit within Clean Architecture, Next.js navigation, and Tailwind CSS styling."
 ---
 
 # Week Slides

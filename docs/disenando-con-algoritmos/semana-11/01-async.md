@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Comprende la asincronía en JavaScript y aprende a manejar callbacks, promesas y async/await en tus programas."
 ---
 
 # Asincronía en JavaScript
@@ -10,7 +11,7 @@ La asincronía es un concepto fundamental en la programación moderna, especialm
 
 Un callback es una función que se pasa como argumento a otra función y se ejecuta después de que se completa una operación asincrónica. Este enfoque permite que el programa continúe ejecutándose mientras se espera la finalización de la operación.
 
-```javascript
+```javascript title="Ejemplo: Callbacks"
 console.log("Inicio");
 
 setTimeout(() => {
@@ -24,7 +25,7 @@ console.log("Fin");
 
 Las promesas son una forma más moderna y poderosa de manejar la asincronía en JavaScript. Una promesa representa un valor que puede estar disponible ahora, en el futuro o nunca. Las promesas tienen tres estados: pendiente, cumplida y rechazada.
 
-```javascript
+```javascript title="Ejemplo: Promesas"
 const miPromesa = new Promise((resolve, reject) => {
   setTimeout(() => {
     resolve("Operación completada");
@@ -40,7 +41,7 @@ miPromesa.then((resultado) => {
 
 `async` y `await` son una forma sintáctica de trabajar con promesas que hace que el código asincrónico sea más fácil de leer y escribir. Al declarar una función como `async`, se puede utilizar `await` dentro de ella para esperar la resolución de una promesa.
 
-```javascript
+```javascript title="Ejemplo: Async/Await"
 const funcionAsincrona = async () => {
   const resultado = await miPromesa;
   console.log(resultado);
@@ -77,7 +78,7 @@ El Event Loop es el mecanismo que permite a Node.js ejecutar operaciones no bloq
 
 Ejemplo:
 
-```js
+```js title="Ejemplo: Microtasks vs Macrotasks"
 console.log('Inicio');
 
 setTimeout(() => console.log('Timeout'), 0);

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Review the official slides of Week 7 on security fundamentals, bcrypt hashing, Passport, JSON Web Tokens, and granular access control."
 ---
 
 # Slides of the Week

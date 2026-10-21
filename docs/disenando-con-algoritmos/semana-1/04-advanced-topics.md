@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Aprende a usar Pull Requests, resolver merge conflicts y aplicar rebase, cherry-pick, squash y stash en Git y GitHub."
 ---
 
 # Git y GitHub Avanzado

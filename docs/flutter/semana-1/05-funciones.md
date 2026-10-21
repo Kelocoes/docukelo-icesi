@@ -1,7 +1,10 @@
 ---
 title: Funciones en Dart
 sidebar_position: 5
+description: "Domina los parámetros posicionales, nombrados y opcionales, las funciones flecha y las funciones como ciudadanos de primera clase en Dart."
 ---
+
+# Funciones en Dart
 
 Las funciones son los bloques de construcción fundamentales en cualquier lenguaje de programación. En Dart, y particularmente dentro del desarrollo con Flutter, las funciones no son simples agrupadores de código; son tratadas como **ciudadanos de primera clase** (first-class citizens). Esto significa que las funciones se pueden asignar a variables, pasarse como argumentos y retornarse desde otras funciones.
 

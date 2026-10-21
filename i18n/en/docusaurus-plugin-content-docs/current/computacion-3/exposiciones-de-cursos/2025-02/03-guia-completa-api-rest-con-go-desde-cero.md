@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Build a complete REST API in Go with JWT authentication, role-based access control, and PostgreSQL persistence, from setup to Docker deployment."
 ---
 
 # Complete Guide: REST API with Go from Scratch
@@ -28,7 +29,7 @@ This guide teaches you how to build a complete REST API in Go with JWT authentic
 **Recommended version:** Go 1.21 or higher
 
 **Windows:**
-```bash
+```bash title="Go Installation"
 # Download from https://golang.org/dl/
 # Or via Chocolatey
 choco install golang
@@ -38,7 +39,7 @@ go version
 ```
 
 **Linux / macOS:**
-```bash
+```bash title="Go Installation 2"
 # Ubuntu / Debian
 sudo apt update
 sudo apt install golang-go
@@ -53,7 +54,7 @@ go version
 ### 2. Dependency Installation
 
 **PostgreSQL:**
-```bash
+```bash title="Dependency Installation"
 # Windows
 # Download from https://www.postgresql.org/download/windows/
 
@@ -78,7 +79,7 @@ brew services start postgresql   # macOS
 ### 3. Environment Variables Setup
 
 Create a `.env` file:
-```env
+```env title="Environment Variables Setup"
 # Database
 DATABASE_URL=postgres://postgres:password@localhost:5432/user_management?sslmode=disable
 
@@ -145,7 +146,7 @@ go mod init user-management-api
 
 ### 2. Install Dependencies
 
-```bash
+```bash title="Install Dependencies"
 # Main dependencies
 go get github.com/gorilla/mux@v1.8.1
 go get github.com/lib/pq@v1.10.9
@@ -167,7 +168,7 @@ mkdir models repository handlers middleware utils tests scripts docs
 
 ### 1. Main Server Entrypoint (`main.go`)
 
-```go
+```go title="main.go"
 package main
 
 import (
@@ -347,7 +348,7 @@ func createDefaultData(db *sql.DB) error {
 
 ### 2. `.gitignore` File
 
-```gitignore
+```gitignore title="gitignore File"
 # Binaries
 *.exe
 *.exe~
@@ -387,7 +388,7 @@ Thumbs.db
 
 ### 1. User Model (`models/user.go`)
 
-```go
+```go title="models/user.go"
 package models
 
 import (
@@ -481,7 +482,7 @@ func (u *UserCreate) Validate() error {
 
 ### 2. JWT Utilities (`utils/jwt.go`)
 
-```go
+```go title="utils/jwt.go"
 package utils
 
 import (
@@ -564,7 +565,7 @@ func GetTokenFromHeader(authHeader string) (string, error) {
 
 ### Auth Handler (`handlers/auth_handler.go`)
 
-```go
+```go title="handlers/auth_handler.go"
 package handlers
 
 import (
@@ -669,7 +670,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 ### 1. Authentication Middleware (`middleware/auth.go`)
 
-```go
+```go title="middleware/auth.go"
 package middleware
 
 import (
@@ -748,7 +749,7 @@ func SendErrorResponse(w http.ResponseWriter, statusCode int, message string) {
 
 ### 2. CORS Middleware (`middleware/cors.go`)
 
-```go
+```go title="middleware/cors.go"
 package middleware
 
 import "net/http"
@@ -771,7 +772,7 @@ func CORSMiddleware(next http.Handler) http.Handler {
 
 ### 3. Logging Middleware (`middleware/logging.go`)
 
-```go
+```go title="middleware/logging.go"
 package middleware
 
 import (
@@ -807,7 +808,7 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 
 ### Unit Test (`tests/auth_test.go`)
 
-```go
+```go title="tests/auth_test.go"
 package tests
 
 import (
@@ -851,7 +852,7 @@ func TestRegister(t *testing.T) {
 ## Endpoint Examples
 
 ### 1. Register User
-```bash
+```bash title="Register User"
 curl -X POST http://localhost:8080/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
@@ -864,7 +865,7 @@ curl -X POST http://localhost:8080/api/auth/register \
 ```
 
 ### 2. Login
-```bash
+```bash title="Login"
 curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
@@ -881,7 +882,7 @@ curl -X GET http://localhost:8080/api/users \
 
 ## Running the Project
 
-```bash
+```bash title="Running the Project"
 # Create PostgreSQL database
 createdb user_management
 
@@ -896,7 +897,7 @@ go build -o bin/user-management-api main.go
 ## Deployment with Docker
 
 ### Dockerfile
-```dockerfile
+```dockerfile title="Dockerfile"
 FROM golang:1.21-alpine AS builder
 WORKDIR /app
 COPY go.mod go.sum ./
@@ -912,7 +913,7 @@ CMD ["./main"]
 ```
 
 ### docker-compose.yml
-```yaml
+```yaml title="docker-compose.yml"
 version: '3.8'
 
 services:
@@ -944,8 +945,8 @@ volumes:
 
 ## Summary & Best Practices
 
-- ✅ JWT Authentication & Password Hashing via bcrypt
-- ✅ Clean layered architecture (models, repository, handlers, middleware)
-- ✅ PostgreSQL database driver (`lib/pq`) with connection pooling
-- ✅ CORS, Logging, and Auth Middlewares
-- ✅ Unit testing with `httptest`
+- JWT Authentication & Password Hashing via bcrypt
+- Clean layered architecture (models, repository, handlers, middleware)
+- PostgreSQL database driver (`lib/pq`) with connection pooling
+- CORS, Logging, and Auth Middlewares
+- Unit testing with `httptest`

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Entiende la arquitectura hipermedia con HTMX y HATEOAS y construye una aplicación de tareas sin escribir JavaScript propio."
 ---
 
 # HTMX y la Arquitectura Hipermedia

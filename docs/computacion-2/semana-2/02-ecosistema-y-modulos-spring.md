@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Explora el ecosistema de Spring y la arquitectura en capas Model, Repository y Service con sus responsabilidades."
 ---
 
 # Ecosistema Spring y Arquitectura en Capas

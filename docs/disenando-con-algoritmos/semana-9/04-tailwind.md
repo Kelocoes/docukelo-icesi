@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Aprende la filosofía utility-first de Tailwind CSS y aplica sus clases de utilidad para construir diseños responsivos."
 ---
 
 # Tailwind CSS
@@ -14,7 +15,7 @@ Las clases de utilidad de Tailwind son atómicas y no están ligadas a component
 
 **Ejemplo:**
 
-```html
+```html title="Ejemplo: Clases de utilidad y filosofía"
 <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded">
     Haz clic
 </button>
@@ -35,7 +36,7 @@ Tailwind facilita el diseño adaptable con prefijos como `sm:`, `md:`, `lg:`, `x
 
 **Ejemplo:**
 
-```html
+```html title="Ejemplo: Diseño adaptable"
 <div class="flex flex-col md:flex-row items-center">
     <div class="w-full md:w-1/2">
         <img src="imagen.jpg" alt="Descripción de la imagen">
@@ -58,7 +59,7 @@ Tailwind es altamente personalizable mediante `tailwind.config.js`.
 
 **Ejemplo:**
 
-```js
+```js title="tailwind.config.js"
 module.exports = {
     theme: {
         extend: {
@@ -85,7 +86,7 @@ Tailwind soporta modificadores para estados como `hover`, `focus`, `active`, `di
 
 **Ejemplo:**
 
-```html
+```html title="Ejemplo: Pseudoclases y estados"
 <a href="#" class="text-blue-500 hover:text-blue-700 hover:font-bold transition-all duration-300">
     Enlace
 </a>
@@ -103,7 +104,7 @@ Tailwind incluye utilidades para Flexbox y Grid.
 
 **Flexbox:**
 
-```html
+```html title="Ejemplo: Flexbox y Grid"
 <nav class="flex justify-between items-center bg-gray-100 p-4">
     <div class="text-lg font-bold">Logo</div>
     <ul class="flex space-x-4">
@@ -121,7 +122,7 @@ Tailwind incluye utilidades para Flexbox y Grid.
 
 **Grid:**
 
-```html
+```html title="Ejemplo: Flexbox y Grid"
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <div class="bg-gray-200 h-32"></div>
     <div class="bg-gray-200 h-32"></div>
@@ -145,7 +146,7 @@ Puedes crear componentes reutilizables con la directiva `@apply` en CSS.
 
 **Ejemplo:**
 
-```css
+```css title="Ejemplo: Directiva @apply"
 .btn-primary {
     @apply bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition-all duration-300;
 }
@@ -153,7 +154,7 @@ Puedes crear componentes reutilizables con la directiva `@apply` en CSS.
 
 En HTML:
 
-```html
+```html title="Ejemplo: Directiva @apply"
 <button class="btn-primary">
     Haz clic
 </button>
@@ -167,7 +168,7 @@ El motor JIT genera clases CSS sobre la marcha, lo que mejora el rendimiento y p
 
 **Ejemplo:**
 
-```html
+```html title="Ejemplo: JIT (Just-in-Time) Engine"
 <div class="w-[375px] h-[calc(100vh-60px)] grid-cols-[1fr_2fr]">
 </div>
 ```

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Consulta las diapositivas de la semana 1 sobre virtualización frente a contenedores, arquitectura de Docker y Dockerfile."
 ---
 
 # Slides de la semana

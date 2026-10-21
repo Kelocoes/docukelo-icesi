@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Practica DOM, eventos, manejo de estado y consumo de APIs con ejercicios progresivos en JavaScript."
 ---
 
 # Ejercicios de DOM y Eventos
@@ -15,7 +16,7 @@ _Estos ejercicios no tienen CSS, pero puedes añadirlos si gustas._
 **Consigna:**  
 Crear un botón que cambie el color de fondo de la página al hacer click.
 
-```html
+```html title="Ejemplo HTML"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -41,7 +42,7 @@ Crear un botón que cambie el color de fondo de la página al hacer click.
 **Consigna:**  
 Crear un contador con botones `+` y `-` que muestre el valor en un `<span>` (evitar números negativos).
 
-```html
+```html title="Contador +/- → Manejo de estado simple"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -70,7 +71,7 @@ Crear un contador con botones `+` y `-` que muestre el valor en un `<span>` (evi
 **Consigna:**  
 Crear un input que, al escribir algo y presionar **Enter**, agregue un `<li>` a una lista `<ul>` (y vacíe el input después).
 
-```html
+```html title="Ejemplo HTML"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -102,7 +103,7 @@ Crear un input que, al escribir algo y presionar **Enter**, agregue un `<li>` a 
 **Consigna:**  
 Crear un buscador que filtre una lista de nombres en tiempo real mientras escribes en un input.
 
-```html
+```html title="Ejemplo HTML"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -135,7 +136,7 @@ Crear un buscador que filtre una lista de nombres en tiempo real mientras escrib
 **Consigna:**  
 Hacer una to-do list donde los ítems se puedan marcar como completados al hacer click y borrarlos con un botón de eliminar (usando **delegación de eventos**).
 
-```html
+```html title="Ejemplo HTML"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -179,9 +180,9 @@ Cuando hagas clic en "Cargar Personajes", tu página irá a buscar personajes de
 5. Por cada personaje, crea una tarjeta con su foto, nombre y estado
 6. Agrega un mensaje de "Cargando..." y maneja si algo sale mal
 
-**💡 Pista:** `fetch()` siempre necesita `await` porque toma tiempo traer datos de internet.
+**Pista:** `fetch()` siempre necesita `await` porque toma tiempo traer datos de internet.
 
-```html
+```html title="Tu primera API → Rick y Morty personajes"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -215,9 +216,9 @@ Cuando hagas clic en "Cargar Personajes", tu página irá a buscar personajes de
 ```
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Tu primera API → Rick y Morty personajes"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -285,9 +286,9 @@ Cuando hagas clic en "Cargar Personajes", tu página irá a buscar personajes de
 </details>
 
 <details>
-<summary>💡 Ver solución compleja</summary>
+<summary>Ver solución compleja</summary>
 
-```javascript
+```javascript title="Tu primera API → Rick y Morty personajes"
 <!DOCTYPE html>
 <html lang="es">
 <head>

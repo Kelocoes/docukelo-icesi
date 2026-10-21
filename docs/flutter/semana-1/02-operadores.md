@@ -1,6 +1,7 @@
 ---
 sidebar_position: 2
 title: Operadores en Dart
+description: "Practica los operadores aritméticos, de comparación, lógicos, de testeo de tipos y de cascada que ofrece Dart."
 ---
 
 # Operadores en Dart

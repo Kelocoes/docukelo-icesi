@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Aprende Tailwind CSS con enfoque utility-first en Next.js: configuración, espaciado y clases de utilidad para diseñar interfaces."
 ---
 
 import ThemedImage from '@theme/ThemedImage';

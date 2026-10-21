@@ -1,5 +1,6 @@
 ---
 sidebar_position: 8
+description: "Comprende el Event Loop de Dart y aprende a usar Futures, async/await, Streams y generadores para trabajar con asincronía."
 ---
 
 # Futures, Streams y Asincronía

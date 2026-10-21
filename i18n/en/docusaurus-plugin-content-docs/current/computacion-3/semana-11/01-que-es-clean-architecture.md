@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Understand the origins, purpose, and core objectives of Clean Architecture and the problems it solves in frontend application design."
 ---
 
 # What is Clean Architecture?

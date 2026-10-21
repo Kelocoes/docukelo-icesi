@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Start a guided workshop that builds a base API with Express, TypeScript, and MongoDB, and learn why this stack is a good choice."
 ---
 
 # Base API: Express, TypeScript & MongoDB

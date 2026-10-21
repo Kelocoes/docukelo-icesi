@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Conoce el contenido del curso Computación en Internet 3 y las tecnologías que verás, como NodeJS, Nest y NextJS, semana a semana."
 ---
 
 import PdfViewer from '@site/src/components/PdfViewer/PdfViewer';

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Aprende qué son Node.js y NPM, sus comandos principales y los archivos importantes de un proyecto Node."
 ---
 
 
@@ -14,7 +15,7 @@ sidebar_position: 4
 - Con Node.js puedes crear aplicaciones de servidor, herramientas de línea de comandos, APIs, etc.
 
 Ejemplo: un archivo `hola.js`
-```js
+```js title="hola.js"
 console.log("Hola desde Node.js");
 ```
 
@@ -65,7 +66,7 @@ Es el archivo principal del proyecto. Contiene información como:
 - **devDependencies** → librerías que se usan solo para desarrollo  
 
 Ejemplo:
-```json
+```json title="package.json"
 {
   "name": "mi-proyecto",
   "version": "1.0.0",
@@ -140,7 +141,7 @@ Por ejemplo: `"express": "^4.18.0"`
 Dentro de `package.json` puedes definir **scripts** que ejecutas con `npm run`.
 
 Ejemplo en `package.json`:
-```json
+```json title="package.json"
 "scripts": {
   "start": "node index.js",
   "dev": "nodemon index.js"

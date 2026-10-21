@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Crea un documento HTML básico siguiendo instrucciones detalladas, sin usar inteligencia artificial ni editores visuales."
 ---
 
 # Ejercicio Inicial: HTML

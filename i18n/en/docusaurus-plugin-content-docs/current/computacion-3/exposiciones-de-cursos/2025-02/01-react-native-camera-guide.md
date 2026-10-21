@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Build a cross-platform filtered camera app with React Native and Expo that runs on iOS, Android, and the web, following a guided workshop."
 ---
 
 # React Native - Cross-Platform Camera with Expo
@@ -102,7 +103,7 @@ npx expo install expo-camera expo-linear-gradient
 
 ### 6.1 `App.js` Implementation
 
-```javascript
+```javascript title="App.js"
 import { StatusBar } from "expo-status-bar";
 import { useState, useRef } from "react";
 import {
@@ -257,7 +258,7 @@ const styles = StyleSheet.create({
 
 ## 7. Running the Application
 
-```bash
+```bash title="Running the Application"
 # Run on Web browser
 npx expo start --web
 

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Aprende a transformar y validar datos de entrada en NestJS usando Pipes, DTOs y la librería class-validator."
 ---
 
 # Pipes y Validadores en NestJS
@@ -289,7 +290,7 @@ export class UsersController {
 :::info[¿Qué ocurre si la petición es inválida?]
 Si un cliente envía `POST /users` con un correo mal formado (`"email": "no-es-correo"`), el `ValidationPipe` detiene automáticamente la ejecución antes de entrar a `create()` y responde con:
 
-```json
+```json title="Guía Práctica: Validación"
 {
   "message": [
     "Debe ingresar un correo electrónico válido"

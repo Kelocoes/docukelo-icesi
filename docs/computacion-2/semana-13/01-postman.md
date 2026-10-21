@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Usa Postman para probar y validar APIs HTTP con colecciones, entornos y scripts de pruebas automatizadas."
 ---
 
 # Postman
@@ -53,7 +54,7 @@ Los entornos definen variables globales o específicas del contexto.
 
 Ejemplo de variables en un entorno:
 
-```json
+```json title="Environment (Entornos)"
 {
     "base_url": "https://api-dev.miapp.com",
     "token": "{{jwt_token}}"
@@ -78,7 +79,7 @@ Una vez que tienes una API en ejecución (por ejemplo, un backend en Spring Boot
 4. Agregar headers (por ejemplo, `Content-Type: application/json`).
 5. Agregar el body (si aplica):
 
-```json
+```json title="Prueba de endpoints con Postman"
 {
     "email": "kevin@example.com",
     "password": "123456"
@@ -100,7 +101,7 @@ Los **Pre-request Scripts** son fragmentos de JavaScript que se ejecutan **antes
 
 Ejemplo:
 
-```js
+```js title="Pre-request Script"
 // Se ejecuta antes de enviar la request
 const timestamp = Date.now();
 const apiKey = "123abc";
@@ -129,7 +130,7 @@ Los **Tests** en Postman son scripts que se ejecutan **después** de recibir la 
 
 Ejemplo:
 
-```js
+```js title="Post-response Script (Tests)"
 pm.test("Status code es 200", function () {
     pm.response.to.have.status(200);
 });
@@ -146,7 +147,7 @@ pm.test("Tiempo de respuesta menor a 500ms", function () {
 
 También puedes guardar información de la respuesta para futuras peticiones:
 
-```js
+```js title="Post-response Script (Tests)"
 const token = pm.response.json().token;
 pm.environment.set("jwt_token", token);
 ```

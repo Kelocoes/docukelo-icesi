@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Conoce el desarrollo basado en especificaciones (SDD), sus pasos en GitHub Spec Kit y su uso con modelos de lenguaje."
 ---
 
 # Spec-driven Development (SDD)
@@ -77,7 +78,7 @@ Puedes instalarlo de varias formas:
 
 1. **Script oficial (recomendado)**
 
-```bash
+```bash title="Requisito previo: instalación de uv"
 # En macOS y Linux
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
@@ -95,7 +96,7 @@ pip install uv
 
 Una vez instalado `uv`, instala la versión `0.8.4` de GitHub Spec Kit:
 
-```bash
+```bash title="Instalación del kit"
 # Instalación de la herramienta
 uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@v0.8.4
 

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Create a landing page with Astro using the islands architecture and React components, from project setup to interactive sections."
 ---
 
 # Astro Landing Demo (Islands + React)
@@ -50,7 +51,7 @@ npm install @astrojs/react react react-dom
 
 Edit `astro.config.mjs` to enable React integration:
 
-```js
+```js title="astro.config.mjs"
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
@@ -87,7 +88,7 @@ export default defineConfig({
 
 ### 5.1 Base Layout
 
-```astro
+```astro title="Base Layout"
 ---
 // src/layouts/BaseLayout.astro
 import ThemeToggle from "../components/ThemeToggle";
@@ -144,7 +145,7 @@ const { title = "Demo Astro Landing", description = "A simple landing page built
 
 ### 5.2 Global CSS Styles
 
-```css
+```css title="src/styles/global.css"
 /* src/styles/global.css */
 
 :root {
@@ -349,7 +350,7 @@ This gives fine-grained control over when to ship and hydrate client JS.
 
 Interactive Counter:
 
-```tsx
+```tsx title="src/components/Counter.tsx"
 // src/components/Counter.tsx
 import React, { useState } from "react";
 export default function Counter(){
@@ -366,7 +367,7 @@ export default function Counter(){
 
 Theme Toggle:
 
-```tsx
+```tsx title="src/components/ThemeToggle.tsx"
 // src/components/ThemeToggle.tsx
 import React, { useCallback, useEffect, useState } from "react";
 export default function ThemeToggle(){
@@ -383,7 +384,7 @@ export default function ThemeToggle(){
 
 ### 5.4 Hero Section (Combining Astro + React)
 
-```astro
+```astro title="Hero Section (Combining Astro + React)"
 ---
 // src/components/Hero.astro
 import Counter from "./Counter";
@@ -401,7 +402,7 @@ import Counter from "./Counter";
 
 Home Page (`src/pages/index.astro`):
 
-```astro
+```astro title="src/pages/index.astro"
 ---
 // src/pages/index.astro
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -422,7 +423,7 @@ import Hero from "../components/Hero.astro";
 
 About Page (`src/pages/about.astro`):
 
-```astro
+```astro title="src/pages/about.astro"
 ---
 // src/pages/about.astro
 import BaseLayout from "../layouts/BaseLayout.astro";

@@ -1,7 +1,10 @@
 ---
 title: Colecciones y Métodos
 sidebar_position: 4
+description: "Aprende a manejar Lists, Sets y Maps en Dart, junto con el operador spread, collection-if y los métodos de transformación."
 ---
+
+# Colecciones y Métodos
 
 En el desarrollo de aplicaciones móviles con Flutter, la gestión de datos es fundamental. Constantemente estarás recibiendo información de APIs REST, bases de datos locales (como SQLite o Isar) o del estado de la aplicación. Para estructurar y manipular esta información de forma óptima, Dart nos ofrece herramientas muy potentes: **Lists**, **Sets** y **Maps**, junto con operadores avanzados y métodos funcionales.
 

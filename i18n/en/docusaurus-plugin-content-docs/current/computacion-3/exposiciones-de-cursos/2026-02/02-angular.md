@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Learn Angular's modern architecture, including standalone components, reactivity, data binding, control flow, and services, with a hands-on walkthrough."
 ---
 
 # Angular: Architecture and Modern Web Application Development

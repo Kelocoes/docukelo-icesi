@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende a manipular el DOM con JavaScript y a guardar datos en el navegador con Web Storage (localStorage y sessionStorage)."
 ---
 
 # DOM y Web Storage
@@ -12,7 +13,7 @@ El **DOM (Document Object Model)** es una representación en forma de árbol de 
 Cada etiqueta de HTML se convierte en un **nodo** que puede ser manipulado con JavaScript.
 
 Ejemplo de HTML:
-```html
+```html title="¿Qué es el DOM"
 <!DOCTYPE html>
 <html>
   <head><title>Ejemplo DOM</title></head>
@@ -41,7 +42,7 @@ Esto se conoce como operaciones **CRUD**: Create, Read, Update, Delete.
 ### 1.1 CRUD de objetos en el DOM
 
 #### Crear elementos
-```html
+```html title="Crear elementos"
 <div id="contenedor"></div>
 
 <script>
@@ -57,7 +58,7 @@ Esto se conoce como operaciones **CRUD**: Create, Read, Update, Delete.
 ```
 
 #### Leer elementos
-```html
+```html title="Leer elementos"
 <h1 id="titulo">Título original</h1>
 
 <script>
@@ -67,7 +68,7 @@ Esto se conoce como operaciones **CRUD**: Create, Read, Update, Delete.
 ```
 
 #### Actualizar elementos
-```html
+```html title="Actualizar elementos"
 <h1 id="titulo">Título original</h1>
 
 <script>
@@ -78,7 +79,7 @@ Esto se conoce como operaciones **CRUD**: Create, Read, Update, Delete.
 ```
 
 #### Eliminar elementos
-```html
+```html title="Eliminar elementos"
 <div id="contenedor">
   <p id="p1">Párrafo a eliminar</p>
 </div>
@@ -95,7 +96,7 @@ Esto se conoce como operaciones **CRUD**: Create, Read, Update, Delete.
 ### 1.2 Inserción de estilos
 
 #### Modificar estilos inline
-```html
+```html title="Modificar estilos inline"
 <p id="p1">Texto con estilo</p>
 
 <script>
@@ -106,7 +107,7 @@ Esto se conoce como operaciones **CRUD**: Create, Read, Update, Delete.
 ```
 
 #### Cambiar clases
-```html
+```html title="Cambiar clases"
 <style>
   .resaltado { color: red; font-weight: bold; }
 </style>
@@ -120,7 +121,7 @@ Esto se conoce como operaciones **CRUD**: Create, Read, Update, Delete.
 ```
 
 #### Insertar CSS desde JS
-```html
+```html title="Insertar CSS desde JS"
 <p id="p3">Texto dinámico</p>
 
 <script>
@@ -141,7 +142,7 @@ Esto se conoce como operaciones **CRUD**: Create, Read, Update, Delete.
 
 ### 1.3 Lógica con DOM
 
-```html
+```html title="Lógica con DOM"
 <ul id="lista"></ul>
 
 <script>
@@ -173,7 +174,7 @@ Esto se conoce como operaciones **CRUD**: Create, Read, Update, Delete.
 
 Ejemplos:
 
-```html
+```html title="querySelector"
 <h1 id="titulo">Título</h1>
 <p class="texto">Párrafo 1</p>
 <p class="texto">Párrafo 2</p>
@@ -209,7 +210,7 @@ Ejemplos de eventos: clic, escribir texto, mover el mouse, cargar la página.
 
 ### 2.1 Manejo básico de eventos
 
-```html
+```html title="Manejo básico de eventos"
 <button id="boton">Haz clic</button>
 
 <script>
@@ -224,7 +225,7 @@ Ejemplos de eventos: clic, escribir texto, mover el mouse, cargar la página.
 
 `addEventListener` es más flexible porque permite escuchar múltiples eventos sobre un mismo elemento.
 
-```html
+```html title="addEventListener"
 <button id="btn">Pasa el mouse</button>
 
 <script>
@@ -257,7 +258,7 @@ Ejemplos de eventos: clic, escribir texto, mover el mouse, cargar la página.
 
 Ejemplo con teclado:
 
-```html
+```html title="Eventos más comunes"
 <input type="text" id="entrada" placeholder="Escribe algo">
 
 <script>
@@ -280,7 +281,7 @@ El **Web Storage** nos permite guardar datos en el navegador:
 
 ### Guardar y leer datos
 
-```js
+```js title="Guardar y leer datos"
 localStorage.setItem("usuario", "Kevin");
 console.log(localStorage.getItem("usuario")); // Kevin
 
@@ -290,14 +291,14 @@ console.log(sessionStorage.getItem("token")); // 12345
 
 ### Eliminar datos
 
-```js
+```js title="Eliminar datos"
 localStorage.removeItem("usuario"); // Borra una clave
 sessionStorage.clear(); // Borra todo
 ```
 
 ### Guardar objetos
 
-```js
+```js title="Guardar objetos"
 const persona = { nombre: "Ana", edad: 25 };
 localStorage.setItem("persona", JSON.stringify(persona));
 
@@ -310,7 +311,7 @@ console.log(personaGuardada.nombre); // Ana
 ## 4. Ejercicios
 
 ### Ejercicio 1: Crear elementos dinámicamente
-```html
+```html title="Ejemplo HTML"
 <ul id="lista"></ul>
 <button id="agregar">Agregar número</button>
 
@@ -328,7 +329,7 @@ console.log(personaGuardada.nombre); // Ana
 ```
 
 ### Ejercicio 2: Cambiar estilos con eventos
-```html
+```html title="Ejercicio 2: Cambiar estilos con eventos"
 <p id="texto">Pasa el mouse sobre mí</p>
 
 <script>
@@ -345,7 +346,7 @@ console.log(personaGuardada.nombre); // Ana
 ```
 
 ### Ejercicio 3: Guardar y recuperar datos con localStorage
-```html
+```html title="Ejemplo HTML"
 <input type="text" id="nombre" placeholder="Escribe tu nombre">
 <button id="guardar">Guardar</button>
 <p id="resultado"></p>

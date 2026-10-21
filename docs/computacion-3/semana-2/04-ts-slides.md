@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Consulta las diapositivas de la semana 2 sobre Node.js, TypeScript y Express, con el resumen de los temas vistos."
 ---
 
 # Slides de la semana

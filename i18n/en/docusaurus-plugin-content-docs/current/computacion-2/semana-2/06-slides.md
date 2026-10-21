@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Browse the week 2 slides on Spring, inversion of control, dependency injection and XML beans."
 ---
 
 # Weekly Slides

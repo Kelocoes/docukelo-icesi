@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Mejora la API con Express agregando validación de datos, middlewares y manejo de excepciones."
 ---
 
 # Validación de Datos y Middlewares
@@ -30,7 +31,7 @@ A partir de esto, crearemos un middleware que valide los datos de entrada en nue
 
 > Recuerda crear un archivo index.ts en la carpeta `middlewares` y exportar el middleware de validación desde allí.
 
-```typescript
+```typescript title="Validación de datos"
 import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 
@@ -44,7 +45,7 @@ export const handleValidationErrors = (req: Request, res: Response, next: NextFu
 ```
 
 Como puedes observar, los middlewares son funciones que reciben tres parámetros: `req`, `res` y `next`. En este caso, estamos utilizando `validationResult` de `express-validator` para obtener los errores de validación. Si hay errores, respondemos con un error 400 y no llamamos a `next()`, lo que detiene la ejecución del middleware. Si ejecutaramos `next()` sin errores, la ejecución continuaría hacia el siguiente middleware o controlador y es que sí, uno puede encadenar middlewares para que se ejecuten en orden.
-```typescript
+```typescript title="Validación de datos (2)"
 export const handleValidationErrors = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -67,7 +68,7 @@ Ahora crearemos con ayuda de `express-validator` los esquemas de validación par
 
 > Crea una carpeta llamada `validators` y dentro de ella crea un archivo `userValidator.ts` donde definiremos las validaciones para el usuario. Recuerda crear el archivo `index.ts` en la carpeta `validators` para exportar los validadores.
 
-```typescript
+```typescript title="index.ts"
 import { body, param } from 'express-validator';
 import { handleValidationErrors } from '../middlewares';
 
@@ -77,7 +78,7 @@ export const userValidations = {
 
 Dentro de este objeto tu puedes definir las validaciones que necesites. Por ejemplo, si quieres validar que el nombre de usuario sea una cadena de texto y tenga una longitud mínima, puedes hacer lo siguiente:
 
-```typescript
+```typescript title="Validación de datos (3)"
 export const userValidations = {
     create : [
         body('name')
@@ -103,7 +104,7 @@ export const userValidations = {
 En este ejemplo, estamos validando que el campo `name` sea una cadena de texto con una longitud mínima de 1 y máxima de 100 caracteres, que el campo `email` sea un correo electrónico válido y que el campo `password` tenga al menos 8 caracteres. Si alguna de estas validaciones falla, se enviará un error 400 con un mensaje descriptivo.
 Para usar estas validaciones en tus rutas, simplemente importa el validador y agrégalo a la ruta correspondiente. Por ejemplo:
 
-```typescript
+```typescript title="Validación de datos (4)"
 import express, { Request, Response } from "express";
 import { userController } from "../controllers";
 import { userValidations } from "../validators";
@@ -157,7 +158,7 @@ Para crear un middleware de loggeo, puedes seguir estos pasos:
 1. Crea un archivo `logger.ts` en la carpeta `middlewares`.
 2. Define una función middleware que registre la hora, la ruta y el método HTTP de cada solicitud entrante.
 
-```typescript	
+```typescript	 title="logger.ts"
 export const logger = (req: Request, res: Response, next: NextFunction) => {
     const timestamp = new Date().toISOString(); // Formato de fecha ISO 8601 ej: 2023-10-01T12:34:56.789Z
     const startTime = Date.now(); // Marca de tiempo de inicio de la solicitud
@@ -193,7 +194,7 @@ Puede resultar un poco raro esta forma de sobrescribir la función `res.send`, p
 
 Este middleware lo registraremos en el archivo `index.ts`  general del proyecto, justo antes de definir las rutas. De esta manera, todas las solicitudes entrantes pasarán por este middleware y se registrarán en un archivo de log.
 
-```typescript
+```typescript title="index.ts"
 app.use(logger);
 
 app.use(express.json());
@@ -209,7 +210,7 @@ Hemos observado dos lugares donde podemos añadir middlewares, uno es antes de d
 
 ¿Qué sucedería si quiero multiples middlewares ejecutados en un orden para una ruta en específico? Puedes encadenar middlewares en la definición de la ruta. Por ejemplo:
 
-```typescript
+```typescript title="Middlewares"
 router.post(
     "/",
     userValidations.create, // Middleware de validación
@@ -226,7 +227,7 @@ Para crear un middleware de manejo de errores, sigue estos pasos:
 1. Crea un archivo `errorHandler.ts` en la carpeta `middlewares`.
 2. Define una función middleware que capture los errores y envíe una respuesta adecuada.
 
-```typescript
+```typescript title="errorHandler.ts"
 import { Request, Response, NextFunction } from 'express';
 
 // Interfaz para errores personalizados
@@ -282,7 +283,7 @@ export const createError = (message: string, statusCode: number = 500) => {
 Este middleware captura cualquier error que ocurra en la aplicación y verifica si es un error personalizado (de tipo `AppError`). Si es así, responde con el código de estado y el mensaje del error. Si no, responde con un error genérico 500.
 Para usar este middleware, simplemente impórtalo y regístralo en tu archivo `index.ts` general del proyecto, justo después de definir las rutas. De esta manera, cualquier error que ocurra en las rutas será capturado por este middleware.
 
-```typescript
+```typescript title="index.ts"
 app.use('/api/users', userRoutes);
 app.use(errorHandler); // Middleware de manejo de errores
 ```

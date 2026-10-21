@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Construye paso a paso una aplicación de cámara con filtros en React Native y Expo que funciona en iOS, Android y Web."
 ---
 
 # React Native - Cámara Multiplataforma con Expo
@@ -158,7 +159,7 @@ npx expo install -- --save-dev prettier eslint-config-prettier eslint-plugin-pre
 
 Crea o actualiza el archivo `eslint.config.js` en la raíz del proyecto:
 
-```javascript
+```javascript title="eslint.config.js"
 const { defineConfig } = require("eslint/config");
 const expoConfig = require("eslint-config-expo/flat");
 
@@ -184,7 +185,7 @@ module.exports = defineConfig([
 
 Crea un archivo `.prettierrc` en la raíz del proyecto:
 
-```json
+```json title="Configuración de Prettier"
 {
   "semi": true,
   "trailingComma": "all",
@@ -230,7 +231,7 @@ metacritic-app/
 
 Comenzamos importando todas las dependencias necesarias. Reemplaza el contenido de `App.js` con:
 
-```javascript
+```javascript title="App.js"
 import { StatusBar } from "expo-status-bar";
 import { useState, useRef } from "react";
 import {
@@ -253,7 +254,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 Agrega las siguientes configuraciones después de los imports:
 
-```javascript
+```javascript title="Configuración de estado y constantes"
 const { height } = Dimensions.get("window");
 
 export default function App() {
@@ -298,7 +299,7 @@ export default function App() {
 
 El manejo adecuado de permisos es crucial para una experiencia de usuario fluida:
 
-```javascript
+```javascript title="Manejo de permisos de cámara"
 // Pantalla de carga
 if (!permission) {
   return (
@@ -349,7 +350,7 @@ if (!permission.granted) {
 
 #### 6.4.1. Cambio de cámara
 
-```javascript
+```javascript title="Cambio de cámara"
 const toggleCameraFacing = () => {
   setFacing((current) => (current === "back" ? "front" : "back"));
 };
@@ -357,7 +358,7 @@ const toggleCameraFacing = () => {
 
 #### 6.4.2. Animación de captura
 
-```javascript
+```javascript title="Animación de captura"
 const animateCapture = () => {
   Animated.sequence([
     Animated.timing(scaleAnim, {
@@ -376,7 +377,7 @@ const animateCapture = () => {
 
 #### 6.4.3. Captura de fotografías
 
-```javascript
+```javascript title="Captura de fotografías"
 const takePicture = async () => {
   if (cameraRef.current && !isCapturing) {
     try {
@@ -414,7 +415,7 @@ const takePicture = async () => {
 
 #### 6.4.4. Gestión de la galería
 
-```javascript
+```javascript title="Gestión de la galería"
 const deletePhoto = (photoId) => {
   Alert.alert(
     "🗑️ Eliminar foto",
@@ -449,7 +450,7 @@ const clearAllPhotos = () => {
 
 La interfaz principal utiliza un ScrollView para acomodar todo el contenido:
 
-```javascript
+```javascript title="Interfaz principal"
 const selectedFilterData = filters.find((f) => f.name === selectedFilter);
 
 return (
@@ -481,7 +482,7 @@ return (
 
 ### 6.6. Contenedor de la cámara
 
-```javascript
+```javascript title="Contenedor de la cámara"
 {
   /* Contenedor de la cámara */
 }
@@ -540,7 +541,7 @@ return (
 
 ### 6.7. Sistema de filtros
 
-```javascript
+```javascript title="Sistema de filtros"
 {
   /* Filtros */
 }
@@ -589,7 +590,7 @@ return (
 
 ### 6.8. Galería de fotos
 
-```javascript
+```javascript title="Galería de fotos"
 {
   /* Galería de fotos */
 }
@@ -666,7 +667,7 @@ return (
 
 Agrega esta función fuera del componente principal:
 
-```javascript
+```javascript title="Función de filtros"
 // Función para obtener estilos de filtro
 function getFilterStyle(filterName) {
   switch (filterName) {
@@ -686,7 +687,7 @@ function getFilterStyle(filterName) {
 
 Agrega todos los estilos al final del archivo:
 
-```javascript
+```javascript title="Estilos completos"
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -1015,7 +1016,7 @@ const styles = StyleSheet.create({
 
 Para ejecutar la aplicación en modo desarrollo:
 
-```bash
+```bash title="Desarrollo local"
 # Navegar al directorio del proyecto
 cd metacritic-app
 
@@ -1085,7 +1086,7 @@ npx expo start
 
 Para crear una build de desarrollo personalizada:
 
-```bash
+```bash title="Build de desarrollo"
 # Build para iOS
 npx expo run:ios
 
@@ -1099,7 +1100,7 @@ npx expo run:android
 
 La aplicación utiliza varios hooks de React para el manejo de estado:
 
-```javascript
+```javascript title="Manejo de estado con Hooks"
 // Estado principal de la aplicación
 const [facing, setFacing] = useState("back"); // Cámara frontal/trasera
 const [photos, setPhotos] = useState([]); // Array de fotos capturadas
@@ -1126,7 +1127,7 @@ La aplicación hace uso de múltiples componentes nativos de React Native:
 
 #### 8.3.1. Cámara (expo-camera)
 
-```javascript
+```javascript title="Cámara (expo-camera)"
 // Hook para manejo de permisos
 const [permission, requestPermission] = useCameraPermissions();
 
@@ -1142,7 +1143,7 @@ const photo = await cameraRef.current.takePictureAsync({
 
 #### 8.3.2. Gradientes (expo-linear-gradient)
 
-```javascript
+```javascript title="Gradientes (expo-linear-gradient)"
 <LinearGradient
   colors={["#667eea", "#764ba2"]}
   style={styles.container}
@@ -1157,7 +1158,7 @@ const photo = await cameraRef.current.takePictureAsync({
 
 La aplicación se adapta a diferentes tamaños de pantalla:
 
-```javascript
+```javascript title="Responsive Design"
 const { height } = Dimensions.get("window");
 
 // Altura adaptativa para la cámara
@@ -1173,11 +1174,11 @@ cameraContainer: {
 
 | Componente           | iOS | Android | Web | Notas                                     |
 | -------------------- | --- | ------- | --- | ----------------------------------------- |
-| **CameraView**       | ✅  | ✅      | ✅  | Acceso a cámara del dispositivo/web       |
-| **LinearGradient**   | ✅  | ✅      | ✅  | Renderizado nativo en móviles, CSS en web |
-| **Animated**         | ✅  | ✅      | ✅  | Animaciones nativas optimizadas           |
-| **ScrollView**       | ✅  | ✅      | ✅  | Scroll nativo en móviles, overflow en web |
-| **TouchableOpacity** | ✅  | ✅      | ✅  | Gestos táctiles en móviles, click en web  |
+| **CameraView**       | Sí  | Sí      | Sí  | Acceso a cámara del dispositivo/web       |
+| **LinearGradient**   | Sí  | Sí      | Sí  | Renderizado nativo en móviles, CSS en web |
+| **Animated**         | Sí  | Sí      | Sí  | Animaciones nativas optimizadas           |
+| **ScrollView**       | Sí  | Sí      | Sí  | Scroll nativo en móviles, overflow en web |
+| **TouchableOpacity** | Sí  | Sí      | Sí  | Gestos táctiles en móviles, click en web  |
 
 ### 9.2. Adaptaciones automáticas por plataforma
 
@@ -1204,7 +1205,7 @@ cameraContainer: {
 
 Para debugging avanzado, instala React Native Debugger:
 
-```bash
+```bash title="React Native Debugger"
 # macOS
 brew install --cask react-native-debugger
 
@@ -1225,7 +1226,7 @@ El servidor de desarrollo de Expo incluye herramientas integradas:
 
 Configura debugging directo en VS Code creando `.vscode/launch.json`:
 
-```json
+```json title=".vscode/launch.json"
 {
   "version": "0.2.0",
   "configurations": [
@@ -1251,7 +1252,7 @@ Configura debugging directo en VS Code creando `.vscode/launch.json`:
 
 #### 11.1.1. Uso de memo para componentes
 
-```javascript
+```javascript title="Uso de memo para componentes"
 import { memo } from 'react';
 
 const PhotoCard = memo(({ photo, onDelete }) => {
@@ -1263,7 +1264,7 @@ const PhotoCard = memo(({ photo, onDelete }) => {
 
 #### 11.1.2. Optimización de imágenes
 
-```javascript
+```javascript title="Optimización de imágenes"
 <Image
   source={{ uri: photo.uri }}
   style={styles.photo}
@@ -1276,7 +1277,7 @@ const PhotoCard = memo(({ photo, onDelete }) => {
 
 ### 11.2. Manejo de memoria
 
-```javascript
+```javascript title="Manejo de memoria"
 // Limpieza de timers y listeners
 useEffect(() => {
   return () => {
@@ -1290,7 +1291,7 @@ useEffect(() => {
 
 ### 11.3. Accesibilidad
 
-```javascript
+```javascript title="Accesibilidad"
 <TouchableOpacity
   style={styles.captureButton}
   onPress={takePicture}
@@ -1334,7 +1335,7 @@ Prueba las siguientes funcionalidades en cada plataforma:
 
 #### 12.2.1. iOS
 
-```bash
+```bash title="iOS"
 # iPhone Simulator
 npx expo start --ios
 
@@ -1344,7 +1345,7 @@ npx expo start --ios
 
 #### 12.2.2. Android
 
-```bash
+```bash title="Android"
 # Android Emulator
 npx expo start --android
 
@@ -1369,7 +1370,7 @@ npx expo start --web
 
 Actualiza la configuración en `app.json`:
 
-```json
+```json title="app.json"
 {
   "expo": {
     "name": "PhotoMagic",
@@ -1396,7 +1397,7 @@ Actualiza la configuración en `app.json`:
 
 #### 13.1.2. Build con EAS (Expo Application Services)
 
-```bash
+```bash title="Build con EAS"
 # Instalar EAS CLI
 npm install -g @expo/eas-cli
 

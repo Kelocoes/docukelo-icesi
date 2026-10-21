@@ -1,5 +1,6 @@
 ---
 sidebar_position: 8
+description: "Consulta las diapositivas de la semana 1 sobre redes, protocolos web, sockets en Java, Apache Tomcat y servlets."
 ---
 
 # Slides de la semana

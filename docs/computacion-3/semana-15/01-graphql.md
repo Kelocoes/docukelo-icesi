@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Taller práctico para entender los conceptos básicos de GraphQL e implementarlo paso a paso en un proyecto con NestJS."
 ---
 
 # Taller de GraphQL
@@ -115,7 +116,7 @@ Espera, ¿qué? ¿Qué es eso de Apollo?
 
 2. **Configuración del módulo GraphQL en NestJS**:
    En el archivo `app.module.ts`, importa y configura el módulo GraphQL:
-   ```typescript
+   ```typescript title="app.module.ts"
    import { GraphQLModule } from '@nestjs/graphql';
    import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
    import { join } from 'path';
@@ -139,7 +140,7 @@ Espera, ¿qué? ¿Qué es eso de Apollo?
 
 Un esquema de GraphQL se puede ver así:
 
-```graphql
+```graphql title="Primeros Pasos con GraphQL en NestJS"
 type User {
   id: ID!
   name: String!
@@ -166,7 +167,7 @@ El símbolo `!` indica que el campo es **obligatorio**, es decir, no puede ser n
 
 Para mapear tus entidades de TypeORM a tipos de GraphQL en NestJS, puedes utilizar los decoradores proporcionados por el paquete `@nestjs/graphql`. Aquí te muestro cómo hacerlo:
 
-```typescript
+```typescript title="Mapeo de Entidades a Tipos GraphQL"
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { User } from './user.entity';
 import { Role } from './role.entity';
@@ -200,7 +201,7 @@ Realmente puedes definir el mapeo **directamente en la entidad**, pero si quiere
 
 Aquí te dejo un ejemplo de la entidad de Post y su correspondiente tipo GraphQL:
 
-```typescript
+```typescript title="Mapeo de Entidades a Tipos GraphQL (2)"
 @ObjectType()
 @Entity('posts')
 export class Post {
@@ -276,7 +277,7 @@ En GraphQL, las **consultas (queries)** y **mutaciones (mutations)** se definen 
 
 Para definir un resolver en NestJS, primero necesitas crear una clase decorada con `@Resolver()`. Dentro de esta clase, puedes definir métodos para las consultas y mutaciones utilizando los decoradores `@Query()` y `@Mutation()` respectivamente.
 
-```typescript
+```typescript title="Definición de la clase Resolver"
 import { Resolver } from '@nestjs/graphql';
 import { AuthorsService } from './authors.service';
 import { Author } from './entities/author.entity';
@@ -288,7 +289,7 @@ export class AuthorsResolver {
 
 Y lo agregamos al módulo correspondiente:
 
-```typescript
+```typescript title="Definición de la clase Resolver (2)"
 @Module({
     imports: [TypeOrmModule.forFeature([Author])],
     providers: [AuthorsService, AuthorsResolver], // <--- Aquí!
@@ -306,7 +307,7 @@ Ahora sí pensemos en las consultas. Aprovechando que ya tenemos unos cuantos se
 - `authorByEmail(email: String!)`: Obtiene un autor por su email.
 - `activeAuthors`: Obtiene una lista de autores activos.
 
-```typescript
+```typescript title="Definición de Consultas"
 import { Resolver, Query, Args, ID } from '@nestjs/graphql';
 import { AuthorsService } from './authors.service';
 import { Author } from './entities/author.entity';
@@ -357,7 +358,7 @@ Te recomiendo que explores la documentación del esquema para familiarizarte con
 
 Aquí te dejo un ejemplo de consulta para obtener todos los autores:
 
-```graphql
+```graphql title="Definición de Consultas (2)"
 query {
   authors {
     id
@@ -370,7 +371,7 @@ query {
 
 También puedes probar la consulta para obtener un autor por su ID:
 
-```graphql
+```graphql title="Definición de Consultas (3)"
 query {
   author(id: 1) {
     id
@@ -389,7 +390,7 @@ query {
 
 Ya que tenemos las consultas listas, vamos a definir las mutaciones para **crear**, **actualizar** y **eliminar** autores. Aquí te muestro cómo hacerlo para la entidad `Author`:
 
-```typescript
+```typescript title="Definición de Mutaciones"
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { AuthorsService } from './authors.service';
 import { Author } from './entities/author.entity';
@@ -455,7 +456,7 @@ Sí, definitivamente puedes (y _deberías_) usar **DTOs de entrada** para simpli
 
 Primero, crea un DTO de entrada para la creación y actualización de autores:
 
-```typescript
+```typescript title="Uso de DTOs de Entrada para Mutaciones"
 import { InputType, Field } from '@nestjs/graphql';
 
 @InputType() // Define un tipo de entrada GraphQL
@@ -506,7 +507,7 @@ export class UpdateAuthorInput {
 
 Y así podrías actualizar tu resolver para usar estos DTOs de entrada:
 
-```typescript
+```typescript title="Uso de DTOs de Entrada (2)"
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { AuthorsService } from './authors.service';
 import { Author } from './entities/author.entity';
@@ -549,7 +550,7 @@ Con este enfoque, tus mutaciones son mucho más limpias y fáciles de mantener. 
 
 **Crear un nuevo autor:**
 
-```graphql
+```graphql title="Uso de DTOs de Entrada (3)"
 mutation {
   createAuthor(createAuthorInput: { // Usa el DTO de entrada
     firstName: "Juan",
@@ -570,7 +571,7 @@ mutation {
 
 **Actualizar un autor existente:**
 
-```graphql
+```graphql title="Uso de DTOs de Entrada (4)"
 mutation {
   updateAuthor( // Mutación para actualizar un autor
     id: 1, // ID del autor a actualizar
@@ -590,7 +591,7 @@ mutation {
 
 **Eliminar un autor:**
 
-```graphql
+```graphql title="Uso de DTOs de Entrada (5)"
 mutation {
   removeAuthor(id: 1) # ID del autor a eliminar
 }
@@ -598,7 +599,7 @@ mutation {
 
 :::info
 ¡Ahora es tu momento de brillar! Implementa las mutaciones para la entidad `Post` siguiendo el mismo patrón que usamos para `Author`. Asegúrate de crear los DTOs de entrada necesarios y definir las mutaciones en el resolver correspondiente. ¡Buena suerte! 
-(ʘ‿ʘ)ﾉ🌸 _"Hold my flower"_
+(ʘ‿ʘ)ﾉ _"Hold my flower"_
 :::
 
 ## 6. TODO

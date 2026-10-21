@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Learn offline-first web architecture with PWAs, Service Workers, and IndexedDB, and build a field logger that works without a connection."
 ---
 
 # Offline-First Web Applications: Architecture with PWA and IndexedDB
@@ -73,7 +74,7 @@ When users mutate records offline across multiple devices simultaneously:
   <Step number="1" title="Clone and Run Demo">
     Clone and start both backend server and React client:
 
-    ```bash
+    ```bash title="Practical Demo: Zero-Signal Field Logger"
     git clone https://github.com/Philipk84/expo-compunet-3
     cd expo-compunet-3
     npm install

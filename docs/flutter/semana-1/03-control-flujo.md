@@ -1,6 +1,7 @@
 ---
 sidebar_position: 3
 title: Control de Flujo y Estructuras Modernas
+description: "Aprende a controlar el flujo de un programa en Dart con condicionales, bucles, records y las estructuras modernas del lenguaje."
 ---
 
 # Control de Flujo y Estructuras Modernas

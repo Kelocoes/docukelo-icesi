@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Aprende a definir clases, propiedades, getters, setters, listas de inicialización y los distintos tipos de constructores en Dart."
 ---
 
 # Clases y Constructores

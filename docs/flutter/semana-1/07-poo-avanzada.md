@@ -1,5 +1,6 @@
 ---
 sidebar_position: 7
+description: "Aprende herencia, interfaces, mixins y modificadores de clase en Dart para estructurar sistemas escalables y seguros."
 ---
 
 # Herencia, Mixins y Modificadores

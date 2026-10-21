@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Practica los conceptos básicos de JavaScript con ejercicios sobre variables, hoisting, operadores y estructuras de control."
 ---
 
 # Ejercicios de Práctica de JavaScript
@@ -20,9 +21,9 @@ Crea una variable llamada `nombre` que almacene tu nombre y muestra en consola e
 - **Salida:** `"Hola, Ana!"`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 let nombre = "Ana";
 console.log("Hola, " + nombre + "!");
 ```
@@ -43,9 +44,9 @@ Tienes dos variables con valores diferentes. Debes intercambiar sus valores sin 
 - **Salida:** `x = 10, y = 5`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 let x = 5;
 let y = 10;
 
@@ -70,9 +71,9 @@ Declara dos constantes `base` y `altura` y calcula el área de un rectángulo (`
 - **Salida:** `12`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 const base = 4;
 const altura = 3;
 console.log(base * altura);
@@ -94,9 +95,9 @@ Declara dos variables: `precio` y `descuento`. Calcula el precio final aplicando
 - **Salida:** `80`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 let precio = 100;
 let descuento = 20; // en porcentaje
 let precioFinal = precio - (precio * descuento) / 100;
@@ -119,9 +120,9 @@ Declara dos variables `x` y `y` y muestra `true` si `x` es mayor que `y`, de lo 
 - **Salida:** `true`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 let x = 10;
 let y = 7;
 console.log(x > y);
@@ -143,9 +144,9 @@ Crea dos variables booleanas `llueve` y `tengoParaguas`. Muestra `true` solo si 
 - **Salida:** `true`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 let llueve = true;
 let tengoParaguas = true;
 console.log(llueve && tengoParaguas);
@@ -167,9 +168,9 @@ Crea dos variables booleanas `tengoDinero` y `tengoTiempo`. Muestra `true` si al
 - **Salida:** `true`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 let tengoDinero = false;
 let tengoTiempo = true;
 console.log(tengoDinero || tengoTiempo);
@@ -191,9 +192,9 @@ Nota: Esto **no funciona igual** con `let` o `const`.
 - **Salida esperada:** `undefined` y luego el valor asignado.
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 console.log(miVariable); // undefined
 var miVariable = "Hola mundo";
 console.log(miVariable); // "Hola mundo"
@@ -221,9 +222,9 @@ Crea una calculadora que realice las cuatro operaciones básicas (suma, resta, m
   ```
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 const num1 = 10;
 const num2 = 5;
 
@@ -245,15 +246,15 @@ Demuestra la diferencia entre los operadores de incremento (`++`) y decremento (
 
 #### Ejemplo
 
-```javascript
+```javascript title="Ejemplo"
 let num = 5;
 // ¿Qué valores se imprimirán en cada caso?
 ```
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 let num = 5;
 
 console.log(num++); // 5 (postfijo: primero imprime, luego incrementa)
@@ -291,9 +292,9 @@ Usa una estructura `if/else` para mostrar `"Mayor de edad"` si la edad es mayor 
 - **Salida:** `"Mayor de edad"`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 let edad = 20;
 if (edad >= 18) {
   console.log("Mayor de edad");
@@ -322,9 +323,9 @@ Usa `if/else if/else` para clasificar una nota:
 - **Salida:** `"Aprobado"`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 let nota = 85;
 if (nota >= 90) {
   console.log("Excelente");
@@ -351,9 +352,9 @@ Usa un `switch` para mostrar el nombre del día de la semana según un número d
 - **Salida:** `"Miércoles"`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 let dia = 3;
 switch (dia) {
   case 1:
@@ -404,9 +405,9 @@ condición ? valorSiVerdadero : valorSiFalso;
 ```
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 let nota = 65;
 console.log(nota >= 70 ? "Aprobado" : "Reprobado");
 ```
@@ -426,9 +427,9 @@ Usa un bucle `for` para mostrar los números del 1 al 5.
 - **Salida:** `1 2 3 4 5`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 for (let i = 1; i <= 5; i++) {
   console.log(i);
 }
@@ -449,9 +450,9 @@ Usa un bucle `while` para contar desde 5 hasta 1.
 - **Salida:** `5 4 3 2 1`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 let i = 5;
 while (i >= 1) {
   console.log(i);
@@ -474,9 +475,9 @@ Usa un `for` para sumar los números del 1 al 10 y muestra el resultado.
 - **Salida:** `55`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 let suma = 0;
 for (let i = 1; i <= 10; i++) {
   suma += i;
@@ -500,9 +501,9 @@ Crea una función `saludar` que reciba un nombre como parámetro y muestre `"Hol
 - **Salida:** `"Hola, Carlos!"`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function saludar(nombre) {
   console.log("Hola, " + nombre + "!");
 }
@@ -525,9 +526,9 @@ Crea una función `cuadrado` que reciba un número y devuelva su cuadrado, es de
 - **Salida:** `16`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function cuadrado(num) {
   return num * num;
 }
@@ -550,9 +551,9 @@ Crea una función `esPar` que reciba un número y devuelva `true` si es par y `f
 - **Salida:** `false`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function esPar(num) {
   return num % 2 === 0;
 }
@@ -584,9 +585,9 @@ Crea una función `agregarElemento` que reciba un array y un elemento, y lo agre
 - **Salida:** `[1, 2, 3, 4]`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function agregarElemento(arr, elem) {
   arr.push(elem);
   return arr;
@@ -610,9 +611,9 @@ Crea una función `eliminarUltimo` que reciba un array y elimine su último elem
 - **Salida:** `[1, 2]`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function eliminarUltimo(arr) {
   arr.pop();
   return arr;
@@ -636,9 +637,9 @@ Crea una función `obtenerNombre` que reciba un objeto con la propiedad `nombre`
 - **Salida:** `"Ana"`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function obtenerNombre(obj) {
   return obj.nombre;
 }
@@ -661,9 +662,9 @@ Crea una función `cambiarEdad` que reciba un objeto con la propiedad `edad` y l
 - **Salida:** `{ nombre: "Ana", edad: 21 }`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function cambiarEdad(obj) {
   obj.edad += 1;
   return obj;
@@ -687,9 +688,9 @@ Crea una función `copiarObjeto` que reciba un objeto y devuelva una copia usand
 - **Salida:** `{ a: 1, b: 2 }`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function copiarObjeto(obj) {
   return { ...obj };
 }
@@ -712,9 +713,9 @@ Crea una función `copiarConAssign` que reciba un objeto y devuelva una copia us
 - **Salida:** `{ x: 10, y: 20 }`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function copiarConAssign(obj) {
   return Object.assign({}, obj);
 }
@@ -737,9 +738,9 @@ Crea una función `agregarDatos` que reciba un objeto y le agregue propiedades n
 - **Salida:** `{ nombre: "Ana", pais: "Colombia", ciudad: "Bogotá" }`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function agregarDatos(obj) {
   obj.pais = "Colombia";
   obj.ciudad = "Bogotá";
@@ -764,9 +765,9 @@ Crea una función `duplicarArray` que reciba un array y devuelva una copia con l
 - **Salida:** `[1, 2, 3]`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function duplicarArray(arr) {
   return [...arr];
 }
@@ -789,9 +790,9 @@ Crea una función `eliminarPropiedad` que reciba un objeto y una propiedad, y el
 - **Salida:** `{ a: 1 }`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function eliminarPropiedad(obj, prop) {
   delete obj[prop];
   return obj;
@@ -815,9 +816,9 @@ Crea una función `combinarObjetos` que reciba dos objetos y devuelva uno nuevo 
 - **Salida:** `{ a: 1, b: 2 }`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function combinarObjetos(obj1, obj2) {
   return { ...obj1, ...obj2 };
 }
@@ -855,9 +856,9 @@ Crea una función `deepCopyJSON` que reciba un objeto y devuelva una copia profu
 - **Salida:** `{ a: 1, b: { c: 2 } }` (copia independiente)
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function deepCopyJSON(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
@@ -880,9 +881,9 @@ Crea una función `deepCopyRecursive` que reciba un objeto y devuelva una copia 
 - **Salida:** `{ x: 10, y: { z: 20 } }` (copia independiente)
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function deepCopyRecursive(obj) {
   if (typeof obj !== "object" || obj === null) return obj;
   let copy = Array.isArray(obj) ? [] : {};
@@ -910,9 +911,9 @@ Crea una función `extraerUsuario` que reciba un objeto con propiedades `nombre`
 - **Salida:** `"Nombre: Ana, Edad: 25"`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function extraerUsuario({ nombre, edad }) {
   return `Nombre: ${nombre}, Edad: ${edad}`;
 }
@@ -935,9 +936,9 @@ Crea una función `primerosDos` que reciba un array y use desestructuración par
 - **Salida:** `10, 20`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function primerosDos(arr) {
   const [a, b] = arr;
   return [a, b];
@@ -961,9 +962,9 @@ Crea una función `infoPersona` que reciba un objeto con propiedades opcionales 
 - **Salida:** `"Ana, 0"`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function infoPersona({ nombre = "Desconocido", edad = 0 }) {
   return `${nombre}, ${edad}`;
 }
@@ -986,9 +987,9 @@ Crea una función `extraerCiudad` que reciba un objeto con estructura `{ direcci
 - **Salida:** `"Bogotá"`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function extraerCiudad({ direccion: { ciudad } }) {
   return ciudad;
 }
@@ -1011,9 +1012,9 @@ Crea una función `aJSON` que reciba un objeto y lo convierta en un string JSON 
 - **Salida:** `"{"a":1,"b":2}"`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function aJSON(obj) {
   return JSON.stringify(obj);
 }
@@ -1036,9 +1037,9 @@ Crea una función `desdeJSON` que reciba un string JSON y lo convierta en un obj
 - **Salida:** `{ a: 1, b: 2 }`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function desdeJSON(str) {
   return JSON.parse(str);
 }
@@ -1061,9 +1062,9 @@ Crea una función `parsearYExtraer` que reciba un string JSON con propiedades `n
 - **Salida:** `"Ana tiene 25 años"`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function parsearYExtraer(str) {
   const { nombre, edad } = JSON.parse(str);
   return `${nombre} tiene ${edad} años`;
@@ -1087,9 +1088,9 @@ Crea una función `copiaIndependiente` que haga una copia profunda de un objeto 
 - **Salida:** original `{ datos: { edad: 20 } }`, copia `{ datos: { edad: 21 } }`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function copiaIndependiente(obj) {
   const copia = JSON.parse(JSON.stringify(obj));
   copia.datos.edad = 21;
@@ -1127,9 +1128,9 @@ Crea una función que reciba un objeto JSON, lo procese convirtiendo todas sus c
 - **Salida:** `{ "NOMBRE": "Ana", "EDAD": 25 }`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function procesarJSON(obj) {
   const copia = JSON.parse(JSON.stringify(obj));
   const resultado = {};
@@ -1157,9 +1158,9 @@ Crea una función recursiva que cuente el número de elementos en un arreglo.
 - **Salida:** `4`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function contarRecursivo(arr) {
   if (arr.length === 0) return 0;
   return 1 + contarRecursivo(arr.slice(1));
@@ -1183,9 +1184,9 @@ Crea una función que reciba un arreglo de objetos con `nombre` y `edad`, y devu
 - **Salida:** `[ {nombre: "Luis", edad: 20} ]`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function filtrarMayores(usuarios) {
   return usuarios.filter((u) => u.edad > 18);
 }
@@ -1213,9 +1214,9 @@ Crea una función recursiva que sume todos los números de un arreglo.
 - **Salida:** `6`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function sumaRecursiva(arr) {
   if (arr.length === 0) return 0;
   return arr[0] + sumaRecursiva(arr.slice(1));
@@ -1239,9 +1240,9 @@ Crea una función que reciba un texto y devuelva un objeto con cada palabra y el
 - **Salida:** `{ hola: 2, mundo: 1 }`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function contarPalabras(texto) {
   const palabras = texto.split(" ");
   const contador = {};
@@ -1269,9 +1270,9 @@ Crea una función recursiva que invierta un string.
 - **Salida:** `"aloh"`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function invertirCadena(str) {
   if (str === "") return "";
   return invertirCadena(str.slice(1)) + str[0];
@@ -1295,9 +1296,9 @@ Crea una función que valide si una contraseña es segura (mínimo 8 caracteres,
 - **Salida:** `true`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function validarContrasena(pass) {
   return (
     /[A-Z]/.test(pass) &&
@@ -1325,9 +1326,9 @@ Crea una función que reciba un arreglo de strings y devuelva un arreglo con los
 - **Salida:** `["1. manzana", "2. pera"]`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function listaNumerada(arr) {
   return arr.map((item, i) => `${i + 1}. ${item}`);
 }
@@ -1350,9 +1351,9 @@ Crea una función recursiva que aplane un arreglo de cualquier profundidad.
 - **Salida:** `[1, 2, 3, 4, 5]`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function aplanar(arr) {
   return arr.reduce(
     (acc, val) =>
@@ -1379,9 +1380,9 @@ Crea una función que convierta de grados Celsius a Fahrenheit y viceversa segú
 - **Salida:** `32`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo"
 function convertirTemp(valor, tipo) {
   if (tipo === "CtoF") return (valor * 9) / 5 + 32;
   if (tipo === "FtoC") return ((valor - 32) * 5) / 9;
@@ -1407,4 +1408,4 @@ console.log(convertirTemp(0, "CtoF"));
 
 ---
 
-> 💡 _"Hola estudiante de DMI, ¡no te desanimes si no lograste alguno! lo intentaste y eso es muy importante. Cada línea de código que escribes es un paso más para mejorar tu manejo en JS ¡Sigue adelante, éxitos! - Att: El profesor Kevin y la monitora Sary."_
+> _"Hola estudiante de DMI, ¡no te desanimes si no lograste alguno! lo intentaste y eso es muy importante. Cada línea de código que escribes es un paso más para mejorar tu manejo en JS ¡Sigue adelante, éxitos! - Att: El profesor Kevin y la monitora Sary."_

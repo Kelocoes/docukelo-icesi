@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Implementa paso a paso la autenticación con JWT en NestJS, configura los módulos de auth y verifica el endpoint de login."
 ---
 
 # Autenticación con JWT

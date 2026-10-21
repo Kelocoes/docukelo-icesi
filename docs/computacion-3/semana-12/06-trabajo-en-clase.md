@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Construye con Tailwind y daisyUI las pantallas de inicio de sesión y registro, el header y la barra de navegación de la aplicación de rutinas."
 ---
 
 # Trabajo en clase

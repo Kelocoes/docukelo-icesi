@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Consulta las diapositivas de la semana 6 sobre paginación, transacciones con rollback y pruebas con JUnit 5 y Mockito."
 ---
 
 # Slides de la semana

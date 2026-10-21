@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Prepare your API security: learn the architecture prerequisites and how to hash passwords with bcrypt."
 ---
 
 # Security Prerequisites and Core Concepts

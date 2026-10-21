@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Install Docker Desktop with the WSL2 backend and verify that your Docker environment works correctly before starting the course exercises."
 ---
 
 # Docker Setup

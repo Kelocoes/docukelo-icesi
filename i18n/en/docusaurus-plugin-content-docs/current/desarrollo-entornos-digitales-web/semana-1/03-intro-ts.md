@@ -1,6 +1,7 @@
 ---
 sidebar_position: 3
 title: Introduction to TypeScript
+description: "Learn to install and use TypeScript: basic types, functions, interfaces, classes, generics and modules to write safer JavaScript code."
 ---
 
 # TypeScript
@@ -21,7 +22,7 @@ JavaScript is flexible and dynamic, but that flexibility can lead to errors that
 
 **Example Issue in JavaScript:**
 
-```javascript
+```javascript title="Why Use TypeScript"
 function add(a, b) {
   return a + b;
 }
@@ -31,7 +32,7 @@ console.log(add(5, "10")); // "510" instead of 15
 
 **TypeScript Solution:**
 
-```typescript
+```typescript title="Why Use TypeScript (solution)"
 function add(a: number, b: number): number {
   return a + b;
 }
@@ -60,7 +61,7 @@ tsc -v
 
 ### 2.2 Initialize a TypeScript Project
 
-```bash
+```bash title="Initialize a TypeScript Project"
 mkdir ts-project
 cd ts-project
 npm init -y
@@ -75,7 +76,7 @@ npx tsc --init
 
 Key compiler settings in `tsconfig.json`:
 
-```json
+```json title="tsconfig.json"
 {
   "compilerOptions": {
     "target": "es6",               // Target JS version
@@ -126,7 +127,7 @@ npx ts-node src/index.ts
 
 TypeScript adds explicit types:
 
-```typescript
+```typescript title="Basic Types in TypeScript"
 let name: string = "Kevin";
 let age: number = 25;
 let active: boolean = true;
@@ -137,20 +138,20 @@ let flexible: any = "Hello"; // Avoid when possible
 
 **Arrays:**
 
-```typescript
+```typescript title="Basic Types in TypeScript (solution)"
 let numbers: number[] = [1, 2, 3];
 let letters: Array<string> = ["a", "b", "c"];
 ```
 
 **Tuples:**
 
-```typescript
+```typescript title="Basic Types in TypeScript (3)"
 let person: [string, number] = ["Kevin", 25];
 ```
 
 **Enums:**
 
-```typescript
+```typescript title="Basic Types in TypeScript (4)"
 enum Color {
   Red = "RED",
   Green = "GREEN",
@@ -163,7 +164,7 @@ console.log(favColor); // "GREEN"
 
 **Union Types:**
 
-```typescript
+```typescript title="Basic Types in TypeScript (5)"
 let id: string | number;
 id = "ABC123";
 id = 42;
@@ -171,7 +172,7 @@ id = 42;
 
 **Type Aliases:**
 
-```typescript
+```typescript title="Basic Types in TypeScript (6)"
 type ID = string | number;
 let userID: ID = 101;
 ```
@@ -182,7 +183,7 @@ let userID: ID = 101;
 
 Typing parameters and return values:
 
-```typescript
+```typescript title="Functions in TypeScript"
 function greet(name: string): string {
   return `Hello, ${name}`;
 }
@@ -192,7 +193,7 @@ console.log(greet("Kevin"));
 
 Optional and default parameters:
 
-```typescript
+```typescript title="Functions in TypeScript (solution)"
 function multiply(a: number, b: number = 2, message?: string): number {
   if (message) console.log(message);
   return a * b;
@@ -208,7 +209,7 @@ console.log(multiply(3, 4, "Calculating..."));
 
 Interfaces define the shape of an object:
 
-```typescript
+```typescript title="Interfaces and Objects"
 interface User {
   id: number;
   name: string;
@@ -225,7 +226,7 @@ let user1: User = {
 
 ## 6. Classes in TypeScript
 
-```typescript
+```typescript title="Classes in TypeScript"
 class Person {
   private name: string;
   protected age: number;
@@ -252,7 +253,7 @@ console.log(p1.greet());
 
 **Generics:**
 
-```typescript
+```typescript title="Advanced Types: Generics"
 function identity<T>(value: T): T {
   return value;
 }
@@ -263,7 +264,7 @@ console.log(identity<number>(123));
 
 **Intersection Types:**
 
-```typescript
+```typescript title="Advanced Types: Generics (solution)"
 interface A { a: string; }
 interface B { b: number; }
 

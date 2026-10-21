@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Distingue principios y patrones de diseño, repasa SOLID y entiende cómo Spring aplica DIP e inversión de control."
 ---
 
 # Principios, Patrones y la Inyección de Dependencias

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Learn to test APIs with Postman: collections, variables, environments and automated tests to validate your NestJS endpoints."
 ---
 
 # API Testing with Postman

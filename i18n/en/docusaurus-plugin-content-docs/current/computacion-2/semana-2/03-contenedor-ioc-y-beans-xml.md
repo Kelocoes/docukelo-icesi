@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Learn how the Spring IoC container works and how to define and inject beans using XML configuration."
 ---
 
 # IoC Containers and Bean Configuration with XML

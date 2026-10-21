@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Practica CSS con juegos y recursos en línea como CSS Grid Garden, Flexbox Froggy, Flukeout y CSS Battle."
 ---
 
 # Ejercicios de CSS

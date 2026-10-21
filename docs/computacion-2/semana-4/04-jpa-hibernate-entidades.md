@@ -1,6 +1,7 @@
 ---
 sidebar_position: 4
 sidebar_label: "JPA y Hibernate"
+description: "Diferencia JPA de Hibernate y mapea entidades Java a tablas relacionales con anotaciones JPA y Lombok."
 ---
 
 # JPA y Hibernate

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Understand the MCP protocol, its host, client, and server architecture, and how it differs from an API or a skill."
 ---
 
 import Tabs from '@theme/Tabs';
@@ -145,7 +146,7 @@ Enables the agent to interact with the remote Git repository:
 
 Enables the agent to launch a headless browser, capture screenshots of the web app, and verify whether buttons are interactive:
 
-```yaml
+```yaml title="MCP server invocation"
 # Flow invocation within the agent
 Agent: "Opening http://localhost:3000 to validate the contact form..."
 Tool Call: browser_navigate(url: "http://localhost:3000")

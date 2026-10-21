@@ -1,6 +1,7 @@
 ---
 sidebar_position: 5
 sidebar_label: "Hands-on Lab: Spring Security & JPA"
+description: "Configure Spring Security with in-memory users and then with JPA to authenticate and authorize in a Spring Boot application."
 ---
 
 import { StepByStep, Step } from '@site/src/components/StepByStep';

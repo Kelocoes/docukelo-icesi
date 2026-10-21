@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Aprende qué es React, cómo se organizan los componentes y cómo crear tus primeras interfaces interactivas."
 ---
 
 # Introducción a React
@@ -97,7 +98,7 @@ Aunque no podemos ver directamente el Virtual DOM, podemos hacer pruebas para co
 
 Ejemplo de un componente simple:
 
-```jsx
+```jsx title="Ejemplo: Virtual DOM"
 function App() {
   return <h1>Hola, React!</h1>;
 }
@@ -107,7 +108,7 @@ export default App;
 
 Si hacemos:
 
-```jsx
+```jsx title="Ejemplo: Virtual DOM"
 console.log(<App />);
 ```
 
@@ -125,7 +126,7 @@ En lugar de trabajar con HTML repetitivo, React permite crear bloques reutilizab
 ### Tipos de componentes
 
 1. **Componentes de clase** (menos usados hoy en día):
-```jsx
+```jsx title="Ejemplo: Tipos de componentes"
 import React, { Component } from "react";
 
 class Welcome extends Component {
@@ -138,7 +139,7 @@ export default Welcome;
 ```
 
 2. **Componentes funcionales** (la forma moderna y recomendada):
-```jsx
+```jsx title="Ejemplo: Tipos de componentes"
 function Welcome({ name }) {
   return <h1>Hola, {name}</h1>;
 }
@@ -162,7 +163,7 @@ Las **props** (propiedades) son valores que se pasan de un componente padre a un
 Son equivalentes a los atributos en HTML.
 
 Ejemplo:
-```jsx
+```jsx title="Ejemplo: Props"
 function Saludo({ nombre }) {
   return <h1>Hola, {nombre}</h1>;
 }
@@ -175,7 +176,7 @@ function App() {
 Aquí, el componente `App` pasa la prop `nombre` al componente `Saludo`.
 
 Además, podemos usar **destructuring** para hacer el código más limpio:
-```jsx
+```jsx title="Ejemplo: Props"
 function Saludo({ nombre, edad }) {
   return <h1>Hola, {nombre}. Tienes {edad} años.</h1>;
 }
@@ -196,7 +197,7 @@ El hook más básico y más utilizado es **useState**, que permite manejar estad
 
 Ejemplo:
 
-```jsx
+```jsx title="Ejemplo: useState"
 import { useState } from "react";
 
 function Contador() {

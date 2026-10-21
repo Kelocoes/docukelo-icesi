@@ -1,6 +1,7 @@
 ---
 sidebar_position: 2
 sidebar_label: "Codificación, Encriptación y Hashing"
+description: "Diferencia codificación, encriptación y hashing, y aprende por qué usar salt y BCrypt para almacenar contraseñas."
 ---
 
 # Codificación, Encriptación y Hashing

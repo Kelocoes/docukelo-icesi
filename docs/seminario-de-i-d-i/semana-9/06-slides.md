@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Consulta las diapositivas de la semana 9 sobre frontend multiplataforma, paradigma declarativo y composición de widgets en Flutter."
 ---
 
 # Slides de la semana

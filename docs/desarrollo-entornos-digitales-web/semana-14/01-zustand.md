@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende a manejar el estado global en Next.js con Zustand, compara con Context API y crea stores tipados para tu aplicación."
 ---
 
 # Zustand en Next.js
@@ -52,7 +53,7 @@ Zustand es una librería de gestión de estado ligera, simple y flexible para ap
 
 Context API - necesitas Provider y useContext:
 
-```javascript
+```javascript title="Comparación directa"
 <NotificationProvider>
     <App />
 </NotificationProvider>;
@@ -62,7 +63,7 @@ const { notifications, addNotification } = useContext(NotificationContext);
 
 Zustand - acceso directo sin Provider:
 
-```javascript
+```javascript title="Comparación directa (solución)"
 const notifications = useNotificationsStore((s) => s.notifications);
 const addNotification = useNotificationsStore((s) => s.addNotification);
 ```
@@ -71,7 +72,7 @@ const addNotification = useNotificationsStore((s) => s.addNotification);
 
 ### Partes de una store Zustand
 
-```typescript
+```typescript title="Partes de una store Zustand"
 import { create } from "zustand";
 
 // 1. Define el tipo del estado
@@ -168,7 +169,7 @@ Zustand soporta middleware para persistencia, logging, etc.
 
 ### Archivo 1: src/lib/store/notificationsStore.ts
 
-```typescript
+```typescript title="Archivo 1"
 import { create } from "zustand";
 
 // Tipo para cada notificación
@@ -241,7 +242,7 @@ export const useNotificationsStore = create<NotificationsState>((set) => ({
 
 Componente que emite (crea) notificaciones para realizar pruebas:
 
-```ts
+```ts title="Archivo 2: NotificationCreator.tsx"
 "use client";
 
 import { useState } from "react";
@@ -292,7 +293,7 @@ export default function NotificationCreator() {
 
 Componente que muestra y gestiona notificaciones:
 
-```ts
+```ts title="Archivo 3: NavBar.tsx"
 "use client";
 
 import Link from "next/link";

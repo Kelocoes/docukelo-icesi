@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende a usar useState, useEffect y los Custom Hooks en React con ejemplos prácticos resueltos."
 ---
 
 # React Hooks
@@ -20,7 +21,7 @@ Los React Hooks son funciones que permiten "enganchar" el estado y el ciclo de v
 
 Al llamar a `useState`, se recibe un arreglo con dos elementos: el valor actual del estado y una función para actualizarlo.
 
-```jsx
+```jsx title="Ejemplo: ¿Cómo funciona"
 const [count, setCount] = useState(0);
 ```
 
@@ -31,7 +32,7 @@ const [count, setCount] = useState(0);
 
 #### 1. Contador simple
 
-```jsx
+```jsx title="Ejemplo: Contador simple"
 import React, { useState } from 'react';
 
 function Contador() {
@@ -49,7 +50,7 @@ function Contador() {
 
 #### 2. Manejo de texto de entrada
 
-```jsx
+```jsx title="Ejemplo: Manejo de texto de entrada"
 import React, { useState } from 'react';
 
 function InputTexto() {
@@ -71,7 +72,7 @@ function InputTexto() {
 
 #### 3. Alternar visibilidad
 
-```jsx
+```jsx title="Ejemplo: Alternar visibilidad"
 import React, { useState } from 'react';
 
 function MostrarOcultar() {
@@ -90,7 +91,7 @@ function MostrarOcultar() {
 
 #### 4. Lista dinámica
 
-```jsx
+```jsx title="Ejemplo: Lista dinámica"
 import React, { useState } from 'react';
 
 function ListaDinamica() {
@@ -122,7 +123,7 @@ function ListaDinamica() {
 
 #### 5. Selección de opción
 
-```jsx
+```jsx title="Ejemplo: Selección de opción"
 import React, { useState } from 'react';
 
 function SeleccionOpcion() {
@@ -150,7 +151,7 @@ function SeleccionOpcion() {
 
 `useEffect` recibe una función que se ejecuta después de que el componente se renderiza. Puede recibir un segundo argumento, un arreglo de dependencias, que determina cuándo se ejecuta el efecto.
 
-```jsx
+```jsx title="Ejemplo: ¿Cómo funciona"
 useEffect(() => {
     // Código del efecto
 }, [dependencias]);
@@ -160,7 +161,7 @@ useEffect(() => {
 
 #### 1. Actualizar el título del documento
 
-```jsx
+```jsx title="Ejemplo: Título del documento"
 import React, { useState, useEffect } from 'react';
 
 function TituloDinamico() {
@@ -182,7 +183,7 @@ function TituloDinamico() {
 
 #### 2. Obtener datos de una API
 
-```jsx
+```jsx title="Ejemplo: Obtener datos de una API"
 import React, { useState, useEffect } from 'react';
 
 function Usuarios() {
@@ -204,7 +205,7 @@ function Usuarios() {
 
 #### 3. Temporizador
 
-```jsx
+```jsx title="Ejemplo: Temporizador"
 import React, { useState, useEffect } from 'react';
 
 function Temporizador() {
@@ -224,7 +225,7 @@ function Temporizador() {
 
 #### 4. Detectar cambios en una variable
 
-```jsx
+```jsx title="Ejemplo: Detectar cambios"
 import React, { useState, useEffect } from 'react';
 
 function CambiosTexto() {
@@ -248,7 +249,7 @@ function CambiosTexto() {
 
 #### 5. Suscripción a eventos del navegador
 
-```jsx
+```jsx title="Ejemplo: Eventos del navegador"
 import React, { useState, useEffect } from 'react';
 
 function TamañoVentana() {
@@ -278,7 +279,7 @@ Un custom hook es una función que comienza con `use` y puede utilizar cualquier
 
 Este custom hook combina `useState` y `useEffect` para crear un contador automático.
 
-```jsx
+```jsx title="Ejemplo: useContador"
 import { useState, useEffect } from 'react';
 
 function useContador(inicial = 0, intervalo = 1000) {

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Navigate between routes in Next.js App Router using the Link component and the useRouter hook, including event-driven navigation."
 ---
 
 import ThemedImage from '@theme/ThemedImage';

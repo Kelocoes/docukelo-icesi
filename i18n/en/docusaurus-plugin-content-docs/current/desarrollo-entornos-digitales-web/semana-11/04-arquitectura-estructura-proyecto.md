@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Explore the structure of a create-next-app project, the special convention files in app and the rendering hierarchy."
 ---
 
 # Architecture & Structure in Next.js

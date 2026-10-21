@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Aprende a navegar entre rutas en Next.js con el componente Link y el hook useRouter, y la diferencia entre push y replace."
 ---
 
 import ThemedImage from '@theme/ThemedImage';

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Descubre cómo construir aplicaciones offline-first con PWA, Service Workers e IndexedDB, incluyendo la resolución de conflictos de datos."
 ---
 
 # Aplicaciones Web Offline-First: Arquitectura con PWA e IndexedDB
@@ -75,7 +76,7 @@ Cuando un usuario modifica un registro sin conexión desde un dispositivo y otro
   <Step number="1" title="Instalar y Levantar la Demostración">
     Clona y ejecuta el servidor backend y el frontend React:
 
-    ```bash
+    ```bash title="Demostración Práctica: Bitácora Cero"
     git clone https://github.com/Philipk84/expo-compunet-3
     cd expo-compunet-3
     npm install

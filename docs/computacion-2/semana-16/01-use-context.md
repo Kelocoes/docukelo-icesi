@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Gestiona el estado global de autenticación con Context API y protege rutas públicas y privadas en una aplicación React."
 ---
 
 # Context API y Rutas Protegidas
@@ -38,7 +39,7 @@ Este componente se encarga de:
 
 #### Fragmento de lógica clave:
 
-```javascript
+```javascript title="Fragmento de lógica clave"
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(() => {
         const storedToken = localStorage.getItem("token");
@@ -79,7 +80,7 @@ Este componente actúa como un "guardián". No renderiza contenido propio direct
 - **`Navigate`**: Un componente de `react-router` que redirige al usuario programáticamente.
 - **`Outlet`**: Es un marcador de posición. Indica dónde se deben renderizar las rutas hijas si la condición de protección se cumple.
 
-```javascript
+```javascript title="El Componente ProtectedRoute"
 export default function ProtectedRoute() {
     const { isAuthenticated } = useContext(AuthContext);
 
@@ -97,7 +98,7 @@ export default function ProtectedRoute() {
 
 En `src/router/Router.jsx`, agrupamos las rutas que requieren protección dentro de un objeto que utiliza el `ProtectedRoute` como elemento base:
 
-```javascript
+```javascript title="Router.jsx"
 const router = createBrowserRouter([
     {
         path: "/auth", // Rutas Públicas

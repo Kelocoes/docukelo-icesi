@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Descubre la arquitectura de NestJS y el ciclo de vida de una solicitud, y valida lo aprendido con un cuestionario de autoevaluación."
 ---
 
 # Introducción a NestJS

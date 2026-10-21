@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Practica merge, rebase y reescritura del historial en Git creando ramas, resolviendo errores y eliminando commits."
 ---
 
 # Ejercicio: Merge, Rebase e Historial
@@ -25,7 +26,7 @@ cd git-avanzado-ejercicioX
 
 Crea un archivo llamado `bitacora.md` y agrega una línea que diga:
 
-```markdown
+```markdown title="bitacora.md"
 # Bitácora de cambios
 Inicio del proyecto.
 ```
@@ -98,7 +99,7 @@ git log --oneline --graph --all
 
 ### Ejemplo de historial después de un merge
 
-```bash
+```bash title="Comandos de ejemplo"
 *   0cb7494 Resuelto el conflicto
 |\
 | * 0aa0487 (agregar-capitulo-1) Agregando capítulo 1
@@ -161,7 +162,7 @@ Si seguiste los pasos correctamente, deberías observar que el historial de comm
 
 ### Ejemplo de historial después de un rebase
 
-```bash
+```bash title="Comandos de ejemplo"
 * 380f775 (HEAD -> master, agregar-capitulo-2) Resolviendo los conflictos de rebase
 * 08080db Agregando informació en main
 *   0cb7494 Resuelto el conflicto
@@ -201,7 +202,7 @@ git reset --soft HEAD~1
 
 5. Elimina el archivo o corrige y Has un nuevo commit correcto:
 
-```bash
+```bash title="Comandos de ejemplo"
 # O puedes restaurar el estado original del archivo:
 git restore bitacora.md
 git add bitacora.md
@@ -214,11 +215,11 @@ git commit -m "Corrección de capítulo con errores"
 git push origin agregar-capitulo-error
 ```
 
-> ⚠️ Ten cuidado si usas `--hard`, pues perderás el trabajo no guardado.
+> Ten cuidado si usas `--hard`, pues perderás el trabajo no guardado.
 
 ---
 
-## ✅ Resultado Esperado
+## Resultado Esperado
 
 Al final del ejercicio tendrás:
 

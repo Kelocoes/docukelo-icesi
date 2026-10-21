@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Configura Smart Tomcat en IntelliJ IDEA y en Visual Studio Code para ejecutar y depurar aplicaciones web Java."
 ---
 
 # Configuración de Smart Tomcat
@@ -58,7 +59,7 @@ Asegúrate de tener instalado lo siguiente:
 5. Selecciona la ubicación del proyecto y espera a que se cree.
 6. Agrega la siguiente dependencia al archivo `pom.xml`:
 
-    ```xml
+    ```xml title="pom.xml"
     <dependency>
           <groupId>jakarta.servlet</groupId>
           <artifactId>jakarta.servlet-api</artifactId>
@@ -87,7 +88,7 @@ Asegúrate de tener instalado lo siguiente:
 
 9. Crea el archivo `HelloServlet.java` en `src/main/java/com/example`:
 
-    ```java
+    ```java title="HelloServlet.java"
     import java.io.*;
     import jakarta.servlet.http.*;
     import jakarta.servlet.annotation.*;

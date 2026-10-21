@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende la estructura de un documento HTML, las etiquetas de contenido, atributos, formularios y multimedia para crear páginas web."
 ---
 
 import BrowserWindow from '@site/src/components/BrowserWindow';
@@ -12,7 +13,7 @@ HTML (HyperText Markup Language) es el lenguaje fundamental para la creación de
 
 Un documento HTML siempre debe comenzar con la declaración `<!DOCTYPE html>`, que le indica al navegador que se trata de HTML5.
 
-```html
+```html title="Estructura básica de un documento HTML"
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -57,7 +58,7 @@ La estructura semántica mejora la accesibilidad, el SEO y la comprensión del d
 - `<aside>`: Contenido secundario (por ejemplo, una barra lateral).
 - `<footer>`: Pie de página.
 
-```html
+```html title="Estructura semántica"
 <body>
   <header>
     <h1>Mi Blog</h1>
@@ -111,7 +112,7 @@ Estas etiquetas permiten dar estructura y estilo al contenido:
 - Saltos de línea: `<br>`
 - Enfasis: `<strong>`, `<em>`
 
-```html
+```html title="Etiquetas de contenido"
 <h1>Título principal</h1>
 <p>Texto con <strong>negrita</strong> y <em>cursiva</em>.</p>
 <hr>
@@ -124,7 +125,7 @@ Estas etiquetas permiten dar estructura y estilo al contenido:
 
 Los atributos permiten modificar el comportamiento y estilo de los elementos:
 
-```html
+```html title="Atributos HTML"
 <img src="https://picsum.photos/200/300" alt="Logotipo del sitio" width="100">
 <a href="https://www.ejemplo.com" target="_blank">Visitar sitio</a>
 ```
@@ -148,7 +149,7 @@ Los atributos permiten modificar el comportamiento y estilo de los elementos:
 
 Los formularios permiten recoger información del usuario:
 
-```html
+```html title="Formularios HTML"
 <form action="/enviar" method="POST">
   <label for="nombre">Nombre:</label>
   <input type="text" id="nombre" name="nombre" required>
@@ -180,7 +181,7 @@ Los formularios permiten recoger información del usuario:
 
 HTML permite integrar imágenes, videos y audios:
 
-```html
+```html title="Multimedia"
 <img src="foto.jpg" alt="Una foto">
 <video src="video.mp4" controls></video>
 <audio src="audio.mp3" controls></audio>
@@ -207,7 +208,7 @@ HTML permite integrar imágenes, videos y audios:
 
 Los enlaces permiten conectar diferentes recursos:
 
-```html
+```html title="Enlaces"
 <a href="https://www.ejemplo.com">Enlace externo</a>
 <a href="#seccion2">Ir a sección interna</a>
 ```

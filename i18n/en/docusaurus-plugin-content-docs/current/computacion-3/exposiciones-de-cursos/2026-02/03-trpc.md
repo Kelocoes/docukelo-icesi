@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Learn how tRPC gives end-to-end type safety without code generation, and build a fullstack task manager with React, Node.js, and MongoDB."
 ---
 
 # tRPC: End-to-End Type Safety without Code Generation

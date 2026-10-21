@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Entiende qué es una API, cómo funciona y cómo consumirla desde JavaScript para intercambiar datos entre aplicaciones."
 ---
 
 # API
@@ -95,7 +96,7 @@ Los códigos de estado HTTP son respuestas estándar que indican el resultado de
 
 ### Ejemplo de métodos usando fetch en JavaScript
 
-```javascript
+```javascript title="Ejemplo: Métodos con fetch"
 // GET
 fetch("https://api.ejemplo.com/usuarios/123")
     .then((response) => response.json())

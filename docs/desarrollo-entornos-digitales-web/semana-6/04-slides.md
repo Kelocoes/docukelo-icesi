@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Consulta las diapositivas de la semana 6 sobre controladores, pipes, validación y pruebas con un visor de PDF integrado."
 ---
 
 # Slides de la semana

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Compara los flujos Git Flow y Git Trunk y aprende convenciones y recomendaciones para organizar el trabajo en repositorios."
 ---
 
 # Organización en Git

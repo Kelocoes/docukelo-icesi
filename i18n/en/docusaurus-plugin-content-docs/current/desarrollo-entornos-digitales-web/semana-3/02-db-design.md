@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Apply the rules of good database design to avoid redundancy and anomalies and obtain a clean, consistent model."
 ---
 
 # How to Design a Good Database

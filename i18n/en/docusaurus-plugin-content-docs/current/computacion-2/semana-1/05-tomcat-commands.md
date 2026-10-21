@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Learn what Apache Tomcat is, how it is organized and the basic commands to start and stop the server."
 ---
 
 # Tomcat Server
@@ -43,7 +44,7 @@ Catalina is Apache Tomcat's Servlet container. It handles HTTP requests and mana
 
 ## Basic Tomcat Commands
 
-```bash
+```bash title="Basic Tomcat Commands"
 # Start server
 ./bin/startup.sh
 

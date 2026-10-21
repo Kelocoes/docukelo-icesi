@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Comprende qué es Node.js, cómo logra concurrencia con el Event Loop y qué son los callbacks, con una presentación de apoyo."
 ---
 
 # Node JS
@@ -40,7 +41,7 @@ Node.js es de un solo hilo (single-threaded), pero puede manejar concurrencia gr
 
 Ejemplo:
 
-```js
+```js title="¿Cómo puede ser concurrente Node JS"
 const fs = require('fs');
 
 console.log('Inicio');
@@ -77,7 +78,7 @@ El Event Loop es el mecanismo que permite a Node.js ejecutar operaciones no bloq
 
 Ejemplo:
 
-```js
+```js title="Microtasks vs Macrotasks"
 console.log('Inicio');
 
 setTimeout(() => console.log('Timeout'), 0);
@@ -102,7 +103,7 @@ Un callback es una función que se pasa como argumento a otra función y que se 
 
 Ejemplo con callback:
 
-```js
+```js title="¿Qué es un callback"
 function saludar(nombre, callback) {
   console.log(`Hola ${nombre}`);
   callback();
@@ -117,7 +118,7 @@ saludar('Kevin', () => {
 
 Cuando muchos callbacks se anidan, el código se vuelve ilegible. Esto se conoce como "callback hell".
 
-```js
+```js title="Callback Hell"
 fs.readFile('archivo1.txt', 'utf-8', (err, data1) => {
     if (err) throw err;
     console.log('Archivo 1 leído');
@@ -151,7 +152,7 @@ Estados:
 
 Ejemplo:
 
-```js
+```js title="Promesas"
 const promesa = new Promise((resolve, reject) => {
   setTimeout(() => resolve('Hecho!'), 1000);
 });
@@ -161,7 +162,7 @@ promesa.then(res => console.log(res));
 
 Con async/await:
 
-```js
+```js title="Promesas (2)"
 async function saludar() {
   const resultado = await promesa;
   console.log(resultado);
@@ -178,10 +179,10 @@ En Node.js, existen dos sistemas de módulos:
 
 Esto se debe a que Node.js fue creado antes de que los módulos ES6 fueran estandarizados. 
 
-```js
+```js title="Diferencia entre require/export y"
 const fs = require('fs'); // CommonJS
 ```
-```js
+```js title="Diferencia entre require/export y (2)"
 import fs from 'fs'; // ES6 Modules
 ```
 
@@ -193,7 +194,7 @@ Permite trabajar con el sistema de archivos.
 
 Ejemplo:
 
-```js
+```js title="Módulo fs"
 const fs = require('fs');
 
 fs.readFile('archivo.txt', 'utf-8', (err, data) => {
@@ -208,7 +209,7 @@ Permite crear servidores HTTP.
 
 Ejemplo:
 
-```js
+```js title="Módulo http"
 const http = require('http');
 
 const server = http.createServer((req, res) => {
@@ -223,7 +224,7 @@ server.listen(3000, () => console.log('Servidor en puerto 3000'));
 
 Permite trabajar con rutas de archivos.
 
-```js
+```js title="Módulo path"
 const path = require('path');
 
 const ruta = path.join(__dirname, 'archivo.txt');
@@ -234,7 +235,7 @@ console.log(ruta);
 
 Provee información del sistema operativo.
 
-```js
+```js title="Módulo os"
 const os = require('os');
 
 console.log('Sistema operativo:', os.platform());
@@ -246,7 +247,7 @@ console.log('CPUs:', os.cpus());
 
 `process.nextTick()` permite ejecutar código de forma asíncrona en la próxima iteración del event loop, antes que cualquier otro evento asíncrono:
 
-```javascript
+```javascript title="Ejemplo de process.nextTick()"
 console.log('Inicio del programa');
 
 // Se ejecuta inmediatamente
@@ -274,7 +275,7 @@ console.log('2. Final del código síncrono');
 
 #### Caso de uso común: Manejo de errores
 
-```javascript
+```javascript title="Caso de uso común: Manejo de errores"
 function asyncFunction(callback) {
     if (typeof callback !== 'function') {
         // Usar nextTick para manejar errores de forma asíncrona

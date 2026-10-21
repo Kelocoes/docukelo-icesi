@@ -1,6 +1,7 @@
 ---
 sidebar_position: 2
 title: "Agile Methodologies & Scrum"
+description: "Learn about agile methodologies and Scrum: roles, events, artifacts and user stories to organize a development team's work."
 ---
 
 # Agile Methodologies & Scrum

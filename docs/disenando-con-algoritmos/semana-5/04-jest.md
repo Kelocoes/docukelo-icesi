@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Aprende a escribir pruebas automáticas en JavaScript con Jest: instalación, matchers, agrupación de tests, hooks y código asíncrono."
 ---
 
 # Testing con Jest
@@ -23,7 +24,7 @@ npm install --save-dev jest
 
 Luego, en tu archivo `package.json`, agrega el script:
 
-```json
+```json title="package.json"
 "scripts": {
   "test": "jest"
 }
@@ -37,7 +38,7 @@ Pero, hace falta donde lo vamos a probar, así que lo vamos a hacerlo paso a pas
 
 Crea un archivo con el nombre `suma.js`:
 
-```js
+```js title="suma.js"
 // Definimos una función llamada 'suma' que recibe dos parámetros y devuelve la suma de estos
 function suma(a, b) {
   return a + b;
@@ -49,7 +50,7 @@ module.exports = suma;
 
 Ahora, crea el archivo `suma.test.js`:
 
-```js
+```js title="suma.test.js"
 // Importamos la función 'suma' desde el archivo suma.js
 // Esto nos permite usar esa función dentro de nuestro test.
 const suma = require("./suma");
@@ -72,7 +73,7 @@ Corre el test con:
 npm test
 ```
 
-¡Y listo! Si todo va bien, verás un mensajito verde que te diga "PASS" ✅
+¡Y listo! Si todo va bien, verás un mensajito verde que te diga "PASS"
 
 ---
 
@@ -82,31 +83,31 @@ npm test
 
 - **toBe** → compara valores primitivos
 
-```js
+```js title="Matchers"
 expect(2 + 2).toBe(4);
 ```
 
 - **toEqual** → compara objetos/arrays
 
-```js
+```js title="Matchers"
 expect({ nombre: "Pedro" }).toEqual({ nombre: "Pedro" });
 ```
 
 - **toBeNull / toBeUndefined / toBeDefined**
 
-```js
+```js title="Matchers"
 expect(null).toBeNull();
 ```
 
 - **toContain**
 
-```js
+```js title="Matchers"
 expect(["rojo", "azul"]).toContain("rojo");
 ```
 
 - **toBeGreaterThan / toBeLessThan**
 
-```js
+```js title="Matchers"
 expect(10).toBeGreaterThan(5);
 ```
 
@@ -116,7 +117,7 @@ expect(10).toBeGreaterThan(5);
 
 Sirve para organizar mejor tus pruebas:
 
-```js
+```js title="Agrupar tests con describe"
 describe("Operaciones matemáticas", () => {
   test("suma", () => {
     expect(2 + 2).toBe(4);
@@ -132,7 +133,7 @@ describe("Operaciones matemáticas", () => {
 
 Puedes preparar o limpiar cosas antes y después de tus tests:
 
-```js
+```js title="Before & After Hooks"
 beforeAll(() => {
   console.log("Se ejecuta una vez ANTES de todos los tests");
 });
@@ -154,7 +155,7 @@ afterEach(() => {
 
 A veces no quieres usar funciones reales (por ejemplo, llamadas a una API). Para eso están los _mocks_:
 
-```js
+```js title="Mocks"
 // Creamos una función "falsa" (mock) con Jest.
 // jest.fn() nos da una función vacía que podemos usar para pruebas.
 const fakeFn = jest.fn();
@@ -174,7 +175,7 @@ expect(fakeFn).toHaveBeenCalledWith("Hola");
 
 Ejemplo con un módulo:
 
-```js
+```js title="Mocks"
 // Le decimos a Jest que "mockee" (simule) el módulo './api'.
 // Eso significa que en lugar de usar las funciones reales de ese archivo,
 // Jest creará versiones falsas (mocks) que podemos controlar.
@@ -210,7 +211,7 @@ En Jest hay varias formas de testear código asíncrono: con **callbacks**, con 
 Algunas funciones no devuelven promesas, sino que usan un **callback** para entregar el resultado.  
 En Jest, para estos casos se usa el parámetro especial `done`, que le dice a Jest cuándo terminar el test:
 
-```js
+```js title="Con Callbacks"
 function fetchDataCallback(callback) {
   setTimeout(() => {
     callback("datos");
@@ -232,7 +233,7 @@ test('fetchDataCallback devuelve "datos" usando callback', (done) => {
 Si la función devuelve una **Promise**, podemos devolverla directamente en el test.  
 Jest esperará a que se resuelva antes de dar el test como terminado:
 
-```js
+```js title="Con Promesas"
 function fetchDataPromise() {
   return Promise.resolve("datos");
 }
@@ -246,7 +247,7 @@ test('fetchDataPromise devuelve "datos" con promesa', () => {
 
 También puedes testear que una promesa falle usando `.catch` o el matcher `rejects`:
 
-```js
+```js title="Con Promesas"
 function fetchDataError() {
   return Promise.reject("error");
 }
@@ -258,12 +259,12 @@ test('fetchDataPromise rechaza con "error"', () => {
 
 ---
 
-### 3. Con Async/Await (lo más limpio ✨)
+### 3. Con Async/Await (lo más limpio)
 
 La forma más moderna y clara es usar **async/await**.  
 Solo marcas el test como `async` y usas `await` para esperar el resultado:
 
-```js
+```js title="Con Async/Await (lo más limpio)"
 function fetchDataAsync() {
   return Promise.resolve("datos");
 }
@@ -276,7 +277,7 @@ test('fetchDataAsync devuelve "datos" con async/await', async () => {
 
 Y para errores, simplemente usas `try/catch` o el matcher `rejects`:
 
-```js
+```js title="Con Async/Await (lo más limpio)"
 async function fetchDataAsyncError() {
   throw new Error("error");
 }
@@ -297,7 +298,7 @@ En resumen:
 ## Prácticas recomendadas
 
 A veces no quieres correr **todos** los tests, solo enfocarte en uno en
-particular (porque el bug anda escondido ahí 👀).\
+particular (porque el bug anda escondido ahí).\
 Para eso Jest te da dos súperpoderes:
 
 ### `test.only(...)`
@@ -305,7 +306,7 @@ Para eso Jest te da dos súperpoderes:
 Corre únicamente ese test y se olvida de los demás. Útil cuando estás
 depurando un caso específico.
 
-```js
+```js title="test.only(...)"
 test.only("suma correctamente 2 + 2", () => {
   expect(2 + 2).toBe(4);
 });
@@ -324,7 +325,7 @@ En este ejemplo, solo el primer test se ejecutará.
 Salta un test que no quieres ejecutar en ese momento (por ejemplo,
 porque aún no está listo o depende de algo externo).
 
-```js
+```js title="test.skip(...)"
 test.skip("esto lo haremos después", () => {
   expect("hola").toBe("adiós");
 });
@@ -339,7 +340,7 @@ El test queda marcado como _skipped_, así no molesta en los resultados.
 Los bloques `describe` sirven para agrupar tests, sí. Pero también tienen `.only`
 y `.skip` para controlar qué conjuntos de pruebas se ejecutan.
 
-```js
+```js title="describe.only y describe.skip"
 describe.only("grupo especial", () => {
   test("ejecuta este", () => {
     expect(1 + 1).toBe(2);
@@ -376,7 +377,7 @@ npm test -- --coverage
 Esto mostrará en consola qué porcentaje de tu código está cubierto por tests (líneas, funciones, ramas, etc.).  
 Además, Jest generará una carpeta llamada `coverage` con un reporte en **HTML** que puedes abrir en tu navegador con el `index.html`.
 
-👉 Ejemplo de salida en consola:
+Ejemplo de salida en consola:
 
 ```
 File        | % Stmts | % Branch | % Funcs | % Lines
@@ -397,7 +398,7 @@ All files   |   85.71 |    75    |   80    |   85.71
 
 ---
 
-## Recursos adicionales 📚
+## Recursos adicionales
 
 - [Documentación oficial de
   Jest](https://jestjs.io/docs/getting-started)

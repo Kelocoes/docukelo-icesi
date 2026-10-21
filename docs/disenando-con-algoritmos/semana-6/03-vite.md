@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Aprende qué es Vite, por qué usarlo frente a Webpack y cómo crear un proyecto con Vanilla-TS y configurarlo."
 ---
 
 # Vite

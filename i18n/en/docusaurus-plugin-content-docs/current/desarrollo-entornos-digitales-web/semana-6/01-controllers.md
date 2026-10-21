@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Learn to create NestJS controllers: routes, HTTP decorators, parameters, responses and exception handling in a REST API."
 ---
 
 # Controllers in NestJS
@@ -173,7 +174,7 @@ throw new BadRequestException('Invalid form inputs', {
 
 The client receives a clean, standardized error response:
 
-```json
+```json title="HTTP Responses and Exception Handling"
 {
   "message": "Invalid form inputs",
   "error": "Email address is already in use",

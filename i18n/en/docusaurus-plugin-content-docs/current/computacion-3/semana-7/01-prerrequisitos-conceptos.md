@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Review the security prerequisites for backend APIs, including password hashing with bcrypt and the difference between authentication and authorization."
 ---
 
 # Security Concepts

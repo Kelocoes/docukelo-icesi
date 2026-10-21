@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Practica un flujo colaborativo en equipo con Git y GitHub creando un repositorio, ramas, commits y escribiendo una historia conjunta."
 ---
 
 # Ejercicio: Colaboración en Git
@@ -53,7 +54,7 @@ Dentro del archivo, escribir una breve historia ficticia, real o inventada (de a
 
 Ejemplo de contenido para `juan.md`:
 
-```markdown
+```markdown title="juan.md"
 # El misterio del bosque encantado
 
 Una mañana, Juan decidió explorar el bosque cercano a su casa. 

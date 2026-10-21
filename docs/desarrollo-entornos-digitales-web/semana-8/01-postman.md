@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende a probar APIs con Postman: colecciones, variables, entornos y pruebas automatizadas para validar tus endpoints de NestJS."
 ---
 
 # Pruebas de APIs con Postman

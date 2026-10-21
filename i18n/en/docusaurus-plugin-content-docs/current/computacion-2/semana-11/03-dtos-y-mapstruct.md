@@ -1,6 +1,7 @@
 ---
 sidebar_position: 3
 sidebar_label: "DTOs (Data Transfer Objects)"
+description: "Apply the DTO pattern to isolate persistence entities and automate object mapping with MapStruct."
 ---
 
 # DTOs (Data Transfer Objects)

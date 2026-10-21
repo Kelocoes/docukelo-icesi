@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Compara el renderizado en el cliente (CSR) y en el servidor (SSR) y conoce los beneficios de usar Next.js."
 ---
 
 # Estrategias de Renderizado: CSR y SSR

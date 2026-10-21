@@ -1,10 +1,14 @@
+---
+description: "Guía de estudio de Spring Boot desde cero: modelo y relaciones JPA, servicios, controladores MVC y REST, DTOs, y autenticación con JWT."
+---
+
 # Guia_spring_boot
 
 # Guía de estudio: Spring Boot desde cero
 
 ---
 
-## 📑 Índice
+## Índice
 
 ### Introduccion a spring boot (model y relaciones)
 
@@ -38,7 +42,7 @@
 
 ## Controller
 
-### 🟦 Bloque 0 — Fundamentos previos
+### Bloque 0 — Fundamentos previos
 
 1. [¿Qué es un endpoint?](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
 2. [Métodos HTTP e idempotencia](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
@@ -46,7 +50,7 @@
 4. [`@PathVariable` vs `@RequestParam`](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
 5. [Los dos tipos de controlador: SSR vs CSR](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
 
-### 🟩 Bloque 1 — Construyendo el controlador MVC
+### Bloque 1 — Construyendo el controlador MVC
 
 1. [Paso 1: preparar el terreno](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
 2. [Paso 2: la clase vacía](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
@@ -61,7 +65,7 @@
 11. [El controlador MVC completo](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
 12. [Paso 11: login MVC y JSESSIONID](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
 
-### 🟨 Bloque 2 — De MVC a REST
+### Bloque 2 — De MVC a REST
 
 1. [Paso 1: cambiar la anotación](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
 2. [Paso 2: el problema de devolver entidades](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
@@ -73,7 +77,7 @@
 8. [El controlador REST completo](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
 9. [Comparación final MVC vs REST](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
 
-### 🟥 Bloque 3 — Autenticación y JWT
+### Bloque 3 — Autenticación y JWT
 
 1. [Panorama: las piezas del rompecabezas](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
 2. [Paso 1:](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21) [`SecurityAuthority`](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
@@ -90,7 +94,7 @@
 13. [El flujo completo, de principio a fin](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
 14. [JSESSIONID vs JWT](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
 
-### ⬜ Bloque 4 — Referencia
+### Bloque 4 — Referencia
 
 1. [Tablas de referencia y errores comunes](https://app.notion.com/p/Guia_spring_boot-3d34e04a83e480a1810fc84eb878a7b9?pvs=21)
 
@@ -102,7 +106,7 @@
 
 La idea central es la **inversión de control (IoC)**: tú no creas objetos con `new`, sino que Spring los crea y te los entrega donde los necesitas. A esos objetos administrados por Spring se les llama **beans**.
 
-```java
+```java title="UserService.java"
 // Sin Spring:
 UserRepository repo = new UserRepositoryImpl(conexionBD);
 UserService service = new UserServiceImpl(repo);
@@ -205,7 +209,7 @@ Estas son las dependencias mínimas para una API REST con base de datos SQL:
 
 Al generar el proyecto, estas dependencias quedan escritas en el archivo `pom.xml`:
 
-```xml
+```xml title="pom.xml"
 <dependencies>
     <!-- API REST + Tomcat -->
     <dependency>
@@ -243,7 +247,7 @@ Al generar el proyecto, estas dependencias quedan escritas en el archivo `pom.xm
 </dependencies>
 ```
 
-> 💡 Si olvidaste una dependencia al crear el proyecto, puedes copiar el bloque `<dependency>` y pegarlo a mano en el `pom.xml`. Al guardar, Maven la descarga.
+> Si olvidaste una dependencia al crear el proyecto, puedes copiar el bloque `<dependency>` y pegarlo a mano en el `pom.xml`. Al guardar, Maven la descarga.
 > 
 
 ### Alternativa para practicar: base de datos en memoria
@@ -292,7 +296,7 @@ eventos/
 
 ### La clase principal
 
-```java
+```java title="EventosApplication.java"
 package com.example.eventos;
 
 import org.springframework.boot.SpringApplication;
@@ -349,7 +353,7 @@ spring.jpa.open-in-view=false
 | `spring.datasource.url` | Dirección de la base de datos. `jdbc:mysql://host:puerto/nombre_bd`. El parámetro `createDatabaseIfNotExist=true` crea el esquema si no existe. |
 | `spring.datasource.username` / `password` | Credenciales de MySQL. |
 | `spring.datasource.driver-class-name` | La clase del driver. Normalmente Spring la detecta sola, pero es buena práctica ponerla. |
-| **`spring.jpa.hibernate.ddl-auto`** | 🔑 **La más importante.** Define qué hace Hibernate con las tablas al arrancar. |
+| **`spring.jpa.hibernate.ddl-auto`** | **La más importante.** Define qué hace Hibernate con las tablas al arrancar. |
 | `spring.jpa.show-sql` | Imprime en consola cada consulta SQL que ejecuta. Excelente para aprender y depurar. |
 | `hibernate.format_sql` | Formatea ese SQL con saltos de línea para que sea legible. |
 | `hibernate.dialect` | El “acento” de SQL que debe hablar Hibernate. Cambia según el motor. |
@@ -371,7 +375,7 @@ spring.jpa.open-in-view=false
 
 Una **entidad** es una clase Java que representa una **tabla** de la base de datos. Cada atributo es una columna y cada instancia de la clase es una fila.
 
-```java
+```java title="User.java"
 package com.example.eventos.model;
 
 import jakarta.persistence.*;
@@ -403,7 +407,7 @@ public class User {
 
 Hibernate traduce esto a:
 
-```sql
+```sql title="La capa Model: entidades JPA"
 CREATE TABLE users (
     id         INT AUTO_INCREMENT PRIMARY KEY,
     user_name  VARCHAR(255) NOT NULL UNIQUE,
@@ -448,7 +452,7 @@ Entonces `@Column(name = "user_name")` sobre `userName` es **redundante**. Solo 
 
 Lo que sí es útil de `@Column` son sus otros atributos:
 
-```java
+```java title="Convención de nombres: camelCase →"
 @Column(nullable = false)                 // NOT NULL
 @Column(unique = true)                    // UNIQUE
 @Column(length = 100)                     // VARCHAR(100)
@@ -458,7 +462,7 @@ Lo que sí es útil de `@Column` son sus otros atributos:
 
 ### Clase model user con relaciones
 
-```java
+```java title="User.java"
 @Data
 @NoArgsConstructor
 @SQLRestriction("deleted = false")   // solo consulta registros no eliminados
@@ -508,7 +512,7 @@ public class User {
 
 En Java tradicional escribirías esto para cada atributo:
 
-```java
+```java title="User.java"
 public class User {
     private String name;
 
@@ -531,7 +535,7 @@ Con 10 atributos eso son 200 líneas de código repetitivo. **Lombok** las gener
 
 Por eso escribes solo:
 
-```java
+```java title="User.java"
 @Data
 @NoArgsConstructor
 @Entity
@@ -545,7 +549,7 @@ public class User {
 
 …y en tu servicio puedes hacer `user.getName()` y `user.setName("Ana")` aunque nunca los escribiste.
 
-### ⚠️ Dos cosas críticas sobre Lombok en entidades JPA
+### Dos cosas críticas sobre Lombok en entidades JPA
 
 **1. `@NoArgsConstructor` es obligatorio.**
 Hibernate crea las instancias por reflexión y necesita un constructor sin argumentos. Si pones `@AllArgsConstructor` sin `@NoArgsConstructor`, la app falla al arrancar.
@@ -555,7 +559,7 @@ Si `User` tiene una lista de `Event`, y cada `Event` tiene un `User`, entonces `
 
 La solución es marcar las relaciones con:
 
-```java
+```java title="Dos cosas críticas sobre Lombok"
 @ToString.Exclude
 @OneToMany(mappedBy = "author")
 private List<Event> events;
@@ -569,7 +573,7 @@ Por eso en tus ejemplos aparece en casi todas las listas. **Regla práctica: tod
 
 Aquí está el corazón de JPA. Una relación en la base de datos es una **llave foránea** (una columna que apunta al ID de otra tabla). En JPA, en vez de manejar el ID, manejas **el objeto completo**.
 
-```java
+```java title="Relaciones entre entidades"
 // En SQL pensarías así:
 private Integer roleId;      // ← guardas el número
 
@@ -583,7 +587,7 @@ Así puedes hacer `user.getRole().getName()` sin escribir un solo `JOIN`.
 
 ### clases de ejmplo:
 
-```java
+```java title="RoleUser.java"
 package com.example.proyectoEjercicio.model;
 
 import java.util.List;
@@ -629,7 +633,7 @@ public class RoleUser {
 
 ```
 
-```java
+```java title="Permission.java"
 package com.example.proyectoEjercicio.model;
 
 import java.util.List;
@@ -667,7 +671,7 @@ public class Permission {
 
 ```
 
-```java
+```java title="PermissionRole.java"
 package com.example.proyectoEjercicio.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -848,8 +852,8 @@ Esto permite que un usuario pueda asistir a varios eventos y un evento tenga var
 
 |  | Lado `@ManyToOne` | Lado `@OneToMany` |
 | --- | --- | --- |
-| ¿Tiene columna FK? | ✅ Sí | ❌ No |
-| ¿Es el dueño? | ✅ Sí | ❌ No (es el inverso) |
+| ¿Tiene columna FK? | Sí | No |
+| ¿Es el dueño? | Sí | No (es el inverso) |
 | Anotación de enlace | `@JoinColumn(name="...")` | `mappedBy = "atributo"` |
 | Tipo del atributo | Un objeto: `Role role` | Una lista: `List<User> users` |
 | ¿Es obligatorio? | Sí, si quieres la FK | No, solo si necesitas navegar |
@@ -861,7 +865,7 @@ Esto permite que un usuario pueda asistir a varios eventos y un evento tenga var
 
 **Escenario:** un usuario tiene un único perfil.
 
-```java
+```java title="User.java"
 // Lado dueño
 @Entity
 public class User {
@@ -884,7 +888,7 @@ public class Profile {
 
 En SQL esto **no se puede representar con una sola columna**: se necesita una tercera tabla (tabla puente).
 
-```java
+```java title="RoleUser.java"
 package com.example.proyectoEjercicio.model;
 
 import java.util.List;
@@ -930,7 +934,7 @@ public class RoleUser {
 
 ```
 
-```java
+```java title="Permission.java"
 package com.example.proyectoEjercicio.model;
 
 import java.util.List;
@@ -968,7 +972,7 @@ public class Permission {
 
 ```
 
-```java
+```java title="PermissionRole.java"
 package com.example.proyectoEjercicio.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -1016,7 +1020,7 @@ public class PermissionRole {
 
 Una clase intermedia es **una entidad normal** con su propio `@Id`, sus atributos propios y **dos `@ManyToOne`** (uno hacia cada lado de las entidades de los extremos).
 
-```java
+```java title="EventAttendee.java"
 @Data
 @NoArgsConstructor
 @Entity
@@ -1053,7 +1057,7 @@ Y el `@ManyToMany` se convierte en dos `@OneToMany` , uno en cada clase del exte
    User ←──ManyToMany──→ Event    User ←OneToMany─ EventAttendee ─ManyToOne→ Event
 ```
 
-```java
+```java title="Cómo se construye una clase intermedia"
 // En User
 @OneToMany(mappedBy = "user")
 @JsonIgnore
@@ -1065,14 +1069,14 @@ private List<EventAttendee> eventAttendees = new ArrayList<>();
 private List<EventAttendee> eventAttendees = new ArrayList<>();
 ```
 
-> ✅ **Regla práctica:** en proyectos reales casi siempre se usa clase intermedia en lugar de `@ManyToMany`, incluso si al principio no tiene datos extra. Es mucho más fácil agregarle una columna después que migrar un `@ManyToMany` a una entidad.
+> **Regla práctica:** en proyectos reales casi siempre se usa clase intermedia en lugar de `@ManyToMany`, incluso si al principio no tiene datos extra. Es mucho más fácil agregarle una columna después que migrar un `@ManyToMany` a una entidad.
 > 
 
 ### Doble relación hacia la misma entidad
 
  `Event` apunta **dos veces** a `User`: el autor y el encargado.
 
-```java
+```java title="Event.java"
 package com.example.proyectoEjercicio.model;
 
 import java.sql.Timestamp;
@@ -1131,7 +1135,7 @@ public class Event {
 
 ```
 
-```java
+```java title="Doble relación hacia la misma entidad"
 @ManyToOne
 @JoinColumn(name = "author_id")
 private User author;      // quien creó el evento
@@ -1143,7 +1147,7 @@ private User manager;     // quien lo administra
 
 Cuando esto pasa, del lado de `User` **debes** distinguirlas con `mappedBy`:
 
-```java
+```java title="Doble relación hacia la misma entidad (2)"
 @OneToMany(mappedBy = "author")     // ← eventos que creó
 private List<Event> createdEvents;
 
@@ -1155,7 +1159,7 @@ Si pusieras `mappedBy = "user"` en las dos, Hibernate no sabría cuál es cuál.
 
 ### Relación recursiva (una entidad hacia sí misma)
 
-```java
+```java title="Relación recursiva"
 @ManyToOne
 @JoinColumn(name = "supervisor_id")
 @JsonIgnore
@@ -1178,14 +1182,14 @@ Cuando un `@RestController` devuelve un objeto, **Jackson** (la librería de JSO
 
 Con una relación bidireccional:
 
-```java
+```java title="El problema"
 User  ──tiene──→ List<Event>
 Event ──tiene──→ User
 ```
 
 Jackson hace:
 
-```json
+```json title="El problema (2)"
 {
   "id": 1, "userName": "ana",
   "events": [
@@ -1203,20 +1207,20 @@ Resultado: `StackOverflowError` o un JSON de varios megabytes.
 
 `@JsonIgnore` le dice a Jackson: *“al convertir a JSON, salta este atributo”*.
 
-```java
+```java title="La solución: @JsonIgnore"
 @OneToMany(mappedBy = "author")
 @JsonIgnore                       // ← se corta el ciclo
 private List<Event> createdEvents;
 ```
 
-> ⚠️ **`@JsonIgnore` NO afecta la base de datos.** La relación sigue existiendo, la FK sigue ahí, y `user.getCreatedEvents()` sigue funcionando en tu código Java. Solo desaparece del JSON de respuesta.
+> **`@JsonIgnore` NO afecta la base de datos.** La relación sigue existiendo, la FK sigue ahí, y `user.getCreatedEvents()` sigue funcionando en tu código Java. Solo desaparece del JSON de respuesta.
 > 
 
 ### ¿En cuál de los dos lados lo pongo?
 
 Regla: **en el lado que no quieres ver en la respuesta**, que casi siempre es el `@OneToMany` (la lista).
 
-```java
+```java title="En cuál de los dos lados lo pongo"
 // Event → quiero ver quién es el autor
 @ManyToOne
 private User author;              // SIN @JsonIgnore
@@ -1229,7 +1233,7 @@ private List<Event> createdEvents;
 
 Así `GET /events/5` devuelve:
 
-```json
+```json title="En cuál de los dos lados lo pongo (2)"
 { "id": 5, "title": "Concierto", "author": { "id": 1, "userName": "ana" } }
 ```
 
@@ -1244,12 +1248,12 @@ Así `GET /events/5` devuelve:
 | `@JsonManagedReference` / `@JsonBackReference` | El “padre” se serializa, el “hijo” corta el ciclo. Más elegante pero menos flexible. |
 | **DTOs** | La solución profesional: nunca devuelves entidades, devuelves clases hechas a la medida de cada endpoint. |
 
-> 🎯 **Lo correcto a largo plazo son los DTOs**, pero para aprender y para proyectos pequeños, `@JsonIgnore` + resuelven el 90% de los problemas.
+> **Lo correcto a largo plazo son los DTOs**, pero para aprender y para proyectos pequeños, `@JsonIgnore` + resuelven el 90% de los problemas.
 > 
 
 ### El trío que siempre va junto en una relación
 
-```java
+```java title="El trío que siempre va junto"
 @JsonIgnore          // no lo serialices → evita recursión en JSON
 @ToString.Exclude    // no lo imprimas  → evita recursión en toString()
 @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
@@ -1264,7 +1268,7 @@ private List<Event> createdEvents = new ArrayList<>();
 
 `cascade` responde: *“cuando hago algo con el padre, ¿qué pasa con los hijos?”*
 
-```java
+```java title="cascade: propagar operaciones"
 @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
 private List<PermissionRole> permissions;
 ```
@@ -1288,16 +1292,16 @@ Cannot delete or update a parent row: a foreign key constraint fails
 
 Con `cascade = CascadeType.ALL` en la lista de registros intermedios, al borrar el permiso se borran primero sus filas en la tabla puente, y luego el permiso. Por eso en tu ejemplo aparece:
 
-```java
+```java title="El caso típico: por qué lo necesitas"
 @OneToMany(mappedBy = "permissionOfRole", cascade = CascadeType.ALL, orphanRemoval = true)
 private List<PermissionRole> permissionOfRoleList;
 ```
 
-### ⚠️ Cuándo NO usar `cascade = ALL`
+### Cuándo NO usar `cascade = ALL`
 
 `CascadeType.REMOVE` es peligroso cuando el “hijo” tiene vida propia.
 
-```java
+```java title="Cuándo NO usar cascade = ALL"
 // ❌ MAL: borrar un rol borraría a todos los usuarios que lo tienen
 @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
 private List<User> users;
@@ -1316,7 +1320,7 @@ private List<User> users;
 
 Borra al hijo cuando lo **sacas de la lista del padre**, aunque no borres el padre.
 
-```java
+```java title="orphanRemoval"
 role.getPermissions().remove(0);
 roleRepository.save(role);
 // Con orphanRemoval = true → la fila se borra de la BD
@@ -1334,7 +1338,7 @@ Diferencia con `CascadeType.REMOVE`:
 
 A veces no quieres borrar de verdad: quieres marcar el registro como eliminado y que deje de aparecer en las consultas. Eso es un **soft delete**.
 
-```java
+```java title="User.java"
 @Data
 @NoArgsConstructor
 @Entity
@@ -1378,7 +1382,7 @@ Permission ─┘                                 │          ├─> Zone
 
 ## 12.1 `Permission`
 
-```java
+```java title="Permission.java"
 package com.example.eventos.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -1411,7 +1415,7 @@ public class Permission {
 
 ## 12.2 `Role`
 
-```java
+```java title="Role.java"
 @Data
 @NoArgsConstructor
 @Entity(name = "roles")
@@ -1439,7 +1443,7 @@ public class Role {
 
 ## 12.3 `RolePermission` (clase intermedia)
 
-```java
+```java title="RolePermission.java"
 @Data
 @NoArgsConstructor
 @Entity(name = "role_permissions")
@@ -1468,7 +1472,7 @@ Fíjate: aquí **no** pongo `@JsonIgnore` en los `@ManyToOne`, porque al pedir u
 
 ## 12.4 `User`
 
-```java
+```java title="User.java"
 @Data
 @NoArgsConstructor
 @Entity(name = "users")
@@ -1528,7 +1532,7 @@ public class User {
 
 ## 12.5 `Zone` (zona del evento)
 
-```java
+```java title="Zone.java"
 @Data
 @NoArgsConstructor
 @Entity(name = "zones")
@@ -1552,7 +1556,7 @@ public class Zone {
 
 ## 12.6 `Event`
 
-```java
+```java title="Event.java"
 @Data
 @NoArgsConstructor
 @Entity(name = "events")
@@ -1602,7 +1606,7 @@ public class Event {
 
 Tabla generada:
 
-```sql
+```sql title="Event"
 CREATE TABLE events (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     title       VARCHAR(255) NOT NULL,
@@ -1619,7 +1623,7 @@ Las tres llaves foráneas salieron de los tres `@ManyToOne`. Las listas (`schedu
 
 ## 12.7 `EventSchedule` (horario)
 
-```java
+```java title="EventSchedule.java"
 @Data
 @NoArgsConstructor
 @Entity(name = "event_schedules")
@@ -1648,7 +1652,7 @@ Un horario **no existe sin su evento** → por eso `nullable = false` y por eso 
 
 ## 12.8 `EventAttendee` (clase intermedia User ↔︎ Event)
 
-```java
+```java title="EventAttendee.java"
 @Data
 @NoArgsConstructor
 @Entity(name = "event_attendees")
@@ -1682,7 +1686,7 @@ Esto es exactamente lo que **no** podrías hacer con un `@ManyToMany` simple: gu
 
 ---
 
-## ✅ Resumen de la Parte 1
+## Resumen de la Parte 1
 
 | Concepto | Regla mental |
 | --- | --- |
@@ -1718,7 +1722,7 @@ Cada uno extiende `JpaRepository<Entidad, Long>`.
 
 ## 1.1 `Airline`
 
-```java
+```java title="Airline.java"
 package com.example.airline.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -1754,7 +1758,7 @@ public class Airline {
 
 ## 1.2 `Airplane`
 
-```java
+```java title="Airplane.java"
 @Data
 @NoArgsConstructor
 @Entity(name = "airplanes")
@@ -1788,7 +1792,7 @@ public class Airplane {
 
 ## 1.3 `Airport`
 
-```java
+```java title="Airport.java"
 @Data
 @NoArgsConstructor
 @Entity(name = "airports")
@@ -1819,7 +1823,7 @@ public class Airport {
 }
 ```
 
-> 📌 Aquí se repite el patrón de la doble relación que vimos en `Event` (autor/encargado): `Airport` aparece **dos veces** en `Flight`, así que se distinguen por `mappedBy`.
+> Aquí se repite el patrón de la doble relación que vimos en `Event` (autor/encargado): `Airport` aparece **dos veces** en `Flight`, así que se distinguen por `mappedBy`.
 > 
 > 
 > Nota también que **no** hay cascade: borrar un aeropuerto no debe borrar vuelos.
@@ -1827,7 +1831,7 @@ public class Airport {
 
 ## 1.4 `Flight`
 
-```java
+```java title="Flight.java"
 @Data
 @NoArgsConstructor
 @Entity(name = "flights")
@@ -1874,7 +1878,7 @@ public class Flight {
 
 ## 1.5 `Ticket`
 
-```java
+```java title="Ticket.java"
 @Data
 @NoArgsConstructor
 @Entity(name = "tickets")
@@ -1905,7 +1909,7 @@ Fíjate que **`Ticket` ya no tiene `originAirport` ni `destinationAirport`**. No
 
 ## 1.6 `TicketFlight` (clase intermedia Ticket ↔︎ Flight)
 
-```java
+```java title="TicketFlight.java"
 @Data
 @NoArgsConstructor
 @Entity(name = "ticket_flights")
@@ -1943,7 +1947,7 @@ Es una **interfaz** que extiende `JpaRepository<T, ID>`. Spring Data JPA prop
 
 java
 
-```java
+```java title="AirlineRepository.java"
 package com.example.airline.repository;
 
 import com.example.airline.model.Airline;
@@ -1974,7 +1978,7 @@ public interface AirlineRepository extends JpaRepository<Airline, Long> {
 
 ### Los dos parámetros genéricos
 
-```java
+```java title="Los dos parámetros genéricos"
 JpaRepository<Flight, Long>
                  │      └── tipo del @Id de esa entidad
                  └── la entidad que maneja
@@ -1994,7 +1998,7 @@ repository/
 └── TicketFlightRepository.java → JpaRepository<TicketFlight, Long>
 ```
 
-> 💡 `@Repository` es opcional cuando extiendes de `JpaRepository` (Spring ya lo detecta), pero se pone por claridad.
+> `@Repository` es opcional cuando extiendes de `JpaRepository` (Spring ya lo detecta), pero se pone por claridad.
 > 
 
 ---
@@ -2003,7 +2007,7 @@ repository/
 
 Sin escribir una sola línea, `JpaRepository` ya te da:
 
-```java
+```java title="Los métodos que vienen definifos"
 // ── Lectura ──
 List<Flight>     findAll();
 List<Flight>     findAllById(Iterable<Long> ids);
@@ -2027,7 +2031,7 @@ Page<Flight> findAll(Pageable pageable);
 
 ## 3.1 Cómo funciona `findById` por dentro
 
-```java
+```java title="Cómo funciona findById por dentro"
 Optional<Flight> resultado = flightRepository.findById(5L);
 ```
 
@@ -2036,7 +2040,7 @@ Paso a paso:
 1. Spring recibe la llamada y sabe que la entidad es `Flight`, cuya tabla es `flights` y cuyo `@Id` es la columna `id`.
 2. Genera y ejecuta:
     
-    ```sql
+    ```sql title="Cómo funciona findById por dentro (2)"
     SELECT f.id, f.flight_number, f.departure_date, f.arrival_date,
            f.airplane_id, f.origin_airport_id, f.destination_airport_id
     FROM flights f
@@ -2050,7 +2054,7 @@ Paso a paso:
 
 Porque el vuelo **puede no existir**. `Optional<Flight>` es una caja que puede estar llena o vacía, y te obliga a decidir qué hacer si está vacía. Así se evita el `NullPointerException`.
 
-```java
+```java title="Por qué Optional"
 // ❌ Esto NO compila: Optional<Flight> no es Flight
 Flight vuelo = flightRepository.findById(5L);
 
@@ -2073,7 +2077,7 @@ flightRepository.findById(5L).ifPresent(v -> System.out.println(v.getFlightNumbe
 
 ## 3.3 `save()` sirve para insertar Y para actualizar
 
-```java
+```java title="save() sirve para insertar"
 // INSERT: el id es null
 Flight nuevo = new Flight();
 nuevo.setFlightNumber("AV8020");
@@ -2122,7 +2126,7 @@ retorno    (findBy)    a filtrar
 | `List<Flight>` | Esperas **varios** (o ninguno → lista vacía, nunca null). |
 | `long` / `boolean` | Con `countBy` / `existsBy`. |
 
-> ⚠️ Si declaras `Optional<Flight>` pero la consulta devuelve 3 filas, Spring lanza
+> Si declaras `Optional<Flight>` pero la consulta devuelve 3 filas, Spring lanza
 `IncorrectResultSizeDataAccessException`. Usa `Optional` **solo** con campos `unique`.
 > 
 
@@ -2130,13 +2134,13 @@ retorno    (findBy)    a filtrar
 
 Aquí es donde Spring busca **nombres de atributos de tu entidad**, en `PascalCase`.
 
-```java
+```java title="3️⃣ El cuerpo: propiedades y palabras"
 // La entidad tiene: private String flightNumber;
 findByFlightNumber(String n)     // ✅ flightNumber existe
 findByFlightNumero(String n)      // ❌ NO EXISTE FlightNumero Y LA APP NO ARRANCA
 ```
 
-> 🔑 **Esto es lo mejor de los métodos derivados:** si te equivocas en un nombre, el error aparece **al arrancar la aplicación**, no cuando un usuario llame al endpoint. Con `@Query` (SQL en texto) el error solo aparece en tiempo de ejecución.
+> **Esto es lo mejor de los métodos derivados:** si te equivocas en un nombre, el error aparece **al arrancar la aplicación**, no cuando un usuario llame al endpoint. Con `@Query` (SQL en texto) el error solo aparece en tiempo de ejecución.
 > 
 
 ---
@@ -2187,22 +2191,22 @@ src/main/java/com/example/airline/
 
 ## 5.1 Encontrar a todos
 
-```java
+```java title="FlightRepository.java"
 public interface FlightRepository extends JpaRepository<Flight, Long> {
     findAll();
 ```
 
-```java
+```java title="Encontrar a todos"
 List<Flight> todos = flightRepository.findAll();
 ```
 
-```sql
+```sql title="Encontrar a todos (2)"
 SELECT * FROM flights;
 ```
 
 ## 5.2 Encontrar uno por atributo específico
 
-```java
+```java title="FlightRepository.java"
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 
     // El número de vuelo es único → Optional
@@ -2210,13 +2214,13 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 }
 ```
 
-```sql
+```sql title="Encontrar uno por atributo específico"
 SELECT * FROM flights WHERE flight_number = ?1;
 ```
 
 Más ejemplos en otros repositorios:
 
-```java
+```java title="Encontrar uno por atributo específico (2)"
 // TicketRepository
 Optional<Ticket> findByBookingCode(String bookingCode);
 
@@ -2234,7 +2238,7 @@ Optional<Airline> findByIataCode(String iataCode);
 
 Cuando el atributo **no es único**, el resultado es una lista:
 
-```java
+```java title="Encontrar varios por atributo específico"
 // AirportRepository
 List<Airport> findByCountry(String country);          // todos los aeropuertos de Colombia
 List<Airport> findByCity(String city);                // todos los de Bogotá
@@ -2248,22 +2252,22 @@ List<Ticket> findByPassengerFullName(String name);    // todos los tiquetes de A
 
 ## 5.4 Combinar dos atributos: `And` / `Or`
 
-```java
+```java title="Combinar dos atributos"
 // Aeropuertos de una ciudad específica en un país específico
 List<Airport> findByCityAndCountry(String city, String country);
 ```
 
-```sql
+```sql title="Combinar dos atributos (2)"
 SELECT * FROM airports WHERE city = ?1 AND country = ?2;
 ```
 
-```java
+```java title="Combinar dos atributos (3)"
 // Aviones que sean A320 o A330
 List<Airplane> findByModelOrModel(String m1, String m2);   // funciona pero es feo
 List<Airplane> findByModelIn(List<String> modelos);        // ✅ mejor
 ```
 
-> 🔑 **El orden de los parámetros del método debe coincidir con el orden en que aparecen en el nombre.** En `findByCityAndCountry(String city, String country)`, el primer parámetro va a `city` y el segundo a `country`. Si los inviertes, compila igual pero busca al revés.
+> **El orden de los parámetros del método debe coincidir con el orden en que aparecen en el nombre.** En `findByCityAndCountry(String city, String country)`, el primer parámetro va a `city` y el segundo a `country`. Si los inviertes, compila igual pero busca al revés.
 > 
 
 ---
@@ -2274,7 +2278,7 @@ Aquí entran las palabras clave que traducen a operadores SQL.
 
 ## 6.1 Comparaciones numéricas
 
-```java
+```java title="Comparaciones numéricas"
 // AirplaneRepository
 
 // Aviones con más de N asientos
@@ -2294,7 +2298,7 @@ List<Airplane> findBySeatCapacityBetween(Integer min, Integer max);
 
 ## 6.2 Comparaciones de fecha
 
-```java
+```java title="Comparaciones de fecha"
 // FlightRepository
 
 // Vuelos que salen después de cierta fecha
@@ -2312,7 +2316,7 @@ List<Flight> findByDepartureDateBetween(Timestamp inicio, Timestamp fin);
 
 ## 6.3 Texto: `Containing`, `StartingWith`, `IgnoreCase`
 
-```java
+```java title="Texto: Containing, StartingWith"
 // TicketRepository
 
 // Pasajeros cuyo nombre CONTIENE un texto (búsqueda tipo buscador)
@@ -2330,12 +2334,12 @@ List<Airport> findByCountryIgnoreCase(String country);
 // → WHERE LOWER(country) = LOWER(?1)
 ```
 
-> 💡 `Containing` + `IgnoreCase` es la combinación estándar para un campo de búsqueda en una interfaz.
+> `Containing` + `IgnoreCase` es la combinación estándar para un campo de búsqueda en una interfaz.
 > 
 
 ## 6.4 Nulos y listas
 
-```java
+```java title="Nulos y listas"
 // Vuelos que todavía no tienen avión asignado
 List<Flight> findByAirplaneIsNull();
 // → WHERE airplane_id IS NULL
@@ -2352,7 +2356,7 @@ List<Airport> findByCountryIn(List<String> paises);
 
 Este es el caso que pediste: **combinar un atributo exacto con una condición**.
 
-```java
+```java title="Encontrar uno por atributo, filtrado"
 // FlightRepository
 
 // El vuelo AV8020 que salga después de hoy
@@ -2360,7 +2364,7 @@ Optional<Flight> findByFlightNumberAndDepartureDateAfter(
         String flightNumber, Timestamp fecha);
 ```
 
-```sql
+```sql title="Encontrar uno por atributo, filtrado (2)"
 SELECT * FROM flights
 WHERE flight_number = ?1
   AND departure_date > ?2;
@@ -2368,7 +2372,7 @@ WHERE flight_number = ?1
 
 Más variantes:
 
-```java
+```java title="Encontrar uno por atributo, filtrado (3)"
 // Aviones de un modelo específico con capacidad mínima
 List<Airplane> findByModelAndSeatCapacityGreaterThan(String model, Integer min);
 
@@ -2382,7 +2386,7 @@ List<Airport> findByCountryAndNameContainingIgnoreCase(String country, String te
 
 ## 6.6 `countBy`, `existsBy`, `deleteBy`
 
-```java
+```java title="countBy, existsBy, deleteBy"
 // ¿Cuántos vuelos salen de este aeropuerto?
 long countByOriginAirportId(Long airportId);
 
@@ -2397,7 +2401,7 @@ boolean existsByBookingCode(String bookingCode);
 void deleteByTicketId(Long ticketId);
 ```
 
-> ⚠️ `deleteBy...` **requiere** `@Transactional` (en el método del repositorio o en el servicio). Sin eso lanza `TransactionRequiredException`.
+> `deleteBy...` **requiere** `@Transactional` (en el método del repositorio o en el servicio). Sin eso lanza `TransactionRequiredException`.
 > 
 
 ---
@@ -2408,14 +2412,14 @@ Esta es la parte más potente. **Puedes filtrar por atributos de entidades relac
 
 ## 7.1 La idea básica
 
-```java
+```java title="La idea básica"
 // En Flight tengo:
 private Airport originAirport;    // y Airport tiene: private String country;
 ```
 
 Entonces:
 
-```java
+```java title="La idea básica (2)"
 List<Flight> findByOriginAirportCountry(String country);
 //                  └─────┬──────┘└──┬──┘
 //              atributo de Flight   atributo de Airport
@@ -2423,7 +2427,7 @@ List<Flight> findByOriginAirportCountry(String country);
 
 Spring genera:
 
-```sql
+```sql title="La idea básica (3)"
 SELECT f.* FROM flights f
 INNER JOIN airports a ON f.origin_airport_id = a.id
 WHERE a.country = ?1;
@@ -2435,7 +2439,7 @@ WHERE a.country = ?1;
 
 Este es el caso más frecuente:
 
-```java
+```java title="Filtrar por el ID de la relación"
 // Todos los vuelos que salen de un aeropuerto específico
 List<Flight> findByOriginAirportId(Long airportId);
 // → WHERE f.origin_airport_id = ?1
@@ -2449,12 +2453,12 @@ List<TicketFlight> findByTicketId(Long ticketId);
 // → WHERE tf.ticket_id = ?1
 ```
 
-> 💡 Al filtrar solo por el ID, Hibernate ni siquiera hace `JOIN`: usa directamente la columna FK, que ya está en la tabla. Es la consulta más eficiente.
+> Al filtrar solo por el ID, Hibernate ni siquiera hace `JOIN`: usa directamente la columna FK, que ya está en la tabla. Es la consulta más eficiente.
 > 
 
 ### Pasar el objeto en lugar del ID
 
-```java
+```java title="Pasar el objeto en lugar del ID"
 List<Flight> findByOriginAirport(Airport airport);   // pasas el objeto completo
 List<Flight> findByOriginAirportId(Long id);         // pasas solo el id  ← preferible
 ```
@@ -2469,12 +2473,12 @@ Puedes bajar tantos niveles como necesites:
 TicketFlight → flight → originAirport → country
 ```
 
-```java
+```java title="Encadenar varios niveles"
 // En TicketFlightRepository
 List<TicketFlight> findByFlightOriginAirportCountry(String country);
 ```
 
-```sql
+```sql title="Encadenar varios niveles (2)"
 SELECT tf.* FROM ticket_flights tf
 INNER JOIN flights  f ON tf.flight_id       = f.id
 INNER JOIN airports a ON f.origin_airport_id = a.id
@@ -2489,7 +2493,7 @@ A veces el nombre es ambiguo. Imagina que `Flight` tuviera un atributo `originAi
 
 El guion bajo **marca explícitamente dónde termina una propiedad y empieza la siguiente**:
 
-```java
+```java title="El guion bajo : cuando hay ambigüedad"
 List<Flight> findByOriginAirport_Country(String country);
 //                  └────┬──────┘ └──┬──┘
 //              atributo de Flight   atributo de Airport
@@ -2497,20 +2501,20 @@ List<Flight> findByOriginAirport_Country(String country);
 
 Es equivalente a `findByOriginAirportCountry`, pero **sin ambigüedad**.
 
-```java
+```java title="El guion bajo : cuando hay ambigüedad (2)"
 // Con guion bajo, súper legible en cadenas largas:
 List<TicketFlight> findByFlight_OriginAirport_Country(String country);
 List<TicketFlight> findByTicket_PassengerFullName(String name);
 ```
 
-> ✅ **Recomendación:** usa `_` siempre que navegues relaciones. Hace obvio dónde está el “join” y evita errores raros de interpretación.
+> **Recomendación:** usa `_` siempre que navegues relaciones. Hace obvio dónde está el “join” y evita errores raros de interpretación.
 > 
 
 ## 7.5 `Distinct`: evitar duplicados
 
 Cuando haces JOIN hacia una colección, puedes obtener la misma fila varias veces.
 
-```java
+```java title="Distinct: evitar duplicados"
 // Aeropuertos que tienen vuelos hacia cierto país
 List<Airport> findDistinctByDepartingFlights_DestinationAirport_Country(String country);
 ```
@@ -2521,28 +2525,28 @@ Sin `Distinct`, si un aeropuerto tiene 5 vuelos a España, aparecería 5 veces.
 
 # 8. MAS EJEMPLOS
 
-## ✅ Caso 1: Encontrar a todos
+## Caso 1: Encontrar a todos
 
-```java
+```java title="Caso 1: Encontrar a todos"
 // FlightRepository — no hay que declarar nada, findAll() viene incluido
 ```
 
-```java
+```java title="Caso 1: Encontrar a todos (2)"
 // FlightServiceImpl
 public List<Flight> findAll() {
     return flightRepository.findAll();
 }
 ```
 
-## ✅ Caso 2: Encontrar uno por atributo específico
+## Caso 2: Encontrar uno por atributo específico
 
-```java
+```java title="FlightRepository.java"
 public interface FlightRepository extends JpaRepository<Flight, Long> {
     Optional<Flight> findByFlightNumber(String flightNumber);
 }
 ```
 
-```java
+```java title="Caso 2: Encontrar uno por atributo"
 public Flight findByFlightNumber(String flightNumber) {
     return flightRepository.findByFlightNumber(flightNumber)
             .orElseThrow(() -> new RuntimeException(
@@ -2550,9 +2554,9 @@ public Flight findByFlightNumber(String flightNumber) {
 }
 ```
 
-## ✅ Caso 3: Encontrar por atributo específico filtrado por condición
+## Caso 3: Encontrar por atributo específico filtrado por condición
 
-```java
+```java title="FlightRepository.java"
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 
     // Un vuelo específico, pero solo si sale después de cierta fecha
@@ -2565,7 +2569,7 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 }
 ```
 
-```sql
+```sql title="Caso 3: Encontrar por atributo"
 -- El segundo genera:
 SELECT f.* FROM flights f
 INNER JOIN airplanes ap ON f.airplane_id = ap.id
@@ -2573,11 +2577,11 @@ WHERE f.origin_airport_id = ?1
   AND ap.seat_capacity > ?2;
 ```
 
-## ✅ Caso 4: Encontrar los `TicketFlight` de un vuelo específico de un país
+## Caso 4: Encontrar los `TicketFlight` de un vuelo específico de un país
 
 Aquí hay que combinar **dos filtros que navegan la misma relación**: el vuelo concreto y el país de su aeropuerto de origen.
 
-```java
+```java title="TicketFlightRepository.java"
 public interface TicketFlightRepository extends JpaRepository<TicketFlight, Long> {
 
     List<TicketFlight> findByFlight_IdAndFlight_OriginAirport_Country(
@@ -2585,7 +2589,7 @@ public interface TicketFlightRepository extends JpaRepository<TicketFlight, Long
 }
 ```
 
-```sql
+```sql title="Caso 4: Encontrar los TicketFlight"
 SELECT tf.* FROM ticket_flights tf
 INNER JOIN flights  f ON tf.flight_id        = f.id
 INNER JOIN airports a ON f.origin_airport_id = a.id
@@ -2595,14 +2599,14 @@ WHERE f.id = ?1
 
 Uso:
 
-```java
+```java title="Caso 4: Encontrar los TicketFlight (2)"
 List<TicketFlight> tramos = ticketFlightRepository
         .findByFlight_IdAndFlight_OriginAirport_Country(12L, "Colombia");
 ```
 
 Variantes útiles del mismo caso:
 
-```java
+```java title="Caso 4: Encontrar los TicketFlight (3)"
 // Por número de vuelo en vez de id
 List<TicketFlight> findByFlight_FlightNumberAndFlight_OriginAirport_Country(
         String flightNumber, String country);
@@ -2614,11 +2618,11 @@ List<TicketFlight> findByFlight_OriginAirport_Country(String country);
 List<TicketFlight> findByFlight_IdOrderBySegmentOrderAsc(Long flightId);
 ```
 
-## ✅ Caso 5: Encontrar todos los vuelos de un país
+## Caso 5: Encontrar todos los vuelos de un país
 
 “De un país” puede significar tres cosas. Aquí están las tres:
 
-```java
+```java title="FlightRepository.java"
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 
     // a) Vuelos que SALEN de ese país
@@ -2639,7 +2643,7 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 
 El caso (c) se llamaría así desde el servicio:
 
-```java
+```java title="Caso 5: Encontrar todos los vuelos"
 public List<Flight> findFlightsByCountry(String country) {
     // hay que pasar el país dos veces, uno por cada lado del OR
     return flightRepository
@@ -2649,16 +2653,16 @@ public List<Flight> findFlightsByCountry(String country) {
 
 SQL del caso (c):
 
-```sql
+```sql title="Caso 5: Encontrar todos los vuelos (2)"
 SELECT f.* FROM flights f
 INNER JOIN airports o ON f.origin_airport_id      = o.id
 INNER JOIN airports d ON f.destination_airport_id = d.id
 WHERE o.country = ?1 OR d.country = ?2;
 ```
 
-## 🎁 Ejemplos adicionales del mismo estilo
+## Ejemplos adicionales del mismo estilo
 
-```java
+```java title="Ejemplos adicionales del mismo estilo"
 // ── FlightRepository ──────────────────────────────────────
 
 // Vuelos de una aerolínea (Flight → Airplane → Airline)
@@ -2713,7 +2717,7 @@ List<Airport> findByCountryOrderByCityAsc(String country);
 List<Airport> findDistinctByDepartingFlightsIsNotEmpty();
 ```
 
-> ⚠️ **Límite de los métodos derivados:** no pueden hacer agregaciones (`SUM`, `AVG`, `GROUP BY`) ni condiciones sobre el tamaño de una colección (`HAVING COUNT(*) > 1`). Para eso sí se necesita `@Query`, o resolverlo en la capa de servicio con streams de Java.
+> **Límite de los métodos derivados:** no pueden hacer agregaciones (`SUM`, `AVG`, `GROUP BY`) ni condiciones sobre el tamaño de una colección (`HAVING COUNT(*) > 1`). Para eso sí se necesita `@Query`, o resolverlo en la capa de servicio con streams de Java.
 > 
 
 ---
@@ -2722,7 +2726,7 @@ List<Airport> findDistinctByDepartingFlightsIsNotEmpty();
 
 ## 9.1 `OrderBy` en el nombre del método
 
-```java
+```java title="OrderBy en el nombre del método"
 List<Flight> findByOriginAirport_CountryOrderByDepartureDateAsc(String country);
 List<Flight> findByOriginAirport_CountryOrderByDepartureDateDesc(String country);
 
@@ -2732,7 +2736,7 @@ List<Airport> findByCountryOrderByCityAscNameAsc(String country);
 
 ## 9.2 `Top` / `First`: limitar resultados
 
-```java
+```java title="Top / First: limitar resultados"
 // El próximo vuelo que sale de un aeropuerto
 Optional<Flight> findFirstByOriginAirport_IdOrderByDepartureDateAsc(Long airportId);
 
@@ -2749,11 +2753,11 @@ List<Airplane> findTop10ByOrderBySeatCapacityDesc();
 
 Cuando el orden lo decide el usuario en tiempo de ejecución:
 
-```java
+```java title="Sort como parámetro"
 List<Flight> findByOriginAirport_Country(String country, Sort sort);
 ```
 
-```java
+```java title="Sort como parámetro (2)"
 // En el servicio
 flightRepository.findByOriginAirport_Country("Colombia",
         Sort.by(Sort.Direction.DESC, "departureDate"));
@@ -2761,11 +2765,11 @@ flightRepository.findByOriginAirport_Country("Colombia",
 
 ## 9.4 `Pageable`: paginación
 
-```java
+```java title="Pageable: paginación"
 Page<Flight> findByOriginAirport_Country(String country, Pageable pageable);
 ```
 
-```java
+```java title="Pageable: paginación (2)"
 // Página 0 (la primera), 20 elementos por página, ordenada por fecha
 Pageable pagina = PageRequest.of(0, 20, Sort.by("departureDate").descending());
 Page<Flight> resultado = flightRepository.findByOriginAirport_Country("Colombia", pagina);
@@ -2796,7 +2800,7 @@ Define el **contrato** (qué operaciones están disponibles).
 
 java
 
-```java
+```java title="IAirlineService.java"
 package com.example.airline.service;
 
 import com.example.airline.model.Airline;
@@ -2821,7 +2825,7 @@ Implementa la interfaz, usa el repositorio y aplica lógica de negocio.
 
 java
 
-```java
+```java title="AirlineServiceImpl.java"
 package com.example.airline.service.serviceImpl;
 
 import com.example.airline.model.Airline;
@@ -2923,7 +2927,7 @@ Cada servicio maneja su lógica de negocio correspondiente.
 
 ### Inyección por constructor (mejor que `@Autowired`)
 
-```java
+```java title="FlightServiceImpl.java"
 @Service
 @Transactional
 public class FlightServiceImpl implements IFlightService {
@@ -2946,7 +2950,7 @@ Es totalmente válido y frecuente. La regla es: **un servicio puede llamar a otr
 
 Ejemplo: crear un tiquete con sus tramos. Necesita validar que los vuelos existan (responsabilidad de `FlightService`) antes de guardar (responsabilidad de `TicketService`).
 
-```java
+```java title="TicketServiceImpl.java"
 @Service
 @Transactional
 public class TicketServiceImpl implements ITicketService {
@@ -3003,7 +3007,7 @@ public class TicketServiceImpl implements ITicketService {
 
 Si mañana cambias `FlightServiceImpl` por `FlightServiceCacheImpl`, `TicketServiceImpl` no se entera. Eso es **desacoplamiento**, y es la razón por la que se crean interfaces de servicio.
 
-### ⚠️ Cuidado con las dependencias circulares
+### Cuidado con las dependencias circulares
 
 Si `TicketService` inyecta `FlightService` y `FlightService` inyecta `TicketService`, Spring falla al arrancar con `BeanCurrentlyInCreationException`. Si eso te pasa, es señal de que la lógica está en el lugar equivocado: normalmente hay que mover ese método a un tercer servicio que use a los dos.
 
@@ -3071,7 +3075,7 @@ Si `TicketService` inyecta `FlightService` y `FlightService` inyecta `TicketServ
 
 # Controller
 
-# 🟦 BLOQUE 0 — Fundamentos previos
+# BLOQUE 0 — Fundamentos previos
 
 Antes de escribir la primera línea de un controlador hay que entender qué es exactamente lo que un controlador atiende.
 
@@ -3106,7 +3110,7 @@ protocolo  host    context     path (ruta)         query string
 | `/5/schedules` | `@GetMapping("/{id}/schedules")` a nivel de método |
 | `?page=0&size=10` | `@RequestParam` |
 
-> 💡 Con `server.servlet.context-path=/api`, **todas** las rutas quedan bajo `/api`. Por eso los ejemplos usan `http://localhost:8081/api/mvc/events`.
+> Con `server.servlet.context-path=/api`, **todas** las rutas quedan bajo `/api`. Por eso los ejemplos usan `http://localhost:8081/api/mvc/events`.
 > 
 
 ### Cómo Spring decide qué método ejecutar
@@ -3137,11 +3141,11 @@ Petición: GET /api/mvc/events/5
 
 | Método | Propósito | Idempotente | Seguro | ¿Body? | Anotación |
 | --- | --- | --- | --- | --- | --- |
-| **GET** | Obtener | ✅ | ✅ | ❌ | `@GetMapping` |
-| **POST** | Crear | ❌ | ❌ | ✅ | `@PostMapping` |
-| **PUT** | Reemplazar completo | ✅ | ❌ | ✅ | `@PutMapping` |
-| **PATCH** | Actualizar parcial | ⚠️ Depende | ❌ | ✅ | `@PatchMapping` |
-| **DELETE** | Eliminar | ✅ | ❌ | ❌ | `@DeleteMapping` |
+| **GET** | Obtener | Sí | Sí | No | `@GetMapping` |
+| **POST** | Crear | No | No | Sí | `@PostMapping` |
+| **PUT** | Reemplazar completo | Sí | No | Sí | `@PutMapping` |
+| **PATCH** | Actualizar parcial | Depende | No | Sí | `@PatchMapping` |
+| **DELETE** | Eliminar | Sí | No | No | `@DeleteMapping` |
 
 **Seguro (*safe*)**: no modifica nada. Solo GET lo es.
 
@@ -3158,14 +3162,14 @@ DELETE /rest/events/5  → borra el 5
 DELETE /rest/events/5  → ya no existe, mismo estado ← idempotente
 ```
 
-> ⚠️ Idempotente **no** significa "misma respuesta". El segundo DELETE puede devolver 404 en vez de 204, pero el **estado del servidor** es idéntico. Eso es lo que cuenta.
+> Idempotente **no** significa "misma respuesta". El segundo DELETE puede devolver 404 en vez de 204, pero el **estado del servidor** es idéntico. Eso es lo que cuenta.
 > 
 
 ### PUT vs PATCH
 
 json
 
-```json
+```json title="PUT vs PATCH"
 // Estado actual del evento 5
 { "id": 5, "title": "Concierto", "description": "Rock", "zoneId": 2 }
 ```
@@ -3174,7 +3178,7 @@ json
 
 `PATCH /rest/events/5` con `{ "title": "Jazz" }` → solo cambia el título.
 
-> 📌 En la práctica, muchísimos proyectos implementan PUT con comportamiento de PATCH (actualizando solo los campos no nulos). Es una desviación común y aceptada. En esta guía se hace así, pero conviene saber que técnicamente no es lo que PUT significa.
+> En la práctica, muchísimos proyectos implementan PUT con comportamiento de PATCH (actualizando solo los campos no nulos). Es una desviación común y aceptada. En esta guía se hace así, pero conviene saber que técnicamente no es lo que PUT significa.
 > 
 
 ---
@@ -3212,7 +3216,7 @@ GET /rest/events/5/schedules?page=0&size=10
 
 java
 
-```java
+```java title="@PathVariable — parte de la ruta"
 // GET /mvc/events/5
 @GetMapping("/{id}")
 public String findById(@PathVariable Integer id) { ... }
@@ -3222,7 +3226,7 @@ Si el nombre del parámetro Java no coincide con el de la plantilla:
 
 java
 
-```java
+```java title="@PathVariable — parte de la ruta (2)"
 @GetMapping("/{eventId}")
 public String findById(@PathVariable("eventId") Integer id) { ... }
 ```
@@ -3231,7 +3235,7 @@ Varias en la misma ruta:
 
 java
 
-```java
+```java title="@PathVariable — parte de la ruta (3)"
 // GET /rest/events/5/attendees/12
 @GetMapping("/{eventId}/attendees/{attendeeId}")
 public ... find(@PathVariable Integer eventId, @PathVariable Integer attendeeId) { ... }
@@ -3241,7 +3245,7 @@ public ... find(@PathVariable Integer eventId, @PathVariable Integer attendeeId)
 
 java
 
-```java
+```java title="@RequestParam — query string"
 // GET /mvc/events?offset=0&pageSize=5
 @GetMapping
 public String findAll(@RequestParam(defaultValue = "0") int offset,
@@ -3254,7 +3258,7 @@ public String findAll(@RequestParam(defaultValue = "0") int offset,
 | `defaultValue` | Valor si no viene. **Implica `required = false`** |
 | `name` / `value` | Nombre en la URL si difiere del parámetro Java |
 
-> ⚠️ Para parámetros opcionales usa **tipos envoltorio** (`Integer`, `Boolean`), nunca primitivos (`int`, `boolean`). Un `int` no puede ser `null`: si el parámetro no viene, Spring lanza excepción.
+> Para parámetros opcionales usa **tipos envoltorio** (`Integer`, `Boolean`), nunca primitivos (`int`, `boolean`). Un `int` no puede ser `null`: si el parámetro no viene, Spring lanza excepción.
 > 
 
 ## ¿Cuándo usar cada uno?
@@ -3309,7 +3313,7 @@ Lo que viaja por la red:
 
 html
 
-```html
+```html title="@Controller — Server-Side Rendering"
 <table>
   <tr><td>1</td><td>Concierto de Jazz</td><td>Auditorio A</td></tr>
   <tr><td>2</td><td>Feria de Ciencias</td><td>Salón principal</td></tr>
@@ -3336,7 +3340,7 @@ Lo que viaja por la red:
 
 json
 
-```json
+```json title="@RestController — Client-Side Rendering"
 [
   { "id": 1, "title": "Concierto de Jazz", "zoneName": "Auditorio A" },
   { "id": 2, "title": "Feria de Ciencias", "zoneName": "Salón principal" }
@@ -3356,14 +3360,14 @@ json
 | **Seguridad típica** | **Sesión + cookie JSESSIONID** | **JWT en el header** |
 | **Estado** | Stateful | Stateless |
 | **Formularios** | HTML `<form>` (solo GET y POST) | JSON con cualquier método |
-| **Consumible por móvil** | ❌ No | ✅ Sí |
-| **CORS** | No aplica | ⚠️ Hay que configurarlo |
+| **Consumible por móvil** | No | Sí |
+| **CORS** | No aplica | Hay que configurarlo |
 
 ## La anotación por dentro
 
 java
 
-```java
+```java title="La anotación por dentro"
 @RestController
 // es exactamente equivalente a:
 @Controller
@@ -3382,7 +3386,7 @@ controller/
 └── rest/    → RestEventController, RestUserController, AuthController
 ```
 
-> ⚠️ Si dos clases en paquetes distintos tienen el **mismo nombre** (como los dos `AuthController`), Spring falla porque el nombre del bean choca. Se resuelve nombrando el bean explícitamente:
+> Si dos clases en paquetes distintos tienen el **mismo nombre** (como los dos `AuthController`), Spring falla porque el nombre del bean choca. Se resuelve nombrando el bean explícitamente:
 > 
 > 
 > java
@@ -3393,7 +3397,7 @@ controller/
 > ```
 > 
 
-# 🟩 BLOQUE 1 — Construyendo el controlador MVC
+# BLOQUE 1 — Construyendo el controlador MVC
 
 A partir de aquí construimos `MvcEventController` desde cero. Cada paso agrega una pieza y explica el concepto que introduce.
 
@@ -3407,7 +3411,7 @@ Un controlador MVC necesita un **motor de plantillas**. El estándar en Spring B
 
 xml
 
-```xml
+```xml title="Qué se necesita"
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -3449,7 +3453,7 @@ src/main/
 
 java
 
-```java
+```java title="MvcEventController.java"
 package com.example.eventos.controller.mvc;
 
 import com.example.eventos.service.EventService;
@@ -3473,7 +3477,7 @@ public class MvcEventController {
 }
 ```
 
-## 🔍 Explicación de cada parte
+## Explicación de cada parte
 
 ### `@Controller`
 
@@ -3488,7 +3492,7 @@ Ruta base de **toda** la clase. Todos los endpoints cuelgan de aquí:
 
 java
 
-```java
+```java title="@RequestMapping("/mvc/events")"
 @RequestMapping("/mvc/events")     // ruta base
     @GetMapping                    // → GET  /mvc/events
     @GetMapping("/{id}")           // → GET  /mvc/events/5
@@ -3503,7 +3507,7 @@ Lombok genera un constructor con **todos los campos `final`**:
 
 java
 
-```java
+```java title="@RequiredArgsConstructor e inyección"
 // Lo que Lombok escribe por ti:
 public MvcEventController(EventService eventService,
                           ZoneService zoneService,
@@ -3525,7 +3529,7 @@ Y Spring usa ese constructor para inyectar los servicios. Desde Spring 4.3, si l
 | Fácil de probar (pasas dobles en el constructor) | Requiere reflection en los tests |
 | Las dependencias circulares se detectan al arrancar | Se detectan tarde o nunca |
 
-> 🔑 **La regla de las capas se respeta aquí:** el controlador inyecta **servicios**, nunca repositorios. Si un controlador inyecta un `EventRepository`, la lógica de negocio se está filtrando a la capa equivocada.
+> **La regla de las capas se respeta aquí:** el controlador inyecta **servicios**, nunca repositorios. Si un controlador inyecta un `EventRepository`, la lógica de negocio se está filtrando a la capa equivocada.
 > 
 
 ---
@@ -3536,7 +3540,7 @@ Antes de escribir plantillas conviene comprobar que el controlador está conecta
 
 java
 
-```java
+```java title="Paso 3: el endpoint de prueba"
 @GetMapping("/ping")
 @ResponseBody   // ← devuelve el texto "pong", NO busca una plantilla
 public String ping() {
@@ -3546,7 +3550,7 @@ public String ping() {
 
 Abres `http://localhost:8081/api/mvc/events/ping` y debe aparecer `pong` en el navegador.
 
-## 🔍 Por qué hace falta `@ResponseBody`
+## Por qué hace falta `@ResponseBody`
 
 Sin esa anotación, Spring interpretaría `"pong"` como un **nombre de vista** e intentaría abrir `templates/pong.html`. Como no existe, lanzaría:
 
@@ -3556,7 +3560,7 @@ TemplateInputException: Error resolving template [pong]
 
 `@ResponseBody` le dice a ese método concreto: *"esto es contenido, no el nombre de un archivo"*.
 
-> 🔑 **Este es el error conceptual número uno de MVC.** El `String` que devuelve un método `@Controller` **no es texto para el usuario**: es la ruta de una plantilla. Si devuelves `"Hola"`, Spring busca `templates/Hola.html`.
+> **Este es el error conceptual número uno de MVC.** El `String` que devuelve un método `@Controller` **no es texto para el usuario**: es la ruta de una plantilla. Si devuelves `"Hola"`, Spring busca `templates/Hola.html`.
 > 
 > 
 > Y de paso: recuerda que `@RestController` = `@Controller` + `@ResponseBody`. Este método `ping` se comporta exactamente como lo haría en un controlador REST.
@@ -3570,7 +3574,7 @@ TemplateInputException: Error resolving template [pong]
 
 java
 
-```java
+```java title="El código"
 @GetMapping
 public String findAll(Model model) {
 
@@ -3582,7 +3586,7 @@ public String findAll(Model model) {
 }
 ```
 
-## 🔍 Los tres elementos de todo método MVC
+## Los tres elementos de todo método MVC
 
 | Elemento | Qué es |
 | --- | --- |
@@ -3596,7 +3600,7 @@ public String findAll(Model model) {
 
 html
 
-```html
+```html title="La plantilla que lo recibe"
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head><title>Eventos</title></head>
@@ -3632,7 +3636,7 @@ html
 | `${...}` | Lee una variable del Model |
 | `@{...}` | Construye una URL |
 
-> 🔑 **La conexión clave:** el nombre en `model.addAttribute("events", ...)` es **exactamente** el que va en `th:each="event : ${events}"`.
+> **La conexión clave:** el nombre en `model.addAttribute("events", ...)` es **exactamente** el que va en `th:each="event : ${events}"`.
 > 
 > 
 > Si no coinciden, la tabla sale **vacía y sin ningún error**. Es el bug más frustrante de MVC porque no hay excepción ni mensaje: simplemente no aparece nada.
@@ -3644,7 +3648,7 @@ Fíjate en `${event.zone.name}`. La plantilla accede a la **entidad completa** c
 
 Esto es cómodo, pero tiene un costo que veremos en el Bloque 2 (y que en REST se vuelve un problema real).
 
-> ⚠️ Si la relación es `FetchType.LAZY` y la plantilla intenta acceder a ella fuera de la transacción, salta `LazyInitializationException`. Con `spring.jpa.open-in-view=true` (el valor por defecto) esto no ocurre porque la sesión queda abierta durante toda la petición — pero esa opción tiene otros problemas. Lo limpio es que el servicio traiga las relaciones que la vista necesita.
+> Si la relación es `FetchType.LAZY` y la plantilla intenta acceder a ella fuera de la transacción, salta `LazyInitializationException`. Con `spring.jpa.open-in-view=true` (el valor por defecto) esto no ocurre porque la sesión queda abierta durante toda la petición — pero esa opción tiene otros problemas. Lo limpio es que el servicio traiga las relaciones que la vista necesita.
 > 
 
 ---
@@ -3657,7 +3661,7 @@ Si hay 5000 eventos, `findAll()` los trae todos y la página tarda una eternidad
 
 java
 
-```java
+```java title="El código (2)"
 // GET http://localhost:8081/api/mvc/events?offset=0&pageSize=5
 @GetMapping
 public String findAll(Model model,
@@ -3677,7 +3681,7 @@ Y en el servicio:
 
 java
 
-```java
+```java title="El código (3)"
 @Override
 @Transactional(readOnly = true)
 public Page<Event> findAll(int offset, int pageSize) {
@@ -3685,7 +3689,7 @@ public Page<Event> findAll(int offset, int pageSize) {
 }
 ```
 
-## 🔍 Explicación
+## Explicación
 
 ### `defaultValue` hace opcionales los parámetros
 
@@ -3715,7 +3719,7 @@ Por eso se inyectan **dos atributos**: `events` para pintar la tabla y `page` pa
 
 html
 
-```html
+```html title="Los botones de paginación"
 <div th:if="${page != null}">
 
     <a th:if="${!page.first}"
@@ -3742,7 +3746,7 @@ html
 
 java
 
-```java
+```java title="El código (4)"
 // GET http://localhost:8081/api/mvc/events/5
 @GetMapping("/{id}")
 public String findById(Model model, @PathVariable Integer id) {
@@ -3760,7 +3764,7 @@ public String findById(Model model, @PathVariable Integer id) {
 }
 ```
 
-## 🔍 Explicación
+## Explicación
 
 ### `@PathVariable Integer id`
 
@@ -3772,7 +3776,7 @@ En la Parte 2 vimos que `findById` devuelve `Optional<Event>`. Aquí se resuelve
 
 java
 
-```java
+```java title="Manejo del Optional"
 Event event = eventService.findById(id).orElse(null);if (event == null) { ... }
 ```
 
@@ -3788,14 +3792,14 @@ Es un truco práctico de MVC: **una sola plantilla sirve para listar todo, lista
 
 java
 
-```java
+```java title="redirect: — el prefijo que cambia todo"
 return "events/list";           // → renderiza templates/events/list.html
 return "redirect:/mvc/events";  // → manda un 302 al navegador para que vaya a esa URL
 ```
 
 Con `redirect:`, el `String` **ya no es un nombre de plantilla, es una URL**. El navegador hace una petición nueva.
 
-> ⚠️ Ojo con este código: el `model.addAttribute("error", ...)` seguido de un `redirect:` **no funciona**. El `Model` se pierde al redirigir porque la petición siguiente es otra. Para que el mensaje sobreviva hace falta `RedirectAttributes`, que veremos en el Paso 8.
+> Ojo con este código: el `model.addAttribute("error", ...)` seguido de un `redirect:` **no funciona**. El `Model` se pierde al redirigir porque la petición siguiente es otra. Para que el mensaje sobreviva hace falta `RedirectAttributes`, que veremos en el Paso 8.
 > 
 
 ---
@@ -3806,7 +3810,7 @@ Con `redirect:`, el `String` **ya no es un nombre de plantilla, es una URL**. El
 
 java
 
-```java
+```java title="Filtrar por un atributo propio"
 // GET http://localhost:8081/api/mvc/events/search_title?title=jazz
 @GetMapping("/search_title")
 public String findByTitleLike(Model model, @RequestParam String title) {
@@ -3824,7 +3828,7 @@ Y el formulario que lo llama:
 
 html
 
-```html
+```html title="Filtrar por un atributo propio (2)"
 <form th:action="@{/mvc/events/search_title}" method="get">
     <input type="text" name="title" placeholder="Buscar por título">
     <button type="submit">Buscar</button>
@@ -3839,7 +3843,7 @@ Aquí se conecta con lo aprendido en la Parte 2: los métodos derivados que nave
 
 java
 
-```java
+```java title="Filtrar por una relación"
 // GET http://localhost:8081/api/mvc/events/zone/2
 @GetMapping("/zone/{zoneId}")
 public String findByZone(Model model, @PathVariable Integer zoneId) {
@@ -3859,13 +3863,13 @@ Que en el repositorio son simplemente:
 
 java
 
-```java
+```java title="Filtrar por una relación (2)"
 List<Event> findByZone_Id(Integer zoneId);
 List<Event> findByAuthor_Id(Integer authorId);
 List<Event> findByTitleContainingIgnoreCase(String title);
 ```
 
-> 🔑 **Nota la decisión de diseño:** aquí se usó `@PathVariable` (`/zone/2`) y no `@RequestParam` (`?zoneId=2`). Ambas funcionan. La convención MVC tiende a rutas semánticas; la convención REST prefiere `?zoneId=2` porque es un filtro, no un recurso. En el Bloque 2 lo cambiaremos a `@RequestParam`.
+> **Nota la decisión de diseño:** aquí se usó `@PathVariable` (`/zone/2`) y no `@RequestParam` (`?zoneId=2`). Ambas funcionan. La convención MVC tiende a rutas semánticas; la convención REST prefiere `?zoneId=2` porque es un filtro, no un recurso. En el Bloque 2 lo cambiaremos a `@RequestParam`.
 > 
 
 ---
@@ -3887,7 +3891,7 @@ En REST bastaría un solo `POST /rest/events`, porque no hay que pintar nada.
 
 java
 
-```java
+```java title="Endpoint 1: mostrar el formulario (GET)"
 @GetMapping("/new")
 public String showCreateForm(Model model) {
 
@@ -3902,11 +3906,11 @@ public String showCreateForm(Model model) {
 }
 ```
 
-### 🔍 Por qué se inyecta un `new Event()` vacío
+### Por qué se inyecta un `new Event()` vacío
 
 Thymeleaf usa `th:object="${event}"` para enlazar cada input a un campo del objeto. Sin un objeto en el Model, el formulario no puede enlazarse y lanza error al renderizar.
 
-### 🔍 Por qué se inyectan `zones` y `managers`
+### Por qué se inyectan `zones` y `managers`
 
 Son las **relaciones**. El usuario no escribe el id de la zona a mano: elige de un desplegable. Para pintar ese desplegable hace falta la lista de zonas disponibles.
 
@@ -3916,7 +3920,7 @@ Esto revela algo importante: **el controlador MVC tiene que preparar todo lo que
 
 java
 
-```java
+```java title="Endpoint 2: procesar el guardado (POST)"
 @PostMapping
 public String createEvent(@ModelAttribute Event event,
                           @RequestParam(required = false) Integer zoneId,
@@ -3940,7 +3944,7 @@ public String createEvent(@ModelAttribute Event event,
 }
 ```
 
-## 🔍 Explicación de los tres conceptos nuevos
+## Explicación de los tres conceptos nuevos
 
 ### `@ModelAttribute`
 
@@ -3948,7 +3952,7 @@ Toma los campos de un formulario HTML y los mete en un objeto Java.
 
 html
 
-```html
+```html title="@ModelAttribute"
 <form method="post" action="/mvc/events">
     <input type="text" name="title">        <!-- → event.setTitle(...) -->
     <input type="text" name="description">  <!-- → event.setDescription(...) -->
@@ -3969,7 +3973,7 @@ Fíjate en el patrón: el `<select>` manda un `zoneId` (un número), el controla
 
 **Nunca se envía el objeto `Zone` completo desde el HTML.**
 
-> 🔑 **Recuerda este patrón.** Es exactamente el mismo que usarán los DTOs en el Bloque 2: el cliente maneja **IDs**, el servidor resuelve las **entidades**. Lo que en MVC hace el `<select name="zoneId">`, en REST lo hará el campo `private Integer zoneId` del DTO.
+> **Recuerda este patrón.** Es exactamente el mismo que usarán los DTOs en el Bloque 2: el cliente maneja **IDs**, el servidor resuelve las **entidades**. Lo que en MVC hace el `<select name="zoneId">`, en REST lo hará el campo `private Integer zoneId` del DTO.
 > 
 
 ### `redirect:` y el patrón POST-Redirect-GET
@@ -3996,7 +4000,7 @@ El problema: al redirigir, **el `Model` se pierde**.
 
 java
 
-```java
+```java title="RedirectAttributes y los flash"
 model.addAttribute("success", "Creado");                     // ❌ se pierde
 redirectAttributes.addFlashAttribute("success", "Creado");   // ✅ sobrevive
 ```
@@ -4012,7 +4016,7 @@ Y en la plantilla:
 
 html
 
-```html
+```html title="RedirectAttributes y los flash (2)"
 <div th:if="${success}" th:text="${success}" style="color:green"></div>
 <div th:if="${error}"   th:text="${error}"   style="color:red"></div>
 ```
@@ -4027,7 +4031,7 @@ Mismo patrón de dos endpoints, pero el formulario llega precargado.
 
 java
 
-```java
+```java title="Mostrar el formulario con los datos"
 @GetMapping("/edit/{id}")
 public String showEditForm(@PathVariable Integer id, Model model,
                            RedirectAttributes redirectAttributes) {
@@ -4054,7 +4058,7 @@ La única diferencia con `showCreateForm` es que en vez de `new Event()` se pone
 
 java
 
-```java
+```java title="Procesar la actualización (POST)"
 @PostMapping("/update/{id}")
 public String updateEvent(@PathVariable Integer id,
                           @ModelAttribute Event event,
@@ -4069,11 +4073,11 @@ public String updateEvent(@PathVariable Integer id,
 }
 ```
 
-## 🔍 Por qué POST y no PUT
+## Por qué POST y no PUT
 
 html
 
-```html
+```html title="Por qué POST y no PUT"
 <form method="put">   <!-- ❌ NO EXISTE. El navegador lo trata como GET -->
 ```
 
@@ -4086,7 +4090,7 @@ Eliminar   → POST /mvc/events/delete/{id}   (en vez de DELETE /mvc/events/{id}
 
 Y por eso las URLs de MVC **llevan verbos** (`/new`, `/edit`, `/update`, `/delete`), rompiendo la nomenclatura REST.
 
-> 📌 **Eso está bien.** MVC no pretende ser REST: son dos estilos con reglas distintas. Cuando pasemos a REST en el Bloque 2, las URLs se limpiarán y los verbos desaparecerán.
+> **Eso está bien.** MVC no pretende ser REST: son dos estilos con reglas distintas. Cuando pasemos a REST en el Bloque 2, las URLs se limpiarán y los verbos desaparecerán.
 > 
 > 
 > Existe un filtro (`HiddenHttpMethodFilter`) que permite simular PUT y DELETE con un campo oculto `<input type="hidden" name="_method" value="put">`, pero es más simple usar POST.
@@ -4098,7 +4102,7 @@ Y por eso las URLs de MVC **llevan verbos** (`/new`, `/edit`, `/update`, `/delet
 
 html
 
-```html
+```html title="Una sola plantilla para crear y editar"
 <form th:action="${event.id == null}
                  ? @{/mvc/events}
                  : @{/mvc/events/update/{id}(id=${event.id})}"
@@ -4135,7 +4139,7 @@ html
 
 java
 
-```java
+```java title="Paso 10: eliminar"
 @PostMapping("/delete/{id}")
 public String deleteEvent(@PathVariable Integer id,
                           RedirectAttributes redirectAttributes) {
@@ -4153,14 +4157,14 @@ En el HTML, como no se puede usar `method="delete"`, se hace con un formulario P
 
 html
 
-```html
+```html title="Paso 10: eliminar (2)"
 <form th:action="@{/mvc/events/delete/{id}(id=${event.id})}" method="post"
       onsubmit="return confirm('¿Seguro que deseas eliminar este evento?');">
     <button type="submit">Eliminar</button>
 </form>
 ```
 
-> 🔑 **Aquí es donde se paga lo aprendido en la Parte 1.** Si `Event` tiene `schedules` y `attendees` con `cascade = CascadeType.ALL, orphanRemoval = true`, al borrar el evento se borran sus horarios y asistentes automáticamente. Si faltara ese cascade, MySQL lanzaría:
+> **Aquí es donde se paga lo aprendido en la Parte 1.** Si `Event` tiene `schedules` y `attendees` con `cascade = CascadeType.ALL, orphanRemoval = true`, al borrar el evento se borran sus horarios y asistentes automáticamente. Si faltara ese cascade, MySQL lanzaría:
 > 
 > 
 > ```
@@ -4178,7 +4182,7 @@ Todos los pasos juntos:
 
 java
 
-```java
+```java title="MvcEventController.java"
 package com.example.eventos.controller.mvc;
 
 import com.example.eventos.model.Event;
@@ -4356,7 +4360,7 @@ public class MvcEventController {
 }
 ```
 
-## 📊 Resumen de las rutas MVC
+## Resumen de las rutas MVC
 
 | Método | Ruta | Qué hace | Devuelve |
 | --- | --- | --- | --- |
@@ -4381,7 +4385,7 @@ Diez endpoints, **tres plantillas** (`list`, `form`, y las de error), y todo tra
 
 java
 
-```java
+```java title="AuthController.java"
 package com.example.eventos.controller.mvc;
 
 import org.springframework.stereotype.Controller;
@@ -4406,7 +4410,7 @@ Y una ruta pública para verificar que la app responde sin autenticación:
 
 java
 
-```java
+```java title="HelloController.java"
 @Controller
 @RequestMapping("/mvc/public")
 public class HelloController {
@@ -4422,7 +4426,7 @@ public class HelloController {
 
 html
 
-```html
+```html title="login.html"
 <!-- templates/login.html -->
 <form th:action="@{/mvc/auth/login}" method="post">
     <input type="text"     name="username" placeholder="Usuario">
@@ -4431,7 +4435,7 @@ html
 </form>
 ```
 
-> ⚠️ Los campos **deben** llamarse `username` y `password`, o hay que declararlo con `.usernameParameter(...)` y `.passwordParameter(...)` en la configuración. No es opcional.
+> Los campos **deben** llamarse `username` y `password`, o hay que declararlo con `.usernameParameter(...)` y `.passwordParameter(...)` en la configuración. No es opcional.
 > 
 
 ## Cómo funciona la sesión con JSESSIONID
@@ -4459,20 +4463,20 @@ html
 
 ## Ventajas y desventajas
 
-| ✅ Ventajas | ❌ Desventajas |
+| Ventajas | Desventajas |
 | --- | --- |
 | El navegador maneja la cookie solo, sin JavaScript | El servidor consume memoria por cada usuario conectado |
 | Cerrar sesión es inmediato y real | Con varios servidores, la sesión no se comparte |
 | `HttpOnly` protege la cookie de XSS | Vulnerable a CSRF (hay que dejar la protección activa) |
 | Los permisos siempre están actualizados | No sirve para apps móviles ni para otras APIs |
 
-> 🔑 **El problema de escalar:** con 3 servidores detrás de un balanceador, si el usuario inicia sesión en el servidor A, su sesión vive **solo en la memoria de A**. Si la siguiente petición cae en B, aparece como no autenticado.
+> **El problema de escalar:** con 3 servidores detrás de un balanceador, si el usuario inicia sesión en el servidor A, su sesión vive **solo en la memoria de A**. Si la siguiente petición cae en B, aparece como no autenticado.
 > 
 > 
 > Se soluciona con *sticky sessions* o replicando la sesión en Redis, pero eso agrega complejidad. **JWT nació para resolver exactamente esto**, y lo veremos en el Bloque 3.
 > 
 
-# 🟨 BLOQUE 2 — De MVC a REST
+# BLOQUE 2 — De MVC a REST
 
 Ya tenemos un controlador MVC funcionando. Ahora lo convertimos en REST **paso a paso**, y en cada paso aparece un problema nuevo que justifica la pieza siguiente.
 
@@ -4496,7 +4500,7 @@ Pasos 6-7: ResponseEntity y CORS terminan de adaptarlo
 
 ## Qué cambia
 
-```java
+```java title="Qué cambia"
 // ANTES (MVC)                          // DESPUÉS (REST)
 @Controller                             @RestController
 @RequestMapping("/mvc/events")          @RequestMapping("/rest/events")
@@ -4530,7 +4534,7 @@ Con ese cambio, **todo lo que devuelva un método deja de interpretarse como nom
 
 Traducción directa del controlador MVC, todavía **devolviendo entidades**:
 
-```java
+```java title="RestEventController.java"
 @RestController
 @RequestMapping("/rest/events")
 @RequiredArgsConstructor
@@ -4582,7 +4586,7 @@ En MVC, devolver la entidad era perfectamente seguro: Thymeleaf pintaba solo los
 
 Esto es lo que sale realmente de `GET /rest/events/5`:
 
-```json
+```json title="Paso 2: el problema de devolver"
 {
   "id": 5,
   "title": "Concierto de Jazz",
@@ -4603,21 +4607,21 @@ Esto es lo que sale realmente de `GET /rest/events/5`:
 
 ## Los cuatro problemas
 
-### 🚨 Problema 1: fuga de datos sensibles
+### Problema 1: fuga de datos sensibles
 
 `password` sale en el JSON. En MVC nunca pasó porque la plantilla simplemente no lo pintaba. Aquí, basta olvidar un `@JsonIgnore` para filtrar hashes de contraseñas a cualquiera que llame al endpoint.
 
-### 🚨 Problema 2: recursión infinita
+### Problema 2: recursión infinita
 
 `Event` → `author` → `createdEvents` → `Event` → `author` → … `StackOverflowError`, o un JSON de varios megabytes.
 
 En la Parte 1 lo tapamos con `@JsonIgnore`. Funciona, pero es un parche: obliga a decorar las **entidades** pensando en cómo se ven en la API, mezclando dos responsabilidades que deberían estar separadas.
 
-### 🚨 Problema 3: el cliente puede enviar lo que quiera
+### Problema 3: el cliente puede enviar lo que quiera
 
 Con `@RequestBody Event event`, alguien puede mandar:
 
-```json
+```json title="Problema 3: el cliente puede enviar lo"
 {
   "title": "Mi evento",
   "id": 5,
@@ -4627,13 +4631,13 @@ Con `@RequestBody Event event`, alguien puede mandar:
 
 Y si lo guardas tal cual, acaba de **sobrescribir el evento 5** y de tocar datos que nunca debió tocar. La entidad expone **todos** sus setters a cualquiera.
 
-### 🚨 Problema 4: acoplamiento con la base de datos
+### Problema 4: acoplamiento con la base de datos
 
 Si mañana renombras `title` a `eventTitle` en la entidad, **el frontend se rompe** sin que nadie se entere hasta que un usuario lo reporte. La API queda amarrada a la estructura de las tablas.
 
 ## La conclusión
 
-> 🔑 **La entidad es un objeto de persistencia, no un objeto de comunicación.** Sirve para hablar con la base de datos. Para hablar con el cliente hace falta otra cosa.
+> **La entidad es un objeto de persistencia, no un objeto de comunicación.** Sirve para hablar con la base de datos. Para hablar con el cliente hace falta otra cosa.
 > 
 > 
 > Esa otra cosa es el **DTO**.
@@ -4671,7 +4675,7 @@ Son distintos porque las necesidades son distintas: al **crear** un evento el cl
 
 ## DTOs de `Event`
 
-```java
+```java title="DTOeventRequest.java"
 package com.example.eventos.dto.event;
 
 import lombok.Data;
@@ -4697,7 +4701,7 @@ public class DTOeventRequest {
 }
 ```
 
-```java
+```java title="DTOeventResponse.java"
 package com.example.eventos.dto.event;
 
 @Data
@@ -4720,7 +4724,7 @@ public class DTOeventResponse {
 
 ## DTOs de `User`
 
-```java
+```java title="DTOuserRequest.java"
 @Data
 @NoArgsConstructor
 public class DTOuserRequest {
@@ -4733,7 +4737,7 @@ public class DTOuserRequest {
 }
 ```
 
-```java
+```java title="DTOuserResponse.java"
 @Data
 @NoArgsConstructor
 public class DTOuserResponse {
@@ -4752,7 +4756,7 @@ public class DTOuserResponse {
 
 ## El resultado
 
-```json
+```json title="El resultado"
 // ❌ Devolviendo la entidad Event
 {
   "id": 5, "title": "Concierto de Jazz",
@@ -4778,12 +4782,12 @@ Los cuatro problemas resueltos de una vez:
 
 | Problema | Cómo lo resuelve el DTO |
 | --- | --- |
-| 🚨 Fuga de datos | `password` no existe en el DTO. Imposible filtrarlo. |
-| 🚨 Recursión infinita | No hay relaciones anidadas, solo `String` planos. |
-| 🚨 Cliente manda lo que quiera | `DTOeventRequest` no tiene `id`. Aunque lo mande, Jackson lo descarta. |
-| 🚨 Acoplamiento | Renombrar un campo de la entidad no cambia el JSON: solo el mapeo. |
+| Fuga de datos | `password` no existe en el DTO. Imposible filtrarlo. |
+| Recursión infinita | No hay relaciones anidadas, solo `String` planos. |
+| Cliente manda lo que quiera | `DTOeventRequest` no tiene `id`. Aunque lo mande, Jackson lo descarta. |
+| Acoplamiento | Renombrar un campo de la entidad no cambia el JSON: solo el mapeo. |
 
-## 🔑 El patrón de las relaciones (el mismo del formulario MVC)
+## El patrón de las relaciones (el mismo del formulario MVC)
 
 ```
 MVC:   <select name="zoneId">  →  @RequestParam Integer zoneId  →  buscar Zone  →  setZone()
@@ -4804,7 +4808,7 @@ Ahora hay un trabajo nuevo: **convertir entre entidad y DTO**. Veamos primero c�
 
 Es lo más natural: se le pone al DTO un método de fábrica y un constructor.
 
-```java
+```java title="DTOeventResponse.java"
 @Data
 @NoArgsConstructor
 public class DTOeventResponse {
@@ -4843,7 +4847,7 @@ public class DTOeventResponse {
 
 Y en el request, el camino inverso:
 
-```java
+```java title="DTOeventRequest.java"
 @Data
 @NoArgsConstructor
 public class DTOeventRequest {
@@ -4879,11 +4883,11 @@ public class DTOeventRequest {
 
 Uso en el controlador:
 
-```java
+```java title="Opción A: métodos de conversión dentro"
 return ResponseEntity.ok(DTOeventResponse.fromEntity(event));
 ```
 
-## ⚠️ Por qué esto no escala
+## Por qué esto no escala
 
 **1. El DTO deja de ser un DTO.** Debería ser una clase plana de datos. Ahora tiene lógica, conoce la entidad y sabe convertirse. Se acopló a lo que debía desacoplar.
 
@@ -4899,7 +4903,7 @@ return ResponseEntity.ok(DTOeventResponse.fromEntity(event));
 
 **5. La actualización parcial es un muro de `if`.**
 
-```java
+```java title="Por qué esto no escala"
 if (request.getTitle() != null)       existing.setTitle(request.getTitle());
 if (request.getDescription() != null) existing.setDescription(request.getDescription());
 if (request.getStartDate() != null)   existing.setStartDate(request.getStartDate());
@@ -4911,7 +4915,7 @@ if (request.getEndDate() != null)     existing.setEndDate(request.getEndDate());
 
 Se puede sacar la lógica del DTO a una clase aparte:
 
-```java
+```java title="EventMapperManual.java"
 @Component
 public class EventMapperManual {
 
@@ -4927,7 +4931,7 @@ public class EventMapperManual {
 
 Mejora el problema 1 (el DTO vuelve a ser plano), pero **los problemas 2, 3, 4 y 5 siguen intactos**: sigue habiendo cientos de líneas de `setX(getX())` que hay que mantener a mano.
 
-> 🔑 **Ese es exactamente el problema que resuelve MapStruct:** genera todos esos `setX(getX())` automáticamente, para que **los DTOs vuelvan a ser clases planas sin ningún método de conversión ni constructor especial**.
+> **Ese es exactamente el problema que resuelve MapStruct:** genera todos esos `setX(getX())` automáticamente, para que **los DTOs vuelvan a ser clases planas sin ningún método de conversión ni constructor especial**.
 > 
 
 ---
@@ -4946,7 +4950,7 @@ Ventajas frente a otras librerías como ModelMapper:
 
 ## Dependencias
 
-```xml
+```xml title="Dependencias"
 <dependency>
     <groupId>org.mapstruct</groupId>
     <artifactId>mapstruct</artifactId>
@@ -4956,7 +4960,7 @@ Ventajas frente a otras librerías como ModelMapper:
 
 Y en el plugin de compilación, **el orden importa**:
 
-```xml
+```xml title="Dependencias (2)"
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -4982,14 +4986,14 @@ Y en el plugin de compilación, **el orden importa**:
 </plugin>
 ```
 
-> ⚠️ **Si Lombok y MapStruct no están en ese orden, todos los mapeos salen `null`.** MapStruct se ejecuta antes de que Lombok haya generado los getters, así que no encuentra nada que mapear. El `lombok-mapstruct-binding` es lo que los sincroniza. Es un error clásico y muy difícil de diagnosticar porque **compila sin errores**.
+> **Si Lombok y MapStruct no están en ese orden, todos los mapeos salen `null`.** MapStruct se ejecuta antes de que Lombok haya generado los getters, así que no encuentra nada que mapear. El `lombok-mapstruct-binding` es lo que los sincroniza. Es un error clásico y muy difícil de diagnosticar porque **compila sin errores**.
 > 
 
 ## Los DTOs vuelven a ser planos
 
 Este es el beneficio directo. Con MapStruct, `DTOeventResponse` queda así:
 
-```java
+```java title="DTOeventResponse.java"
 @Data
 @NoArgsConstructor
 public class DTOeventResponse {
@@ -5011,7 +5015,7 @@ La inyección de datos la hace el mapper por defecto: **si el nombre del campo c
 
 ## El mapper de `Event`
 
-```java
+```java title="EventMapper.java"
 package com.example.eventos.mapper;
 
 import com.example.eventos.dto.event.DTOeventRequest;
@@ -5050,7 +5054,7 @@ public interface EventMapper {
 
 Nota que **es una interfaz**: no hay ni una línea de implementación.
 
-## 🔍 Explicación de cada anotación
+## Explicación de cada anotación
 
 | Elemento | Qué hace |
 | --- | --- |
@@ -5061,9 +5065,9 @@ Nota que **es una interfaz**: no hay ni una línea de implementación.
 | `@Mapping(target = "x", ignore = true)` | No toques ese campo. Se usa para `id` y para las relaciones. |
 | `@MappingTarget` | En vez de crear un objeto nuevo, **modifica el que le pasas**. Es lo que permite actualizar sin perder los campos que no vinieron en el DTO. |
 
-## 🔍 Por qué las relaciones se ignoran
+## Por qué las relaciones se ignoran
 
-```java
+```java title="Por qué las relaciones se ignoran"
 @Mapping(target = "zone", ignore = true)
 ```
 
@@ -5074,9 +5078,9 @@ Por eso el reparto de trabajo es:
 - El **mapper** copia los campos planos.
 - El **controlador** (o el servicio) busca las entidades relacionadas y las asigna.
 
-## 🔑 El patrón estándar de un POST en REST
+## El patrón estándar de un POST en REST
 
-```java
+```java title="El patrón estándar de un POST en REST"
 @PostMapping
 public ResponseEntity<DTOeventResponse> createEvent(@RequestBody DTOeventRequest request) {
 
@@ -5103,7 +5107,7 @@ public ResponseEntity<DTOeventResponse> createEvent(@RequestBody DTOeventRequest
 
 Compara el paso ② con el equivalente MVC:
 
-```java
+```java title="El patrón estándar de un POST en REST (2)"
 // MVC                                    // REST
 if (zoneId != null) {                     if (request.getZoneId() != null) {
     Zone zone = zoneService                   Zone zone = zoneService
@@ -5116,7 +5120,7 @@ if (zoneId != null) {                     if (request.getZoneId() != null) {
 
 ## Actualización parcial: antes y después
 
-```java
+```java title="Actualización parcial: antes y después"
 // ❌ SIN mapper: un if por cada campo
 if (request.getTitle() != null)       existing.setTitle(request.getTitle());
 if (request.getDescription() != null) existing.setDescription(request.getDescription());
@@ -5131,7 +5135,7 @@ Una línea hace exactamente lo mismo, generada automáticamente.
 
 ## El mapper de `User`
 
-```java
+```java title="UserMapper.java"
 @Mapper(componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
@@ -5175,14 +5179,14 @@ En MVC, un error se comunicaba redirigiendo con un mensaje que leía un humano. 
 
 **1. Devolver el objeto directamente** → siempre 200 OK:
 
-```java
+```java title="Las tres formas de responder"
 @GetMapping
 public Page<DTOeventResponse> findAll() { ... }
 ```
 
 **2. `@ResponseStatus`** → código fijo para todo el método:
 
-```java
+```java title="Las tres formas de responder (2)"
 @PostMapping
 @ResponseStatus(HttpStatus.CREATED)
 public DTOeventResponse create(@RequestBody DTOeventRequest request) { ... }
@@ -5190,7 +5194,7 @@ public DTOeventResponse create(@RequestBody DTOeventRequest request) { ... }
 
 **3. `ResponseEntity<T>`** → control total: código, cabeceras y cuerpo:
 
-```java
+```java title="Las tres formas de responder (3)"
 ResponseEntity.ok(dto)                                // 200 + cuerpo
 ResponseEntity.status(HttpStatus.CREATED).body(dto)   // 201 + cuerpo
 ResponseEntity.noContent().build()                    // 204 sin cuerpo
@@ -5198,7 +5202,7 @@ ResponseEntity.notFound().build()                     // 404 sin cuerpo
 ResponseEntity.badRequest().body(mensaje)             // 400 + cuerpo
 ```
 
-> 💡 Usa `ResponseEntity` cuando el mismo método pueda responder con **códigos distintos** (200 si existe, 404 si no). Usa retorno directo cuando siempre sea 200.
+> Usa `ResponseEntity` cuando el mismo método pueda responder con **códigos distintos** (200 si existe, 404 si no). Usa retorno directo cuando siempre sea 200.
 > 
 
 `ResponseEntity<Void>` significa “no devuelvo cuerpo”, y `.build()` cierra la construcción sin adjuntar nada.
@@ -5211,7 +5215,7 @@ ResponseEntity.badRequest().body(mensaje)             // 400 + cuerpo
 | `redirect:` + `addFlashAttribute("success", ...)` | `ResponseEntity.ok(dto)` o `.status(CREATED)` |
 | `try/catch` con mensaje al usuario | Código de estado que el frontend interpreta |
 
-```java
+```java title="Traducción directa de los patrones MVC"
 // MVC                                     // REST
 if (event == null) {                       if (event == null) {
     redirectAttributes.addFlashAttribute(      return ResponseEntity.notFound().build();
@@ -5224,7 +5228,7 @@ if (event == null) {                       if (event == null) {
 
 Los `try/catch` repetidos en cada método se pueden centralizar:
 
-```java
+```java title="GlobalExceptionHandler.java"
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -5250,7 +5254,7 @@ public class GlobalExceptionHandler {
 
 Con esto el controlador queda limpio: lanza la excepción y el `@RestControllerAdvice` la convierte en la respuesta correcta.
 
-```java
+```java title="Manejo centralizado de errores"
 @GetMapping("/{id}")
 public DTOeventResponse findById(@PathVariable Integer id) {
     return eventMapper.toResponse(eventService.findById(id));  // si no existe → 404
@@ -5276,7 +5280,7 @@ React corre en `localhost:5173` y Spring Boot en `localhost:8081`. Son **orígen
 
 ## Solución rápida: `@CrossOrigin`
 
-```java
+```java title="RestEventController.java"
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/rest/events")
@@ -5287,7 +5291,7 @@ public class RestEventController { ... }
 
 Ponerlo en cada controlador es repetitivo. Mejor un solo bean:
 
-```java
+```java title="Solución correcta: configuración global"
 @Bean
 public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
@@ -5312,7 +5316,7 @@ public CorsConfigurationSource corsConfigurationSource() {
 
 Este bean va en la clase de configuración de seguridad y lo veremos completo en el Bloque 3.
 
-### 🔍 Los detalles que suelen fallar
+### Los detalles que suelen fallar
 
 | Detalle | Por qué importa |
 | --- | --- |
@@ -5322,7 +5326,7 @@ Este bean va en la clase de configuración de seguridad y lo veremos completo en
 
 Y en la cadena de seguridad hay que permitir explícitamente las preflight:
 
-```java
+```java title="Los detalles que suelen fallar"
 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 ```
 
@@ -5332,7 +5336,7 @@ Y en la cadena de seguridad hay que permitir explícitamente las preflight:
 
 Todos los pasos aplicados:
 
-```java
+```java title="RestEventController.java"
 package com.example.eventos.controller.rest;
 
 import com.example.eventos.dto.event.DTOeventRequest;
@@ -5506,19 +5510,19 @@ public class RestEventController {
 }
 ```
 
-## 🔍 Dos detalles nuevos
+## Dos detalles nuevos
 
 ### `Page.map()`
 
 `Page<T>` transforma cada elemento **conservando los metadatos**:
 
-```java
+```java title="Page.map()"
 return eventPage.map(eventMapper::toResponse);   // Page<Event> → Page<DTOeventResponse>
 ```
 
 El JSON resultante:
 
-```json
+```json title="Page.map()"
 {
   "content": [ { "id": 1, "title": "Concierto", "zoneName": "Auditorio A" }, ... ],
   "totalElements": 47,
@@ -5536,7 +5540,7 @@ React usa `totalPages` y `number` para pintar la paginación. Es el equivalente 
 
 Cuando el servicio devuelve una `List` en vez de un `Page`:
 
-```java
+```java title="stream().map(...).toList()"
 List<DTOeventResponse> response = eventService.findByZone_Id(zoneId)
         .stream()                       // convierte la lista en un flujo
         .map(eventMapper::toResponse)   // transforma cada elemento
@@ -5551,7 +5555,7 @@ List<DTOeventResponse> response = eventService.findByZone_Id(zoneId)
 
 ## El mismo método, lado a lado
 
-```java
+```java title="El mismo método, lado a lado"
 // ══════════════════ MVC ══════════════════
 @GetMapping("/{id}")
 public String findById(Model model, @PathVariable Integer id,
@@ -5617,7 +5621,7 @@ Lo verdaderamente nuevo:
 
 Tres cuartas partes del controlador REST ya las sabías. Solo hacía falta entender **qué problema nuevo** justifica cada pieza añadida.
 
-# 🟥 BLOQUE 3 — Autenticación y JWT
+# BLOQUE 3 — Autenticación y JWT
 
 En el Bloque 1 vimos que MVC usa **sesión + cookie JSESSIONID** y que Spring Security lo hace casi todo solo. En REST no es así: hay que construir varias piezas a mano.
 
@@ -5688,7 +5692,7 @@ User (ana)
                                         └─ permission → Permission (WRITE)
 ```
 
-> 🔑 **Aquí es donde se paga la decisión de la Parte 1** de modelar `RolePermission` como clase intermedia en vez de un `@ManyToMany` simple. Es la cadena que hay que recorrer para saber qué puede hacer un usuario.
+> **Aquí es donde se paga la decisión de la Parte 1** de modelar `RolePermission` como clase intermedia en vez de un `@ManyToMany` simple. Es la cadena que hay que recorrer para saber qué puede hacer un usuario.
 > 
 
 ---
@@ -5701,7 +5705,7 @@ Spring Security no sabe qué es un `Permission`. Solo entiende de `GrantedAuthor
 
 ## La solución: un adaptador
 
-```java
+```java title="SecurityAuthority.java"
 package com.example.eventos.security;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -5720,7 +5724,7 @@ public class SecurityAuthority implements GrantedAuthority {
 }
 ```
 
-## 🔍 Explicación
+## Explicación
 
 Es un **adaptador**: envuelve una entidad `Permission` y la presenta con la interfaz que Spring Security espera.
 
@@ -5731,7 +5735,7 @@ Permission (entidad JPA)  →  SecurityAuthority  →  GrantedAuthority (Spring 
 
 El `String` que devuelve `getAuthority()` es **exactamente** el que después compara `@PreAuthorize("hasAuthority('READ')")`. Si en la base de datos el permiso se llama `READ`, en la anotación va `'READ'`.
 
-> 💡 Es la clase más pequeña de todo el bloque, pero es la que conecta tu modelo de datos con el sistema de permisos de Spring.
+> Es la clase más pequeña de todo el bloque, pero es la que conecta tu modelo de datos con el sistema de permisos de Spring.
 > 
 
 ---
@@ -5744,7 +5748,7 @@ Spring Security tampoco sabe qué es tu entidad `User`. Necesita un `UserDetails
 
 ## La solución
 
-```java
+```java title="CustomUserDetails.java"
 package com.example.eventos.security;
 
 import com.example.eventos.model.User;
@@ -5797,7 +5801,7 @@ public class CustomUserDetails implements UserDetails {
 }
 ```
 
-## 🔍 Explicación
+## Explicación
 
 ### Es un envoltorio (*wrapper*)
 
@@ -5810,7 +5814,7 @@ User (tu entidad)  →  CustomUserDetails  →  UserDetails (lo que Spring entie
   role.rolePermissions                         getAuthorities()
 ```
 
-### 🔑 Dos tipos de authority conviviendo
+### Dos tipos de authority conviviendo
 
 Este es un detalle que confunde mucho. El método devuelve **dos clases distintas** de authority:
 
@@ -5821,21 +5825,21 @@ Este es un detalle que confunde mucho. El método devuelve **dos clases distinta
 
 Por eso en la configuración se pueden mezclar reglas de grano fino (`hasAuthority('DELETE')`) con reglas de grano grueso (`hasAuthority('ADMIN')`). Ambas funcionan porque ambas cadenas están en la lista.
 
-> ⚠️ **`hasRole` vs `hasAuthority`.** `hasRole('ADMIN')` busca internamente la authority `ROLE_ADMIN` (añade el prefijo). Como aquí el rol se añade sin prefijo, hay que usar **`hasAuthority('ADMIN')`**. Si prefieres `hasRole`, guarda los roles en la BD como `ROLE_ADMIN`.
+> **`hasRole` vs `hasAuthority`.** `hasRole('ADMIN')` busca internamente la authority `ROLE_ADMIN` (añade el prefijo). Como aquí el rol se añade sin prefijo, hay que usar **`hasAuthority('ADMIN')`**. Si prefieres `hasRole`, guarda los roles en la BD como `ROLE_ADMIN`.
 > 
 
 ### `getUser()` no es parte de la interfaz
 
 `UserDetails` no tiene ese método: se agrega para poder recuperar la entidad original más adelante:
 
-```java
+```java title="getUser() no es parte de la interfaz"
 CustomUserDetails cud = (CustomUserDetails) userDetails;
 User user = cud.getUser();     // ← el User completo, con id y relaciones
 ```
 
 Se necesita en `AuthService` porque el token debe llevar el `userId`, y `UserDetails` solo expone el `username`.
 
-### ⚠️ Cuidado con LAZY
+### Cuidado con LAZY
 
 `getAuthorities()` recorre `user.getRole().getRolePermissions()`. Si esas relaciones son `FetchType.LAZY` y el `User` se cargó fuera de una transacción, salta `LazyInitializationException`.
 
@@ -5852,7 +5856,7 @@ Dos formas de evitarlo:
 
 Es el puente entre Spring Security y la base de datos: dado un nombre de usuario, devuelve su `UserDetails`.
 
-```java
+```java title="CustomUserDetailsService.java"
 package com.example.eventos.security;
 
 import com.example.eventos.model.User;
@@ -5881,7 +5885,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 }
 ```
 
-## 🔍 Explicación
+## Explicación
 
 ### `UserDetailsService` es la interfaz que Spring Security busca
 
@@ -5900,7 +5904,7 @@ Fíjate que inyecta `UserService`, **no** `UserRepository`. Sigue la misma regla
 
 En el código de referencia esta clase **no** tiene anotación de componente. Se registra a mano como bean en la configuración:
 
-```java
+```java title="No lleva @Service"
 @Bean
 public UserDetailsService userDetailsService(UserService userService) {
     return new CustomUserDetailsService(userService);
@@ -5911,7 +5915,7 @@ Ambas formas valen. Registrarlo como `@Bean` deja explícito en un solo archivo 
 
 ### El método en el servicio
 
-```java
+```java title="El método en el servicio"
 // UserService
 User findByUserName(String userName);
 
@@ -5919,7 +5923,7 @@ User findByUserName(String userName);
 Optional<User> findByUserName(String userName);
 ```
 
-> ⚠️ Si `User` tiene `@SQLRestriction("deleted = false")` (el borrado suave de la Parte 1), un usuario eliminado **no aparecerá** en esta búsqueda y no podrá autenticarse. Ese es justamente el comportamiento deseado.
+> Si `User` tiene `@SQLRestriction("deleted = false")` (el borrado suave de la Parte 1), un usuario eliminado **no aparecerá** en esta búsqueda y no podrá autenticarse. Ese es justamente el comportamiento deseado.
 > 
 
 ---
@@ -5941,18 +5945,18 @@ eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbmEiLCJyb2xlcyI6WyJSRUFEIl19.dBjftJeZ4CVP...
 | **Payload** | Los *claims*: usuario, permisos, expiración | Base64URL |
 | **Signature** | Firma de header + payload con la clave secreta | HMAC |
 
-### 🔑 Lo más importante: el token NO está cifrado, está FIRMADO
+### Lo más importante: el token NO está cifrado, está FIRMADO
 
 Cualquiera puede copiar un JWT, pegarlo en [jwt.io](https://jwt.io/) y **leer el payload completo**. Es solo Base64.
 
 Lo que la firma garantiza es la **integridad**: si alguien cambia `"roles": ["READ"]` por `"roles": ["ADMIN"]`, la firma deja de coincidir y el servidor rechaza el token. Para generar una firma válida haría falta la **clave secreta**, que solo conoce el servidor.
 
-> ⚠️ **Consecuencia práctica: nunca metas datos sensibles en el payload.** Ni contraseñas, ni documentos, ni datos personales. Solo identificadores y permisos.
+> **Consecuencia práctica: nunca metas datos sensibles en el payload.** Ni contraseñas, ni documentos, ni datos personales. Solo identificadores y permisos.
 > 
 
 ## Dependencias
 
-```xml
+```xml title="Dependencias (3)"
 <dependency>
     <groupId>io.jsonwebtoken</groupId>
     <artifactId>jjwt-api</artifactId>
@@ -5978,12 +5982,12 @@ Y la clave secreta en `application.properties`:
 app.jwt.secret=bXlTdXBlclNlY3JldEtleUZvckpXVFNpZ25pbmcxMjM0NTY3ODkwMTIzNDU2Nzg5MA==
 ```
 
-> ⚠️ Debe estar en **Base64** y tener al menos 256 bits (32 bytes) para HS256. En producción va en una variable de entorno, **nunca** en el repositorio.
+> Debe estar en **Base64** y tener al menos 256 bits (32 bytes) para HS256. En producción va en una variable de entorno, **nunca** en el repositorio.
 > 
 
 ## La interfaz
 
-```java
+```java title="JwtService.java"
 package com.example.eventos.service;
 
 import com.example.eventos.model.User;
@@ -6000,7 +6004,7 @@ public interface JwtService {
 
 ## La implementación
 
-```java
+```java title="JwtServiceImpl.java"
 package com.example.eventos.service.serviceImpl;
 
 import com.example.eventos.model.User;
@@ -6085,7 +6089,7 @@ public class JwtServiceImpl implements JwtService {
 }
 ```
 
-## 🔍 Explicación pieza por pieza
+## Explicación pieza por pieza
 
 ### `@Value("${app.jwt.secret}")`
 
@@ -6106,7 +6110,7 @@ Convierte el `String` en Base64 a un objeto `SecretKey` criptográfico. **La mis
 | `issuedAt` | Fecha de emisión | Auditoría |
 | `expiration` | Fecha de vencimiento | Seguridad: el token muere solo |
 
-> 🔑 **El `subject` es el claim más importante.** Es el que se usa en `extractUsername`, y con él el filtro carga el usuario desde la base de datos en cada petición.
+> **El `subject` es el claim más importante.** Es el que se usa en `extractUsername`, y con él el filtro carga el usuario desde la base de datos en cada petición.
 > 
 
 ### `.expiration(... + 60 * 60 * 1000)`
@@ -6119,7 +6123,7 @@ Si el token fue manipulado, `parseSignedClaims` lanza `SignatureException` y la 
 
 ### `validateToken` comprueba dos cosas
 
-```java
+```java title="validateToken comprueba dos cosas"
 username.equals(userDetails.getUsername())   // el token corresponde a este usuario
 && !isTokenExpired(token)                    // y no ha vencido
 ```
@@ -6132,7 +6136,7 @@ La firma ya se validó implícitamente al hacer `extractUsername`.
 
 Igual que en el Bloque 2: no se exponen entidades, se usan DTOs.
 
-```java
+```java title="AuthRequest.java"
 package com.example.eventos.dto;
 
 import lombok.Data;
@@ -6144,7 +6148,7 @@ public class AuthRequest {
 }
 ```
 
-```java
+```java title="AuthResponse.java"
 package com.example.eventos.dto;
 
 import lombok.AllArgsConstructor;
@@ -6157,13 +6161,13 @@ public class AuthResponse {
 }
 ```
 
-## 🔍 Explicación
+## Explicación
 
 `AuthRequest` es un DTO de entrada perfecto: solo los dos campos que el cliente debe enviar. **No es la entidad `User`**, así que es imposible que alguien mande un `roleId` en el login e intente escalar privilegios.
 
 `AuthResponse` con `@AllArgsConstructor` permite `new AuthResponse(token)` en una línea.
 
-> 💡 Una versión más completa devolvería también el nombre y los permisos, para que el frontend no tenga que decodificar el token:
+> Una versión más completa devolvería también el nombre y los permisos, para que el frontend no tenga que decodificar el token:
 > 
 > 
 > ```java
@@ -6182,7 +6186,7 @@ public class AuthResponse {
 
 Aquí se junta todo lo anterior.
 
-```java
+```java title="AuthService.java"
 package com.example.eventos.service;
 
 import com.example.eventos.dto.AuthResponse;
@@ -6194,7 +6198,7 @@ public interface AuthService {
 }
 ```
 
-```java
+```java title="AuthServiceImpl.java"
 package com.example.eventos.service.serviceImpl;
 
 import com.example.eventos.dto.AuthResponse;
@@ -6280,13 +6284,13 @@ public class AuthServiceImpl implements AuthService {
 }
 ```
 
-## 🔍 Explicación de los puntos críticos
+## Explicación de los puntos críticos
 
 ### `passwordEncoder.matches(plano, hash)`
 
 BCrypt es **unidireccional**: no se puede descifrar un hash. Lo que hace `matches()` es volver a hashear el texto plano con la misma sal (que va guardada dentro del propio hash) y comparar los resultados.
 
-```java
+```java title="passwordEncoder.matches(plano, hash)"
 // ❌ NUNCA:
 if (password.equals(user.getPassword()))       // compara texto plano con hash: siempre false
 
@@ -6296,27 +6300,27 @@ if (passwordEncoder.matches(password, userDetails.getPassword()))
 
 Y al guardar, siempre `encode`:
 
-```java
+```java title="passwordEncoder.matches(plano, hash)"
 newUser.setPassword(passwordEncoder.encode(request.getPassword()));
 ```
 
-> ⚠️ Si guardas contraseñas sin `encode()`, el login **nunca** funcionará, porque `matches()` compara contra un hash que no existe.
+> Si guardas contraseñas sin `encode()`, el login **nunca** funcionará, porque `matches()` compara contra un hash que no existe.
 > 
 
 ### El cast a `CustomUserDetails`
 
-```java
+```java title="El cast a CustomUserDetails"
 CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
 User user = customUserDetails.getUser();
 ```
 
 `UserDetails` es una interfaz: solo expone `getUsername()`, `getPassword()` y `getAuthorities()`. Como el token necesita el `userId`, hay que recuperar la entidad completa. De ahí el método extra `getUser()` que añadimos en el Paso 2.
 
-### 🔑 El paso ⑤ del register: por qué recargar
+### El paso ⑤ del register: por qué recargar
 
 Este es el detalle menos obvio de todo el bloque.
 
-```java
+```java title="El paso ⑤ del register: por qué recargar"
 userService.save(newUser);
 
 // ⑤ NO se usa newUser directamente. Se recarga desde la BD.
@@ -6327,25 +6331,25 @@ UserDetails userDetails = userDetailsService.loadUserByUsername(newUser.getUserN
 
 Recargándolo desde la base de datos, las relaciones se cargan correctamente y el token sale completo.
 
-> 🔑 **El síntoma de olvidar este paso:** el usuario se registra bien, recibe su token, pero **cada petición posterior devuelve 403**. El token existe, es válido, pero su lista de permisos está vacía.
+> **El síntoma de olvidar este paso:** el usuario se registra bien, recibe su token, pero **cada petición posterior devuelve 403**. El token existe, es válido, pero su lista de permisos está vacía.
 > 
 
 ### El rol se asigna en el servidor, nunca desde el request
 
-```java
+```java title="El rol se asigna en el servidor, nunca"
 Role role = roleService.findById(2)   // el rol "básico" fijo
 ```
 
 Aunque `DTOuserRequest` tenga un campo `roleId`, en el **registro público** se ignora deliberadamente. Si no, cualquiera podría registrarse como `ADMIN` mandando `{"roleId": 1}`.
 
-> 💡 Usar el id `2` a fuego es frágil. Mejor buscarlo por nombre: `roleService.findByName("ATTENDEE")`.
+> Usar el id `2` a fuego es frágil. Mejor buscarlo por nombre: `roleService.findByName("ATTENDEE")`.
 > 
 
 ---
 
 # 8. Paso 7: `AuthController`
 
-```java
+```java title="AuthController.java"
 package com.example.eventos.controller.rest;
 
 import com.example.eventos.dto.AuthRequest;
@@ -6394,11 +6398,11 @@ public class AuthController {
 }
 ```
 
-## 🔍 Explicación
+## Explicación
 
 ### Compara con el `AuthController` de MVC
 
-```java
+```java title="Compara con el AuthController de MVC"
 // MVC: solo entrega el HTML, Spring Security intercepta el POST
 @GetMapping("/login")
 public String getLogin() { return "login"; }
@@ -6423,7 +6427,7 @@ Aunque “solo consultan”, llevan la contraseña en el cuerpo. Un GET la pondr
 - **Login fallido** → `401 Unauthorized`: las credenciales no sirven.
 - **Registro fallido** → `400 Bad Request`: los datos enviados tienen algún problema (usuario duplicado, campos faltantes).
 
-> ⚠️ **Sobre el `catch (Exception e)` genérico:** captura todo por igual, así que un fallo de conexión a la base de datos se reporta como “credenciales inválidas”. En un proyecto real conviene capturar excepciones concretas o delegar en el `@RestControllerAdvice` del Bloque 2.
+> **Sobre el `catch (Exception e)` genérico:** captura todo por igual, así que un fallo de conexión a la base de datos se reporta como “credenciales inválidas”. En un proyecto real conviene capturar excepciones concretas o delegar en el `@RestControllerAdvice` del Bloque 2.
 > 
 > 
 > Si necesitas ver qué está fallando mientras desarrollas, agrega temporalmente un `e.printStackTrace()` — pero **quítalo antes de entregar**. Un stack trace en producción filtra la estructura interna de la aplicación.
@@ -6440,7 +6444,7 @@ Content-Type: application/json
 
 Respuesta:
 
-```json
+```json title="Probarlo con Postman"
 { "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbmEi..." }
 ```
 
@@ -6459,7 +6463,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbmEi...
 
 Se ejecuta **antes** de que la petición llegue a cualquier controlador. Es lo que convierte un token en un usuario autenticado.
 
-```java
+```java title="JwtAuthenticationFilter.java"
 package com.example.eventos.security.filters;
 
 import com.example.eventos.service.JwtService;
@@ -6533,7 +6537,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 }
 ```
 
-## 🔍 Explicación paso a paso
+## Explicación paso a paso
 
 | Paso | Qué hace y por qué |
 | --- | --- |
@@ -6555,9 +6559,9 @@ Es un almacén asociado al hilo que atiende la petición. Todo lo que venga desp
 
 **Y se limpia al terminar la petición.** Eso es lo que hace a JWT *stateless*: el servidor no recuerda nada entre peticiones.
 
-### 🔑 Un detalle importante: las authorities vienen de la BD, no del token
+### Un detalle importante: las authorities vienen de la BD, no del token
 
-```java
+```java title="Un detalle importante: las authorities"
 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 // ...
 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -6569,7 +6573,7 @@ Esto tiene una consecuencia muy buena: **si el administrador le quita un permiso
 
 Se paga con una consulta a la base de datos por petición. Es un enfoque **semi-stateful**: rompe la pureza del stateless a cambio de control de seguridad en tiempo real. Es un compromiso perfectamente razonable.
 
-> 📌 La alternativa “pura” sería leer las authorities del claim `roles` del token. Es más rápido (cero consultas), pero entonces revocar un permiso no tiene efecto hasta que el token expire.
+> La alternativa “pura” sería leer las authorities del claim `roles` del token. Es más rápido (cero consultas), pero entonces revocar un permiso no tiene efecto hasta que el token expire.
 > 
 
 ### El problema de la revocación
@@ -6588,7 +6592,7 @@ Como el servidor no guarda estado, **no puede invalidar un token emitido**. Tres
 
 Un filtro propio, útil para entender el mecanismo y para casos como un modo mantenimiento.
 
-```java
+```java title="CustomSecurityFilter.java"
 package com.example.eventos.security.filters;
 
 import jakarta.servlet.FilterChain;
@@ -6627,11 +6631,11 @@ public class CustomSecurityFilter extends OncePerRequestFilter {
 }
 ```
 
-## 🔍 Lo que enseña este filtro
+## Lo que enseña este filtro
 
 Un filtro tiene exactamente **dos salidas posibles**:
 
-```java
+```java title="Lo que enseña este filtro"
 filterChain.doFilter(request, response);   // ✅ continúa hacia el siguiente filtro
 // ─────────────────── o ───────────────────
 response.sendError(...);                   // 🛑 corta la cadena aquí mismo
@@ -6643,7 +6647,7 @@ Es el mismo mecanismo que usa `JwtAuthenticationFilter`, pero sin lógica: sirve
 
 Se registra en la cadena MVC:
 
-```java
+```java title="Lo que enseña este filtro (2)"
 .addFilterAt(customSecurityFilter(), UsernamePasswordAuthenticationFilter.class)
 ```
 
@@ -6653,7 +6657,7 @@ Se registra en la cadena MVC:
 
 Aquí se ata todo. Es la clase más densa, pero cada bloque ya se explicó por separado.
 
-```java
+```java title="AppConfig.java"
 package com.example.eventos.config;
 
 import com.example.eventos.security.CustomUserDetailsService;
@@ -6791,7 +6795,7 @@ public class AppConfig {
 }
 ```
 
-## 🔍 Explicación de las anotaciones de clase
+## Explicación de las anotaciones de clase
 
 | Anotación | Qué hace |
 | --- | --- |
@@ -6800,7 +6804,7 @@ public class AppConfig {
 | `debug = true` | Imprime en consola toda la cadena de filtros y qué hace cada petición. **Muy útil para depurar, quitar en producción.** |
 | `@EnableMethodSecurity` | Habilita `@PreAuthorize`. **Sin esto, `@PreAuthorize` se ignora en silencio.** |
 
-## 🔍 Por qué DOS cadenas
+## Por qué DOS cadenas
 
 Porque MVC y REST necesitan **configuraciones incompatibles**:
 
@@ -6816,17 +6820,17 @@ No se pueden mezclar en una sola cadena.
 
 ### `securityMatcher` y `@Order`
 
-```java
+```java title="securityMatcher y @Order"
 @Order(1)  .securityMatcher("/mvc/**", ...)    // ← se evalúa primero
 @Order(2)  .securityMatcher("/rest/**")        // ← si la 1 no coincide, esta
 ```
 
 `securityMatcher` decide **a qué rutas aplica** la cadena. `@Order` decide **en qué orden** se evalúan. Spring toma **la primera que coincida** y las demás ni se miran.
 
-> ⚠️ **Un `securityMatcher` demasiado amplio en la cadena de menor `@Order` se traga todo.** Si la cadena 1 fuera `.securityMatcher("/**")`, la cadena REST nunca se aplicaría y todas las peticiones a `/rest` intentarían usar sesión.
+> **Un `securityMatcher` demasiado amplio en la cadena de menor `@Order` se traga todo.** Si la cadena 1 fuera `.securityMatcher("/**")`, la cadena REST nunca se aplicaría y todas las peticiones a `/rest` intentarían usar sesión.
 > 
 
-## 🔍 Las líneas clave de la cadena REST
+## Las líneas clave de la cadena REST
 
 ### `SessionCreationPolicy.STATELESS`
 
@@ -6836,7 +6840,7 @@ Le prohíbe a Spring crear `HttpSession`. Sin esto, seguiría generando `JSESSIO
 
 La protección CSRF existe porque el navegador envía cookies **automáticamente**. Como el JWT viaja en una cabecera que el JavaScript pone **a mano**, un sitio malicioso no puede provocar peticiones autenticadas. El ataque no aplica.
 
-> ⚠️ **En MVC, en cambio, CSRF debe seguir activo.** Ahí sí hay cookies automáticas. Por eso la cadena 1 solo lo desactiva para `/h2-console/**` (que es una herramienta de desarrollo, no un endpoint de la app).
+> **En MVC, en cambio, CSRF debe seguir activo.** Ahí sí hay cookies automáticas. Por eso la cadena 1 solo lo desactiva para `/h2-console/**` (que es una herramienta de desarrollo, no un endpoint de la app).
 > 
 
 ### `addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)`
@@ -6851,17 +6855,17 @@ Las peticiones **preflight** de CORS. El navegador manda un `OPTIONS` sin cabece
 
 Se evalúan **de arriba abajo** y gana **la primera coincidencia**:
 
-```java
+```java title="El orden de los requestMatchers importa"
 .requestMatchers("/rest/auth/**").permitAll()              // ① primero lo público
 .requestMatchers(HttpMethod.GET, "/rest/events/**").authenticated()  // ② luego lo específico
 .requestMatchers("/rest/users/**").hasAuthority("ADMIN")   // ③
 .anyRequest().authenticated()                              // ④ el catch-all AL FINAL
 ```
 
-> ⚠️ Si pusieras `.anyRequest().authenticated()` primero, **todo lo demás se ignoraría** y hasta el login exigiría estar autenticado (un candado con la llave dentro).
+> Si pusieras `.anyRequest().authenticated()` primero, **todo lo demás se ignoraría** y hasta el login exigiría estar autenticado (un candado con la llave dentro).
 > 
 
-## 🔍 Las líneas clave de la cadena MVC
+## Las líneas clave de la cadena MVC
 
 | Línea | Qué hace |
 | --- | --- |
@@ -6878,7 +6882,7 @@ Se evalúan **de arriba abajo** y gana **la primera coincidencia**:
 
 Es la última capa: autorización **a nivel de método**, más fina que la de rutas.
 
-```java
+```java title="Paso 11: @PreAuthorize"
 @PreAuthorize("isAuthenticated()")                    // cualquier usuario logueado
 @PreAuthorize("hasAuthority('READ')")                 // un permiso concreto
 @PreAuthorize("hasAnyAuthority('WRITE', 'UPDATE')")   // alguno de varios
@@ -6894,14 +6898,14 @@ Se ejecuta **antes** del método. Si la condición es falsa, devuelve **403 Forb
 | --- | --- | --- |
 | Granularidad | Por ruta y método HTTP | Por método Java |
 | Dónde se ve | Todo junto, en un archivo | Junto al código que protege |
-| Puede usar los parámetros | ❌ No | ✅ Sí (`#id`) |
+| Puede usar los parámetros | No | Sí (`#id`) |
 | Cuándo usarla | Reglas amplias por sección | Reglas finas o condicionales |
 
 Se complementan. Lo habitual es una regla amplia en la configuración y afinar con `@PreAuthorize` donde haga falta.
 
 ## Aplicado a los controladores
 
-```java
+```java title="RestEventController.java"
 @RestController
 @RequestMapping("/rest/events")
 @RequiredArgsConstructor
@@ -6941,7 +6945,7 @@ JwtAuthenticationFilter → SecurityContextHolder (Paso 8)
 @PreAuthorize("hasAuthority('READ')")  ✅
 ```
 
-> 🔑 **Si `@PreAuthorize` devuelve 403 con un token que parece correcto**, sigue esa cadena hacia atrás. Casi siempre el problema está en que el permiso en la base de datos se llama distinto a lo que dice la anotación, o en que `getAuthorities()` devolvió una lista vacía por el problema de LAZY del Paso 6.
+> **Si `@PreAuthorize` devuelve 403 con un token que parece correcto**, sigue esa cadena hacia atrás. Casi siempre el problema está en que el permiso en la base de datos se llama distinto a lo que dice la anotación, o en que `getAuthorities()` devolvió una lista vacía por el problema de LAZY del Paso 6.
 > 
 
 ---
@@ -7063,13 +7067,13 @@ eventMapper.toResponse() → DTOs
 | Estado en el servidor | Sí (stateful) | No (stateless) |
 | Cómo viaja | Cookie automática | Cabecera `Authorization: Bearer` |
 | ¿Quién lo envía? | El navegador, solo | El JavaScript, a mano |
-| Escalar a N servidores | ❌ Sticky sessions o Redis | ✅ Cualquier servidor lo valida |
-| Cerrar sesión | ✅ Inmediato | ❌ Válido hasta expirar |
-| Revocar permisos | ✅ Inmediato | ❌ Requiere consultar la BD |
+| Escalar a N servidores | No: Sticky sessions o Redis | Sí: Cualquier servidor lo valida |
+| Cerrar sesión | Sí: Inmediato | No: Válido hasta expirar |
+| Revocar permisos | Sí: Inmediato | No: Requiere consultar la BD |
 | Memoria | Crece con los usuarios conectados | Cero |
-| Vulnerable a CSRF | ✅ Sí (protección necesaria) | ❌ No |
+| Vulnerable a CSRF | Sí (protección necesaria) | No |
 | Vulnerable a XSS | Menos (cookie `HttpOnly`) | Sí, si se guarda en `localStorage` |
-| Sirve para móvil | ❌ No | ✅ Sí |
+| Sirve para móvil | No | Sí |
 | Usado con | `@Controller` MVC | `@RestController` |
 
 ## El resumen en dos frases
@@ -7092,7 +7096,7 @@ eventMapper.toResponse() → DTOs
 - La API la consumen también apps móviles, que no manejan cookies igual.
 - Stateless es un principio de REST, y las sesiones lo violan directamente.
 
-# ⬜ BLOQUE 4 — Referencia
+# BLOQUE 4 — Referencia
 
 ---
 

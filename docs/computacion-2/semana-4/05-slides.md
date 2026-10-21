@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Consulta las diapositivas de la semana 4 sobre Spring Boot, Tomcat embebido, DispatcherServlet, Lombok y Spring Data JPA."
 ---
 
 # Slides de la semana

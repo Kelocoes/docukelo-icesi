@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 title: Variables y Tipos de Datos
+description: "Aprende a declarar variables en Dart, elegir entre final, const y late, y aprovechar el tipado fuerte y la null safety."
 ---
 
 # Variables y Tipos de Datos

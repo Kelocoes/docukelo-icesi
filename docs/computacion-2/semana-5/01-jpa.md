@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Practica con 50 ejercicios de Query Methods de Spring Data JPA usando JpaRepository y métodos derivados por nombre."
 ---
 
 # Ejercicios de JPA con Query Methods
@@ -23,7 +24,7 @@ A continuación se definen las entidades que se usarán como referencia en los e
 
 A continuación se definen las entidades Java (anotaciones JPA) que usaremos como referencia en los ejercicios.  
 
-```java
+```java title="Especificación del modelo a revisar"
 package com.example.demo.model;
 
 import jakarta.persistence.*;
@@ -160,14 +161,14 @@ A continuación vienen algunos ejercicios para practicar la creación de *query 
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByUsername"
 public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findByUsername(String username);
 }
 ```
 
 Ejemplo de uso:
-```java
+```java title="findByUsername"
 @Autowired
 private StudentRepository repo;
 
@@ -186,12 +187,12 @@ public List<Student> findStudentsByUsername(String username) {
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByEmailIgnoreCase"
 List<Student> findByEmailIgnoreCase(String email);
 ```
 
 Uso:
-```java
+```java title="findByEmailIgnoreCase"
 List<Student> s = repo.findByEmailIgnoreCase("ALICE@EXAMPLE.COM");
 // Encuentra registros aunque el email esté en distinta capitalización.
 ```
@@ -206,12 +207,12 @@ List<Student> s = repo.findByEmailIgnoreCase("ALICE@EXAMPLE.COM");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByFirstNameAndLastName"
 List<Student> findByFirstNameAndLastName(String firstName, String lastName);
 ```
 
 Uso:
-```java
+```java title="findByFirstNameAndLastName"
 repo.findByFirstNameAndLastName("Alice", "Lopez");
 ```
 
@@ -225,12 +226,12 @@ repo.findByFirstNameAndLastName("Alice", "Lopez");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByAgeGreaterThan"
 List<Student> findByAgeGreaterThan(Integer age);
 ```
 
 Uso:
-```java
+```java title="findByAgeGreaterThan"
 repo.findByAgeGreaterThan(21);
 ```
 
@@ -244,7 +245,7 @@ repo.findByAgeGreaterThan(21);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByAgeGreaterThanEqual"
 List<Student> findByAgeGreaterThanEqual(Integer age);
 ```
 
@@ -258,12 +259,12 @@ List<Student> findByAgeGreaterThanEqual(Integer age);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByGpaBetween"
 List<Student> findByGpaBetween(Double min, Double max);
 ```
 
 Uso:
-```java
+```java title="findByGpaBetween"
 repo.findByGpaBetween(3.0, 4.0);
 ```
 
@@ -277,12 +278,12 @@ repo.findByGpaBetween(3.0, 4.0);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByActiveTrue"
 List<Student> findByActiveTrue();
 ```
 
 Uso:
-```java
+```java title="findByActiveTrue"
 repo.findByActiveTrue();
 ```
 
@@ -296,7 +297,7 @@ repo.findByActiveTrue();
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByActiveFalse"
 List<Student> findByActiveFalse();
 ```
 
@@ -310,12 +311,12 @@ List<Student> findByActiveFalse();
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByRegistrationDateAfter"
 List<Student> findByRegistrationDateAfter(Timestamp date);
 ```
 
 Uso:
-```java
+```java title="findByRegistrationDateAfter"
 repo.findByRegistrationDateAfter(Timestamp.valueOf(LocalDateTime.of(2024, 1, 1, 0, 0)));
 ```
 
@@ -329,12 +330,12 @@ repo.findByRegistrationDateAfter(Timestamp.valueOf(LocalDateTime.of(2024, 1, 1, 
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByRegistrationDateBetween"
 List<Student> findByRegistrationDateBetween(Timestamp from, Timestamp to);
 ```
 
 Uso:
-```java
+```java title="findByRegistrationDateBetween"
 repo.findByRegistrationDateBetween(Timestamp.valueOf(LocalDateTime.of(2024,1,1,0,0)), Timestamp.valueOf(LocalDateTime.of(2024,12,31,23,59)));
 ```
 
@@ -347,12 +348,12 @@ repo.findByRegistrationDateBetween(Timestamp.valueOf(LocalDateTime.of(2024,1,1,0
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByCoursesCode"
 List<Student> findByCoursesCode(String code);
 ```
 
 Uso:
-```java
+```java title="findByCoursesCode"
 repo.findByCoursesCode("CS101");
 ```
 
@@ -366,12 +367,12 @@ repo.findByCoursesCode("CS101");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByCoursesTitleContainingIgnoreCase"
 List<Student> findByCoursesTitleContainingIgnoreCase(String titlePart);
 ```
 
 Uso:
-```java
+```java title="findByCoursesTitleContainingIgnoreCase"
 repo.findByCoursesTitleContainingIgnoreCase("data");
 ```
 
@@ -385,12 +386,12 @@ repo.findByCoursesTitleContainingIgnoreCase("data");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findDistinctByCoursesCode"
 List<Student> findDistinctByCoursesCode(String code);
 ```
 
 Uso:
-```java
+```java title="findDistinctByCoursesCode"
 repo.findDistinctByCoursesCode("CS101");
 ```
 
@@ -404,12 +405,12 @@ repo.findDistinctByCoursesCode("CS101");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByAdvisorLastName"
 List<Student> findByAdvisorLastName(String lastName);
 ```
 
 Uso:
-```java
+```java title="findByAdvisorLastName"
 repo.findByAdvisorLastName("Gonzalez");
 ```
 
@@ -423,12 +424,12 @@ repo.findByAdvisorLastName("Gonzalez");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByAdvisorId"
 List<Student> findByAdvisorId(Long instructorId);
 ```
 
 Uso:
-```java
+```java title="findByAdvisorId"
 repo.findByAdvisorId(42L);
 ```
 
@@ -442,12 +443,12 @@ repo.findByAdvisorId(42L);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByAdvisorIsNull"
 List<Student> findByAdvisorIsNull();
 ```
 
 Uso:
-```java
+```java title="findByAdvisorIsNull"
 repo.findByAdvisorIsNull();
 ```
 
@@ -461,12 +462,12 @@ repo.findByAdvisorIsNull();
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="existsByEmail"
 boolean existsByEmail(String email);
 ```
 
 Uso:
-```java
+```java title="existsByEmail"
 boolean exists = repo.existsByEmail("alice@example.com");
 ```
 
@@ -480,12 +481,12 @@ boolean exists = repo.existsByEmail("alice@example.com");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="countByActiveTrue"
 long countByActiveTrue();
 ```
 
 Uso:
-```java
+```java title="countByActiveTrue"
 long activeStudents = repo.countByActiveTrue();
 ```
 
@@ -499,12 +500,12 @@ long activeStudents = repo.countByActiveTrue();
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="deleteByUsername"
 void deleteByUsername(String username);
 ```
 
 Uso:
-```java
+```java title="deleteByUsername"
 repo.deleteByUsername("old_user");
 ```
 
@@ -518,12 +519,12 @@ repo.deleteByUsername("old_user");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findTop5ByOrderByGpaDesc"
 List<Student> findTop5ByOrderByGpaDesc();
 ```
 
 Uso:
-```java
+```java title="findTop5ByOrderByGpaDesc"
 List<Student> top5 = repo.findTop5ByOrderByGpaDesc();
 ```
 
@@ -537,12 +538,12 @@ List<Student> top5 = repo.findTop5ByOrderByGpaDesc();
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findFirstByOrderByRegistrationDateAsc"
 Optional<Student> findFirstByOrderByRegistrationDateAsc();
 ```
 
 Uso:
-```java
+```java title="findFirstByOrderByRegistrationDateAsc"
 Optional<Student> first = repo.findFirstByOrderByRegistrationDateAsc();
 ```
 
@@ -556,12 +557,12 @@ Optional<Student> first = repo.findFirstByOrderByRegistrationDateAsc();
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByFirstNameStartingWith"
 List<Student> findByFirstNameStartingWith(String prefix);
 ```
 
 Uso:
-```java
+```java title="findByFirstNameStartingWith"
 repo.findByFirstNameStartingWith("Al");
 ```
 
@@ -575,12 +576,12 @@ repo.findByFirstNameStartingWith("Al");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByLastNameEndingWith"
 List<Student> findByLastNameEndingWith(String suffix);
 ```
 
 Uso:
-```java
+```java title="findByLastNameEndingWith"
 repo.findByLastNameEndingWith("ez");
 ```
 
@@ -594,12 +595,12 @@ repo.findByLastNameEndingWith("ez");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByFirstNameContaining"
 List<Student> findByFirstNameContaining(String fragment);
 ```
 
 Uso:
-```java
+```java title="findByFirstNameContaining"
 repo.findByFirstNameContaining("li");
 ```
 
@@ -613,12 +614,12 @@ repo.findByFirstNameContaining("li");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByEmailLike"
 List<Student> findByEmailLike(String pattern);
 ```
 
 Uso:
-```java
+```java title="findByEmailLike"
 repo.findByEmailLike("%example.com");
 ```
 
@@ -632,7 +633,7 @@ repo.findByEmailLike("%example.com");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByGpaIsNull"
 List<Student> findByGpaIsNull();
 ```
 
@@ -646,7 +647,7 @@ List<Student> findByGpaIsNull();
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByGpaIsNotNull"
 List<Student> findByGpaIsNotNull();
 ```
 
@@ -660,12 +661,12 @@ List<Student> findByGpaIsNotNull();
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByUsernameIn"
 List<Student> findByUsernameIn(Collection<String> usernames);
 ```
 
 Uso:
-```java
+```java title="findByUsernameIn"
 repo.findByUsernameIn(List.of("a","b","c"));
 ```
 
@@ -679,7 +680,7 @@ repo.findByUsernameIn(List.of("a","b","c"));
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByUsernameNotIn"
 List<Student> findByUsernameNotIn(Collection<String> usernames);
 ```
 
@@ -693,7 +694,7 @@ List<Student> findByUsernameNotIn(Collection<String> usernames);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByUsernameNot"
 List<Student> findByUsernameNot(String username);
 ```
 
@@ -707,14 +708,14 @@ List<Student> findByUsernameNot(String username);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByDepartmentName (CourseRepository)"
 public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findByDepartmentName(String deptName);
 }
 ```
 
 Uso:
-```java
+```java title="findByDepartmentName (CourseRepository)"
 courseRepo.findByDepartmentName("Computer Science");
 ```
 
@@ -728,12 +729,12 @@ courseRepo.findByDepartmentName("Computer Science");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByCreditsLessThan (CourseRepository)"
 List<Course> findByCreditsLessThan(int credits);
 ```
 
 Uso:
-```java
+```java title="findByCreditsLessThan (CourseRepository)"
 courseRepo.findByCreditsLessThan(4);
 ```
 
@@ -747,12 +748,12 @@ courseRepo.findByCreditsLessThan(4);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByLevelIn (CourseRepository)"
 List<Course> findByLevelIn(Collection<Level> levels);
 ```
 
 Uso:
-```java
+```java title="findByLevelIn (CourseRepository)"
 courseRepo.findByLevelIn(List.of(Level.BEGINNER, Level.INTERMEDIATE));
 ```
 
@@ -766,12 +767,12 @@ courseRepo.findByLevelIn(List.of(Level.BEGINNER, Level.INTERMEDIATE));
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByEnrollmentsGradeGreaterThan"
 List<Student> findByEnrollmentsGradeGreaterThan(Double grade);
 ```
 
 Uso:
-```java
+```java title="findByEnrollmentsGradeGreaterThan"
 repo.findByEnrollmentsGradeGreaterThan(85.0);
 ```
 
@@ -785,12 +786,12 @@ repo.findByEnrollmentsGradeGreaterThan(85.0);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByEnrollmentsStatus"
 List<Student> findByEnrollmentsStatus(EnrollmentStatus status);
 ```
 
 Uso:
-```java
+```java title="findByEnrollmentsStatus"
 repo.findByEnrollmentsStatus(EnrollmentStatus.COMPLETED);
 ```
 
@@ -804,12 +805,12 @@ repo.findByEnrollmentsStatus(EnrollmentStatus.COMPLETED);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByEnrollmentsSemesterAndCourseCode"
 List<Student> findByEnrollmentsSemesterAndEnrollmentsCourseCode(Semester semester, String courseCode);
 ```
 
 Uso:
-```java
+```java title="findByEnrollmentsSemesterAndCourseCode"
 repo.findByEnrollmentsSemesterAndEnrollmentsCourseCode(Semester.FALL, "CS101");
 ```
 
@@ -823,12 +824,12 @@ repo.findByEnrollmentsSemesterAndEnrollmentsCourseCode(Semester.FALL, "CS101");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByCoursesLevelAndCreditsGreaterThan"
 List<Student> findByCoursesLevelAndCoursesCreditsGreaterThan(Level level, int credits);
 ```
 
 Uso:
-```java
+```java title="findByCoursesLevelAndCreditsGreaterThan"
 repo.findByCoursesLevelAndCoursesCreditsGreaterThan(Level.ADVANCED, 3);
 ```
 
@@ -842,12 +843,12 @@ repo.findByCoursesLevelAndCoursesCreditsGreaterThan(Level.ADVANCED, 3);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByActiveTrue (paginated)"
 Page<Student> findByActiveTrue(Pageable pageable);
 ```
 
 Uso:
-```java
+```java title="findByActiveTrue (paginated)"
 Page<Student> page = repo.findByActiveTrue(PageRequest.of(0, 20, Sort.by("gpa").descending()));
 ```
 
@@ -861,12 +862,12 @@ Page<Student> page = repo.findByActiveTrue(PageRequest.of(0, 20, Sort.by("gpa").
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByCoursesStartDateBefore"
 List<Student> findByCoursesStartDateBefore(Timestamp date);
 ```
 
 Uso:
-```java
+```java title="findByCoursesStartDateBefore"
 repo.findByCoursesStartDateBefore(Timestamp.valueOf(LocalDateTime.now()));
 ```
 
@@ -880,7 +881,7 @@ repo.findByCoursesStartDateBefore(Timestamp.valueOf(LocalDateTime.now()));
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="Ejemplo en Java"
 List<Student> findByFirstNameIgnoreCaseAndLastNameIgnoreCase(String first, String last);
 ```
 
@@ -894,7 +895,7 @@ List<Student> findByFirstNameIgnoreCaseAndLastNameIgnoreCase(String first, Strin
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findDistinctByFirstNameAndLastName"
 List<Student> findDistinctByFirstNameAndLastName(String first, String last);
 ```
 
@@ -908,7 +909,7 @@ List<Student> findDistinctByFirstNameAndLastName(String first, String last);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByEmailEndingWith"
 List<Student> findByEmailEndingWith(String suffix);
 // Ej: findByEmailEndingWith("@gmail.com")
 ```
@@ -923,7 +924,7 @@ List<Student> findByEmailEndingWith(String suffix);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByFirstNameOrderByLastNameAsc"
 List<Student> findByFirstNameOrderByLastNameAsc(String firstName);
 ```
 
@@ -937,7 +938,7 @@ List<Student> findByFirstNameOrderByLastNameAsc(String firstName);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByLastNameOrderByFirstNameDesc"
 List<Student> findByLastNameOrderByFirstNameDesc(String lastName);
 ```
 
@@ -951,12 +952,12 @@ List<Student> findByLastNameOrderByFirstNameDesc(String lastName);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByCoursesCodeOrderByCreditsDesc"
 List<Student> findByCoursesCodeOrderByCoursesCreditsDesc(String courseCode);
 ```
 
 Uso:
-```java
+```java title="findByCoursesCodeOrderByCreditsDesc"
 repo.findByCoursesCodeOrderByCoursesCreditsDesc("CS101");
 ```
 
@@ -970,12 +971,12 @@ repo.findByCoursesCodeOrderByCoursesCreditsDesc("CS101");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="streamByActiveTrue"
 Stream<Student> streamByActiveTrue();
 ```
 
 Uso (recordar cerrar el stream si es necesario):
-```java
+```java title="streamByActiveTrue"
 try (Stream<Student> s = repo.streamByActiveTrue()) {
     s.forEach(...);
 }
@@ -991,12 +992,12 @@ try (Stream<Student> s = repo.streamByActiveTrue()) {
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findTopByOrderByGpaAsc"
 Optional<Student> findTopByOrderByGpaAsc();
 ```
 
 Uso:
-```java
+```java title="findTopByOrderByGpaAsc"
 Optional<Student> worst = repo.findTopByOrderByGpaAsc();
 ```
 
@@ -1010,7 +1011,7 @@ Optional<Student> worst = repo.findTopByOrderByGpaAsc();
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="Ejemplo en Java"
 List<Student> findByRegistrationDateBetween(Timestamp startOfYear, Timestamp endOfYear);
 // Ejemplo de llamada:
 // repo.findByRegistrationDateBetween(Timestamp.valueOf(LocalDateTime.of(2024,1,1,0,0)), Timestamp.valueOf(LocalDateTime.of(2024,12,31,23,59)));
@@ -1026,7 +1027,7 @@ List<Student> findByRegistrationDateBetween(Timestamp startOfYear, Timestamp end
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByFirstNameNot"
 List<Student> findByFirstNameNot(String name);
 ```
 
@@ -1040,12 +1041,12 @@ List<Student> findByFirstNameNot(String name);
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="Ejemplo en Java"
 List<Student> findByEmailContainingIgnoreCaseAndActiveTrue(String fragment);
 ```
 
 Uso:
-```java
+```java title="Ejemplo en Java"
 repo.findByEmailContainingIgnoreCaseAndActiveTrue("example");
 ```
 
@@ -1059,12 +1060,12 @@ repo.findByEmailContainingIgnoreCaseAndActiveTrue("example");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findDistinctByCoursesDepartmentName"
 List<Student> findDistinctByCoursesDepartmentName(String deptName);
 ```
 
 Uso:
-```java
+```java title="findDistinctByCoursesDepartmentName"
 repo.findDistinctByCoursesDepartmentName("Mathematics");
 ```
 
@@ -1078,12 +1079,12 @@ repo.findDistinctByCoursesDepartmentName("Mathematics");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="Ejemplo en Java"
 List<Student> findByEnrollmentsCourseCodeAndEnrollmentsStatus(String courseCode, EnrollmentStatus status);
 ```
 
 Uso:
-```java
+```java title="Ejemplo en Java"
 repo.findByEnrollmentsCourseCodeAndEnrollmentsStatus("CS101", EnrollmentStatus.ENROLLED);
 ```
 
@@ -1097,12 +1098,12 @@ repo.findByEnrollmentsCourseCodeAndEnrollmentsStatus("CS101", EnrollmentStatus.E
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="existsByUsername"
 boolean existsByUsername(String username);
 ```
 
 Uso:
-```java
+```java title="existsByUsername"
 boolean e = repo.existsByUsername("kevin");
 ```
 
@@ -1116,12 +1117,12 @@ boolean e = repo.existsByUsername("kevin");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="deleteAllByActiveFalse"
 void deleteAllByActiveFalse();
 ```
 
 Uso:
-```java
+```java title="deleteAllByActiveFalse"
 repo.deleteAllByActiveFalse();
 ```
 
@@ -1135,12 +1136,12 @@ repo.deleteAllByActiveFalse();
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByFirstNameOrLastName"
 List<Student> findByFirstNameOrLastName(String first, String last);
 ```
 
 Uso:
-```java
+```java title="findByFirstNameOrLastName"
 repo.findByFirstNameOrLastName("Carlos","Gomez");
 ```
 
@@ -1154,12 +1155,12 @@ repo.findByFirstNameOrLastName("Carlos","Gomez");
 <details>
 <summary>Solución esperada</summary>
 
-```java
+```java title="findByFirstNameNotContaining"
 List<Student> findByFirstNameNotContaining(String fragment);
 ```
 
 Uso:
-```java
+```java title="findByFirstNameNotContaining"
 repo.findByFirstNameNotContaining("test");
 ```
 

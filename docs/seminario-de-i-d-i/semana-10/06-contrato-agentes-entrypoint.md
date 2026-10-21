@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Aprende a crear y mantener el contrato AGENTS.md como entrypoint modular que guía el trabajo de los agentes en tu proyecto."
 ---
 
 import Tabs from '@theme/Tabs';
@@ -84,7 +85,7 @@ En la práctica profesional con enfoque **Human-in-the-Lead**, el archivo de con
 ### Protocolo de Actualización
 * **Regla de las dos advertencias:** Si tienes que corregir al agente dos veces sobre la misma mala práctica (por ejemplo, omitir constructores `const`), no lo corrijas una tercera vez a mano. **Abre `AGENTS.md` y añade la restricción.**
 * **Concisión y claridad:** Sé directo y taxativo. Es más efectivo escribir:
-  ```markdown
+  ```markdown title="Regla en AGENTS.md"
   - PROHIBIDO: Usar Scaffold dentro de archivos ubicados en lib/pages/.
   ```
   que escribir un párrafo justificativo de tres párrafos sobre la historia del diseño en Flutter.

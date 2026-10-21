@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende qué son los requerimientos de software, sus tipos y su papel en el ciclo de vida para especificar bien lo que se va a construir."
 ---
 
 # Requerimientos de Software

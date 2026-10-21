@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Configure TypeORM with PostgreSQL in NestJS and translate an entity-relationship diagram into entities with persistent storage."
 ---
 
 # TypeORM Configuration and Entities

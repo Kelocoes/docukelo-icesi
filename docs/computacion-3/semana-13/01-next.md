@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Introducción a Next.js: instalación, estructura de un proyecto, conceptos esenciales y estrategias de renderizado y obtención de datos."
 ---
 
 
@@ -64,7 +65,7 @@ mi-proyecto/
 
 ### Configuración base
 El archivo `next.config.js` permite ajustar el comportamiento del framework:
-```js
+```js title="next.config.js"
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true, // Habilita el modo estricto de React
@@ -110,7 +111,7 @@ Por ejemplo, `app/blog/[id]/page.js` permite acceder a `/blog/123` o `/blog/abc`
 `layout.js` define la estructura visual compartida entre páginas (como encabezados o menús).
 Puedes tener layouts anidados en diferentes niveles del árbol.
 
-```jsx
+```jsx title="app/layout.js"
 // app/layout.js
 export default function RootLayout({ children }) {
   return (
@@ -129,7 +130,7 @@ El contenido se genera en el navegador del usuario. Es el modo estándar de Reac
 
 ### SSR (Server-Side Rendering)
 La página se renderiza en el servidor en cada petición.
-```jsx
+```jsx title="SSR (Server-Side Rendering)"
 export default async function Page() {
   const res = await fetch('https://api.example.com/data', { cache: 'no-store' });
   const data = await res.json();
@@ -139,13 +140,13 @@ export default async function Page() {
 
 ### SSG (Static Site Generation)
 El contenido se genera en tiempo de build y se sirve como HTML estático.
-```jsx
+```jsx title="SSG (Static Site Generation)"
 export const revalidate = false;
 ```
 
 ### ISR (Incremental Static Regeneration)
 Permite regenerar páginas estáticas en intervalos definidos.
-```jsx
+```jsx title="ISR (Incremental Static Regeneration)"
 export const revalidate = 60; // cada 60 segundos
 ```
 
@@ -173,7 +174,7 @@ export const revalidate = 60; // cada 60 segundos
 ### Uso del `'use client'`
 Coloca `'use client'` al inicio de un archivo para indicar que debe ejecutarse en el cliente.
 
-```jsx
+```jsx title="Uso del 'use client'"
 'use client';
 
 import { useState } from 'react';
@@ -187,7 +188,7 @@ export default function Counter() {
 ### Pasar datos entre componentes de servidor y cliente
 Puedes pasar props desde un **Server Component** a un **Client Component**, pero no al revés.
 
-```jsx
+```jsx title="app/page.js"
 // app/page.js
 import Counter from './Counter';
 

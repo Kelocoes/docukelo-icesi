@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Conoce la anatomía de un proyecto Next.js, los archivos especiales del App Router y cómo organizar carpetas."
 ---
 
 # Arquitectura y Estructura en Next.js

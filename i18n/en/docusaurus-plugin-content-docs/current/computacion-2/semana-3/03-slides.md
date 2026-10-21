@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Browse the week 3 slides on annotations, Java Config, @Qualifier, @Primary, @Value and SpEL in Spring."
 ---
 
 # Presentation: Annotations, JavaConfig & SpEL

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Learn what Node.js is, how it achieves concurrency with a single thread, and how the event loop works, compared with browser JavaScript."
 ---
 
 # Node JS
@@ -38,7 +39,7 @@ Node.js is single-threaded, but handles concurrency using:
 
 Example:
 
-```js
+```js title="How can Node JS be concurrent"
 const fs = require('fs');
 
 console.log('Start');

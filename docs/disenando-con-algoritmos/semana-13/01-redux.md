@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Comprende el problema del estado compartido en React y aprende los conceptos de Flux y Redux para resolverlo."
 ---
 
 # Redux y Flux
@@ -58,7 +59,7 @@ Componentes:
 
 Ejemplo simple:
 
-```javascript
+```javascript title="Ejemplo: Evolución de Flux a Redux"
 // action
 { type: 'INCREMENT' }
 

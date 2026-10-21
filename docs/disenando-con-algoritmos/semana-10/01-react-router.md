@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende las funcionalidades iniciales de React Router en modo Data y modo Framework: rutas, navegación y carga de datos."
 ---
 
 
@@ -46,7 +47,7 @@ Principales formas de navegar y sus diferencias:
 ## Modo Data — ejemplos y patrones
 
 ### 1) Router con loaders (createBrowserRouter + RouterProvider)
-```js
+```js title="src/main.jsx"
 // src/main.jsx
 import { createBrowserRouter, RouterProvider } from "react-router";
 import Root from "./routes/Root";
@@ -71,7 +72,7 @@ createRoot(document.getElementById("root")).render(
 ```
 
 ### 2) Loader y useLoaderData
-```js
+```js title="src/routes/Users.jsx"
 // src/routes/Users.jsx
 import { useLoaderData, Link } from "react-router";
 
@@ -98,7 +99,7 @@ export default function Users() {
 *Nota:* los `loader`s se ejecutan antes de renderizar la ruta y su resultado está disponible con `useLoaderData`. Esto facilita que la UI tenga los datos listos al montarse. 
 
 ### 3) Actions y `<Form>` (envío progresivo)
-```js
+```js title="src/routes/newUser.jsx"
 // src/routes/newUser.jsx
 import { Form, redirect, useActionData } from "react-router";
 
@@ -129,7 +130,7 @@ export default function NewUser() {
 El `<Form>` es una versión "progressively enhanced" del `<form>` HTML que funciona incluso sin JS y activa las acciones/estados de navegación (submitting). 
 
 ### 4) useFetcher — interacciones sin navegación
-```js
+```js title="Ejemplo: useFetcher"
 import { useFetcher } from "react-router";
 
 function FavoriteButton({ postId }) {
@@ -147,7 +148,7 @@ function FavoriteButton({ postId }) {
 `useFetcher` permite llamar loaders/actions sin cambiar la ruta actual (perfecto para popovers, botones en listas, signups rápidos). 
 
 ### 5) Redirecciones desde loaders/actions
-```js
+```js title="Ejemplo: Redirecciones"
 import { redirect } from "react-router";
 
 export async function loader({ request }) {
@@ -159,7 +160,7 @@ export async function loader({ request }) {
 Usar `redirect()` dentro de loaders/actions produce una navegación controlada por la librería, con comportamiento consistente en cliente/servidor. 
 
 ### 6) Manejo de errores por ruta
-```js
+```js title="Ejemplo: Manejo de errores por ruta"
 {
   path: "users/:id",
   loader: userLoader,
@@ -175,7 +176,7 @@ Usar `redirect()` dentro de loaders/actions produce una navegación controlada p
 En **Framework mode** se usan convenciones (archivos `root.tsx`, `routes.ts`, `entry.server.tsx`, etc.) para integrar React Router con frameworks que hacen SSR/SSG/streaming. El objetivo es ofrecer puntos de integración y herramientras para hydrating, rutas como módulos y adaptadores para distintas plataformas (por ejemplo aprovechando `createStaticHandler` o `ServerRouter`). Consulta los "Framework Conventions" de la docs para adaptarlo a tu infraestructura. 
 
 **Ejemplo (esquema de integración simple)**
-```ts
+```ts title="routes.ts"
 // routes.ts (definición de rutas en módulos)
 import Root from "./root";
 import Home, { loader as homeLoader } from "./routes/home";

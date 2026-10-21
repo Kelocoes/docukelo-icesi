@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Consulta las diapositivas de la semana 11 sobre APIs REST, códigos de estado HTTP, DTOs y seguridad con JWT."
 ---
 
 # Slides de la semana

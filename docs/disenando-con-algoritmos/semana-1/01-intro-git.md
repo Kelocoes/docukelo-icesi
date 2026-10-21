@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende qué es Git, por qué usarlo, cómo funciona y cómo instalarlo y configurarlo en Windows, macOS y Linux."
 ---
 
 # Introducción a Git

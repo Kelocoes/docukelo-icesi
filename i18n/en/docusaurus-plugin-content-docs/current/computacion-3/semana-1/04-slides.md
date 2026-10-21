@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Review the official slides of Week 1 on virtualization versus containers, Docker architecture, multi-stage Dockerfiles, and useful commands."
 ---
 
 # Slides of the Week

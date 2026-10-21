@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Build a ToDo application with Vue.js and Vite, learning components, reactivity, and state management through a step-by-step guide."
 ---
 
 # ToDo Vue.js Guide
@@ -44,7 +45,7 @@ project-root/
 
 Open a terminal in your workspace root:
 
-```bash
+```bash title="Create the Project (Vite + Vue)"
 # Scaffold frontend with Vite
 npm create vite@latest frontend -- --template vue
 
@@ -56,7 +57,7 @@ npm install
 
 ## 2) Install Additional Dependencies
 
-```bash
+```bash title="Install Additional Dependencies"
 # Inside frontend/
 npm install pinia
 
@@ -74,7 +75,7 @@ npx tailwindcss init -p
 
 Create `postcss.config.cjs` inside `frontend/`:
 
-```js
+```js title="postcss.config.cjs"
 // postcss.config.cjs
 module.exports = {
   plugins: [
@@ -86,7 +87,7 @@ module.exports = {
 
 Create `tailwind.config.cjs`:
 
-```js
+```js title="tailwind.config.cjs"
 // tailwind.config.cjs
 module.exports = {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
@@ -99,7 +100,7 @@ module.exports = {
 
 ### `package.json` Reference Checklist
 
-```json
+```json title="package.json"
 {
   "name": "frontend",
   "private": true,
@@ -130,7 +131,7 @@ module.exports = {
 
 Create `src/index.css`:
 
-```css
+```css title="src/index.css"
 /* src/index.css - Tailwind v4 import */
 @import "tailwindcss";
 
@@ -149,7 +150,7 @@ html {
 
 ## 5) Enable Pinia in `src/main.js`
 
-```js
+```js title="src/main.js"
 // src/main.js
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
@@ -165,7 +166,7 @@ app.mount('#app')
 
 Create `src/stores/todoStore.ts` (TypeScript):
 
-```ts
+```ts title="src/stores/todoStore.ts"
 // src/stores/todoStore.ts
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
@@ -242,7 +243,7 @@ export const useTodoStore = defineStore('todo', () => {
 
 ## 7) Core Component: `src/components/TodoList.vue`
 
-```vue
+```vue title="src/components/TodoList.vue"
 <template>
   <div class="max-w-xl mx-auto p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-lg">
     <h1 class="text-2xl font-bold mb-4">To-Do List</h1>
@@ -322,7 +323,7 @@ const doneTodos = computed(() => store.todos.filter(t => t.done))
 
 ## 8) Dark Mode Composable: `src/composables/useDarkMode.ts`
 
-```ts
+```ts title="src/composables/useDarkMode.ts"
 import { ref, onMounted, watchEffect } from 'vue'
 
 const STORAGE_KEY = 'color-scheme'
@@ -363,7 +364,7 @@ export function useDarkMode() {
 
 ## 9) Main Application Layout: `src/App.vue`
 
-```vue
+```vue title="src/App.vue"
 <template>
   <div class="min-h-screen p-8 flex gap-6 bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
     <div class="absolute top-4 right-4 flex items-center gap-2">

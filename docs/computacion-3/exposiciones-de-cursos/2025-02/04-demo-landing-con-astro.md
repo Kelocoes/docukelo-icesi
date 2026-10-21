@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Crea una landing page con Astro usando arquitectura de islas y componentes React para agregar interactividad solo donde hace falta."
 ---
 
 # Demo Landing con Astro (Islas + React)
@@ -50,7 +51,7 @@ npm install @astrojs/react react react-dom
 
 Edita `astro.config.mjs` para activar React:
 
-```js
+```js title="astro.config.mjs"
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
@@ -87,7 +88,7 @@ export default defineConfig({
 
 ### 5.1 Layout base
 
-```astro
+```astro title="Layout base"
 ---
 // src/layouts/BaseLayout.astro
 import ThemeToggle from "../components/ThemeToggle";
@@ -144,7 +145,7 @@ const { title = "Demo Astro Landing", description = "A simple landing page built
 
 ### 5.2 Estilos globales (CSS sin complicaciones)
 
-```css
+```css title="src/styles/global.css"
 /* src/styles/global.css */
 
 :root {
@@ -349,7 +350,7 @@ Esto te permite controlar “cuándo” enviar e hidratar JS, para mantener la p
 
 Counter interactivo:
 
-```tsx
+```tsx title="src/components/Counter.tsx"
 // src/components/Counter.tsx
 import React, { useState } from "react";
 export default function Counter(){
@@ -366,7 +367,7 @@ export default function Counter(){
 
 Toggle de tema:
 
-```tsx
+```tsx title="src/components/ThemeToggle.tsx"
 // src/components/ThemeToggle.tsx
 import React, { useCallback, useEffect, useState } from "react";
 export default function ThemeToggle(){
@@ -383,7 +384,7 @@ export default function ThemeToggle(){
 
 ### 5.4 Sección Hero (mezcla Astro + React)
 
-```astro
+```astro title="Sección Hero (mezcla Astro + React)"
 ---
 // src/components/Hero.astro
 import Counter from "./Counter";
@@ -401,7 +402,7 @@ import Counter from "./Counter";
 
 Home:
 
-```astro
+```astro title="Páginas"
 ---
 // src/pages/index.astro
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -422,7 +423,7 @@ import Hero from "../components/Hero.astro";
 
 About:
 
-```astro
+```astro title="Páginas (2)"
 ---
 // src/pages/about.astro
 import BaseLayout from "../layouts/BaseLayout.astro";

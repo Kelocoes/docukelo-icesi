@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Aprende Programación Orientada a Objetos en JavaScript: clases, objetos, getters y setters, herencia y otros conceptos clave."
 ---
 
 # Programación Orientada a Objetos en JavaScript
@@ -16,7 +17,7 @@ Imagina que quieres modelar un auto en tu código. En lugar de tener variables s
 
 Una clase es como el plano de lo que vas a hacer. Define qué características y comportamientos tendrán todos los objetos creados a partir de él, pero aún no creas los objetos.
 
-```javascript
+```javascript title="Definiendo una Clase"
 class Auto {
   // Constructor: se ejecuta cuando creamos un nuevo auto
   constructor(marca, modelo, color) {
@@ -54,7 +55,7 @@ class Auto {
 Una **instancia** es un objeto real creado a partir de una clase.  
 Cada objeto tiene sus **propios valores** y su **propio estado**, aunque todos comparten la misma estructura y comportamientos definidos en la clase.
 
-```javascript
+```javascript title="Creando Objetos (Instancias)"
 // Crear objetos específicos a partir de la clase
 const miAuto = new Auto("Toyota", "Corolla", "rojo");
 const tuAuto = new Auto("Honda", "Civic", "azul");
@@ -78,7 +79,7 @@ tuAuto.acelerar(30);
 
 Imagina que tienes una propiedad `edad` en un objeto `Persona`. Sin getters/setters, alguien podría hacer esto:
 
-```javascript
+```javascript title="¿Por qué usarlos"
 persona.edad = -50; // ¡Esto no tiene sentido!
 persona.edad = "veinte"; // ¡Esto tampoco!
 ```
@@ -87,7 +88,7 @@ Con getters y setters, puedes controlar qué valores son válidos.
 
 ### Ejemplo Básico
 
-```javascript
+```javascript title="Ejemplo Básico"
 class Persona {
   constructor(nombre, edad) {
     this.nombre = nombre;
@@ -149,7 +150,7 @@ console.log(ana.informacion); // "Ana, 30 años (Adulto)"
 
 ### Ejemplo Más Avanzado: Cuenta de Usuario
 
-```javascript
+```javascript title="Ejemplo Más Avanzado: Cuenta de Usuario"
 class CuentaUsuario {
   constructor(usuario, email) {
     this._usuario = usuario;
@@ -254,7 +255,7 @@ miCuenta.intentarLogin("123456"); // ✅ Correcto
 
 ### Getters y Setters con Propiedades Privadas
 
-```javascript
+```javascript title="Ejemplo de JavaScript"
 class Producto {
   #precio = 0; // Propiedad verdaderamente privada
   #descuento = 0;
@@ -339,7 +340,7 @@ laptop.precio = -500; // ❌ No permite precios negativos
 
 Las propiedades son las características de un objeto. Pueden ser públicas (accesibles desde fuera) o privadas (solo accesibles desde dentro de la clase).
 
-```javascript
+```javascript title="Propiedades"
 class Persona {
   constructor(nombre, edad) {
     this.nombre = nombre; // Propiedad pública
@@ -377,7 +378,7 @@ console.log(persona.edad); // Usa el getter
 
 Un método estático es un método de una clase que no necesita que crees un objeto (instancia) para poder usarlo. En lugar de pertenecer a los objetos, pertenece directamente a la clase.
 
-```javascript
+```javascript title="Métodos Estáticos"
 class Matematicas {
   static sumar(a, b) {
     return a + b;
@@ -405,7 +406,7 @@ Imagina que tienes un celular. Puedes hacer llamadas, enviar mensajes y tomar fo
 
 **Ejemplo:**
 
-```javascript
+```javascript title="Encapsulamiento"
 class Celular {
   #bateria = 100; // Privado: no puedes tocarlo directamente
   #sistemaOperativo; // Privado: interno del celular
@@ -451,7 +452,7 @@ Piensa en las redes sociales. Todas (Instagram, TikTok, Twitter) tienen cosas en
 
 **Ejemplo:**
 
-```javascript
+```javascript title="Herencia"
 // La "red social básica" - lo que todas tienen en común
 class RedSocial {
   constructor(nombreUsuario) {
@@ -533,7 +534,7 @@ Imagina que tienes diferentes apps de música en tu celular: Spotify, Apple Musi
 
 **Ejemplo:**
 
-```javascript
+```javascript title="Polimorfismo"
 class AppMusica {
   constructor(nombre) {
     this.nombre = nombre;
@@ -602,7 +603,7 @@ Cuando subes una foto a Instagram, solo presionas "subir" y listo. No necesitas 
 
 **Ejemplo:**
 
-```javascript
+```javascript title="Abstracción"
 // Clase "abstracta" - define QUÉ se debe hacer, no CÓMO
 class Dispositivo {
   constructor(marca) {
@@ -687,7 +688,7 @@ console.log(laptop.obtenerEstado());
 
 Vamos a crear un sistema simple de videojuegos que combine todos los conceptos:
 
-```javascript
+```javascript title="Ejemplo Práctico: Sistema de Videojuegos"
 // Clase base para todos los personajes del juego
 class Personaje {
   #vida = 100; // Privado: no se puede modificar directamente

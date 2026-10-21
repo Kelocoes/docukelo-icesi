@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Realiza peticiones HTTP desde React con Axios, entendiendo sus ventajas frente a fetch y su configuración básica."
 ---
 
 # Axios en React
@@ -41,7 +42,7 @@ npm install axios
 
 ### Ejemplo simple de uso con React
 
-```jsx
+```jsx title="Ejemplo simple de uso con React"
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -84,7 +85,7 @@ export default UserList;
 
 Puedes crear una instancia personalizada con una **base URL**, **headers** y otras configuraciones comunes:
 
-```js
+```js title="Configuración global de Axios"
 import axios from "axios";
 
 const api = axios.create({
@@ -100,7 +101,7 @@ export default api;
 
 Uso:
 
-```jsx
+```jsx title="Configuración global de Axios"
 import api from "./api";
 
 api.get("/users").then((res) => console.log(res.data));
@@ -116,7 +117,7 @@ Los interceptores te permiten **intervenir las solicitudes y respuestas** antes 
 
 ### Ejemplo: agregar token JWT automáticamente
 
-```js
+```js title="Ejemplo en JavaScript"
 import axios from "axios";
 
 const api = axios.create({ baseURL: "https://api.example.com" });
@@ -137,7 +138,7 @@ export default api;
 
 ### Ejemplo: manejo global de errores
 
-```js
+```js title="Ejemplo: manejo global de errores"
 api.interceptors.response.use(
     (response) => response,
     (error) => {
@@ -156,31 +157,31 @@ api.interceptors.response.use(
 
 ### GET
 
-```js
+```js title="GET"
 axios.get("/users");
 ```
 
 ### POST
 
-```js
+```js title="POST"
 axios.post("/users", { name: "Kevin", email: "kevin@example.com" });
 ```
 
 ### PUT
 
-```js
+```js title="PUT"
 axios.put("/users/1", { name: "Kevin Updated" });
 ```
 
 ### DELETE
 
-```js
+```js title="DELETE"
 axios.delete("/users/1");
 ```
 
 ### PATCH
 
-```js
+```js title="PATCH"
 axios.patch("/users/1", { active: false });
 ```
 
@@ -188,7 +189,7 @@ axios.patch("/users/1", { active: false });
 
 ## Manejo de errores con try/catch
 
-```js
+```js title="Manejo de errores con try/catch"
 try {
     const res = await axios.get("/invalid-url");
     console.log(res.data);
@@ -208,7 +209,7 @@ try {
 
 Axios permite cancelar solicitudes en curso usando `AbortController` o `CancelToken`.
 
-```js
+```js title="Cancelación de peticiones"
 const controller = new AbortController();
 
 axios.get("/slow-endpoint", { signal: controller.signal });
@@ -221,7 +222,7 @@ setTimeout(() => controller.abort(), 3000);
 
 ## Ejemplo completo: CRUD con Axios + React
 
-```jsx
+```jsx title="Ejemplo completo: CRUD con Axios + React"
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 

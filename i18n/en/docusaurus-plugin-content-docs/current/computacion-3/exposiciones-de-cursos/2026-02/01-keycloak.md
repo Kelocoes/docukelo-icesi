@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Understand centralized identity and access management with Keycloak, covering SSO, OAuth2, and OIDC in modern web apps with a practical walkthrough."
 ---
 
 # Keycloak: Centralized Identity and Access Management

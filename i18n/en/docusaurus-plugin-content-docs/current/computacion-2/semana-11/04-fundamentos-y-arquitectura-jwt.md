@@ -1,6 +1,7 @@
 ---
 sidebar_position: 4
 sidebar_label: "JWT Foundations & Architecture"
+description: "Understand what a JSON Web Token is, how it is structured and how its issuance and validation flow in a REST API."
 ---
 
 # JWT Foundations and Architecture
@@ -173,7 +174,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 In Spring Security configuration, we register the filter using:
 
-```java
+```java title="Java example"
 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 ```
 

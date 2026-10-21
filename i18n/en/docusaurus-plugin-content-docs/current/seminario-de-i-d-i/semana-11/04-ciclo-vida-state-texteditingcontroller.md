@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Learn the State lifecycle and how to use TextEditingController without memory leaks in forms with validation."
 ---
 
 import Tabs from '@theme/Tabs';

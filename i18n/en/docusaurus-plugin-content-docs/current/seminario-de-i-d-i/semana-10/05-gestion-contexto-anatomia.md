@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Understand the layers of an agent context window, the risks of amnesia and bloat, and the commands to inspect it."
 ---
 
 import Tabs from '@theme/Tabs';
@@ -64,7 +65,7 @@ Professional terminal environments offer slash commands to inspect the agent's c
 ### 1. `/context`: What is inside the agent's working memory?
 Allows you to inspect the exact list of files loaded into memory and the percentage of the context window consumed:
 
-```yaml
+```yaml title="Context command"
 # Active memory audit in terminal
 > /context
 Active Context Tokens: 14250 / 128000 (11%)
@@ -78,7 +79,7 @@ Loaded Files:
 ### 2. `/usage` (or `/cost`): Resource and Cost Monitoring
 Displays cumulative token usage for the active session:
 
-```yaml
+```yaml title="Usage command"
 # Real-time consumption and cost metrics
 > /usage
 Session Usage:
@@ -91,7 +92,7 @@ Session Usage:
 ### 3. `/model`: Selecting the Right Engine
 Allows you to switch models depending on task complexity:
 
-```yaml
+```yaml title="Model command"
 # Interactive agentic model selector
 > /model
 Available Models:

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Follow this legacy guide to configure Jest in an Express application with TypeScript and write your first unit test."
 ---
 
 # Jest in Express with TypeScript
@@ -22,7 +23,7 @@ Using `npm init jest@latest`, you can interactively generate a `jest.config.ts` 
 
 When running `npm init jest@latest`, answer the prompts as follows:
 
-```bash
+```bash title="Interactive Jest Setup"
 > npm init jest@latest
 
 The following questions will help Jest to create a suitable configuration for your project
@@ -46,7 +47,7 @@ The following questions will help Jest to create a suitable configuration for yo
 
 ### 2.2 Generated Configuration File
 
-```typescript
+```typescript title="Generated Configuration File"
 import type { Config } from 'jest';
 
 const config: Config = {
@@ -61,7 +62,7 @@ export default config;
 
 This updates `package.json`:
 
-```json
+```json title="package.json"
 "scripts": {
   "test": "jest"
 }
@@ -75,7 +76,7 @@ npm install --save-dev ts-jest
 
 Then update `jest.config.ts` to configure `ts-jest`:
 
-```typescript
+```typescript title="jest.config.ts"
 import type { Config } from 'jest';
 
 const config: Config = {
@@ -110,7 +111,7 @@ A clean directory structure separates source code (`src`) from test suites (`src
 
 Create a utility module in `src/utils/operations.util.ts`:
 
-```typescript
+```typescript title="src/utils/operations.util.ts"
 export function add(a: number, b: number): number {
     return a + b;
 }
@@ -118,13 +119,13 @@ export function add(a: number, b: number): number {
 
 Export it in `src/utils/index.ts`:
 
-```typescript
+```typescript title="src/utils/index.ts"
 export * from './operations.util';
 ```
 
 Now create a unit test file in `tests/utils/operations.util.test.ts`:
 
-```typescript
+```typescript title="tests/utils/operations.util.test.ts"
 import { add } from "../../utils";
 
 it("should add two numbers", () => {
@@ -140,7 +141,7 @@ npm test
 
 Expected output:
 
-```bash
+```bash title="Writing Your First Unit Test"
 > compunet3-20252@1.0.0 test
 > jest
 
@@ -176,7 +177,7 @@ Ran all test suites
 
 To configure explicit code coverage filters, update `collectCoverageFrom` in `jest.config.ts`:
 
-```typescript
+```typescript title="jest.config.ts"
 const config: Config = {
     clearMocks: true,
     collectCoverage: true,
@@ -212,7 +213,7 @@ const config: Config = {
 - **`jest.mock()`**: Replaces an entire module or package with mock functions.
 - **`jest.spyOn()`**: Intercepts specific methods on existing real objects without replacing the whole module.
 
-```typescript
+```typescript title="Understanding Mocks and jest.spyOn()"
 import { userService } from "../../services";
 import { UserModel, UserRole } from "../../models";
 import bcrypt from "bcrypt";

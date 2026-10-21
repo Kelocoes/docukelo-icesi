@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Practica React con TypeScript resolviendo 20 ejercicios progresivos, desde tarjetas simples hasta componentes con estado."
 ---
 
 # Ejercicios de React + TypeScript

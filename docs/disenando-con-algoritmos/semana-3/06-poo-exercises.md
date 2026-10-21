@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Refuerza la programación orientada a objetos en JavaScript con ejercicios prácticos de clases, herencia y métodos."
 ---
 
 # Ejercicios de POO en JavaScript
@@ -33,7 +34,7 @@ Agrega métodos para:
 <details>
 <summary>Ver solución</summary>
 
-```js
+```js title="Ejercicio 1: Clase Coche"
 class Coche {
     constructor(marca, modelo, año) {
         this.marca = marca;
@@ -74,7 +75,7 @@ Agrega métodos para:
 <details>
 <summary>Ver solución</summary>
 
-```js
+```js title="Ejercicio 2: Clase Rectángulo"
 class Rectangulo {
     constructor(ancho, alto) {
         this.ancho = ancho;
@@ -112,7 +113,7 @@ Incluye métodos para:
 <details>
 <summary>Ver solución</summary>
 
-```js
+```js title="Ejemplo de JavaScript"
 class Persona {
     constructor(nombre, edad, profesion) {
         this.nombre = nombre;
@@ -144,7 +145,7 @@ Luego, crea clases hijas `Perro` y `Gato` que sobrescriban ese método con sonid
 <details>
 <summary>Ver solución</summary>
 
-```js
+```js title="Ejercicio 4: Herencia con Animal"
 class Animal {
     hacerSonido() {
         console.log("Sonido genérico de animal");
@@ -182,7 +183,7 @@ Agrega métodos para:
 <details>
 <summary>Ver solución</summary>
 
-```js
+```js title="Ejercicio 5: Clase CuentaBancaria"
 class CuentaBancaria {
     constructor(titular, saldo = 0) {
         this.titular = titular;
@@ -224,7 +225,7 @@ Agrega métodos para:
 <details>
 <summary>Ver solución</summary>
 
-```js
+```js title="Ejercicio 6: Clase Triángulo"
 class Triangulo {
     constructor(lado1, lado2, lado3) {
         this.lado1 = lado1;
@@ -262,7 +263,7 @@ Crea clases hijas `Bicicleta`, `Coche` y `Avión` que sobrescriban el método `m
 <details>
 <summary>Ver solución</summary>
 
-```js
+```js title="Ejercicio 7: Polimorfismo con Vehículo"
 class Vehiculo {
     mover() {
         console.log("El vehículo se está moviendo.");
@@ -307,7 +308,7 @@ Luego, crea una clase hija `ProductoElectronico` que además tenga una `garantí
 <details>
 <summary>Ver solución</summary>
 
-```js
+```js title="Ejercicio 8: Clase Producto"
 class Producto {
     constructor(nombre, precio) {
         this.nombre = nombre;
@@ -346,7 +347,7 @@ Agrega métodos para:
 <details>
 <summary>Ver solución</summary>
 
-```js
+```js title="Ejercicio 9: Clase Libro"
 class Libro {
     constructor(titulo, autor, año) {
         this.titulo = titulo;
@@ -378,7 +379,7 @@ Crea clases hijas `Círculo`, `Cuadrado` y `Rectángulo` que implementen el mét
 <details>
 <summary>Ver solución</summary>
 
-```js
+```js title="Ejercicio 10: Sistema de Figuras"
 class Figura {
     calcularArea() {
         return 0;

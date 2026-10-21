@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Descubre cómo organizar archivos y carpetas en un proyecto React con Tailwind para que sea mantenible y escalable."
 ---
 
 # Estructura de Proyecto React

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Consulta las diapositivas de la semana 8 sobre renderizado en servidor, expresiones Thymeleaf y formularios web."
 ---
 
 # Slides de la semana

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Construye un caso de estudio de login, registro y navegación en Next.js conectado al backend NestJS del curso, con CORS y rutas protegidas."
 ---
 
 # Caso de Estudio: Login, Registro y Navegación
@@ -752,7 +753,7 @@ Analicemos en profundidad las decisiones técnicas de navegación tomadas en nue
 
 Cuando un usuario inicia sesión correctamente, ejecutamos:
 
-```typescript
+```typescript title="Por qué router.replace y no router.push"
 router.replace('/dashboard');
 ```
 
@@ -762,7 +763,7 @@ Si utilizáramos `router.push('/dashboard')`, Next.js añadiría una nueva entra
 
 Al cerrar sesión, limpiamos la credencial y redirigimos al login reemplazando el historial:
 
-```typescript
+```typescript title="Cierre de Sesión (Logout)"
 const handleLogout = () => {
   authService.logout();
   router.replace('/login');

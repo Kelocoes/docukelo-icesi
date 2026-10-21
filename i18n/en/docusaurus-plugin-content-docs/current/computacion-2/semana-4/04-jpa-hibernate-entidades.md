@@ -1,6 +1,7 @@
 ---
 sidebar_position: 4
 sidebar_label: "JPA & Hibernate"
+description: "Tell JPA from Hibernate and map Java entities to relational tables using JPA annotations and Lombok."
 ---
 
 # JPA & Hibernate

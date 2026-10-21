@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Configura Guards con Passport en NestJS, define un decorador de permisos y protege los controladores según el permiso del usuario."
 ---
 
 # Guards y Passport
@@ -18,7 +19,7 @@ Estas dependencias te permitirán usar Passport con JWT en tu aplicación NestJS
 
 Además de eso, crearemos un script para poblar la base de datos con ususarios, roles y permisos iniciales por medio de un archivo `seed.ts` en la carpeta `src`:
 
-```typescript
+```typescript title="seed.ts"
 import * as dotenv from 'dotenv';
 import * as bcrypt from 'bcrypt';
 
@@ -152,7 +153,7 @@ npx ts-node src/scripts/seed.ts
 
 Ahora, vamos a configurar el módulo de autenticación (`AuthModule`) para usar Passport con JWT. Primero, crea un servicio de autenticación (`AuthService`) que maneje la lógica de validación de usuarios y generación de tokens JWT.
 
-```typescript
+```typescript title="Configuración del módulo Auth"
 @Injectable()
 export class AuthService {
     constructor(
@@ -174,7 +175,7 @@ En el código anterior, `validateUser` verifica las credenciales del usuario y `
 
 Para realizar la validación de usuarios, puedes usar `bcrypt` para comparar la contraseña proporcionada con el hash almacenado en la base de datos. Aquí tienes una implementación completa del método `validateUser`:
 
-```typescript
+```typescript title="Configuración del módulo Auth (2)"
 async validateUser(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
     if (!user) throw new NotFoundException('User not found');
@@ -188,7 +189,7 @@ async validateUser(email: string, password: string) {
 
 Asegúrate de que tu `UsersService` tenga un método `findByEmail` para buscar usuarios por su correo electrónico:
 
-```typescript
+```typescript title="Configuración del módulo Auth (3)"
 async findByEmail(email: string): Promise<User | null> {
     return this.userRepository.findOne({
         where: { email },
@@ -203,7 +204,7 @@ async findByEmail(email: string): Promise<User | null> {
 
 Por último realiza el método de login:
 
-```typescript
+```typescript title="Configuración del módulo Auth (4)"
 async login(userLoginDto: UserLoginDto) {
     const user = await this.validateUser(
         userLoginDto.email,
@@ -222,7 +223,7 @@ async login(userLoginDto: UserLoginDto) {
 
 Passport utiliza estrategias para manejar diferentes métodos de autenticación. En este caso, usaremos la estrategia JWT. Crea un archivo `jwt.strategy.ts` en el módulo de autenticación:
 
-```typescript
+```typescript title="jwt.strategy.ts"
 interface JwtPayload {
     sub: number;
     email: string;
@@ -265,7 +266,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
 También necesitamos crear un controlador para manejar las solicitudes de autenticación. Aquí tienes un ejemplo básico de un `AuthController`:
 
-```typescript
+```typescript title="Configuración del AuthController"
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) {}
@@ -281,7 +282,7 @@ export class AuthController {
 
 Finalmente, configura el módulo de autenticación (`AuthModule`) para importar los módulos necesarios y proporcionar los servicios y estrategias:
 
-```typescript
+```typescript title="Configuración del AuthModule"
 @Module({
     controllers: [
         RolesController,
@@ -317,7 +318,7 @@ export class AuthModule {}
 
 Como puedes ver, hice una modificación en la relación de `UsersModule` para evitar dependencias circulares usando `forwardRef`. Deberás hacer lo mismo en el `UsersModule`:
 
-```typescript
+```typescript title="Configuración del AuthModule (2)"
 @Module({
     controllers: [UsersController],
     providers: [UsersService],
@@ -344,7 +345,7 @@ Para manejar los permisos de manera más sencilla, puedes crear un decorador per
 
 Crea un archivo `permissions.decorator.ts` en una carpeta adecuada:
 
-```typescript
+```typescript title="permissions.decorator.ts"
 import { SetMetadata } from '@nestjs/common';
 
 export const Permissions = (...perms: string[]) =>
@@ -356,7 +357,7 @@ export const Permissions = (...perms: string[]) =>
 Ahora, crea un guardia personalizado llamado `PermissionsGuard` que verificará si el usuario autenticado tiene los permisos necesarios para acceder a un endpoint específico. Este guardia utilizará el decorador `Permissions` que acabamos de crear.
 Crea un archivo `permissions.guard.ts` en una carpeta adecuada:
 
-```typescript
+```typescript title="permissions.guard.ts"
 interface AuthenticatedRequest extends Request {
     user?: User;
 }
@@ -393,7 +394,7 @@ export class PermissionsGuard implements CanActivate {
 
 Ahora puedes usar los guards `AuthGuard` y `PermissionsGuard` en tus controladores para proteger tus endpoints. Aquí tienes un ejemplo de cómo hacerlo en el `UsersController`:
 
-```typescript
+```typescript title="Uso de los Guards en los Controladores"
 @UseGuards(AuthGuard('jwt'), PermissionsGuard)
 @Controller('users')
 // @UseInterceptors(CryptoInterceptor)

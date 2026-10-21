@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Follow this legacy guide to deploy an Express application with MongoDB on Railway, from account creation to a public domain."
 ---
 
 # Deploying Express with MongoDB using Railway
@@ -31,7 +32,7 @@ Deployment on Railway
 
 > **Note:** If you are deploying an app created using earlier course guides, keep the following checklist in mind:
 - In `package.json`, ensure you have build and start scripts for transpiling TypeScript:
-  ```json
+  ```json title="package.json"
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js"
@@ -42,7 +43,7 @@ Deployment on Railway
   npm install dotenv
   ```
 - In your main entry file (e.g., `index.ts`), load `dotenv` at the very top:
-  ```typescript
+  ```typescript title="Link your Express Repository"
   import dotenv from 'dotenv';
   dotenv.config();
   ```
@@ -52,7 +53,7 @@ Deployment on Railway
   npm install -D @types/cors
   ```
   And enable it in your main file:
-  ```typescript
+  ```typescript title="Link your Express Repository 2"
   import cors from 'cors';
   app.use(cors());
   ```

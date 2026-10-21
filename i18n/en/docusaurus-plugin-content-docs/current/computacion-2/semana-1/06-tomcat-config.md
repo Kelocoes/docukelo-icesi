@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Set up Smart Tomcat in IntelliJ IDEA and Visual Studio Code to run and debug Java web applications."
 ---
 
 # Smart Tomcat Setup Guide

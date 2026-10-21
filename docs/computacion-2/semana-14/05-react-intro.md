@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Crea un proyecto de React con Vite y comprende qué es React y cómo funciona el Virtual DOM."
 ---
 
 # React introduction
@@ -111,7 +112,7 @@ Aunque no podemos ver directamente el Virtual DOM, podemos hacer pruebas para co
 
 Ejemplo de un componente simple:
 
-```jsx
+```jsx title="Visualización del Virtual DOM en React"
 function App() {
     return <h1>Hola, React!</h1>;
 }
@@ -121,7 +122,7 @@ export default App;
 
 Si hacemos:
 
-```jsx
+```jsx title="Visualización del Virtual DOM en React"
 console.log(<App />);
 ```
 
@@ -139,7 +140,7 @@ En lugar de trabajar con HTML repetitivo, React permite crear bloques reutilizab
 
 1. **Componentes de clase** (menos usados hoy en día):
 
-```jsx
+```jsx title="Tipos de componentes"
 import React, { Component } from "react";
 
 class Welcome extends Component {
@@ -153,7 +154,7 @@ export default Welcome;
 
 2. **Componentes funcionales** (la forma moderna y recomendada):
 
-```jsx
+```jsx title="Tipos de componentes"
 function Welcome({ name }) {
     return <h1>Hola, {name}</h1>;
 }
@@ -178,7 +179,7 @@ Son equivalentes a los atributos en HTML.
 
 Ejemplo:
 
-```jsx
+```jsx title="Props"
 function Saludo({ nombre }) {
     return <h1>Hola, {nombre}</h1>;
 }
@@ -192,7 +193,7 @@ Aquí, el componente `App` pasa la prop `nombre` al componente `Saludo`.
 
 Además, podemos usar **destructuring** para hacer el código más limpio:
 
-```jsx
+```jsx title="Props"
 function Saludo({ nombre, edad }) {
     return (
         <h1>
@@ -217,7 +218,7 @@ El hook más básico y más utilizado es **useState**, que permite manejar estad
 
 Ejemplo:
 
-```jsx
+```jsx title="useState"
 import { useState } from "react";
 
 function Contador() {

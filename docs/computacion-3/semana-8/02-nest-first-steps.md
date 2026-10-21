@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Inicia un proyecto con NestJS: instala el CLI, crea el proyecto, conoce su estructura y ejecuta la aplicación."
 ---
 
 # Primeros pasos con NestJS
@@ -141,7 +142,7 @@ El CLI preguntará si deseas REST o GraphQL, y si quieres incluir pruebas unitar
 
 Vamos a crear una entidad simple llamada `User`. Crea el archivo `user.entity.ts` dentro de `src/users/entities/`:
 
-```typescript
+```typescript title="src/users/entities/user.entity.ts"
 // src/users/entities/user.entity.ts
 
 /**
@@ -178,7 +179,7 @@ export class User {
 **Crear un DTO para crear usuarios:**  
 Crea `create-user.dto.ts` en `src/users/dto/`:
 
-```typescript
+```typescript title="src/users/dto/create-user.dto.ts"
 // src/users/dto/create-user.dto.ts
 
 /**
@@ -195,7 +196,7 @@ export class CreateUserDto {
 **DTO para actualizar usuarios:**  
 Crea `update-user.dto.ts`:
 
-```typescript
+```typescript title="src/users/dto/update-user.dto.ts"
 // src/users/dto/update-user.dto.ts
 
 import { PartialType } from '@nestjs/mapped-types';
@@ -214,7 +215,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {}
 
 Edita `src/users/users.service.ts` para implementar la lógica de usuarios en memoria:
 
-```typescript
+```typescript title="src/users/users.service.ts"
 // src/users/users.service.ts
 
 import { Injectable } from '@nestjs/common';
@@ -292,7 +293,7 @@ nest g res roles
 **Entidad de roles:**  
 Crea `role.entity.ts` en `src/roles/entities/`:
 
-```typescript
+```typescript title="src/roles/entities/role.entity.ts"
 // src/roles/entities/role.entity.ts
 
 /**
@@ -314,7 +315,7 @@ export class Role {
 **DTO para crear roles:**  
 Crea `create-role.dto.ts` en `src/roles/dto/`:
 
-```typescript
+```typescript title="src/roles/dto/create-role.dto.ts"
 // src/roles/dto/create-role.dto.ts
 
 /**
@@ -329,7 +330,7 @@ export class CreateRoleDto {
 **Servicio de roles:**  
 Edita `src/roles/roles.service.ts`:
 
-```typescript
+```typescript title="src/roles/roles.service.ts"
 // src/roles/roles.service.ts
 
 import { Injectable } from '@nestjs/common';
@@ -409,7 +410,7 @@ export class RolesService {
 
 Ahora, queremos que cada usuario tenga un rol asignado. Modifica la entidad `User` para agregar la propiedad `roleId`:
 
-```typescript
+```typescript title="src/users/entities/user.entity.ts"
 // src/users/entities/user.entity.ts
 
 export class User {
@@ -443,7 +444,7 @@ export class User {
 **Actualizar el DTO de creación de usuario:**  
 Ahora, en vez de recibir `roleId`, recibiremos `roleName` para buscar el rol por nombre:
 
-```typescript
+```typescript title="src/users/dto/create-user.dto.ts"
 // src/users/dto/create-user.dto.ts
 
 export class CreateUserDto {
@@ -458,7 +459,7 @@ export class CreateUserDto {
 **Actualizar el servicio de usuarios para asignar el rol:**  
 Ahora el servicio de usuarios debe recibir el servicio de roles y buscar el rol por nombre antes de crear el usuario.
 
-```typescript
+```typescript title="src/users/users.service.ts"
 // src/users/users.service.ts
 
 import { RolesService } from '../roles/roles.service';
@@ -501,7 +502,7 @@ Para que el servicio de usuarios pueda usar el servicio de roles, debes exportar
 
 - En `src/roles/roles.module.ts`:
 
-```typescript
+```typescript title="src/roles/roles.module.ts"
 import { Module } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { RolesController } from './roles.controller';
@@ -516,7 +517,7 @@ export class RolesModule {}
 
 - En `src/users/users.module.ts`:
 
-```typescript
+```typescript title="src/users/users.module.ts"
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
@@ -579,7 +580,7 @@ Al modificar los servicios y DTOs, es probable que las pruebas generadas por el 
 **Pruebas del servicio de usuarios:**  
 Edita `src/users/users.service.spec.ts`:
 
-```typescript
+```typescript title="src/users/users.service.spec.ts"
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { RolesService } from '../roles/roles.service';
@@ -615,7 +616,7 @@ describe('UsersService', () => {
 **Pruebas del controlador de usuarios:**  
 Edita `src/users/users.controller.spec.ts`:
 
-```typescript
+```typescript title="src/users/users.controller.spec.ts"
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
@@ -650,7 +651,7 @@ describe('UsersController', () => {
 > **Alternativa:**  
 > También puedes mockear el servicio de usuarios directamente si solo quieres probar el controlador:
 
-```typescript
+```typescript title="Arreglo de pruebas unitarias"
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';

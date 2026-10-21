@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Migra de la configuración XML a anotaciones estereotipo y Java Config para declarar beans, alcances y ciclo de vida en Spring."
 ---
 
 # Anotaciones y Java Config

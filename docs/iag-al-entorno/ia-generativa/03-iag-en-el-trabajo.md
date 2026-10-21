@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Realiza 20 actividades de simulación práctica para aplicar la IA generativa en tareas de oficina como minutas, análisis y documentos."
 ---
 
 # IAG en el Trabajo

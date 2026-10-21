@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Conoce gRPC, Protocol Buffers y HTTP/2, compara gRPC con REST y construye una Pokédex con el patrón Backend for Frontend."
 ---
 
 # gRPC: Microservicios Eficientes con Protocol Buffers
@@ -100,7 +101,7 @@ flowchart LR
   <Step number="3" title="Implementar el Cliente gRPC en Python (Flask)">
     El BFF en Python actúa como cliente de gRPC, compilando los stubs y exponiendo la ruta web para el navegador:
 
-    ```bash
+    ```bash title="Demostración Práctica: Pokédex"
     cd frontend_python
     python -m venv venv
     source venv/bin/activate  # En Windows: venv\Scripts\activate

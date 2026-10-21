@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende a construir interfaces con Tailwind CSS usando utilidades de espaciado, dimensiones, tipografía y colores."
 ---
 
 import BrowserWindow from "@site/src/components/BrowserWindow";

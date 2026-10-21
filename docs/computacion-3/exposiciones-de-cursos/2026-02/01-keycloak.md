@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Comprende cómo Keycloak centraliza la identidad y el acceso con SSO, OAuth2 y OIDC, y sigue una demostración práctica paso a paso."
 ---
 
 # Keycloak: Gestión Centralizada de Identidad y Acceso

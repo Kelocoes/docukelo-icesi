@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Secure your Express API with JWT authentication, role-based access control, and protected routes using middleware and Mongoose roles."
 ---
 
 # Authentication and Route Protection

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Review the project report of an expert system built with Flask and Python that gives sports betting recommendations, hosted on GitHub."
 ---
 
 # Project Report: Expert System for Sports Betting Advice

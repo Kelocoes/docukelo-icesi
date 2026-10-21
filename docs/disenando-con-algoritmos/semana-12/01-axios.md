@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende a hacer peticiones HTTP con Axios en React y TypeScript, y por qué es una alternativa robusta a fetch."
 ---
 
 # Axios en React y TypeScript
@@ -47,7 +48,7 @@ npm install --save-dev @types/axios
 
 ### Ejemplo simple de uso con React y TypeScript
 
-```tsx
+```tsx title="Ejemplo: Uso con React"
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -93,7 +94,7 @@ export default UserList;
 
 Puedes crear una instancia personalizada con una **base URL**, **headers** y otras configuraciones comunes:
 
-```ts
+```ts title="Ejemplo: Configuración global de Axios"
 import axios from 'axios';
 
 const api = axios.create({
@@ -109,7 +110,7 @@ export default api;
 
 Uso:
 
-```tsx
+```tsx title="Ejemplo: Configuración global de Axios"
 import api from './api';
 
 api.get('/users').then(res => console.log(res.data));
@@ -125,7 +126,7 @@ Los interceptores te permiten **intervenir las solicitudes y respuestas** antes 
 
 ### Ejemplo: agregar token JWT automáticamente
 
-```ts
+```ts title="Ejemplo: Token JWT automático"
 import axios from 'axios';
 
 const api = axios.create({ baseURL: 'https://api.example.com' });
@@ -146,7 +147,7 @@ export default api;
 
 ### Ejemplo: manejo global de errores
 
-```ts
+```ts title="Ejemplo: Manejo global de errores"
 api.interceptors.response.use(
     (response) => response,
     (error) => {
@@ -165,7 +166,7 @@ api.interceptors.response.use(
 
 Axios soporta **tipos genéricos**, lo que te permite definir el tipo de dato que esperas en la respuesta:
 
-```ts
+```ts title="Ejemplo: Tipado avanzado con Axios"
 interface Post {
     id: number;
     title: string;
@@ -185,27 +186,27 @@ Esto ofrece **autocompletado** y **seguridad de tipos** en todo tu código.
 ## Métodos HTTP con Axios
 
 ### GET
-```ts
+```ts title="Ejemplo: GET"
 axios.get('/users');
 ```
 
 ### POST
-```ts
+```ts title="Ejemplo: POST"
 axios.post('/users', { name: 'Kevin', email: 'kevin@example.com' });
 ```
 
 ### PUT
-```ts
+```ts title="Ejemplo: PUT"
 axios.put('/users/1', { name: 'Kevin Updated' });
 ```
 
 ### DELETE
-```ts
+```ts title="Ejemplo: DELETE"
 axios.delete('/users/1');
 ```
 
 ### PATCH
-```ts
+```ts title="Ejemplo: PATCH"
 axios.patch('/users/1', { active: false });
 ```
 
@@ -213,7 +214,7 @@ axios.patch('/users/1', { active: false });
 
 ## Manejo de errores con try/catch
 
-```ts
+```ts title="Ejemplo: Manejo de errores con try/catch"
 try {
     const res = await axios.get('/invalid-url');
     console.log(res.data);
@@ -233,7 +234,7 @@ try {
 
 Axios permite cancelar solicitudes en curso usando `AbortController` o `CancelToken`.
 
-```ts
+```ts title="Ejemplo: Cancelación de peticiones"
 const controller = new AbortController();
 
 axios.get('/slow-endpoint', { signal: controller.signal });
@@ -246,7 +247,7 @@ setTimeout(() => controller.abort(), 3000);
 
 ## Ejemplo completo: CRUD con Axios + React + TypeScript
 
-```tsx
+```tsx title="Ejemplo: CRUD con Axios"
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Discover the NestJS architecture and the request lifecycle, and check what you learned with a self-assessment quiz."
 ---
 
 # Introduction to NestJS

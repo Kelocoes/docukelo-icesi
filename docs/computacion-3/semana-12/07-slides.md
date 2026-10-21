@@ -1,5 +1,6 @@
 ---
 sidebar_position: 7
+description: "Consulta las diapositivas de la semana 12 sobre estado en React, Redux Toolkit, navegación en Next.js y estilos con Tailwind CSS."
 ---
 
 # Slides de la semana

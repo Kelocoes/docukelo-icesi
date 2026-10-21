@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Instala Docker y despliega una aplicación React en un contenedor usando un Dockerfile multi-etapa, Nginx y Docker Compose."
 ---
 
 # Configuración de Docker
@@ -36,7 +37,7 @@ Para mantener simple el ejemplo, utilizaremos una aplicación de React básica d
 
 Crea un archivo llamado `Dockerfile` en la raíz de tu proyecto de React con el siguiente contenido:
 
-```bash
+```bash title="Dockerfile"
 # Etapa 1: contruccion
 FROM node:22-alpine AS builder
 WORKDIR /app
@@ -54,7 +55,7 @@ CMD ["nginx", "-g", "daemon off;"]
 
 Ya que estamos proponiendo usar nginx, es necesario crear un archivo de configuración llamado `nginx.conf` en la raíz de tu proyecto de React con el siguiente contenido:
 
-```nginx
+```nginx title="nginx.conf"
 server {
   listen 80;
   server_name localhost;
@@ -72,7 +73,7 @@ Esto configura Nginx para servir tu aplicación React y manejar correctamente la
 
 Si usas basepath en tu aplicación de React, asegúrate de ajustar la configuración de Nginx de la siguiente manera:
 
-```nginx
+```nginx title="Frontend - Creación del Dockerfile"
 server {
   listen 80;
   server_name localhost;
@@ -89,7 +90,7 @@ server {
 }
 ```
 
-```bash
+```bash title="Frontend - Creación (solución)"
 # Etapa 1: contruccion
 FROM node:22-alpine AS builder
 WORKDIR /app
@@ -108,7 +109,7 @@ CMD ["nginx", "-g", "daemon off;"]
 
 Crea un archivo llamado `docker-compose.yml` en la raíz de tu proyecto con el siguiente contenido:
 
-```yaml
+```yaml title="docker-compose.yml"
 services:
   frontend:
     build:

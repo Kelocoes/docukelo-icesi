@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Aprende a escribir pruebas unitarias y de integración E2E en NestJS para asegurar la calidad y estabilidad de tu aplicación."
 ---
 
 # Testing en NestJS
@@ -46,7 +47,7 @@ Supón que tienes el servicio `src/users/users.service.ts`. Crea el archivo de p
 
 #### Paso 1: Configuración inicial
 
-```typescript
+```typescript title="users.service.spec.ts"
 // users.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
@@ -94,7 +95,7 @@ describe('UsersService', () => {
 
 Agrega una prueba para el método `create`:
 
-```typescript
+```typescript title="Prueba de creación de usuario"
 it('should create a user successfully when role exists', async () => {
     const createUserDto = { username: 'testuser', email: 'test@example.com', passwordHash: 'hashedpassword', bio: 'Test bio', roleName: 'admin' };
     const mockRole = { id: 1, name: 'admin', description: 'Administrator role' };
@@ -118,7 +119,7 @@ it('should create a user successfully when role exists', async () => {
 
 #### Paso 3: Prueba de consulta de usuarios
 
-```typescript
+```typescript title="Prueba de consulta de usuarios"
 it('should return an array of users', async () => {
     const mockUsers = [
         { id: 1, username: 'user1', email: 'user1@example.com', bio: 'Bio 1' },
@@ -164,7 +165,7 @@ npm install --save-dev supertest
 
 #### Paso 1: Configuración y login
 
-```typescript
+```typescript title="Configuración y login"
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
@@ -198,7 +199,7 @@ describe('Users E2E', () => {
 
 #### Paso 2: Crear usuario vía API
 
-```typescript
+```typescript title="Crear usuario vía API"
     it('should create a new user', async () => {
         const createUserDto = {
             username: 'newuser',
@@ -221,7 +222,7 @@ describe('Users E2E', () => {
 
 #### Paso 3: Consultar usuarios
 
-```typescript
+```typescript title="Consultar usuarios"
     it('should return all users', async () => {
         const response = await request(app.getHttpServer())
             .get('/users')

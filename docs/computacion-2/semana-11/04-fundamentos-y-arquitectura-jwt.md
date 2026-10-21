@@ -1,6 +1,7 @@
 ---
 sidebar_position: 4
 sidebar_label: "Fundamentos y Arquitectura de JWT"
+description: "Comprende qué es un JSON Web Token, cómo se estructura y cómo fluyen su emisión y validación en una API REST."
 ---
 
 # Fundamentos y Arquitectura de JWT
@@ -173,7 +174,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 En la configuración de Spring Security se utiliza la siguiente instrucción:
 
-```java
+```java title="Ejemplo en Java"
 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 ```
 

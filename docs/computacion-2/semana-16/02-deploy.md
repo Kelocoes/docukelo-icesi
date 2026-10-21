@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Despliega una aplicación React con Vite en Apache Tomcat configurando el enrutamiento, las variables de entorno y el archivo WAR."
 ---
 
 
@@ -44,7 +45,7 @@ Antes de generar la versión de producción, asegúrate de que las variables de 
 
 Edita tu archivo `.env.production` (o `.env`):
 
-```env
+```env title="Paso 2: Configurar Variables de Entorno"
 VITE_API_URL=http://192.168.131.110:8081/compunet2-2026/rest
 ```
 

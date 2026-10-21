@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Integra TypeORM en un proyecto NestJS configurando la conexión y definiendo las entidades Usuario y Role."
 ---
 
 # NestJS y TypeORM
@@ -18,7 +19,7 @@ npm install --save @nestjs/typeorm typeorm @nestjs/config pg
 
 Para configurar TypeORM en tu aplicación NestJS, importa el módulo `TypeOrmModule` en tu módulo principal (usualmente `AppModule`). Aquí tienes un ejemplo de configuración básica:
 
-```typescript
+```typescript title="Configuración de TypeORM en NestJS"
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -69,7 +70,7 @@ La propiedad `synchronize` controla si TypeORM sincroniza automáticamente el es
 
 TypeORM ofrece herramientas similares a JPA en Java. Así defines una entidad `User`:
 
-```typescript
+```typescript title="Definición de la entidad Usuario"
 import { Role } from 'src/roles/entities/role.entity';
 import {
     Entity,
@@ -118,7 +119,7 @@ Explicación de los decoradores principales:
 
 Para cerrar la relación entre usuario y rol, define la entidad `Role` así:
 
-```typescript
+```typescript title="Definición de la entidad Role"
 import { User } from 'src/users/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
@@ -144,7 +145,7 @@ export class Role {
 
 Ahora el servicio de roles utiliza el repositorio de TypeORM en lugar de un arreglo en memoria:
 
-```typescript
+```typescript title="Modificación del servicio de roles"
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -202,7 +203,7 @@ Además de los métodos básicos (`create`, `save`, `find`, `findOneBy`, `update
 
 #### 1. `find` con opciones avanzadas
 
-```typescript
+```typescript title="find con opciones avanzadas"
 const users = await userRepository.find({
     where: { role: { name: 'admin' } },
     order: { createdAt: 'DESC' },
@@ -214,26 +215,26 @@ const users = await userRepository.find({
 
 #### 2. `findOne` y `findOneByOrFail`
 
-```typescript
+```typescript title="findOne y findOneByOrFail"
 const user = await userRepository.findOne({ where: { email: 'correo@ejemplo.com' } });
 const user = await userRepository.findOneByOrFail({ id: 1 });
 ```
 
 #### 3. `count`
 
-```typescript
+```typescript title="count"
 const count = await userRepository.count({ where: { role: { name: 'admin' } } });
 ```
 
 #### 4. `query` para SQL personalizado
 
-```typescript
+```typescript title="query para SQL personalizado"
 const rawUsers = await userRepository.query('SELECT * FROM users WHERE email LIKE $1', ['%@gmail.com']);
 ```
 
 #### 5. `findAndCount`
 
-```typescript
+```typescript title="findAndCount"
 const [users, total] = await userRepository.findAndCount({
     where: { role: { name: 'admin' } },
     skip: 0,
@@ -243,7 +244,7 @@ const [users, total] = await userRepository.findAndCount({
 
 #### 6. `save` con arreglos
 
-```typescript
+```typescript title="save con arreglos"
 const roles = await roleRepository.save([
     { name: 'admin', description: 'Administrador' },
     { name: 'user', description: 'Usuario estándar' },
@@ -252,7 +253,7 @@ const roles = await roleRepository.save([
 
 #### 7. Relaciones y consultas anidadas
 
-```typescript
+```typescript title="Relaciones y consultas anidadas"
 const users = await userRepository.find({
     relations: ['role', 'posts', 'posts.comments'],
 });
@@ -264,7 +265,7 @@ Consulta la [documentación oficial de TypeORM](https://typeorm.io/repository-ap
 
 Para probar el servicio de roles con TypeORM, utiliza un repositorio simulado (mock):
 
-```typescript
+```typescript title="Adaptación de los tests del servicio"
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RolesService } from './roles.service';
@@ -303,7 +304,7 @@ Así puedes probar el servicio sin una base de datos real, facilitando las prueb
 
 Para el controlador de roles:
 
-```typescript
+```typescript title="Adaptación de los tests del servicio (2)"
 import { Test, TestingModule } from '@nestjs/testing';
 import { RolesController } from './roles.controller';
 import { RolesService } from './roles.service';
@@ -339,7 +340,7 @@ Se utiliza un mock del servicio para probar el controlador de manera aislada.
 
 El servicio de usuarios también debe usar el repositorio de TypeORM:
 
-```typescript
+```typescript title="Modificación del servicio de usuarios"
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -398,7 +399,7 @@ Los tests para este servicio deben adaptarse de manera similar, usando mocks par
 
 Asegúrate de importar `TypeOrmModule.forFeature` en los módulos donde uses los repositorios:
 
-```typescript
+```typescript title="TypeOrmModule.forFeature"
 import { Module } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { RolesController } from './roles.controller';
@@ -414,7 +415,7 @@ import { Role } from './entities/role.entity';
 export class RolesModule {}
 ```
 
-```typescript
+```typescript title="Importación de repositorios"
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';

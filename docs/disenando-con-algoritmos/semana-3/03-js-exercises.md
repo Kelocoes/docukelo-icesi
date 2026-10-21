@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Resuelve desafíos de programación en JavaScript con ejemplos de entrada y salida para reforzar la lógica y el manejo de arrays."
 ---
 
 # Desafíos de Programación
@@ -20,9 +21,9 @@ Un escalador está comenzando a practicar en un muro de escalada. El muro tiene 
 - **Salida:** `4`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo 2"
 function alturaMaxima(alturas) {
     let saltoMax = 0;
     for (let i = 0; i < alturas.length - 1; i++) {
@@ -52,9 +53,9 @@ Un jardinero tiene un jardín rectangular representado por una matriz `jardin` d
 - **Salida:** `14`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo 2"
 function recolectar(x, y, jardin) {
   if (x >= jardin.length || y >= jardin[0].length) {
     return 0;
@@ -90,9 +91,9 @@ Un detective está investigando un caso. Tiene un array de números `pistas` don
 - **Salida:** `5`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo 2"
 function culpable(pistas) {
     let mapa = {};
     let maxCount = 0;
@@ -123,7 +124,7 @@ Un traductor necesita crear un programa que traduzca palabras de un idioma a otr
 
 #### Ejemplo 1
 - **Entrada:**
-    ```json
+    ```json title="Ejemplo 1"
     {
         "idioma1": ["hola", "mundo", "javascript"],
         "idioma2": ["hello", "world", "javascript"],
@@ -134,7 +135,7 @@ Un traductor necesita crear un programa que traduzca palabras de un idioma a otr
 
 #### Ejemplo 2
 - **Entrada:**
-    ```json
+    ```json title="Ejemplo 2"
     {
         "idioma1": ["perro", "gato", "pájaro"],
         "idioma2": ["dog", "cat", "bird"],
@@ -144,9 +145,9 @@ Un traductor necesita crear un programa que traduzca palabras de un idioma a otr
 - **Salida:** "No encontrado"
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo 2"
 function traducir(idioma1, idioma2, palabra) {
     let index = idioma1.indexOf(palabra);
     return index !== -1 ? idioma2[index] : 'No encontrado';
@@ -173,9 +174,9 @@ Un organizador de tareas tiene una lista de tareas representadas por un array de
 - **Salida:** `6`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo 2"
 function tiempoTotal(tareas) {
     return tareas.reduce((total, tarea) => total + tarea, 0);
 }
@@ -201,9 +202,9 @@ Un analista de datos tiene un array de números `datos` que representan las vent
 - **Salida:** `9 (Octubre)`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo 2"
 function mesMayorVentas(datos) {
     let maxVentas = Math.max(...datos);
     return datos.indexOf(maxVentas);
@@ -230,9 +231,9 @@ Un corrector de textos necesita un programa que cuente el número de palabras en
 - **Salida:** `3`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo 2"
 function contarPalabras(texto) {
     return texto.split(" ").length;
 }
@@ -258,9 +259,9 @@ Un generador de contraseñas necesita crear contraseñas seguras. Se le da una l
 - **Salida:** `"Ab12Cd34"`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo 2"
 function generarContraseña(longitud) {
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let contraseña = '';
@@ -291,9 +292,9 @@ Un juego de cartas tiene un mazo de cartas representadas por un array de número
 - **Salida:** `10`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo 2"
 function diferenciaJuegoCartas(mazo) {
     let jugador1 = 0;
     let jugador2 = 0;
@@ -330,9 +331,9 @@ Un escritor quiere contar cuántas veces aparece cada letra en un texto. Se te d
 - **Salida:** `{ j: 1, a: 2, v: 1, s: 1, c: 1, r: 1, i: 1, p: 1, t: 1 }`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo 2"
 function contarLetras(texto) {
     let contador = {};
     for (let letra of texto.replace(/\s+/g, '')) {
@@ -362,9 +363,9 @@ Un matemático está trabajando con una lista de números y quiere elevar cada n
 - **Salida:** `[36, 49, 64, 81, 100]`
 
 <details>
-<summary>💡 Ver solución</summary>
+<summary>Ver solución</summary>
 
-```javascript
+```javascript title="Ejemplo 2"
 function elevarCuadrado(numeros) {
     return numeros.map(num => num ** 2);
 }

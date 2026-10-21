@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Practica el modelado de bases de datos con ejercicios graduales, desde un blog simple hasta redes sociales y sistemas de cursos."
 ---
 
 # Ejercicios de Modelado

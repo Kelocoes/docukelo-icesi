@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Recorre el contenido del curso Desarrollo de Entornos Digitales Web, semana a semana, desde requerimientos y TypeScript hasta NestJS y Next.js."
 ---
 
 import PdfViewer from '@site/src/components/PdfViewer/PdfViewer';

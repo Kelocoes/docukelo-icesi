@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Pasa de roles a permisos granulares: crea el decorador Permissions y un guard para controlar el acceso a cada endpoint."
 ---
 
 # Control de Acceso y Guards
@@ -222,7 +223,7 @@ curl -X GET http://localhost:3000/users \
 ```
 
 **Respuesta HTTP 200 OK:**
-```json
+```json title="Caso 1: Acceso Concedido"
 [
   { "id": 1, "email": "ana@icesi.edu.co", "role": { "name": "admin" } }
 ]
@@ -235,7 +236,7 @@ curl -X GET http://localhost:3000/users
 ```
 
 **Respuesta HTTP 401 Unauthorized:**
-```json
+```json title="Caso 2: Rechazo por Falta"
 {
   "message": "Unauthorized",
   "statusCode": 401
@@ -247,7 +248,7 @@ curl -X GET http://localhost:3000/users
 Si un usuario con rol "invitado" intenta acceder a una ruta que requiere `users:read`:
 
 **Respuesta HTTP 403 Forbidden:**
-```json
+```json title="Caso 3: Rechazo por Permisos"
 {
   "message": "Acceso denegado: No cuentas con los permisos suficientes para esta acción",
   "error": "Forbidden",

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Resuelve un quiz práctico de React que aplica los conceptos de la semana a los datos de una encuesta estudiantil."
 ---
 
 # Quiz: React
@@ -17,7 +18,7 @@ Te han asignado la tarea de desarrollar una aplicación web utilizando React que
 - En un segundo apartado de la página, los usuarios deben de poder observar en pequeñas tarjetas (cards) los comentarios más relevantes que los estudiantes han dejado en la encuesta, permitiendo filtrar estos comentarios por palabras clave.
 - No te han dado más información al respecto, no obstante, te han comentado que el archivo JSON proporcionado contiene toda la información necesaria para cumplir con los requisitos. Su estructura es parecida a este:
 
-```json
+```json title="Ejemplo: Contexto"
 [
   {
     "id": 1,
@@ -48,7 +49,7 @@ Te han asignado la tarea de desarrollar una aplicación web utilizando React que
 
 - Crea un proyecto vacío utilizando Vite con la plantilla de React con Typescript.
     Puedes hacerlo ejecutando el siguiente comando en tu terminal:
-    ```bash
+    ```bash title="Comandos: Recomendaciones"
     npm create vite@latest prubea-corta-3-react -- --template react-ts
     cd prubea-corta-3-react
     npm install
@@ -57,13 +58,13 @@ Te han asignado la tarea de desarrollar una aplicación web utilizando React que
 
 - Utiliza correctamente el hook `useState` y evita mutar el estado directamente.  
     **Ejemplo incorrecto:**
-    ```js
+    ```js title="Ejemplo: Recomendaciones"
     const [count, setCount] = useState(0);
     count = count + 1; // Esto es incorrecto
     setCount(count); // Esto es incorrecto
     ```
     **Ejemplo correcto:**
-    ```js
+    ```js title="Ejemplo: Recomendaciones"
     const [count, setCount] = useState(0);
     setCount(prevCount => prevCount + 1); // Esto es correcto
     ```
@@ -78,4 +79,4 @@ Te han asignado la tarea de desarrollar una aplicación web utilizando React que
 - Para el gráfico en torta, puedes utilizar una librería como `recharts` o `chart.js` y más. Asegúrate de instalar la librería que elijas y seguir su documentación para integrarla en tu proyecto.
 
 - Organiza tus archivos como prefieras, pero se recomienda seguir la estructura de carpetas vista en clase.  
-    Consulta el archivo [File Structure](./file-structure.md) para ver un ejemplo de organización recomendada.
+    Consulta el archivo [File Structure](./03-file-structure.md) para ver un ejemplo de organización recomendada.

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Learn Redux Toolkit concepts such as stores, slices, reducers, selectors, actions, and thunks, and how unidirectional data flow works."
 ---
 
 import ThemedImage from '@theme/ThemedImage';

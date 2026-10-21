@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Aprende cómo tRPC logra seguridad de tipos de extremo a extremo en TypeScript, sin generar código, con un gestor de tareas fullstack."
 ---
 
 # tRPC: End-to-End Type Safety sin Generación de Código

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Consulta las diapositivas de la semana 9 sobre el despliegue de un backend NestJS en Railway con un visor de PDF integrado."
 ---
 
 # Slides de la semana

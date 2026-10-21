@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Aprende a construir una API en Python con FastAPI, PostgreSQL y SQLAlchemy, con validación de datos y documentación automática."
 ---
 
 # Guía FastAPI
@@ -40,7 +41,7 @@ sidebar_position: 5
 - **PostgreSQL** 
 - **Arquitectura por features**: words, games, guesses
 
-```bash
+```bash title="Stack y arquitectura del proyecto"
 app/
 ├─ api/router.py
 ├─ core/{config, middleware, lifespan}.py
@@ -60,7 +61,7 @@ pip install -r requirements.txt
 ```
 
 ## Base de datos con Docker
-```yaml
+```yaml title="Base de datos con Docker"
 services:
   db:
     image: postgres:17
@@ -199,7 +200,7 @@ VITE_BASE_URL=http://127.0.0.1:8000
 
 ### Levantar el frontend
 
-```bash
+```bash title="Levantar el frontend"
 cd wordle-frontend
 npm install
 npm run dev

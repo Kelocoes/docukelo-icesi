@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Aprende a dar estilo a páginas web con CSS: selectores, propiedades, unidades, pseudo-clases, Flexbox y media queries."
 ---
 
 import BrowserWindow from '@site/src/components/BrowserWindow';
@@ -14,7 +15,7 @@ Hay varias formas de aplicar CSS en una página HTML:
 
 * **CSS en línea**: dentro de un atributo `style` directamente en el elemento HTML. No es recomendable para proyectos grandes.
 
-```html
+```html title="¿Cómo se utiliza CSS"
 <p style="color: red;">Texto en rojo</p>
 ```
 
@@ -26,7 +27,7 @@ Hay varias formas de aplicar CSS en una página HTML:
 
 * **CSS interno**: dentro de una etiqueta `<style>` en el `<head>` del documento HTML.
 
-```html
+```html title="¿Cómo se utiliza CSS"
 <!DOCTYPE html>
 <html>
   <head>
@@ -50,12 +51,12 @@ Hay varias formas de aplicar CSS en una página HTML:
 
 * **CSS externo**: se crea un archivo `.css` separado y se importa con `<link>`.
 
-```html
+```html title="index.html"
 <!-- index.html -->
 <link rel="stylesheet" href="estilos.css">
 ```
 
-```css
+```css title="estilos.css"
 /* estilos.css */
 body {
   background-color: #fafafa;
@@ -69,7 +70,7 @@ Los selectores permiten apuntar a los elementos HTML que quieres estilizar.
 
 #### Selector por etiqueta
 
-```css
+```css title="Selector por etiqueta"
 p {
   color: blue;
 }
@@ -77,7 +78,7 @@ p {
 
 #### Selector por clase
 
-```css
+```css title="Selector por clase"
 .texto-rojo {
   color: red;
 }
@@ -85,13 +86,13 @@ p {
 
 #### Selector por ID
 
-```css
+```css title="Selector por ID"
 #titulo-principal {
   font-size: 32px;
 }
 ```
 
-```html
+```html title="Selector por ID"
 <!DOCTYPE html>
 <html>
   <body>
@@ -118,7 +119,7 @@ Algunas propiedades comunes en CSS incluyen:
 * `font-size`
 * `text-align`
 
-```css
+```css title="Propiedades comunes"
 .box {
   color: white;
   background-color: steelblue;
@@ -143,7 +144,7 @@ Algunas propiedades comunes en CSS incluyen:
     * `%`: relativo al tamaño del contenedor padre.
     * `vw`, `vh`: relativo al ancho (`vw`) o alto (`vh`) del viewport (ventana del navegador). `100vw` es el 100% del ancho de la ventana.
 
-```css
+```css title="Medidas Absolutas vs Relativas"
 .texto-absoluto {
   font-size: 16px;
 }
@@ -163,7 +164,7 @@ Algunas propiedades comunes en CSS incluyen:
 
 Las pseudo-clases permiten aplicar estilos según el estado del elemento.
 
-```css
+```css title="Pseudo-clases"
 a:hover {
   color: red;
 }
@@ -211,7 +212,7 @@ Propiedades comunes del contenedor:
   * `flex-start`, `center`, `flex-end`, `space-between`, `space-around`
 * `align-items`: alineación vertical
 
-```css
+```css title="Flexbox"
 .contenedor {
   display: flex;
   justify-content: space-around;
@@ -235,7 +236,7 @@ Enlaces de referencia:
 
 Permiten adaptar los estilos según el tamaño de pantalla. Muy útiles para diseño responsivo.
 
-```css
+```css title="Media Queries"
 body {
   background-color: lightgreen;
 }
@@ -269,7 +270,7 @@ El `only screen` es una consulta que se aplica solo a pantallas, excluyendo otro
   </>
 </BrowserWindow>
 
-```css
+```css title="Media Queries"
 .flex-mediaquery-demo {
     display: flex;
     flex-direction: row;

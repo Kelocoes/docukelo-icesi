@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Learn the fundamentals of relational databases: tables, primary and foreign keys, ER diagrams and relationship types."
 ---
 
 # Relational Databases

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Practica Web Storage en JavaScript con ejercicios progresivos como preferencias de tema, carrito de compras y registro con login."
 ---
 
 # Ejercicios de Web Storage
@@ -7,7 +8,7 @@ sidebar_position: 3
 Este documento te ayudará a practicar **Web Storage** en JavaScript con ejercicios progresivos.  
 La idea es que tengas una **consigna clara** y una **base de código lista para copiar y pegar**, así no empiezas desde cero.
 
-> **Nota**: Para repasar los conceptos teóricos de Web Storage, consulta la [explicación del profesor](./dom.md#3-web-storage).
+> **Nota**: Para repasar los conceptos teóricos de Web Storage, consulta la [explicación del profesor](./01-dom.md#3-web-storage).
 
 ---
 
@@ -35,7 +36,7 @@ Crea un botón que permita alternar entre modo claro y modo oscuro. La preferenc
 
 _Extra_: Puedes cambiar los estilos del botón para que contrasten con el fondo.\_
 
-```html
+```html title="Preferencias de tema (claro/oscuro)"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -66,9 +67,9 @@ _Extra_: Puedes cambiar los estilos del botón para que contrasten con el fondo.
 ```
 
 <details>
-<summary>💡 Posible solución >:) </summary>
+<summary>Posible solución >:) </summary>
 
-```javascript
+```javascript title="Preferencias de tema (claro/oscuro)"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -149,7 +150,7 @@ Haz un formulario que pida nombre, profesión y descripción. Cada vez que el us
 
 _Extra: Añadir un botón que pueda eliminar cards_
 
-```html
+```html title="Ejemplo HTML"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -177,9 +178,9 @@ _Extra: Añadir un botón que pueda eliminar cards_
 ```
 
 <details>
-<summary>💡 Posible solución >:) </summary>
+<summary>Posible solución >:) </summary>
 
-```javascript
+```javascript title="Ejemplo de JavaScript"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -290,7 +291,7 @@ Muestra una lista de películas. Cada una debe tener estrellas para votar (del 1
 
 _Pista: En este ejercicio puedes usar este caracter `★`, pues, solo le cambiaras el color a la estrella._
 
-```html
+```html title="Calificar películas"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -314,9 +315,9 @@ _Pista: En este ejercicio puedes usar este caracter `★`, pues, solo le cambiar
 ```
 
 <details>
-<summary>💡 Posible solución >:) </summary>
+<summary>Posible solución >:) </summary>
 
-```javascript
+```javascript title="Calificar películas"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -407,7 +408,7 @@ _Pista: En este ejercicio puedes usar este caracter `★`, pues, solo le cambiar
 **Consigna:**  
 Crea un sistema de carrito donde se puedan agregar productos, mostrarlos en una lista con su precio, calcular el total y eliminarlos. Toda la información debe guardarse en `localStorage`.
 
-```html
+```html title="Carrito de compras"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -437,9 +438,9 @@ Crea un sistema de carrito donde se puedan agregar productos, mostrarlos en una 
 ```
 
 <details>
-<summary>💡 Posible solución >:) </summary>
+<summary>Posible solución >:) </summary>
 
-```javascript
+```javascript title="Carrito de compras"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -554,7 +555,7 @@ Crea un sistema de carrito donde se puedan agregar productos, mostrarlos en una 
 **Consigna:**  
 Crea un sistema simple de registro y login usando `localStorage`. El usuario debe poder registrarse con nombre y contraseña. Luego, al iniciar sesión, el sistema debe validar los datos y mostrar un mensaje de bienvenida.
 
-```html
+```html title="Register y Login"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -589,9 +590,9 @@ Crea un sistema simple de registro y login usando `localStorage`. El usuario deb
 ```
 
 <details>
-<summary>💡 Posible solución >:) </summary>
+<summary>Posible solución >:) </summary>
 
-```javascript
+```javascript title="Register y Login"
 <!DOCTYPE html>
 <html lang="es">
   <head>

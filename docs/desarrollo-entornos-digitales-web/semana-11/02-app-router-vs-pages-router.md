@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Compara el App Router y el Pages Router de Next.js en historia, estructura de archivos, rutas y obtención de datos."
 ---
 
 # App Router vs. Pages Router

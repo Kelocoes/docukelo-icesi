@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Understand NestJS guards, the Passport strategy pattern, and the structure of JSON Web Tokens to build a secure authentication layer."
 ---
 
 # Guards, Passport, and JSON Web Tokens (JWT)
@@ -45,7 +46,7 @@ Guards receive the `ExecutionContext` instance, allowing them to inspect:
 
 Every Guard must implement the `canActivate` contract:
 
-```typescript
+```typescript title="The CanActivate Interface"
 export interface CanActivate {
   canActivate(
     context: ExecutionContext,
@@ -159,7 +160,7 @@ The Header and Payload segments are merely **Base64Url-encoded**, not encrypted.
 
 The signature guarantees the **integrity** and **authenticity** of the token. It is calculated by hashing the encoded header, encoded payload, and an application secret key known only to the backend server (`JWT_SECRET`):
 
-```javascript
+```javascript title="Signature"
 HMACSHA256(
   base64UrlEncode(header) + "." + base64UrlEncode(payload),
   JWT_SECRET

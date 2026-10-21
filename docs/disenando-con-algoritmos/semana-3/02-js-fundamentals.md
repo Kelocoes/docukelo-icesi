@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Aprende los fundamentos de JavaScript: tipos de datos, variables, funciones, control de flujo, bucles, desestructuración y más."
 ---
 
 # Fundamentos de JavaScript
@@ -48,7 +49,7 @@ Tres formas sencillas:
 1. **Consola del navegador:** abre una página web, presiona `F12` → pestaña "Console" y escribe `console.log('hola')`.
 2. **Archivo .html** con un `<script>`:
 
-```html
+```html title="Cómo ejecutar JavaScript (rápido)"
 <!doctype html>
 <html>
   <body>
@@ -77,7 +78,7 @@ JavaScript tiene **tipos primitivos** y **objetos**.
 * `Symbol` — identificadores únicos (avanzado).
 * `BigInt` — enteros muy grandes: `123n`.
 
-```js
+```js title="Tipos primitivos"
 console.log(typeof 42); // 'number'
 console.log(typeof 'hola'); // 'string'
 console.log(typeof null); // 'object'  <-- historic quirk
@@ -89,7 +90,7 @@ console.log(typeof null); // 'object'  <-- historic quirk
 
 Colecciones de pares clave/valor: arrays, funciones, objetos literales.
 
-```js
+```js title="Objetos"
 const persona = { nombre: 'Ana', edad: 30 };
 const arr = [1, 2, 3];
 ```
@@ -105,7 +106,7 @@ JavaScript tiene tres maneras principales de declarar variables:
 * Antigua forma. Tiene **scope de función** — no de bloque.
 * Está sujeta a hoisting (se "eleva").
 
-```js
+```js title="var"
 function ejemploVar() {
   if (true) {
     var x = 10;
@@ -120,7 +121,7 @@ function ejemploVar() {
 * **Scope de bloque** (`{ ... }`).
 * No permite redeclarar en el mismo scope.
 
-```js
+```js title="let"
 if (true) {
   let y = 5;
 }
@@ -132,7 +133,7 @@ if (true) {
 * Igual que `let` (scope de bloque) pero **constante**: no se puede reasignar.
 * **Ojo:** objetos declarados con `const` pueden modificarse internamente (mutación), solo la referencia no puede cambiar.
 
-```js
+```js title="const"
 const z = 3;
 // z = 4; // TypeError: asignación a constante
 
@@ -150,7 +151,7 @@ El *hoisting* es el comportamiento donde las declaraciones de funciones y variab
 
 ### Ejemplos:
 
-```js
+```js title="Ejemplos"
 console.log(a); // undefined
 var a = 2;
 ```
@@ -159,7 +160,7 @@ var a = 2;
 
 Con `let` y `const` sucede distinto:
 
-```js
+```js title="Ejemplos"
 console.log(b); // ReferenceError: cannot access 'b' before initialization
 let b = 3;
 ```
@@ -168,7 +169,7 @@ Las variables `let` y `const` están en lo que llamamos **Temporal Dead Zone (TD
 
 ### Hoisting de funciones
 
-```js
+```js title="Hoisting de funciones"
 saludar(); // 'hola'
 function saludar() { console.log('hola'); }
 ```
@@ -183,7 +184,7 @@ Las funciones son bloques de código que realizan tareas. JavaScript trata las f
 
 ### Declaración de función
 
-```js
+```js title="Declaración de función"
 function suma(a, b) {
   return a + b;
 }
@@ -192,7 +193,7 @@ console.log(suma(2, 3)); // 5
 
 ### Expresión de función
 
-```js
+```js title="Expresión de función"
 const resta = function(a, b) {
   return a - b;
 };
@@ -203,7 +204,7 @@ console.log(resta(5, 2)); // 3
 
 Sintaxis compacta introducida en ES6.
 
-```js
+```js title="Arrow functions (=)"
 const multiplicar = (a, b) => a * b;
 console.log(multiplicar(3, 4)); // 12
 ```
@@ -212,7 +213,7 @@ console.log(multiplicar(3, 4)); // 12
 
 ### Parámetros por defecto y rest
 
-```js
+```js title="Parámetros por defecto y rest"
 function saludar(nombre = 'invitado') {
   console.log('Hola ' + nombre);
 }
@@ -226,7 +227,7 @@ function sumaTodo(...nums) { // rest param
 
 Una función puede recordar el entorno donde fue creada.
 
-```js
+```js title="Closure (cierres)"
 function contador() {
   let cuenta = 0;
   return function() {
@@ -244,7 +245,7 @@ Eso es un *closure*: la función interna mantiene acceso a `cuenta` aunque la ej
 
 ### IIFE (Immediately Invoked Function Expression)
 
-```js
+```js title="Ejemplo de JavaScript"
 (function() {
   console.log('Esto se ejecuta inmediatamente');
 })();
@@ -252,7 +253,7 @@ Eso es un *closure*: la función interna mantiene acceso a `cuenta` aunque la ej
 
 ### Funciones como parámetros y retorno
 
-```js
+```js title="Funciones como parámetros y retorno"
 function operar(a, b, fn) {
   return fn(a, b);
 }
@@ -266,7 +267,7 @@ operar(2, 3, (x, y) => x * y); // 6
 
 ### `if / else`
 
-```js
+```js title="if / else"
 const edad = 18;
 if (edad >= 18) {
   console.log('Eres mayor de edad');
@@ -277,7 +278,7 @@ if (edad >= 18) {
 
 Ternario (forma compacta):
 
-```js
+```js title="if / else"
 const mensaje = edad >= 18 ? 'Mayor' : 'Menor';
 ```
 
@@ -285,7 +286,7 @@ const mensaje = edad >= 18 ? 'Mayor' : 'Menor';
 
 Útil con múltiples opciones discretas.
 
-```js
+```js title="switch / case"
 const dia = 'martes';
 switch (dia) {
   case 'lunes':
@@ -307,7 +308,7 @@ switch (dia) {
 
 ### `for` clásico
 
-```js
+```js title="for clásico"
 for (let i = 0; i < 5; i++) {
   console.log(i);
 }
@@ -315,7 +316,7 @@ for (let i = 0; i < 5; i++) {
 
 ### `while`
 
-```js
+```js title="while"
 let i = 0;
 while (i < 3) {
   console.log(i);
@@ -327,7 +328,7 @@ while (i < 3) {
 
 Se ejecuta al menos una vez.
 
-```js
+```js title="do...while"
 let n = 0;
 do {
   console.log('ejecución', n);
@@ -337,7 +338,7 @@ do {
 
 ### `for...of` (arrays y iterables)
 
-```js
+```js title="for...of"
 const arr = ['a', 'b', 'c'];
 for (const letra of arr) {
   console.log(letra);
@@ -346,7 +347,7 @@ for (const letra of arr) {
 
 ### `for...in` (propiedades de objetos)
 
-```js
+```js title="for...in"
 const obj = {x: 1, y: 2};
 for (const k in obj) {
   console.log(k, obj[k]);
@@ -367,7 +368,7 @@ Ambos son métodos del prototype `Array`.
 * **No devuelve** nada (retorna `undefined`).
 * Ideal para efectos secundarios (p. ej. imprimir, modificar algo fuera del array).
 
-```js
+```js title="forEach"
 const nums = [1, 2, 3];
 nums.forEach((n, i) => {
   console.log('Index', i, 'valor', n);
@@ -379,14 +380,14 @@ nums.forEach((n, i) => {
 * Transforma cada elemento y devuelve **un nuevo array** con los resultados.
 * No modifica el array original a menos que lo reasignes.
 
-```js
+```js title="map"
 const dobles = nums.map(n => n * 2);
 console.log(dobles); // [2, 4, 6]
 ```
 
 **Comparación práctica:**
 
-```js
+```js title="map"
 const arr = [1, 2, 3];
 const r1 = arr.forEach(x => x * 2); // r1 === undefined
 const r2 = arr.map(x => x * 2); // r2 === [2,4,6]
@@ -397,7 +398,7 @@ const r2 = arr.map(x => x * 2); // r2 === [2,4,6]
 * `filter` devuelve un array con los elementos que pasan una condición.
 * `reduce` acumula un resultado (suma, concatenación, etc.).
 
-```js
+```js title="filter, reduce (mención rápida)"
 const pares = arr.filter(x => x % 2 === 0);
 const suma = arr.reduce((acc, x) => acc + x, 0);
 ```
@@ -412,7 +413,7 @@ const suma = arr.reduce((acc, x) => acc + x, 0);
 
 Los tipos primitivos (`number`, `string`, `boolean`, `null`, `undefined`, `symbol`, `bigint`) se copian **por valor**.
 
-```js
+```js title="Primitivos (por valor)"
 let a = 5;
 let b = a;
 b = 10;
@@ -423,7 +424,7 @@ console.log(a); // 5 (no cambia)
 
 Los objetos y arrays se copian **por referencia**: la variable almacena una referencia a la ubicación en memoria.
 
-```js
+```js title="Objetos y arrays (por referencia)"
 const o1 = { x: 1 };
 const o2 = o1;
 o2.x = 2;
@@ -435,7 +436,7 @@ console.log(o1.x); // 2 — ambos apuntan al mismo objeto
 * Arrays: `slice()`, spread `[...arr]`.
 * Objetos: `Object.assign({}, obj)`, spread `{ ...obj }`.
 
-```js
+```js title="Copias superficiales (shallow copy)"
 const a = [1, 2];
 const b = [...a];
 const o = { a: 1 };
@@ -444,7 +445,7 @@ const oCopy = { ...o };
 
 **Aviso:** estas son *copias superficiales*. Si el objeto tiene objetos anidados, las subpropiedades siguen siendo referencias.
 
-```js
+```js title="Copias superficiales (shallow copy)"
 const orig = { nested: { val: 1 } };
 const shallow = { ...orig };
 shallow.nested.val = 2;
@@ -456,7 +457,7 @@ console.log(orig.nested.val); // 2 -> ambas referencias apuntan al mismo nested
 * `JSON.parse(JSON.stringify(obj))` (simple y común) — no funciona con funciones, `undefined`, `Date`, `RegExp`, `Map`, `Set`, `Symbol`.
 * `structuredClone(obj)` — método moderno (si está disponible) para clonar de forma profunda.
 
-```js
+```js title="Copia profunda (deep copy)"
 const deep = JSON.parse(JSON.stringify(orig));
 deep.nested.val = 3;
 console.log(orig.nested.val); // 2 (no cambia)
@@ -470,7 +471,7 @@ Permite extraer valores de arrays u objetos en variables.
 
 ### Array destructuring
 
-```js
+```js title="Array destructuring"
 const arr = [10, 20, 30];
 const [a, b, c] = arr; // a=10, b=20, c=30
 const [primero, ...resto] = arr; // primero=10, resto=[20,30]
@@ -478,7 +479,7 @@ const [primero, ...resto] = arr; // primero=10, resto=[20,30]
 
 ### Object destructuring
 
-```js
+```js title="Object destructuring"
 const persona = { nombre: 'Ana', edad: 25 };
 const { nombre, edad } = persona;
 // También puedes renombrar:
@@ -487,13 +488,13 @@ const { nombre: n, edad: e } = persona; // n='Ana', e=25
 
 ### Valores por defecto
 
-```js
+```js title="Valores por defecto"
 const [x = 1, y = 2] = [10]; // x=10, y=2
 ```
 
 ### Destructuring en parámetros de función
 
-```js
+```js title="Destructuring en parámetros de función"
 function mostrar({ nombre, edad }) {
   console.log(nombre, edad);
 }
@@ -509,7 +510,7 @@ mostrar({ nombre: 'Ana', edad: 25 });
 * `==` hace coerción de tipos (intenta convertir).
 * `===` compara estrictamente sin conversión. **Usa `===` por seguridad**.
 
-```js
+```js title="Igualdad == vs ==="
 0 == false; // true
 0 === false; // false
 '' == false; // true
@@ -525,7 +526,7 @@ Cualquier otro valor es truthy.
 
 Usa `??` para escoger el primer valor no `null`/`undefined`.
 
-```js
+```js title="Nullish coalescing"
 const a = 0 ?? 5; // a = 0 (porque 0 no es null/undefined)
 const b = null ?? 5; // b = 5
 ```
@@ -534,7 +535,7 @@ const b = null ?? 5; // b = 5
 
 Evita errores si una parte intermedia es `null`/`undefined`.
 
-```js
+```js title="Optional chaining"
 const user = { profile: null };
 console.log(user.profile?.name); // undefined en vez de lanzar error
 ```
@@ -543,14 +544,14 @@ console.log(user.profile?.name); // undefined en vez de lanzar error
 
 Interpolación con `` ` ``:
 
-```js
+```js title="Template literals"
 const nombre = 'Ana';
 console.log(`Hola ${nombre}`); // Hola Ana
 ```
 
 ### Spread operator
 
-```js
+```js title="Spread operator"
 const arr = [1,2];
 const nuevo = [...arr, 3]; // [1,2,3]
 const obj = { a: 1 };
@@ -568,7 +569,7 @@ Declara una variable `nombre` con tu nombre y otra `edad` con un número. Muestr
 <details>
 <summary>Solución</summary>
 
-```js
+```js title="Ejercicio 1 — Variables y tipos"
 const nombre = 'María';
 const edad = 28;
 console.log(`Hola, soy ${nombre} y tengo ${edad} años`);
@@ -583,7 +584,7 @@ Crea una función `hacerSaludo` que reciba `saludo` y retorne otra función que 
 <details>
 <summary>Solución</summary>
 
-```js
+```js title="Ejercicio 2 — Funciones y closures"
 function hacerSaludo(saludo) {
   return function(nombre) {
     console.log(`${saludo}, ${nombre}`);
@@ -605,7 +606,7 @@ Tienes `const nums = [1,2,3,4]`.
 <details>
 <summary>Solución</summary>
 
-```js
+```js title="Ejercicio 3 — map vs forEach"
 const nums = [1,2,3,4];
 nums.forEach(n => console.log(n * 2));
 const cuadrados = nums.map(n => n * n);
@@ -621,7 +622,7 @@ Crea un objeto `original = { a: 1, nested: { b: 2 } }`. Haz una copia superficia
 <details>
 <summary>Solución</summary>
 
-```js
+```js title="Ejercicio 4 — Reference & Copying"
 const original = { a: 1, nested: { b: 2 } };
 const copyShallow = { ...original };
 copyShallow.nested.b = 3;

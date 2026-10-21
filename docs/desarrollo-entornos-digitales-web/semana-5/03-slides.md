@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Revisa las diapositivas de la semana 5 sobre providers, inyección de dependencias y repositorios con un visor de PDF integrado."
 ---
 
 # Slides de la semana

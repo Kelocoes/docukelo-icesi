@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Review the official slides of Week 9 on Next.js, rendering strategies, the App Router, Server and Client Components, layouts, and metadata."
 ---
 
 # Weekly Slides

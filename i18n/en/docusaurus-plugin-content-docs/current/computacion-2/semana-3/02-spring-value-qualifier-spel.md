@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Resolve injection ambiguities with @Qualifier and @Primary and inject external properties with @Value and SpEL."
 ---
 
 # Advanced Injection and SpEL
@@ -100,7 +101,7 @@ public class UsuarioController {
 
 Custom bean identifiers can also be declared in `@Service`:
 
-```java
+```java title="Java example"
 @Service("emailService")
 public class NotificacionEmailServiceImpl implements NotificacionService { ... }
 

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Implementa la capa de infraestructura con DTOs, datasources, mappers y repositorios concretos que desacoplan el origen de los datos."
 ---
 
 # Acceso a Datos: Repository, Datasources y Mappers

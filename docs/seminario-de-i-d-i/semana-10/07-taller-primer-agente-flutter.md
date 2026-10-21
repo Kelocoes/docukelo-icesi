@@ -1,6 +1,7 @@
 ---
 sidebar_position: 7
 unlisted: true
+description: "Elabora el contrato agéntico de tu app Flutter y resuelve problemas en consola con un agente, iterando el contrato."
 ---
 
 # Taller de Agentes

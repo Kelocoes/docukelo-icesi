@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Learn what FastAPI is and build a Wordle API with SQLAlchemy, PostgreSQL, and Docker, following the group's step-by-step guide."
 ---
 
 # FastAPI Guide
@@ -40,7 +41,7 @@ sidebar_position: 5
 - **PostgreSQL**
 - **Feature-based Architecture**: words, games, guesses
 
-```bash
+```bash title="Tech Stack & Project Architecture"
 app/
 ├─ api/router.py
 ├─ core/{config, middleware, lifespan}.py
@@ -60,7 +61,7 @@ pip install -r requirements.txt
 ```
 
 ## Database Setup with Docker
-```yaml
+```yaml title="Database Setup with Docker"
 services:
   db:
     image: postgres:17
@@ -83,7 +84,7 @@ docker compose up -d
 ```
 
 ## Environment Variables
-```ini
+```ini title="Environment Variables"
 DEBUG=true
 DATABASE_URL=postgresql+psycopg://wordle:wordle@localhost:5431/wordle
 ALLOWED_ORIGINS=["http://localhost:5173"]
@@ -189,7 +190,7 @@ wordle-frontend/
 
 Create a `.env` file in the frontend root:
 
-```ini
+```ini title="Environment Variables (Frontend)"
 VITE_BASE_URL=http://127.0.0.1:8000
 ```
 
@@ -197,7 +198,7 @@ VITE_BASE_URL=http://127.0.0.1:8000
 
 ### Run the Frontend
 
-```bash
+```bash title="Run the Frontend"
 cd wordle-frontend
 npm install
 npm run dev

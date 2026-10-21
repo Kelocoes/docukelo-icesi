@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Revisa la presentación de introducción a NestJS y sus conceptos principales para construir aplicaciones backend."
 ---
 import PdfViewer from '@site/src/components/PdfViewer/PdfViewer';
 

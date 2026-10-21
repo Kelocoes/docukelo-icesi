@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Review the official slides of Week 11 on frontend Clean Architecture with Next.js and TypeScript, the Dependency Inversion Principle, and layers."
 ---
 
 # Week Slides

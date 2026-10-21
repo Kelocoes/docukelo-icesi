@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Construye una aplicación de tareas con Vue, Vite y Tailwind, entendiendo los componentes y la estructura básica de un proyecto Vue."
 ---
 
 # ToDoVueJS
@@ -61,7 +62,7 @@ npm install
 
 ```
 
-```--template vue ```  indica que queremos una plantilla de Vue 3 lista para empezar.
+```--template vue ```  indica que queremos una plantilla de Vue 3 lista para empezar. title="Crear el proyecto (Vite + Vue)"
 
 ## 2) Instalar dependencias adicionales
 ```

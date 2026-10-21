@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Understand what the TCP, UDP and HTTP protocols are and how web servers handle client requests."
 ---
 
 # Protocols and Web Servers

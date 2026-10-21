@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 sidebar_label: "Authentication vs Authorization"
+description: "Tell authentication from authorization and understand the role of application-level security in access control."
 ---
 
 # Authentication vs. Authorization

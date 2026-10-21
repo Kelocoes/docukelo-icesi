@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Conoce el reporte de un sistema experto en Flask y Python que ofrece asesoría para apuestas deportivas a partir de reglas."
 ---
 
 # Project Report: Expert System for Sports Betting Advice

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Da tus primeros pasos con NestJS: conoce módulos, controladores y servicios y crea tu primer proyecto paso a paso."
 ---
 
 # Primeros Pasos con NestJS

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Consulta las diapositivas de React para repasar sus fundamentos y entender cómo funciona la librería."
 ---
 
 # Diapositivas de React

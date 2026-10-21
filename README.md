@@ -15,6 +15,7 @@ npm start            # servidor de desarrollo en http://localhost:3000 (idioma p
 npm run build        # build de producción en build/ (es y en)
 npm run serve        # sirve el build de producción en local
 npm run clear        # limpia la caché de Docusaurus
+npm run lint:docs    # revisa los documentos contra las reglas de la guía (ver .agents/memory/docusaurus-guidelines.md)
 ```
 
 Para ver la versión en inglés en desarrollo: `npm start -- --locale en`.
@@ -35,7 +36,7 @@ static/interactive/ Piezas interactivas (HTML) con su kit compartido en _shared/
 
 ## Escribir contenido
 
-- Cada curso es una carpeta de `docs/` con su `_category_.json` y un `intro.md`; las semanas son subcarpetas con archivos `01-tema.md`, `02-otro.md`...
+- Cada curso es una carpeta de `docs/` con su `_category_.json` y un `intro.md`; las semanas son subcarpetas con archivos `01-tema.md`, `02-otro.md` (prefijo de dos dígitos, minúsculas y guiones; el prefijo no aparece en la URL).
 - Las reglas de estilo, los componentes disponibles y cómo incluir diagramas están en [`.agents/memory/docusaurus-guidelines.md`](.agents/memory/docusaurus-guidelines.md).
 - Los documentos nuevos en `es` se traducen a `i18n/en/docusaurus-plugin-content-docs/current/` con la misma ruta.
 - "Última actualización" toma la fecha de `git log` y muestra como autor a Kevin Rodriguez, salvo la guía de Spring Boot (Carol Mosquera). Para otro autor, usa `last_update.author` en el frontmatter.

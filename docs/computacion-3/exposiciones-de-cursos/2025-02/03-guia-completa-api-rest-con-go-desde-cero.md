@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Aprende a crear una API REST en Go con autenticación JWT, control de acceso por roles y base de datos PostgreSQL."
 ---
 
 # Guía Completa: API REST con Go desde Cero
@@ -28,7 +29,7 @@ Esta guía te enseñará a crear una API REST completa en Go con autenticación 
 **Versión recomendada:** Go 1.21 o superior
 
 **Windows:**
-```bash
+```bash title="Instalación de Go"
 # Descargar desde https://golang.org/dl/
 # O usar Chocolatey
 choco install golang
@@ -38,7 +39,7 @@ go version
 ```
 
 **Linux/macOS:**
-```bash
+```bash title="Instalación de Go (2)"
 # Usar el instalador oficial o package manager
 # Ubuntu/Debian
 sudo apt update
@@ -54,7 +55,7 @@ go version
 ### 2. Instalación de Dependencias
 
 **PostgreSQL:**
-```bash
+```bash title="Instalación de Dependencias"
 # Windows
 # Descargar desde https://www.postgresql.org/download/windows/
 
@@ -79,7 +80,7 @@ brew services start postgresql   # macOS
 ### 3. Configuración de Variables de Entorno
 
 Crear archivo `.env`:
-```env
+```env title=".env"
 # Base de datos
 DATABASE_URL=postgres://postgres:password@localhost:5432/user_management?sslmode=disable
 
@@ -138,7 +139,7 @@ user-management-api/
 
 ### 1. Crear el Módulo
 
-```bash
+```bash title="Crear el Módulo"
 # Crear directorio del proyecto
 mkdir user-management-api
 cd user-management-api
@@ -149,7 +150,7 @@ go mod init user-management-api
 
 ### 2. Instalar Dependencias
 
-```bash
+```bash title="Instalar Dependencias"
 # Dependencias principales
 go get github.com/gorilla/mux@v1.8.1
 go get github.com/lib/pq@v1.10.9
@@ -172,7 +173,7 @@ mkdir models repository handlers middleware utils tests scripts docs
 
 ### 1. Archivo Principal (main.go)
 
-```go
+```go title="Archivo Principal (main.go)"
 package main
 
 import (
@@ -354,7 +355,7 @@ func createDefaultData(db *sql.DB) error {
 
 ### 2. Archivo .gitignore
 
-```gitignore
+```gitignore title="Archivo .gitignore"
 # Binarios
 *.exe
 *.exe~
@@ -396,7 +397,7 @@ Thumbs.db
 
 ### 1. Modelo de Usuario (models/user.go)
 
-```go
+```go title="Modelo de Usuario (models/user.go)"
 package models
 
 import (
@@ -494,7 +495,7 @@ func (u *UserCreate) Validate() error {
 
 ### 2. Utilidades JWT (utils/jwt.go)
 
-```go
+```go title="Utilidades JWT (utils/jwt.go)"
 package utils
 
 import (
@@ -577,7 +578,7 @@ func GetTokenFromHeader(authHeader string) (string, error) {
 
 ### 1. Handler de Autenticación (handlers/auth_handler.go)
 
-```go
+```go title="Handler de Autenticación"
 package handlers
 
 import (
@@ -688,7 +689,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 ### 1. Middleware de Autenticación (middleware/auth.go)
 
-```go
+```go title="Middleware de Autenticación"
 package middleware
 
 import (
@@ -773,7 +774,7 @@ func SendErrorResponse(w http.ResponseWriter, statusCode int, message string) {
 
 ### 2. Middleware de CORS (middleware/cors.go)
 
-```go
+```go title="Middleware de CORS (middleware/cors.go)"
 package middleware
 
 import "net/http"
@@ -796,7 +797,7 @@ func CORSMiddleware(next http.Handler) http.Handler {
 
 ### 3. Middleware de Logging (middleware/logging.go)
 
-```go
+```go title="Middleware de Logging"
 package middleware
 
 import (
@@ -832,7 +833,7 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 
 ### 1. Prueba de Autenticación (tests/auth_test.go)
 
-```go
+```go title="Prueba de Autenticación"
 package tests
 
 import (
@@ -881,7 +882,7 @@ func TestRegister(t *testing.T) {
 
 ### 1. Registro de Usuario
 
-```bash
+```bash title="Registro de Usuario"
 curl -X POST http://localhost:8080/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
@@ -895,7 +896,7 @@ curl -X POST http://localhost:8080/api/auth/register \
 
 ### 2. Login
 
-```bash
+```bash title="Login"
 curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
@@ -915,7 +916,7 @@ curl -X GET http://localhost:8080/api/users \
 
 ### 1. Configurar Base de Datos
 
-```bash
+```bash title="Configurar Base de Datos"
 # Crear base de datos
 createdb user_management
 
@@ -925,7 +926,7 @@ psql -U postgres -c "CREATE DATABASE user_management;"
 
 ### 2. Ejecutar el Servidor
 
-```bash
+```bash title="Ejecutar el Servidor"
 # Desarrollo
 go run main.go
 
@@ -939,7 +940,7 @@ go build -o bin/user-management-api main.go
 ### 3. Scripts de Utilidad
 
 **run.sh (Linux/macOS):**
-```bash
+```bash title="Scripts de Utilidad"
 #!/bin/bash
 export DATABASE_URL="postgres://postgres:password@localhost:5432/user_management?sslmode=disable"
 export JWT_SECRET="your-secret-key"
@@ -948,7 +949,7 @@ go run main.go
 ```
 
 **run.bat (Windows):**
-```batch
+```batch title="Scripts de Utilidad (2)"
 @echo off
 set DATABASE_URL=postgres://postgres:password@localhost:5432/user_management?sslmode=disable
 set JWT_SECRET=your-secret-key
@@ -960,7 +961,7 @@ go run main.go
 
 ### 1. Dockerfile
 
-```dockerfile
+```dockerfile title="Dockerfile"
 FROM golang:1.21-alpine AS builder
 
 WORKDIR /app
@@ -979,7 +980,7 @@ CMD ["./main"]
 
 ### 2. docker-compose.yml
 
-```yaml
+```yaml title="docker-compose.yml"
 version: '3.8'
 
 services:
@@ -1012,7 +1013,7 @@ volumes:
 ### 3. Despliegue en Producción
 
 **Heroku:**
-```bash
+```bash title="Despliegue en Producción"
 # Instalar Heroku CLI
 # Crear app
 heroku create your-app-name
@@ -1026,7 +1027,7 @@ git push heroku main
 ```
 
 **Railway:**
-```bash
+```bash title="Despliegue en Producción (2)"
 # Instalar Railway CLI
 npm install -g @railway/cli
 
@@ -1040,7 +1041,7 @@ railway up
 
 ### 1. Versionado del Código
 
-```bash
+```bash title="Versionado del Código"
 # Inicializar Git
 git init
 git add .
@@ -1055,7 +1056,7 @@ git checkout -b feature/role-management
 
 Usar Swagger/OpenAPI:
 
-```go
+```go title="Documentación de API"
 //go:generate swag init
 // @title User Management API
 // @version 1.0
@@ -1072,7 +1073,7 @@ Usar Swagger/OpenAPI:
 
 ### 3. Testing
 
-```bash
+```bash title="Testing"
 # Ejecutar todas las pruebas
 go test ./...
 
@@ -1085,7 +1086,7 @@ go test ./handlers -v
 
 ### 4. Linting y Formateo
 
-```bash
+```bash title="Linting y Formateo"
 # Instalar herramientas
 go install golang.org/x/lint/golint@latest
 go install golang.org/x/tools/cmd/goimports@latest
@@ -1099,7 +1100,7 @@ golint ./...
 
 ### 5. Configuración de Producción
 
-```env
+```env title=".env.production"
 # .env.production
 DATABASE_URL=postgres://user:password@prod-db:5432/user_management?sslmode=require
 JWT_SECRET=very-secure-secret-key-for-production
@@ -1112,14 +1113,14 @@ LOG_LEVEL=error
 
 Esta guía te proporciona una base sólida para crear APIs REST en Go. El proyecto incluye:
 
-- ✅ Autenticación JWT
-- ✅ Control de acceso basado en roles
-- ✅ Base de datos PostgreSQL
-- ✅ Middlewares para CORS, logging y autenticación
-- ✅ Estructura de proyecto organizada
-- ✅ Pruebas unitarias
-- ✅ Documentación completa
-- ✅ Scripts de despliegue
+- Autenticación JWT
+- Control de acceso basado en roles
+- Base de datos PostgreSQL
+- Middlewares para CORS, logging y autenticación
+- Estructura de proyecto organizada
+- Pruebas unitarias
+- Documentación completa
+- Scripts de despliegue
 
 Para continuar desarrollando, puedes agregar:
 - Rate limiting
@@ -1130,4 +1131,4 @@ Para continuar desarrollando, puedes agregar:
 - Pruebas de integración
 - CI/CD con GitHub Actions
 
-¡Feliz programación! 🚀
+¡Feliz programación!
