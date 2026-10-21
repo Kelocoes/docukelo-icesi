@@ -1,6 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import {useThemeConfig} from '@docusaurus/theme-common';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import Logo from '@theme/Logo';
 import CollapseButton from '@theme/DocSidebar/Desktop/CollapseButton';
 import Content from '@theme/DocSidebar/Desktop/Content';
@@ -23,8 +24,8 @@ function DocSidebarDesktop({path, sidebar, onCollapse, isHidden}) {
       <Content path={path} sidebar={sidebar} />
       <div className={styles.sidebarFooter}>
         <a href="https://www.icesi.edu.co" target="_blank" rel="noopener noreferrer" className={styles.poweredByLink} title="Universidad Icesi">
-          <img src="/img/powered-by-icesi-light.svg" className={styles.poweredByLogoLight} alt="Powered by Icesi" />
-          <img src="/img/powered-by-icesi-dark.svg" className={styles.poweredByLogoDark} alt="Powered by Icesi" />
+          <img src={useBaseUrl('/img/powered-by-icesi-light.svg')} className={styles.poweredByLogoLight} alt="Powered by Icesi" />
+          <img src={useBaseUrl('/img/powered-by-icesi-dark.svg')} className={styles.poweredByLogoDark} alt="Powered by Icesi" />
         </a>
       </div>
       {hideable && <CollapseButton onClick={onCollapse} />}

@@ -9,5 +9,5 @@ Allow: /
 Disallow: /build/
 Disallow: /node_modules/
 
-# Sitemap (actualiza con tu URL real cuando despliegues)
-# Sitemap: https://tu-dominio.com/sitemap.xml
+# Sitemap (despliegue oficial: GitHub Pages)
+Sitemap: https://kelocoes.github.io/docukelo-icesi/sitemap.xml

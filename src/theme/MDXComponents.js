@@ -3,7 +3,6 @@ import React from 'react';
 import MDXComponents from '@theme-original/MDXComponents';
 import BrowserWindow from '@site/src/components/BrowserWindow';
 import IframeWindow from '@site/src/components/BrowserWindow/IFrameWindow';
-import CodeEditor from '@site/src/components/CodeEditor/CodeEditor';
 import MermaidExample from '@site/src/components/MermaidExample/MermaidExample';
 import PdfViewer from '@site/src/components/PdfViewer/PdfViewer';
 import { StepByStep, Step } from '@site/src/components/StepByStep';
@@ -21,7 +20,6 @@ export default {
     // Register our custom components globally
     BrowserWindow,
     IframeWindow,
-    CodeEditor,
     MermaidExample,
     PdfViewer,
     StepByStep,
