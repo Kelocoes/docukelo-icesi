@@ -2,7 +2,7 @@
   "name": "docukelo-icesi",
   "version": "0.0.0",
   "private": true,
-  "homepage": "https://kelocoes.github.io/docukelo-icesi/",
+  "homepage": "https://docukelo-icesi.onrender.com/",
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",

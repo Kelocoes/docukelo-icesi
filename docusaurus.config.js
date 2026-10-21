@@ -13,10 +13,10 @@ import coursesPlugin from './src/plugins/courses-data/index.js';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 // Despliegues: el sitio se publica en dos lugares con la misma rama (main).
-//   - GitHub Pages (oficial): https://kelocoes.github.io/docukelo-icesi/  -> baseUrl /docukelo-icesi/
+//   - Render (sitio principal): https://docukelo-icesi.onrender.com  -> baseUrl /  (se detecta sola con la
+//     variable RENDER que Render define en cada build, asi que no hay que configurar nada alli).
+//   - GitHub Pages (espejo): https://kelocoes.github.io/docukelo-icesi/  -> baseUrl /docukelo-icesi/
 //     (ver .github/workflows/deploy.yml y Dockerfile).
-//   - Render: https://docukelo-icesi.onrender.com  -> baseUrl /  (se detecta sola con la variable
-//     RENDER que Render define en cada build, asi que no hay que configurar nada alli).
 // En desarrollo (`npm start`) el sitio se sirve en la raiz. Todo se puede forzar con las variables
 // SITE_URL y BASE_URL (por ejemplo BASE_URL=/ para probar la imagen Docker en local).
 const isRender = Boolean(process.env.RENDER);

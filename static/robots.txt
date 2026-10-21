@@ -9,5 +9,5 @@ Allow: /
 Disallow: /build/
 Disallow: /node_modules/
 
-# Sitemap (despliegue oficial: GitHub Pages)
-Sitemap: https://kelocoes.github.io/docukelo-icesi/sitemap.xml
+# Sitemap (sitio principal: Render)
+Sitemap: https://docukelo-icesi.onrender.com/sitemap.xml
