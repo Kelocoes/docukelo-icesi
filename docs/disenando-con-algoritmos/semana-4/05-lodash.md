@@ -45,7 +45,7 @@ Moment.js es una librería para manipular, validar, analizar y mostrar fechas y 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Moment.js: Ejercicios"
     const moment = require('moment');
     console.log(moment().format('YYYY-MM-DD'));
     ```
@@ -57,7 +57,7 @@ Moment.js es una librería para manipular, validar, analizar y mostrar fechas y 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Moment.js: Ejercicios"
     console.log(moment().format('HH:mm:ss'));
     ```
     </details>
@@ -68,7 +68,7 @@ Moment.js es una librería para manipular, validar, analizar y mostrar fechas y 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Moment.js: Ejercicios"
     console.log(moment().format('dddd'));
     ```
     </details>
@@ -79,7 +79,7 @@ Moment.js es una librería para manipular, validar, analizar y mostrar fechas y 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Moment.js: Ejercicios"
     console.log(moment().add(7, 'days').format('YYYY-MM-DD'));
     ```
     </details>
@@ -90,7 +90,7 @@ Moment.js es una librería para manipular, validar, analizar y mostrar fechas y 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Moment.js: Ejercicios"
     console.log(moment().subtract(3, 'months').format('YYYY-MM-DD'));
     ```
     </details>
@@ -101,7 +101,7 @@ Moment.js es una librería para manipular, validar, analizar y mostrar fechas y 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Moment.js: Ejercicios"
     const endYear = moment().endOf('year');
     console.log(endYear.diff(moment(), 'days'));
     ```
@@ -113,7 +113,7 @@ Moment.js es una librería para manipular, validar, analizar y mostrar fechas y 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Moment.js: Ejercicios"
     console.log(moment('2025-02-30', 'YYYY-MM-DD', true).isValid());
     ```
     </details>
@@ -124,7 +124,7 @@ Moment.js es una librería para manipular, validar, analizar y mostrar fechas y 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Moment.js: Ejercicios"
     console.log(moment().startOf('month').format('YYYY-MM-DD'));
     ```
     </details>
@@ -135,7 +135,7 @@ Moment.js es una librería para manipular, validar, analizar y mostrar fechas y 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Moment.js: Ejercicios"
     console.log(moment().endOf('day').format('YYYY-MM-DD HH:mm:ss'));
     ```
     </details>
@@ -146,7 +146,7 @@ Moment.js es una librería para manipular, validar, analizar y mostrar fechas y 
      Ver solución
      </summary>
 
-     ```js title="Ejercicios"
+     ```js title="Moment.js: Ejercicios"
      console.log(moment().diff(moment('2025-01-01'), 'days'));
      ```
      </details>
@@ -168,7 +168,7 @@ Lodash es una librería de utilidades que facilita trabajar con arrays, objetos 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Lodash: Ejercicios"
     const _ = require('lodash');
     console.log(_.max([10, 5, 20, 8]));
     ```
@@ -180,7 +180,7 @@ Lodash es una librería de utilidades que facilita trabajar con arrays, objetos 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Lodash: Ejercicios (2)"
     console.log(_.min([10, 5, 20, 8]));
     ```
     </details>
@@ -191,7 +191,7 @@ Lodash es una librería de utilidades que facilita trabajar con arrays, objetos 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Lodash: Ejercicios (3)"
     console.log(_.sortBy([3, 1, 4, 2]));
     ```
     </details>
@@ -202,7 +202,7 @@ Lodash es una librería de utilidades que facilita trabajar con arrays, objetos 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Lodash: Ejercicios (4)"
     console.log(_.uniq([1, 2, 2, 3, 4, 4, 5]));
     ```
     </details>
@@ -213,7 +213,7 @@ Lodash es una librería de utilidades que facilita trabajar con arrays, objetos 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Lodash: Ejercicios (5)"
     console.log(_.chunk([1,2,3,4,5], 2));
     ```
     </details>
@@ -224,7 +224,7 @@ Lodash es una librería de utilidades que facilita trabajar con arrays, objetos 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Lodash: Ejercicios (6)"
     console.log(_.concat([1,2], [3,4]));
     ```
     </details>
@@ -235,7 +235,7 @@ Lodash es una librería de utilidades que facilita trabajar con arrays, objetos 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Lodash: Ejercicios (7)"
     console.log(_.fill([1,2,3,4,5], '*', 1, 4));
     ```
     </details>
@@ -246,7 +246,7 @@ Lodash es una librería de utilidades que facilita trabajar con arrays, objetos 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Lodash: Ejercicios (8)"
     console.log(_.findIndex([1,2,3,4,5], n => n > 3));
     ```
     </details>
@@ -257,7 +257,7 @@ Lodash es una librería de utilidades que facilita trabajar con arrays, objetos 
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Lodash: Ejercicios (9)"
     const data = [{type: 'a'}, {type: 'b'}, {type: 'a'}];
     console.log(_.groupBy(data, 'type'));
     ```
@@ -269,7 +269,7 @@ Lodash es una librería de utilidades que facilita trabajar con arrays, objetos 
      Ver solución
      </summary>
 
-     ```js title="Ejercicios"
+     ```js title="Lodash: Ejercicios (10)"
      console.log(_.invert({a:1, b:2}));
      ```
      </details>
@@ -291,7 +291,7 @@ Faker.js permite generar datos falsos (nombres, correos, direcciones, etc.), muy
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Faker.js: Ejercicios"
     const { faker } = require('@faker-js/faker');
     console.log(faker.person.fullName());
     ```
@@ -303,7 +303,7 @@ Faker.js permite generar datos falsos (nombres, correos, direcciones, etc.), muy
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Faker.js: Ejercicios"
     console.log(faker.internet.email());
     ```
     </details>
@@ -314,7 +314,7 @@ Faker.js permite generar datos falsos (nombres, correos, direcciones, etc.), muy
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Faker.js: Ejercicios"
     console.log(faker.location.streetAddress());
     ```
     </details>
@@ -325,7 +325,7 @@ Faker.js permite generar datos falsos (nombres, correos, direcciones, etc.), muy
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Faker.js: Ejercicios"
     console.log(faker.phone.number());
     ```
     </details>
@@ -336,7 +336,7 @@ Faker.js permite generar datos falsos (nombres, correos, direcciones, etc.), muy
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Faker.js: Ejercicios"
     console.log(faker.date.birthdate());
     ```
     </details>
@@ -347,7 +347,7 @@ Faker.js permite generar datos falsos (nombres, correos, direcciones, etc.), muy
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Faker.js: Ejercicios"
     console.log(faker.internet.userName());
     ```
     </details>
@@ -358,7 +358,7 @@ Faker.js permite generar datos falsos (nombres, correos, direcciones, etc.), muy
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Faker.js: Ejercicios"
     console.log(faker.location.country());
     ```
     </details>
@@ -369,7 +369,7 @@ Faker.js permite generar datos falsos (nombres, correos, direcciones, etc.), muy
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Faker.js: Ejercicios"
     console.log(faker.commerce.productName());
     ```
     </details>
@@ -380,7 +380,7 @@ Faker.js permite generar datos falsos (nombres, correos, direcciones, etc.), muy
     Ver solución
     </summary>
 
-    ```js title="Ejercicios"
+    ```js title="Faker.js: Ejercicios"
     console.log(faker.company.name());
     ```
     </details>
@@ -391,7 +391,7 @@ Faker.js permite generar datos falsos (nombres, correos, direcciones, etc.), muy
      Ver solución
      </summary>
 
-     ```js title="Ejercicios"
+     ```js title="Faker.js: Ejercicios"
      console.log(faker.finance.creditCardNumber());
      ```
      </details>

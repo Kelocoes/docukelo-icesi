@@ -28,7 +28,7 @@ function sumar(a, b) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 1: Suma simple (tipos básicos)"
+```typescript title="Ejercicio 1: Suma simple (tipos básicos) (2)"
 function sumar(a: number, b: number): number {
   return a + b;
 }
@@ -40,7 +40,7 @@ function sumar(a: number, b: number): number {
 
 ### Ejercicio 2: Parámetro opcional y por defecto
 
-```javascript title="Ejemplo de JavaScript"
+```javascript title="Parámetro opcional y por defecto"
 // Convierte a TypeScript
 function saludar(nombre, saludo) {
   saludo = saludo || "Hola";
@@ -53,7 +53,7 @@ function saludar(nombre, saludo) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejemplo de TypeScript"
+```typescript title="Parámetro opcional y por defecto (2)"
 function saludar(nombre: string, saludo: string = "Hola"): string {
   return `${saludo}, ${nombre}`;
 }
@@ -65,7 +65,7 @@ function saludar(nombre: string, saludo: string = "Hola"): string {
 
 ### Ejercicio 3: Definir un objeto con interfaz
 
-```javascript title="Ejemplo de JavaScript"
+```javascript title="Definir un objeto con interfaz"
 // Convierte a TypeScript
 const crearUsuario = (u) => {
   return `Usuario ${u.nombre} creado con id ${u.id}`;
@@ -77,7 +77,7 @@ const crearUsuario = (u) => {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejemplo de TypeScript"
+```typescript title="Definir un objeto con interfaz (2)"
 interface Usuario {
   id: number;
   nombre: string;
@@ -108,7 +108,7 @@ const config = {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 4: Readonly y tipos literales"
+```typescript title="Ejercicio 4: Readonly y tipos literales (2)"
 type Mode = "development" | "production" | "test";
 
 interface Config {
@@ -142,7 +142,7 @@ function crearPar(nombre, edad) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 5: Tuplas"
+```typescript title="Ejercicio 5: Tuplas (2)"
 function crearPar(nombre: string, edad: number): [string, number] {
   return [nombre, edad];
 }
@@ -166,7 +166,7 @@ const estado = "Activo"; // puede ser 'Activo' o 'Inactivo'
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 6: Enums para estados"
+```typescript title="Ejercicio 6: Enums para estados (2)"
 enum Estado {
   Activo = "Activo",
   Inactivo = "Inactivo"
@@ -193,7 +193,7 @@ function identidad(x) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 7: Genéricos: identidad"
+```typescript title="Ejercicio 7: Genéricos: identidad (2)"
 function identidad<T>(x: T): T {
   return x;
 }
@@ -208,7 +208,7 @@ const b = identidad("hola");
 
 ### Ejercicio 8: Genéricos con restricción (length)
 
-```javascript title="Ejemplo de JavaScript"
+```javascript title="Genéricos con restricción (length)"
 // Convierte a TypeScript
 function cuentaLongitud(x) {
   return x.length;
@@ -220,7 +220,7 @@ function cuentaLongitud(x) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejemplo de TypeScript"
+```typescript title="Genéricos con restricción (length) (2)"
 function cuentaLongitud<T extends { length: number }>(x: T): number {
   return x.length;
 }
@@ -250,7 +250,7 @@ function formatear(x) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 9: Unión de tipos y narrowing"
+```typescript title="Ejercicio 9: Unión de tipos y narrowing (2)"
 function formatear(x: string | number): string {
   if (typeof x === 'number') {
     return x.toFixed(2);
@@ -280,7 +280,7 @@ function descripcion(animal) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 10: Type guard"
+```typescript title="Ejercicio 10: Type guard (2)"
 type Gato = { nombre: string; ronronea: boolean };
 type Pez = { tipo: string; nada: boolean };
 
@@ -314,7 +314,7 @@ function esA(x) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 11: Narrowing con instanceof"
+```typescript title="Ejercicio 11: Narrowing con instanceof (2)"
 class A { a = 1 }
 class B { b = 2 }
 
@@ -333,7 +333,7 @@ console.log(esA(a));
 
 ### Ejercicio 12: Uniones discriminadas (formas geométricas)
 
-```javascript title="Ejemplo de JavaScript"
+```javascript title="Uniones discriminadas"
 // Convierte a TypeScript
 function area(shape) {
   if (shape.kind === 'circle') {
@@ -348,7 +348,7 @@ function area(shape) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejemplo de TypeScript"
+```typescript title="Uniones discriminadas (2)"
 type Circulo = { kind: 'circle'; radius: number };
 type Cuadrado = { kind: 'square'; size: number };
 type Shape = Circulo | Cuadrado;
@@ -379,7 +379,7 @@ function pluck(obj, keys) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 13: keyof y pluck"
+```typescript title="Ejercicio 13: keyof y pluck (2)"
 function pluck<T, K extends keyof T>(obj: T, keys: K[]): T[K][] {
   return keys.map(k => obj[k]);
 }
@@ -405,7 +405,7 @@ const user = { id: 1, nombre: 'Ana', password: '123' };
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 14: Utility type: Pick"
+```typescript title="Ejercicio 14: Utility type: Pick (2)"
 interface Usuario {
   id: number;
   nombre: string;
@@ -434,7 +434,7 @@ const user = { id: 1, nombre: 'Ana', password: '123' };
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 15: Utility type: Omit"
+```typescript title="Ejercicio 15: Utility type: Omit (2)"
 interface Usuario {
   id: number;
   nombre: string;
@@ -464,7 +464,7 @@ function actualizar(usuario, cambios) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 16: Partial y Required"
+```typescript title="Ejercicio 16: Partial y Required (2)"
 interface Usuario {
   id: number;
   nombre: string;
@@ -496,7 +496,7 @@ nums.push(4); // debería no permitirse si queremos inmutabilidad
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 17: ReadonlyArray y readonly"
+```typescript title="Ejercicio 17: ReadonlyArray y readonly (2)"
 const nums: ReadonlyArray<number> = [1, 2, 3];
 // nums.push(4); // Error: Property 'push' does not exist on type 'readonly number[]'.
 ```
@@ -520,7 +520,7 @@ function combinar(a, b) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 18: Sobrecarga de funciones"
+```typescript title="Ejercicio 18: Sobrecarga de funciones (2)"
 function combinar(a: number, b: number): number;
 function combinar(a: string, b: string): string;
 function combinar(a: any, b: any): any {
@@ -538,7 +538,7 @@ const s = combinar('a', 'b'); // string
 
 ### Ejercicio 19: Mapped types: crear Optionalize
 
-```javascript title="Ejemplo de JavaScript"
+```javascript title="Mapped types: crear Optionalize"
 // Convierte a TypeScript
 // Queremos un tipo igual al original pero con todas las propiedades opcionales
 ```
@@ -548,7 +548,7 @@ const s = combinar('a', 'b'); // string
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejemplo de TypeScript"
+```typescript title="Mapped types: crear Optionalize (2)"
 type Optionalize<T> = { [P in keyof T]?: T[P] };
 
 interface Persona {
@@ -565,7 +565,7 @@ type PersonaOpcional = Optionalize<Persona>; // { id?: number; nombre?: string }
 
 ### Ejercicio 20: Tipos condicionales simples
 
-```javascript title="Ejemplo de JavaScript"
+```javascript title="Tipos condicionales simples"
 // Convierte a TypeScript
 // Queremos un tipo que sea 'yes' si T es string, y 'no' en caso contrario
 ```
@@ -575,7 +575,7 @@ type PersonaOpcional = Optionalize<Persona>; // { id?: number; nombre?: string }
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejemplo de TypeScript"
+```typescript title="Tipos condicionales simples (2)"
 type IsString<T> = T extends string ? 'yes' : 'no';
 
 type A = IsString<string>; // 'yes'
@@ -600,7 +600,7 @@ function parse(json) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 21: unknown vs any"
+```typescript title="Ejercicio 21: unknown vs any (2)"
 function parse(json: string): unknown {
   return JSON.parse(json);
 }
@@ -633,7 +633,7 @@ function procesar(valor) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 22: never y chequeo exhaustivo"
+```typescript title="Ejercicio 22: never y chequeo exhaustivo (2)"
 type T = 'a' | 'b';
 
 function assertNever(x: never): never {
@@ -710,7 +710,7 @@ console.log(doble(3));
 
 ### Ejercicio 25: 'as const' para inferencia literal
 
-```javascript title="Ejemplo de JavaScript"
+```javascript title="'as const' para inferencia literal"
 // Convierte a TypeScript
 const opciones = { modo: 'auto', retry: 3 };
 ```
@@ -720,7 +720,7 @@ const opciones = { modo: 'auto', retry: 3 };
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejemplo de TypeScript"
+```typescript title="'as const' para inferencia literal (2)"
 const opciones = { modo: 'auto', retry: 3 } as const;
 // tipo de opciones.modo es 'auto' (literal), no string
 ```
@@ -743,7 +743,7 @@ function makeTuple(first, ...rest) {
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejercicio 26: Tuplas con elementos rest"
+```typescript title="Ejercicio 26: Tuplas con elementos rest (2)"
 function makeTuple(first: string, ...rest: number[]): [string, ...number[]] {
   return [first, ...rest];
 }
@@ -786,7 +786,7 @@ async function fetchUser(): Promise<Usuario> {
 
 ### Ejercicio 28: Type assertion y non-null assertion
 
-```javascript title="Ejemplo de JavaScript"
+```javascript title="Type assertion y non-null assertion"
 // Convierte a TypeScript
 const el = document.getElementById('app');
 el.innerHTML = 'Hola';
@@ -797,7 +797,7 @@ el.innerHTML = 'Hola';
 <details>
 <summary>Ver solución</summary>
 
-```typescript title="Ejemplo de TypeScript"
+```typescript title="Type assertion y non-null assertion (2)"
 const el = document.getElementById('app') as HTMLElement | null;
 if (el) {
   el.innerHTML = 'Hola';

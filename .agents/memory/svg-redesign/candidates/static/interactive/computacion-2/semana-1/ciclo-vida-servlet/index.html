@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ciclo de vida de un servlet</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Ciclo de vida de un servlet: solo DATOS. Cada paso resalta las lineas de HelloServlet que se ejecutan. */
+(function () {
+  var N = 'nav', C = 'cat', S = 'servlet';
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+  var st = function (nav, servlet) { return { nav: nav, cat: 'Contenedor', servlet: servlet }; };
+
+  var CODE = [
+    '@WebServlet("/hello-servlet")',                                   // 1
+    'public class HelloServlet extends HttpServlet {',                 // 2
+    '    private String message;',                                     // 3
+    '',                                                                // 4
+    '    public void init() {',                                        // 5
+    '        message = "Hello World!";',                               // 6
+    '    }',                                                           // 7
+    '',                                                                // 8
+    '    public void doGet(HttpServletRequest request,',               // 9
+    '                      HttpServletResponse response) throws IOException {', // 10
+    '        response.setContentType("text/html");',                   // 11
+    '        PrintWriter out = response.getWriter();',                 // 12
+    '        out.println("<h1>" + message + "</h1>");',                // 13
+    '    }',                                                           // 14
+    '',                                                                // 15
+    '    public void destroy() {',                                     // 16
+    '    }',                                                           // 17
+    '}',                                                               // 18
+  ].join('\n');
+
+  var request = function () { return [msg(N, C, 'GET /hello-servlet', 'data')]; };
+  var answer = function () { return [msg(S, C, 'HTML', 'ack'), msg(C, N, 'Respuesta 200', 'ack')]; };
+
+  var steps = [
+    { phase: 0, title: 'Se crea la instancia', code: [1, 2], msgs: [msg(C, S, 'new HelloServlet()', 'ctl')], state: st('Esperando', 'Creado'),
+      caption: 'Catalina carga la clase del servlet y crea UNA instancia (en la primera solicitud, o al arrancar si así se configura). Todavía no ha atendido a nadie.' },
+    { phase: 0, title: 'init(): se prepara una sola vez', code: [5, 6, 7], msgs: [msg(C, S, 'init()', 'ctl')], state: st('Esperando', 'Listo'),
+      caption: 'Catalina llama a init() una única vez. Aquí el servlet prepara lo que necesite; en el ejemplo, guarda el mensaje "Hello World!". Después de init() queda listo para atender.' },
+
+    { phase: 1, title: 'Llega una solicitud', msgs: request(), state: st('Pide la página', 'Listo'),
+      caption: 'El navegador pide /hello-servlet. Catalina asigna un hilo (thread) para atender esta solicitud.' },
+    { phase: 1, title: 'service() llama a doGet()', code: [9, 10], msgs: [msg(C, S, 'service() → doGet()', 'ctl')], state: st('Pide la página', 'Atendiendo'),
+      caption: 'Catalina invoca service(), que según el método HTTP llama a doGet() (si fue GET) o a doPost() (si fue POST). Recibe los objetos request y response.' },
+    { phase: 1, title: 'Se devuelve la respuesta', code: [11, 12, 13], msgs: answer(), state: st('Recibe el HTML', 'Listo'),
+      caption: 'doGet() escribe el HTML en el objeto response y termina; Catalina lo envía de vuelta. La instancia queda lista para la siguiente solicitud: no se destruye.' },
+    { phase: 1, title: 'Otra solicitud, el mismo servlet', code: [9, 10, 11, 12, 13],
+      msgs: request().concat([msg(C, S, 'doGet()', 'ctl')]).concat(answer()), state: st('Recibe el HTML', 'Listo'),
+      caption: 'No se crea otro servlet ni se vuelve a llamar a init(): es la misma instancia. Si llegan varias solicitudes a la vez, Catalina usa un hilo por solicitud sobre esa única instancia.' },
+
+    { phase: 2, title: 'destroy(): se libera', code: [16, 17], msgs: [msg(C, S, 'destroy()', 'ctl')], state: st('Esperando', 'Destruido'),
+      caption: 'Cuando la aplicación se detiene o se apaga el servidor, Catalina llama a destroy() una sola vez para liberar recursos (conexiones, archivos) y descarta la instancia.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Ciclo de vida de un servlet: creación, init, atención de solicitudes con doGet y destroy',
+    phases: ['Cargar', 'Atender', 'Destruir'],
+    scene: function (svg) {
+      return DK.sequence({
+        svg: svg, idleState: 'Sin crear', phases: ['Cargar', 'Atender', 'Destruir'],
+        actors: [
+          { id: N, label: 'Navegador', icon: 'browser' },
+          { id: C, label: 'Catalina', icon: 'server' },
+          { id: S, label: 'HelloServlet', icon: 'classbox' },
+        ],
+      });
+    },
+    build: function () { return steps; },
+    code: { title: 'HelloServlet.java', text: CODE },
+    kicker: function (p) { return ['Fase 1 · Cargar (una vez)', 'Fase 2 · Atender (muchas veces)', 'Fase 3 · Destruir (una vez)'][p]; },
+    intro: {
+      kicker: 'Ciclo de vida de un servlet', title: 'Antes de empezar',
+      text: 'Un servlet vive en tres fases: se prepara una vez, atiende muchas solicitudes y se destruye una vez. Pulsa "Siguiente" y mira qué línea del código se ejecuta en cada paso.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

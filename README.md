@@ -16,6 +16,7 @@ npm run build        # build de producción en build/ (es y en)
 npm run serve        # sirve el build de producción en local
 npm run clear        # limpia la caché de Docusaurus
 npm run lint:docs    # revisa los documentos contra las reglas de la guía (ver .agents/memory/docusaurus-guidelines.md)
+npm run scaffold-week -- --course computacion-2 --week 17 --topics "Tema uno, Tema dos"   # crea una semana nueva
 ```
 
 Para ver la versión en inglés en desarrollo: `npm start -- --locale en`.
@@ -35,6 +36,8 @@ static/interactive/ Piezas interactivas (HTML) con su kit compartido en _shared/
 ```
 
 ## Escribir contenido
+
+> Al instalar (`npm install`) se activa un hook de pre-commit que revisa los documentos que modificas con `npm run lint:docs`.
 
 - Cada curso es una carpeta de `docs/` con su `_category_.json` y un `intro.md`; las semanas son subcarpetas con archivos `01-tema.md`, `02-otro.md` (prefijo de dos dígitos, minúsculas y guiones; el prefijo no aparece en la URL).
 - Las reglas de estilo, los componentes disponibles y cómo incluir diagramas están en [`.agents/memory/docusaurus-guidelines.md`](.agents/memory/docusaurus-guidelines.md).

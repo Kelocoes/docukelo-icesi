@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Autenticación y autorización</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Autenticación y autorización: solo DATOS. Ejemplo del capítulo: ana intenta borrar al usuario 42 (DELETE /mvc/users/42).
+ * Dos interruptores, tres desenlaces: todo bien (200), contraseña incorrecta (401), sin rol ADMIN (403). */
+(function () {
+  var msg = function (path, label, kind, extra) { var m = { path: path, label: label, kind: kind }; for (var k in extra) m[k] = extra[k]; return m; };
+
+  var nodes = [
+    { id: 'deny1', kind: 'box', tone: 'err', label: 'HTTP 401', sub: 'Unauthorized', x: 186, y: 8, w: 160, h: 52 },
+    { id: 'deny2', kind: 'box', tone: 'err', label: 'HTTP 403', sub: 'Forbidden', x: 432, y: 8, w: 160, h: 52 },
+    { id: 'client', kind: 'actor', icon: 'browser', label: 'Cliente', x: 4, y: 112, w: 96, h: 84 },
+    { id: 'gate1', kind: 'box', icon: 'user', label: 'Autenticación', sub: '¿Quién eres?', x: 186, y: 112, w: 160, h: 84 },
+    { id: 'gate2', kind: 'box', icon: 'lock', label: 'Autorización', sub: '¿Qué puedes hacer?', x: 432, y: 112, w: 160, h: 84 },
+    { id: 'res', kind: 'box', icon: 'classbox', label: 'Recurso', sub: 'borrar usuario 42', x: 678, y: 112, w: 118, h: 84 },
+    { id: 'auth', kind: 'box', icon: 'card', label: 'Authentication', sub: 'todavía no hay identidad', x: 279, y: 270, w: 220, h: 84 },
+  ];
+
+  function build(o) {
+    var s = [];
+    // ---- Fase 1: las dos preguntas ----
+    s.push({ phase: 0, title: 'Primera pregunta: ¿quién eres?', focus: ['gate1'], msgs: [],
+      caption: 'La autenticación comprueba la identidad de quien llama. Todavía no importa qué quiere hacer.' });
+    s.push({ phase: 0, title: 'Segunda pregunta: ¿qué puedes hacer?', focus: ['gate2'], msgs: [],
+      caption: 'La autorización decide si esa identidad puede ejecutar la acción pedida. Solo tiene sentido después de la primera.' });
+    s.push({ phase: 0, title: 'La primera habilita a la segunda', focus: ['gate1', 'auth', 'gate2'],
+      msgs: [msg([300, 196, 300, 270], 'crea', 'ack'), msg([480, 270, 480, 196], 'lee', 'ctl')],
+      caption: 'La autenticación deja como resultado un objeto Authentication; la autorización lo lee para saber a quién evaluar. Sin identidad no hay nada que autorizar.' });
+    s.push({ phase: 0, title: 'Cada una falla con su propio código', focus: ['deny1', 'deny2'],
+      msgs: [msg([266, 112, 266, 60], 'falla', 'err'), msg([512, 112, 512, 60], 'falla', 'err')],
+      caption: '401 cuando no se sabe quién eres; 403 cuando se sabe, pero no tienes permiso. Son errores distintos y es muy común confundirlos.' });
+
+    // ---- Fase 2: autenticación ----
+    s.push({ phase: 1, title: 'ana llega con sus credenciales', focus: ['client', 'gate1'],
+      msgs: [msg([100, 154, 186, 154], 'ana + clave', 'data')],
+      caption: 'ana quiere borrar al usuario 42 (DELETE /mvc/users/42) y se identifica con su usuario y contraseña.' });
+    s.push({ phase: 1, title: 'Hay varias formas de comprobarlo', focus: ['gate1'], sub: { gate1: 'Basic · Form · JWT' }, msgs: [],
+      caption: 'Spring Security admite HTTP Basic, un formulario de login o tokens (JWT, OAuth2). Cambia el mecanismo, no la pregunta: ¿quién eres?' });
+    if (o.badpass) {
+      s.push({ phase: 1, title: 'Credenciales inválidas: 401', focus: ['gate1', 'deny1'], sub: { gate1: 'credenciales inválidas' },
+        msgs: [msg([266, 112, 266, 60], 'falla', 'err')],
+        caption: 'La contraseña no coincide, así que no hay identidad. Responde 401 Unauthorized y la petición se detiene aquí: ni siquiera se pregunta por permisos.' });
+    } else {
+      s.push({ phase: 1, title: 'Identidad verificada', focus: ['gate1', 'auth'], sub: { gate1: 'identidad verificada', auth: 'Principal: ana' },
+        msgs: [msg([300, 196, 300, 270], 'crea', 'ack')],
+        caption: 'Las credenciales coinciden: se crea el objeto Authentication con el Principal "ana". Ya sabemos quién es; la autorización puede empezar.' });
+    }
+
+    // ---- Fase 3: autorización ----
+    if (o.badpass) {
+      s.push({ phase: 2, title: 'La autorización ni se intenta', focus: ['gate2'], sub: { gate2: 'no se evalúa' }, msgs: [],
+        caption: 'Sin identidad no hay permisos que revisar. Por eso la autenticación va primero: es la condición para que la autorización exista. Desactiva el interruptor para ver el camino completo.' });
+      return s;
+    }
+    var role = o.norole ? 'ROLE_CLIENT' : 'ROLE_ADMIN';
+    s.push({ phase: 2, title: 'Lee quién eres', focus: ['gate2', 'auth'],
+      msgs: [msg([480, 270, 480, 196], 'lee', 'ctl')],
+      caption: 'La autorización toma el Authentication que ya existe y mira qué privilegios trae ana.' });
+    s.push({ phase: 2, title: 'Roles y authorities', focus: ['gate2', 'auth'], sub: { gate2: 'rol o permiso', auth: 'ana · ' + role }, msgs: [],
+      caption: 'Los privilegios son roles (lo que eres: ROLE_ADMIN) o authorities (lo que puedes hacer: DELETE_USER). Spring los compara con la regla del recurso.' });
+    s.push({ phase: 2, title: 'La regla se evalúa en dos sitios', focus: ['gate2', 'res'], sub: { gate2: 'URL o @PreAuthorize' }, msgs: [],
+      caption: 'La regla se puede aplicar a la URL, con los filtros HTTP, o a un método, con @PreAuthorize. Aquí: "solo ROLE_ADMIN puede borrar usuarios".' });
+    if (o.norole) {
+      s.push({ phase: 2, title: 'Sin permiso: 403', focus: ['gate2', 'deny2'], sub: { gate2: 'permiso insuficiente' },
+        msgs: [msg([512, 112, 512, 60], 'falla', 'err')],
+        caption: 'ana sí está identificada, pero su rol (CLIENT) no alcanza para borrar. Responde 403 Forbidden: sabemos quién es, y aun así no se lo permitimos.' });
+    } else {
+      s.push({ phase: 2, title: 'Permitido: 200', focus: ['gate2', 'res'], sub: { gate2: 'permiso concedido', res: '200 OK: borrado' },
+        msgs: [msg([592, 154, 678, 154], 'permitido', 'ack')],
+        caption: 'ana tiene ROLE_ADMIN y la regla pide ADMIN: la petición llega al controlador y responde 200 OK.' });
+    }
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Autenticación y autorización como dos puertas en orden: primero se verifica la identidad, luego los permisos; cada una falla con su código HTTP',
+    phases: ['Dos preguntas', 'Autenticación', 'Autorización'],
+    scene: function (svg) { return DK.layers({ svg: svg, width: 800, height: 372, nodes: nodes, trail: 'phase', labels: 'smart' }); },
+    build: build,
+    toggles: [
+      { key: 'badpass', label: 'Usar una contraseña incorrecta', affectsPhase: 1 },
+      { key: 'norole', label: 'Quitar el rol ADMIN', affectsPhase: 2 },
+    ],
+    kicker: function (p) { return ['Fase 1 · Dos preguntas, en orden', 'Fase 2 · Autenticación: ¿quién eres?', 'Fase 3 · Autorización: ¿qué puedes hacer?'][p]; },
+    intro: {
+      kicker: 'Control de acceso', title: 'Antes de empezar',
+      text: 'Una petición pasa por dos puertas, siempre en el mismo orden. Pulsa "Siguiente": primero conoces las dos preguntas y luego sigues a ana, que intenta borrar un usuario. Usa los interruptores para ver cómo falla cada puerta.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

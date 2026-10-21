@@ -1,0 +1,6 @@
+{
+  "interactive": ".agents/memory/svg-redesign/candidates/static/interactive/computacion-2/semana-2/contenedor-ioc-y-beans/index.html",
+  "height": 680,
+  "finalPath": "static/interactive/computacion-2/semana-2/contenedor-ioc-y-beans/",
+  "embed": "<iframe src=\"/interactive/computacion-2/semana-2/contenedor-ioc-y-beans/index.html\" title=\"El contenedor IoC y los beans\" style={{ width: '100%', height: 680, border: 0 }} loading=\"lazy\" />"
+}

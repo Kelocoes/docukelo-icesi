@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TCP frente a UDP</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-compare.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* TCP frente a UDP: solo DATOS. Dos diagramas en paralelo que avanzan con el mismo paso. */
+(function () {
+  var E = 'emisor', R = 'receptor';
+  var msg = function (from, to, label, kind, extra) { var m = { from: from, to: to, label: label, kind: kind }; for (var k in extra) m[k] = extra[k]; return m; };
+  var pieces = function (lostNo) { return [1, 2, 3, 4].map(function (n) { return msg(E, R, 'Pieza ' + n, 'data', { piece: n, lost: n === lostNo }); }); };
+  var both = function (s) { return { emisor: s, receptor: s }; };
+  var ALL = [1, 2, 3, 4];
+
+  function build(opt) {
+    var steps = [];
+    var step = function (phase, title, caption, tcp, udp) { steps.push({ phase: phase, title: title, caption: caption, panes: { tcp: tcp, udp: udp } }); };
+
+    // Fase 1: abrir
+    step(0, 'Abrir la comunicación',
+      'TCP empieza presentándose: acuerda con el otro lado (SYN, SYN-ACK, ACK) antes de enviar nada. UDP se salta este paso y no pide permiso.',
+      { msgs: [msg(E, R, 'SYN', 'ctl'), msg(R, E, 'SYN-ACK', 'ctl'), msg(E, R, 'ACK', 'ack')], state: both('Conectado'), note: 'Primero se conecta' },
+      { msgs: [], state: both('Sin conexión'), note: 'No hay conexión: envía directo' });
+
+    // Fase 2: enviar
+    if (!opt.loss) {
+      step(1, 'Enviar las piezas',
+        'Las dos mandan las mismas 4 piezas. La diferencia: TCP espera una confirmación (ACK) y UDP no espera nada.',
+        { msgs: pieces(0).concat([msg(R, E, 'ACK 1-4', 'ack')]), state: both('Conectado'), tray: { emisor: ALL, receptor: ALL }, note: 'Cada entrega se confirma' },
+        { msgs: pieces(0), state: both('Sin conexión'), tray: { emisor: ALL, receptor: ALL }, note: 'Envía y sigue, sin confirmar' });
+    } else {
+      step(1, 'Se pierde una pieza',
+        'Las dos envían las 4 piezas y la pieza 3 se pierde en el camino (la X roja), igual en las dos.',
+        { msgs: pieces(3), state: both('Conectado'), tray: { emisor: ALL, receptor: [1, 2, 4] }, note: 'Falta la pieza 3' },
+        { msgs: pieces(3), state: both('Sin conexión'), tray: { emisor: ALL, receptor: [1, 2, 4] }, note: 'Falta la pieza 3' });
+      step(1, 'Qué hace cada uno',
+        'TCP se da cuenta porque no llegó la confirmación de la pieza 3 y la reenvía. UDP no se entera: el Receptor se queda con un hueco.',
+        { msgs: [msg(R, E, 'ACK hasta 2', 'ack'), msg(E, R, 'Pieza 3 (reenvío)', 'data', { piece: 3 }), msg(R, E, 'ACK 1-4', 'ack')], state: both('Conectado'), tray: { emisor: ALL, receptor: ALL }, note: 'Reenvía lo perdido' },
+        { msgs: [], state: both('Sin conexión'), tray: { emisor: ALL, receptor: [1, 2, 4] }, note: 'No reenvía: queda un hueco' });
+    }
+
+    // Fase 3: resultado
+    step(2, 'Resultado',
+      opt.loss
+        ? 'TCP entregó todo completo y en orden, a cambio de más mensajes. UDP fue más liviano, pero la pieza 3 se perdió para siempre.'
+        : 'TCP garantiza que todo llegue, a cambio de más mensajes. UDP usa menos mensajes y es más rápido, pero sin garantía. Por eso TCP sirve para páginas y correos, y UDP para videollamadas y juegos.',
+      { msgs: [], state: both('Conectado'), tray: { emisor: ALL, receptor: ALL }, note: 'Completo y en orden' },
+      { msgs: [], state: both('Sin conexión'), tray: { emisor: ALL, receptor: opt.loss ? [1, 2, 4] : ALL }, note: opt.loss ? 'Rápido, pero con un hueco' : 'Rápido, pero sin garantía' });
+    return steps;
+  }
+
+  var seq = function (extra) {
+    var c = { trayCount: 4, idleState: 'Sin conexión', phases: ['Abrir', 'Enviar', 'Resultado'],
+      actors: [{ id: E, label: 'Emisor', icon: 'laptop', tray: 'mensaje a enviar' }, { id: R, label: 'Receptor', icon: 'server', tray: 'piezas recibidas' }] };
+    for (var k in extra) c[k] = extra[k];
+    return c;
+  };
+
+  DK.player({
+    mount: document.getElementById('app'),
+    phases: ['Abrir', 'Enviar', 'Resultado'],
+    scene: function (svg, stage) {
+      return DK.compare({
+        stage: stage, statLabel: 'mensajes',
+        panes: [
+          { id: 'tcp', title: 'TCP', subtitle: 'confirma cada entrega', sequence: seq() },
+          { id: 'udp', title: 'UDP', subtitle: 'envía y sigue', sequence: seq() },
+        ],
+      });
+    },
+    build: build,
+    toggles: [{ key: 'loss', label: 'Simular que se pierde un paquete', affectsPhase: 1 }],
+    kicker: function (p) { return ['Fase 1 · Abrir', 'Fase 2 · Enviar', 'Fase 3 · Resultado'][p]; },
+    intro: {
+      kicker: 'TCP frente a UDP', title: 'Antes de empezar',
+      text: 'Dos formas de enviar los mismos datos. Pulsa "Siguiente" y compara qué hace cada protocolo en cada paso.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

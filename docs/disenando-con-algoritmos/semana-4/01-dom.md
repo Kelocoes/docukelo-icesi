@@ -311,7 +311,7 @@ console.log(personaGuardada.nombre); // Ana
 ## 4. Ejercicios
 
 ### Ejercicio 1: Crear elementos dinámicamente
-```html title="Ejemplo HTML"
+```html title="Crear elementos dinámicamente"
 <ul id="lista"></ul>
 <button id="agregar">Agregar número</button>
 
@@ -346,7 +346,7 @@ console.log(personaGuardada.nombre); // Ana
 ```
 
 ### Ejercicio 3: Guardar y recuperar datos con localStorage
-```html title="Ejemplo HTML"
+```html title="Guardar y recuperar datos"
 <input type="text" id="nombre" placeholder="Escribe tu nombre">
 <button id="guardar">Guardar</button>
 <p id="resultado"></p>

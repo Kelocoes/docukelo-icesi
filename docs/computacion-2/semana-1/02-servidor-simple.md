@@ -63,7 +63,7 @@ Nota: `BufferedReader` utiliza un buffer interno para leer datos de manera efici
 
 Utilice `StringTokenizer` para extraer el nombre del archivo solicitado:
 
-```java title="Ejemplo en Java"
+```java title="Procesar la solicitud y obtener"
 StringTokenizer lineaSeparada = new StringTokenizer(lineaDeLaSolicitudHttp);
 if (lineaSeparada.nextToken().equals("GET")) {
     String nombreArchivo = lineaSeparada.nextToken();
@@ -85,7 +85,7 @@ El siguiente código implementa el algoritmo que permite al servidor leer el arc
 
 El uso de `writeBytes` para los encabezados y el salto de línea final `\r\n` es relevante porque la especificación HTTP requiere que los encabezados terminen con una línea vacía antes de enviar el cuerpo del mensaje. Esto indica al navegador que los encabezados han terminado y que a continuación viene el contenido solicitado.
 
-```java title="Ejemplo en Java"
+```java title="Leer el archivo solicitado y preparar"
 File archivo = new File(nombreArchivo);
 FileInputStream archivoDeEntrada = new FileInputStream(nombreArchivo);
 int cantidadDeBytes = (int) archivo.length();

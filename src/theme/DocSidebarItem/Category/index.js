@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import clsx from 'clsx';
 import {
   ThemeClassNames,
@@ -21,6 +21,11 @@ import DocSidebarItems from '@theme/DocSidebarItems';
 import DocSidebarItemLink from '@theme/DocSidebarItem/Link';
 import { FolderIcon } from '@site/src/components/IcesiIcons';
 import { extractLeadingEmoji } from '@docusaurus/theme-common/internal';
+import {
+  PROGRESS_EVENT,
+  collectLinkHrefs,
+  isCompleted,
+} from '@site/src/utils/readingProgress';
 import styles from './styles.module.css';
 // If we navigate to a category and it becomes active, it should automatically
 // expand itself
@@ -113,6 +118,32 @@ function CategoryLinkLabel({label}) {
     </span>
   );
 }
+// Contador "leidas/total" de una categoria, a partir de las casillas de completado del sidebar
+function CategoryProgress({items}) {
+  const hrefs = useMemo(() => collectLinkHrefs(items), [items]);
+  const [done, setDone] = useState(0);
+  useEffect(() => {
+    const update = () => setDone(hrefs.filter(isCompleted).length);
+    update();
+    window.addEventListener(PROGRESS_EVENT, update);
+    window.addEventListener('storage', update);
+    return () => {
+      window.removeEventListener(PROGRESS_EVENT, update);
+      window.removeEventListener('storage', update);
+    };
+  }, [hrefs]);
+  if (hrefs.length === 0 || done === 0) {
+    return null;
+  }
+  return (
+    <span
+      className={clsx(styles.progressBadge, done === hrefs.length && styles.progressBadgeDone)}
+      title={`${done}/${hrefs.length}`}>
+      {done}/{hrefs.length}
+    </span>
+  );
+}
+
 export default function DocSidebarItemCategory(props) {
   const visibleChildren = useVisibleSidebarItems(
     props.item.items,
@@ -248,6 +279,7 @@ function DocSidebarItemCategoryCollapsible({
           href={collapsible ? hrefWithSSRFallback ?? '#' : hrefWithSSRFallback}
           {...props}>
           <CategoryLinkLabel label={label} />
+          <CategoryProgress items={items} />
         </Link>
         {href && collapsible && (
           <CollapseButton

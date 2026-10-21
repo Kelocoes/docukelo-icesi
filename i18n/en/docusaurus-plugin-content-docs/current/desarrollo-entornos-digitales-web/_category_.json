@@ -3,6 +3,6 @@
   "position": 4,
   "link": {
     "type": "generated-index",
-    "description": "Course content for Web Digital Environments Development."
+    "description": "Modern web development: TypeScript, Docker, NestJS, databases with TypeORM, authentication, permissions, deployment, and UI with Tailwind and daisyUI."
   }
 }

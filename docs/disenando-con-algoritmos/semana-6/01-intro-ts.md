@@ -34,7 +34,7 @@ console.log(sumar(5, "10")); // Resultado: "510"
 
 **Mismo ejemplo en TypeScript:**
 
-```typescript title="¿Por qué usar TypeScript"
+```typescript title="¿Por qué usar TypeScript (2)"
 function sumar(a: number, b: number): number {
   return a + b;
 }
@@ -148,7 +148,7 @@ let cualquiera: any = "Hola"; // Evitar en lo posible
 
 En TypeScript también podemos indicar qué tipo de datos contendrá un arreglo.
 
-```typescript title="Tipos básicos en TypeScript"
+```typescript title="Tipos básicos en TypeScript (2)"
 let numeros: number[] = [1, 2, 3];
 let letras: Array<string> = ["a", "b", "c"];
 ```
@@ -157,7 +157,7 @@ let letras: Array<string> = ["a", "b", "c"];
 
 Una tupla es como un arreglo con un número fijo de posiciones y tipos ya definidos. Aquí TypeScript sabe que el primer valor debe ser texto y el segundo un número.
 
-```typescript title="Tipos básicos en TypeScript"
+```typescript title="Tipos básicos en TypeScript (3)"
 let persona: [string, number] = ["Kevin", 25];
 ```
 
@@ -165,7 +165,7 @@ let persona: [string, number] = ["Kevin", 25];
 
 Los enums permiten dar nombres más claros a un conjunto de valores. Son útiles para evitar usar valores “mágicos” en el código y mantener todo más legible.
 
-```typescript title="Tipos básicos en TypeScript"
+```typescript title="Tipos básicos en TypeScript (4)"
 enum Color {
   Rojo = "ROJO",
   Verde = "VERDE",
@@ -180,7 +180,7 @@ console.log(colorFav); // "VERDE"
 
 A veces una variable puede ser de más de un tipo. Con `|` le decimos a TypeScript que acepte varias opciones.
 
-```typescript title="Tipos básicos en TypeScript"
+```typescript title="Tipos básicos en TypeScript (5)"
 let id: string | number;
 id = "ABC123";
 id = 42;
@@ -190,7 +190,7 @@ id = 42;
 
 Para no repetirnos, podemos crear un nombre que represente esa unión de tipos y reutilizarlo en cualquier parte.
 
-```typescript title="Tipos básicos en TypeScript"
+```typescript title="Tipos básicos en TypeScript (6)"
 type ID = string | number;
 let usuarioID: ID = 101;
 ```
@@ -214,7 +214,7 @@ console.log(saludar("Kevin")); // "Hola, Kevin"
 - Un parámetro por defecto tiene un valor asignado si no se pasa nada.
 - Un parámetro opcional (con `?`) puede omitirse.
 
-```typescript title="Funciones en TypeScript"
+```typescript title="Funciones en TypeScript (2)"
 function multiplicar(a: number, b: number = 2, mensaje?: string): number {
   if (mensaje) console.log(mensaje);
   return a * b;
@@ -228,7 +228,7 @@ console.log(multiplicar(3, 4, "Calculando...")); // muestra mensaje → 12
 
 Las funciones flecha son una forma más corta de escribir funciones y también se pueden tipar.
 
-```typescript title="Funciones en TypeScript"
+```typescript title="Funciones en TypeScript (3)"
 const dividir = (a: number, b: number): number => a / b;
 
 console.log(dividir(10, 2)); // 5
@@ -261,7 +261,7 @@ Aquí `user1` debe cumplir con la estructura definida en Usuario. Si intentamos 
 
 Las interfaces no solo sirven para objetos, también pueden usarse para definir la firma de una función, es decir, los parámetros que recibe y lo que devuelve.
 
-```typescript title="Interfaces y Objetos"
+```typescript title="Interfaces y Objetos (2)"
 interface Operacion {
   (a: number, b: number): number;
 }
@@ -309,7 +309,7 @@ Aquí vemos tres modificadores de acceso:
 
 Las clases pueden extenderse para crear nuevas con propiedades o comportamientos adicionales.
 
-```typescript title="Clases en TypeScript"
+```typescript title="Clases en TypeScript (2)"
 class Estudiante extends Persona {
   curso: string;
 
@@ -349,7 +349,7 @@ Aquí la función `sumar` queda lista para ser usada en otros archivos.
 
 Para usar lo que exportaste, necesitas importarlo:
 
-```typescript title="Módulos en TypeScript"
+```typescript title="Módulos en TypeScript (2)"
 // archivo: index.ts
 import { sumar } from "./utils";
 console.log(sumar(3, 4));
@@ -381,7 +381,7 @@ El ejemplo anterior muestra una función que recibe un valor de tipo genérico `
 
 Estos tipos permiten combinar múltiples tipos en uno solo, creando un nuevo tipo que tiene todas las propiedades de los tipos combinados.
 
-```typescript title="Tipos avanzados"
+```typescript title="Tipos avanzados (2)"
 interface A {
   a: string;
 }
@@ -447,7 +447,7 @@ _Piensa en una interface como un molde que describe cómo debe verse un objeto._
 - No pueden extenderse igual que las interfaces.
 - Perfectos cuando necesitas tipos que no son solo objetos.
 
-```typescript title="Interface vs Type Alias"
+```typescript title="Interface vs Type Alias (2)"
 type ID = string | number;
 type Usuario = {
   id: ID;
@@ -461,7 +461,7 @@ _Un type alias es como un atajo: le das un nombre a un tipo (simple o complejo) 
 
 Los `type aliases` permiten definir uniones de tipos, algo que no es posible directamente con `interface`.
 
-```typescript title="Ejemplo de TypeScript"
+```typescript title="Ejemplo: Algo que se puede hacer"
 type Resultado = string | number;
 
 let respuesta: Resultado;

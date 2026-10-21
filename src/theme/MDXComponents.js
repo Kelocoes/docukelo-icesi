@@ -12,6 +12,7 @@ import { Quiz, Question, Option } from '@site/src/components/Quiz/Quiz';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import DaisyPreview from '@site/src/components/DaisyPreview';
+import CourseCards from '@site/src/components/CourseCards';
 
 export default {
     // Re-use the default mapping
@@ -33,4 +34,5 @@ export default {
     Tabs,
     TabItem,
     DaisyPreview,
+    CourseCards,
 };

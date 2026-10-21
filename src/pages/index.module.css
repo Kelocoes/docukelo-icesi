@@ -13,7 +13,11 @@
 }
 
 .heroTitle {
-  font-size: 3.5rem;
+  /* Fluido: 3.5rem en escritorio y menos en celular, para que "Documentación" no se parta */
+  font-size: clamp(2rem, 10vw, 3.5rem);
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
   font-weight: 800;
   letter-spacing: -0.025em;
   margin-bottom: 1.25rem;
@@ -26,7 +30,7 @@
 }
 
 .heroSubtitle {
-  font-size: 1.35rem;
+  font-size: clamp(1.05rem, 4vw, 1.35rem);
   max-width: 800px;
   margin: 0 auto 2.5rem auto;
   line-height: 1.6;
@@ -41,9 +45,10 @@
 
 .buttons {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 12px 16px;
 }
 
 .primaryButton {
@@ -116,9 +121,9 @@
 
 .sectionTitle {
   text-align: center;
-  font-size: 2.25rem;
+  font-size: clamp(1.6rem, 6vw, 2.25rem);
   font-weight: 800;
-  margin-bottom: 3.5rem;
+  margin-bottom: 2.5rem;
   position: relative;
 }
 
@@ -132,61 +137,17 @@
   border-radius: 2px;
 }
 
-.cardGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 30px;
-  padding: 0 20px;
-}
+@media (max-width: 576px) {
+  .heroBanner {
+    padding: 3rem 0;
+  }
 
-.courseCard {
-  background: white;
-  border-radius: 16px;
-  padding: 2.25rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #e2e8f0;
-  text-decoration: none !important;
-  color: inherit !important;
-  display: flex;
-  flex-direction: column;
-}
+  .mainSection {
+    padding: 3rem 0;
+  }
 
-[data-theme='dark'] .courseCard {
-  background: #111827;
-  border-color: #1f2937;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-}
-
-.courseCard:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 25px -5px var(--icesi-blue-glow, rgba(84, 84, 233, 0.25));
-  border-color: var(--ifm-color-primary);
-}
-
-.cardTitle {
-  font-size: 1.35rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-}
-
-.cardDescription {
-  font-size: 0.95rem;
-  color: #64748b;
-  line-height: 1.5;
-  flex-grow: 1;
-}
-
-[data-theme='dark'] .cardDescription {
-  color: #94a3b8;
-}
-
-.cardFooter {
-  margin-top: 1.5rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--ifm-color-primary);
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  .primaryButton,
+  .secondaryButton {
+    padding: 0.65rem 1.5rem !important;
+  }
 }

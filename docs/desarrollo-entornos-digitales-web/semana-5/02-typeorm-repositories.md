@@ -242,7 +242,7 @@ Para aplicar filtros más expresivos que la simple igualdad, TypeORM incluye ope
 
 ### Ejemplo con Operadores Combinados
 
-```typescript title="Ejemplo de consulta con operadores" showLineNumbers
+```typescript title="Ejemplo con Operadores Combinados" showLineNumbers
 import { Between, ILike, In, MoreThan } from "typeorm";
 
 // Buscar libros de Ciencia Ficción o Novela, con precio entre 20 y 70 USD,

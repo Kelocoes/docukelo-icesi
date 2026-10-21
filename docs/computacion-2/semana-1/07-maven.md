@@ -20,7 +20,7 @@ Para utilizar Maven en tu entorno local, asegúrate de contar primero con una in
 
 ### Opción A: Mediante gestores de paquetes (Recomendado)
 Si utilizas **Scoop** o **Chocolatey** en PowerShell:
-```powershell title="Ejemplo en PowerShell"
+```powershell title="Opción A"
 # Usando Scoop
 scoop install maven
 

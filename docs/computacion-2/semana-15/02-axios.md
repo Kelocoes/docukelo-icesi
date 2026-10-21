@@ -101,7 +101,7 @@ export default api;
 
 Uso:
 
-```jsx title="Configuración global de Axios"
+```jsx title="Configuración global de Axios (2)"
 import api from "./api";
 
 api.get("/users").then((res) => console.log(res.data));
@@ -117,7 +117,7 @@ Los interceptores te permiten **intervenir las solicitudes y respuestas** antes 
 
 ### Ejemplo: agregar token JWT automáticamente
 
-```js title="Ejemplo en JavaScript"
+```js title="Ejemplo: agregar token JWT"
 import axios from "axios";
 
 const api = axios.create({ baseURL: "https://api.example.com" });

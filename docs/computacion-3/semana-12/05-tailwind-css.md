@@ -3446,7 +3446,7 @@ export function RoutineNavbar() {
 
 En daisyUI 5 los campos ya traen borde (desaparecieron `input-bordered` y `select-bordered`) y los formularios se agrupan con `fieldset`, `fieldset-legend` y `label` (reemplazan a `form-control` y `label-text` de la versión 4):
 
-```tsx title="Ejemplo de campo de texto accesible" showLineNumbers
+```tsx title="Campos de Entrada" showLineNumbers
 <fieldset className="fieldset w-full max-w-sm">
   <legend className="fieldset-legend">Nombre de la rutina</legend>
   <input

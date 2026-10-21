@@ -249,3 +249,15 @@ Comandos: `npm run lint:docs` (resumen), `-- --verbose` (archivo:linea), `-- --r
 * **Linea base**: `scripts/lint-docs.baseline.json` guarda cuantos incumplimientos tiene hoy cada archivo. Lo antiguo se tolera; lo nuevo debe nacer limpio. Cuando arregles contenido o renombres/muevas archivos, vuelve a correr `npm run lint:docs -- --update-baseline` para actualizarla.
 * **Traducciones**: si mueves o renombras un documento en `docs/`, mueve tambien su traduccion en `i18n/en/` (si no, `i18n-orphan` lo detecta). Las traducciones pendientes no son error: solo faltan por hacer. El estado por curso se puede regenerar con un analisis de paridad (ver `temp/` del autor).
 * Antes de dar por terminado un documento nuevo o editado, corre `npm run lint:docs -- --changed --verbose` y corrige lo que reporte.
+
+* **Hook de pre-commit**: `.githooks/pre-commit` corre `npm run lint:docs -- --check --changed` y bloquea el commit si un documento modificado incumple las reglas. Se activa solo con `npm install` (script `prepare`, que ejecuta `scripts/install-hooks.mjs` y fija `core.hooksPath`); si no se activo, corre `node scripts/install-hooks.mjs`. Para saltarlo en un commit puntual: `git commit --no-verify`.
+
+---
+
+## 11. Portada, bienvenida y avance de lectura
+
+* **Tarjetas de cursos**: la portada (`src/pages/index.js`) y `docs/intro.md` usan `<CourseCards />`. La lista sale sola de `docs/*/_category_.json` mediante el plugin `src/plugins/courses-data` (nombre = `label`, texto = `link.description`, orden = `position`, semanas y documentos contados del disco; las categorias con `className: "hidden"` no aparecen). **Para un curso nuevo basta con su `_category_.json` y un `intro.md`**; escribe un `link.description` claro (una frase con los temas).
+* **Avance de lectura**: la casilla junto a cada pagina del menu lateral (`src/theme/DocSidebarItem/Link`) guarda `docukelo-page-completed-<ruta>` en `localStorage`. Las tarjetas de curso y las categorias del menu muestran el avance (`n de m leidos`) leyendo esas claves (`src/utils/readingProgress.js`). Todo vive en el navegador del estudiante; no hay servidor.
+* **Crear una semana nueva**: `npm run scaffold-week -- --course <curso> --week <n> --topics "Tema uno, Tema dos" [--slides] [--label "Nombre"] [--dry-run]` crea la carpeta, el `_category_.json` (posicion automatica) y un documento por tema con la estructura base de la guia. No sobrescribe semanas existentes. La traduccion a `i18n/en` se hace despues, con la misma ruta y nombre.
+* **Revisar en celular**: Edge/Chrome headless no baja de ~500 px de ventana; para ver el diseno movil real, incrusta la pagina en un `<iframe>` de 390 px y captura eso. Titulos grandes deben usar tamanos fluidos (`clamp(...)`), no tamanos fijos, y las filas de botones llevan `flex-wrap`.
+

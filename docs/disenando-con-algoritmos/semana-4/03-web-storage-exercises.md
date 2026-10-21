@@ -150,7 +150,7 @@ Haz un formulario que pida nombre, profesión y descripción. Cada vez que el us
 
 _Extra: Añadir un botón que pueda eliminar cards_
 
-```html title="Ejemplo HTML"
+```html title="Formulario que cree cards"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -180,7 +180,7 @@ _Extra: Añadir un botón que pueda eliminar cards_
 <details>
 <summary>Posible solución >:) </summary>
 
-```javascript title="Ejemplo de JavaScript"
+```javascript title="Formulario que cree cards (2)"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -317,7 +317,7 @@ _Pista: En este ejercicio puedes usar este caracter `★`, pues, solo le cambiar
 <details>
 <summary>Posible solución >:) </summary>
 
-```javascript title="Calificar películas"
+```javascript title="Calificar películas (2)"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -440,7 +440,7 @@ Crea un sistema de carrito donde se puedan agregar productos, mostrarlos en una 
 <details>
 <summary>Posible solución >:) </summary>
 
-```javascript title="Carrito de compras"
+```javascript title="Carrito de compras (2)"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -592,7 +592,7 @@ Crea un sistema simple de registro y login usando `localStorage`. El usuario deb
 <details>
 <summary>Posible solución >:) </summary>
 
-```javascript title="Register y Login"
+```javascript title="Register y Login (2)"
 <!DOCTYPE html>
 <html lang="es">
   <head>

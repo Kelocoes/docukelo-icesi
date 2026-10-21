@@ -3,6 +3,6 @@
     "position": 3,
     "link": {
         "type": "generated-index",
-        "description": "Contenido del curso de Computación en Internet 3."
+        "description": "Ingeniería web con Node.js y TypeScript: Express, Docker, pruebas, NestJS, Next.js, estado en el frontend, Clean Architecture y despliegue."
     }
 }

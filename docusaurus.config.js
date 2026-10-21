@@ -8,6 +8,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import remarkStaticBaseUrl from './src/plugins/remark-static-base-url.js';
+import coursesPlugin from './src/plugins/courses-data/index.js';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -107,6 +108,8 @@ const config = {
     ],
 
     themes: ['@docusaurus/theme-mermaid'],
+    // Lista de cursos (desde docs/*/_category_.json) para la portada y la pagina de bienvenida
+    plugins: [coursesPlugin],
     presets: [
         [
             'classic',

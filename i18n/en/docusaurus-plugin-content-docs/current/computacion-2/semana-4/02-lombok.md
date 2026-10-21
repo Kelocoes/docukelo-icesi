@@ -222,7 +222,7 @@ Avoid placing `@Data` on classes annotated with JPA `@Entity` if they contain bi
 
 **Recommendation:**  
 Use explicit annotations on JPA entities:
-```java title="Java example"
+```java title="Warnings and Best Practices with JPA"
 @Entity
 @Getter
 @Setter

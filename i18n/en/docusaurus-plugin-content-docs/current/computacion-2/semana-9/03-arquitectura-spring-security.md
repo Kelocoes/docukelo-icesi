@@ -66,11 +66,11 @@ In modern production environments, the mandatory standard implementation is `BCr
 
 ### G. SecurityContextHolder and SecurityContext
 Once a user is successfully authenticated, the filter stores the validated `Authentication` instance inside the `SecurityContextHolder`:
-```java title="Java example"
+```java title="G. SecurityContextHolder"
 SecurityContextHolder.getContext().setAuthentication(authenticatedToken);
 ```
 The `SecurityContextHolder` stores this information using **`ThreadLocal`**, binding the security context to the execution thread of the active request. Consequently, any controller or service can inspect the authenticated user at any point:
-```java title="Java example"
+```java title="G. SecurityContextHolder"
 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 String currentUsername = auth.getName();
 ```

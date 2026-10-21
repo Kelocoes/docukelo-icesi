@@ -228,7 +228,7 @@ Evita colocar `@Data` en clases anotadas con `@Entity` de JPA si contienen relac
 
 **Recomendación:**  
 En entidades JPA, utiliza anotaciones explícitas:
-```java title="Ejemplo en Java"
+```java title="Advertencias y Buenas Prácticas con JPA"
 @Entity
 @Getter
 @Setter

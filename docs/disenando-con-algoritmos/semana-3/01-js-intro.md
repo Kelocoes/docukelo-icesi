@@ -36,7 +36,7 @@ JavaScript es **multiparadigma**, lo que significa que soporta varios estilos de
   ```
 
 - **Orientado a objetos**: basado en prototipos y, más recientemente, en clases. Este paradigma permite modelar entidades del mundo real como objetos.
-  ```javascript title="Paradigma del lenguaje"
+  ```javascript title="Paradigma del lenguaje (2)"
   class Persona {
     constructor(nombre) {
       this.nombre = nombre;
@@ -48,7 +48,7 @@ JavaScript es **multiparadigma**, lo que significa que soporta varios estilos de
   ```
 
 - **Funcional**: permite tratar funciones como ciudadanos de primera clase. Este paradigma es ideal para trabajar con datos de manera declarativa.
-  ```javascript title="Paradigma del lenguaje"
+  ```javascript title="Paradigma del lenguaje (3)"
   let numeros = [1, 2, 3];
   numeros.forEach(num => console.log(num)); // Imprime cada número usando una función
   ```
@@ -62,7 +62,7 @@ Un lenguaje interpretado se ejecuta línea por línea mediante un intérprete, e
 En JavaScript, el intérprete generalmente es el motor del navegador (como V8 en Chrome o SpiderMonkey en Firefox).
 
 Ejemplo:
-```javascript title="Ejemplo de JavaScript"
+```javascript title="Qué significa ser un lenguaje"
 console.log("Hola mundo"); // Se ejecuta inmediatamente
 console.log("Esta línea se ejecuta después"); // Se ejecuta en orden
 ```
@@ -85,7 +85,7 @@ console.log(saludar("Ana")); // "Hola, Ana"
 ```
 
 Ejemplo de Strict Mode:
-```javascript title="Javascript vs ECMAScript"
+```javascript title="Javascript vs ECMAScript (2)"
 "use strict"; // Activa el modo estricto
 let x = 3.14;
 console.log(x); // 3.14
@@ -302,7 +302,7 @@ Animal.prototype.saludar = function() { console.log("Hola, soy " + this.nombre);
 Los prototipos en JavaScript son objetos que actúan como plantillas para otros objetos. Cada objeto tiene un prototipo que puede proporcionar propiedades y métodos compartidos. Esto permite reutilizar código y establecer relaciones entre objetos.
 
 Ejemplo básico:
-```javascript title="Prototipos"
+```javascript title="Prototipos (2)"
 function Animal(nombre) {
     this.nombre = nombre;
 }

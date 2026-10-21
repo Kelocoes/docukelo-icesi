@@ -113,7 +113,7 @@ Incluye métodos para:
 <details>
 <summary>Ver solución</summary>
 
-```js title="Ejemplo de JavaScript"
+```js title="Clase Persona con métodos adicionales"
 class Persona {
     constructor(nombre, edad, profesion) {
         this.nombre = nombre;

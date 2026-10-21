@@ -15,3 +15,20 @@ TODO merge this logic back in Infima?
   display: flex;
   align-items: center;
 }
+
+.progressBadge {
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.progressBadgeDone {
+  background: var(--ifm-color-primary);
+  color: #ffffff;
+}
