@@ -59,13 +59,13 @@ Por defecto en Spring, **únicamente** las excepciones no verificadas (hijas de 
 
 Para garantizar que cualquier excepción (incluyendo excepciones de negocio verificadas) revierta la transacción, se utiliza el atributo `rollbackFor`:
 
-```java title="Ejemplo en Java"
+```java title="Reglas de Rollback por Defecto vs."
 @Transactional(rollbackFor = Exception.class)
 ```
 
 Si por el contrario deseas que una excepción específica no cancele la transacción (por ejemplo, fallo en el envío de una notificación por correo secundaria), se utiliza `noRollbackFor`:
 
-```java title="Ejemplo en Java"
+```java title="Reglas de Rollback por Defecto vs."
 @Transactional(noRollbackFor = EmailNotificationFailedException.class)
 ```
 

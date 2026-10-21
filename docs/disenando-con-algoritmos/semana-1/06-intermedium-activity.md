@@ -215,7 +215,9 @@ git commit -m "Corrección de capítulo con errores"
 git push origin agregar-capitulo-error
 ```
 
-> Ten cuidado si usas `--hard`, pues perderás el trabajo no guardado.
+:::warning
+Ten cuidado si usas `--hard`, pues perderás el trabajo no guardado.
+:::
 
 ---
 

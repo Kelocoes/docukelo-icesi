@@ -101,7 +101,7 @@ public class UsuarioController {
 
 También podemos asignar un identificador personalizado directamente en la anotación `@Service`:
 
-```java title="Ejemplo en Java"
+```java title="B. Solución 1"
 @Service("emailService")
 public class NotificacionEmailServiceImpl implements NotificacionService { ... }
 

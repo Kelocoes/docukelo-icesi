@@ -116,7 +116,7 @@ Un token JWT consta de tres cadenas de texto separadas por puntos (`.`):
 
 $$\text{JWT} = \text{Header} \,.\, \text{Payload} \,.\, \text{Signature}$$
 
-```text title="Ejemplo de Token JWT Codificado"
+```text title="Anatomía de un Token JWT"
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImFuYUBpY2VzaS5lZHUuY28ifQ.k7G_X9R7q0LwE58vY6pZaM1o9TuQeWd8xP
 ```
 

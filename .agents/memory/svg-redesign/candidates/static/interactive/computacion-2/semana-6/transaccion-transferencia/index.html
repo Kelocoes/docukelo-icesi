@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>@Transactional: commit y rollback</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* @Transactional con una transferencia entre dos cuentas: solo DATOS. Los dos interruptores dan cuatro desenlaces. */
+(function () {
+  var msg = function (path, label, kind, extra) { var m = { path: path, label: label, kind: kind }; for (var k in extra) m[k] = extra[k]; return m; };
+
+  var nodes = [
+    { id: 'svc', kind: 'box', icon: 'gear', label: 'TransferService', sub: 'transferir(A, B, 50)', x: 6, y: 134, w: 164, h: 92 },
+    { id: 'db', kind: 'outer', label: 'Base de datos', sub: 'PostgreSQL / MySQL', x: 290, y: 8, w: 504, h: 344 },
+    { id: 'tx', kind: 'outer', label: 'Transacción', sub: 'frontera de la operación', x: 306, y: 62, w: 472, h: 278 },
+    { id: 'accA', kind: 'box', icon: 'card', label: 'Cuenta A', sub: 'saldo: 100', x: 330, y: 106, w: 170, h: 92 },
+    { id: 'accB', kind: 'box', icon: 'card', label: 'Cuenta B', sub: 'saldo: 100', x: 330, y: 222, w: 170, h: 92 },
+    { id: 'estado', kind: 'box', icon: 'file', label: 'Estado', sub: 'sin operar', x: 540, y: 145, w: 222, h: 130 },
+  ];
+
+  function build(opt) {
+    var tx = !opt.notx, fail = !!opt.fail;
+    var def = tx ? '(provisional)' : '(definitivo)';
+    var step = function (phase, title, caption, focus, code, msgs, sub) { return { phase: phase, title: title, caption: caption, focus: focus, code: code, msgs: msgs || [], sub: sub }; };
+    var steps = [];
+
+    steps.push(step(0, 'Dos operaciones que van juntas',
+      'transferir() mueve 50 de la cuenta A a la B. Son dos operaciones (debitar y acreditar) que deben ocurrir juntas o no ocurrir.',
+      ['svc'], [2, 3, 7], []));
+
+    steps.push(tx
+      ? step(0, 'Spring abre la transacción',
+        'El proxy de @Transactional abre una transacción antes de ejecutar el método. Lo que ocurra dentro es provisional hasta el COMMIT.',
+        ['tx'], [1], [msg([170, 182, 306, 182], 'begin', 'ctl')], { tx: 'abierta: los cambios son provisionales', estado: 'transacción abierta' })
+      : step(0, 'Sin transacción',
+        'Sin @Transactional no se abre ninguna transacción: cada UPDATE se confirma en el instante en que se ejecuta.',
+        ['tx'], [1], [], { tx: 'sin @Transactional: cada UPDATE es definitivo', estado: 'sin transacción' }));
+
+    steps.push(step(1, 'Debitar la cuenta A',
+      tx ? 'Se descuentan 50 de A, pero de forma provisional: nadie más ve el cambio hasta el COMMIT.'
+         : 'Se descuentan 50 de A y el cambio queda definitivo de inmediato.',
+      ['accA'], [3], [msg([170, 158, 330, 158], 'debitar', 'data')], { accA: 'saldo: 50 ' + def }));
+
+    steps.push(fail
+      ? step(1, 'Ocurre un fallo',
+        'La cuenta destino está bloqueada: el método lanza una excepción antes de acreditar a B.',
+        ['accB', 'svc'], [4, 5], [msg([170, 206, 330, 262], 'acreditar', 'data', { lost: true })], { estado: 'excepción lanzada' })
+      : step(1, 'Acreditar la cuenta B',
+        'Se suman 50 a B. Las dos mitades de la transferencia ya ocurrieron.',
+        ['accB'], [7], [msg([170, 206, 330, 262], 'acreditar', 'data')], { accB: 'saldo: 150 ' + def }));
+
+    if (tx && !fail) {
+      steps.push(step(2, 'COMMIT: se confirma todo',
+        'El método terminó sin excepción: el proxy hace COMMIT y los dos cambios se vuelven definitivos a la vez (atomicidad).',
+        ['tx', 'estado', 'accA', 'accB'], [8], [msg([306, 330, 106, 226], 'COMMIT', 'ack')],
+        { tx: 'cerrada: cambios confirmados', estado: 'COMMIT: definitivo', accA: 'saldo: 50 (definitivo)', accB: 'saldo: 150 (definitivo)' }));
+    } else if (tx && fail) {
+      steps.push(step(2, 'ROLLBACK: se deshace todo',
+        'El proxy captura la excepción (es una RuntimeException) y hace ROLLBACK: el débito de A se deshace. Nadie pierde dinero.',
+        ['tx', 'estado', 'accA'], [5], [msg([306, 330, 106, 226], 'ROLLBACK', 'ctl')],
+        { tx: 'cerrada: cambios descartados', estado: 'ROLLBACK: revertido', accA: 'saldo: 100 (revertido)' }));
+    } else if (!tx && !fail) {
+      steps.push(step(2, 'Salió bien, pero sin red de seguridad',
+        'Esta vez no hubo fallos y todo quedó correcto. Pero nada lo garantizaba: activa "Simular un fallo" y mira qué habría pasado.',
+        ['accA', 'accB', 'estado'], [8], [], { estado: 'sin transacción: todo bien' }));
+    } else {
+      steps.push(step(2, 'El dinero desapareció',
+        'A ya perdió 50 de forma definitiva y B nunca los recibió: faltan 50 en total. Sin transacción no hay rollback posible. Es justo lo que evita @Transactional.',
+        ['accA', 'accB', 'estado'], [3, 5], [], { tx: 'sin transacción: nada se pudo deshacer', estado: 'INCONSISTENTE' }));
+    }
+    return steps;
+  }
+
+  function code(opt) {
+    var head = opt.notx ? '// @Transactional   (quitada para esta prueba)' : '@Transactional';
+    return {
+      title: 'TransferService.java',
+      text: [
+        head,
+        'public void transferir(Long origen, Long destino, BigDecimal monto) {',
+        '    cuentaRepo.debitar(origen, monto);',
+        '    if (destinoBloqueado(destino)) {',
+        '        throw new IllegalStateException("Cuenta destino bloqueada");',
+        '    }',
+        '    cuentaRepo.acreditar(destino, monto);',
+        '}',
+      ].join('\n'),
+    };
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Transferencia entre dos cuentas con y sin @Transactional: begin, débito, acreditación, commit o rollback',
+    phases: ['Preparar', 'Operar', 'Cerrar'],
+    scene: function (svg) { return DK.layers({ svg: svg, width: 800, height: 360, nodes: nodes, trail: 'phase', labels: 'smart' }); },
+    build: build,
+    code: code,
+    toggles: [
+      { key: 'notx', label: 'Quitar @Transactional', affectsPhase: 0 },
+      { key: 'fail', label: 'Simular un fallo (cuenta destino bloqueada)', affectsPhase: 1 },
+    ],
+    kicker: function (p) { return ['Fase 1 · Preparar', 'Fase 2 · Operar', 'Fase 3 · Cerrar (commit o rollback)'][p]; },
+    intro: {
+      kicker: '@Transactional en una transferencia', title: 'Antes de empezar',
+      text: 'Una transferencia mueve dinero de una cuenta a otra. Pulsa "Siguiente" para verla con @Transactional; luego prueba los interruptores: quita la anotación y simula un fallo para ver cuándo hay commit, cuándo rollback y qué pasa sin ninguno.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

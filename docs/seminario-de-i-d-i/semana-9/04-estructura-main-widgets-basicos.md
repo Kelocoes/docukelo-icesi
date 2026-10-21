@@ -485,7 +485,7 @@ En Material 3 disponemos de tres variantes principales de botones, cada una dise
 | **`OutlinedButton`** | Media             | Acciones secundarias (Cancelar, Volver, Filtros alternativos).  |
 | **`TextButton`**     | Baja / Sutil      | Acciones terciarias en tarjetas o diálogos (Ver más, Términos). |
 
-```dart title="Ejemplo de Botones Material 3" showLineNumbers
+```dart title="C. Botones de Material 3" showLineNumbers
 // Botón con acción definida
 ElevatedButton.icon(
   onPressed: () {

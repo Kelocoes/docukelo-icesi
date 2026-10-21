@@ -37,4 +37,6 @@ Para crear un repositorio en GitHub, sigue estos pasos:
 <img src="/img/disenando-con-algoritmos/github-repo-config.png" alt="Clonar repositorio en GitHub" width="900" />
 
 7. Puedes empezar a trabajar en tu proyecto localmente y luego hacer push de tus cambios al repositorio remoto en GitHub.
-> **Importante:** Siempre crea ramas a partir de una rama principal (por ejemplo, `main` o `master`). Si no lo haces, podrías enfrentar conflictos al combinar cambios, ya que el historial de commits puede volverse no lineal o carecer de un ancestro común. Esto puede dificultar la integración y resolución de problemas en tu proyecto.
+:::warning
+**Importante:** Siempre crea ramas a partir de una rama principal (por ejemplo, `main` o `master`). Si no lo haces, podrías enfrentar conflictos al combinar cambios, ya que el historial de commits puede volverse no lineal o carecer de un ancestro común. Esto puede dificultar la integración y resolución de problemas en tu proyecto.
+:::

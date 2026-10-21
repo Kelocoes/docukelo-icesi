@@ -130,7 +130,7 @@ export default function NewUser() {
 El `<Form>` es una versión "progressively enhanced" del `<form>` HTML que funciona incluso sin JS y activa las acciones/estados de navegación (submitting). 
 
 ### 4) useFetcher — interacciones sin navegación
-```js title="Ejemplo en JavaScript"
+```js title="4) useFetcher"
 import { useFetcher } from "react-router";
 
 function FavoriteButton({ postId }) {

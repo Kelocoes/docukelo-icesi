@@ -174,7 +174,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 In Spring Security configuration, we register the filter using:
 
-```java title="Java example"
+```java title="Why does JwtAuthenticationFilter go"
 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 ```
 

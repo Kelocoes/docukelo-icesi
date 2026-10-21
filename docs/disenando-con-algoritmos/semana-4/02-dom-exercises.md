@@ -16,7 +16,7 @@ _Estos ejercicios no tienen CSS, pero puedes añadirlos si gustas._
 **Consigna:**  
 Crear un botón que cambie el color de fondo de la página al hacer click.
 
-```html title="Ejemplo HTML"
+```html title="Botón cambio color → Event listeners"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -71,7 +71,7 @@ Crear un contador con botones `+` y `-` que muestre el valor en un `<span>` (evi
 **Consigna:**  
 Crear un input que, al escribir algo y presionar **Enter**, agregue un `<li>` a una lista `<ul>` (y vacíe el input después).
 
-```html title="Ejemplo HTML"
+```html title="Input + lista → Forms y creación"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -103,7 +103,7 @@ Crear un input que, al escribir algo y presionar **Enter**, agregue un `<li>` a 
 **Consigna:**  
 Crear un buscador que filtre una lista de nombres en tiempo real mientras escribes en un input.
 
-```html title="Ejemplo HTML"
+```html title="Buscador tiempo real → Filtrado"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -136,7 +136,7 @@ Crear un buscador que filtre una lista de nombres en tiempo real mientras escrib
 **Consigna:**  
 Hacer una to-do list donde los ítems se puedan marcar como completados al hacer click y borrarlos con un botón de eliminar (usando **delegación de eventos**).
 
-```html title="Ejemplo HTML"
+```html title="To-do list → Delegación de eventos"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -218,7 +218,7 @@ Cuando hagas clic en "Cargar Personajes", tu página irá a buscar personajes de
 <details>
 <summary>Ver solución</summary>
 
-```javascript title="Tu primera API → Rick y Morty personajes"
+```javascript title="Tu primera API → Rick y Morty personajes (2)"
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -288,7 +288,7 @@ Cuando hagas clic en "Cargar Personajes", tu página irá a buscar personajes de
 <details>
 <summary>Ver solución compleja</summary>
 
-```javascript title="Tu primera API → Rick y Morty personajes"
+```javascript title="Tu primera API → Rick y Morty personajes (3)"
 <!DOCTYPE html>
 <html lang="es">
 <head>

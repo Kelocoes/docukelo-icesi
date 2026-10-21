@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El contenedor IoC y los beans</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El contenedor IoC y los beans: solo DATOS. Nombres tomados del capitulo (estudianteServiceBean, estudianteRepositoryBean). */
+(function () {
+  var msg = function (path, label, kind) { return { path: path, label: label, kind: kind }; };
+
+  var nodes = [
+    { id: 'jvm', kind: 'outer', label: 'JVM', sub: 'Máquina Virtual de Java', x: 170, y: 8, w: 626, h: 410 },
+    { id: 'xml', kind: 'box', icon: 'filecode', label: 'applicationContext.xml', sub: 'la receta de los beans', x: 190, y: 54, w: 230, h: 84 },
+    { id: 'ctx', kind: 'outer', label: 'Contenedor IoC de Spring', sub: 'ApplicationContext', x: 186, y: 190, w: 598, h: 214 },
+    { id: 'svc', kind: 'box', icon: 'gear', label: 'estudianteServiceBean', sub: 'EstudianteServiceImpl', x: 214, y: 250, w: 190, h: 84 },
+    { id: 'repo', kind: 'box', icon: 'database', label: 'estudianteRepositoryBean', sub: 'EstudianteRepositoryInMemory', x: 520, y: 250, w: 230, h: 84 },
+    { id: 'nota', kind: 'box', label: 'Singleton', sub: 'una sola instancia de cada bean; todos reciben la misma', x: 214, y: 346, w: 536, h: 48 },
+    { id: 'main', kind: 'box', icon: 'classbox', label: 'Main', sub: '(tu código)', x: 4, y: 200, w: 96, h: 84 },
+    { id: 'otro', kind: 'box', icon: 'classbox', label: 'Servlet', sub: '(otra clase)', x: 4, y: 310, w: 96, h: 84 },
+  ];
+
+  var steps = [
+    // ---- Fase 1: las piezas ----
+    { phase: 0, title: 'El contenedor IoC', focus: ['jvm', 'ctx'], msgs: [],
+      caption: 'Dentro de la JVM vive el contenedor IoC de Spring (el ApplicationContext). Es el encargado de crear y conectar los objetos de tu aplicación.' },
+    { phase: 0, title: 'La receta: applicationContext.xml', focus: ['xml'], msgs: [],
+      caption: 'Con la etiqueta <bean> declaras qué objetos quieres y cómo se conectan. El contenedor no adivina nada: sigue esta receta.' },
+    { phase: 0, title: 'Los beans', focus: ['svc', 'repo'], msgs: [],
+      caption: 'Un bean es un objeto cuya creación y conexión administra el contenedor. Aquí hay dos: el servicio, que necesita al repositorio para trabajar, y el repositorio.' },
+
+    // ---- Fase 2: crear y conectar ----
+    { phase: 1, title: 'El contenedor lee la receta', focus: ['xml', 'ctx'], sub: { svc: 'sin crear', repo: 'sin crear' },
+      msgs: [msg([305, 138, 305, 190], 'lee', 'ctl')],
+      caption: 'Al arrancar, el contenedor lee applicationContext.xml. Todavía no existe ningún bean: solo sabe cuáles debe crear.' },
+    { phase: 1, title: 'Crea el repositorio', focus: ['repo'], sub: { repo: 'objeto creado' },
+      msgs: [msg([635, 206, 635, 250], 'new', 'ctl')],
+      caption: 'Empieza por el repositorio, que no depende de nadie. Fíjate: el contenedor ejecuta el new por ti.' },
+    { phase: 1, title: 'Crea el servicio, pero le falta algo', focus: ['svc'], sub: { svc: 'repositorio = ? (falta)' },
+      msgs: [msg([309, 206, 309, 250], 'new', 'ctl')],
+      caption: 'El servicio necesita un repositorio para funcionar: esa es su dependencia. Recién creado todavía no la tiene.' },
+    { phase: 1, title: 'Inyección de dependencias', focus: ['repo', 'svc'], sub: { svc: 'repositorio = inyectado' },
+      msgs: [msg([520, 292, 404, 292], 'inyecta', 'data')],
+      caption: 'Inyectar es esto: el contenedor le ENTREGA al servicio el repositorio ya creado (por el constructor, con <constructor-arg ref>). El servicio nunca hace new del repositorio.' },
+
+    // ---- Fase 3: usar los beans ----
+    { phase: 2, title: 'Pedir un bean', focus: ['main', 'ctx'],
+      msgs: [msg([100, 218, 186, 218], 'getBean', 'ctl'), msg([186, 244, 100, 244], 'bean', 'ack')],
+      caption: 'Tu código le pide el bean al contenedor por su id: getBean("estudianteServiceBean"). El contenedor responde con el servicio ya armado.' },
+    { phase: 2, title: 'El bean ya viene conectado', focus: ['svc', 'repo'],
+      msgs: [msg([100, 274, 214, 274], 'listar()', 'data'), msg([404, 276, 520, 276], 'usa', 'data')],
+      caption: 'Al llamar al servicio, este usa el repositorio que le inyectaron. Quien lo usa no necesita saber cómo se construyó.' },
+    { phase: 2, title: 'Quién más puede usarlo', focus: ['otro', 'nota'],
+      msgs: [msg([100, 340, 186, 340], 'getBean', 'ctl'), msg([186, 366, 100, 366], 'el mismo', 'ack')],
+      caption: 'Cualquier clase con acceso al contenedor (un servlet, por ejemplo) puede pedir el bean. Por defecto es singleton: todos reciben la MISMA instancia.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'El contenedor IoC de Spring dentro de la JVM: cómo crea los beans, inyecta la dependencia del servicio y los entrega a quien los pide',
+    phases: ['Las piezas', 'Crear y conectar', 'Usar los beans'],
+    scene: function (svg) { return DK.layers({ svg: svg, width: 800, height: 426, nodes: nodes, trail: 'phase', labels: 'smart' }); },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Contenedor IoC y beans', title: 'Antes de empezar',
+      text: 'Este es el mapa de una aplicación Spring. Pulsa "Siguiente": primero conoces las piezas, luego ves cómo se crean y se conectan los beans, y al final cómo se usan.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

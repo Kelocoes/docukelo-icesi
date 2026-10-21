@@ -1213,8 +1213,10 @@ Resultado: `StackOverflowError` o un JSON de varios megabytes.
 private List<Event> createdEvents;
 ```
 
-> **`@JsonIgnore` NO afecta la base de datos.** La relación sigue existiendo, la FK sigue ahí, y `user.getCreatedEvents()` sigue funcionando en tu código Java. Solo desaparece del JSON de respuesta.
-> 
+:::warning
+**`@JsonIgnore` NO afecta la base de datos.** La relación sigue existiendo, la FK sigue ahí, y `user.getCreatedEvents()` sigue funcionando en tu código Java. Solo desaparece del JSON de respuesta.
+
+:::
 
 ### ¿En cuál de los dos lados lo pongo?
 
@@ -2126,7 +2128,9 @@ retorno    (findBy)    a filtrar
 | `List<Flight>` | Esperas **varios** (o ninguno → lista vacía, nunca null). |
 | `long` / `boolean` | Con `countBy` / `existsBy`. |
 
-> Si declaras `Optional<Flight>` pero la consulta devuelve 3 filas, Spring lanza
+:::warning
+Si declaras `Optional<Flight>` pero la consulta devuelve 3 filas, Spring lanza
+:::
 `IncorrectResultSizeDataAccessException`. Usa `Optional` **solo** con campos `unique`.
 > 
 
@@ -2401,8 +2405,10 @@ boolean existsByBookingCode(String bookingCode);
 void deleteByTicketId(Long ticketId);
 ```
 
-> `deleteBy...` **requiere** `@Transactional` (en el método del repositorio o en el servicio). Sin eso lanza `TransactionRequiredException`.
-> 
+:::warning
+`deleteBy...` **requiere** `@Transactional` (en el método del repositorio o en el servicio). Sin eso lanza `TransactionRequiredException`.
+
+:::
 
 ---
 
@@ -2717,8 +2723,10 @@ List<Airport> findByCountryOrderByCityAsc(String country);
 List<Airport> findDistinctByDepartingFlightsIsNotEmpty();
 ```
 
-> **Límite de los métodos derivados:** no pueden hacer agregaciones (`SUM`, `AVG`, `GROUP BY`) ni condiciones sobre el tamaño de una colección (`HAVING COUNT(*) > 1`). Para eso sí se necesita `@Query`, o resolverlo en la capa de servicio con streams de Java.
-> 
+:::warning
+**Límite de los métodos derivados:** no pueden hacer agregaciones (`SUM`, `AVG`, `GROUP BY`) ni condiciones sobre el tamaño de una colección (`HAVING COUNT(*) > 1`). Para eso sí se necesita `@Query`, o resolverlo en la capa de servicio con streams de Java.
+
+:::
 
 ---
 
@@ -3162,8 +3170,10 @@ DELETE /rest/events/5  → borra el 5
 DELETE /rest/events/5  → ya no existe, mismo estado ← idempotente
 ```
 
-> Idempotente **no** significa "misma respuesta". El segundo DELETE puede devolver 404 en vez de 204, pero el **estado del servidor** es idéntico. Eso es lo que cuenta.
-> 
+:::warning
+Idempotente **no** significa "misma respuesta". El segundo DELETE puede devolver 404 en vez de 204, pero el **estado del servidor** es idéntico. Eso es lo que cuenta.
+
+:::
 
 ### PUT vs PATCH
 
@@ -3258,8 +3268,10 @@ public String findAll(@RequestParam(defaultValue = "0") int offset,
 | `defaultValue` | Valor si no viene. **Implica `required = false`** |
 | `name` / `value` | Nombre en la URL si difiere del parámetro Java |
 
-> Para parámetros opcionales usa **tipos envoltorio** (`Integer`, `Boolean`), nunca primitivos (`int`, `boolean`). Un `int` no puede ser `null`: si el parámetro no viene, Spring lanza excepción.
-> 
+:::warning
+Para parámetros opcionales usa **tipos envoltorio** (`Integer`, `Boolean`), nunca primitivos (`int`, `boolean`). Un `int` no puede ser `null`: si el parámetro no viene, Spring lanza excepción.
+
+:::
 
 ## ¿Cuándo usar cada uno?
 
@@ -3386,16 +3398,15 @@ controller/
 └── rest/    → RestEventController, RestUserController, AuthController
 ```
 
-> Si dos clases en paquetes distintos tienen el **mismo nombre** (como los dos `AuthController`), Spring falla porque el nombre del bean choca. Se resuelve nombrando el bean explícitamente:
-> 
-> 
-> java
-> 
-> ```java
-> @Controller("mvcAuthController")       // en el paquete mvc
-> @RestController("restAuthController")  // en el paquete rest
-> ```
-> 
+:::warning
+Si dos clases en paquetes distintos tienen el **mismo nombre** (como los dos `AuthController`), Spring falla porque el nombre del bean choca. Se resuelve nombrando el bean explícitamente:
+
+```java title="Nombres de bean explícitos"
+@Controller("mvcAuthController")       // en el paquete mvc
+@RestController("restAuthController")  // en el paquete rest
+```
+
+:::
 
 # BLOQUE 1 — Construyendo el controlador MVC
 
@@ -3648,8 +3659,10 @@ Fíjate en `${event.zone.name}`. La plantilla accede a la **entidad completa** c
 
 Esto es cómodo, pero tiene un costo que veremos en el Bloque 2 (y que en REST se vuelve un problema real).
 
-> Si la relación es `FetchType.LAZY` y la plantilla intenta acceder a ella fuera de la transacción, salta `LazyInitializationException`. Con `spring.jpa.open-in-view=true` (el valor por defecto) esto no ocurre porque la sesión queda abierta durante toda la petición — pero esa opción tiene otros problemas. Lo limpio es que el servicio traiga las relaciones que la vista necesita.
-> 
+:::warning
+Si la relación es `FetchType.LAZY` y la plantilla intenta acceder a ella fuera de la transacción, salta `LazyInitializationException`. Con `spring.jpa.open-in-view=true` (el valor por defecto) esto no ocurre porque la sesión queda abierta durante toda la petición — pero esa opción tiene otros problemas. Lo limpio es que el servicio traiga las relaciones que la vista necesita.
+
+:::
 
 ---
 
@@ -3799,8 +3812,10 @@ return "redirect:/mvc/events";  // → manda un 302 al navegador para que vaya a
 
 Con `redirect:`, el `String` **ya no es un nombre de plantilla, es una URL**. El navegador hace una petición nueva.
 
-> Ojo con este código: el `model.addAttribute("error", ...)` seguido de un `redirect:` **no funciona**. El `Model` se pierde al redirigir porque la petición siguiente es otra. Para que el mensaje sobreviva hace falta `RedirectAttributes`, que veremos en el Paso 8.
-> 
+:::warning
+Ojo con este código: el `model.addAttribute("error", ...)` seguido de un `redirect:` **no funciona**. El `Model` se pierde al redirigir porque la petición siguiente es otra. Para que el mensaje sobreviva hace falta `RedirectAttributes`, que veremos en el Paso 8.
+
+:::
 
 ---
 
@@ -4435,8 +4450,10 @@ html
 </form>
 ```
 
-> Los campos **deben** llamarse `username` y `password`, o hay que declararlo con `.usernameParameter(...)` y `.passwordParameter(...)` en la configuración. No es opcional.
-> 
+:::warning
+Los campos **deben** llamarse `username` y `password`, o hay que declararlo con `.usernameParameter(...)` y `.passwordParameter(...)` en la configuración. No es opcional.
+
+:::
 
 ## Cómo funciona la sesión con JSESSIONID
 
@@ -4986,8 +5003,10 @@ Y en el plugin de compilación, **el orden importa**:
 </plugin>
 ```
 
-> **Si Lombok y MapStruct no están en ese orden, todos los mapeos salen `null`.** MapStruct se ejecuta antes de que Lombok haya generado los getters, así que no encuentra nada que mapear. El `lombok-mapstruct-binding` es lo que los sincroniza. Es un error clásico y muy difícil de diagnosticar porque **compila sin errores**.
-> 
+:::warning
+**Si Lombok y MapStruct no están en ese orden, todos los mapeos salen `null`.** MapStruct se ejecuta antes de que Lombok haya generado los getters, así que no encuentra nada que mapear. El `lombok-mapstruct-binding` es lo que los sincroniza. Es un error clásico y muy difícil de diagnosticar porque **compila sin errores**.
+
+:::
 
 ## Los DTOs vuelven a ser planos
 
@@ -5825,8 +5844,10 @@ Este es un detalle que confunde mucho. El método devuelve **dos clases distinta
 
 Por eso en la configuración se pueden mezclar reglas de grano fino (`hasAuthority('DELETE')`) con reglas de grano grueso (`hasAuthority('ADMIN')`). Ambas funcionan porque ambas cadenas están en la lista.
 
-> **`hasRole` vs `hasAuthority`.** `hasRole('ADMIN')` busca internamente la authority `ROLE_ADMIN` (añade el prefijo). Como aquí el rol se añade sin prefijo, hay que usar **`hasAuthority('ADMIN')`**. Si prefieres `hasRole`, guarda los roles en la BD como `ROLE_ADMIN`.
-> 
+:::warning
+**`hasRole` vs `hasAuthority`.** `hasRole('ADMIN')` busca internamente la authority `ROLE_ADMIN` (añade el prefijo). Como aquí el rol se añade sin prefijo, hay que usar **`hasAuthority('ADMIN')`**. Si prefieres `hasRole`, guarda los roles en la BD como `ROLE_ADMIN`.
+
+:::
 
 ### `getUser()` no es parte de la interfaz
 
@@ -5923,8 +5944,10 @@ User findByUserName(String userName);
 Optional<User> findByUserName(String userName);
 ```
 
-> Si `User` tiene `@SQLRestriction("deleted = false")` (el borrado suave de la Parte 1), un usuario eliminado **no aparecerá** en esta búsqueda y no podrá autenticarse. Ese es justamente el comportamiento deseado.
-> 
+:::warning
+Si `User` tiene `@SQLRestriction("deleted = false")` (el borrado suave de la Parte 1), un usuario eliminado **no aparecerá** en esta búsqueda y no podrá autenticarse. Ese es justamente el comportamiento deseado.
+
+:::
 
 ---
 
@@ -5951,8 +5974,10 @@ Cualquiera puede copiar un JWT, pegarlo en [jwt.io](https://jwt.io/) y **leer el
 
 Lo que la firma garantiza es la **integridad**: si alguien cambia `"roles": ["READ"]` por `"roles": ["ADMIN"]`, la firma deja de coincidir y el servidor rechaza el token. Para generar una firma válida haría falta la **clave secreta**, que solo conoce el servidor.
 
-> **Consecuencia práctica: nunca metas datos sensibles en el payload.** Ni contraseñas, ni documentos, ni datos personales. Solo identificadores y permisos.
-> 
+:::warning
+**Consecuencia práctica: nunca metas datos sensibles en el payload.** Ni contraseñas, ni documentos, ni datos personales. Solo identificadores y permisos.
+
+:::
 
 ## Dependencias
 
@@ -5982,8 +6007,10 @@ Y la clave secreta en `application.properties`:
 app.jwt.secret=bXlTdXBlclNlY3JldEtleUZvckpXVFNpZ25pbmcxMjM0NTY3ODkwMTIzNDU2Nzg5MA==
 ```
 
-> Debe estar en **Base64** y tener al menos 256 bits (32 bytes) para HS256. En producción va en una variable de entorno, **nunca** en el repositorio.
-> 
+:::warning
+Debe estar en **Base64** y tener al menos 256 bits (32 bytes) para HS256. En producción va en una variable de entorno, **nunca** en el repositorio.
+
+:::
 
 ## La interfaz
 
@@ -6304,8 +6331,10 @@ Y al guardar, siempre `encode`:
 newUser.setPassword(passwordEncoder.encode(request.getPassword()));
 ```
 
-> Si guardas contraseñas sin `encode()`, el login **nunca** funcionará, porque `matches()` compara contra un hash que no existe.
-> 
+:::warning
+Si guardas contraseñas sin `encode()`, el login **nunca** funcionará, porque `matches()` compara contra un hash que no existe.
+
+:::
 
 ### El cast a `CustomUserDetails`
 
@@ -6427,11 +6456,13 @@ Aunque “solo consultan”, llevan la contraseña en el cuerpo. Un GET la pondr
 - **Login fallido** → `401 Unauthorized`: las credenciales no sirven.
 - **Registro fallido** → `400 Bad Request`: los datos enviados tienen algún problema (usuario duplicado, campos faltantes).
 
-> **Sobre el `catch (Exception e)` genérico:** captura todo por igual, así que un fallo de conexión a la base de datos se reporta como “credenciales inválidas”. En un proyecto real conviene capturar excepciones concretas o delegar en el `@RestControllerAdvice` del Bloque 2.
-> 
-> 
-> Si necesitas ver qué está fallando mientras desarrollas, agrega temporalmente un `e.printStackTrace()` — pero **quítalo antes de entregar**. Un stack trace en producción filtra la estructura interna de la aplicación.
-> 
+:::warning
+**Sobre el `catch (Exception e)` genérico:** captura todo por igual, así que un fallo de conexión a la base de datos se reporta como “credenciales inválidas”. En un proyecto real conviene capturar excepciones concretas o delegar en el `@RestControllerAdvice` del Bloque 2.
+
+
+Si necesitas ver qué está fallando mientras desarrollas, agrega temporalmente un `e.printStackTrace()` — pero **quítalo antes de entregar**. Un stack trace en producción filtra la estructura interna de la aplicación.
+
+:::
 
 ### Probarlo con Postman
 
@@ -6827,8 +6858,10 @@ No se pueden mezclar en una sola cadena.
 
 `securityMatcher` decide **a qué rutas aplica** la cadena. `@Order` decide **en qué orden** se evalúan. Spring toma **la primera que coincida** y las demás ni se miran.
 
-> **Un `securityMatcher` demasiado amplio en la cadena de menor `@Order` se traga todo.** Si la cadena 1 fuera `.securityMatcher("/**")`, la cadena REST nunca se aplicaría y todas las peticiones a `/rest` intentarían usar sesión.
-> 
+:::warning
+**Un `securityMatcher` demasiado amplio en la cadena de menor `@Order` se traga todo.** Si la cadena 1 fuera `.securityMatcher("/**")`, la cadena REST nunca se aplicaría y todas las peticiones a `/rest` intentarían usar sesión.
+
+:::
 
 ## Las líneas clave de la cadena REST
 
@@ -6840,8 +6873,10 @@ Le prohíbe a Spring crear `HttpSession`. Sin esto, seguiría generando `JSESSIO
 
 La protección CSRF existe porque el navegador envía cookies **automáticamente**. Como el JWT viaja en una cabecera que el JavaScript pone **a mano**, un sitio malicioso no puede provocar peticiones autenticadas. El ataque no aplica.
 
-> **En MVC, en cambio, CSRF debe seguir activo.** Ahí sí hay cookies automáticas. Por eso la cadena 1 solo lo desactiva para `/h2-console/**` (que es una herramienta de desarrollo, no un endpoint de la app).
-> 
+:::warning
+**En MVC, en cambio, CSRF debe seguir activo.** Ahí sí hay cookies automáticas. Por eso la cadena 1 solo lo desactiva para `/h2-console/**` (que es una herramienta de desarrollo, no un endpoint de la app).
+
+:::
 
 ### `addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)`
 
@@ -6862,8 +6897,10 @@ Se evalúan **de arriba abajo** y gana **la primera coincidencia**:
 .anyRequest().authenticated()                              // ④ el catch-all AL FINAL
 ```
 
-> Si pusieras `.anyRequest().authenticated()` primero, **todo lo demás se ignoraría** y hasta el login exigiría estar autenticado (un candado con la llave dentro).
-> 
+:::warning
+Si pusieras `.anyRequest().authenticated()` primero, **todo lo demás se ignoraría** y hasta el login exigiría estar autenticado (un candado con la llave dentro).
+
+:::
 
 ## Las líneas clave de la cadena MVC
 

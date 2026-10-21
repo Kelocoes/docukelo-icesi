@@ -1,0 +1,6 @@
+{
+  "interactive": ".agents/memory/svg-redesign/candidates/static/interactive/computacion-2/semana-8/flujo-ssr-thymeleaf/index.html",
+  "height": 720,
+  "finalPath": "static/interactive/computacion-2/semana-8/flujo-ssr-thymeleaf/",
+  "embed": "<iframe src=\"/interactive/computacion-2/semana-8/flujo-ssr-thymeleaf/index.html\" title=\"Flujo de una peticion con Thymeleaf\" style={{ width: '100%', height: 720, border: 0 }} loading=\"lazy\" />"
+}

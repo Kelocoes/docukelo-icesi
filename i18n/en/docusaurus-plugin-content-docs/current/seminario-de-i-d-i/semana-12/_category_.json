@@ -1,0 +1,8 @@
+{
+    "label": "W12 - State Lifting and Navigation",
+    "position": 12,
+    "link": {
+        "type": "generated-index",
+        "description": "State lifting, callbacks and declarative navigation between screens."
+    }
+}

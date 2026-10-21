@@ -101,7 +101,7 @@ public class UsuarioController {
 
 Custom bean identifiers can also be declared in `@Service`:
 
-```java title="Java example"
+```java title="B. Solution 1"
 @Service("emailService")
 public class NotificacionEmailServiceImpl implements NotificacionService { ... }
 

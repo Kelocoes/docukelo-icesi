@@ -174,7 +174,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 En la configuración de Spring Security se utiliza la siguiente instrucción:
 
-```java title="Ejemplo en Java"
+```java title="Por qué JwtAuthenticationFilter va"
 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 ```
 

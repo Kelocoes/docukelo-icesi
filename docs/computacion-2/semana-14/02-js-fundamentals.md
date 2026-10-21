@@ -152,7 +152,7 @@ El _hoisting_ es el comportamiento donde las declaraciones de funciones y variab
 
 ### Ejemplos:
 
-```js title="Ejemplos"
+```js title="Hoisting"
 console.log(a); // undefined
 var a = 2;
 ```
@@ -161,7 +161,7 @@ var a = 2;
 
 Con `let` y `const` sucede distinto:
 
-```js title="Ejemplos"
+```js title="Hoisting (2)"
 console.log(b); // ReferenceError: cannot access 'b' before initialization
 let b = 3;
 ```
@@ -249,7 +249,7 @@ Eso es un _closure_: la función interna mantiene acceso a `cuenta` aunque la ej
 
 ### IIFE (Immediately Invoked Function Expression)
 
-```js title="Ejemplo en JavaScript"
+```js title="IIFE"
 (function () {
     console.log("Esto se ejecuta inmediatamente");
 })();
@@ -391,7 +391,7 @@ console.log(dobles); // [2, 4, 6]
 
 **Comparación práctica:**
 
-```js title="map"
+```js title="map (2)"
 const arr = [1, 2, 3];
 const r1 = arr.forEach((x) => x * 2); // r1 === undefined
 const r2 = arr.map((x) => x * 2); // r2 === [2,4,6]
@@ -449,7 +449,7 @@ const oCopy = { ...o };
 
 **Aviso:** estas son _copias superficiales_. Si el objeto tiene objetos anidados, las subpropiedades siguen siendo referencias.
 
-```js title="Copias superficiales (shallow copy)"
+```js title="Copias superficiales (shallow copy) (2)"
 const orig = { nested: { val: 1 } };
 const shallow = { ...orig };
 shallow.nested.val = 2;

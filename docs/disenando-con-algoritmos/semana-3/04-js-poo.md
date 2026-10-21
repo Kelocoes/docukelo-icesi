@@ -255,7 +255,7 @@ miCuenta.intentarLogin("123456"); // ✅ Correcto
 
 ### Getters y Setters con Propiedades Privadas
 
-```javascript title="Ejemplo de JavaScript"
+```javascript title="Getters y Setters con Propiedades"
 class Producto {
   #precio = 0; // Propiedad verdaderamente privada
   #descuento = 0;

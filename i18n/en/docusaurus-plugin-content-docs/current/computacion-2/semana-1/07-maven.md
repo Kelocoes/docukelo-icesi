@@ -20,7 +20,7 @@ To use Maven in your local environment, first make sure you have an active insta
 
 ### Option A: Via package managers (Recommended)
 If you use **Scoop** or **Chocolatey** in PowerShell:
-```powershell title="PowerShell example"
+```powershell title="Option A"
 # Using Scoop
 scoop install maven
 

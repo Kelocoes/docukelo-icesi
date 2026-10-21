@@ -1,6 +1,6 @@
 # DocuKelo
 
-Portal de documentación de asignaturas y proyectos de la Universidad Icesi: guías paso a paso, laboratorios, slides y diagramas interactivos. Está construido con [Docusaurus](https://docusaurus.io) 3 (React y MDX) y publicado en **https://kelocoes.github.io/docukelo-icesi/**.
+Portal de documentación de asignaturas y proyectos de la Universidad Icesi: guías paso a paso, laboratorios, slides y diagramas interactivos. Está construido con [Docusaurus](https://docusaurus.io) 3 (React y MDX) y publicado en **https://docukelo-icesi.onrender.com** (con un espejo en https://kelocoes.github.io/docukelo-icesi/).
 
 ## Requisitos
 
@@ -16,6 +16,7 @@ npm run build        # build de producción en build/ (es y en)
 npm run serve        # sirve el build de producción en local
 npm run clear        # limpia la caché de Docusaurus
 npm run lint:docs    # revisa los documentos contra las reglas de la guía (ver .agents/memory/docusaurus-guidelines.md)
+npm run scaffold-week -- --course computacion-2 --week 17 --topics "Tema uno, Tema dos"   # crea una semana nueva
 ```
 
 Para ver la versión en inglés en desarrollo: `npm start -- --locale en`.
@@ -36,6 +37,8 @@ static/interactive/ Piezas interactivas (HTML) con su kit compartido en _shared/
 
 ## Escribir contenido
 
+> Al instalar (`npm install`) se activa un hook de pre-commit que revisa los documentos que modificas con `npm run lint:docs`.
+
 - Cada curso es una carpeta de `docs/` con su `_category_.json` y un `intro.md`; las semanas son subcarpetas con archivos `01-tema.md`, `02-otro.md` (prefijo de dos dígitos, minúsculas y guiones; el prefijo no aparece en la URL).
 - Las reglas de estilo, los componentes disponibles y cómo incluir diagramas están en [`.agents/memory/docusaurus-guidelines.md`](.agents/memory/docusaurus-guidelines.md).
 - Los documentos nuevos en `es` se traducen a `i18n/en/docusaurus-plugin-content-docs/current/` con la misma ruta.
@@ -43,7 +46,10 @@ static/interactive/ Piezas interactivas (HTML) con su kit compartido en _shared/
 
 ## Despliegue
 
-Se publica automáticamente en GitHub Pages cuando se hace push a `main` (por ejemplo, al fusionar un pull request). El workflow `.github/workflows/deploy.yml` construye el sitio con el `Dockerfile` multi-stage y lo sube con `actions/deploy-pages`.
+La rama `main` se publica en dos sitios cada vez que recibe un push (por ejemplo, al fusionar un pull request):
+
+- **Render** (sitio principal, Static Site): https://docukelo-icesi.onrender.com. Se reconstruye solo; el `docusaurus.config.js` detecta la variable `RENDER` y usa `baseUrl: /`, así que no hay nada que configurar en el panel.
+- **GitHub Pages** (espejo): https://kelocoes.github.io/docukelo-icesi/. Lo publica `.github/workflows/deploy.yml`, que construye el sitio con el `Dockerfile` multi-stage y lo sube con `actions/deploy-pages`.
 
 Para revisar el build de producción con Docker en local:
 
@@ -52,7 +58,7 @@ docker build --build-arg BASE_URL=/ -t docukelo .
 docker run --rm -p 8080:80 docukelo     # http://localhost:8080/
 ```
 
-En producción el sitio vive bajo `/docukelo-icesi/`; en desarrollo, en `/`. Se puede forzar con las variables `BASE_URL` y `SITE_URL`.
+En GitHub Pages el sitio vive bajo `/docukelo-icesi/`; en Render y en desarrollo (`npm start`), en la raíz `/`. Se puede forzar con las variables `BASE_URL` y `SITE_URL`.
 
 ## Para agentes de IA
 

@@ -7,6 +7,7 @@ import isInternalUrl from '@docusaurus/isInternalUrl';
 import IconExternalLink from '@theme/Icon/ExternalLink';
 import { DocumentIcon } from '@site/src/components/IcesiIcons';
 import { extractLeadingEmoji } from '@docusaurus/theme-common/internal';
+import { notifyProgressChanged } from '@site/src/utils/readingProgress';
 import styles from './styles.module.css';
 
 function stripLeadingEmoji(str) {
@@ -64,6 +65,7 @@ export default function DocSidebarItemLink({
     } catch (e) {
       console.error('Error saving completion state to localStorage', e);
     }
+    notifyProgressChanged();
   };
 
   return (
