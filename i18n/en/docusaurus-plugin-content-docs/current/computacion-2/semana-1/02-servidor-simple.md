@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Build a simple Java web server step by step, using sockets to receive requests and respond to a client."
 ---
 
 # Building a Simple Server
@@ -18,7 +19,7 @@ Add the following lines at the top of the file to import the required classes:
 - `java.net`: Allows working with networking, sockets, and TCP/IP connections.
 - `java.util`: Includes utilities such as collections and string manipulation classes like `StringTokenizer`.
 
-```java
+```java title="Import Required Packages"
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -28,7 +29,7 @@ import java.util.*;
 
 Declare the main class and the `main` method:
 
-```java
+```java title="Define the Main Class"
 public class ServidorWebSimple {
     public static void main(String argv[]) throws Exception {
         // Code goes here
@@ -40,7 +41,7 @@ public class ServidorWebSimple {
 
 Inside the `main` method, add the code to create the socket listening on port 6789:
 
-```java
+```java title="Create the Server Socket"
 ServerSocket socketdeEscucha = new ServerSocket(6789);
 Socket socketdeConexion = socketdeEscucha.accept();
 ```
@@ -49,7 +50,7 @@ Socket socketdeConexion = socketdeEscucha.accept();
 
 Add the following code to read the HTTP request sent by the browser:
 
-```java
+```java title="Read the Client Request"
 BufferedReader mensajeDesdeCliente =
     new BufferedReader(new InputStreamReader(socketdeConexion.getInputStream()));
 String lineaDeLaSolicitudHttp = mensajeDesdeCliente.readLine();
@@ -61,7 +62,7 @@ Note: `BufferedReader` uses an internal buffer to efficiently read data from the
 
 Use `StringTokenizer` to extract the requested file name:
 
-```java
+```java title="Process Request and Extract File Name"
 StringTokenizer lineaSeparada = new StringTokenizer(lineaDeLaSolicitudHttp);
 if (lineaSeparada.nextToken().equals("GET")) {
     String nombreArchivo = lineaSeparada.nextToken();
@@ -77,7 +78,7 @@ if (lineaSeparada.nextToken().equals("GET")) {
 
 The following code implements the algorithm allowing the server to read the requested file and send an appropriate HTTP response:
 
-```java
+```java title="Read Requested File and Prepare Response"
 File archivo = new File(nombreArchivo);
 FileInputStream archivoDeEntrada = new FileInputStream(nombreArchivo);
 int cantidadDeBytes = (int) archivo.length();

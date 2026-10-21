@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Conoce el propósito, las unidades y el cronograma semanal de la etapa de desarrollo frontend con Flutter asistido por IA."
 ---
 
 import PdfViewer from '@site/src/components/PdfViewer/PdfViewer';

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Learn to create and maintain the AGENTS.md contract as a modular entrypoint that guides agents working on your project."
 ---
 
 import Tabs from '@theme/Tabs';
@@ -84,7 +85,7 @@ In professional practice following a **Human-in-the-Lead** approach, the context
 ### Update Protocol
 * **The two-warnings rule:** If you have to correct the agent twice on the same anti-pattern (for instance, omitting `const` constructors), do not correct it manually a third time. **Open `AGENTS.md` and add the constraint.**
 * **Conciseness and clarity:** Be direct and prescriptive. It is far more effective to write:
-  ```markdown
+  ```markdown title="Rule in AGENTS.md"
   - FORBIDDEN: Using Scaffold inside files located in lib/pages/.
   ```
   than writing a three-paragraph justification on Flutter design history.

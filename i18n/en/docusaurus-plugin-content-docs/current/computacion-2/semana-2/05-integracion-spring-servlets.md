@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Integrate the Spring context into web servlets with ContextLoaderListener to avoid recreating the container on every request."
 ---
 
 # Spring Context Integration in Web Servlets

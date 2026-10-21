@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Consulta las diapositivas de la semana 9 sobre Next.js, renderizado CSR y SSR, App Router y componentes de servidor y cliente."
 ---
 
 # Slides de la semana

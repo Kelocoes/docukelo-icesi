@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Review the official slides of Week 6 on REST controllers, the HTTP request lifecycle, validation pipes with DTOs, and unit testing."
 ---
 
 # Slides of the Week

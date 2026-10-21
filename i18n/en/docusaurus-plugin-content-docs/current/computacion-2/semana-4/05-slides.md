@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Browse the week 4 slides on Spring Boot, embedded Tomcat, the DispatcherServlet, Lombok and Spring Data JPA."
 ---
 
 # Week Slides

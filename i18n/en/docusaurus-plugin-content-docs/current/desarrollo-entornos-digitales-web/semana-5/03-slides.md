@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Review the week 5 slides on providers, dependency injection and repositories using the embedded PDF viewer."
 ---
 
 # Weekly Slides

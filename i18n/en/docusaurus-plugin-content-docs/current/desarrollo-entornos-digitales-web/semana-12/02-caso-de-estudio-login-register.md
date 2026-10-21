@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Build a login, registration and navigation case study in Next.js connected to the course's NestJS backend, with CORS and protected routes."
 ---
 
 # Case Study: Login, Registration, and Navigation
@@ -752,7 +753,7 @@ Let's analyze in depth the technical navigation decisions made in our flow:
 
 When a user logs in successfully, we execute:
 
-```typescript
+```typescript title="Why router.replace and Not router.push"
 router.replace('/dashboard');
 ```
 
@@ -762,7 +763,7 @@ If we used `router.push('/dashboard')`, Next.js would add a new entry to the bro
 
 Upon logging out, we clear the credential and redirect to login replacing the history:
 
-```typescript
+```typescript title="Logout Flow"
 const handleLogout = () => {
   authService.logout();
   router.replace('/login');

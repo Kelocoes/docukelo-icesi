@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Learn to validate input data in NestJS using built-in pipes, class-validator and custom pipes."
 ---
 
 # Pipes and Validators in NestJS
@@ -293,7 +294,7 @@ export class UsersController {
 :::info[What happens if input validation fails?]
 If a client issues `POST /users` with an invalid email address (`"email": "not-an-email"`), `ValidationPipe` interrupts execution before calling `create()` and responds with:
 
-```json
+```json title="Practical Guide: Validation"
 {
   "message": [
     "Must provide a valid email address"

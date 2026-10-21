@@ -4,7 +4,7 @@
 // There are various equivalent ways to declare your Docusaurus config.
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
-import { themes as prismThemes, themes } from 'prism-react-renderer';
+import { themes as prismThemes } from 'prism-react-renderer';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import remarkStaticBaseUrl from './src/plugins/remark-static-base-url.js';
@@ -36,6 +36,9 @@ const config = {
     // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
     future: {
         v4: true, // Improve compatibility with the upcoming Docusaurus v4
+        // Rspack + SWC + lightningcss y calculo de "Ultima actualizacion" en un solo paso de git
+        // (paquete @docusaurus/faster). Si un build falla solo con esto, probar desactivarlo.
+        faster: true,
     },
 
     url: siteUrl,
@@ -47,6 +50,7 @@ const config = {
     projectName: 'docukelo-icesi', // Usually your repo name.
 
     onBrokenLinks: 'throw',
+    onBrokenAnchors: 'throw',
     headTags: [
         {
             tagName: 'script',
@@ -71,7 +75,7 @@ const config = {
             return result;
         },
         hooks: {
-            onBrokenMarkdownLinks: 'warn',
+            onBrokenMarkdownLinks: 'throw',
         },
         mermaid: true,
         mdx1Compat: {
@@ -110,12 +114,7 @@ const config = {
             ({
                 docs: {
                     sidebarPath: './sidebars.js',
-                    // Cursos en desarrollo/internos ocultos durante el despliegue de producción
-                    exclude:
-                        process.env.NODE_ENV === 'production' &&
-                        process.env.SHOW_INTERNAL_COURSES !== 'true'
-                            ? ['diseno-de-software-1/**', '**/_*.{js,jsx,ts,tsx,md,mdx}']
-                            : ['**/_*.{js,jsx,ts,tsx,md,mdx}'],
+                    exclude: ['**/_*.{js,jsx,ts,tsx,md,mdx}'],
                     // Docusaurus agrega la ruta del archivo relativa a la raiz del repo
                     // (docs/<curso>/...), asi que este valor base es el correcto.
                     editUrl:
@@ -217,9 +216,6 @@ const config = {
 
                 // Optional: whether the insights feature is enabled or not on Docsearch (`false` by default)
                 insights: false,
-
-                // Optional: whether you want to use the new Ask AI feature (undefined by default)
-                askAi: 'YOUR_ALGOLIA_ASK_AI_ASSISTANT_ID',
 
                 //... other Algolia params
             },

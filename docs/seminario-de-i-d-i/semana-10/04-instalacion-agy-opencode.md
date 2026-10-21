@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Instala y verifica las CLI de agentes Antigravity (agy) y OpenCode en tu equipo, y conoce sus requisitos y comandos básicos."
 ---
 
 import Tabs from '@theme/Tabs';
@@ -81,7 +82,7 @@ Al ejecutar `agy` por primera vez:
 1. La consola desplegará una URL de autenticación o abrirá automáticamente tu navegador predeterminado.
 2. Inicia sesión con tus credenciales autorizadas.
 3. Al completar el inicio de sesión, la terminal mostrará el prompt interactivo:
-   ```yaml
+   ```yaml title="Prompt de Antigravity CLI"
    Antigravity CLI: Ready
    Help: Type /help for available slash commands
    Status: Connected

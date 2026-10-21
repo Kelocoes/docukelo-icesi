@@ -1,5 +1,6 @@
 ---
 sidebar_position: 7
+description: "Install Apache Maven and understand its lifecycle, the pom.xml file and dependency management in Java projects."
 ---
 
 # Apache Maven: Management and Lifecycle
@@ -19,7 +20,7 @@ To use Maven in your local environment, first make sure you have an active insta
 
 ### Option A: Via package managers (Recommended)
 If you use **Scoop** or **Chocolatey** in PowerShell:
-```powershell
+```powershell title="PowerShell example"
 # Using Scoop
 scoop install maven
 

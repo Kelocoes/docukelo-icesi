@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 sidebar_label: "API REST"
+description: "Compara servicios stateful y stateless y comprende qué es una API REST y cómo se diseña sobre Spring Boot."
 ---
 
 # API REST

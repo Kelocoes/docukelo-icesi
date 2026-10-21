@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Explora la estructura de un proyecto create-next-app, los archivos especiales de convención en app y la jerarquía de renderizado."
 ---
 
 # Arquitectura y Estructura en Next.js

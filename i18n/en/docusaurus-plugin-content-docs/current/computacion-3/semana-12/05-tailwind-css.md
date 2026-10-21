@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Style a Next.js application with Tailwind CSS and daisyUI, learning utility-first classes, spacing, and component styling for the routines app."
 ---
 
 import ThemedImage from '@theme/ThemedImage';
@@ -3288,7 +3289,7 @@ As an application grows, building every button, form field, modal, and navigatio
 
 It provides **semantic class names** (such as `btn`, `card`, `navbar`, `input`, `badge`, `alert`) that encapsulate professional and accessible styles built on CSS variables and Tailwind utilities:
 
-```html
+```html title="What Is daisyUI"
 <!-- Instead of writing 12 utilities for an accessible primary button: -->
 <button class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
   Save

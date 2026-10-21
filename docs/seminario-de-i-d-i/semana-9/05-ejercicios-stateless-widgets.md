@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Practica la creación de StatelessWidgets, desde átomos visuales hasta moléculas modulares, con ejercicios por niveles."
 ---
 
 import Tabs from '@theme/Tabs';

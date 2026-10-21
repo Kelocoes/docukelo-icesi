@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Instala y configura Docker y despliega una aplicación con Spring Boot y React en contenedores paso a paso."
 ---
 
 # Configuración de Docker
@@ -36,7 +37,7 @@ Para mantener simple el ejemplo, utilizaremos una aplicación de Spring Boot y R
 
 Primero asumimos que estás usando maven, aunque realmente puedes usar cualquier herramienta de construcción que prefieras. Crea un archivo llamado `Dockerfile` en la raíz de tu proyecto de Spring Boot con el siguiente contenido:
 
-```bash
+```bash title="Dockerfile"
 # Etapa 1: Build del WAR
 FROM maven:3.8.5-openjdk-17 AS builder
 WORKDIR /app
@@ -57,7 +58,7 @@ Aquí podemos observar algo llamado **multi-stage build**. Esto nos permite crea
 
 Crea un archivo llamado `Dockerfile` en la raíz de tu proyecto de React con el siguiente contenido:
 
-```bash
+```bash title="Dockerfile"
 # Etapa 1: contruccion
 FROM node:18-alpine AS builder
 WORKDIR /app
@@ -75,7 +76,7 @@ CMD ["nginx", "-g", "daemon off;"]
 
 Ya que estamos proponiendo usar nginx, es necesario crear un archivo de configuración llamado `nginx.conf` en la raíz de tu proyecto de React con el siguiente contenido:
 
-```nginx
+```nginx title="nginx.conf"
 server {
   listen 80;
   server_name localhost;
@@ -95,7 +96,7 @@ Esto configura Nginx para servir tu aplicación React y manejar correctamente la
 
 Crea un archivo llamado `docker-compose.yml` en la raíz de tu proyecto con el siguiente contenido:
 
-```yaml
+```yaml title="docker-compose.yml"
 services:
   db:
     image: postgres:14.18

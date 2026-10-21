@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Understand why state lives in State, how setState rebuilds the widget tree, and how to handle the first user interaction."
 ---
 
 import Tabs from '@theme/Tabs';
@@ -177,7 +178,7 @@ In Flutter, buttons and interactive events receive **functions as parameters** t
 :::caution[Critical Antipattern with setState()]
 Never place heavy asynchronous calls (such as `await http.get()`) directly inside a `setState()` block. Only immediate, synchronous memory assignments belong inside the callback:
 
-```dart
+```dart title="setState antipattern"
 // INCORRECT: Blocks the render pipeline!
 setState(() async {
   final data = await api.get();

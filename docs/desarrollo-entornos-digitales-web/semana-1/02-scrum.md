@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Conoce las metodologías ágiles y Scrum: roles, eventos, artefactos e historias de usuario para organizar el trabajo de un equipo de desarrollo."
 ---
 
 # Metodologías Ágiles y Scrum

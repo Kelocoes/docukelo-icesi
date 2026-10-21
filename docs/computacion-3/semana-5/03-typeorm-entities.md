@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Configura TypeORM con PostgreSQL en NestJS, traduce un diagrama ER a entidades y pobla la base de datos con un script de datos iniciales."
 ---
 
 # Configuración de TypeORM y Entidades

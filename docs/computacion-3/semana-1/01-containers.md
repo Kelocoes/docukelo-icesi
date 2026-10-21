@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Entiende las máquinas virtuales y los contenedores, sus diferencias y por qué los contenedores evolucionan a partir de la virtualización."
 ---
 
 # Contenedores

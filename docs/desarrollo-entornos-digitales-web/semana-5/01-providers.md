@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Entiende la arquitectura por capas de NestJS, la inversión de control y la inyección de dependencias mediante providers y servicios."
 ---
 
 # Arquitectura y Providers

@@ -1,6 +1,7 @@
 ---
 sidebar_position: 3
 sidebar_label: "Spring Security Architecture"
+description: "Learn the internal architecture of Spring Security: SecurityFilterChain, AuthenticationManager and the HTTP request lifecycle."
 ---
 
 # Spring Security Architecture
@@ -43,7 +44,7 @@ The component containing the **concrete verification logic**. For applications b
 
 ### E. UserDetailsService and UserDetails
 - **`UserDetailsService`:** A functional interface with a single method:
-  ```java
+  ```java title="UserDetailsService and UserDetails"
   UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
   ```
   Serves as the adapter between Spring Security and your persistence layer (JPA Repositories).
@@ -55,7 +56,7 @@ The component containing the **concrete verification logic**. For applications b
 
 ### F. PasswordEncoder
 The interface responsible for processing and validating passwords:
-```java
+```java title="PasswordEncoder"
 public interface PasswordEncoder {
     String encode(CharSequence rawPassword);
     boolean matches(CharSequence rawPassword, String encodedPassword);
@@ -65,11 +66,11 @@ In modern production environments, the mandatory standard implementation is `BCr
 
 ### G. SecurityContextHolder and SecurityContext
 Once a user is successfully authenticated, the filter stores the validated `Authentication` instance inside the `SecurityContextHolder`:
-```java
+```java title="Java example"
 SecurityContextHolder.getContext().setAuthentication(authenticatedToken);
 ```
 The `SecurityContextHolder` stores this information using **`ThreadLocal`**, binding the security context to the execution thread of the active request. Consequently, any controller or service can inspect the authenticated user at any point:
-```java
+```java title="Java example"
 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 String currentUsername = auth.getName();
 ```

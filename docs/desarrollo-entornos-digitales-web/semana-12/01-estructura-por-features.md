@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende a organizar un proyecto Next.js por features, mantener páginas delgadas en app y separar el consumo de API en capas."
 ---
 
 import ThemedImage from '@theme/ThemedImage';
@@ -278,7 +279,7 @@ export type { LoginInput, AuthState } from './types';
 
 Uno de los errores más graves en proyectos formativos es invocar `fetch()` directamente dentro del evento `onClick` o `onSubmit` de un botón:
 
-```tsx
+```tsx title="Dónde Vive el Consumo de API"
 // Anti-patrón: fetch directo en el componente de UI
 <button onClick={() => fetch('http://localhost:4000/auth/login', { method: 'POST', body: ... })}>
 ```

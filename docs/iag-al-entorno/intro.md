@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Presentación del curso de IA generativa al entorno y de los recursos teóricos y prácticos que podrás consultar en cada sección."
 ---
 
 # Contenido del curso

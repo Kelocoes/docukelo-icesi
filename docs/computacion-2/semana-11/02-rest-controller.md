@@ -1,6 +1,7 @@
 ---
 sidebar_position: 2
 sidebar_label: "Rest Controller"
+description: "Construye controladores REST en Spring Boot con @RestController, @RequestMapping y la captura de parámetros de la petición HTTP."
 ---
 
 # Rest Controller

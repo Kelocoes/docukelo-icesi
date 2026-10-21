@@ -1,5 +1,6 @@
 ---
 sidebar_position: 0
+description: "Conoce el contenido del curso Computación en Internet 2, centrado en el desarrollo de aplicaciones web con Spring Boot y React."
 ---
 import PdfViewer from '@site/src/components/PdfViewer/PdfViewer';
 

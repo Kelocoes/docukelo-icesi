@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Model the domain layer of a Clean Architecture frontend, including entities, use cases, and repository contracts free of external dependencies."
 ---
 
 # Domain Layer: Entities and Use Cases

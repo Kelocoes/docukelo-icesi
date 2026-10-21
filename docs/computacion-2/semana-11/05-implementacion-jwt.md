@@ -1,6 +1,7 @@
 ---
 sidebar_position: 5
 sidebar_label: "Implementación de JWT"
+description: "Implementa seguridad basada en JWT con Spring Boot 3 y Spring Security 6: filtros, utilidades de tokens y controlador de autenticación."
 ---
 
 # Implementación de JWT
@@ -552,7 +553,7 @@ public class AuthController {
    }
    ```
    *Respuesta esperada (HTTP 200 OK):*
-   ```json
+   ```json title="Guía de Construcción Paso a Paso"
    {
      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
    }

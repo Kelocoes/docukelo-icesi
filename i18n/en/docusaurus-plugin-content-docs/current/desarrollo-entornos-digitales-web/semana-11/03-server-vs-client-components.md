@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Tell Server Components from Client Components in Next.js and decide when to use the use client directive."
 ---
 
 # Server Components vs. Client Components

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Connect the domain and infrastructure layers to Next.js using dependency injection, custom hooks as presenters, and decoupled visual components."
 ---
 
 # Dependency Injection, Presenters, and Next.js

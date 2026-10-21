@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Learn why to use TypeScript, how to install and configure it, and how to apply basic types, interfaces, functions, and generics in your code."
 ---
 
 # TypeScript
@@ -20,7 +21,7 @@ JavaScript is a flexible and dynamic language, but that dynamism can lead to run
 
 **JavaScript Pitfall Example:**
 
-```javascript
+```javascript title="Why Use TypeScript"
 function sumar(a, b) {
   return a + b;
 }
@@ -30,7 +31,7 @@ console.log(sumar(5, "10")); // "510" instead of 15
 
 **TypeScript Solution:**
 
-```typescript
+```typescript title="Why Use TypeScript? 2"
 function sumar(a: number, b: number): number {
   return a + b;
 }
@@ -59,7 +60,7 @@ tsc -v
 
 ### 2.2 Initialize a TypeScript Project
 
-```bash
+```bash title="Initialize a TypeScript Project"
 mkdir ts-project
 cd ts-project
 npm init -y
@@ -74,7 +75,7 @@ npx tsc --init
 
 Key starting compiler options:
 
-```json
+```json title="Initialize a TypeScript Project 2"
 {
   "compilerOptions": {
     "target": "es6",               // JavaScript target version
@@ -128,7 +129,7 @@ npx ts-node src/index.ts
 
 TypeScript introduces static primitive and composite types:
 
-```typescript
+```typescript title="Basic Types in TypeScript"
 let name: string = "Kevin";
 let age: number = 25;
 let isActive: boolean = true;
@@ -139,20 +140,20 @@ let anyVal: any = "Hello"; // Avoid whenever possible
 
 **Arrays:**
 
-```typescript
+```typescript title="Basic Types in TypeScript 2"
 let numbers: number[] = [1, 2, 3];
 let letters: Array<string> = ["a", "b", "c"];
 ```
 
 **Tuples:**
 
-```typescript
+```typescript title="Basic Types in TypeScript 3"
 let person: [string, number] = ["Kevin", 25];
 ```
 
 **Enums:**
 
-```typescript
+```typescript title="Basic Types in TypeScript 4"
 enum Color {
   Red = "RED",
   Green = "GREEN",
@@ -165,7 +166,7 @@ console.log(favColor); // "GREEN"
 
 **Union Types:**
 
-```typescript
+```typescript title="Basic Types in TypeScript 5"
 let id: string | number;
 id = "ABC123";
 id = 42;
@@ -173,7 +174,7 @@ id = 42;
 
 **Type Aliases:**
 
-```typescript
+```typescript title="Basic Types in TypeScript 6"
 type ID = string | number;
 let userId: ID = 101;
 ```
@@ -184,7 +185,7 @@ let userId: ID = 101;
 
 Function signatures can explicitly annotate parameters and return types:
 
-```typescript
+```typescript title="Functions in TypeScript"
 function greet(name: string): string {
   return `Hello, ${name}`;
 }
@@ -194,7 +195,7 @@ console.log(greet("Kevin"));
 
 Optional and default parameters:
 
-```typescript
+```typescript title="Functions in TypeScript 2"
 function multiply(a: number, b: number = 2, message?: string): number {
   if (message) console.log(message);
   return a * b;
@@ -206,7 +207,7 @@ console.log(multiply(3, 4, "Computing..."));
 
 Arrow functions:
 
-```typescript
+```typescript title="Functions in TypeScript 3"
 const divide = (a: number, b: number): number => a / b;
 ```
 
@@ -216,7 +217,7 @@ const divide = (a: number, b: number): number => a / b;
 
 Interfaces define the structural contract of an object:
 
-```typescript
+```typescript title="Interfaces and Objects"
 interface User {
   id: number;
   name: string;
@@ -231,7 +232,7 @@ let user1: User = {
 
 Function signatures in interfaces:
 
-```typescript
+```typescript title="Interfaces and Objects 2"
 interface MathOperation {
   (a: number, b: number): number;
 }
@@ -244,7 +245,7 @@ console.log(add(5, 3));
 
 ## 6. Classes in TypeScript
 
-```typescript
+```typescript title="Classes in TypeScript"
 class Person {
   private name: string;
   protected age: number;
@@ -267,7 +268,7 @@ console.log(p1.greet());
 
 Inheritance:
 
-```typescript
+```typescript title="Classes in TypeScript 2"
 class Student extends Person {
   course: string;
   constructor(name: string, age: number, isActive: boolean, course: string) {
@@ -283,7 +284,7 @@ class Student extends Person {
 
 **Exporting:**
 
-```typescript
+```typescript title="Modules in TypeScript"
 // file: utils.ts
 export function sum(a: number, b: number): number {
   return a + b;
@@ -292,7 +293,7 @@ export function sum(a: number, b: number): number {
 
 **Importing:**
 
-```typescript
+```typescript title="Modules in TypeScript 2"
 // file: index.ts
 import { sum } from "./utils";
 console.log(sum(3, 4));
@@ -306,7 +307,7 @@ console.log(sum(3, 4));
 
 Similar to Java, Generics enable functions and classes to operate over multiple data types while preserving full type safety. The type parameter is conventionally denoted by `<T>`:
 
-```typescript
+```typescript title="Advanced Types"
 function identity<T>(value: T): T {
   return value;
 }
@@ -321,7 +322,7 @@ The function receives a value of generic type `T` and returns it without type co
 
 Combine multiple type definitions into one cohesive contract:
 
-```typescript
+```typescript title="Advanced Types 2"
 interface A { a: string; }
 interface B { b: number; }
 
@@ -340,13 +341,13 @@ To use TypeScript in the browser:
 
 Example:
 
-```typescript
+```typescript title="src/app.ts"
 // src/app.ts
 const message: string = "Hello from TS";
 console.log(message);
 ```
 
-```html
+```html title="index.html"
 <!-- index.html -->
 <script src="dist/app.js"></script>
 ```
@@ -359,7 +360,7 @@ In TypeScript, both interfaces and type aliases define shapes and types, but pos
 
 - **Interfaces**: Primarily designed to define object shapes. They support declaration merging and extension via `extends`.
 
-```typescript
+```typescript title="Interface vs. Type Alias"
 interface User {
   id: number;
   name: string;
@@ -368,7 +369,7 @@ interface User {
 
 - **Type Aliases**: Used for more expressive type compositions, including unions, tuples, and primitives.
 
-```typescript
+```typescript title="Interface vs. Type Alias 2"
 type ID = string | number;
 type User = {
   id: ID;
@@ -380,7 +381,7 @@ type User = {
 
 Type aliases can directly declare unions, which is not possible with interfaces:
 
-```typescript
+```typescript title="Key Difference: Union Types"
 type Result = string | number;
 
 let response: Result;

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende qué es una skill, cómo se estructura el archivo SKILL.md y cómo instalarla e invocarla para extender a tus agentes."
 ---
 
 import Tabs from '@theme/Tabs';
@@ -31,7 +32,7 @@ Físicamente, una skill es un directorio estructurado ubicado en las carpetas de
 
 Su anatomía se compone de los siguientes elementos obligatorios y opcionales:
 
-```bash
+```bash title="Estructura de una skill"
 .agents/skills/flutter-helper/
 ├── SKILL.md            # [OBLIGATORIO] Manifiesto, metadata YAML e instrucciones
 ├── scripts/            # [OPCIONAL] Scripts de automatización ejecutables
@@ -84,7 +85,7 @@ En el CLI agéntico, puedes cargar e interactuar con una skill de dos formas:
 <Tabs>
 <TabItem value="manual" label="Invocación Explícita (/skill)" default>
 
-```yaml
+```yaml title="Invocación explícita"
 # Carga directa de la skill en la sesión activa
 > /skill flutter-helper
 
@@ -97,7 +98,7 @@ Tokens added: 920 tokens (0.7% of context limit).
 </TabItem>
 <TabItem value="automatica" label="Activación Semántica Automática">
 
-```yaml
+```yaml title="Activación automática"
 # El agente detecta la necesidad a partir del prompt y carga la skill
 > "Revisa lib/pages/contact_page.dart y verifica si hay fugas de memoria en los controladores"
 
@@ -125,7 +126,7 @@ agy skill list
 
 O dentro de la sesión interactiva del agente:
 
-```yaml
+```yaml title="Listar skills"
 > /skills
 ```
 

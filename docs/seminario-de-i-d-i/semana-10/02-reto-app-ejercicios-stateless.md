@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Descompone las vistas de la app FitTrack en componentes StatelessWidget y especifica la arquitectura que los organiza."
 ---
 
 import Tabs from '@theme/Tabs';

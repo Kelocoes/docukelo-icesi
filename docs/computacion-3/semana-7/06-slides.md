@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Consulta las diapositivas de la semana 7 sobre seguridad, bcrypt, Passport, JWT y control de acceso granular."
 ---
 
 # Slides de la semana

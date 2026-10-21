@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Write unit and integration tests with JUnit 5 and Mockito, isolating layers and applying the Arrange-Act-Assert pattern."
 ---
 
 # Unit and Integration Testing with JUnit 5 and Mockito

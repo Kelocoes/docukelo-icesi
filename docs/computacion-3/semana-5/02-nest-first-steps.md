@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Instala el CLI de NestJS y crea tus primeros módulos, controladores y servicios siguiendo una guía práctica paso a paso."
 ---
 
 # Primeros Pasos con NestJS

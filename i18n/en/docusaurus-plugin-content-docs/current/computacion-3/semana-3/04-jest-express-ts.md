@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Configure Jest in an Express application written in TypeScript and write your first unit and integration tests."
 ---
 
 # Testing with Jest
@@ -22,7 +23,7 @@ Using `npm init jest@latest`, we can generate a `jest.config.ts` configuration f
 
 Running `npm init jest@latest` prompts configuration questions. Here are standard responses recommended for an Express TypeScript project:
 
-```bash
+```bash title="Interactive Jest Configuration"
 > npm init jest@latest
 
 The following questions will help Jest to create a suitable configuration for your project
@@ -53,7 +54,7 @@ The following questions will help Jest to create a suitable configuration for yo
 
 The generated file is comprehensive; here is a streamlined initial configuration:
 
-```typescript
+```typescript title="Generated Configuration File"
 /**
  * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/configuration
@@ -73,7 +74,7 @@ export default config;
 
 Jest setup also adds a `"test"` script to `package.json`:
 
-```json
+```json title="package.json"
 "scripts": {
   "test": "jest"
 }
@@ -87,7 +88,7 @@ npm install --save-dev ts-jest
 
 Finally, update `jest.config.ts` to use `ts-jest` as the preprocessor:
 
-```typescript
+```typescript title="jest.config.ts"
 import type { Config } from 'jest';
 
 const config: Config = {
@@ -132,20 +133,20 @@ To keep code organized, separate source code from automated tests. A standard la
 
 To verify the setup, let us create a simple utility in `src/utils`. Create `operations.util.ts`:
 
-```typescript
+```typescript title="operations.util.ts"
 export function add(a: number, b: number): number {
     return a + b;
 }
 ```
 And export it inside `src/utils/index.ts`:
 
-```typescript
+```typescript title="Writing Your First Test"
 export * from './operations.util';
 ```
 
 Now create `src/tests/utils/operations.util.test.ts`:
 
-```typescript
+```typescript title="src/tests/utils/operations.util.test.ts"
 import { add } from "../../utils";
 
 it("should add two numbers", () => {
@@ -161,7 +162,7 @@ npm test
 
 You should see output similar to this:
 
-```bash
+```bash title="Writing Your First Test 2"
 > compunet3-20252@1.0.0 test
 > jest
 
@@ -184,7 +185,7 @@ Ran all test suites
 
 > **Nota**: Has este punto, es posible que tu proyecto no compile o aparezcan advertencias en tu editor de código respecto a las funciones it y expect. Esto se debe a que Jest no está configurado para reconocer estos tipos de funciones globales. Para solucionarlo, puedes agregar en el archivo `tsconfig.json` la siguiente configuración:
 
-```json
+```json title="tsconfig.json"
 {
   "compilerOptions": {
     "types": ["jest"]
@@ -198,7 +199,7 @@ At this point, you might wonder why Jest initially reported 100% coverage with o
 
 No obstante, quizá deseas comprobar la cobertura de tu código de una manera más detallada y ver qué líneas de código están cubiertas por las pruebas. To track overall repository coverage, configure `collectCoverageFrom` in `jest.config.ts`: y especificar qué archivos deseas incluir en la recolección de cobertura. Aquí tienes un ejemplo de cómo podrías configurarlo:
 
-```typescript
+```typescript title="jest.config.ts"
 const config: Config = {
     clearMocks: true,
     collectCoverage: true,
@@ -227,7 +228,7 @@ const config: Config = {
 ```
 Now re-run `npm test`. You will see a detailed coverage breakdown:, indicando qué líneas de código han sido cubiertas por las pruebas y cuáles no.
 
-```bash
+```bash title="Testing and Code Coverage"
 > compunet3-20252@1.0.0 test
 > jest
 
@@ -283,7 +284,7 @@ Primero, crea un archivo llamado `user.service.test.ts` dentro de la carpeta `te
 
 Comenzamos importando las dependencias necesarias y configurando los mocks:
 
-```typescript
+```typescript title="Imports and Mock Setup"
 import { userService } from "../../services";
 import { UserModel, UserDocument, UserRole } from "../../models";
 import bcrypt from "bcrypt";
@@ -294,7 +295,7 @@ import { UserInput } from "../../interfaces";
 
 #### 5.2.3 Mocking External Dependencies
 
-```typescript
+```typescript title="Mocking External Dependencies"
 // Mock de bcrypt para simular el hash de contraseñas
 jest.mock("bcrypt", () => ({
     hash: jest.fn(),
@@ -318,7 +319,7 @@ jest.mock("../../models", () => ({
 
 #### 5.2.4 Test Suite Structure
 
-```typescript
+```typescript title="Test Suite Structure"
 describe("UserService", () => {
     beforeEach(() => {
         jest.clearAllMocks(); // Limpia los mocks antes de cada prueba
@@ -336,7 +337,7 @@ describe("UserService", () => {
 
 Ahora agregamos nuestra primera prueba dentro del bloque `describe`:
 
-```typescript
+```typescript title="First Test: Successful User Creation"
 describe("create", () => {
     it("should create a new user", async () => {
         // 1. Preparar datos de prueba
@@ -390,7 +391,7 @@ En la prueba anterior usamos `jest.spyOn(userService, "findByEmail")`. Es import
 
 #### Basic Syntax
 
-```typescript
+```typescript title="Basic Syntax"
 jest.spyOn(objeto, 'nombreDelMétodo').mockImplementation(() => {
     // Nueva implementación
 });
@@ -414,7 +415,7 @@ jest.spyOn(objeto, 'nombreDelMétodo').mockResolvedValue(valorRetorno);
 
 #### Comparative Example
 
-```typescript
+```typescript title="Comparative Example"
 // ❌ Usando jest.mock() - Reemplaza TODO el módulo
 jest.mock("../../services", () => ({
     userService: {
@@ -434,7 +435,7 @@ jest.spyOn(userService, "findByEmail").mockResolvedValue(null);
 
 #### Useful spyOn Methods
 
-```typescript
+```typescript title="Useful spyOn Methods"
 const spy = jest.spyOn(userService, "findByEmail");
 
 // Controlar el valor de retorno
@@ -460,7 +461,7 @@ spy.mockRestore();
 
 #### Practical Context Example
 
-```typescript
+```typescript title="Practical Context Example"
 // En nuestra prueba de usuario
 it("should create a new user", async () => {
     // Espiamos el método findByEmail del userService real
@@ -485,7 +486,7 @@ it("should create a new user", async () => {
 
 Agregamos una segunda prueba dentro del mismo bloque `describe("create")`:
 
-```typescript
+```typescript title="Second Test: Error When User Already"
 it("should throw an error if the user already exists", async () => {
     // 1. Preparar datos de prueba
     const mockUserInput: UserInput = {
@@ -519,7 +520,7 @@ it("should throw an error if the user already exists", async () => {
 
 El archivo completo `user.service.test.ts` se vería así:
 
-```typescript
+```typescript title="user.service.test.ts"
 import { userService } from "../../services";
 import { UserModel, UserDocument, UserRole } from "../../models";
 import bcrypt from "bcrypt";
@@ -608,7 +609,7 @@ Crea un archivo llamado `user.controller.test.ts` dentro de la carpeta `tests/co
 
 #### 5.3.2 Setting up Imports and Mocks
 
-```typescript
+```typescript title="Setting up Imports and Mocks"
 import { userController } from "../../controllers/user.controller";
 import { userService } from "../../services/user.service";
 import { Request, Response } from "express";
@@ -620,7 +621,7 @@ import { UserInput, UserInputUpdate } from "../../interfaces";
 
 #### 5.3.3 Mocking the User Service
 
-```typescript
+```typescript title="Mocking the User Service"
 jest.mock("../../services/user.service", () => ({
     userService: {
         create: jest.fn(),
@@ -636,7 +637,7 @@ jest.mock("../../services/user.service", () => ({
 
 #### 5.3.4 Setting up Mock Request and Response Objects
 
-```typescript
+```typescript title="Setting up Mock Request and Response"
 describe("UserController", () => {
     let req: Partial<Request>;
     let res: Partial<Response>;
@@ -663,7 +664,7 @@ describe("UserController", () => {
 
 #### 5.3.5 First Test: Successful User Creation
 
-```typescript
+```typescript title="First Test: Successful User Creation 2"
 describe("create", () => {
     it("should create a new user and return 201", async () => {
         // 1. Preparar datos de entrada
@@ -705,7 +706,7 @@ describe("create", () => {
 
 #### 5.3.6 Second Test: Error Handling
 
-```typescript
+```typescript title="Second Test: Error Handling"
 it("should call next with an error if user already exists", async () => {
     // 1. Preparar datos
     const mockUserInput: UserInput = {
@@ -733,7 +734,7 @@ it("should call next with an error if user already exists", async () => {
 
 #### 5.3.7 Testing Get All Users
 
-```typescript
+```typescript title="Testing Get All Users"
 describe("getAll", () => {
     it("should return all users", async () => {
         // 1. Preparar datos simulados
@@ -757,7 +758,7 @@ describe("getAll", () => {
 
 #### 5.3.8 Testing Get User by ID
 
-```typescript
+```typescript title="Testing Get User by ID"
 describe("getOne", () => {
     it("should return a user by id", async () => {
         const mockUser: UserDocument = {
@@ -796,7 +797,7 @@ describe("getOne", () => {
 
 #### 5.3.9 Testing Update and Delete Operations
 
-```typescript
+```typescript title="Testing Update and Delete Operations"
 describe("update", () => {
     it("should update a user and return the updated user", async () => {
         const mockUserUpdate: UserInputUpdate = { 
@@ -839,7 +840,7 @@ describe("delete", () => {
 
 Aquí tienes el archivo completo `user.controller.test.ts` con todas las pruebas organizadas:
 
-```typescript
+```typescript title="user.controller.test.ts"
 import { userController } from "../../controllers/user.controller";
 import { userService } from "../../services/user.service";
 import { Request, Response } from "express";
@@ -1045,7 +1046,7 @@ npm test
 
 **Reporte de cobertura obtenido:**
 
-```bash
+```bash title="Coverage Results After Implementing"
 ------------------------------|---------|----------|---------|---------|------------------------------------------
 File                          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 ------------------------------|---------|----------|---------|---------|------------------------------------------
@@ -1071,14 +1072,14 @@ All files                     |   36.79 |       56 |   29.03 |   36.79 |
 
 ### 6.1 Results Analysis
 
-#### ✅ **Logros destacados:**
+#### **Logros destacados:**
 
 1. **user.controller.ts**: **86.11% de cobertura** - Excelente resultado gracias a nuestras pruebas de controlador
 2. **user.service.ts**: **58.33% de cobertura** - Mejora notable con las pruebas de servicio (incremento de ~1.44%)
 3. **operations.util.ts**: **100% de cobertura** - Cobertura completa en nuestras utilidades
 4. **Cobertura general**: **36.79%** - Incremento ligero pero positivo en la cobertura total
 
-#### 📊 **Métricas importantes:**
+#### **Métricas importantes:**
 
 - **% Stmts** (Statements): Porcentaje de declaraciones ejecutadas
 - **% Branch** (Branches): Porcentaje de ramas condicionales probadas  
@@ -1086,7 +1087,7 @@ All files                     |   36.79 |       56 |   29.03 |   36.79 |
 - **% Lines**: Porcentaje de líneas de código ejecutadas
 - **Uncovered Line #s**: Números de líneas no cubiertas por las pruebas
 
-#### 🎯 **Áreas de mejora identificadas:**
+#### **Áreas de mejora identificadas:**
 
 1. **auth.controller.ts y games.controller.ts**: **0% de cobertura** - Requieren implementar pruebas urgentemente
 2. **Middlewares**: **30.14% promedio** - Necesitan pruebas específicas para middleware
@@ -1107,7 +1108,7 @@ Para mejorar la cobertura general del proyecto, te recomendamos:
 
 Puedes agregar umbrales mínimos de cobertura en tu `jest.config.ts`:
 
-```typescript
+```typescript title="jest.config.ts"
 const config: Config = {
     // ... otras configuraciones
     coverageThreshold: {

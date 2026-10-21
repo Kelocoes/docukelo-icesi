@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Modela entidades, contratos de repositorio y casos de uso en la capa de dominio de una aplicación frontend con Clean Architecture."
 ---
 
 # Capa de Dominio: Entidades y Casos de Uso

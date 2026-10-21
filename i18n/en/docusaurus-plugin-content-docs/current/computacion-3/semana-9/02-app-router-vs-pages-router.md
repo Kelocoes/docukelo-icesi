@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Compare the Next.js App Router with the Pages Router in structure, routing, and data fetching to understand how routing has evolved."
 ---
 
 # App Router vs. Pages Router

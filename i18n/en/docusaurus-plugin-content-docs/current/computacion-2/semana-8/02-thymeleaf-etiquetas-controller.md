@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Use Thymeleaf expressions and th:* tags together with MVC controllers and the Post/Redirect/Get pattern."
 ---
 
 # Tags and MVC Controllers

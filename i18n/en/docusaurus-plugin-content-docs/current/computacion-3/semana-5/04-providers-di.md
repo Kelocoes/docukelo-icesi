@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Understand layered architecture, inversion of control, providers, and constructor-based dependency injection in NestJS."
 ---
 
 # Dependency Injection and Providers

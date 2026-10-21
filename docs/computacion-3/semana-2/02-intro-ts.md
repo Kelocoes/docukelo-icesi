@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Aprende los fundamentos de TypeScript: instalación, tipos básicos y funciones tipadas para escribir código más seguro y mantenible."
 ---
 
 # Typescript
@@ -20,7 +21,7 @@ JavaScript es un lenguaje flexible y dinámico, pero esa flexibilidad puede llev
 
 **Ejemplo de problema en JavaScript:**
 
-```javascript
+```javascript title="¿Por qué usar TypeScript"
 function sumar(a, b) {
   return a + b;
 }
@@ -30,7 +31,7 @@ console.log(sumar(5, "10")); // "510" en vez de 15
 
 **Solución en TypeScript:**
 
-```typescript
+```typescript title="¿Por qué usar TypeScript (2)"
 function sumar(a: number, b: number): number {
   return a + b;
 }
@@ -59,7 +60,7 @@ tsc -v
 
 ### 2.2 Inicializar un proyecto con TypeScript
 
-```bash
+```bash title="Inicializar un proyecto con TypeScript"
 mkdir proyecto-ts
 cd proyecto-ts
 npm init -y
@@ -74,7 +75,7 @@ npx tsc --init
 
 Esto creará un archivo con muchas opciones comentadas. Las más importantes para empezar:
 
-```json
+```json title="Inicializar un proyecto (2)"
 {
   "compilerOptions": {
     "target": "es6",               // Versión de JS a generar
@@ -127,7 +128,7 @@ npx ts-node src/index.ts
 
 TypeScript añade tipos estáticos que permiten definir qué tipo de dato esperamos.
 
-```typescript
+```typescript title="Tipos básicos en TypeScript"
 let nombre: string = "Kevin";
 let edad: number = 25;
 let activo: boolean = true;
@@ -138,20 +139,20 @@ let cualquiera: any = "Hola"; // Evitar en lo posible
 
 **Arreglos:**
 
-```typescript
+```typescript title="Tipos básicos en TypeScript (2)"
 let numeros: number[] = [1, 2, 3];
 let letras: Array<string> = ["a", "b", "c"];
 ```
 
 **Tuplas:**
 
-```typescript
+```typescript title="Tipos básicos en TypeScript (3)"
 let persona: [string, number] = ["Kevin", 25];
 ```
 
 **Enums:**
 
-```typescript
+```typescript title="Tipos básicos en TypeScript (4)"
 enum Color {
   Rojo = "ROJO",
   Verde = "VERDE",
@@ -164,7 +165,7 @@ console.log(colorFav); // "VERDE"
 
 **Union types:**
 
-```typescript
+```typescript title="Tipos básicos en TypeScript (5)"
 let id: string | number;
 id = "ABC123";
 id = 42;
@@ -172,7 +173,7 @@ id = 42;
 
 **Type aliases:**
 
-```typescript
+```typescript title="Tipos básicos en TypeScript (6)"
 type ID = string | number;
 let usuarioID: ID = 101;
 ```
@@ -183,7 +184,7 @@ let usuarioID: ID = 101;
 
 Podemos tipar parámetros y valores de retorno.
 
-```typescript
+```typescript title="Funciones en TypeScript"
 function saludar(nombre: string): string {
   return `Hola, ${nombre}`;
 }
@@ -193,7 +194,7 @@ console.log(saludar("Kevin"));
 
 Parámetros opcionales y por defecto:
 
-```typescript
+```typescript title="Funciones en TypeScript (2)"
 function multiplicar(a: number, b: number = 2, mensaje?: string): number {
   if (mensaje) console.log(mensaje);
   return a * b;
@@ -205,7 +206,7 @@ console.log(multiplicar(3, 4, "Calculando..."));
 
 Funciones flecha:
 
-```typescript
+```typescript title="Funciones en TypeScript (3)"
 const dividir = (a: number, b: number): number => a / b;
 ```
 
@@ -215,7 +216,7 @@ const dividir = (a: number, b: number): number => a / b;
 
 Las interfaces definen la forma de un objeto.
 
-```typescript
+```typescript title="Interfaces y Objetos"
 interface Usuario {
   id: number;
   nombre: string;
@@ -230,7 +231,7 @@ let user1: Usuario = {
 
 Interfaces con funciones:
 
-```typescript
+```typescript title="Interfaces y Objetos (2)"
 interface Operacion {
   (a: number, b: number): number;
 }
@@ -243,7 +244,7 @@ console.log(sumar(5, 3));
 
 ## 6. Clases en TypeScript
 
-```typescript
+```typescript title="Clases en TypeScript"
 class Persona {
   private nombre: string;
   protected edad: number;
@@ -266,7 +267,7 @@ console.log(p1.saludar());
 
 Herencia:
 
-```typescript
+```typescript title="Clases en TypeScript (2)"
 class Estudiante extends Persona {
   curso: string;
   constructor(nombre: string, edad: number, activo: boolean, curso: string) {
@@ -282,7 +283,7 @@ class Estudiante extends Persona {
 
 **Exportar:**
 
-```typescript
+```typescript title="utils.ts"
 // archivo: utils.ts
 export function sumar(a: number, b: number): number {
   return a + b;
@@ -291,7 +292,7 @@ export function sumar(a: number, b: number): number {
 
 **Importar:**
 
-```typescript
+```typescript title="index.ts"
 // archivo: index.ts
 import { sumar } from "./utils";
 console.log(sumar(3, 4));
@@ -306,7 +307,7 @@ console.log(sumar(3, 4));
 Los genéricos así como en Java nos permiten crear funciones y clases que pueden trabajar con diferentes tipos de datos sin perder la seguridad de tipos.
 En ellos especificaremos un tipo genérico denotado por `<T>` el cual podemos usar en lugar de un tipo específico.
 
-```typescript
+```typescript title="Tipos avanzados"
 function identidad<T>(valor: T): T {
   return valor;
 }
@@ -321,7 +322,7 @@ El ejeemplo anterior muestra una función que recibe un valor de tipo genérico 
 
 Estos tipos permiten combinar múltiples tipos en uno solo, creando un nuevo tipo que tiene todas las propiedades de los tipos combinados.
 
-```typescript
+```typescript title="Tipos avanzados (2)"
 interface A { a: string; }
 interface B { b: number; }
 // Lo mismo que interface C { a: string; b: number; }
@@ -341,13 +342,13 @@ Para usar TypeScript en el navegador:
 
 Ejemplo:
 
-```typescript
+```typescript title="src/app.ts"
 // src/app.ts
 const mensaje: string = "Hola desde TS";
 console.log(mensaje);
 ```
 
-```html
+```html title="index.html"
 <!-- index.html -->
 <script src="dist/app.js"></script>
 ```
@@ -360,7 +361,7 @@ En TypeScript, tanto las interfaces como los type aliases se utilizan para defin
 
 - **Interfaces**: Se utilizan principalmente para definir la forma de un objeto. Pueden ser extendidas y son ideales para definir contratos claros entre diferentes partes del código.
 
-```typescript
+```typescript title="Interface vs Type Alias"
 interface Usuario {
   id: number;
   nombre: string;
@@ -369,7 +370,7 @@ interface Usuario {
 
 - **Type Aliases**: Se utilizan para definir tipos más complejos, incluyendo uniones, tuplas y tipos primitivos. No pueden ser extendidos como las interfaces, pero son más flexibles.
 
-```typescript
+```typescript title="Interface vs Type Alias (2)"
 type ID = string | number;
 type Usuario = {
   id: ID;
@@ -381,7 +382,7 @@ type Usuario = {
 
 Los `type aliases` permiten definir uniones de tipos, algo que no es posible directamente con `interface`.
 
-```typescript
+```typescript title="Ejemplo: Algo que se puede hacer"
 type Resultado = string | number;
 
 let respuesta: Resultado;

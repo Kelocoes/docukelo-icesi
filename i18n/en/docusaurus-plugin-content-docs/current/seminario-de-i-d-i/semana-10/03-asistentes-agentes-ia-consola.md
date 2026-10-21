@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Tell passive assistants from terminal AI agents, understand the ReAct loop, and learn the autonomy levels they operate at."
 ---
 
 import Tabs from '@theme/Tabs';

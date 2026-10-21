@@ -1,6 +1,7 @@
 ---
 sidebar_position: 5
 title: Weekly Slides
+description: "Review the week 1 slides on requirements, Scrum and TypeScript using the embedded PDF viewer."
 ---
 
 # Weekly Slides

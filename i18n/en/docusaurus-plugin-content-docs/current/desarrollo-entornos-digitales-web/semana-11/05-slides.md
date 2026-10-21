@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Review the week 11 slides on Next.js, rendering and server and client components using the embedded PDF viewer."
 ---
 
 # Weekly Slides

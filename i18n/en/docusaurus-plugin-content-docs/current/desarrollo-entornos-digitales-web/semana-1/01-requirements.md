@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 title: Software Requirements
+description: "Learn what software requirements are, their types and their role in the life cycle so you can specify what you are going to build."
 ---
 
 # Software Requirements

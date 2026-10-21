@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Prepara la seguridad de tu API: conoce los prerrequisitos de la arquitectura y aprende a cifrar contraseñas con bcrypt."
 ---
 
 # Prerrequisitos y Conceptos de Seguridad

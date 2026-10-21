@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Comprende qué son los protocolos TCP, UDP y HTTP y cómo funcionan los servidores web que atienden las peticiones de los clientes."
 ---
 
 # Protocolos y servidores web

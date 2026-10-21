@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Entiende por qué el estado vive en State, cómo setState reconstruye el árbol de widgets y cómo manejar la primera interacción."
 ---
 
 import Tabs from '@theme/Tabs';
@@ -177,7 +178,7 @@ En Flutter, los botones y eventos interactivos reciben **funciones como parámet
 :::caution[Antipatrón Crítico con setState()]
 Nunca coloques llamadas asincrónicas pesadas (como `await http.get()`) adentro del bloque de `setState()`. Solo las asignaciones sincrónicas inmediatas de memoria deben vivir dentro del callback:
 
-```dart
+```dart title="Antipatrón con setState"
 // ❌ INCORRECTO:
 setState(() async {
   final datos = await api.get(); // ¡Bloquea el pipeline de renderizado!

@@ -1,5 +1,6 @@
-﻿---
+---
 sidebar_position: 6
+description: "Consulta las diapositivas de la semana 5 sobre NestJS, el ciclo de vida HTTP, la arquitectura por capas y la inversión de control."
 ---
 
 # Slides de la semana

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Consulta las diapositivas de la semana 2 sobre Spring, inversión de control, inyección de dependencias y beans XML."
 ---
 
 # Slides de la semana

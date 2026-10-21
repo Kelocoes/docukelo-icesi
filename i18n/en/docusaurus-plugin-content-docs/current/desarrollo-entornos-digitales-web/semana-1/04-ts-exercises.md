@@ -1,6 +1,7 @@
 ---
 sidebar_position: 4
 title: TypeScript Exercises
+description: "Practice TypeScript by converting JavaScript code through graded exercises on types, interfaces, generics and modules, each with a solution."
 ---
 
 # TypeScript Exercises
@@ -16,7 +17,7 @@ Difficulty increases progressively.
 
 ### Exercise 1: Simple Addition (Basic Types)
 
-```javascript
+```javascript title="Simple Addition (Basic Types)"
 // Convert to TypeScript
 function add(a, b) {
   return a + b;
@@ -26,9 +27,9 @@ function add(a, b) {
 **Hint:** Use `number` type for parameters and return value.
 
 <details>
-<summary>💡 View solution</summary>
+<summary>View solution</summary>
 
-```typescript
+```typescript title="Simple Addition (Basic Types) (solution)"
 function add(a: number, b: number): number {
   return a + b;
 }
@@ -40,7 +41,7 @@ function add(a: number, b: number): number {
 
 ### Exercise 2: Optional and Default Parameters
 
-```javascript
+```javascript title="Optional and Default Parameters"
 // Convert to TypeScript
 function greet(name, greeting) {
   greeting = greeting || "Hello";
@@ -51,9 +52,9 @@ function greet(name, greeting) {
 **Hint:** Use default parameter syntax `greeting: string = "Hello"`.
 
 <details>
-<summary>💡 View solution</summary>
+<summary>View solution</summary>
 
-```typescript
+```typescript title="Optional and Default (solution)"
 function greet(name: string, greeting: string = "Hello"): string {
   return `${greeting}, ${name}`;
 }
@@ -65,7 +66,7 @@ function greet(name: string, greeting: string = "Hello"): string {
 
 ### Exercise 3: Defining an Object with an Interface
 
-```javascript
+```javascript title="Defining an Object with an Interface"
 // Convert to TypeScript
 const createUser = (u) => {
   return `User ${u.name} created with id ${u.id}`;
@@ -75,9 +76,9 @@ const createUser = (u) => {
 **Hint:** Use an `interface` to define the shape of `User`.
 
 <details>
-<summary>💡 View solution</summary>
+<summary>View solution</summary>
 
-```typescript
+```typescript title="Defining an Object (solution)"
 interface User {
   id: number;
   name: string;
@@ -95,7 +96,7 @@ const createUser = (u: User): string => {
 
 ### Exercise 4: Readonly and Literal Types
 
-```javascript
+```javascript title="Readonly and Literal Types"
 // Convert to TypeScript
 const config = {
   mode: "production",
@@ -106,9 +107,9 @@ const config = {
 **Hint:** Use `readonly` properties and union literals `"development" | "production"`.
 
 <details>
-<summary>💡 View solution</summary>
+<summary>View solution</summary>
 
-```typescript
+```typescript title="Readonly and Literal Types (solution)"
 type Mode = "development" | "production" | "test";
 
 interface Config {
@@ -128,7 +129,7 @@ const config: Config = {
 
 ### Exercise 5: Tuples
 
-```javascript
+```javascript title="Tuples"
 // Convert to TypeScript
 function createPair(name, age) {
   return [name, age];
@@ -138,9 +139,9 @@ function createPair(name, age) {
 **Hint:** Use a tuple type `[string, number]`.
 
 <details>
-<summary>💡 View solution</summary>
+<summary>View solution</summary>
 
-```typescript
+```typescript title="Tuples (solution)"
 function createPair(name: string, age: number): [string, number] {
   return [name, age];
 }
@@ -152,7 +153,7 @@ function createPair(name: string, age: number): [string, number] {
 
 ### Exercise 6: Enums for Statuses
 
-```javascript
+```javascript title="Enums for Statuses"
 // Convert to TypeScript
 const status = "Active"; // can be 'Active' or 'Inactive'
 ```
@@ -160,9 +161,9 @@ const status = "Active"; // can be 'Active' or 'Inactive'
 **Hint:** Use `enum Status`.
 
 <details>
-<summary>💡 View solution</summary>
+<summary>View solution</summary>
 
-```typescript
+```typescript title="Enums for Statuses (solution)"
 enum Status {
   Active = "Active",
   Inactive = "Inactive"
@@ -177,7 +178,7 @@ const currentStatus: Status = Status.Active;
 
 ### Exercise 7: Generics Identity
 
-```javascript
+```javascript title="Generics Identity"
 // Convert to TypeScript
 function identity(x) {
   return x;
@@ -187,9 +188,9 @@ function identity(x) {
 **Hint:** Use `<T>` generic parameter.
 
 <details>
-<summary>💡 View solution</summary>
+<summary>View solution</summary>
 
-```typescript
+```typescript title="Generics Identity (solution)"
 function identity<T>(x: T): T {
   return x;
 }
@@ -204,7 +205,7 @@ const str = identity("hello");
 
 ### Exercise 8: Generic Constraints
 
-```javascript
+```javascript title="Generic Constraints"
 // Convert to TypeScript
 function getLength(x) {
   return x.length;
@@ -214,9 +215,9 @@ function getLength(x) {
 **Hint:** Use `T extends { length: number }`.
 
 <details>
-<summary>💡 View solution</summary>
+<summary>View solution</summary>
 
-```typescript
+```typescript title="Generic Constraints (solution)"
 function getLength<T extends { length: number }>(x: T): number {
   return x.length;
 }
@@ -231,7 +232,7 @@ console.log(getLength([1,2,3])); // 3
 
 ### Exercise 9: Union Types and Type Narrowing
 
-```javascript
+```javascript title="Union Types and Type Narrowing"
 // Convert to TypeScript
 function format(x) {
   if (typeof x === 'number') {
@@ -244,9 +245,9 @@ function format(x) {
 **Hint:** Use `x: string | number` and `typeof`.
 
 <details>
-<summary>💡 View solution</summary>
+<summary>View solution</summary>
 
-```typescript
+```typescript title="Union Types and Type (solution)"
 function format(x: string | number): string {
   if (typeof x === 'number') {
     return x.toFixed(2);
@@ -261,7 +262,7 @@ function format(x: string | number): string {
 
 ### Exercise 10: Discriminated Unions
 
-```javascript
+```javascript title="Discriminated Unions"
 // Convert to TypeScript
 function area(shape) {
   if (shape.kind === 'circle') {
@@ -274,9 +275,9 @@ function area(shape) {
 **Hint:** Define circle and square types with a `kind` discriminant property.
 
 <details>
-<summary>💡 View solution</summary>
+<summary>View solution</summary>
 
-```typescript
+```typescript title="Discriminated Unions (solution)"
 type Circle = { kind: 'circle'; radius: number };
 type Square = { kind: 'square'; size: number };
 type Shape = Circle | Square;
@@ -295,7 +296,7 @@ function area(shape: Shape): number {
 
 ### Exercise 11: Utility Types: Pick and Omit
 
-```javascript
+```javascript title="Utility Types: Pick and Omit"
 // Convert to TypeScript
 const user = { id: 1, name: 'Ana', password: '123' };
 // We want a public user type without password
@@ -304,9 +305,9 @@ const user = { id: 1, name: 'Ana', password: '123' };
 **Hint:** Use `Omit<User, 'password'>` or `Pick<User, 'id' | 'name'>`.
 
 <details>
-<summary>💡 View solution</summary>
+<summary>View solution</summary>
 
-```typescript
+```typescript title="Utility Types: Pick and Omit (solution)"
 interface User {
   id: number;
   name: string;
@@ -324,7 +325,7 @@ const safeUser: PublicUser = { id: 1, name: 'Ana' };
 
 ### Exercise 12: Utility Types: Partial and Required
 
-```javascript
+```javascript title="Utility Types: Partial and Required"
 // Convert to TypeScript
 function update(user, changes) {
   return { ...user, ...changes };
@@ -334,9 +335,9 @@ function update(user, changes) {
 **Hint:** Use `Partial<User>` for `changes`.
 
 <details>
-<summary>💡 View solution</summary>
+<summary>View solution</summary>
 
-```typescript
+```typescript title="Utility Types: Partial (solution)"
 interface User {
   id: number;
   name: string;
@@ -354,7 +355,7 @@ function update(user: User, changes: Partial<User>): User {
 
 ### Exercise 13: Promises and Async/Await
 
-```javascript
+```javascript title="Promises and Async/Await"
 // Convert to TypeScript
 async function fetchUser() {
   const r = await fetch('/user');
@@ -365,9 +366,9 @@ async function fetchUser() {
 **Hint:** Annotate return type as `Promise<User>`.
 
 <details>
-<summary>💡 View solution</summary>
+<summary>View solution</summary>
 
-```typescript
+```typescript title="Promises and Async/Await (solution)"
 interface User { id: number; name: string; }
 
 async function fetchUser(): Promise<User> {

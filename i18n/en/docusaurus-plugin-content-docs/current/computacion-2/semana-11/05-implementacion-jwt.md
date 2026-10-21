@@ -1,6 +1,7 @@
 ---
 sidebar_position: 5
 sidebar_label: "JWT Implementation"
+description: "Implement JWT-based security with Spring Boot 3 and Spring Security 6: filters, token utilities and an authentication controller."
 ---
 
 # JWT Implementation
@@ -551,7 +552,7 @@ public class AuthController {
    }
    ```
    *Expected response (HTTP 200 OK):*
-   ```json
+   ```json title="Step-by-Step Construction Guide"
    {
      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
    }

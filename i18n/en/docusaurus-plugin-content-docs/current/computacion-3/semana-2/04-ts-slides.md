@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Review the official slides of Week 2 on Node.js, TypeScript, and Express to reinforce the concepts covered in class."
 ---
 
 # Slides of the Week

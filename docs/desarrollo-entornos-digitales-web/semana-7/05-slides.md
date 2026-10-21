@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Revisa las diapositivas de la semana 7 sobre autenticación, JWT, guards y permisos con un visor de PDF integrado."
 ---
 
 # Slides de la semana

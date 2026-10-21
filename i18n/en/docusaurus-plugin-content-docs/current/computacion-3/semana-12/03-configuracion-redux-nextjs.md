@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Integrate Redux Toolkit into a Next.js project that follows Clean Architecture, organizing folders and connecting the store to your layers."
 ---
 
 import ThemedImage from '@theme/ThemedImage';
@@ -317,7 +318,7 @@ export const useAppStore: () => AppStore = useStore;
 
 :::tip[Note on Redux Toolkit 2.0+ and .withTypes]
 Recent versions of Redux Toolkit (v2.0+) and React-Redux (v9.0+) introduced the `.withTypes` convenience method:
-```typescript
+```typescript title="Step-by-Step Setup Guide"
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 export const useAppSelector = useSelector.withTypes<RootState>();
 ```

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Extend your Express API with data validation using express-validator, global error-handling middleware, and structured logging."
 ---
 
 # Data Validation and Middleware
@@ -95,6 +96,6 @@ export const errorHandler = (
 
 Register the error handler in `src/index.ts` after all routes:
 
-```typescript
+```typescript title="src/index.ts"
 app.use(errorHandler);
 ```

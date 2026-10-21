@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Repasa comandos básicos de Linux útiles para desplegar aplicaciones web y administrar servidores."
 ---
 
 # Comandos de Linux

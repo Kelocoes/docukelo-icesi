@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Build a monolithic contact book in Flutter step by step and reflect on the limitations of that architecture."
 ---
 
 import Tabs from '@theme/Tabs';

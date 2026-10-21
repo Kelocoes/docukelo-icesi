@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Review the most common Docker commands and the structure of a Dockerfile and Docker Compose file for configuring and running containers."
 ---
 
 # Docker Commands
@@ -29,7 +30,7 @@ When working with Docker, we interact across multiple areas when executing code 
 
 A Dockerfile is a text file containing instructions to build a Docker image. Below is the basic structure of a Dockerfile:
 
-```bash
+```bash title="Dockerfile Structure"
 # Dockerfile
 FROM <base-image-name>:<tag>  # Base image
 MAINTAINER <name> <email>  # Maintainer information
@@ -49,7 +50,7 @@ CMD and ENTRYPOINT define the command executed when a container starts. The main
 
 A `docker-compose.yml` file allows defining and running multi-container applications:
 
-```yaml
+```yaml title="docker-compose.yml"
 version: "3.9"
 services:
     backendnode:

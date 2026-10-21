@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Revisa las diapositivas de la semana 2 sobre contenedores y Docker, con un visor interactivo y un cuestionario de autoevaluación."
 ---
 
 # Slides de la Semana

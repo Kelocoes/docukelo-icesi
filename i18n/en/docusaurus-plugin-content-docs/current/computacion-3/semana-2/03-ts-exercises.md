@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Practice TypeScript with 28 hands-on exercises that turn JavaScript code into typed code, each with a solution you can reveal."
 ---
 
 # TypeScript Exercises
@@ -15,7 +16,7 @@ Exercises progress with gradually increasing difficulty.
 
 ### Exercise 1: Simple Addition (Basic Types)
 
-```javascript
+```javascript title="Exercise 1: Simple Addition"
 // Convert to TypeScript
 function sumar(a, b) {
   return a + b;
@@ -25,9 +26,9 @@ function sumar(a, b) {
 **Hint:** Use `number` types for both parameters and the return type. `number` represents numeric values and prevents passing strings by mistake.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 1: Simple Addition 2"
 function sumar(a: number, b: number): number {
   return a + b;
 }
@@ -39,7 +40,7 @@ function sumar(a: number, b: number): number {
 
 ### Exercise 2: Optional and Default Parameters
 
-```javascript
+```javascript title="Exercise 2: Optional and Default"
 // Convert to TypeScript
 function saludar(nombre, saludo) {
   saludo = saludo || "Hola";
@@ -50,9 +51,9 @@ function saludar(nombre, saludo) {
 **Hint:** Use `?` for optional parameters and default assignment values. `param?: T` indicates optionality, while `= defaultValue` assigns a fallback value.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 2: Optional and Default 2"
 function saludar(nombre: string, saludo: string = "Hola"): string {
   return `${saludo}, ${nombre}`;
 }
@@ -64,7 +65,7 @@ function saludar(nombre: string, saludo: string = "Hola"): string {
 
 ### Exercise 3: Defining an Object with an Interface
 
-```javascript
+```javascript title="Exercise 3: Defining an Object"
 // Convert to TypeScript
 const crearUsuario = (u) => {
   return `Usuario ${u.nombre} creado con id ${u.id}`;
@@ -74,9 +75,9 @@ const crearUsuario = (u) => {
 **Hint:** Use `interface` to declare the shape of the `User` object. `interface` defines clear contracts across parts of your application.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 3: Defining an Object 2"
 interface Usuario {
   id: number;
   nombre: string;
@@ -94,7 +95,7 @@ const crearUsuario = (u: Usuario): string => {
 
 ### Exercise 4: Readonly and Literal Types
 
-```javascript
+```javascript title="Exercise 4: Readonly and Literal Types"
 // Convert to TypeScript
 const config = {
   mode: "production",
@@ -105,9 +106,9 @@ const config = {
 **Pista:** Usa `readonly` para propiedades inmutables y un *union type* literal (por ejemplo `"dev" | "prod"`). `readonly` evita reasignaciones accidentales.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 4: Readonly and Literal Types 2"
 type Mode = "development" | "production" | "test";
 
 interface Config {
@@ -129,7 +130,7 @@ const config: Config = {
 
 ### Exercise 5: Tuples
 
-```javascript
+```javascript title="Exercise 5: Tuples"
 // Convert to TypeScript
 function crearPar(nombre, edad) {
   return [nombre, edad];
@@ -139,9 +140,9 @@ function crearPar(nombre, edad) {
 **Pista:** Usa una tupla `[string, number]` para representar `(nombre, edad)`. Las tuplas permiten tipos fijos en posiciones concretas.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 5: Tuples 2"
 function crearPar(nombre: string, edad: number): [string, number] {
   return [nombre, edad];
 }
@@ -155,7 +156,7 @@ const p = crearPar("Ana", 30);
 
 ### Exercise 6: Enums for State Management
 
-```javascript
+```javascript title="Exercise 6: Enums for State Management"
 // Convert to TypeScript
 const estado = "Activo"; // puede ser 'Activo' o 'Inactivo'
 ```
@@ -163,9 +164,9 @@ const estado = "Activo"; // puede ser 'Activo' o 'Inactivo'
 **Pista:** Usa `enum` para representar un conjunto de valores nombrados. `enum` ayuda a mantener valores constantes legibles y seguros.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 6: Enums for State Management 2"
 enum Estado {
   Activo = "Activo",
   Inactivo = "Inactivo"
@@ -180,7 +181,7 @@ const estado: Estado = Estado.Activo;
 
 ### Exercise 7: Generics: Identity Function
 
-```javascript
+```javascript title="Exercise 7: Generics: Identity Function"
 // Convert to TypeScript
 function identidad(x) {
   return x;
@@ -190,9 +191,9 @@ function identidad(x) {
 **Pista:** Usa `generics` (`<T>`) para que la función preserve y acepte cualquier tipo. Los genéricos permiten escribir funciones y tipos reutilizables y tipados.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 7: Generics: Identity 2"
 function identidad<T>(x: T): T {
   return x;
 }
@@ -207,7 +208,7 @@ const b = identidad("hola");
 
 ### Exercise 8: Generics with Constraints (length)
 
-```javascript
+```javascript title="Exercise 8: Generics with Constraints"
 // Convert to TypeScript
 function cuentaLongitud(x) {
   return x.length;
@@ -217,9 +218,9 @@ function cuentaLongitud(x) {
 **Pista:** Usa `T extends { length: number }` para restringir a tipos que tengan `length`. Esto garantiza que `x.length` existe.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 8: Generics with Constraints 2"
 function cuentaLongitud<T extends { length: number }>(x: T): number {
   return x.length;
 }
@@ -234,7 +235,7 @@ console.log(cuentaLongitud([1,2,3])); // 3
 
 ### Exercise 9: Union Types and Type Narrowing
 
-```javascript
+```javascript title="Exercise 9: Union Types and Type"
 // Convert to TypeScript
 function formatear(x) {
   if (typeof x === 'number') {
@@ -247,9 +248,9 @@ function formatear(x) {
 **Pista:** Usa `string | number` y `typeof` para hacer *narrowing*. `typeof` permite distinguir tipos primitivos en tiempo de ejecución.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 9: Union Types and Type 2"
 function formatear(x: string | number): string {
   if (typeof x === 'number') {
     return x.toFixed(2);
@@ -264,7 +265,7 @@ function formatear(x: string | number): string {
 
 ### Exercise 10: Type Guard with `in`
 
-```javascript
+```javascript title="Exercise 10: Type Guard"
 // Convert to TypeScript
 function descripcion(animal) {
   if (animal.nombre) {
@@ -277,9 +278,9 @@ function descripcion(animal) {
 **Pista:** Usa `in` para comprobar presencia de una propiedad (p.ej. `if ('nombre' in animal)`). Esto sirve como *type guard* para objetos con distintas formas.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 10: Type Guard 2"
 type Gato = { nombre: string; ronronea: boolean };
 type Pez = { tipo: string; nada: boolean };
 
@@ -297,7 +298,7 @@ function descripcion(animal: Gato | Pez): string {
 
 ### Exercise 11: Narrowing with `instanceof`
 
-```javascript
+```javascript title="Exercise 11: Narrowing with instanceof"
 // Convert to TypeScript
 class A { constructor() {} }
 class B { constructor() {} }
@@ -311,9 +312,9 @@ function esA(x) {
 **Pista:** Usa clases y `instanceof` para distinguir instancias en tiempo de ejecución. `instanceof` es útil con clases y permite inferir el tipo dentro del bloque.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 11: Narrowing with instanceof 2"
 class A { a = 1 }
 class B { b = 2 }
 
@@ -332,7 +333,7 @@ console.log(esA(a));
 
 ### Exercise 12: Discriminated Unions (Geometric Shapes)
 
-```javascript
+```javascript title="Exercise 12: Discriminated Unions"
 // Convert to TypeScript
 function area(shape) {
   if (shape.kind === 'circle') {
@@ -345,9 +346,9 @@ function area(shape) {
 **Pista:** Usa `type` con una propiedad literal discriminante `kind`. Las uniones discriminadas facilitan el *narrowing* y la seguridad de tipos.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 12: Discriminated Unions 2"
 type Circulo = { kind: 'circle'; radius: number };
 type Cuadrado = { kind: 'square'; size: number };
 type Shape = Circulo | Cuadrado;
@@ -366,7 +367,7 @@ function area(shape: Shape): number {
 
 ### Exercise 13: keyof and Pluck Operator
 
-```javascript
+```javascript title="Exercise 13: keyof and Pluck Operator"
 // Convert to TypeScript
 function pluck(obj, keys) {
   return keys.map(k => obj[k]);
@@ -376,9 +377,9 @@ function pluck(obj, keys) {
 **Pista:** Usa `keyof` y genéricos `K extends keyof T` para asegurar que las claves existen en `obj`. `keyof` obtiene las claves de un tipo.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 13: keyof and Pluck Operator 2"
 function pluck<T, K extends keyof T>(obj: T, keys: K[]): T[K][] {
   return keys.map(k => obj[k]);
 }
@@ -393,7 +394,7 @@ const resultados = pluck(persona, ['nombre']); // tipo: string[]
 
 ### Exercise 14: Utility Type: Pick
 
-```javascript
+```javascript title="Exercise 14: Utility Type: Pick"
 // Convert to TypeScript
 const user = { id: 1, nombre: 'Ana', password: '123' };
 // Queremos un objeto público sin password
@@ -402,9 +403,9 @@ const user = { id: 1, nombre: 'Ana', password: '123' };
 **Pista:** Usa `Pick<T, K>` para construir un nuevo tipo con solo algunas propiedades. `Pick` sirve para exponer solo un subconjunto del tipo original.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 14: Utility Type: Pick 2"
 interface Usuario {
   id: number;
   nombre: string;
@@ -422,7 +423,7 @@ const user: UsuarioPublico = { id: 1, nombre: 'Ana' };
 
 ### Exercise 15: Utility Type: Omit
 
-```javascript
+```javascript title="Exercise 15: Utility Type: Omit"
 // Convert to TypeScript
 const user = { id: 1, nombre: 'Ana', password: '123' };
 // Queremos un usuario sin password
@@ -431,9 +432,9 @@ const user = { id: 1, nombre: 'Ana', password: '123' };
 **Pista:** Usa `Omit<T, K>` para crear un tipo sin ciertas propiedades. `Omit` es útil para eliminar campos sensibles como contraseña.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 15: Utility Type: Omit 2"
 interface Usuario {
   id: number;
   nombre: string;
@@ -451,7 +452,7 @@ const safeUser: UsuarioSinPassword = { id: 1, nombre: 'Ana' };
 
 ### Exercise 16: Partial and Required
 
-```javascript
+```javascript title="Exercise 16: Partial and Required"
 // Convert to TypeScript
 function actualizar(usuario, cambios) {
   return { ...usuario, ...cambios };
@@ -461,9 +462,9 @@ function actualizar(usuario, cambios) {
 **Pista:** Usa `Partial<T>` para permitir objetos con propiedades opcionales en `cambios`. `Partial` convierte todas las propiedades en opcionales; `Required` hace lo contrario.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 16: Partial and Required 2"
 interface Usuario {
   id: number;
   nombre: string;
@@ -484,7 +485,7 @@ const actualizado = actualizar(u, { email: 'a@b.com' });
 
 ### Exercise 17: ReadonlyArray and readonly
 
-```javascript
+```javascript title="Exercise 17: ReadonlyArray and readonly"
 // Convert to TypeScript
 const nums = [1,2,3];
 nums.push(4); // debería no permitirse si queremos inmutabilidad
@@ -493,9 +494,9 @@ nums.push(4); // debería no permitirse si queremos inmutabilidad
 **Pista:** Usa `readonly` o `ReadonlyArray<T>` para arrays inmutables. `readonly` evita métodos mutativos como `push` o `splice` en tiempo de compilación.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 17: ReadonlyArray 2"
 const nums: ReadonlyArray<number> = [1, 2, 3];
 // nums.push(4); // Error: Property 'push' does not exist on type 'readonly number[]'.
 ```
@@ -506,7 +507,7 @@ const nums: ReadonlyArray<number> = [1, 2, 3];
 
 ### Exercise 18: Function Overloading
 
-```javascript
+```javascript title="Exercise 18: Function Overloading"
 // Convert to TypeScript
 function combinar(a, b) {
   if (typeof a === 'number' && typeof b === 'number') return a + b;
@@ -517,9 +518,9 @@ function combinar(a, b) {
 **Pista:** Usa *overloads* (declaraciones de firma) para expresar que la función puede aceptar y devolver distintos tipos. Esto mejora la inferencia para quien la use.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 18: Function Overloading 2"
 function combinar(a: number, b: number): number;
 function combinar(a: string, b: string): string;
 function combinar(a: any, b: any): any {
@@ -537,7 +538,7 @@ const s = combinar('a', 'b'); // string
 
 ### Exercise 19: Mapped Types: Creating Optionalize
 
-```javascript
+```javascript title="Exercise 19: Mapped Types: Creating"
 // Convert to TypeScript
 // Queremos un tipo igual al original pero con todas las propiedades opcionales
 ```
@@ -545,9 +546,9 @@ const s = combinar('a', 'b'); // string
 **Pista:** Crea un mapped type `Optionalize<T>` con `[P in keyof T]?: T[P]`. Los mapped types transforman propiedades de un tipo a través de `keyof`.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 19: Mapped Types: Creating 2"
 type Optionalize<T> = { [P in keyof T]?: T[P] };
 
 interface Persona {
@@ -564,7 +565,7 @@ type PersonaOpcional = Optionalize<Persona>; // { id?: number; nombre?: string }
 
 ### Exercise 20: Simple Conditional Types
 
-```javascript
+```javascript title="Exercise 20: Simple Conditional Types"
 // Convert to TypeScript
 // Queremos un tipo que sea 'yes' si T es string, y 'no' en caso contrario
 ```
@@ -572,9 +573,9 @@ type PersonaOpcional = Optionalize<Persona>; // { id?: number; nombre?: string }
 **Pista:** Usa `T extends U ? X : Y` para crear tipos condicionales. Sirven para calcular tipos basados en otros.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 20: Simple Conditional Types 2"
 type IsString<T> = T extends string ? 'yes' : 'no';
 
 type A = IsString<string>; // 'yes'
@@ -587,7 +588,7 @@ type B = IsString<number>; // 'no'
 
 ### Exercise 21: unknown vs any
 
-```javascript
+```javascript title="Exercise 21: unknown vs any"
 // Convert to TypeScript
 function parse(json) {
   return JSON.parse(json);
@@ -597,9 +598,9 @@ function parse(json) {
 **Pista:** Usa `unknown` como tipo de retorno de parse y *narrowing* antes de usarlo. `unknown` obliga a comprobar el tipo antes de operar, a diferencia de `any`.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 21: unknown vs any 2"
 function parse(json: string): unknown {
   return JSON.parse(json);
 }
@@ -617,7 +618,7 @@ if (typeof data === 'object' && data !== null && 'x' in data) {
 
 ### Exercise 22: never and Exhaustive Type Checking
 
-```javascript
+```javascript title="Exercise 22: never and Exhaustive Type"
 // Convert to TypeScript
 function procesar(valor) {
   switch(valor) {
@@ -630,9 +631,9 @@ function procesar(valor) {
 **Pista:** Usa un `never` en la rama `default` para forzar exhaustividad (`assertNever`). `never` representa valores que nunca ocurren y ayuda a detectar casos no manejados.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 22: never and Exhaustive Type 2"
 type T = 'a' | 'b';
 
 function assertNever(x: never): never {
@@ -654,7 +655,7 @@ function procesar(valor: T): number {
 
 ### Exercise 23: Index Signatures / Record
 
-```javascript
+```javascript title="Exercise 23: Index Signatures / Record"
 // Convert to TypeScript
 const puntuaciones = {};
 puntuaciones['ana'] = 10;
@@ -664,9 +665,9 @@ puntuaciones['juan'] = 8;
 **Pista:** Usa `Record<string, number>` o `interface` con index signature `[k: string]: number` para tipar objetos con claves dinámicas.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 23: Index Signatures / Record 2"
 const puntuaciones: Record<string, number> = {};
 puntuaciones['ana'] = 10;
 puntuaciones['juan'] = 8;
@@ -678,7 +679,7 @@ puntuaciones['juan'] = 8;
 
 ### Exercise 24: Modules: export / import
 
-```javascript
+```javascript title="Exercise 24: Modules: export / import"
 // Convert to TypeScript (dos archivos)
 // utils.js
 function doble(x) { return x * 2; }
@@ -692,9 +693,9 @@ console.log(doble(3));
 **Pista:** Usa `export` y `import` con tipos. `export` declara lo que se comparte desde un módulo y `import` lo consume.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="utils.ts"
 // utils.ts
 export function doble(x: number): number { return x * 2; }
 
@@ -709,7 +710,7 @@ console.log(doble(3));
 
 ### Exercise 25: 'as const' for Literal Inference
 
-```javascript
+```javascript title="Exercise 25: 'as const' for Literal"
 // Convert to TypeScript
 const opciones = { modo: 'auto', retry: 3 };
 ```
@@ -717,9 +718,9 @@ const opciones = { modo: 'auto', retry: 3 };
 **Pista:** Usa `as const` para fijar valores como literales (readonly). `as const` convierte propiedades en `readonly` y sus valores en tipos literales.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 25: 'as const' for Literal 2"
 const opciones = { modo: 'auto', retry: 3 } as const;
 // tipo de opciones.modo es 'auto' (literal), no string
 ```
@@ -730,7 +731,7 @@ const opciones = { modo: 'auto', retry: 3 } as const;
 
 ### Exercise 26: Tuples with Rest Elements
 
-```javascript
+```javascript title="Exercise 26: Tuples with Rest Elements"
 // Convert to TypeScript
 function makeTuple(first, ...rest) {
   return [first, ...rest];
@@ -740,9 +741,9 @@ function makeTuple(first, ...rest) {
 **Pista:** Declara la tupla como `[string, ...number[]]` por ejemplo. Los rest elements en tuplas permiten mezclar longitud fija con repetición tipada.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 26: Tuples with Rest Elements 2"
 function makeTuple(first: string, ...rest: number[]): [string, ...number[]] {
   return [first, ...rest];
 }
@@ -756,7 +757,7 @@ const t = makeTuple('x', 1, 2, 3); // tipo: [string, ...number[]]
 
 ### Exercise 27: Promises and async/await
 
-```javascript
+```javascript title="Exercise 27: Promises and async/await"
 // Convert to TypeScript
 async function fetchUser() {
   const r = await fetch('/user');
@@ -767,9 +768,9 @@ async function fetchUser() {
 **Pista:** Tipa la función con `Promise<Usuario>` y el método `json()` con el tipo correcto. Las promesas en TS se declaran como `Promise<T>`.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 27: Promises and async/await 2"
 interface Usuario { id: number; nombre: string; }
 
 async function fetchUser(): Promise<Usuario> {
@@ -785,7 +786,7 @@ async function fetchUser(): Promise<Usuario> {
 
 ### Exercise 28: Type Assertion and Non-Null Assertion
 
-```javascript
+```javascript title="Exercise 28: Type Assertion and Non-Null"
 // Convert to TypeScript
 const el = document.getElementById('app');
 el.innerHTML = 'Hola';
@@ -794,9 +795,9 @@ el.innerHTML = 'Hola';
 **Pista:** Usa `as HTMLElement` o `!` para indicar a TypeScript que conoces el tipo o que no es null. `!` (non-null assertion) asume que el valor no es null/undefined.
 
 <details>
-<summary>💡 View Solution</summary>
+<summary>View Solution</summary>
 
-```typescript
+```typescript title="Exercise 28: Type Assertion 2"
 const el = document.getElementById('app') as HTMLElement | null;
 if (el) {
   el.innerHTML = 'Hola';

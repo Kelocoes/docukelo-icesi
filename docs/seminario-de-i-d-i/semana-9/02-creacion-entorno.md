@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Instala y configura el SDK de Flutter, Dart y Visual Studio Code, y verifica tu entorno con una lista de comprobación."
 ---
 
 # Configuración de Entorno

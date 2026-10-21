@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Review the week 6 slides on controllers, pipes, validation and testing using the embedded PDF viewer."
 ---
 
 # Slides of the Week

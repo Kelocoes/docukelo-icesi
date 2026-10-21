@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Understand the singleton and prototype scopes and the lifecycle of Spring beans configured with XML."
 ---
 
 # Bean Scopes and Lifecycle

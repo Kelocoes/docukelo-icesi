@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Comprende los conceptos de seguridad backend: hashing de contraseñas con bcrypt y la diferencia entre autenticación y autorización."
 ---
 
 # Conceptos de Seguridad

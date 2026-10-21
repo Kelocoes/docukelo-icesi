@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Add logging and cross-cutting concerns to NestJS with a custom file logger and interceptors that keep controllers focused on business logic."
 ---
 
 # Interceptors and Logging
@@ -242,7 +243,7 @@ Inspired by Aspect-Oriented Programming (AOP), **Interceptors** make it possible
 
 Every interceptor implements `NestInterceptor`:
 
-```typescript
+```typescript title="The NestInterceptor Contract"
 export interface NestInterceptor<T = any, R = any> {
   intercept(context: ExecutionContext, next: CallHandler<T>): Observable<R>;
 }
@@ -419,7 +420,7 @@ The industry-standard solution is introducing a unique **Correlation ID** (or *T
   <Step number="2" title="Enhance AppLogger for Trace Context">
     Update `AppLogger` so any service log message across the application can associate the request correlation identifier:
     - Add context method signatures:
-      ```typescript
+      ```typescript title="Assignment Objectives"
       logWithTrace(correlationId: string, level: string, message: string): void
       ```
     - Or integrate Node.js [`AsyncLocalStorage`](https://nodejs.org/api/async_context.html#class-asynclocalstorage) so calls to `this.logger.debug(...)` within downstream service methods automatically include the active trace ID without manual parameter passing.

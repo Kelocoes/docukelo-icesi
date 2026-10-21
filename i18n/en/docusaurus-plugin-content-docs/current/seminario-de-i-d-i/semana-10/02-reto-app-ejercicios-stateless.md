@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Break the FitTrack app views down into StatelessWidget components and specify the architecture that organizes them."
 ---
 
 import Tabs from '@theme/Tabs';

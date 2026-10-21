@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Comprende la interfaz como función del estado, qué es un componente de interfaz y cómo se escribe un StatelessWidget en Flutter."
 ---
 
 # Componentes y Paradigma Declarativo

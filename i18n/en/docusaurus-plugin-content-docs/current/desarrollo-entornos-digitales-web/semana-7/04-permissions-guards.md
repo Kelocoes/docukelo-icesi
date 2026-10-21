@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Move from roles to granular permissions: create the Permissions decorator and a guard to control access to each endpoint."
 ---
 
 # Access Control with Guards
@@ -222,7 +223,7 @@ curl -X GET http://localhost:3000/users \
 ```
 
 **HTTP 200 OK Response:**
-```json
+```json title="Scenario 1: Access Granted"
 [
   { "id": 1, "email": "ana@icesi.edu.co", "role": { "name": "admin" } }
 ]
@@ -235,7 +236,7 @@ curl -X GET http://localhost:3000/users
 ```
 
 **HTTP 401 Unauthorized Response:**
-```json
+```json title="Scenario 2: Unauthenticated Request"
 {
   "message": "Unauthorized",
   "statusCode": 401
@@ -247,7 +248,7 @@ curl -X GET http://localhost:3000/users
 When an authenticated user with role "guest" attempts to access an endpoint requiring `users:read`:
 
 **HTTP 403 Forbidden Response:**
-```json
+```json title="Scenario 3: Access Denied"
 {
   "message": "Access denied: You do not have sufficient permissions to perform this action",
   "error": "Forbidden",

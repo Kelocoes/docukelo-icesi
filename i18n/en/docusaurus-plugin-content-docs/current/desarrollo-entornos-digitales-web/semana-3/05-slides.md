@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Review the week 3 slides on relational databases, design and TypeORM using the embedded PDF viewer."
 ---
 
 # Weekly Slides

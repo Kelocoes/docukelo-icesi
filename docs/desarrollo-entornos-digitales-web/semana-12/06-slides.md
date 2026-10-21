@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Revisa las diapositivas de la semana 12 sobre estructura por features, Tailwind CSS v4 y daisyUI 5 con un visor de PDF integrado."
 ---
 
 # Slides de la semana

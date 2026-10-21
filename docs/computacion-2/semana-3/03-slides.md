@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Consulta las diapositivas de la semana 3 sobre anotaciones, Java Config, @Qualifier, @Primary, @Value y SpEL en Spring."
 ---
 
 # Slides de la semana

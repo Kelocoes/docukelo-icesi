@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Gestiona transacciones con @Transactional, comprende las propiedades ACID y controla cuándo ocurre el commit o el rollback."
 ---
 
 # Gestión de Transacciones con @Transactional y Rollback
@@ -58,13 +59,13 @@ Por defecto en Spring, **únicamente** las excepciones no verificadas (hijas de 
 
 Para garantizar que cualquier excepción (incluyendo excepciones de negocio verificadas) revierta la transacción, se utiliza el atributo `rollbackFor`:
 
-```java
+```java title="Ejemplo en Java"
 @Transactional(rollbackFor = Exception.class)
 ```
 
 Si por el contrario deseas que una excepción específica no cancele la transacción (por ejemplo, fallo en el envío de una notificación por correo secundaria), se utiliza `noRollbackFor`:
 
-```java
+```java title="Ejemplo en Java"
 @Transactional(noRollbackFor = EmailNotificationFailedException.class)
 ```
 
@@ -270,7 +271,7 @@ public class TransferService {
 
 :::caution[Cuidado con las Invocaciones Internas (Self-Invocation)]
 Si un método dentro de una clase `@Service` llama a otro método de la **misma clase** anotado con `@Transactional`, la transacción **NO se activará**:
-```java
+```java title="Errores Comunes al Usar @Transactional"
 public void procesarBatch() {
     // ❌ La llamada es directa a this, omitiendo el Proxy de Spring
     this.ejecutarTransaccion();

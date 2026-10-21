@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Identify the monolithic component anti-pattern in Next.js and see how layered separation and SOLID principles improve frontend code."
 ---
 
 # The Monolithic Component Anti-Pattern

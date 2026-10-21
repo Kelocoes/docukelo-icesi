@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+description: "Review the week 12 slides on feature-based structure, Tailwind CSS v4 and daisyUI 5 using the embedded PDF viewer."
 ---
 
 # Slides of the Week

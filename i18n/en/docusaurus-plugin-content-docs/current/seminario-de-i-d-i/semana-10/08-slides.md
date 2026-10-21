@@ -1,5 +1,6 @@
 ---
 sidebar_position: 8
+description: "Browse the Week 10 slides on Flutter layout, terminal AI agents, the context window, and AGENTS.md contracts."
 ---
 
 # Weekly Slides

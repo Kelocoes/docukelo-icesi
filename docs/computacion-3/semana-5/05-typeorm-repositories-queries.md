@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+description: "Usa el patrón repositorio con TypeORM en NestJS para realizar operaciones CRUD y consultas sobre entidades relacionadas."
 ---
 
 # Repositorios y Consultas con TypeORM
@@ -166,7 +167,7 @@ La clase `Repository<T>` de TypeORM expone un conjunto de métodos listos para u
 
 ### Diferencia clave: `create()` frente a `save()`
 
-```typescript
+```typescript title="Diferencia clave: create() frente"
 // 1. create() solo instancia el objeto en memoria TypeScript (valida tipos)
 const bookInstance = this.bookRepository.create({
   title: 'Cien años de soledad',
@@ -189,7 +190,7 @@ const savedBook = await this.bookRepository.save(bookInstance);
 
 El método `find()` acepta un objeto de configuración (`FindManyOptions`) con opciones declarativas para controlar la consulta:
 
-```typescript
+```typescript title="Consultas Declarativas con FindOptions"
 const books = await this.bookRepository.find({
   // 1. select: Proyección de columnas específicas (evita SELECT *)
   select: {

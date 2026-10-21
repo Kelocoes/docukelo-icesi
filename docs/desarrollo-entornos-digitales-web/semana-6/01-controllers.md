@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Aprende a crear controladores en NestJS: rutas, decoradores HTTP, parametros, respuestas y manejo de excepciones en una API REST."
 ---
 
 # Controladores en NestJS
@@ -171,7 +172,7 @@ throw new BadRequestException('Datos inválidos en el formulario', {
 
 El cliente recibe una respuesta uniforme con el código correspondiente:
 
-```json
+```json title="Manejo de Respuestas y Excepciones HTTP"
 {
   "message": "Datos inválidos en el formulario",
   "error": "El correo electrónico ya está registrado",

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Learn to translate an ER diagram into code by creating TypeORM entities and configuring the database connection in NestJS."
 ---
 
 # Entities in NestJS with TypeORM
@@ -171,7 +172,7 @@ Below we explore fundamental options passed to TypeORM decorators:
 
 #### 1. `@Entity(name?: string, options?: EntityOptions)`
 Defines that the class represents a table. If a name is omitted, the lowercase class name is used.
-```typescript
+```typescript title="@Entity"
 @Entity('roles') // Explicit table name in PostgreSQL
 ```
 
@@ -188,7 +189,7 @@ Configures exact column properties in PostgreSQL:
 * `default`: Sets a default value if none is provided.
 * `length`: Sets maximum length for `varchar`.
 
-```typescript
+```typescript title="@Column(options?: ColumnOptions)"
 @Column({ type: 'varchar', length: 150, unique: true, nullable: false })
 email: string;
 

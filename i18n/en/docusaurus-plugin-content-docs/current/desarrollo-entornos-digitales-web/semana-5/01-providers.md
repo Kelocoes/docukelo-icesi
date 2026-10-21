@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Understand the layered architecture of NestJS, inversion of control and dependency injection through providers and services."
 ---
 
 # Application Structure and Providers in NestJS

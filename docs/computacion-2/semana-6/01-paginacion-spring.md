@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: "Implementa paginación y ordenamiento en Spring Data JPA con Pageable, Sort y Page para evitar consultas masivas."
 ---
 
 # Paginación y Ordenamiento en Spring Data JPA
@@ -292,7 +293,7 @@ public class ProductController {
 
 :::tip[Uso directo de Pageable en Parámetros del Controlador]
 Spring MVC permite recibir directamente `Pageable` como parámetro en el método del controlador:
-```java
+```java title="Guía Práctica: Paso a Paso"
 @GetMapping
 public ResponseEntity<Page<Product>> listProducts(Pageable pageable) {
     return ResponseEntity.ok(productRepository.findAll(pageable));

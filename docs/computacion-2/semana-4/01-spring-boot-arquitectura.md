@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 sidebar_label: "Spring Boot"
+description: "Conoce la arquitectura de Spring Boot, el flujo de una petición con DispatcherServlet y su estructura multicapa de carpetas."
 ---
 
 # Spring Boot

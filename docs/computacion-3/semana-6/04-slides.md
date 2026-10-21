@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: "Consulta las diapositivas de la semana 6 sobre controladores REST, pipes, validación con DTOs y pruebas unitarias."
 ---
 
 # Slides de la semana

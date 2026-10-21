@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: "Comprende el protocolo MCP, su arquitectura de host, cliente y servidor, y en qué se diferencia de una API o una skill."
 ---
 
 import Tabs from '@theme/Tabs';
@@ -145,7 +146,7 @@ Permite que el agente interactúe con el repositorio remoto de Git:
 
 Permite que el agente abra un navegador headless, capture pantallas de la aplicación web y valide si los botones son interactivos:
 
-```yaml
+```yaml title="Invocación de servidor MCP"
 # Invocación en el flujo del agente
 Agent: "Abriendo http://localhost:3000 para validar el formulario de contactos..."
 Tool Call: browser_navigate(url: "http://localhost:3000")

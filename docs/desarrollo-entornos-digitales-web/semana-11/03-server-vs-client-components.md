@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+description: "Distingue los Server Components de los Client Components en Next.js y decide cuándo usar la directiva use client."
 ---
 
 # Server Components vs. Client Components
