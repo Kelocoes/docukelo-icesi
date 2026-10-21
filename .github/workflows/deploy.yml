@@ -1,12 +1,10 @@
 name: Deploy to GitHub Pages
 
-# - push a main: construye el sitio con Docker (multi-stage) y lo publica en GitHub Pages.
-# - pull request hacia main: solo construye, para detectar enlaces rotos o errores de MDX
-#   antes de mezclar (`onBrokenLinks: 'throw'`). No publica nada.
+# Solo se construye y publica cuando hay un push a main (es decir, al hacer merge de un PR).
+# Los pull requests no ejecutan nada. `workflow_dispatch` permite relanzarlo a mano desde la
+# pestaña Actions.
 on:
   push:
-    branches: [main]
-  pull_request:
     branches: [main]
   workflow_dispatch:
 
@@ -15,8 +13,8 @@ permissions:
 
 # Una sola publicacion a la vez; si llega otra, espera en vez de cancelar la que va en curso.
 concurrency:
-  group: pages-${{ github.event_name == 'pull_request' && github.ref || 'deploy' }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -41,13 +39,11 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Upload Pages artifact
-        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
           path: ./build
 
   deploy:
-    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     permissions:

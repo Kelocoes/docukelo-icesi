@@ -209,7 +209,7 @@ Some explanations are understood better by **moving and touching** than by looki
 
 ## 9. Despliegue, rutas y "Ultima actualizacion"
 
-* **Despliegue oficial: GitHub Pages**, en `https://kelocoes.github.io/docukelo-icesi/`. Se publica solo al hacer push a `main` con `.github/workflows/deploy.yml`, que construye el sitio con el `Dockerfile` multi-stage (`deps` -> `build` -> `export`) y sube el resultado con `actions/deploy-pages`. Los pull requests hacia `main` solo construyen (no publican). Ya no se usa Render ni la rama `gh-pages`, y el script `deploy` de `package.json` se eliminó.
+* **Despliegue oficial: GitHub Pages**, en `https://kelocoes.github.io/docukelo-icesi/`. Se publica solo al hacer push a `main` (es decir, al fusionar un PR) con `.github/workflows/deploy.yml`, que construye el sitio con el `Dockerfile` multi-stage (`deps` -> `build` -> `export`) y sube el resultado con `actions/deploy-pages`. Ya no se usa Render ni la rama `gh-pages`, y el script `deploy` de `package.json` se eliminó.
 * **baseUrl**: en produccion es `/docukelo-icesi/`; en desarrollo (`npm start`) es `/`. Se puede forzar con las variables `BASE_URL` y `SITE_URL` (ver `docusaurus.config.js`).
 * **Rutas en los `.md`/`.mdx`**: sigue escribiendo rutas absolutas simples (`/img/...`, `/files/...`, `/interactive/...`) tambien en `<iframe src>`, `<PdfViewer src>` y similares; el plugin `src/plugins/remark-static-base-url.js` les antepone el baseUrl al compilar. En componentes React (`src/`) usa `useBaseUrl('/img/...')`. Nunca escribas una URL completa del sitio dentro de los documentos: usa enlaces relativos (`./otro-doc.md#ancla`).
 * **Probar el build de produccion en local con Docker**:
