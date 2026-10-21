@@ -13,7 +13,6 @@ The portal covers several courses, including:
 - **Diseñando con Algoritmos / Desarrollo de Entornos Digitales Web**: Focuses on UI/UX, responsive layouts, web styling (CSS/Tailwind CSS), and frontend interaction.
 - **IAG al Entorno**: Artificial Intelligence and Generative AI fundamentals.
 - **Flutter**: Mobile application development.
-- **Testing**: Quality assurance and automated testing practices.
 
 ---
 
@@ -204,3 +203,23 @@ Some explanations are understood better by **moving and touching** than by looki
   The declared height is only a fallback: the piece resizes its own iframe to its content (`DK.autoHeight`).
 * **Rules that always apply**: it must work in light and dark theme (use the kit tokens, never raw hex colors), no emojis, texts in Spanish with technical terms in English, and the written explanation of the chapter stays around the piece (the piece accompanies the text, it does not replace it).
 * **Review workflow**: new pieces are first built as candidates and reviewed by the teacher before they replace anything in `docs/` (see the skill, step 2 and 4).
+
+
+---
+
+## 9. Despliegue, rutas y "Ultima actualizacion"
+
+* **Despliegue oficial: GitHub Pages**, en `https://kelocoes.github.io/docukelo-icesi/`. Se publica solo al hacer push a `main` con `.github/workflows/deploy.yml`, que construye el sitio con el `Dockerfile` multi-stage (`deps` -> `build` -> `export`) y sube el resultado con `actions/deploy-pages`. Los pull requests hacia `main` solo construyen (no publican). Ya no se usa Render ni la rama `gh-pages`, y el script `deploy` de `package.json` se eliminó.
+* **baseUrl**: en produccion es `/docukelo-icesi/`; en desarrollo (`npm start`) es `/`. Se puede forzar con las variables `BASE_URL` y `SITE_URL` (ver `docusaurus.config.js`).
+* **Rutas en los `.md`/`.mdx`**: sigue escribiendo rutas absolutas simples (`/img/...`, `/files/...`, `/interactive/...`) tambien en `<iframe src>`, `<PdfViewer src>` y similares; el plugin `src/plugins/remark-static-base-url.js` les antepone el baseUrl al compilar. En componentes React (`src/`) usa `useBaseUrl('/img/...')`. Nunca escribas una URL completa del sitio dentro de los documentos: usa enlaces relativos (`./otro-doc.md#ancla`).
+* **Probar el build de produccion en local con Docker**:
+  ```bash
+  docker build --build-arg BASE_URL=/ -t docukelo .
+  docker run --rm -p 8080:80 docukelo     # http://localhost:8080/
+  ```
+* **"Ultima actualizacion"** (`showLastUpdateTime` y `showLastUpdateAuthor`): la fecha sale de `git log`, por eso el workflow hace checkout con historial completo y el `Dockerfile` instala `git`. El autor se asigna en `docusaurus.config.js` (`parseFrontMatter`): por defecto *Kevin Rodriguez*; los documentos de `computacion-2/documentacion-guia-springboot/` figuran a nombre de *Carol Mosquera*. Para otro autor en un documento concreto, usa el frontmatter:
+  ```yaml
+  last_update:
+    author: Nombre Apellido
+  ```
+* **Editar esta pagina**: apunta a `https://github.com/Kelocoes/docukelo-icesi/tree/main/` + ruta del archivo; en `/en/` apunta a la traduccion dentro de `i18n/en/` (`editLocalizedFiles`).

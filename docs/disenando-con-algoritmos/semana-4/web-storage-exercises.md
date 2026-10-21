@@ -7,7 +7,7 @@ sidebar_position: 3
 Este documento te ayudará a practicar **Web Storage** en JavaScript con ejercicios progresivos.  
 La idea es que tengas una **consigna clara** y una **base de código lista para copiar y pegar**, así no empiezas desde cero.
 
-> **Nota**: Para repasar los conceptos teóricos de Web Storage, consulta la [explicación del profesor](https://docukelo-icesi.onrender.com/docs/disenando-con-algoritmos/semana-4/dom#3-web-storage).
+> **Nota**: Para repasar los conceptos teóricos de Web Storage, consulta la [explicación del profesor](./dom.md#3-web-storage).
 
 ---
 

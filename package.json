@@ -1,14 +1,13 @@
 {
-  "name": "my-website",
+  "name": "docukelo-icesi",
   "version": "0.0.0",
   "private": true,
-  "homepage": "https://kelocoes.github.io/docukelo-icesi",
+  "homepage": "https://kelocoes.github.io/docukelo-icesi/",
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",

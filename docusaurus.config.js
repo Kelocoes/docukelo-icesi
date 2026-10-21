@@ -7,8 +7,25 @@
 import { themes as prismThemes, themes } from 'prism-react-renderer';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import remarkStaticBaseUrl from './src/plugins/remark-static-base-url.js';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
+
+// Despliegue oficial: GitHub Pages (ver .github/workflows/deploy.yml y Dockerfile).
+// El sitio vive en https://kelocoes.github.io/docukelo-icesi/, asi que el build de produccion usa
+// ese baseUrl. En desarrollo (`npm start`) se sirve en la raiz. Ambos se pueden forzar con las
+// variables SITE_URL y BASE_URL (por ejemplo BASE_URL=/ para probar la imagen Docker en local).
+const siteUrl = process.env.SITE_URL || 'https://kelocoes.github.io';
+const baseUrl =
+    process.env.BASE_URL ||
+    (process.env.NODE_ENV === 'production' ? '/docukelo-icesi/' : '/');
+
+// Autor que Docusaurus muestra en "Ultima actualizacion". Por defecto es Kevin Rodriguez, salvo
+// las rutas listadas aqui. Un `last_update.author` explicito en el frontmatter siempre gana.
+const DEFAULT_LAST_UPDATE_AUTHOR = 'Kevin Rodriguez';
+const LAST_UPDATE_AUTHOR_BY_PATH = [
+    { pathIncludes: '/computacion-2/documentacion-guia-springboot/', author: 'Carol Mosquera' },
+];
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -21,11 +38,8 @@ const config = {
         v4: true, // Improve compatibility with the upcoming Docusaurus v4
     },
 
-    // Set the production url of your site here
-    url: 'https://docukelo-icesi.onrender.com',
-    // Set the /<baseUrl>/ pathname under which your site is served
-    // For GitHub pages deployment, it is often '/<projectName>/'
-    baseUrl: '/',
+    url: siteUrl,
+    baseUrl,
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
@@ -43,6 +57,19 @@ const config = {
         },
     ],
     markdown: {
+        // Asigna el autor de "Ultima actualizacion" sin tocar el frontmatter de cada documento.
+        parseFrontMatter: async (params) => {
+            const result = await params.defaultParseFrontMatter(params);
+            const filePath = params.filePath.replace(/\\/g, '/');
+            const override = LAST_UPDATE_AUTHOR_BY_PATH.find(({ pathIncludes }) =>
+                filePath.includes(pathIncludes),
+            );
+            result.frontMatter.last_update = {
+                author: override ? override.author : DEFAULT_LAST_UPDATE_AUTHOR,
+                ...result.frontMatter.last_update,
+            };
+            return result;
+        },
         hooks: {
             onBrokenMarkdownLinks: 'warn',
         },
@@ -66,10 +93,11 @@ const config = {
             type: 'text/css',
         },
         {
-            href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
+            // Debe coincidir con la version de katex instalada (la que usa rehype-katex).
+            href: 'https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/katex.min.css',
             type: 'text/css',
             integrity:
-                'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
+                'sha384-nH0MfJ44wi1dd7w6jinlyBgljjS8EJAh2JBoRad8a3VDw2K69vfaaqm4WnR+gXtA',
             crossorigin: 'anonymous',
         },
     ],
@@ -88,11 +116,15 @@ const config = {
                         process.env.SHOW_INTERNAL_COURSES !== 'true'
                             ? ['diseno-de-software-1/**', '**/_*.{js,jsx,ts,tsx,md,mdx}']
                             : ['**/_*.{js,jsx,ts,tsx,md,mdx}'],
-                    // Please change this to your repo.
-                    // Remove this to remove the "edit this page" links.
+                    // Docusaurus agrega la ruta del archivo relativa a la raiz del repo
+                    // (docs/<curso>/...), asi que este valor base es el correcto.
                     editUrl:
                         'https://github.com/Kelocoes/docukelo-icesi/tree/main/',
-                    remarkPlugins: [remarkMath],
+                    // En /en/ el enlace "Editar" lleva a la traduccion (i18n/en/...) y no al original.
+                    editLocalizedFiles: true,
+                    showLastUpdateTime: true,
+                    showLastUpdateAuthor: true,
+                    remarkPlugins: [remarkMath, [remarkStaticBaseUrl, { baseUrl }]],
                     rehypePlugins: [rehypeKatex],
                 },
                 blog: {
@@ -121,7 +153,7 @@ const config = {
         /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
             // Replace with your project's social card
-            image: 'img/docusaurus-social-card.jpg',
+            image: 'img/docukelo-social-card.png',
             navbar: {
                 title: 'Documentación - Kelo',
                 logo: {
