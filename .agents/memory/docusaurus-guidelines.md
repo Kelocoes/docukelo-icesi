@@ -223,3 +223,4 @@ Some explanations are understood better by **moving and touching** than by looki
     author: Nombre Apellido
   ```
 * **Editar esta pagina**: apunta a `https://github.com/Kelocoes/docukelo-icesi/tree/main/` + ruta del archivo; en `/en/` apunta a la traduccion dentro de `i18n/en/` (`editLocalizedFiles`).
+* **Build estricto**: `onBrokenLinks`, `onBrokenAnchors` y `onBrokenMarkdownLinks` estan en `throw`: un enlace o ancla rota hace fallar el build (y el despliegue). Valida siempre con `npm run build`. Node 20 o superior (`.nvmrc`), y `future.faster` (Rspack) activo; si algun dia un build falla solo por eso, desactivalo en `docusaurus.config.js`.

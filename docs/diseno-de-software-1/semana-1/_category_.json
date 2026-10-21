@@ -1,8 +1,0 @@
-{
-    "label": "S1 - Fundamentos de Diseño y Drivers",
-    "position": 1,
-    "link": {
-        "type": "generated-index",
-        "description": "Semana 1: Abstracción, encapsulamiento, modularidad, principios SOLID, heurísticas GRASP, inyección de dependencias y escenarios de calidad ASRs."
-    }
-}

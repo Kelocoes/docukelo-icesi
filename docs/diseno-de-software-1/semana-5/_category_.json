@@ -1,8 +1,0 @@
-{
-    "label": "S5 - Descripción y Decisiones Arquitectónicas",
-    "position": 5,
-    "link": {
-        "type": "generated-index",
-        "description": "Semana 5: Vistas, viewpoints, C4 Model, Architecture Decision Records (ADR) y entrega de DOC-ARC (25%)."
-    }
-}
