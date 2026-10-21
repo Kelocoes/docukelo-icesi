@@ -14,7 +14,7 @@
     "write-heading-ids": "docusaurus write-heading-ids",
     "lint:docs": "node scripts/lint-docs.mjs",
     "scaffold-week": "node scripts/scaffold-week.mjs",
-    "prepare": "node scripts/install-hooks.mjs"
+    "prepare": "node scripts/install-hooks.mjs || exit 0"
   },
   "dependencies": {
     "@docusaurus/core": "^3.10.2",
