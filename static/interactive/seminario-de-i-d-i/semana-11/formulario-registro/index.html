@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formulario con TextEditingController</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-tree.js"></script>
+<script src="../../../_shared/dk-phone.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Simulador del formulario de registro: controladores, escritura (sin setState) y registro (con setState).
+   Solo DATOS: la app, el árbol de widgets, el código esencial y los pasos. Los números de línea se buscan por texto. */
+(function () {
+  var LINES = [
+    'class _RegistroPageState extends State<RegistroPage> {',
+    '  late final TextEditingController _nombreController;',
+    '  late final TextEditingController _emailController;',
+    "  String _mensajeResultado = '';",
+    '',
+    '  @override',
+    '  void initState() {',
+    '    super.initState();',
+    '    _nombreController = TextEditingController();',
+    '    _emailController = TextEditingController();',
+    '  }',
+    '',
+    '  @override',
+    '  void dispose() {',
+    '    _nombreController.dispose();',
+    '    _emailController.dispose();',
+    '    super.dispose();',
+    '  }',
+    '',
+    '  void _procesarFormulario() {',
+    '    final nombre = _nombreController.text.trim();',
+    '    final email = _emailController.text.trim();',
+    '',
+    '    if (nombre.isEmpty || email.isEmpty) {',
+    '      ScaffoldMessenger.of(context).showSnackBar(',
+    "        const SnackBar(content: Text('Completa todos los campos')),",
+    '      );',
+    '      return;',
+    '    }',
+    '',
+    '    setState(() {',
+    "      _mensajeResultado = 'Usuario registrado: $nombre ($email)';",
+    '    });',
+    '',
+    '    _nombreController.clear();',
+    '    _emailController.clear();',
+    '  }',
+    '',
+    '  @override',
+    '  Widget build(BuildContext context) {',
+    '    return Column(',
+    '      children: [',
+    '        TextField(controller: _nombreController),',
+    '        TextField(controller: _emailController),',
+    '        FilledButton(',
+    '          onPressed: _procesarFormulario,',
+    "          child: const Text('Registrar'),",
+    '        ),',
+    '        if (_mensajeResultado.isNotEmpty) Text(_mensajeResultado),',
+    '      ],',
+    '    );',
+    '  }',
+    '}',
+  ];
+  var at = function (s) { for (var i = 0; i < LINES.length; i++) if (LINES[i].indexOf(s) >= 0) return i + 1; throw new Error('línea no encontrada: ' + s); };
+  var rng = function (a, b) { var r = []; if (at(b) < at(a)) throw new Error('rango vacío: ' + a + ' .. ' + b); for (var i = at(a); i <= at(b); i++) r.push(i); return r; };
+
+  var L = {
+    ctrls: rng('late final TextEditingController _nombreController', 'late final TextEditingController _emailController'),
+    init: rng('void initState', '_emailController = TextEditingController();'),
+    tfs: [at('TextField(controller: _nombreController)'), at('TextField(controller: _emailController)')],
+    button: rng('FilledButton(', 'onPressed: _procesarFormulario'),
+    read: rng('final nombre =', 'final email ='),
+    valid: rng('if (nombre.isEmpty', 'return;'),
+    set: rng('setState(() {', "_mensajeResultado = 'Usuario"),
+    clear: rng('_nombreController.clear()', '_emailController.clear()'),
+    build: rng('Widget build', 'if (_mensajeResultado'),
+  };
+  L.fullSubmit = L.read.concat(L.set, L.clear);
+
+  var PHASES = ['Los controladores', 'Escribir', 'Registrar', 'Pruébalo tú'];
+  var BUILD = '--> build() ejecutado';
+  var MSG = 'Usuario registrado: Ana Pérez (ana@icesi.edu.co)';
+  var ctl = function (t) { return { text: t }; };
+
+  var steps = [
+    // ---- Fase 1: los controladores nacen en initState ----
+    { phase: 0, title: 'initState() crea los controladores', code: L.init, msgs: [], dwell: 4500,
+      state: { _nombreController: ctl(''), _emailController: ctl('') }, changed: ['_nombreController', '_emailController'],
+      caption: 'Antes de initState las variables late no tienen valor. Aquí se crean los dos controladores, una sola vez. Cada uno guarda el texto de su campo en la propiedad text.' },
+    { phase: 0, title: 'build() conecta cada TextField', code: L.tfs, msgs: [], dwell: 4000, tree: {},
+      caption: 'Cada TextField recibe su controlador: el campo muestra lo que dice controller.text y, cuando el usuario escribe, actualiza esa propiedad. El controlador es el puente entre el campo y tu código.' },
+
+    // ---- Fase 2: escribir no reconstruye nada ----
+    { phase: 1, title: 'El usuario escribe el nombre', code: L.ctrls.slice(0, 1), msgs: [], dwell: 4800,
+      state: { _nombreController: ctl('Ana Pérez') }, changed: ['_nombreController'], tree: { tfN: 'self' },
+      note: 'Escribir cambia controller.text, pero no llama a setState: no hay build(). Solo se repinta el TextField.',
+      caption: 'Mira la consola: sigue con una sola línea. El texto cambió en el controlador y el campo se actualiza solo, sin reconstruir la página.' },
+    { phase: 1, title: 'Y escribe el correo', code: L.ctrls.slice(1), msgs: [], dwell: 3800,
+      state: { _emailController: ctl('ana@icesi.edu.co') }, changed: ['_emailController'], tree: { tfE: 'self' },
+      note: 'Tampoco hay setState: el estado de la página (_mensajeResultado) no cambió.',
+      caption: 'Los dos controladores ya tienen texto, pero _mensajeResultado sigue vacío: nada en la página depende de lo que se escribe hasta que se pulse el botón.' },
+
+    // ---- Fase 3: registrar ----
+    { phase: 2, title: 'El usuario pulsa Registrar', code: L.button, msgs: [], dwell: 3500, tap: 'registrar', stage: 0,
+      caption: 'onPressed llama a _procesarFormulario. Hasta aquí solo se tocó el botón.' },
+    { phase: 2, title: 'Se lee el texto y se valida', code: L.read.concat(L.valid), msgs: [], dwell: 5000, stage: 1,
+      caption: 'controller.text entrega lo escrito y trim() quita espacios sobrantes. Si algún campo está vacío, se muestra un SnackBar y se hace return. Aquí ambos tienen texto, así que continúa.' },
+    { phase: 2, title: 'setState guarda el resultado', code: L.set, msgs: [], dwell: 4400, stage: 3, tree: 'dirty', stale: true,
+      state: { _mensajeResultado: MSG }, changed: ['_mensajeResultado'],
+      caption: 'Ahora sí cambia el estado de la página: _mensajeResultado recibe el texto y la página se marca como dirty. La pantalla aún no lo muestra.' },
+    { phase: 2, title: 'clear() vacía los campos y build() muestra el resultado', code: L.clear, msgs: [], dwell: 5200, stage: 5, tree: 'build',
+      state: { _nombreController: ctl(''), _emailController: ctl('') }, changed: ['_nombreController', '_emailController'], log: [BUILD],
+      caption: 'clear() deja los campos listos para otra entrada. En el siguiente frame build() corre y aparece la tarjeta de resultado, porque _mensajeResultado ya no está vacío.' },
+    { phase: 2, title: 'Con un campo vacío no hay setState', code: L.valid, msgs: [], dwell: 5200, tap: 'registrar', stage: 1, block: 2,
+      snack: 'Completa todos los campos',
+      note: 'La validación falla: se muestra el SnackBar y return. Sin setState no hay build().',
+      caption: 'Si pulsas Registrar con los campos vacíos, se ejecuta el if, aparece el SnackBar y la función termina antes de llegar a setState. La página no se reconstruye (la consola no cambia).' },
+
+    // ---- Fase 4: libre ----
+    { phase: 3, title: 'Pruébalo tú', msgs: [], free: true, dwell: 1500,
+      caption: 'Escribe en los campos (la consola no cambia) y pulsa Registrar. Prueba también con un campo vacío o con ambos vacíos.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Simulación de un formulario de registro en Flutter con TextEditingController: escribir no reconstruye, registrar sí',
+    phases: PHASES,
+    wide: true,
+    code: { title: 'registro_page.dart (lo esencial; los estilos se omiten)', text: LINES.join('\n') },
+    scene: function (svg, stage, api) {
+      return DK.phone({
+        stage: stage, api: api,
+        title: 'Registro', height: 390,
+        className: '_RegistroPageState',
+        init: { _nombreController: null, _emailController: null, _mensajeResultado: '' },
+        fields: [
+          { key: '_nombreController', type: 'TextEditingController', show: function (v) { return v ? "text: '" + v.text + "'" : 'sin inicializar (late)'; } },
+          { key: '_emailController', type: 'TextEditingController', show: function (v) { return v ? "text: '" + v.text + "'" : 'sin inicializar (late)'; } },
+          { key: '_mensajeResultado', type: 'String' },
+        ],
+        initLog: [BUILD],
+        freeInit: { _nombreController: ctl(''), _emailController: ctl(''), _mensajeResultado: '' },
+        buildLog: function () { return BUILD; },
+        hint: 'Escribe y pulsa Registrar.',
+        tree: [
+          { id: 'scaffold', label: 'Scaffold', d: 0 },
+          { id: 'page', label: 'RegistroPage', d: 1, state: true },
+          { id: 'col', label: 'Column', d: 2 },
+          { id: 'tfN', label: 'TextField', sub: 'nombre', d: 3 },
+          { id: 'tfE', label: 'TextField', sub: 'correo', d: 3 },
+          { id: 'btn', label: 'FilledButton', d: 3 },
+          { id: 'res', label: 'Text', sub: '_mensajeResultado', d: 3, when: function (s) { return s._mensajeResultado !== ''; } },
+        ],
+        view: function (s) {
+          var e = DK.phone.esc, n = s._nombreController ? s._nombreController.text : '', c = s._emailController ? s._emailController.text : '';
+          return '<p class="pf-h">Formulario de Registro</p>' +
+            '<label class="pf-field"><span>Nombre completo</span><input data-in="nombre" value="' + e(n) + '" placeholder="Ej. Juanita Pérez" autocomplete="off"></label>' +
+            '<label class="pf-field"><span>Correo electrónico</span><input data-in="email" value="' + e(c) + '" placeholder="usuario@icesi.edu.co" autocomplete="off"></label>' +
+            '<button class="pf-btn" data-act="registrar" style="margin-top:16px">' + DK.phone.icon('check') + 'Registrar Usuario</button>' +
+            (s._mensajeResultado ? '<div class="pf-result">' + e(s._mensajeResultado) + '</div>' : '');
+        },
+        actions: {
+          registrar: function (s) {
+            var nombre = s._nombreController.text.trim(), email = s._emailController.text.trim();
+            if (!nombre || !email) {
+              return { set: false, code: L.read.concat(L.valid), snack: 'Completa todos los campos',
+                note: 'La validación falló: se muestra el SnackBar y return. Sin setState no hay build().' };
+            }
+            s._mensajeResultado = 'Usuario registrado: ' + nombre + ' (' + email + ')';
+            s._nombreController.text = ''; s._emailController.text = '';
+            return { set: true, code: L.fullSubmit, note: 'setState guardó el mensaje y clear() vació los campos.' };
+          },
+        },
+        input: function (s, key, value) {
+          s[key === 'nombre' ? '_nombreController' : '_emailController'].text = value;
+          return { code: key === 'nombre' ? L.ctrls.slice(0, 1) : L.ctrls.slice(1), self: key === 'nombre' ? 'tfN' : 'tfE',
+            note: 'Escribir cambia controller.text, pero no llama a setState: no hay build(). Solo se repinta el TextField.' };
+        },
+      });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'TextEditingController',
+      title: 'Qué pasa cuando escribes y cuando registras',
+      text: 'Un formulario real en un teléfono: verás que escribir cambia el controlador sin reconstruir la página, y que Registrar sí usa setState. Los estilos se omiten: lo importante es la lógica.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

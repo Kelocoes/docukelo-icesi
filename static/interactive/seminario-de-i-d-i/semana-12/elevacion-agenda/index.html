@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elevación de estado y prop drilling</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-tree.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El árbol de la agenda de la semana 12: dónde vive el estado y cómo viaja (elevación, props, callbacks, prop drilling).
+   Simplificado a partir del árbol de Computación 3. Solo DATOS. La rama del resumen (PanelResumen) aparece en la fase 3. */
+(function () {
+  var NODES = [
+    { id: 'screen', label: 'AgendaScreen', sub: 'Scaffold' },
+    { id: 'page', label: 'AgendaPage', parent: 'screen', sub: 'página' },
+    { id: 'form', label: 'ContactoForm', parent: 'page', sub: 'formulario' },
+    { id: 'list', label: 'ContactoList', parent: 'page', sub: 'lista' },
+    { id: 'card', label: 'ContactoCard', parent: 'list', sub: 'una tarjeta' },
+    { id: 'panel', label: 'PanelResumen', parent: 'page', sub: 'nuevo' },
+    { id: 'bar', label: 'BarraResumen', parent: 'panel' },
+    { id: 'chip', label: 'ContadorChip', parent: 'bar', sub: 'muestra el total' },
+  ];
+
+  // la rama del resumen todavía no existe hasta que llega el requisito nuevo
+  var HIDE = { panel: 'hide', bar: 'hide', chip: 'hide' };
+  var roles = function (r, withNew) {
+    var o = {};
+    if (!withNew) for (var k in HIDE) o[k] = HIDE[k];
+    for (var j in r) o[j] = r[j];
+    return o;
+  };
+  var step = function (phase, title, caption, extra) {
+    var s = { phase: phase, title: title, caption: caption, msgs: [] };
+    for (var k in extra) s[k] = extra[k];
+    return s;
+  };
+
+  var steps = [
+    // ---- Fase 1: el problema ----
+    step(0, 'La pantalla es un árbol',
+      'Cada caja es un componente y cada línea une a un padre con el hijo que construye. Los datos en Flutter solo bajan por estas ramas, de padre a hijo, como argumentos del constructor.',
+      { roles: roles({}) }),
+    step(0, 'Si cada uno guardara lo suyo',
+      'Imagina que ContactoForm guarda la lista de contactos. ContactoList, en otra rama, necesita mostrarla, pero entre hermanos no hay un camino directo: el dato no le llega.',
+      { roles: roles({ form: 'owner', list: 'need' }), tags: { form: '_contactos', list: '¿contactos?' },
+        msgs: [{ from: 'form', to: 'list', label: 'no hay camino', kind: 'err', lost: true }] }),
+
+    // ---- Fase 2: elevar el estado ----
+    step(1, 'Se sube al ancestro común',
+      'El ancestro común más cercano de ContactoForm y ContactoList es AgendaPage. Allí se mueve la lista: la página pasa a ser la única dueña del estado.',
+      { roles: roles({ page: 'owner', form: 'dim', list: 'need' }), tags: { page: 'List<Contacto> _contactos' } }),
+    step(1, 'Los datos bajan como argumentos',
+      'AgendaPage le entrega la lista a ContactoList por el constructor, y esta se la pasa a cada tarjeta. Cada nivel usa lo que recibe: la lista hace .map y la tarjeta muestra al contacto.',
+      { roles: roles({ page: 'owner', list: 'use', card: 'use' }), tags: { page: '_contactos', list: 'contactos', card: 'contacto' },
+        msgs: [{ path: ['page', 'list', 'card'], label: 'contactos', kind: 'data' }] }),
+    step(1, 'Los eventos suben como callbacks',
+      'El formulario no modifica la lista: llama a la función onAgregar que recibió, y esa función (definida en AgendaPage) hace el setState. Con eliminar pasa igual.',
+      { roles: roles({ page: 'owner', form: 'use', card: 'use' }), tags: { page: 'setState(...)', form: 'onAgregar(nuevo)', card: 'onEliminar(id)' },
+        msgs: [{ path: ['form', 'page'], label: 'onAgregar', kind: 'ctl' }, { path: ['card', 'list', 'page'], label: 'onEliminar', kind: 'ctl' }] }),
+    step(1, 'Un dueño y dos hijos desacoplados',
+      'ContactoForm no conoce a ContactoList ni al revés: solo conocen el contrato que les da su padre. Por eso puedes reutilizar o reemplazar cualquiera de los dos.',
+      { roles: roles({ page: 'owner', form: 'use', list: 'use' }), tags: { page: 'setState + _contactos', form: 'solo avisa', list: 'solo muestra' } }),
+
+    // ---- Fase 3: prop drilling ----
+    step(2, 'Llega un requisito nuevo',
+      'El equipo agrega un resumen con el total de contactos (ContadorChip). Está tres niveles por debajo de AgendaPage, con PanelResumen y BarraResumen en medio.',
+      { roles: roles({ page: 'owner', panel: 'need', bar: 'need', chip: 'need' }, true), tags: { chip: '¿total?' } }),
+    step(2, 'El total viaja nivel por nivel',
+      'El total tiene que atravesar PanelResumen y BarraResumen, que no lo usan: solo lo reenvían. Son widgets pasamanos y esto es el prop drilling.',
+      { roles: roles({ page: 'owner', panel: 'pass', bar: 'pass', chip: 'use' }, true),
+        tags: { page: 'contactos.length', panel: 'no lo usa', bar: 'no lo usa', chip: 'total: 3' },
+        msgs: [{ path: ['page', 'panel', 'bar', 'chip'], label: 'total', kind: 'data' }] }),
+    step(2, 'El costo del prop drilling',
+      'Cambiar el nombre o el tipo de total obliga a editar tres constructores, y los intermedios quedan acoplados a un dato que no les importa. Con 1 o 2 niveles es sano; con 3 o más empieza a doler.',
+      { roles: roles({ page: 'owner', panel: 'pass', bar: 'pass', chip: 'use' }, true),
+        tags: { page: 'pasa total', panel: 'recibe total', bar: 'reenvía total', chip: 'usa total' } }),
+
+    // ---- Fase 4: la salida ----
+    step(3, 'Un salto directo',
+      'Una herramienta de gestión de estado (Provider, Riverpod, BLoC) deja que el consumidor lea el dato directamente, sin pasar por los intermedios. PanelResumen y BarraResumen quedan libres.',
+      { roles: roles({ page: 'provider', chip: 'use', panel: 'dim', bar: 'dim' }, true), tags: { page: 'Provider / Riverpod', chip: 'context.watch' },
+        msgs: [{ from: 'page', to: 'chip', direct: true, label: 'total', kind: 'ack' }] }),
+    step(3, 'Cuándo dar el salto',
+      'Regla práctica: empieza elevando el estado y pasando argumentos. Cuando veas widgets que reenvían datos que no usan, es la señal para pasar a una herramienta de gestión de estado.',
+      { roles: roles({ page: 'provider', chip: 'use', form: 'use', list: 'use' }, true) }),
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Árbol de componentes de la agenda: elevación de estado, datos hacia abajo, eventos hacia arriba, prop drilling y gestión de estado',
+    phases: ['El problema', 'Elevar el estado', 'Prop drilling', 'La salida'],
+    wide: true,
+    scene: function (svg) {
+      return DK.tree({ svg: svg, width: 1000, levelGap: 100, nodes: NODES, legend: ['owner', 'pass', 'use', 'provider', 'need'] });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Árbol de componentes',
+      title: 'Dónde vive el estado de la agenda y cómo viaja',
+      text: 'La agenda como árbol de componentes. Verás por qué hay que elevar el estado, cómo bajan los datos y suben los eventos, y cuándo el prop drilling empieza a doler.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

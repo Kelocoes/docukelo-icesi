@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Los tres árboles de Flutter</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Los tres árboles de Flutter: se sigue UN widget (el Text del contador) por las tres capas. Solo DATOS.
+   Filas = los tres árboles; columnas = ContadorPage (el StatefulWidget) y el Text que muestra el contador. */
+(function () {
+  var NODES = [
+    // cabeceras de fila: qué es cada árbol
+    { id: 'laneW', kind: 'box', icon: 'filecode', label: 'Árbol de Widgets', sub: 'la descripción', x: 8, y: 18, w: 160, h: 100 },
+    { id: 'laneE', kind: 'box', icon: 'classbox', label: 'Árbol de Elements', sub: 'los nodos vivos', x: 8, y: 158, w: 160, h: 126 },
+    { id: 'laneR', kind: 'box', icon: 'gear', label: 'Árbol de Render', sub: 'mide y pinta', x: 8, y: 330, w: 160, h: 100 },
+
+    // fila 1: widgets (se crean de nuevo en cada build)
+    { id: 'wA', kind: 'box', label: 'ContadorPage', sub: 'widget #w1 · inmutable', x: 250, y: 36, w: 260, h: 64 },
+    { id: 'wB', kind: 'box', label: 'Text', sub: "texto: '0' · #a1", x: 540, y: 36, w: 252, h: 64 },
+
+    // fila 2: elements (persisten) y, dentro del de ContadorPage, el State
+    { id: 'eA', kind: 'outer', label: 'StatefulElement', sub: 'persistente · #e1', x: 250, y: 152, w: 260, h: 138 },
+    { id: 'sA', kind: 'box', label: 'State', sub: '_contador = 0', x: 268, y: 208, w: 224, h: 64 },
+    { id: 'eB', kind: 'box', label: 'Element', sub: 'persistente · #e2', x: 540, y: 172, w: 252, h: 98 },
+
+    // fila 3: render objects (persisten y pintan)
+    { id: 'rA', kind: 'box', label: 'Sin RenderObject', sub: 'solo compone a sus hijos', x: 250, y: 346, w: 260, h: 68 },
+    { id: 'rB', kind: 'box', label: 'RenderParagraph', sub: "pinta '0' · #r1", x: 540, y: 346, w: 252, h: 68 },
+  ];
+
+  var step = function (phase, title, caption, focus, extra) {
+    var s = { phase: phase, title: title, caption: caption, focus: focus, msgs: [] };
+    for (var k in extra) s[k] = extra[k];
+    return s;
+  };
+  var m = function (from, to, label, kind, extra) {
+    var r = { from: from, to: to, label: label, kind: kind };
+    for (var k in extra) r[k] = extra[k];
+    return r;
+  };
+
+  var steps = [
+    // ---- Fase 1: qué es cada árbol ----
+    step(0, 'Árbol de Widgets: la descripción',
+      'Es lo que escribes en build(): una descripción liviana e inmutable de cómo debe verse la pantalla. Flutter crea widgets nuevos todo el tiempo y casi no cuesta.',
+      ['laneW', 'wA', 'wB']),
+    step(0, 'Árbol de Elements: los nodos vivos',
+      'Por cada widget hay un Element que lo representa en el árbol real. Los Element persisten entre reconstrucciones, y el de un StatefulWidget es quien retiene el State.',
+      ['laneE', 'eA', 'sA', 'eB']),
+    step(0, 'Árbol de Render: mide y pinta',
+      'Algunos Element crean un RenderObject, que calcula tamaños y posición y pinta. ContadorPage no necesita uno (solo compone a sus hijos); el Text sí: RenderParagraph.',
+      ['laneR', 'rA', 'rB']),
+    step(0, 'Cómo se conectan',
+      'El Widget es la receta, el Element es el nodo que la ejecuta y el RenderObject es lo que realmente se pinta. Cada widget de arriba crea su Element de abajo.',
+      [], { msgs: [m('wA', 'eA', 'crea', 'ctl'), m('wB', 'eB', 'crea', 'ctl'), m('eB', 'rB', 'crea', 'ctl')] }),
+
+    // ---- Fase 2: qué pasa con un setState ----
+    step(1, 'Antes del toque',
+      "Todo está en reposo: el Text muestra '0' y el State guarda _contador = 0. Fíjate en los números: #a1, #e2, #r1. Son identidades de objetos: te ayudarán a ver qué se reemplaza y qué se conserva.",
+      ['sA', 'wB', 'eB', 'rB']),
+    step(1, 'setState cambia el dato y marca dirty',
+      'El State pasa a _contador = 1 y su Element queda marcado como dirty. Solo es una bandera: todavía no se reconstruyó nada.',
+      ['sA', 'eA'], { sub: { sA: '_contador = 1', eA: 'DIRTY · #e1' } }),
+    step(1, 'build() crea un Widget nuevo',
+      "En el siguiente frame se ejecuta build(): el Text('1') es un objeto nuevo (#b7). El anterior (#a1) se descarta. Crear widgets es barato por diseño.",
+      ['wB', 'eA'], { sub: { sA: '_contador = 1', eA: 'DIRTY · #e1', wB: "texto: '1' · #b7 (nuevo)" },
+        msgs: [m('eA', 'wB', 'build()', 'data', { path: [510, 168, 548, 90], labelSide: 'left' })] }),
+    step(1, 'El Element se reutiliza',
+      'Flutter compara el widget nuevo con el viejo: mismo tipo y misma posición, así que NO crea otro Element. El #e2 sigue siendo el mismo y solo actualiza a qué widget apunta.',
+      ['eB'], { sub: { sA: '_contador = 1', eA: 'DIRTY · #e1', wB: "texto: '1' · #b7 (nuevo)", eB: 'mismo #e2 · apunta a #b7' },
+        msgs: [m('wB', 'eB', 'actualiza', 'ack')] }),
+    step(1, 'El RenderObject se repinta',
+      "El Element le entrega el texto nuevo al RenderParagraph. Es el mismo objeto (#r1): solo cambia lo que pinta, y se repinta en el siguiente frame.",
+      ['rB'], { sub: { sA: '_contador = 1', eA: 'DIRTY · #e1', wB: "texto: '1' · #b7 (nuevo)", eB: 'mismo #e2 · apunta a #b7', rB: "pinta '1' · mismo #r1" },
+        msgs: [m('eB', 'rB', 'actualiza', 'ack')] }),
+    step(1, 'Qué cambió y qué no',
+      'Se creó un Widget nuevo, que es barato. El Element, el State y el RenderObject son los mismos: solo se actualizaron. Recrear es barato y lo caro (nodos, tamaños, pintura) se reutiliza.',
+      ['wB', 'sA', 'eB', 'rB'], { sub: { sA: '_contador = 1 (se conserva)', eA: 'persistente · #e1', wB: "texto: '1' · #b7 (nuevo)", eB: 'mismo #e2 · apunta a #b7', rB: "pinta '1' · mismo #r1" } }),
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Los tres árboles de Flutter: widgets, elements y render objects, y qué se conserva y qué se reemplaza en un setState',
+    wide: true,
+    phases: ['Los tres árboles', 'Un setState'],
+    scene: function (svg) {
+      return DK.layers({ svg: svg, width: 800, height: 440, labels: 'smart', trail: 'phase', nodes: NODES });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Los tres árboles',
+      title: 'Qué se recrea y qué se conserva',
+      text: 'Flutter mantiene tres árboles a la vez. Sigue un solo Text por los tres y mira qué objetos se reemplazan cuando llamas a setState y cuáles se reutilizan.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

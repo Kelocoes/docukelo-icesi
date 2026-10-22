@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agenda de contactos monolítica</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-tree.js"></script>
+<script src="../../../_shared/dk-phone.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* La agenda del taller funcionando en un teléfono: agregar y eliminar con setState sobre UN solo State.
+   Solo DATOS. Los números de línea se buscan por texto para no equivocarse al editar el código. */
+(function () {
+  var LINES = [
+    'class _AgendaPageState extends State<AgendaPage> {',
+    '  late final TextEditingController _nombreCtrl;',
+    '  late final TextEditingController _telefonoCtrl;',
+    '',
+    '  final List<Contacto> _contactos = [',
+    "    const Contacto(id: '1', nombre: 'María Camila Gómez', telefono: '312 456 7890'),",
+    "    const Contacto(id: '2', nombre: 'Alejandro Soto', telefono: '300 123 9988'),",
+    "    const Contacto(id: '3', nombre: 'Daniela Valderrama', telefono: '315 789 1122'),",
+    '  ];',
+    '',
+    '  void _agregarContacto() {',
+    '    final nombre = _nombreCtrl.text.trim();',
+    '    final telefono = _telefonoCtrl.text.trim();',
+    '    if (nombre.isEmpty || telefono.isEmpty) return; // + SnackBar',
+    '',
+    '    setState(() {',
+    '      _contactos.add(Contacto(id: nuevoId, nombre: nombre, telefono: telefono));',
+    '    });',
+    '    _nombreCtrl.clear();',
+    '    _telefonoCtrl.clear();',
+    '  }',
+    '',
+    '  void _eliminarContacto(String id) {',
+    '    setState(() {',
+    '      _contactos.removeWhere((c) => c.id == id);',
+    '    });',
+    '  }',
+    '',
+    '  @override',
+    '  Widget build(BuildContext context) {',
+    '    return Column(',
+    '      children: [',
+    '        // A: formulario (estilos omitidos)',
+    '        TextField(controller: _nombreCtrl),',
+    '        TextField(controller: _telefonoCtrl),',
+    '        FilledButton(onPressed: _agregarContacto, child: const Text(\'Agregar\')),',
+    '',
+    '        // B: lista',
+    "        Chip(label: Text('${_contactos.length} contactos')),",
+    '        ..._contactos.map((contacto) {',
+    '          return ListTile(',
+    '            title: Text(contacto.nombre),',
+    '            subtitle: Text(contacto.telefono),',
+    '            trailing: IconButton(',
+    '              onPressed: () => _eliminarContacto(contacto.id),',
+    '              icon: const Icon(Icons.delete_outline),',
+    '            ),',
+    '          );',
+    '        }),',
+    '      ],',
+    '    );',
+    '  }',
+    '}',
+  ];
+  var at = function (s) { for (var i = 0; i < LINES.length; i++) if (LINES[i].indexOf(s) >= 0) return i + 1; throw new Error('línea no encontrada: ' + s); };
+  var rng = function (a, b) { var r = []; if (at(b) < at(a)) throw new Error('rango vacío: ' + a + ' .. ' + b); for (var i = at(a); i <= at(b); i++) r.push(i); return r; };
+
+  var L = {
+    ctrls: rng('late final TextEditingController _nombreCtrl', 'late final TextEditingController _telefonoCtrl'),
+    data: rng('final List<Contacto> _contactos', '  ];'),
+    read: rng('final nombre =', 'final telefono ='),
+    valid: [at('if (nombre.isEmpty')],
+    add: rng('setState(() {', '_contactos.add('),
+    clear: rng('_nombreCtrl.clear()', '_telefonoCtrl.clear()'),
+    del: rng('void _eliminarContacto', '_contactos.removeWhere'),
+    tfs: [at('TextField(controller: _nombreCtrl)'), at('TextField(controller: _telefonoCtrl)')],
+    button: [at('FilledButton(onPressed: _agregarContacto')],
+    chip: [at('Chip(label:')],
+    map: rng('..._contactos.map', 'subtitle: Text(contacto.telefono)'),
+    trash: rng('trailing: IconButton(', 'onPressed: () => _eliminarContacto'),
+  };
+  L.addAll = L.read.concat(L.add, L.clear);
+  var addFull = rng('void _agregarContacto', '_telefonoCtrl.clear()');
+
+  var BASE = [
+    { id: '1', nombre: 'María Camila Gómez', telefono: '312 456 7890' },
+    { id: '2', nombre: 'Alejandro Soto', telefono: '300 123 9988' },
+    { id: '3', nombre: 'Daniela Valderrama', telefono: '315 789 1122' },
+  ];
+  var ANA = { id: '4', nombre: 'Ana Gómez', telefono: '311 222 3344' };
+  var ctl = function (t) { return { text: t }; };
+  var build = function (n) { return '--> build(): ' + n + ' contactos'; };
+  var nextId = 100;
+
+  var PHASES = ['El estado', 'Agregar', 'Eliminar', 'Pruébalo tú'];
+  var steps = [
+    // ---- Fase 1: todo el estado en un solo State ----
+    { phase: 0, title: 'Todo el estado vive en un solo State', code: L.ctrls.concat(L.data), msgs: [], dwell: 4800,
+      caption: 'Hay tres datos: la lista de contactos y dos controladores de texto. Los tres viven en _AgendaPageState, y el mismo build() dibuja el formulario y la lista leyéndolos.' },
+    { phase: 0, title: 'La lista se dibuja con .map()', code: L.map, msgs: [], dwell: 4200,
+      caption: 'Cada contacto de _contactos se convierte en un ListTile. Si la lista cambia y build() corre, la pantalla muestra la lista nueva: UI = f(state).' },
+
+    // ---- Fase 2: agregar ----
+    { phase: 1, title: 'El usuario escribe un contacto', code: L.tfs, msgs: [], dwell: 4200,
+      state: { _nombreCtrl: ctl('Ana Gómez'), _telefonoCtrl: ctl('311 222 3344') }, changed: ['_nombreCtrl', '_telefonoCtrl'], tree: { tfs: 'self' },
+      note: 'Escribir cambia los controladores, pero no llama a setState: no hay build().',
+      caption: 'Los campos viven en los controladores. Mientras el usuario escribe, la lista no se entera: no hay nada que reconstruir.' },
+    { phase: 1, title: 'Pulsa Agregar Contacto', code: L.button, msgs: [], dwell: 3500, tap: 'add', stage: 0,
+      caption: 'onPressed llama a _agregarContacto. Primero se lee y se valida lo escrito.' },
+    { phase: 1, title: 'setState agrega a la lista', code: L.add, msgs: [], dwell: 4800, stage: 3, tree: 'dirty', stale: true,
+      state: { _contactos: BASE.concat([ANA]) }, changed: ['_contactos'],
+      caption: 'Dentro de setState se hace _contactos.add(...). Cuatro contactos en el estado, pero la pantalla todavía muestra tres, y AgendaPage queda marcada como dirty.' },
+    { phase: 1, title: 'build() redibuja todo', code: L.chip.concat(L.map), msgs: [], dwell: 5600, stage: 5, tree: 'build',
+      state: { _nombreCtrl: ctl(''), _telefonoCtrl: ctl('') }, changed: ['_contactos', '_nombreCtrl', '_telefonoCtrl'], log: [build(4)],
+      caption: 'clear() vació los campos y build() reconstruyó TODO el subárbol: el formulario, el contador del Chip y cada tarjeta, aunque lo único que cambió fue la lista. Esta es la consecuencia de tener todo en un solo widget.' },
+
+    // ---- Fase 3: eliminar ----
+    { phase: 2, title: 'Toca eliminar a Alejandro', code: L.trash, msgs: [], dwell: 3500, tap: 'del:2', stage: 0,
+      caption: 'El IconButton de cada tarjeta llama a _eliminarContacto con el id de su contacto.' },
+    { phase: 2, title: 'removeWhere dentro de setState', code: L.del, msgs: [], dwell: 4400, stage: 3, tree: 'dirty', stale: true,
+      state: { _contactos: [BASE[0], BASE[2], ANA] }, changed: ['_contactos'],
+      caption: 'removeWhere quita al contacto con ese id. La lista del estado ya tiene tres, la pantalla todavía muestra cuatro.' },
+    { phase: 2, title: 'build() dibuja la lista nueva', code: L.chip.concat(L.map), msgs: [], dwell: 4200, stage: 5, tree: 'build', log: [build(3)],
+      caption: 'Otra vez se reconstruye todo el subárbol. Funciona, pero el formulario se redibuja por algo que no le incumbe. Eso lo vamos a corregir en la semana 12.' },
+
+    // ---- Fase 4: libre ----
+    { phase: 3, title: 'Pruébala tú', msgs: [], free: true, dwell: 1500,
+      caption: 'Agrega contactos nuevos (prueba con un campo vacío), elimínalos y mira cuántos nodos del árbol se reconstruyen en cada operación.' },
+  ];
+
+  var initials = function (n) { var p = n.trim().split(/\s+/); return ((p[0] ? p[0][0] : '?') + (p[1] ? p[1][0] : '')).toUpperCase(); };
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Agenda de contactos monolítica en Flutter: agregar y eliminar contactos con setState sobre un solo State',
+    phases: PHASES,
+    wide: true,
+    code: { title: 'agenda_page.dart (lo esencial; los estilos se omiten)', text: LINES.join('\n') },
+    scene: function (svg, stage, api) {
+      return DK.phone({
+        stage: stage, api: api,
+        title: 'Agenda de Contactos', height: 420,
+        className: '_AgendaPageState',
+        init: { _nombreCtrl: ctl(''), _telefonoCtrl: ctl(''), _contactos: BASE },
+        fields: [
+          { key: '_contactos', type: 'List<Contacto>', show: function (v) { return '[' + v.length + '] ' + v.map(function (c) { return c.nombre.split(' ')[0]; }).join(', '); } },
+          { key: '_nombreCtrl', type: 'TextEditingController', show: function (v) { return "text: '" + v.text + "'"; } },
+          { key: '_telefonoCtrl', type: 'TextEditingController', show: function (v) { return "text: '" + v.text + "'"; } },
+        ],
+        initLog: [build(3)],
+        buildLog: function (s) { return build(s._contactos.length); },
+        hint: 'Agrega y elimina contactos.',
+        tree: [
+          { id: 'scaffold', label: 'Scaffold', d: 0 },
+          { id: 'page', label: 'AgendaPage', d: 1, state: true },
+          { id: 'col', label: 'Column', d: 2 },
+          { id: 'card', label: 'Card', sub: 'formulario', d: 3 },
+          { id: 'tfs', label: 'TextField', sub: 'x2', d: 4 },
+          { id: 'btn', label: 'FilledButton', d: 4 },
+          { id: 'chip', label: 'Chip', sub: function (s) { return "'" + s._contactos.length + " contactos'"; }, d: 3 },
+          { id: 'tiles', label: 'ListTile', sub: function (s) { return 'x' + s._contactos.length; }, d: 3 },
+        ],
+        view: function (s) {
+          var e = DK.phone.esc;
+          var tiles = s._contactos.length ? s._contactos.map(function (c) {
+            return '<div class="pf-tile"><span class="av">' + e(initials(c.nombre)) + '</span><span class="tx"><b>' + e(c.nombre) + '</b><small>' + e(c.telefono) + '</small></span>' +
+              '<button class="x" data-act="del" data-arg="' + e(c.id) + '" aria-label="Eliminar">' + DK.phone.icon('del') + '</button></div>';
+          }).join('') : '<p class="pf-empty">No hay contactos registrados.</p>';
+          return '<div class="pf-card"><p class="pf-h" style="color:#6b21a8">Registrar Nuevo Contacto</p>' +
+            '<label class="pf-field"><span>Nombre</span><input data-in="nombre" value="' + e(s._nombreCtrl.text) + '" autocomplete="off"></label>' +
+            '<label class="pf-field"><span>Teléfono</span><input data-in="telefono" value="' + e(s._telefonoCtrl.text) + '" autocomplete="off"></label>' +
+            '<button class="pf-btn" data-act="add">' + DK.phone.icon('person') + 'Agregar Contacto</button></div>' +
+            '<div class="pf-row"><b>Directorio Activo</b><span class="pf-chip">' + s._contactos.length + ' contactos</span></div>' + tiles;
+        },
+        actions: {
+          add: function (s) {
+            var nombre = s._nombreCtrl.text.trim(), tel = s._telefonoCtrl.text.trim();
+            if (!nombre || !tel) return { set: false, code: L.read.concat(L.valid), snack: 'Ingresa tanto el nombre como el teléfono.',
+              note: 'La validación falló: return antes de setState, así que no hay build().' };
+            s._contactos.push({ id: String(nextId++), nombre: nombre, telefono: tel });
+            s._nombreCtrl.text = ''; s._telefonoCtrl.text = '';
+            return { set: true, code: addFull, note: 'La lista cambió dentro de setState; build() redibujó el formulario, el Chip y todas las tarjetas.' };
+          },
+          del: function (s, id) {
+            s._contactos = s._contactos.filter(function (c) { return c.id !== id; });
+            return { set: true, code: L.del, note: 'removeWhere dentro de setState; build() redibujó todo el subárbol.' };
+          },
+        },
+        input: function (s, key, value) {
+          s[key === 'nombre' ? '_nombreCtrl' : '_telefonoCtrl'].text = value;
+          return { code: L.tfs, self: 'tfs', note: 'Escribir cambia el controlador, pero no llama a setState: no hay build().' };
+        },
+      });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Taller de la semana 11',
+      title: 'La agenda, funcionando en un solo State',
+      text: 'La aplicación del taller en un teléfono: agrega y elimina contactos y observa que cada operación pasa por un setState y reconstruye todo el subárbol de AgendaPage.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

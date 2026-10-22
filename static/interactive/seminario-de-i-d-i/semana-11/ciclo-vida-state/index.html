@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ciclo de vida de State</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Ciclo de vida de State + el controlador que hay que liberar. Solo DATOS: 3 actores, 4 fases y un interruptor
+   ("Olvidar dispose()") que cambia el desenlace de la fase 3 y 4. Cada paso resalta las líneas que se ejecutan. */
+(function () {
+  var FW = 'fw', ST = 'st', CT = 'ct';
+  var PHASES = ['Nacer', 'Vivir', 'Morir', 'Repetir'];
+
+  var code = function (o) {
+    return {
+      title: 'registro_page.dart',
+      text: [
+        'class RegistroPage extends StatefulWidget {',                                   // 1
+        '  const RegistroPage({super.key});',                                            // 2
+        '',                                                                              // 3
+        '  @override',                                                                   // 4
+        '  State<RegistroPage> createState() => _RegistroPageState();',                  // 5
+        '}',                                                                             // 6
+        '',                                                                              // 7
+        'class _RegistroPageState extends State<RegistroPage> {',                        // 8
+        '  late final TextEditingController _nombreController;',                        // 9
+        '',                                                                              // 10
+        '  @override',                                                                   // 11
+        '  void initState() {',                                                          // 12
+        '    super.initState();',                                                        // 13
+        '    _nombreController = TextEditingController();',                              // 14
+        '  }',                                                                           // 15
+        '',                                                                              // 16
+        '  @override',                                                                   // 17
+        '  void didChangeDependencies() {',                                              // 18
+        '    super.didChangeDependencies();',                                            // 19
+        '  }',                                                                           // 20
+        '',                                                                              // 21
+        '  @override',                                                                   // 22
+        '  void dispose() {',                                                            // 23
+        o.leak ? '    // _nombreController.dispose();  <- se nos olvidó' : '    _nombreController.dispose();',   // 24
+        '    super.dispose();',                                                          // 25
+        '  }',                                                                           // 26
+        '',                                                                              // 27
+        '  @override',                                                                   // 28
+        '  Widget build(BuildContext context) {',                                        // 29
+        '    return TextField(controller: _nombreController);',                          // 30
+        '  }',                                                                           // 31
+        '}',                                                                             // 32
+      ].join('\n'),
+    };
+  };
+
+  var msg = function (from, to, label, kind, extra) {
+    var m = { from: from, to: to, label: label, kind: kind };
+    for (var k in extra) m[k] = extra[k];
+    return m;
+  };
+  var chips = function (fw, st, ct) { return { fw: fw, st: st, ct: ct }; };
+
+  function build(o) {
+    var L = !!o.leak;
+    return [
+      // ---- Nacer: ocurre una sola vez ----
+      { phase: 0, title: '1 · createState()', code: [4, 5], msgs: [msg(FW, ST, 'createState()', 'ctl')], state: chips('Montando', 'Creado', 'No existe'),
+        caption: 'Al insertar el widget en el árbol, Flutter llama a createState() (un método del Widget, no del State) y se crea el objeto State. Aún no hay controlador.' },
+      { phase: 0, title: '2 · initState()', code: [11, 12, 13], msgs: [msg(FW, ST, 'initState()', 'ctl')], state: chips('Montando', 'Iniciando', 'No existe'),
+        caption: 'Es lo primero que se ejecuta en el State y ocurre una sola vez en toda su vida. Empieza siempre con super.initState().' },
+      { phase: 0, title: 'Aquí se crea el controlador', code: [14], msgs: [msg(ST, CT, 'new', 'ctl')], state: chips('Montando', 'Iniciando', 'En RAM: 1'),
+        caption: 'Dentro de initState se instancian los recursos que viven tanto como la pantalla: controladores, suscripciones, temporizadores. Como initState corre una sola vez, el controlador se crea una sola vez.' },
+      { phase: 0, title: '3 · didChangeDependencies()', code: [17, 18, 19, 20], msgs: [msg(FW, ST, 'didChangeDependencies()', 'ctl')], state: chips('Montando', 'Listo', 'En RAM: 1'),
+        caption: 'Se llama justo después de initState y de nuevo cada vez que cambia algo heredado del contexto (el tema, el idioma, MediaQuery).' },
+      { phase: 0, title: '4 · build()', code: [28, 29, 30, 31], msgs: [msg(FW, ST, 'build()', 'data')], state: chips('Pintando', 'Activo', 'En RAM: 1'),
+        caption: 'Ahora sí se construye la pantalla. El TextField recibe el controlador y desde aquí el usuario puede escribir.' },
+
+      // ---- Vivir: se repite ----
+      { phase: 1, title: 'build() se repite con cada setState', code: [28, 29, 30, 31], msgs: [msg(ST, FW, 'setState()', 'ctl'), msg(FW, ST, 'build()', 'data')], state: chips('Pintando', 'Activo', 'En RAM: 1'),
+        caption: 'setState no es una etapa del ciclo de vida: es lo que provoca que build() corra otra vez, tantas veces como haga falta. initState NO se repite y el controlador es el mismo.' },
+
+      // ---- Morir: una sola vez ----
+      { phase: 2, title: '5 · dispose()', code: [22, 23], msgs: [msg(FW, ST, 'dispose()', 'ctl')], state: chips('Retirando', 'Cerrando', 'En RAM: 1'),
+        caption: 'Cuando el usuario sale de la pantalla (por ejemplo con Navigator.pop), Flutter llama a dispose() una sola vez. Es la última oportunidad de limpiar.' },
+      { phase: 2, title: L ? 'Se olvidó liberar el controlador' : 'Se libera el controlador', code: L ? [24] : [24, 25], msgs: [msg(ST, CT, 'dispose()', L ? 'err' : 'ack', L ? { lost: true } : {})],
+        state: chips('Retirando', 'Destruido', L ? 'Huérfano: 1' : 'Liberado'),
+        caption: L ? 'La línea dispose() no está: el controlador queda vivo, con sus listeners activos, aunque ya nadie lo use. Es una fuga de memoria (memory leak).'
+                   : 'Todo lo que se creó en initState se libera aquí, y super.dispose() va al final. El controlador suelta sus listeners y la memoria queda limpia.' },
+
+      // ---- Repetir: el costo acumulado ----
+      { phase: 3, title: 'El usuario entra otra vez', code: [12, 13, 14], msgs: [msg(FW, ST, 'initState()', 'ctl'), msg(ST, CT, 'new', 'ctl')],
+        state: chips('Montando', 'Activo', L ? 'En RAM: 2' : 'En RAM: 1'),
+        caption: L ? 'Es un State nuevo y crea un controlador nuevo, pero el anterior sigue en memoria: ya hay dos.' : 'Es un State nuevo con su propio controlador. El anterior ya no existe: solo hay uno en memoria.' },
+      { phase: 3, title: 'Y sale otra vez', code: [23, 24, 25], msgs: [msg(FW, ST, 'dispose()', 'ctl'), msg(ST, CT, 'dispose()', L ? 'err' : 'ack', L ? { lost: true } : {})],
+        state: chips('Retirando', 'Destruido', L ? 'Huérfanos: 2' : 'Liberado'),
+        caption: L ? 'Sin dispose() cada visita deja un controlador huérfano más.' : 'Con dispose() cada visita termina con la memoria limpia.' },
+      { phase: 3, title: 'Después de 5 visitas', code: [24], msgs: [], state: chips('Retirando', 'Destruido', L ? 'Huérfanos: 5' : 'Liberado'),
+        caption: L ? 'Cinco controladores huérfanos acumulados: memoria que nunca se libera, listeners activos y una app cada vez más lenta. Esa es la fuga que previene la regla "todo lo que creas en initState, lo liberas en dispose".'
+                   : 'Cinco visitas y cero controladores acumulados. La regla: todo lo que creas en initState, lo liberas en dispose.' },
+    ];
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Ciclo de vida de State en Flutter: createState, initState, didChangeDependencies, build, dispose, y la fuga de memoria si no se libera el controlador',
+    wide: true,
+    phases: PHASES,
+    toggles: [{ key: 'leak', label: 'Olvidar controller.dispose()', affectsPhase: 2 }],
+    code: code,
+    scene: function (svg) {
+      return DK.sequence({
+        svg: svg, width: 960, trayCount: 0, idleState: '',
+        phases: PHASES,
+        actors: [
+          { id: FW, label: 'Flutter', icon: 'gear' },
+          { id: ST, label: 'State', icon: 'classbox' },
+          { id: CT, label: 'TextEditingController', icon: 'bag' },
+        ],
+      });
+    },
+    build: build,
+    intro: {
+      kicker: 'Ciclo de vida',
+      title: 'Nacer, vivir y morir: la historia de un State',
+      text: 'Un State no es eterno: Flutter lo crea, lo reconstruye muchas veces y lo destruye. Sigue cada método y comprueba qué pasa con un TextEditingController si olvidas liberarlo.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

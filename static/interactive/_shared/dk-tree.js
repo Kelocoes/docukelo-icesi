@@ -18,7 +18,7 @@
  *
  * La posicion se calcula sola (hojas repartidas a lo ancho, cada padre centrado sobre sus hijos). Un paso:
  *   { phase, title, caption,
- *     roles: { page: 'owner', layout: 'pass', counter: 'use' },   // owner | pass | use | provider | need | dim
+ *     roles: { page: 'owner', layout: 'pass', counter: 'use' },   // owner | pass | use | provider | need | dim | hide (aún no existe)
  *     tags:  { page: 'useState(routines)' },                      // etiqueta sobre el nodo (del color de su rol)
  *     sub:   { counter: 'total: 3' },                              // cambia el texto secundario solo en este paso
  *     msgs: [
@@ -33,9 +33,10 @@ DK.tree = function (o) {
   var S = DK.svg;
   var DUR = o.dur || 700, STAG = DUR * 0.85;
   var W = o.width || 1000, NW = o.nodeW || 168, NH = o.nodeH || 52, GAP = o.levelGap || 118, TOP = o.top || 40, SIDE = 24;
-  var ROLE_TXT = { owner: 'Dueño del estado', pass: 'Solo reenvía', use: 'Consume el dato', provider: 'Provider (Context)', need: 'Necesita el dato' };
+  var ROLE_TXT = { owner: 'Dueño del estado', pass: 'Solo reenvía', use: 'Consume el dato', provider: 'Provider (Context)', need: 'Necesita el dato',
+    dirty: 'Dirty', build: 'build()', reuse: 'const: reutilizado', self: 'Se repinta solo' };   // los cuatro últimos los usa dk-phone.js
   var byId = {}, kids = {}, root = null;
-  var nodeEls = {}, subEls = {}, tagLayer, gMsgs, steps = [];
+  var nodeEls = {}, subEls = {}, edgeEls = {}, tagLayer, gMsgs, steps = [];
   var t = DK.timers();
   var H;
 
@@ -75,7 +76,8 @@ DK.tree = function (o) {
     o.nodes.forEach(function (n) {
       if (n.parent) {
         var p = byId[n.parent];
-        gEdges.appendChild(S('line', { x1: p.cx, y1: p.y + p.h, x2: n.cx, y2: n.y, class: 'dk-tedge' }));
+        edgeEls[n.id] = S('line', { x1: p.cx, y1: p.y + p.h, x2: n.cx, y2: n.y, class: 'dk-tedge' });
+        gEdges.appendChild(edgeEls[n.id]);
       }
       var g = S('g', { class: 'dk-tnode', 'data-id': n.id });
       g.appendChild(S('rect', { x: n.x, y: n.y, width: n.w, height: n.h, rx: 12 }));
@@ -153,9 +155,11 @@ DK.tree = function (o) {
     var roles = step.roles || {}, tags = step.tags || {}, subs = step.sub || {}, focus = step.focus || [];
     o.nodes.forEach(function (n) {
       var g = nodeEls[n.id];
+      // rol 'hide': el nodo (y la rama que llega a él) todavía no existe en este paso; aparece cuando deja de estar oculto
+      if (edgeEls[n.id]) edgeEls[n.id].style.opacity = (roles[n.id] === 'hide' || roles[n.parent] === 'hide') ? 0 : 1;
       g.setAttribute('class', 'dk-tnode' + (roles[n.id] ? ' role-' + roles[n.id] : '') + (focus.indexOf(n.id) >= 0 ? ' on' : ''));
       subEls[n.id].textContent = subs[n.id] !== undefined ? subs[n.id] : (n.sub || '');
-      if (tags[n.id]) {
+      if (tags[n.id] && roles[n.id] !== 'hide') {
         var txt = tags[n.id], tw = txt.length * 6.6 + 16;
         var tg = S('g', { class: 'dk-ttag dk-tnode' + (roles[n.id] ? ' role-' + roles[n.id] : '') });
         tg.appendChild(S('rect', { x: n.cx - tw / 2, y: n.y - 13, width: tw, height: 20, rx: 10 }));

@@ -46,22 +46,14 @@ Flutter follows the principle of **Unidirectional Data Flow**:
 
 When two sibling widgets need to interact (the form that creates a contact and the list that must show it immediately), **neither of them should hold a direct reference to the other**. 
 
-To solve this need, we **lift the state (*State Lifting*)** to their closest common ancestor (`AgendaPage`):
+To solve this need, we **lift the state (*State Lifting*)** to their closest common ancestor (`AgendaPage`). Walk through the contact book's component tree: first you will see why a component cannot hand data to its sibling, and then how lifting solves it, with data flowing down and events flowing up (phases 3 and 4 come back in section 5):
 
-```mermaid
-flowchart TD
-    Page["AgendaPage (Stateful - Owns the State)"]
-    Form["ContactoForm (Child A - Form)"]
-    List["ContactoList (Child B - List)"]
-
-    Form -->|"onAgregar(nuevoContacto)"| Page
-    Page -->|"final List<Contacto> contactos"| List
-    List -->|"onEliminar(id)"| Page
-
-    style Page fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#ffffff
-    style Form fill:#581c87,stroke:#a855f7,stroke-width:2px,color:#ffffff
-    style List fill:#0f766e,stroke:#14b8a6,stroke-width:2px,color:#ffffff
-```
+<iframe
+  src="/interactive/seminario-de-i-d-i/semana-12/elevacion-agenda/index.html"
+  title="Contact book component tree: state lifting, data going down and events going up"
+  style={{ width: '100%', height: 780, border: 0 }}
+  loading="lazy"
+/>
 
 In this scheme:
 * `AgendaPage` is the `StatefulWidget` that holds the `_contactos` list and centralizes the calls to `setState()`.
@@ -111,9 +103,13 @@ widget.onAgregar(nuevo);
 
 ## 4. Immutable Models and the `copyWith` Method
 
-In Flutter, **mutating existing objects directly in memory is a frequent source of visual bugs**. If you mutate an inner field of an object inside a list, the framework may assume the reference in memory has not changed and skip rebuilding the screen.
+In a `StatefulWidget`, `setState()` always marks the `Element` as `dirty`, whether you changed the list or created a new one. Even so, **mutating shared objects in memory is a frequent source of bugs**, which is why models are designed to be immutable:
 
-To avoid this, we apply the **Immutability with `copyWith`** pattern:
+* **Predictability:** if a `Contacto` never changes after it is created, none of the components receiving it through their constructor can alter it without its owner knowing. All changes go through a single place: `AgendaPage`.
+* **Change detection:** when a child receives an object through its constructor, comparing it (in `didUpdateWidget`, or in state-management tools such as Provider, Riverpod or BLoC that you will see later) boils down to asking whether **it is another reference**. If you mutate the original object instead of creating a new one, that comparison no longer detects the change.
+* **Fewer subtle bugs:** sharing one mutable object between two screens lets one modify it "underneath" the other.
+
+To work with immutable models we apply the **Immutability with `copyWith`** pattern:
 
 ```dart title="lib/models/contacto.dart" showLineNumbers
 class Contacto {
@@ -154,6 +150,7 @@ final contactoActualizado = contactoOriginal.copyWith(
 And in the page list, you replace the element by producing a new collection:
 
 ```dart title="Update the list" showLineNumbers
+// Note: to reassign the list, _contactos is declared without final (List<Contacto> _contactos = [...])
 setState(() {
   _contactos = _contactos.map((c) {
     return c.id == idObjetivo ? c.copyWith(telefono: nuevoTelefono) : c;
@@ -169,10 +166,17 @@ setState(() {
 **Prop Drilling** happens when we pass data or callbacks through multiple intermediate levels of widgets that **do not need them for themselves**, but only to forward them to a deeper descendant widget.
 :::
 
+The difference shows up in the contact book's tree. With `AgendaPage` → `ContactoList` → `ContactoCard` each level uses what it receives. But if the team adds a summary with the total number of contacts three levels further down (`PanelResumen` → `BarraResumen` → `ContadorChip`), the data has to cross two widgets that do not use it. Move through the **Prop drilling** and **La salida** ("The way out") phases:
+
+<iframe
+  src="/interactive/seminario-de-i-d-i/semana-12/elevacion-agenda/index.html#fase=3"
+  title="Prop drilling in the contact book tree: pass-through widgets and the way out with state management"
+  style={{ width: '100%', height: 780, border: 0 }}
+  loading="lazy"
+/>
+
 <Tabs>
   <TabItem value="saludable" label="Healthy Zone (1 to 2 levels)" default>
-
-![Healthy Prop Drilling Zone](/img/seminario-de-i-d-i/prop-drilling-zona-saludable.svg)
 
 In this 1 to 2 level scenario (`AgendaPage` $\rightarrow$ `ContactoList`):
 * **Each level consumes what it receives:** The list needs the contacts to run `.map()` and draw them on screen.
@@ -213,8 +217,6 @@ class ContactoList extends StatelessWidget {
 
   </TabItem>
   <TabItem value="critica" label="Critical Zone (Painful Prop Drilling)">
-
-![Critical Prop Drilling Zone](/img/seminario-de-i-d-i/prop-drilling-zona-critica.svg)
 
 In this scenario of 3 or more levels with pass-through widgets:
 * **Pass-Through widgets:** Intermediate components such as `DashboardShell` or `SectionTabBody` do not use `userRole` in their own `build()`, but are forced to declare it in their constructor just to hand it to the next child.

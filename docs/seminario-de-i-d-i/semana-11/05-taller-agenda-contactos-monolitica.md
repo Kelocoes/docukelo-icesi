@@ -12,7 +12,14 @@ En este taller práctico desarrollarás la **Parte 1 (de 2)** de la aplicación 
 
 El objetivo de esta sesión es resolver una aplicación completamente interactiva donde **todo el estado, la lista de datos y la interfaz visual residen en una sola pantalla monolítica** con `StatefulWidget`. En la Semana 12 (Sesión 23), tomaremos este mismo código para transformarlo mediante **Elevación de Estado (*State Lifting*)** y comunicación desacoplada por *callbacks*.
 
-![Arquitectura Monolítica de la Agenda de Contactos en Memoria](/img/seminario-de-i-d-i/taller-agenda-contactos-flujo.svg)
+Así debe verse y comportarse tu aplicación al terminar. Agrega y elimina contactos (prueba también con un campo vacío) y observa a la derecha qué cambia en el `State` y cuánto del árbol de widgets se reconstruye con cada operación:
+
+<iframe
+  src="/interactive/seminario-de-i-d-i/semana-11/agenda-monolitica/index.html"
+  title="Agenda de contactos monolítica funcionando en un teléfono: agregar y eliminar con setState"
+  style={{ width: '100%', height: 930, border: 0 }}
+  loading="lazy"
+/>
 
 ---
 
@@ -173,7 +180,7 @@ Tu solución debe cumplir con las siguientes especificaciones técnicas:
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Contacto &quot;$nombre&quot; agregado con éxito.'),
+            content: Text('Contacto "$nombre" agregado con éxito.'),
             backgroundColor: const Color(0xFF10B981),
           ),
         );
@@ -335,9 +342,18 @@ Tu solución debe cumplir con las siguientes especificaciones técnicas:
 Tómate un momento para inspeccionar el archivo `agenda_page.dart` que acabas de construir:
 * La clase `_AgendaPageState` supera las 150 líneas de código.
 * Tiene tres responsabilidades mezcladas al mismo tiempo:
-  1. Gestionar el estado en memoria (`_contactos`, `_nombreCtrl`, `_telefonoCtrl`).
-  2. Dibujar y validar el formulario visual de captura.
-  3. Dibujar las tarjetas individuales de la lista y sus avatares.
+  1. **Custodiar el estado** en memoria: los datos (`_contactos`), los controladores (`_nombreCtrl`, `_telefonoCtrl`) y las acciones que los modifican (`_agregarContacto`, `_eliminarContacto`).
+  2. **Dibujar y validar el formulario** visual de captura.
+  3. **Dibujar las tarjetas** individuales de la lista y sus avatares.
+
+La siguiente pieza pinta el mismo archivo (resumido, sin estilos) con un color por tipo de código. Recorre cada color y, al final, mira cómo se podría cortar:
+
+<iframe
+  src="/interactive/seminario-de-i-d-i/semana-11/responsabilidades-agenda/index.html"
+  title="El archivo de la agenda monolítica coloreado por responsabilidad: datos, controladores, acciones, formulario y lista"
+  style={{ width: '100%', height: 1560, border: 0 }}
+  loading="lazy"
+/>
 
 ¿Qué sucedería si ahora quisiéramos reutilizar el formulario en otra pantalla o cambiar la lista por una cuadrícula de dos columnas? **No podemos**, porque todo está rígidamente acoplado dentro de un solo archivo monolítico.
 

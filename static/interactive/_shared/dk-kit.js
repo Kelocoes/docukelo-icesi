@@ -85,7 +85,9 @@ window.DK = (function () {
    * el resto en minuscula = objeto/variable. Devuelve HTML seguro para innerHTML. */
   var KW = {};
   ('public private protected class interface extends implements void return new throws throw import static final abstract if else for while do switch case ' +
-   'try catch finally this super const let var function package instanceof null true false export async await').split(' ').forEach(function (k) { KW[k] = 1; });
+   'try catch finally this super const let var function package instanceof null true false export async await late required').split(' ').forEach(function (k) { KW[k] = 1; });
+  var TY = {}; // tipos primitivos en minuscula (Dart): se pintan como clase/tipo y no como variable
+  'int double bool num dynamic'.split(' ').forEach(function (k) { TY[k] = 1; });
   function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function highlight(line) {
     var out = '', last = 0, prev = '', m;
@@ -100,6 +102,7 @@ window.DK = (function () {
       else {
         var nextCh = (line.slice(re.lastIndex).match(/^\s*(.)/) || [])[1] || '';
         if (KW[t]) cls = 'kw';
+        else if (TY[t] && nextCh !== '(') cls = 'ty';
         else if (/^[A-Z]/.test(t)) cls = (nextCh === '(' && prev !== 'new') ? 'fn' : 'ty';
         else cls = nextCh === '(' ? 'fn' : 'ob';
       }

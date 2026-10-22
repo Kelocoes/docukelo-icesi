@@ -46,22 +46,14 @@ En Flutter rige el principio de **Flujo Unidireccional de Datos (*Unidirectional
 
 Cuando dos widgets hermanos necesitan interactuar (el formulario que crea un contacto y la lista que debe mostrarlo de inmediato), **ninguno de los dos debe tener una referencia directa hacia el otro**. 
 
-Para resolver esta necesidad, **elevamos el estado (*State Lifting*)** a su ancestro común más cercano (`AgendaPage`):
+Para resolver esta necesidad, **elevamos el estado (*State Lifting*)** a su ancestro común más cercano (`AgendaPage`). Recorre el árbol de componentes de la agenda: primero verás por qué un componente no puede entregarle datos a su hermano y luego cómo la elevación lo resuelve, con los datos bajando y los eventos subiendo (las fases 3 y 4 las retomamos en la sección 5):
 
-```mermaid
-flowchart TD
-    Page["AgendaPage (Stateful - Custodia el Estado)"]
-    Form["ContactoForm (Hijo A - Formulario)"]
-    List["ContactoList (Hijo B - Lista)"]
-
-    Form -->|"onAgregar(nuevoContacto)"| Page
-    Page -->|"final List<Contacto> contactos"| List
-    List -->|"onEliminar(id)"| Page
-
-    style Page fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#ffffff
-    style Form fill:#581c87,stroke:#a855f7,stroke-width:2px,color:#ffffff
-    style List fill:#0f766e,stroke:#14b8a6,stroke-width:2px,color:#ffffff
-```
+<iframe
+  src="/interactive/seminario-de-i-d-i/semana-12/elevacion-agenda/index.html"
+  title="Árbol de componentes de la agenda: elevación de estado, datos hacia abajo y eventos hacia arriba"
+  style={{ width: '100%', height: 780, border: 0 }}
+  loading="lazy"
+/>
 
 En este esquema:
 * `AgendaPage` es el `StatefulWidget` que retiene la lista `_contactos` y centraliza las llamadas a `setState()`.
@@ -111,9 +103,13 @@ widget.onAgregar(nuevo);
 
 ## 4. Modelos Inmutables y el Método `copyWith`
 
-En Flutter, **mutar objetos existentes directamente en memoria es una fuente frecuente de errores visuales**. Si mutas un campo interno de un objeto dentro de una lista, el framework puede asumir que la referencia en memoria no ha cambiado y omitir la reconstrucción de la pantalla.
+En un `StatefulWidget`, `setState()` siempre marca el `Element` como `dirty`, sin importar si cambiaste la lista o creaste otra nueva. Aun así, **mutar objetos compartidos en memoria es una fuente frecuente de errores**, y por eso los modelos se diseñan inmutables:
 
-Para evitar esto, aplicamos el patrón de **Inmutabilidad con `copyWith`**:
+* **Predecibilidad:** si un `Contacto` nunca cambia después de creado, ninguno de los componentes que lo recibe por constructor puede alterarlo sin que su dueño lo sepa. Todos los cambios pasan por un único lugar: `AgendaPage`.
+* **Detección de cambios:** cuando un hijo recibe un objeto por constructor, compararlo (en `didUpdateWidget`, o en las herramientas de gestión de estado como Provider, Riverpod o BLoC que verás más adelante) se reduce a preguntar si **es otra referencia**. Si mutas el objeto original en vez de crear uno nuevo, esa comparación ya no detecta el cambio.
+* **Menos errores sutiles:** compartir un mismo objeto mutable entre dos pantallas permite que una lo modifique "por debajo" de la otra.
+
+Para trabajar con modelos inmutables aplicamos el patrón de **Inmutabilidad con `copyWith`**:
 
 ```dart title="lib/models/contacto.dart" showLineNumbers
 class Contacto {
@@ -154,6 +150,7 @@ final contactoActualizado = contactoOriginal.copyWith(
 Y en la lista de la página, reemplazas el elemento produciendo una nueva colección:
 
 ```dart title="Actualizar la lista" showLineNumbers
+// Nota: para reasignar la lista, _contactos se declara sin final (List<Contacto> _contactos = [...])
 setState(() {
   _contactos = _contactos.map((c) {
     return c.id == idObjetivo ? c.copyWith(telefono: nuevoTelefono) : c;
@@ -169,10 +166,17 @@ setState(() {
 El **Prop Drilling** (perforación de propiedades) ocurre cuando pasamos datos o callbacks a través de múltiples niveles intermedios de widgets que **no los necesitan para sí mismos**, sino únicamente para reenviárselos a un widget descendiente más profundo.
 :::
 
+En el árbol de la agenda se ve la diferencia. Con `AgendaPage` → `ContactoList` → `ContactoCard` cada nivel usa lo que recibe. Pero si el equipo agrega un resumen con el total de contactos tres niveles más abajo (`PanelResumen` → `BarraResumen` → `ContadorChip`), el dato tiene que atravesar dos widgets que no lo usan. Avanza por las fases **Prop drilling** y **La salida**:
+
+<iframe
+  src="/interactive/seminario-de-i-d-i/semana-12/elevacion-agenda/index.html#fase=3"
+  title="Prop drilling en el árbol de la agenda: widgets pasamanos y la salida con gestión de estado"
+  style={{ width: '100%', height: 780, border: 0 }}
+  loading="lazy"
+/>
+
 <Tabs>
   <TabItem value="saludable" label="Zona Saludable (1 a 2 niveles)" default>
-
-![Zona Saludable de Prop Drilling](/img/seminario-de-i-d-i/prop-drilling-zona-saludable.svg)
 
 En este escenario de 1 a 2 niveles (`AgendaPage` $\rightarrow$ `ContactoList`):
 * **Cada nivel consume lo que recibe:** La lista necesita los contactos para hacer `.map()` y dibujarlos en pantalla.
@@ -213,8 +217,6 @@ class ContactoList extends StatelessWidget {
 
   </TabItem>
   <TabItem value="critica" label="Zona Crítica (Prop Drilling Doloroso)">
-
-![Zona Crítica de Prop Drilling](/img/seminario-de-i-d-i/prop-drilling-zona-critica.svg)
 
 En este escenario de 3 o más niveles con widgets pasamanos:
 * **Widgets pasamanos (*Pass-Through*):** Componentes intermedios como `DashboardShell` o `SectionTabBody` no usan `userRole` en su propio `build()`, pero están obligados a declararlo en su constructor solo para pasárselo al siguiente hijo.

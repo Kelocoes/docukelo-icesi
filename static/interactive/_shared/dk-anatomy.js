@@ -92,6 +92,7 @@ DK.anatomy = function (o) {
     // enfoque en el mensaje
     var focus = step && step.focus;
     msgBox.classList.toggle('has-focus', !!focus);
+    msgBox.classList.toggle('show-all', !!(step && step.all)); // step.all: todas las partes coloreadas a la vez (resumen)
     spans.forEach(function (n) { n.classList.toggle('on', !!focus && n.getAttribute('data-part') === focus); });
     // explicacion a la derecha
     var c = (step && step.callout) || {};
