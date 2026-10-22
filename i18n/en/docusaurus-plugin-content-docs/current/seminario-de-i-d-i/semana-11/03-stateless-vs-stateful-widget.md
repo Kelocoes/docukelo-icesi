@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-description: "Understand why state lives in State, how setState rebuilds the widget tree, and how to handle the first user interaction."
+description: "Understand what state is, how a StatefulWidget is structured, what setState does, and how Flutter updates the widget tree."
 ---
 
 import Tabs from '@theme/Tabs';
@@ -10,74 +10,128 @@ import TabItem from '@theme/TabItem';
 
 Up to this point in the course, all screens and components you built have been **static and immutable** using `StatelessWidget`. However, real-world applications must respond to user events: pressing buttons, typing into text fields, toggling switches, and loading dynamic data.
 
-In this session, you will master the mathematical and architectural foundations of state management in Flutter, why state lives in a separate class (`State<T>`), and how internal tree rebuilding operates via `setState()`.
+In this session you will learn **what state is**, how a `StatefulWidget` is organized (and why it takes two classes), what exactly `setState()` does, and how Flutter decides which part of the screen to update.
+
+:::note[About the interactive pieces]
+The interactive simulators in this chapter use the course's Spanish identifiers (for example `_contador`, which is `_counter` in the code samples below).
+:::
 
 ---
 
-## 1. The Fundamental Equation of Declarative Frontend
+## 1. What Is State?
 
-In modern frontend frameworks (Flutter, React, SwiftUI), the user interface is not modified by directly mutating visual elements in memory as in JavaFX or the JavaScript DOM. Instead, it adheres to a strict mathematical equation:
+**State** is any piece of data that **changes over time** and that decides **how the interface looks** at a given moment.
+
+| Example | Is it state? | Why |
+| :--- | :---: | :--- |
+| A click counter (`int _counter`) | Yes | It changes with every tap and the screen must show it. |
+| The text the user types into a field | Yes | It changes while typing. |
+| A list of contacts | Yes | It grows and shrinks as items are added or removed. |
+| An `isLoading` flag | Yes | It toggles between loading and loaded. |
+| The fixed title `const Text('Agenda')` | No | It never changes: it is configuration, not state. |
+
+In modern frontend frameworks (Flutter, React, SwiftUI), the interface is not modified by directly touching visual elements, as in JavaFX or the JavaScript DOM. Instead, the interface is **the result of a function** that receives the state:
 
 $$UI = f(state)$$
 
-* **$state$ (State):** The information and data describing the current runtime state of the application at any given point in time (for example: a numeric counter at `0`, a boolean `isLoading: true`, or a list of contacts).
-* **$f$ (Render Function):** The `build(BuildContext context)` method. It is a declarative function describing how the user interface should look given that data.
-* **$UI$ (User Interface):** The visible pixels drawn on screen by Flutter's graphics engine (Impeller or Skia) at 60 or 120 frames per second.
+* **$state$ (State):** the data describing the application at a given instant (a counter at `0`, a boolean `isLoading: true`, a list of contacts).
+* **$f$ (Render Function):** the `build(BuildContext context)` method. It describes how the interface should look given that data.
+* **$UI$ (User Interface):** the visible pixels drawn on screen by Flutter's graphics engine (Impeller or Skia) at 60 or 120 frames per second.
 
-When state changes, the framework re-evaluates function $f$ and efficiently updates the graphic elements on screen.
+When state changes, Flutter re-evaluates function $f$ and updates what you see. Your job is to **change the state**; the framework redraws.
 
----
-
-## 2. Why Does State Live in `State` and Not in the `Widget`?
-
-One of the most frequent questions students ask when learning Flutter is: *Why does a `StatefulWidget` require two separate classes instead of just one?*.
-
-![StatelessWidget vs StatefulWidget Structure](/img/seminario-de-i-d-i/stateless-vs-stateful-arquitectura.svg)
-
-The answer lies in the framework's memory and performance optimizations:
-
-1. **The `Widget` class is `@immutable` (Immutable and Ephemeral):**
-   * In Flutter, widgets are lightweight UI configuration blueprints.
-   * When changes occur, Flutter can destroy and instantiate thousands of widgets per second with virtually zero memory overhead.
-   * If mutable variables lived directly inside the widget, they would be lost every time the parent widget rebuilt.
-
-2. **The `State<T>` class is Persistent and Mutable:**
-   * The `State` object remains alive in RAM for as long as the screen is presented to the user.
-   * It holds mutable fields (for example: `int _counter = 0;`).
-   * It is not destroyed when the outer widget is recreated; it persists and retains active runtime data.
+:::tip[Key idea]
+A `StatelessWidget` can only display what its parent hands to it: it has nowhere to keep data that changes. For a widget to **remember and change** something by itself, you need a `StatefulWidget`.
+:::
 
 ---
 
-## 3. Flutter's Three Trees and `dirty` Marking
+## 2. Anatomy of a StatefulWidget
 
-To understand what actually happens when an application state changes, we must understand the **three parallel trees** Flutter manages internally:
+One of the most frequent questions when learning Flutter is: *why does a `StatefulWidget` require two classes instead of just one?* Walk through the parts of this chapter's counter to find out:
 
-![Flutter Three Trees and Dirty Marking after setState](/img/seminario-de-i-d-i/arbol-widgets-elements-reconstruccion.svg)
+<iframe
+  src="/interactive/seminario-de-i-d-i/semana-11/anatomia-stateful/index.html"
+  title="Interactive anatomy of a StatefulWidget: Widget class, State class, the state, build and setState"
+  style={{ width: '100%', height: 1030, border: 0 }}
+  loading="lazy"
+/>
 
-1. **Widget Tree:** The declarative blueprint. Immutable, recyclable, and extremely inexpensive to create.
-2. **Element Tree:** The persistent structural tree. `Elements` represent actual runtime nodes in memory and hold references to `State` objects.
-3. **RenderObject Tree:** Objects calculating layout geometries, box constraints, and issuing direct painting instructions to the GPU.
+The answer lies in how Flutter manages memory and performance:
 
-### What does `setState()` do under the hood?
+1. **The `Widget` class is `@immutable` (immutable and ephemeral):**
+   * Widgets are lightweight UI configurations (blueprints).
+   * When something changes, Flutter can discard and recreate thousands of widgets per second with no noticeable impact.
+   * If mutable variables lived inside the widget, they would be lost every time the parent widget rebuilt.
 
-When you invoke `setState(() { ... })`, the following exact steps take place:
-1. It executes the synchronous function passed as an argument, mutating your internal state variable (e.g., `_counter++`).
-2. It internally calls `markNeedsBuild()` on the corresponding `Element`.
-3. The `Element` is flagged as **`dirty`**.
-4. On the next screen refresh cycle (*frame*), Flutter walks through elements marked as `dirty` and invokes their `build()` method.
-5. **Rebuild scope:** Only the subtree descending from that stateful widget is rebuilt. Sibling or ancestor widgets are not recomputed, and those marked with `const` are reused directly by the framework.
+2. **The `State<T>` class is persistent and mutable:**
+   * The `State` object stays alive in memory while the screen is present in the tree.
+   * It holds the mutable fields (for example `int _counter = 0;`).
+   * It is not destroyed when the outer widget is recreated: it survives and keeps the data.
+
+| | `StatelessWidget` | `StatefulWidget` |
+| :--- | :--- | :--- |
+| **Classes** | 1 (just the widget) | 2 (the `Widget` and its `State`) |
+| **Memory between rebuilds** | None | The `State` object persists |
+| **Where `build()` lives** | In the widget itself | In the `State` class |
+| **Can it change by itself?** | No: only if its parent passes new data | Yes, with `setState()` |
 
 ---
 
-## 4. Didactic Experiment: Tracing with `debugPrint`
+## 3. What Does `setState()` Do?
 
-The clearest way to verify rebuilding behavior is to insert a console print statement inside the `build()` method.
+`setState()` is how you **tell Flutter that the state changed** and that it must run `build()` again. Changing a variable and notifying the framework are two different things, and `setState` does both.
+
+Tap the phone's buttons and follow the full journey. Pay special attention to two moments: the instant the inspector already says `1` while the screen still shows `0`, and the **Sumar sin avisar** ("add without notifying") case:
+
+<iframe
+  src="/interactive/seminario-de-i-d-i/semana-11/setstate-en-accion/index.html"
+  title="Interactive setState simulation on a counter: from the tap to build"
+  style={{ width: '100%', height: 860, border: 0 }}
+  loading="lazy"
+/>
+
+When you call `setState(() { ... })`, the following happens, in order:
+
+1. **It runs your function** immediately and synchronously: that is where you change the state variable (for example `_counter++`).
+2. **It marks the `Element` as `dirty`:** internally it calls `markNeedsBuild()`. This is only a flag; nothing is rebuilt yet.
+3. **It schedules the rebuild:** on the next screen refresh cycle (*frame*) Flutter looks for `dirty` elements and runs their `build()`.
+4. **Rebuild scope:** only the subtree descending from the stateful widget is rebuilt. Ancestors and sibling widgets are not rebuilt, and widgets marked `const` are reused.
+
+:::warning[Changing the variable is not the same as notifying]
+If you do `_counter++` **outside `setState`**, the data changes but Flutter does not find out: the screen keeps showing the previous value. Worse, when another `setState` later triggers a `build()`, the screen "jumps" to the accumulated value and the bug seems intermittent.
+:::
+
+---
+
+## 4. The Update Tree: Flutter's Three Trees
+
+To understand what is recreated and what is kept when you call `setState`, you need to know the **three parallel trees** Flutter maintains. The following piece follows **a single `Text`** through all three:
+
+<iframe
+  src="/interactive/seminario-de-i-d-i/semana-11/tres-arboles/index.html"
+  title="Flutter's three trees: widgets, elements and render objects, and what is kept during a setState"
+  style={{ width: '100%', height: 780, border: 0 }}
+  loading="lazy"
+/>
+
+1. **Widget Tree:** the declarative description you write in `build()`. It is immutable and cheap to create: it is created again on every rebuild.
+2. **Element Tree:** the living nodes of the application. Each `Element` represents a widget at a specific position in the tree and **persists across rebuilds**; the `Element` of a `StatefulWidget` is the one holding the `State` object.
+3. **RenderObject Tree:** the objects that compute sizes and positions (*box constraints*) and paint on screen. They also persist: when something changes they are updated and repainted.
+
+The key to the whole mechanism is this: after a `setState`, `build()` creates **new** widgets, but Flutter compares each new widget with the previous one; if they have the same type and the same position it **reuses the `Element`** and the `RenderObject` and only hands them the new configuration. Creating widgets is cheap; the expensive parts (nodes, size computation, painting) are reused.
+
+---
+
+## 5. Didactic Experiment: Tracing with `debugPrint`
+
+The clearest way to verify rebuilding behavior is to insert a console print statement inside the `build()` method. It is the same thing the **Consola** panel of the simulator above shows.
 
 <Tabs>
 <TabItem value="codigo" label="Counter with DebugPrint" default>
 
 ```dart title="lib/pages/counter_page.dart" showLineNumbers
-import 'package:flutter/material';
+import 'package:flutter/material.dart';
 
 // 1. WIDGET CLASS (Immutable and bound to its State)
 class CounterPage extends StatefulWidget {
@@ -160,32 +214,32 @@ flutter: --> [FRAME RENDER] build() executed. Current value: 1
 flutter: --> [FRAME RENDER] build() executed. Current value: 2
 ```
 
-Notice that every time `setState()` mutates the variable, the `build()` method runs from top to bottom to regenerate the new visual description with the updated number.
+Notice that every time `setState()` marks the element as `dirty`, the `build()` method runs from top to bottom to regenerate the new visual description with the updated number.
 
 </TabItem>
 </Tabs>
 
 ---
 
-## 5. First User Interaction: Functions and Callbacks
+## 6. First User Interaction: Functions and Callbacks
 
 In Flutter, buttons and interactive events receive **functions as parameters** through properties such as `onPressed` or `onTap`:
 
 1. **Reference to an existing method:** `onPressed: _incrementCounter`. Pass the method name without parentheses so Flutter invokes it when the click occurs.
 2. **Anonymous lambda function:** `onPressed: () { setState(() => _counter++); }`. Best for concise one-line operations.
-3. **Disabled state (`null`):** Passing `onPressed: null` causes the Material framework to automatically render the button in an inactive disabled grey style and ignore touch inputs.
+3. **Disabled state (`null`):** passing `onPressed: null` causes the Material framework to render the button in an inactive grey style and ignore touch inputs.
 
-:::caution[Critical Antipattern with setState()]
-Never place heavy asynchronous calls (such as `await http.get()`) directly inside a `setState()` block. Only immediate, synchronous memory assignments belong inside the callback:
+:::caution[Antipattern with setState(): an asynchronous function]
+The function that `setState()` receives must be **synchronous** and contain only the state assignments. If you declare it `async`, Flutter throws an assertion in debug mode (*"setState() callback argument returned a Future"*), because the change would happen after `setState` has already finished marking the element. Do the asynchronous work first and then call `setState` with the assignment:
 
 ```dart title="setState antipattern"
-// INCORRECT: Blocks the render pipeline!
+// INCORRECT: the setState function cannot be async
 setState(() async {
   final data = await api.get();
   _list = data;
 });
 
-// CORRECT:
+// CORRECT: asynchronous work first, then the synchronous change
 final data = await api.get();
 if (mounted) {
   setState(() {
@@ -193,6 +247,8 @@ if (mounted) {
   });
 }
 ```
+
+The `mounted` check avoids calling `setState` if the user already left the screen while the request was in flight.
 :::
 
 ---
@@ -200,7 +256,7 @@ if (mounted) {
 ## Self-Assessment Quiz
 
 <Quiz id="seminario-s11-state-foundations-quiz">
-  <Question title="Which mathematical equation defines the declarative paradigm in Flutter?">
+  <Question title="Which formula defines the declarative paradigm in Flutter?">
     <Option>State = f(UI)</Option>
     <Option correct>UI = f(state)</Option>
     <Option>Widget = Element + RenderObject</Option>
@@ -219,6 +275,20 @@ if (mounted) {
     <Option>The mobile device cache memory is erased.</Option>
     <Option correct>The corresponding Element is marked with the dirty flag, scheduling the execution of its build() method on the next refresh frame.</Option>
     <Option>A Flutter SDK update is downloaded from the Internet.</Option>
+  </Question>
+
+  <Question title="A method does _counter++ but never calls setState(). What happens?">
+    <Option>Flutter detects the variable change and rebuilds the screen automatically.</Option>
+    <Option>The application throws an exception and closes.</Option>
+    <Option correct>The data changes in memory, but no Element becomes dirty and no build() runs: the screen keeps showing the previous value until another setState rebuilds it.</Option>
+    <Option>The value reverts to the previous one when the method ends.</Option>
+  </Question>
+
+  <Question title="After a setState, build() creates new widgets. What does Flutter do with the existing Element and RenderObject?">
+    <Option>It destroys them and creates new ones on every rebuild.</Option>
+    <Option correct>It reuses them when the new widget has the same type and position as the previous one, and only hands them the updated configuration.</Option>
+    <Option>It copies them into the Widget Tree so they become immutable.</Option>
+    <Option>It freezes them until the user closes the application.</Option>
   </Question>
 
   <Question title="If we place the const keyword before a child widget inside the build() method, how does Flutter handle it during a rebuild?">

@@ -84,6 +84,18 @@ Un diagrama original con muchos colores (azul, morado, naranja, verde) "sin que 
 
 Una definición ("la autenticación verifica la identidad") se entiende más rápido con una persona haciendo algo concreto (ana intenta borrar al usuario 42). Elegir **un** ejemplo del capítulo, nombrarlo en el primer paso y no cambiarlo: todas las etiquetas, estados (`ana · ROLE_ADMIN`) y desenlaces hablan de él.
 
+## 5n. Separar el dato de la pantalla
+
+Cuando el concepto es "cambiar el estado", lo difícil para el estudiante es que **el dato y la pantalla no cambian a la vez**. Mostrar los dos por separado (inspector del `State` y teléfono) durante uno o dos pasos (`stale: true`): el dato ya vale 1 y la pantalla sigue en 0. Eso hace entendible `setState` mejor que cualquier definición, y hace visible el error clásico (cambiar la variable sin avisar).
+
+## 5o. El estudiante toca, la pieza demuestra
+
+Si el capítulo afirma algo que se puede comprobar ("escribir en un `TextField` no reconstruye la página", "sin `setState` la pantalla no cambia"), la pieza lo **demuestra** en el modo libre (la consola no cambia, el camino se corta en `setState`) y no solo lo cuenta. Un recorrido guiado primero, el modo libre al final: el estudiante ya sabe qué mirar.
+
+## 5p. Lo importante a la vista, lo accesorio fuera
+
+Un ejemplo de 120 líneas donde 60 son estilos esconde la lógica. Ofrecer el código en tres vistas (simulador, **lo esencial** sin decoraciones, completo con estilos) y dejar en la pieza solo lo esencial. Lo mismo para diagramas: lo que no enseña el concepto (un `InputDecoration`) sobra.
+
 ## 6. Color con rol, no con nombre
 
 Control, confirmación, datos y fallo tienen un color fijo en todo el kit (`--dk-ctl`, `--dk-ack`, `--dk-data`, `--dk-err`). El estudiante aprende el vocabulario visual una vez y lo reconoce en todas las piezas. Nunca usar un hex suelto; así el tema oscuro funciona sin trabajo extra.

@@ -1,0 +1,149 @@
+<!doctype html>
+<!--
+  PLANTILLA de pieza "simulador de app movil" (DK.phone): telefono + State + arbol de widgets + consola, con modo libre.
+  Es una copia PROBADA de static/interactive/seminario-de-i-d-i/semana-11/setstate-en-accion/. Copiar a
+  static/interactive/<curso>/<semana>/<slug>/index.html y cambiar SOLO los DATOS: CODE (el codigo del capitulo, sin estilos),
+  init/fields/tree/view/actions de la app y los pasos. Los numeros de linea de `code` se pueden buscar por texto (ver
+  formulario-registro). API completa: references/kit-api.md (dk-phone.js). Las rutas ../../../_shared/ asumen <curso>/<semana>/<slug>/.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>setState en acción</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-tree.js"></script>
+<script src="../../../_shared/dk-phone.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* setState en acción: un contador en un teléfono. Solo DATOS: la app, el árbol de widgets y los pasos. */
+(function () {
+  var CODE = [
+    'class _ContadorPageState extends State<ContadorPage> {',        // 1
+    '  int _contador = 0; // el estado: un dato que vive en State',   // 2
+    '',                                                               // 3
+    '  void _incrementar() {',                                        // 4
+    '    setState(() {',                                              // 5
+    '      _contador++;',                                             // 6
+    '    });',                                                        // 7
+    '  }',                                                            // 8
+    '',                                                               // 9
+    '  // Mal: cambia el dato, pero nadie avisa al framework',        // 10
+    '  void _sumarSinAvisar() {',                                     // 11
+    '    _contador++;',                                               // 12
+    '  }',                                                            // 13
+    '',                                                               // 14
+    '  @override',                                                    // 15
+    '  Widget build(BuildContext context) {',                         // 16
+    "    debugPrint('--> build() ejecutado. Valor actual: $_contador');", // 17
+    '    return Column(',                                             // 18
+    '      children: [',                                              // 19
+    "        const Text('Número de clics:'),",                        // 20
+    "        Text('$_contador'),",                                    // 21
+    '        FilledButton(',                                          // 22
+    '          onPressed: _incrementar,',                             // 23
+    "          child: const Text('Incrementar'),",                    // 24
+    '        ),',                                                     // 25
+    '        OutlinedButton(',                                        // 26
+    '          onPressed: _sumarSinAvisar,',                          // 27
+    "          child: const Text('Sumar sin avisar'),",               // 28
+    '        ),',                                                     // 29
+    '      ],',                                                       // 30
+    '    );',                                                         // 31
+    '  }',                                                            // 32
+    '}',                                                              // 33
+  ].join('\n');
+
+  var PHASES = ['Estado y pantalla', 'El camino de setState', 'Sin setState', 'Pruébalo tú'];
+  var LOG0 = '--> build() ejecutado. Valor actual: ';
+
+  var steps = [
+    // ---- Fase 1: el estado y su reflejo ----
+    { phase: 0, title: 'El estado es un dato', code: [2, 21], msgs: [], dwell: 4200,
+      caption: '_contador = 0 es el estado: un dato que vive en el objeto State. Lo que ves en el teléfono es solo su reflejo, Text(\'$_contador\'): si el dato cambia, la pantalla debe cambiar con él.' },
+
+    // ---- Fase 2: el camino completo de un setState ----
+    { phase: 1, title: 'El usuario toca Incrementar', code: [22, 23], msgs: [], dwell: 3500, tap: 'inc', stage: 0,
+      caption: 'El toque dispara onPressed, que apunta al método _incrementar. Hasta aquí no ha cambiado nada: ni el dato ni la pantalla.' },
+    { phase: 1, title: 'Se ejecuta _incrementar()', code: [4], msgs: [], dwell: 3200, stage: 1,
+      caption: 'Flutter llama al callback. Dentro hay un setState: sin él, el cambio no le llegaría al framework.' },
+    { phase: 1, title: 'setState ejecuta el cambio', code: [5, 6, 7], msgs: [], dwell: 4400, stage: 2,
+      state: { _contador: 1 }, changed: ['_contador'], stale: true,
+      caption: 'setState ejecuta primero tu función: _contador pasa de 0 a 1. Fíjate: el dato ya vale 1, pero la pantalla sigue en 0 porque todavía no se ha reconstruido.' },
+    { phase: 1, title: 'El Element se marca dirty', code: [5], msgs: [], dwell: 4200, stage: 3, tree: 'dirty', stale: true,
+      caption: 'Luego setState llama a markNeedsBuild(): el Element de ContadorPage queda marcado como dirty (sucio). Es solo una bandera: nada se reconstruye todavía.' },
+    { phase: 1, title: 'build() corre de nuevo', code: [16, 17, 18, 19, 20, 21], msgs: [], dwell: 5200, stage: 4, tree: 'build', stale: true,
+      log: [LOG0 + '1'],
+      caption: 'En el siguiente frame Flutter reconstruye los Element dirty: se ejecuta build() y se descarta la descripción vieja. Solo se reconstruye el subárbol de ContadorPage. El ancestro (Scaffold) no, y el Text const se reutiliza tal cual.' },
+    { phase: 1, title: 'La pantalla muestra el estado nuevo', code: [21], msgs: [], dwell: 3800, stage: 5, tree: 'build',
+      caption: 'La pantalla ya dice 1. Esto es UI = f(state): la misma función build() con otro estado produce otra pantalla.' },
+
+    // ---- Fase 3: el error clásico ----
+    { phase: 2, title: 'Cambiar la variable no basta', code: [10, 11, 12, 13], msgs: [], dwell: 5200, tap: 'bad', stage: 1, block: 2,
+      state: { _contador: 2 }, changed: ['_contador'], stale: true,
+      note: 'Sin setState no hay dirty ni build(): el framework no se entera de que el dato cambió.',
+      caption: '_sumarSinAvisar suma 1 al dato, pero nunca llama a setState. El inspector ya dice 2 y la pantalla sigue en 1: la variable y lo que ves dejaron de coincidir.' },
+    { phase: 2, title: 'Hasta que otro setState la despierta', code: [4, 5, 6, 7], msgs: [], dwell: 5200, tap: 'inc', stage: 5, tree: 'build',
+      state: { _contador: 3 }, changed: ['_contador'], log: [LOG0 + '3'],
+      caption: 'Cuando después llega cualquier setState, build() lee el valor actual (3) y la pantalla salta del 1 al 3: el 2 nunca se vio. Por eso el error parece intermitente.' },
+
+    // ---- Fase 4: libre ----
+    { phase: 3, title: 'Toca tú mismo', msgs: [], free: true, dwell: 1500,
+      caption: 'Toca Incrementar y mira el camino completo. Luego toca Sumar sin avisar: el dato cambia, la pantalla no. Después vuelve a tocar Incrementar y observa el salto.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Simulación de un contador en Flutter: qué ocurre desde que el usuario toca hasta que build() actualiza la pantalla',
+    phases: PHASES,
+    wide: true,
+    code: { title: 'contador_page.dart', text: CODE },
+    scene: function (svg, stage, api) {
+      return DK.phone({
+        stage: stage, api: api,
+        title: 'Contador', height: 320,
+        className: '_ContadorPageState',
+        init: { _contador: 0 },
+        fields: [{ key: '_contador', type: 'int' }],
+        initLog: [LOG0 + '0'],
+        buildLog: function (s) { return LOG0 + s._contador; },
+        hint: 'Toca Incrementar y Sumar sin avisar.',
+        tree: [
+          { id: 'scaffold', label: 'Scaffold', d: 0 },
+          { id: 'page', label: 'ContadorPage', d: 1, state: true },
+          { id: 'col', label: 'Column', d: 2 },
+          { id: 't1', label: 'Text', sub: "'Número de clics:'", d: 3, k: 'const' },
+          { id: 't2', label: 'Text', sub: "'$_contador'", d: 3 },
+          { id: 'b1', label: 'FilledButton', d: 3 },
+          { id: 'b2', label: 'OutlinedButton', d: 3 },
+        ],
+        view: function (s) {
+          return '<p class="pf-label">Número de clics:</p>' +
+            '<p class="pf-big">' + s._contador + '</p>' +
+            '<button class="pf-btn" data-act="inc">' + DK.phone.icon('add') + 'Incrementar</button>' +
+            '<button class="pf-btn out" data-act="bad">Sumar sin avisar</button>';
+        },
+        actions: {
+          inc: function (s) { s._contador++; return { set: true, code: [4, 5, 6, 7] }; },
+          bad: function (s) { s._contador++; return { set: false, code: [10, 11, 12, 13] }; },
+        },
+      });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'setState en acción',
+      title: 'Qué pasa cuando cambia el estado',
+      text: 'Sigue un toque en el botón desde el teléfono hasta que build() redibuja la pantalla: verás el dato cambiar en el State, el Element marcarse como dirty y qué partes del árbol se reconstruyen.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -17,7 +17,7 @@ Todas las rutas son relativas a la raíz del repo (`docukelo-icesi/`). Si no est
 | **El kit compartido** (CSS, `dk-*.js`) | `static/interactive/_shared/` | Sí |
 | Documentación del kit (API de cada módulo) | `references/kit-api.md` (en esta skill) | Sí |
 | Piezas interactivas ya integradas | `static/interactive/<curso>/<semana>/<slug>/index.html` | Sí |
-| Plantilla para una pieza nueva | `templates/piece/index.html` (en esta skill) | Sí |
+| Plantilla para una pieza nueva | `templates/piece/index.html` (secuencia por fases) y `templates/piece-phone/index.html` (simulador de app móvil con `DK.phone`), en esta skill | Sí |
 | Guía general de contenido (sección 8: gráficos interactivos) | `.agents/memory/docusaurus-guidelines.md` | Sí |
 | Contexto, decisiones y estado del proyecto de rediseño | `.agents/memory/svg-redesign/README.md` | **No** (en `.gitignore`, solo en el disco del profesor) |
 | Comentarios y briefs del profesor por gráfico | `.agents/memory/svg-redesign/reviews.json` | **No** |
@@ -65,6 +65,9 @@ Una animación no es decoración: cada movimiento debe revelar un **orden** o un
 | Qué cambia el resultado según decisiones (con/sin anotación, con/sin fallo) | N3 | Kit: `DK.layers` con `sub`, `code` función y varios interruptores (ejemplo: `transaccion-transferencia`) |
 | Qué método/línea se ejecuta cuándo (ciclo de vida) | N3 | Kit: `DK.player` + `DK.sequence` con la opción `code` (ejemplo: `ciclo-vida-servlet`) |
 | Dónde vive el estado en un árbol de componentes y cómo viaja (lifting, prop drilling, Context, store) | N3 | Kit: `DK.player` + `DK.tree` (ejemplo: `arbol-estado`) |
+| Qué pasa por dentro cuando el usuario toca una app móvil (`setState`, controladores, formularios, listas) | N3 | Kit: `DK.player` + `DK.phone` con `code` (ejemplos: `seminario-de-i-d-i/semana-11/setstate-en-accion`, `formulario-registro`, `agenda-monolitica`) |
+| Un archivo con varias responsabilidades y cómo se corta | N3 | Kit: `DK.anatomy` con `code`, `layout: 'stack'` y un paso final `all: true` (ejemplo: `responsabilidades-agenda`) |
+| Qué se recrea y qué se conserva entre capas paralelas (Widget, Element, RenderObject) | N3 | Kit: `DK.layers` con `sub` por paso e identidades (`#a1`, `#b7`) (ejemplo: `tres-arboles`) |
 | Algo que se entiende provocándolo (estado, fallos, parámetros) | N3 | Kit; escena nueva si no existe el patrón (ver `patterns.md`) |
 
 ### 2. Construir en `candidates/`, nunca directo en `docs/` ni `static/img`
@@ -109,7 +112,7 @@ Al terminar cada gráfico, **antes de pasar al siguiente**, actualizar la skill;
 
 ### El kit (`static/interactive/_shared/`)
 
-JavaScript plano y CSS, sin dependencias, con tema claro/oscuro automático. Módulos: `dk-base.css`, `dk-theme.js`, `dk-kit.js`, `dk-icons.js`, `dk-flow.js`, `dk-sequence.js`, `dk-layers.js`, `dk-compare.js`, `dk-anatomy.js`, `dk-table.js`, `dk-player.js` (con panel de código sincronizado opcional, que puede cambiar con los interruptores). API completa y formato de los pasos en `references/kit-api.md`.
+JavaScript plano y CSS, sin dependencias, con tema claro/oscuro automático. Módulos: `dk-base.css`, `dk-theme.js`, `dk-kit.js`, `dk-icons.js`, `dk-flow.js`, `dk-sequence.js`, `dk-layers.js`, `dk-compare.js`, `dk-anatomy.js`, `dk-table.js`, `dk-tree.js`, `dk-phone.js` (teléfono + `State` + árbol de widgets + consola, con modo libre), `dk-player.js` (con panel de código sincronizado opcional, que puede cambiar con los interruptores). API completa y formato de los pasos en `references/kit-api.md`.
 
 Una pieza nueva debería ser ~100 líneas de **datos** (actores, fases, pasos con leyenda). Si estás escribiendo lógica de dibujo, animación, controles o tema dentro de una pieza, para y llévala al kit.
 

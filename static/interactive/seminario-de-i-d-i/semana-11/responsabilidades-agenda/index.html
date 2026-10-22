@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Responsabilidades de la agenda monolítica</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-anatomy.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El archivo agenda_page.dart coloreado por responsabilidad: la misma lista de colores que se corta en archivos en la
+   semana 12. El código está resumido (los estilos se omiten) para que quepa en pantalla. Solo DATOS. */
+(function () {
+  var PARTS = {
+    datos:  { label: 'Datos',         color: 'p1' },
+    ctrls:  { label: 'Controladores', color: 'p5' },
+    acc:    { label: 'Acciones',      color: 'p4' },
+    form:   { label: 'Formulario',    color: 'p3' },
+    lista:  { label: 'Lista',         color: 'p2' },
+  };
+
+  var DOC = [
+    [['class _AgendaPageState extends State<AgendaPage> {']],
+    [['  late final TextEditingController _nombreCtrl;', 'ctrls']],
+    [['  late final TextEditingController _telefonoCtrl;', 'ctrls']],
+    [['']],
+    [['  final List<Contacto> _contactos = [', 'datos']],
+    [["    const Contacto(id: '1', nombre: 'María Camila Gómez', telefono: '312 456 7890'),", 'datos']],
+    [['    // ... dos contactos más', 'datos']],
+    [['  ];', 'datos']],
+    [['']],
+    [['  void initState() { /* crea los dos controladores */ }', 'ctrls']],
+    [['  void dispose()   { /* libera los dos controladores */ }', 'ctrls']],
+    [['']],
+    [['  void _agregarContacto() {', 'acc']],
+    [['    // lee los campos y valida que no estén vacíos', 'acc']],
+    [['    setState(() { _contactos.add(nuevo); });', 'acc']],
+    [['    _nombreCtrl.clear();', 'acc']],
+    [['  }', 'acc']],
+    [['  void _eliminarContacto(String id) {', 'acc']],
+    [['    setState(() { _contactos.removeWhere((c) => c.id == id); });', 'acc']],
+    [['  }', 'acc']],
+    [['']],
+    [['  @override']],
+    [['  Widget build(BuildContext context) {']],
+    [['    return Column(children: [']],
+    [['      Card(', 'form']],
+    [["        child: Column(children: [", 'form']],
+    [["          const Text('Registrar Nuevo Contacto'),", 'form']],
+    [['          TextField(controller: _nombreCtrl, decoration: ...),', 'form']],
+    [['          TextField(controller: _telefonoCtrl, decoration: ...),', 'form']],
+    [['          FilledButton.icon(onPressed: _agregarContacto, ...),', 'form']],
+    [['        ]),', 'form']],
+    [['      ),', 'form']],
+    [["      Row(children: [Text('Directorio Activo'), Chip(...)]),", 'lista']],
+    [['      ..._contactos.map((contacto) {', 'lista']],
+    [['        return Card(child: ListTile(', 'lista']],
+    [['          title: Text(contacto.nombre),', 'lista']],
+    [['          trailing: IconButton(onPressed: () => _eliminarContacto(contacto.id), ...),', 'lista']],
+    [['        ));', 'lista']],
+    [['      }),', 'lista']],
+    [['    ]);']],
+    [['  }']],
+    [['}']],
+  ];
+
+  var step = function (phase, title, caption, focus, callout, extra) {
+    var s = { phase: phase, title: title, caption: caption, doc: DOC, focus: focus, callout: callout, msgs: [] };
+    for (var k in extra) s[k] = extra[k];
+    return s;
+  };
+
+  var steps = [
+    step(0, 'Los datos', 'La lista de contactos: la información que la aplicación recuerda.', 'datos',
+      { text: 'Es el estado que importa para el negocio: qué contactos existen. Todo lo demás existe para mostrarlos o modificarlos.',
+        examples: ['List<Contacto> _contactos', 'Se lee en build() y se modifica en las acciones'] }),
+    step(0, 'Los controladores', 'Lo que se necesita para leer los campos de texto: se crean, se usan y se liberan.', 'ctrls',
+      { text: 'Son un estado distinto: no es información de la agenda, es un recurso de la interfaz del formulario. Hay que crearlos en initState y liberarlos en dispose.',
+        examples: ['_nombreCtrl y _telefonoCtrl', 'Ciclo de vida: initState y dispose'] }),
+    step(0, 'Las acciones', 'Los métodos que cambian los datos, siempre con setState.', 'acc',
+      { text: 'Agregar valida, guarda y limpia. Eliminar quita por id. Son las únicas que llaman a setState: el resto del archivo solo describe y lee.',
+        examples: ['_agregarContacto', '_eliminarContacto'] }),
+    step(0, 'El formulario', 'La parte de la pantalla que captura un contacto nuevo.', 'form',
+      { text: 'Dibuja la tarjeta con los dos campos y el botón. Solo necesita los controladores y la acción de agregar: no necesita saber qué contactos existen.',
+        examples: ['Usa: _nombreCtrl, _telefonoCtrl', 'Llama a: _agregarContacto'] }),
+    step(0, 'La lista', 'La parte de la pantalla que muestra los contactos.', 'lista',
+      { text: 'Dibuja el encabezado y una tarjeta por contacto. Solo necesita la lista de datos y la acción de eliminar: no necesita saber nada del formulario.',
+        examples: ['Usa: _contactos', 'Llama a: _eliminarContacto'] }),
+
+    step(1, 'Cortar por colores', 'Cada color es un candidato a archivo propio. Eso es lo que haremos en la semana 12.', null,
+      { text: 'El formulario y la lista no se necesitan entre sí: solo comparten los datos y las acciones. Por eso el estado se queda arriba, en AgendaPage, y cada parte pasa a ser un componente.',
+        examples: ['Datos + acciones: se quedan en AgendaPage', 'Controladores + formulario: ContactoForm', 'Lista: ContactoList'] },
+      { all: true }),
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'La agenda monolítica coloreada por responsabilidad: datos, controladores, acciones, formulario y lista',
+    wide: true,
+    phases: ['Las responsabilidades', 'Cómo se corta'],
+    scene: function (svg, stage) {
+      return DK.anatomy({ stage: stage, parts: PARTS, code: true, layout: 'stack' });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Reflexión de arquitectura',
+      title: 'Cinco responsabilidades en un solo archivo',
+      text: 'El mismo archivo agenda_page.dart, pintado por responsabilidad (resumido: sin estilos). Recorre cada color y mira cómo se podría cortar.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

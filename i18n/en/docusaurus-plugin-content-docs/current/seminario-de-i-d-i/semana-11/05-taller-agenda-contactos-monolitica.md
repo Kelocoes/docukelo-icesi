@@ -12,7 +12,14 @@ In this practical workshop, you will develop **Part 1 (of 2)** of the **In-Memor
 
 The goal of this session is to build a fully interactive application where **all state, data collection, and visual interface reside inside a single monolithic screen** with `StatefulWidget`. In Week 12 (Session 23), we will take this exact codebase and refactor it using **State Lifting** and decoupled communication via callbacks.
 
-![Monolithic Architecture of the In-Memory Contact Book](/img/seminario-de-i-d-i/taller-agenda-contactos-flujo.svg)
+This is how your application should look and behave when you finish. Add and delete contacts (also try an empty field) and watch on the right what changes in the `State` and how much of the widget tree is rebuilt on each operation:
+
+<iframe
+  src="/interactive/seminario-de-i-d-i/semana-11/agenda-monolitica/index.html"
+  title="The monolithic contact book running on a phone: add and delete with setState"
+  style={{ width: '100%', height: 930, border: 0 }}
+  loading="lazy"
+/>
 
 ---
 
@@ -173,7 +180,7 @@ Your solution must meet the following technical specifications:
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Contact &quot;$nombre&quot; successfully added.'),
+            content: Text('Contact "$nombre" successfully added.'),
             backgroundColor: const Color(0xFF10B981),
           ),
         );
@@ -335,8 +342,17 @@ Your solution must meet the following technical specifications:
 Take a moment to inspect the `agenda_page.dart` file you just built:
 * The `_AgendaPageState` class exceeds 150 lines of code.
 * It mixes three distinct responsibilities simultaneously:
-  1. Managing in-memory state (`_contactos`, `_nombreCtrl`, `_telefonoCtrl`).
-  2. Laying out and validating the visual input form.
-  3. Laying out individual list cards and their avatars.
+  1. **Holding the state** in memory: the data (`_contactos`), the controllers (`_nombreCtrl`, `_telefonoCtrl`) and the actions that modify them (`_agregarContacto`, `_eliminarContacto`).
+  2. **Laying out and validating the visual input form.**
+  3. **Laying out the individual list cards** and their avatars.
+
+The following piece paints the same file (condensed, without styles) with one color per kind of code. Go through each color and, at the end, see how it could be cut:
+
+<iframe
+  src="/interactive/seminario-de-i-d-i/semana-11/responsabilidades-agenda/index.html"
+  title="The monolithic contact book file colored by responsibility: data, controllers, actions, form and list"
+  style={{ width: '100%', height: 1560, border: 0 }}
+  loading="lazy"
+/>
 
 What would happen if we wanted to reuse the form on another screen or replace the list with a two-column grid? **We cannot**, because everything is tightly coupled inside a single monolithic file.

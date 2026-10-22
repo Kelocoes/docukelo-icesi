@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomía de un StatefulWidget</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-anatomy.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Anatomía de un StatefulWidget: el mismo contador del capítulo, con una parte enfocada por paso. Solo DATOS. */
+(function () {
+  var PARTS = {
+    widget:   { label: 'Clase Widget',  color: 'p1' },
+    state:    { label: 'Clase State',   color: 'p2' },
+    field:    { label: 'El estado',     color: 'p3' },
+    build:    { label: 'build()',       color: 'p5' },
+    setstate: { label: 'setState()',    color: 'p4' },
+  };
+
+  var DOC = [
+    [['class ContadorPage extends StatefulWidget {', 'widget']],
+    [['  const ContadorPage({super.key});', 'widget']],
+    [['']],
+    [['  @override', 'widget']],
+    [['  State<ContadorPage> createState() => _ContadorPageState();', 'widget']],
+    [['}', 'widget']],
+    [['']],
+    [['class _ContadorPageState extends State<ContadorPage> {', 'state']],
+    [['  int _contador = 0;', 'field']],
+    [['']],
+    [['  void _incrementar() {', 'setstate']],
+    [['    setState(() {', 'setstate']],
+    [['      _contador++;', 'setstate']],
+    [['    });', 'setstate']],
+    [['  }', 'setstate']],
+    [['']],
+    [['  @override', 'build']],
+    [['  Widget build(BuildContext context) {', 'build']],
+    [["    return Text('$_contador');", 'build']],
+    [['  }', 'build']],
+    [['}', 'state']],
+  ];
+
+  var step = function (phase, title, caption, focus, callout, extra) {
+    var s = { phase: phase, title: title, caption: caption, doc: DOC, focus: focus, callout: callout, msgs: [] };
+    for (var k in extra) s[k] = extra[k];
+    return s;
+  };
+
+  var steps = [
+    step(0, 'Un StatefulWidget son dos clases',
+      'Un StatelessWidget es una sola clase y no recuerda nada. Un StatefulWidget se reparte en dos: una receta y una memoria.',
+      null,
+      { text: 'La clase Widget (azul) solo describe cómo se ve y se configura. La clase State (morado) guarda lo que cambia con el tiempo. Recórrelas con Siguiente.',
+        examples: ['StatelessWidget: build() y nada más', 'StatefulWidget: Widget + State'] }),
+
+    step(0, 'La clase Widget: la configuración',
+      'Es inmutable y barata: Flutter la crea de nuevo cada vez que su padre se reconstruye.',
+      'widget',
+      { text: 'Solo lleva la configuración que le pasa su padre (los parámetros del constructor) y sabe crear su State con createState(). Ninguna variable que cambie con el tiempo puede vivir aquí: se perdería en cada reconstrucción.',
+        examples: ['const ContadorPage({super.key})', 'createState(): "crea mi memoria"'] }),
+
+    step(0, 'La clase State: la memoria',
+      'Es mutable y persistente: se crea una sola vez y sobrevive mientras la pantalla esté en el árbol.',
+      'state',
+      { text: 'Flutter llama a createState() una vez y conserva ese objeto en el árbol de Element. Aunque el Widget se vuelva a crear mil veces, este State es el mismo. Por convención empieza con guion bajo: es privado de su archivo.',
+        examples: ['State<ContadorPage>: se asocia con su widget', 'Accede a la configuración con widget.parametro'] }),
+
+    step(1, 'El estado: los campos de State',
+      'El estado es el dato que cambia con el tiempo y que decide cómo se ve la pantalla.',
+      'field',
+      { text: '_contador es una variable normal de Dart. Aquí vive el estado. Cambiarla no repinta nada por sí sola: Flutter no vigila las variables.',
+        examples: ['int _contador = 0;', 'Una lista, un booleano o un texto también son estado'] }),
+
+    step(1, 'build(): la pantalla en función del estado',
+      'build() lee el estado y devuelve la descripción de la pantalla: UI = f(state).',
+      'build',
+      { text: 'build() no modifica nada: solo mira _contador y describe cómo debe verse. Se ejecuta al crear la pantalla y cada vez que el State se marca como dirty.',
+        examples: ["Text('$_contador')", 'Con otro valor de _contador, otra pantalla'] }),
+
+    step(2, 'setState(): avisar que algo cambió',
+      'Cambiar la variable y avisar al framework son dos cosas distintas; setState hace las dos.',
+      'setstate',
+      { text: 'setState ejecuta tu función (_contador++), marca el Element como dirty y programa un nuevo build() en el siguiente frame. Sin la llamada a setState el dato cambia, pero la pantalla no se entera.',
+        examples: ['1. ejecuta el cambio', '2. marca dirty', '3. build() corre de nuevo'] }),
+
+    step(2, 'Todo junto',
+      'Una receta inmutable, una memoria persistente, el dato, la pantalla que lo muestra y el aviso de cambio.',
+      null,
+      { text: 'Cuando algo en tu pantalla deba cambiar con el tiempo (un contador, un texto escrito, un interruptor), necesitas un StatefulWidget. Si nunca cambia, un StatelessWidget basta.',
+        examples: ['Widget = receta (inmutable)', 'State = memoria (persistente)', 'setState = aviso de cambio'] },
+      { all: true }),
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Anatomía de un StatefulWidget: clase Widget, clase State, el estado, build y setState',
+    wide: true,
+    phases: ['Dos clases', 'El estado', 'Cómo cambia'],
+    scene: function (svg, stage) {
+      return DK.anatomy({ stage: stage, parts: PARTS, code: true, layout: 'stack' });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Anatomía',
+      title: 'Las partes de un StatefulWidget',
+      text: 'El contador de este capítulo, pieza por pieza: qué hace cada parte y por qué son dos clases y no una.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -16,24 +16,33 @@ Comprender el **Ciclo de Vida de `State`** es indispensable para inicializar rec
 
 ## 1. La Línea de Tiempo del Ciclo de Vida en `State`
 
-A diferencia de un `StatelessWidget` (que solo posee el método `build`), la clase `State<T>` atraviesa varias etapas bien delimitadas durante su existencia en el *Element Tree*:
+A diferencia de un `StatelessWidget` (que solo posee el método `build`), la clase `State<T>` atraviesa varias etapas bien delimitadas durante su existencia en el *Element Tree*. Sigue cada método en la siguiente pieza y activa el interruptor **Olvidar controller.dispose()** para ver qué pasa con la memoria cuando se omite la limpieza:
 
-![Ciclo de Vida de State y Gestión de TextEditingController](/img/seminario-de-i-d-i/ciclo-vida-stateful-controller.svg)
+<iframe
+  src="/interactive/seminario-de-i-d-i/semana-11/ciclo-vida-state/index.html"
+  title="Ciclo de vida de State en Flutter: createState, initState, didChangeDependencies, build, dispose y fuga de un controlador"
+  style={{ width: '100%', height: 900, border: 0 }}
+  loading="lazy"
+/>
 
-### Las 5 Etapas Esenciales
+### Las Etapas Esenciales
 
-1. **`createState()`:** Invocado automáticamente por el framework para vincular el widget inmutable con su nueva instancia de estado.
-2. **`initState()` (Inicialización Única):**
-   * Es el **primer método** que se ejecuta tras la creación del objeto `State`.
-   * Se ejecuta **exactamente una sola vez** en toda la vida del widget.
-   * Es el lugar obligatorio para instanciar controladores (`TextEditingController`), suscribirse a flujos de datos (*Streams*) o iniciar temporizadores.
-   * **Regla estricta:** Siempre debe iniciar llamando a `super.initState()`.
-3. **`didChangeDependencies()`:** Se ejecuta inmediatamente después de `initState()` y cada vez que cambia un objeto heredado del contexto (como el tema de color o la orientación de la pantalla).
-4. **`build()` (Fase Activa):** Devuelve la estructura de widgets a renderizar. Se ejecuta al inicio y se repite cada vez que se llama a `setState()`.
-5. **`dispose()` (Destrucción y Limpieza Terminal):**
-   * Se ejecuta cuando el objeto `State` se retira permanentemente del árbol (por ejemplo, cuando el usuario cierra la pantalla o navega hacia atrás con `Navigator.pop`).
-   * Es el lugar donde **debes liberar y destruir obligatoriamente** todos los recursos pesados que abriste en `initState()`.
-   * **Regla estricta:** Siempre debe finalizar llamando a `super.dispose()`.
+1. **`createState()`:** es un método del **Widget** (no del `State`). Flutter lo invoca una vez al insertar el widget en el árbol para crear su objeto `State`.
+2. **`initState()` (inicialización única):**
+   * Es el **primer método** que se ejecuta en el objeto `State` tras su creación.
+   * Se ejecuta **exactamente una sola vez** en toda su vida.
+   * Es el lugar donde se instancian controladores (`TextEditingController`), se suscriben flujos de datos (*Streams*) o se inician temporizadores.
+   * **Regla estricta:** siempre debe iniciar llamando a `super.initState()`.
+3. **`didChangeDependencies()`:** se ejecuta inmediatamente después de `initState()` y cada vez que cambia un objeto heredado del contexto (como el tema o el idioma).
+4. **`build()` (fase activa):** devuelve la estructura de widgets a renderizar. Se ejecuta al inicio y se repite cada vez que `setState()` marca el elemento como `dirty`. `setState()` no es una etapa del ciclo de vida: es lo que **provoca** que `build()` corra otra vez.
+5. **`dispose()` (limpieza terminal):**
+   * Se ejecuta cuando el objeto `State` se retira permanentemente del árbol (por ejemplo, cuando el usuario navega hacia atrás con `Navigator.pop`).
+   * Es el lugar donde **debes liberar** los recursos que abriste en `initState()`.
+   * **Regla estricta:** siempre debe finalizar llamando a `super.dispose()`.
+
+:::note[Otros métodos que existen]
+Hay dos métodos más que verás más adelante: `didUpdateWidget()` (el padre entrega una configuración nueva al mismo `State`) y `deactivate()` (el `State` sale temporalmente del árbol). Para este capítulo, con las cinco etapas anteriores es suficiente.
+:::
 
 ---
 
@@ -41,31 +50,117 @@ A diferencia de un `StatelessWidget` (que solo posee el método `build`), la cla
 
 El widget `TextField` permite a los usuarios ingresar texto desde el teclado del dispositivo. Para poder leer lo que el usuario escribió, modificar el texto mediante programación o vaciar el campo tras enviar un formulario, Flutter utiliza un **`TextEditingController`**.
 
-Un controlador actúa como un puente bidireccional:
-* **Lectura:** Permite consultar el texto actual mediante la propiedad `controller.text`.
-* **Escritura:** Permite cambiar el texto mediante `controller.text = 'Nuevo valor'` o `controller.clear()`.
-* **Escucha reactiva:** Puede emitir eventos cada vez que el usuario presiona una tecla mediante `controller.addListener(...)`.
+Un controlador actúa como un puente bidireccional entre el campo y tu código:
+* **Lectura:** permite consultar el texto actual mediante la propiedad `controller.text`.
+* **Escritura:** permite cambiar el texto mediante `controller.text = 'Nuevo valor'` o `controller.clear()`.
+* **Escucha reactiva:** puede avisar cada vez que el texto cambia mediante `controller.addListener(...)`.
+
+:::info[Escribir no es un setState]
+Mientras el usuario escribe, el `TextField` actualiza `controller.text` y se repinta **por su cuenta**: tu página no se reconstruye ni se ejecuta su `build()`. Solo necesitas `setState()` cuando algo **de tu pantalla** dependa de ese texto. Compruébalo en el simulador de la sección 4.
+:::
 
 ---
 
 ## 3. El Peligro Crítico de Fugas de Memoria (*Memory Leaks*)
 
-Un `TextEditingController` se comunica con los servicios nativos de entrada de texto del sistema operativo (Android o iOS) y retiene punteros a listeners en la memoria RAM.
+Un `TextEditingController` es un objeto que **mantiene listeners** (los `TextField` y cualquier `addListener` que registres) y reserva recursos mientras exista. Por eso Flutter le exige a quien lo crea que lo libere.
 
 :::danger[La Regla Inquebrantable de dispose()]
-Si creas un `TextEditingController` en tu pantalla y no lo destruyes llamando a `.dispose()` dentro del método `dispose()` de tu clase `State`, el recolector de basura (*Garbage Collector*) de Dart **no podrá liberar esa memoria**.
+Si creas un `TextEditingController` en tu pantalla y no llamas a `.dispose()` dentro del método `dispose()` de tu clase `State`, el controlador **no libera sus listeners ni sus recursos** y queda como un objeto huérfano de una pantalla que ya no existe.
 
-Si el usuario abre y cierra la pantalla 20 veces al día, habrá 20 controladores huérfanos acumulándose en la memoria RAM del teléfono, provocando ralentizaciones, consumo excesivo de batería y, finalmente, el cierre forzado de la aplicación (*App Crash* por falta de memoria).
+Si el usuario abre y cierra la pantalla muchas veces, esos controladores huérfanos se acumulan: más memoria ocupada, más trabajo para el recolector de basura y una aplicación cada vez más lenta. Además, en modo debug las herramientas de Flutter reportan el controlador como una **fuga de memoria** (*memory leak*).
+
+Es una regla simple y sin excepciones: **todo lo que creas en `initState()`, lo liberas en `dispose()`**.
 :::
 
 ---
 
-## 4. Implementación Completa: Formulario con Validación y Limpieza
+## 4. Implementación: Formulario con Limpieza y Validación Básica
 
-A continuación se presenta un ejemplo completo que muestra la inicialización en `initState()`, el uso dentro del formulario y la liberación obligatoria en `dispose()`:
+El siguiente ejemplo reúne la inicialización en `initState()`, el uso de los controladores en el formulario y la liberación obligatoria en `dispose()`. La validación es básica: solo comprueba que los campos no estén vacíos.
+
+Lo importante aquí es la **lógica**, no los estilos. Por eso el ejemplo se ofrece en tres vistas: un **simulador** para ver su comportamiento, el código **esencial** (sin decoraciones) y el código **completo** con todos los estilos.
 
 <Tabs>
-<TabItem value="codigo" label="Formulario Reactivo" default>
+<TabItem value="simulador" label="Simulador" default>
+
+Escribe en los campos y fíjate en la consola: **escribir no ejecuta `build()`**. Pulsa **Registrar** y mira el camino completo; prueba también con un campo vacío:
+
+<iframe
+  src="/interactive/seminario-de-i-d-i/semana-11/formulario-registro/index.html"
+  title="Simulación del formulario de registro con TextEditingController: escribir no reconstruye, registrar sí"
+  style={{ width: '100%', height: 930, border: 0 }}
+  loading="lazy"
+/>
+
+</TabItem>
+<TabItem value="esencial" label="Lo Esencial">
+
+Es el mismo código sin decoraciones: tres bloques (declarar, crear/liberar y usar los controladores), el método que procesa el formulario y un `build()` mínimo.
+
+```dart title="lib/pages/registro_page.dart (lo esencial)" showLineNumbers
+class _RegistroPageState extends State<RegistroPage> {
+  // 1. Declaración de controladores y estado de la página
+  late final TextEditingController _nombreController;
+  late final TextEditingController _emailController;
+  String _mensajeResultado = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // 2. Se crean UNA sola vez
+    _nombreController = TextEditingController();
+    _emailController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    // 3. Se liberan al salir de la pantalla
+    _nombreController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  void _procesarFormulario() {
+    final nombre = _nombreController.text.trim();
+    final email = _emailController.text.trim();
+
+    // Validación: campos obligatorios
+    if (nombre.isEmpty || email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Completa todos los campos')),
+      );
+      return; // sin setState: la página no se reconstruye
+    }
+
+    setState(() {
+      _mensajeResultado = 'Usuario registrado: $nombre ($email)';
+    });
+
+    // 4. Se vacían los campos tras el envío exitoso
+    _nombreController.clear();
+    _emailController.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TextField(controller: _nombreController),
+        TextField(controller: _emailController),
+        FilledButton(
+          onPressed: _procesarFormulario,
+          child: const Text('Registrar'),
+        ),
+        if (_mensajeResultado.isNotEmpty) Text(_mensajeResultado),
+      ],
+    );
+  }
+}
+```
+
+</TabItem>
+<TabItem value="codigo" label="Código Completo (con estilos)">
 
 ```dart title="lib/pages/registro_page.dart" showLineNumbers
 import 'package:flutter/material.dart';
@@ -230,6 +325,13 @@ class _RegistroPageState extends State<RegistroPage> {
     <Option correct>Mediante la propiedad controller.text</Option>
     <Option>Leyendo directamente el archivo de texto en disco local.</Option>
     <Option>Invocando al método dispose() con parámetros de texto.</Option>
+  </Question>
+
+  <Question title="Mientras el usuario escribe en un TextField conectado a un controlador (sin ningún setState), ¿qué ocurre con el build() de la página?">
+    <Option>Se ejecuta en cada tecla pulsada.</Option>
+    <Option correct>No se ejecuta: el campo actualiza controller.text y se repinta por su cuenta; la página solo se reconstruye si algo llama a setState.</Option>
+    <Option>Se ejecuta una sola vez al terminar de escribir.</Option>
+    <Option>Se ejecuta initState() otra vez para recrear el controlador.</Option>
   </Question>
 
   <Question title="¿Qué hace el método controller.clear()?">

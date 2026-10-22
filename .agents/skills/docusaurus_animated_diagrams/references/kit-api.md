@@ -17,6 +17,7 @@ Orden de carga en el `index.html` de una pieza (rutas relativas, para que funcio
 <script src="../../../_shared/dk-anatomy.js"></script>   <!-- escena: anatomía explorable (enfoca partes de un mensaje) -->
 <script src="../../../_shared/dk-table.js"></script>     <!-- escena: tabla de datos con estado (paginación, orden, SQL) -->
 <script src="../../../_shared/dk-tree.js"></script>      <!-- escena: árbol de componentes + estado (props, callbacks, Context) -->
+<script src="../../../_shared/dk-phone.js"></script>     <!-- escena: teléfono + State + árbol de widgets + consola (cargar dk-tree.js ANTES de dk-phone.js) -->
 <script src="../../../_shared/dk-player.js"></script>
 ```
 
@@ -36,6 +37,7 @@ Todo es JavaScript plano (scripts clásicos, sin módulos ni dependencias) y exp
 | `dk-table.js` | `DK.table`: tabla de datos reales con estado por paso (todas las filas o una página, orden, SQL generado, metadatos de `Page<T>`, medidores de costo) | Paginación, orden, filtros, `LIMIT/OFFSET`: "qué trae esta consulta" |
 | `dk-anatomy.js` | `DK.anatomy`: un mensaje o documento real en una caja; cada paso enfoca una parte y a la derecha aparece su explicación | Explicar la estructura de algo (petición HTTP, JWT, JSON, URL) |
 | `dk-tree.js` | `DK.tree`: un árbol de componentes de verdad (nodos y ramas, distribuido solo); cada paso marca roles y hace viajar datos por las ramas o en salto directo | Estado en React/Flutter: lifting state up, prop drilling, Context, store global, re-renders |
+| `dk-phone.js` | `DK.phone`: un teléfono con la app real (que el estudiante puede tocar) y, al lado, el camino del evento, el objeto `State` con sus campos, el árbol de widgets (dirty, build, const reutilizado) y la consola | Estado en Flutter (`setState`, controladores, formularios, listas): causa y efecto provocados por el estudiante |
 | `dk-compare.js` | `DK.compare`: dos o más diagramas de secuencia lado a lado, sincronizados paso a paso, con contador y nota por panel | Contrastar alternativas (TCP/UDP, con/sin caché, stateful/stateless) |
 | `dk-player.js` | `DK.player`: pestañas por fase, leyenda, controles, interruptores | Cualquier pieza paso a paso |
 
@@ -176,6 +178,8 @@ Un paso (todos comparten el mismo `doc`):
 - La estructura que cambia con un interruptor (por ejemplo "con cuerpo (POST)") se resuelve en `build(opts)` devolviendo otro `doc` y otros pasos.
 - **Para código** (un `createSlice`, una clase): `code: true` colorea la sintaxis con `DK.highlight` (mismos roles que el panel de código), no parte las líneas y enfoca la **línea completa** con un borde del color de la parte. `layout: 'stack'` pone el código a todo el ancho y la explicación debajo; úsalo cuando las líneas pasan de ~45 caracteres. Las dos opciones son opcionales y no cambian las piezas existentes. Ejemplo: `static/interactive/computacion-3/semana-12/anatomia-slice/`.
 
+- **`all: true` en un paso:** colorea **todas** las partes a la vez (sin atenuar), para un resumen o para "cortar por colores". Ejemplo: `static/interactive/seminario-de-i-d-i/semana-11/responsabilidades-agenda/` (un archivo de 40 líneas pintado por responsabilidad: datos, controladores, acciones, formulario, lista).
+
 Pieza de referencia: `candidates/static/interactive/computacion-2/semana-1/peticion-http/index.html`.
 
 ## dk-tree.js: `DK.tree(opciones)`
@@ -208,6 +212,39 @@ Un paso (cada paso se describe completo; roles, etiquetas y `sub` no se heredan)
 - Un `path` con varios saltos etiqueta cada rama con el mismo `label`: es justo lo que enseña el prop drilling (la misma prop pasando nivel por nivel).
 - Solo se dibujan las flechas del paso actual.
 - Opciones de tamaño: `nodeW` (168), `nodeH` (52), `levelGap` (118), `top` (40). Con 5 hojas a `width: 1000` caben nombres de ~18 caracteres.
+- **Roles `dirty`, `build`, `reuse`, `self`** (los usa `dk-phone.js` para el árbol de widgets): `dirty` = fallo (naranja, relleno fuerte), `build` = control (azul, relleno fuerte), `reuse` = éxito (verde), `self` = datos (violeta). Sus textos de leyenda están en `ROLE_TXT` (`legend: ['dirty', 'build', 'reuse']`).
+- **Rol `hide`** (`roles: { panel: 'hide' }`): el nodo y la rama que llega a él **todavía no existen** en ese paso (opacidad 0). Sirve para que aparezca una rama nueva cuando llega un requisito nuevo (el `PanelResumen` del prop drilling). El hueco queda reservado: el árbol no se re-distribuye. Ejemplo: `static/interactive/seminario-de-i-d-i/semana-12/elevacion-agenda/`.
+
+## dk-phone.js: `DK.phone(opciones)`
+
+Escena para `DK.player` (con `wide: true`; **requiere también `dk-tree.js`**): **a la izquierda un teléfono** con la pantalla de la app (HTML con estilo Material, siempre en tema claro como una pantalla real). **A la derecha**: el **árbol de widgets dibujado como árbol** (`DK.tree`: nodos y ramas; cada nodo se marca `dirty`, `build()`, `reutilizado` si es `const` o `se repinta solo`, con una leyenda en la cabecera) y, debajo y lado a lado, el inspector del objeto `State` (campos con tipo y valor; lo que cambia se resalta) y la **consola** de `debugPrint`. Arriba, el camino del evento (`Toque > Callback > setState > dirty > build() > Pantalla`) con su aviso en la misma fila. El panel de código lo pone `DK.player` (`code`; en estas piezas se reduce a 150 px de alto).
+
+**Que quepa en pantalla:** en escritorio la pieza mide ~820 a 960 px (todo a la vista en una laptop); en celular (< 700 px) el árbol y (inspector + consola) pasan a **dos pestañas** con un punto que avisa cuál cambió en el paso, y la pieza baja de ~1700 a ~1100 px. Un árbol de 4 niveles y 4 hojas ya es el máximo cómodo: quita raíces que no enseñan nada (se omitió `MaterialApp`; `Scaffold` basta como ancestro que no se reconstruye).
+
+```js
+scene: function (svg, stage, api) {          // el player pasa un tercer argumento: api.code([líneas]) resalta código
+  return DK.phone({
+    stage: stage, api: api,
+    title: 'Contador', height: 360,          // AppBar y alto de la pantalla en px (por defecto 446)
+    className: '_ContadorPageState',         // cabecera del inspector
+    init: { _contador: 0 },                  // estado inicial (solo JSON); freeInit: estado con el que arranca el modo libre
+    fields: [{ key: '_contador', type: 'int', show: function (v, s) { return String(v); } }],   // show es opcional
+    initLog: ['--> build() ejecutado. Valor actual: 0'],
+    buildLog: function (s) { return '--> build() ejecutado. Valor actual: ' + s._contador; },
+    tree: [ { id: 'page', label: 'ContadorPage', d: 2, state: true }, { id: 't1', label: "Text('...')", d: 4, k: 'const' } ],
+    view: function (s) { return '<p class="pf-big">' + s._contador + '</p><button class="pf-btn" data-act="inc">Incrementar</button>'; },
+    actions: { inc: function (s, arg) { s._contador++; return { set: true, code: [4, 5, 6, 7] }; } },   // modo libre
+    input: function (s, key, value) { s.nombre = value; return { self: 'tfNombre', note: '...', code: [3] }; },
+  });
+}
+```
+
+- **`tree`:** filas **en orden de recorrido** con `d` (profundidad; el padre de una fila es la anterior con un nivel menos), `label` (corto: cabe en ~14 caracteres), `sub` (detalle en una segunda línea; string, o función `(estado) => texto` para detalles dinámicos), `state: true` (el widget dueño del `State`: es el que se marca `dirty` y cuyo subárbol se reconstruye), `k: 'const'` (se reutiliza) y `when: (estado) => bool` (fila condicional: oculta también a sus descendientes). Opciones del árbol: `treeWidth` (por defecto se calcula con el número de hojas). Antes del primer paso, `introNote` (o un texto por defecto) explica el camino vacío. Las marcas se calculan solas: `tree: 'dirty'` marca al dueño; `tree: 'build'` marca al dueño y a sus descendientes (los `const` salen `reutilizado` y sus hijos no se marcan); también acepta un objeto `{ id: 'dirty' | 'build' | 'reuse' | 'self' }`.
+- **Pantalla (`view`)**: usa las clases `pf-*` de `dk-base.css`: `pf-label`, `pf-big`, `pf-h`, `pf-btn` (+ `out`, `warn`), `pf-field` (campo con etiqueta flotante; `<label class="pf-field"><span>Nombre</span><input data-in="nombre"></label>`), `pf-card`, `pf-result`, `pf-row`, `pf-chip`, `pf-tile` (con `.av`, `.tx` y un `button.x` para eliminar), `pf-empty`. Iconos: `DK.phone.icon('add' | 'check' | 'refresh' | 'del' | 'person' | 'mail' | 'phone')`; `DK.phone.esc(texto)` escapa HTML. **Tocable** = `data-act="accion"` (más `data-arg="id"`); **campo de texto** = `data-in="clave"`.
+- **Pasos guiados** (cada paso hereda `state` y `log` de los anteriores; el resto se describe completo): `state` (campos que cambian), `changed` (filas resaltadas), `stale: true` (la pantalla **aún no se reconstruyó**: sigue mostrando el estado anterior; es lo que enseña que "dato" y "pantalla" no cambian a la vez), `tap: 'inc' | 'del:2'` (un dedo toca ese elemento), `stage` (chip activo del camino, 0 a 5), `block` (chip donde el flujo se corta: `setState` que no se llamó), `tree`, `log`, `snack` (un SnackBar), `note` (aviso bajo el camino), `dwell` (ms de lectura en reproducción automática) y `msgs: []` (el player lo necesita).
+- **Modo libre** (`free: true` en un paso): el estudiante toca la pantalla y las `actions` corren de verdad, animando el camino chip a chip. Una acción muta el estado y devuelve `{ set, code, log, snack, note }`: `set: true` recorre todo el camino (setState, dirty, build, pantalla); `set: false` lo corta en `setState` (la variable cambia, la pantalla no). `input` atiende `data-in`: escribir **no** llama a `setState` y marca la fila del `TextField` (`self`). El botón **Restablecer** reinicia el estado.
+- **Qué enseña bien:** que `setState` es avisar y no solo cambiar; que escribir en un `TextField` no reconstruye la página; qué subárbol se reconstruye y qué `const` se reutiliza. Piezas de referencia: `static/interactive/seminario-de-i-d-i/semana-11/` (`setstate-en-accion`, `formulario-registro`, `agenda-monolitica`).
+- Ancho: en pantallas de menos de 700 px el teléfono se apila sobre los paneles.
 
 ## dk-compare.js: `DK.compare(opciones)`
 
@@ -266,9 +303,14 @@ code: { title: 'HelloServlet.java', text: CODIGO_COMO_TEXTO },   // en el player
 
 `code` también puede ser una **función** `(opts) => ({ title, text })` cuando el código cambia con los interruptores (por ejemplo, con y sin `@Transactional`): el panel se redibuja en cada cambio y las líneas se numeran igual en todas las variantes (reemplaza una línea, no agregues ni quites líneas, para que los números de los pasos sigan valiendo). Pieza de referencia: `candidates/static/interactive/computacion-2/semana-6/transaccion-transferencia/index.html`.
 
-**Colores del código por rol** (`DK.highlight`, con leyenda automática en la cabecera del panel; se apaga con `legend: false`): **clase o tipo** (verde azulado, negrita: `Product`, `Pageable`), **método** (marrón: lo que va seguido de `(`), **objeto o variable** (morado: `productRepository`, `page`), **palabra clave** (azul, negrita: `public`, `new`, `throw`), texto, número, anotación y comentario (gris cursiva). Reglas del tokenizador: mayúscula inicial = clase; palabra + `(` = método (tras `new`, es la clase del constructor); el resto en minúscula = objeto o variable. Los tokens `--dk-s-kw/ty/fn/ob/st/nu/an` están en `dk-base.css` con variante oscura. Si el código de un capítulo usa otro lenguaje (XML, SQL), ampliar `DK.highlight` o agregar un resaltador por lenguaje.
+**Colores del código por rol** (`DK.highlight`, con leyenda automática en la cabecera del panel; se apaga con `legend: false`): **clase o tipo** (verde azulado, negrita: `Product`, `Pageable`), **método** (marrón: lo que va seguido de `(`), **objeto o variable** (morado: `productRepository`, `page`), **palabra clave** (azul, negrita: `public`, `new`, `throw`), texto, número, anotación y comentario (gris cursiva). Reglas del tokenizador: mayúscula inicial = clase; palabra + `(` = método (tras `new`, es la clase del constructor); el resto en minúscula = objeto o variable. Los tokens `--dk-s-kw/ty/fn/ob/st/nu/an` están en `dk-base.css` con variante oscura. Si el código de un capítulo usa otro lenguaje (XML, SQL), ampliar `DK.highlight` o agregar un resaltador por lenguaje. **Dart:** `late` y `required` son palabras clave, y `int double bool num dynamic` se pintan como tipo (no como variable); `String`, `List`, `Widget` ya salen como clase por la mayúscula inicial. Para números de línea que no se desfasen al editar el código, no los escribas a mano: define las líneas en un arreglo y busca por texto (`at('initState')`, `rng('setState(() {', "_mensaje = 'Usuario")`), lanzando un error si el rango queda vacío.
 
 El panel tiene alto limitado (~196 px) y se **desplaza solo** hasta la primera línea resaltada; trae resaltado de sintaxis mínimo (`DK.highlight`: palabras clave, textos, anotaciones, comentarios). Cuidado al numerar: cuenta las líneas en blanco. Pieza de referencia: `candidates/static/interactive/computacion-2/semana-1/ciclo-vida-servlet/index.html`.
+
+**Opciones y campos extra del player:**
+- `scene(svg, stage, api)`: el **tercer argumento** `api` trae `api.code([líneas])`, para que una escena interactiva (`DK.phone` en modo libre) resalte líneas del panel de código por su cuenta.
+- `paso.dwell` (ms): tiempo de lectura de un paso en la reproducción automática, cuando el paso no tiene mensajes que animar (por defecto 1700 ms, pensado para flechas).
+- **URL con `#fase=N`** (`index.html#fase=3`): la pieza se abre en la fase N (1 = primera). Sirve para usar **la misma pieza en dos secciones** de un capítulo (elevación de estado en una y prop drilling en otra) sin duplicarla. Ojo al probar: navegar a la misma URL con otro `#` no recarga la página.
 
 Contrato de una escena para `DK.player`: `scene(svg, stage)` devuelve un objeto con `setSteps(steps)`, `render(i, animate)` (que devuelve `{ animMs }`) y `msgDuration`; cada paso trae `phase`, `title`, `caption` y `msgs` (para calcular la duración). `DK.sequence` usa el `svg`; `DK.compare` ignora el `svg` y llena `stage`.
 

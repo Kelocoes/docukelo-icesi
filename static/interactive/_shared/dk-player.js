@@ -13,6 +13,7 @@
  *     code: { title: 'HelloServlet.java', text: '...codigo...' },   // opcional: panel de código (o una función (opts) => {title, text}
  *                                                                    // si el código cambia con los interruptores); cada paso resalta
  *                                                                    // sus líneas con step.code = [5, 6, 7] (desde 1)
+ *     // URL con #fase=3: abre la pieza directamente en la fase 3
  *     wide: true,   // opcional: sin topes de 760/640 px; la pieza ocupa todo el ancho del iframe (dibujar con viewBox ~1000)
  *   });
  *
@@ -85,6 +86,17 @@ DK.player = function (o) {
     return i < 0 ? steps.length : i;
   }
 
+  // resalta lineas del panel de codigo (numeradas desde 1) y lo desplaza hasta la primera; tambien lo usan las escenas
+  // interactivas (DK.phone en modo libre) a traves de api.code(lineas)
+  function markCode(lines, animate) {
+    if (!codeBox) return;
+    lines = lines || [];
+    codeLines.forEach(function (n, k) { n.classList.toggle('on', lines.indexOf(k + 1) >= 0); });
+    // el panel de codigo tiene alto limitado: se desplaza solo para dejar a la vista las lineas resaltadas
+    var firstOn = codeLines.filter(function (n) { return n.classList.contains('on'); })[0];
+    if (firstOn) codeBox.scrollTo({ top: Math.max(0, firstOn.offsetTop - 40), behavior: animate && !DK.reduced ? 'smooth' : 'auto' });
+  }
+
   function show(i, animate) {
     var step = steps[i];
     scene.render(i, animate);
@@ -93,10 +105,7 @@ DK.player = function (o) {
       b.className = p === phase ? 'on' : (p < phase ? 'done' : '');
     });
     [].forEach.call(dots.children, function (d, k) { d.className = k === i ? 'cur' : (k < i ? 'past' : ''); });
-    codeLines.forEach(function (n, k) { n.classList.toggle('on', !!step && (step.code || []).indexOf(k + 1) >= 0); });
-    // el panel de codigo tiene alto limitado: se desplaza solo para dejar a la vista las lineas resaltadas
-    var firstOn = codeLines.filter(function (n) { return n.classList.contains('on'); })[0];
-    if (firstOn) codeBox.scrollTo({ top: Math.max(0, firstOn.offsetTop - 40), behavior: animate && !DK.reduced ? 'smooth' : 'auto' });
+    markCode(step ? step.code : [], animate);
     var intro = o.intro || {};
     ph.textContent = step ? (o.kicker ? o.kicker(step.phase) : 'Fase ' + (step.phase + 1) + ' · ' + o.phases[step.phase]) : (intro.kicker || '');
     ttl.textContent = step ? step.title : (intro.title || '');
@@ -118,14 +127,19 @@ DK.player = function (o) {
     if (ctrl) ctrl.go(keepAt, false);
   }
 
-  scene = o.scene(svgEl, stage); // una escena puede ignorar el svg y llenar `stage` con su propio contenido (ver dk-compare.js)
+  // una escena puede ignorar el svg y llenar `stage` con su propio contenido (ver dk-compare.js); el tercer argumento
+  // `api` le deja resaltar lineas del panel de codigo por su cuenta (api.code([5, 6]))
+  scene = o.scene(svgEl, stage, { code: function (lines) { markCode(lines, true); } });
   ctrl = DK.stepper({
     count: function () { return steps.length; },
     show: show,
-    dwell: function (i) { return steps[i].msgs.length * scene.msgDuration + 1700; },
+    dwell: function (i) { return steps[i].dwell || steps[i].msgs.length * scene.msgDuration + 1700; },   // step.dwell: tiempo propio de lectura (ms)
     onPlay: function (on) { play.textContent = on ? 'Pausar' : 'Reproducir'; },
   });
   rebuild(-1);
+  // #fase=3 en la URL del iframe abre la pieza en esa fase (1 = primera): sirve para usar la misma pieza en dos secciones del capitulo
+  var hashPhase = /[#&]fase=(\d+)/.exec(location.hash);
+  if (hashPhase && o.phases[Number(hashPhase[1]) - 1] !== undefined) ctrl.go(firstStepOfPhase(Number(hashPhase[1]) - 1), false);
 
   prev.onclick = ctrl.prev;
   next.onclick = ctrl.next;
