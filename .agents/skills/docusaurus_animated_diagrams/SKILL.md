@@ -82,6 +82,8 @@ Una animación no es decoración: cada movimiento debe revelar un **orden** o un
 
 Recorrer todos los pasos, activar cada interruptor, **ambos temas** (claro y oscuro), 800 px y 360 px de ancho, y el espacio con el texto de arriba y de abajo. Para integrar en el sitio ver los docs en español: `npx docusaurus start --port 3001 --locale es --no-open` (el del 3000 del profesor sirve `en`). Capturas de pantalla, no solo comprobar el DOM.
 
+**Prueba automática:** además de la revisión visual, corre `npm run test:pieces -- <parte-de-la-ruta>` (o sin filtro para todas). Recorre los pasos, los interruptores, el tema oscuro y la pantalla completa y falla con errores de JavaScript o desbordes. **Es obligatorio correrlo completo cuando cambies algo de `static/interactive/_shared/`**, porque todas las piezas usan el kit.
+
 ### 4. Integrar solo con la aprobación del profesor
 
 La integración es mecánica y se puede **delegar a otro agente**: ver `references/integration-checklist.md` (pasos, verificación, restricciones y cómo comprobar su reporte). Resumen:
