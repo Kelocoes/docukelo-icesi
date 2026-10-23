@@ -177,7 +177,7 @@ Envuelve un diagrama Mermaid y agrega un modal con zoom y arrastre para diagrama
 Para diagramas pequeños basta un bloque ```` ```mermaid ```` normal.
 
 ### Vista previa con daisyUI (`<DaisyPreview>`)
-Renderiza en un iframe el ejemplo número `id` de la actividad de componentes daisyUI (`desarrollo-entornos-digitales-web/semana-12`): `<DaisyPreview id={1} height="135px" />`. Carga Tailwind y daisyUI desde un CDN en el navegador, así que necesita internet. Es específico de esa actividad; para mostrar otra interfaz usa `<BrowserWindow>` o una pieza interactiva.
+Renderiza en un iframe el ejemplo número `id` de la actividad de componentes daisyUI (`desarrollo-entornos-digitales-web/semana-12`): `<DaisyPreview id={1} height="135px" />`. Usa un CSS precompilado (`static/css/daisy-preview.css`, Tailwind 3 + daisyUI 4 con el tema `icesi`, ~14 KB comprimido) en vez de los CDN de Tailwind y daisyUI. **Si agregas o cambias clases en los ejemplos de `src/components/DaisyPreview/index.jsx`, ejecuta `npm run build:daisy-preview` y sube el CSS generado**; si no, las clases nuevas no tendrán estilo. La configuración está en `scripts/daisy-preview/`. Solo las fuentes siguen viniendo de Google Fonts. Es específico de esa actividad; para mostrar otra interfaz usa `<BrowserWindow>` o una pieza interactiva.
 
 ### Gráficos interactivos (`<InteractiveFrame>`)
 Para piezas de `static/interactive/` con botón de pantalla completa. Ver la sección 8.

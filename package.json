@@ -13,6 +13,7 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "lint:docs": "node scripts/lint-docs.mjs",
+    "build:daisy-preview": "tailwindcss -c scripts/daisy-preview/tailwind.config.cjs -i scripts/daisy-preview/input.css -o static/css/daisy-preview.css --minify",
     "scaffold-week": "node scripts/scaffold-week.mjs",
     "prepare": "node scripts/install-hooks.mjs || exit 0"
   },
@@ -32,7 +33,9 @@
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.10.2",
-    "@docusaurus/types": "^3.10.2"
+    "@docusaurus/types": "^3.10.2",
+    "daisyui": "^4.12.10",
+    "tailwindcss": "^3.4.17"
   },
   "browserslist": {
     "production": [

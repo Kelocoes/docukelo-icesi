@@ -1,60 +1,14 @@
 import React from 'react';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
-const TAILWIND_DAISYUI_HEAD = `
+// El CSS (Tailwind 3 + daisyUI 4 con el tema "icesi", solo las clases que usan los ejemplos) se genera con
+// `npm run build:daisy-preview` (scripts/daisy-preview/) y vive en static/css/daisy-preview.css. Si agregas o cambias
+// clases en COMPONENTS_HTML, vuelve a generarlo y sube el CSS. Ya no se carga el CDN de Tailwind ni el CSS completo de daisyUI.
+const buildHead = (cssUrl) => `
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
-          colors: {
-            'icesi-blue': '#5454e9',
-            'icesi-yellow': '#e4eb60',
-            'icesi-green': '#4cb979',
-            'icesi-purple': '#865cf0',
-            'icesi-orange': '#e9683b',
-            'icesi-gray-1': '#88898c',
-            'icesi-gray-2': '#cecfd4',
-          }
-        }
-      },
-      daisyui: {
-        themes: [
-          {
-            icesi: {
-              "primary": "#5454e9",
-              "primary-content": "#ffffff",
-              "secondary": "#865cf0",
-              "secondary-content": "#ffffff",
-              "accent": "#4cb979",
-              "accent-content": "#ffffff",
-              "neutral": "#1e1e2f",
-              "neutral-content": "#ffffff",
-              "base-100": "#ffffff",
-              "base-200": "#f8f9fc",
-              "base-300": "#cecfd4",
-              "base-content": "#1a1a24",
-              "info": "#5454e9",
-              "info-content": "#ffffff",
-              "success": "#4cb979",
-              "success-content": "#ffffff",
-              "warning": "#e4eb60",
-              "warning-content": "#1a1a24",
-              "error": "#e9683b",
-              "error-content": "#ffffff",
-            },
-          },
-        ],
-      },
-    }
-  </script>
+  <link href="${cssUrl}" rel="stylesheet" type="text/css" />
   <style>
     * { box-sizing: border-box; }
     body {
@@ -511,6 +465,9 @@ const DEFAULT_HEIGHTS = {
 };
 
 export default function DaisyPreview({ id, height }) {
+  // Ruta con baseUrl (no absoluta: site.url apunta a GitHub Pages y no al origen real). Un srcDoc resuelve las rutas
+  // que empiezan con / contra la pagina que lo contiene, asi que funciona en local, en Render y en GitHub Pages.
+  const cssUrl = useBaseUrl('/css/daisy-preview.css');
   const compId = Number(id);
   const rawHtml = COMPONENTS_HTML[compId] || '<p>Componente no encontrado</p>';
   const finalHeight = height || DEFAULT_HEIGHTS[compId] || '200px';
@@ -519,7 +476,7 @@ export default function DaisyPreview({ id, height }) {
 <html lang="es" data-theme="icesi">
 <head>
   <meta charset="UTF-8">
-  ${TAILWIND_DAISYUI_HEAD}
+  ${buildHead(cssUrl)}
 </head>
 <body>
   ${rawHtml}
@@ -573,7 +530,7 @@ export default function DaisyPreview({ id, height }) {
           display: 'block',
           background: '#f8f9fc'
         }}
-        sandbox="allow-scripts"
+        sandbox=""
       />
     </div>
   );
