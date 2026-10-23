@@ -253,6 +253,7 @@ Some explanations are understood better by **moving and touching** than by looki
     author: Nombre Apellido
   ```
 * **Editar esta pagina**: apunta a `https://github.com/Kelocoes/docukelo-icesi/tree/main/` + ruta del archivo; en `/en/` apunta a la traduccion dentro de `i18n/en/` (`editLocalizedFiles`).
+* **Redirects de URLs viejas** (`@docusaurus/plugin-client-redirects`, lista en `src/redirects.js`): cuando renombres o muevas un documento que ya estuvo publicado, agrega `['/docs/<ruta vieja>', '/docs/<ruta nueva>']` a `OLD_URLS` (la URL no lleva el prefijo numérico ni la extensión, pero sí las carpetas). Así los enlaces guardados y los buscadores no dan 404. Las redirecciones que solo cambian en mayúsculas (`/FastAPI` a `/fastapi`) se activan únicamente en Linux, porque el plugin falla si el archivo ya existe y Windows/macOS no distinguen mayúsculas; por eso en local se omiten y en el despliegue (Render, Docker, GitHub Actions) sí corren. Las páginas que se eliminan sin reemplazo no llevan redirect.
 * **Build estricto**: `onBrokenLinks`, `onBrokenAnchors` y `onBrokenMarkdownLinks` estan en `throw`: un enlace o ancla rota hace fallar el build (y el despliegue). Valida siempre con `npm run build`. Node 20 o superior (`.nvmrc`), y `future.faster` (Rspack) activo; si algun dia un build falla solo por eso, desactivalo en `docusaurus.config.js`.
 
 ---

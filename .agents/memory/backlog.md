@@ -43,7 +43,7 @@ Estado verificado contra el repositorio; el análisis completo vive en `temp/` d
 - [ ] Comprobar en Render y GitHub Pages el contador de lectura (`n/55` en computación 2), registrar el sitemap en Search Console y revisar "Última actualización" en Render.
 
 **Menor**
-- [ ] `plugin-client-redirects` para las URLs que cambiaron de mayúsculas a minúsculas.
+- [x] `plugin-client-redirects` para las URLs que cambiaron de mayúsculas a minúsculas (hecho: `src/redirects.js`, 35 redirecciones reconstruidas desde el historial de Git; ver la guía, sección 9).
 - [ ] `DaisyPreview`: fijar la versión de Tailwind/daisyUI o empaquetar el CSS (hoy usa CDN sin SRI).
 - [ ] Carpetas vacías del menú: `seminario-de-i-d-i/semana-13` a `16`.
 - [ ] Revisión humana de una muestra de las `description` y los `title=` generados por modelos.
