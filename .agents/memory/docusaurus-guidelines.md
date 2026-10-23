@@ -302,3 +302,10 @@ Comandos: `npm run lint:docs` (resumen), `-- --verbose` (archivo:linea), `-- --r
 * Dependabot (`.github/dependabot.yml`) abre PR semanales de npm (agrupados: `@docusaurus/*` juntos y el resto de menores/parches), y mensuales de GitHub Actions y de las imagenes del Dockerfile. Las versiones mayores de React y Docusaurus se actualizan a mano.
 * La auditoria del 2026-10-20 dejo 68 avisos (0 criticos, 41 altos, 22 moderados, 5 bajos), todos en herramientas de build/desarrollo salvo `katex` (bajo).
 
+---
+
+## 13. Pruebas automáticas
+
+* **Componentes React** (`npm test`, Vitest + Testing Library + jsdom): las pruebas viven en `tests/components/` y cubren `Quiz`, `PdfViewer`, `InteractiveFrame`, `FocusModeButton`, `CardGrid` y `StepByStep`. La configuración está en `vitest.config.mjs`; los módulos de Docusaurus (`@docusaurus/router`, `@docusaurus/useDocusaurusContext`) se sustituyen por mocks en `tests/mocks/`. Si creas un componente nuevo en `src/components/`, agrega su archivo `tests/components/<Nombre>.test.jsx`; si tocas uno existente, corre `npm test` antes del commit. `npm run test:watch` vuelve a correr al guardar.
+* **Piezas interactivas** (`npm run test:pieces [filtro]`, `scripts/test-pieces.mjs`): abre cada `static/interactive/**/index.html` en un navegador real (Chrome, Edge o el Chromium de Playwright, vía `playwright-core`), recorre todos los pasos, prueba los interruptores, repite con el tema oscuro y la carga en un iframe de pantalla completa (`data-dk-fixed`). Falla si hay errores de JavaScript, recursos locales que no cargan, una pieza que no dibuja o desbordes en pantalla completa. **Córrelo siempre que cambies algo de `static/interactive/_shared/`** (el kit lo usan todas las piezas) y al agregar una pieza nueva. En un equipo sin navegador: `npx playwright install chromium`.
+* Los tests no reemplazan la revisión visual de una pieza nueva (capturas en claro y oscuro, 800 px y 360 px); solo detectan que algo se rompió.

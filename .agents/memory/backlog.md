@@ -51,7 +51,11 @@ Estado verificado contra el repositorio; el análisis completo vive en `temp/` d
 
 **Mayor**
 - [ ] Idiomas: `i18n/en/code.json` y navbar traducido; decidir qué cursos mantener en inglés (hoy 70 %; sin traducir: Diseñando con Algoritmos, IAG, Flutter).
-- [ ] Accesibilidad y rendimiento: Lighthouse o `axe` sobre unas páginas, `plugin-ideal-image` o `sharp` para PNG/JPG, comprimir PDFs (49 MB, 7 de más de 2 MB).
-- [ ] CI: build en PR, Lighthouse CI o `pa11y-ci`, `npm audit`; pruebas de `Quiz`, `PdfViewer` y `FocusModeButton`.
-- [ ] Piezas interactivas: reglas `dk-fs` (pantalla completa) para `DK.layers`, `DK.sequence` y el resto; prueba E2E con Playwright de cada `index.html`.
+- [ ] Accesibilidad: Lighthouse o `axe` sobre unas páginas. *(Decidido: no por ahora.)* Contraste de la paleta como texto: amarillo `#e4eb60` (1,3:1) y verde `#4cb979` (2,5:1) no cumplen sobre blanco; gris `#88898c` y naranja `#e9683b` solo sirven para texto grande.
+- [ ] Imágenes: recomprimir en el mismo lugar con `sharp` (PNG/JPG sin pérdida primero, guardando antes los originales fuera de git; comparar las 12 de más de 300 KB) y evaluar WebP después, que obliga a actualizar referencias en `docs/` y `i18n/en/`. *(Decidido: no por ahora.)*
+- [ ] PDFs (49 MB, 7 de más de 2 MB): `loading="lazy"` en el iframe de `PdfViewer` y compresión con Ghostscript (`/ebook`). *(Descartado por ahora.)*
+- [ ] CI: build en PR, Lighthouse CI o `pa11y-ci`, `npm audit`; ejecutar `npm test` y `npm run test:pieces` en el workflow.
+- [x] Pruebas de componentes (`npm test`: Quiz, PdfViewer, InteractiveFrame, FocusModeButton, CardGrid, StepByStep) y prueba de humo de las piezas interactivas (`npm run test:pieces`); ver la sección 13 de la guía.
+- [x] Pantalla completa para las piezas de figura SVG (`DK.layers`, `DK.tree`, `DK.sequence`, `DK.radial`) y prueba de humo de cada `index.html` con Playwright (`npm run test:pieces`).
+- [ ] Pantalla completa para las piezas de escenario HTML (`DK.anatomy`, `DK.table`, `DK.compare`, `DK.phone`): hay que diseñar pieza por pieza cómo reorganizar su contenido con más espacio; hoy se ven centradas y se desplazan. Siguen como `<iframe>`. *(Decidido: no por ahora.)*
 - [ ] Skills: árbol de decisión único entre `docusaurus_mermaid_svg`, `resource_visualizer`, `pedagogical_svg_designer` y `docusaurus_animated_diagrams`; skills de crear semana, traducir es a en y slides con PDF.
