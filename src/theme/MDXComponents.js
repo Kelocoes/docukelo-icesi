@@ -3,7 +3,6 @@ import React from 'react';
 import MDXComponents from '@theme-original/MDXComponents';
 import BrowserWindow from '@site/src/components/BrowserWindow';
 import IframeWindow from '@site/src/components/BrowserWindow/IFrameWindow';
-import MermaidExample from '@site/src/components/MermaidExample/MermaidExample';
 import PdfViewer from '@site/src/components/PdfViewer/PdfViewer';
 import { StepByStep, Step } from '@site/src/components/StepByStep';
 import { CardGrid, Card } from '@site/src/components/CardGrid';
@@ -22,7 +21,6 @@ export default {
     // Register our custom components globally
     BrowserWindow,
     IframeWindow,
-    MermaidExample,
     PdfViewer,
     StepByStep,
     Step,

@@ -174,7 +174,7 @@ Envuelve un diagrama Mermaid y agrega un modal con zoom y arrastre para diagrama
 <ZoomableMermaid value={`flowchart LR
     A[Cliente] --> B[Servidor]`} />
 ```
-Para diagramas pequeños basta un bloque ```` ```mermaid ```` normal. `MermaidExample` es una demostración de rutas mínimas que hoy no se usa en ningún documento: no lo uses como plantilla.
+Para diagramas pequeños basta un bloque ```` ```mermaid ```` normal.
 
 ### Vista previa con daisyUI (`<DaisyPreview>`)
 Renderiza en un iframe el ejemplo número `id` de la actividad de componentes daisyUI (`desarrollo-entornos-digitales-web/semana-12`): `<DaisyPreview id={1} height="135px" />`. Carga Tailwind y daisyUI desde un CDN en el navegador, así que necesita internet. Es específico de esa actividad; para mostrar otra interfaz usa `<BrowserWindow>` o una pieza interactiva.

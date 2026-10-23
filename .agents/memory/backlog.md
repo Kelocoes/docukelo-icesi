@@ -48,7 +48,6 @@ Estado verificado contra el repositorio; el análisis completo vive en `temp/` d
 - [ ] Carpetas vacías del menú: `seminario-de-i-d-i/semana-13` a `16`.
 - [ ] Revisión humana de una muestra de las `description` y los `title=` generados por modelos.
 - [ ] Contrastar `computacion-3/semana-12/03-configuracion-redux-nextjs` con la rama `week-12/next-redux` (ruta del slice y nombre del thunk).
-- [ ] `MermaidExample` no se usa en ningún documento: eliminarlo o convertirlo en ejemplo real.
 
 **Mayor**
 - [ ] Idiomas: `i18n/en/code.json` y navbar traducido; decidir qué cursos mantener en inglés (hoy 70 %; sin traducir: Diseñando con Algoritmos, IAG, Flutter).
