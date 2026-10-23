@@ -30,11 +30,10 @@ Cualquier sistema de control de acceso se fundamenta en responder de manera estr
 
 Recorre el diagrama paso a paso: primero las dos preguntas, luego el ejemplo de ana. Activa los interruptores para ver cómo falla cada puerta (401 y 403).
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-9/authn-vs-authz/index.html"
   title="Autenticación y autorización: dos puertas en orden, con sus errores 401 y 403"
-  style={{ width: '100%', height: 660, border: 0 }}
-  loading="lazy"
+  height={660}
 />
 
 ### A. Autenticación (Authentication) — *¿Quién eres?*

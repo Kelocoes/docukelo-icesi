@@ -117,22 +117,20 @@ At this point it is worth talking about what a Servlet is. A Servlet is a Java c
 
 Below is a diagram that shows where a servlet sits inside a web project. Go through it step by step: first you get to know the pieces, and then you follow the journey of a request to the servlet and back.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-1/servlet-en-tomcat/index.html"
   title="The servlet inside Tomcat: Coyote, Catalina and the servlets"
-  style={{ width: '100%', height: 640, border: 0 }}
-  loading="lazy"
+  height={640}
 />
 
 As you can see, servlets usually live inside the Web Server, in this case Tomcat, and are invoked by the servlet container when an HTTP request matching their configuration is received.
 
 In the lifecycle of a servlet you can observe the following. As you move through the diagram, notice which line of the `HelloServlet` code runs at each step:
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-1/ciclo-vida-servlet/index.html"
   title="Servlet lifecycle: init, doGet and destroy"
-  style={{ width: '100%', height: 880, border: 0 }}
-  loading="lazy"
+  height={880}
 />
 
 - The servlet is loaded into the Web Container when a request is received.

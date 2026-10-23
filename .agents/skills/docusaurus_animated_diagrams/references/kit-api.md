@@ -332,7 +332,8 @@ Para ver una pieza compleja con mucho más espacio, el sitio tiene el componente
 - Propiedades: `src`, `title`, `height` (alto en la página; por defecto 700). Pinta el mismo `<iframe>` de siempre y, arriba a la derecha, el botón "Pantalla completa".
 - Al pulsarlo abre un `<dialog>` modal (96 vw por 94 vh, fondo oscurecido; Esc, "Cerrar" o un clic fuera lo cierran; bloquea el desplazamiento de la página). La pieza del diálogo **se crea solo al abrir** y se elimina al cerrar, y su `<iframe>` lleva `data-dk-fixed`.
 - Contrato con la pieza: `DK.autoHeight()` detecta `data-dk-fixed`, no ajusta el alto y pone la clase **`dk-fs`** en `<html>`. El alto del iframe es ahora el de la ventana, así que `100vh` dentro de la pieza vale ese alto.
-- **Piezas sin cambios:** funcionan igual en el diálogo (tarjeta centrada, con desplazamiento si hace falta); solo no aprovechan el espacio extra. Para que lo aprovechen, agrega reglas bajo `.dk-fs`.
+- **Reglas genéricas (`dk-base.css`):** toda pieza de `DK.player` cuya figura es un `<svg>` directo en el escenario (`DK.layers`, `DK.tree`, `DK.sequence`) ya aprovecha el diálogo sin tocar su `index.html`: la figura a la izquierda llenando el alto de la ventana y, a la derecha, el texto del paso, los controles y el código. La pieza circular (`DK.radial`) trae sus propias reglas en `dk-radial.css`.
+- **Piezas con escenario HTML** (`DK.anatomy`, `DK.table`, `DK.compare`, `DK.phone`): usan el ancho completo del diálogo (la tarjeta pierde su tope de 760 px) pero no reorganizan su contenido. No las conviertas a `<InteractiveFrame>` salvo que se les agreguen reglas `dk-fs` propias y se pruebe en una captura.
 - **Cómo adaptar una pieza** (el ejemplo real está en `dk-radial.css`): haz que el cuerpo ocupe el alto de la ventana y que la fila de la figura y la del código se estiren, en vez de restar alturas a mano:
 
 ```css
@@ -346,7 +347,7 @@ Para ver una pieza compleja con mucho más espacio, el sitio tiene el componente
 }
 ```
 
-Restringe esas reglas al diseño ancho (`min-width: 821px`): en una pantalla angosta la pieza se apila y no debe forzarse a 100 vh. `DK.layers`, `DK.sequence` y el resto aún no tienen reglas `dk-fs`: se agregan a `dk-base.css` cuando una de esas piezas lo necesite, probándolo en una captura con la ventana grande.
+Restringe esas reglas al diseño ancho (`min-width: 821px`): en una pantalla angosta la pieza se apila y no debe forzarse a 100 vh. Si una escena nueva (o una de las de escenario HTML) necesita reglas `dk-fs`, agrégalas a `dk-base.css` (o a su propio `dk-<escena>.css`) con el mismo patrón y pruébalas en una captura con la ventana grande (por ejemplo 1824x873).
 
 ## Tokens y clases de `dk-base.css`
 

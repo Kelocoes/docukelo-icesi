@@ -16,11 +16,10 @@ When a client sends a request to an endpoint in our application, the request int
 
 Walk through the diagram step by step: first you meet each piece, then you follow a numbered login and, finally, a request that is already authenticated.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-9/spring-security-filterchain/index.html"
   title="Spring Security architecture: filter chain, AuthenticationManager, provider, UserDetailsService and SecurityContext"
-  style={{ width: '100%', height: 780, border: 0 }}
-  loading="lazy"
+  height={780}
 />
 
 ---

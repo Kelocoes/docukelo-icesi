@@ -86,11 +86,10 @@ Calls to `setState` do not synchronously alter the variable on the following lin
 
 The following interactive animation illustrates the lifecycle of `useState`, contrasting a successful immutable update against the silent error of direct mutation:
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/ciclo-usestate/index.html"
   title="useState Lifecycle and the Immutability Rule"
-  style={{ width: '100%', height: 700, border: 0 }}
-  loading="lazy"
+  height={700}
 />
 
 ---
@@ -298,11 +297,10 @@ Although Context eliminates *Prop Drilling*, **it was not designed as a state ma
 
 Before concluding, let us bring everything together by viewing the page as what it truly is: a **component tree**. The following piece demonstrates, on the same routines tree, where local state lives, how it is shared by lifting it to the common ancestor (data flows down as *props* and changes bubble up as *callbacks*), why *prop drilling* emerges when the consumer is far away, and how Context avoids it, along with its re-rendering limitations.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/arbol-estado/index.html"
   title="State in the component tree: lifting state up, prop drilling, and Context"
-  style={{ width: '100%', height: 760, border: 0 }}
-  loading="lazy"
+  height={760}
 />
 
 ---

@@ -19,11 +19,10 @@ La siguiente ilustración detalla el ciclo completo de procesamiento en Spring B
 
 Recorre el diagrama paso a paso: sigue una petición desde el navegador hasta que vuelve convertida en HTML y fíjate cómo viajan los datos entre los componentes.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-8/flujo-ssr-thymeleaf/index.html"
   title="Flujo de una petición en Spring Boot con Thymeleaf: DispatcherServlet, controlador, Model y motor de plantillas"
-  style={{ width: '100%', height: 760, border: 0 }}
-  loading="lazy"
+  height={760}
 />
 
 #### Explicación Detallada de los Componentes del Flujo

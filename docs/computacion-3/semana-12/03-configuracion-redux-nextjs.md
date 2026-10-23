@@ -51,11 +51,10 @@ Para mantener la integridad arquitectónica, debemos definir con precisión los 
 
 Explora el recorrido completo de una mutación en el siguiente diagrama interactivo por capas:
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/redux-en-clean-architecture/index.html"
   title="Redux Toolkit en Clean Architecture"
-  style={{ width: '100%', height: 740, border: 0 }}
-  loading="lazy"
+  height={740}
 />
 
 ---
@@ -293,11 +292,10 @@ La solución oficial es definir la fábrica `makeStore = () => configureStore(..
 
 Compara ambos comportamientos en la siguiente pieza interactiva:
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/makestore-vs-singleton/index.html"
   title="makeStore frente a Singleton en Next.js"
-  style={{ width: '100%', height: 700, border: 0 }}
-  loading="lazy"
+  height={700}
 />
 </Step>
 

@@ -190,11 +190,10 @@ In Redux, information always travels in a single predictable direction (*One-Way
 
 Below, you can interactively experience this full cycle using the course's routines domain:
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/flujo-redux/index.html"
   title="Unidirectional data flow in Redux Toolkit"
-  style={{ width: '100%', height: 740, border: 0 }}
-  loading="lazy"
+  height={740}
 />
 
 ---
@@ -260,11 +259,10 @@ In a frontend architected with **Clean Architecture**, the asynchronous thunk **
 
 Explore in the following interactive piece how an asynchronous thunk's lifecycle behaves, toggling the switch to compare a successful response against a network failure:
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/ciclo-thunk/index.html"
   title="Lifecycle of a createAsyncThunk with success and failure"
-  style={{ width: '100%', height: 740, border: 0 }}
-  loading="lazy"
+  height={740}
 />
 
 ---

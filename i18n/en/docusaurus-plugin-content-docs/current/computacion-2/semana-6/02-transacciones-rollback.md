@@ -13,11 +13,10 @@ In backend systems managing mission-critical workflows (such as banking transfer
 
 Try a transfer between two accounts: walk through it with @Transactional, then use the switches to remove the annotation or simulate a failure and see when the commit happens and when the rollback happens.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-6/transaccion-transferencia/index.html"
   title="@Transactional in a transfer between two accounts: commit and rollback"
-  style={{ width: '100%', height: 840, border: 0 }}
-  loading="lazy"
+  height={840}
 />
 
 ### ACID Properties

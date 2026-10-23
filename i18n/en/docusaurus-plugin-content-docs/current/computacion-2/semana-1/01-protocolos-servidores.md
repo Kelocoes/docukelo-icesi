@@ -16,11 +16,10 @@ For this reason, TCP is fundamental in applications where **data integrity is es
 
 Walk through the diagram step by step: each message travels between the client and the server, and you can simulate what happens when a packet is lost.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-1/tcp-en-accion/index.html"
   title="TCP in action: connect, transfer and close"
-  style={{ width: '100%', height: 740, border: 0 }}
-  loading="lazy"
+  height={740}
 />
 
 #### Three-Way Handshake

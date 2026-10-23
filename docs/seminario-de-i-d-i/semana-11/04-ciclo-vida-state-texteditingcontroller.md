@@ -18,11 +18,10 @@ Comprender el **Ciclo de Vida de `State`** es indispensable para inicializar rec
 
 A diferencia de un `StatelessWidget` (que solo posee el método `build`), la clase `State<T>` atraviesa varias etapas bien delimitadas durante su existencia en el *Element Tree*. Sigue cada método en la siguiente pieza y activa el interruptor **Olvidar controller.dispose()** para ver qué pasa con la memoria cuando se omite la limpieza:
 
-<iframe
+<InteractiveFrame
   src="/interactive/seminario-de-i-d-i/semana-11/ciclo-vida-state/index.html"
   title="Ciclo de vida de State en Flutter: createState, initState, didChangeDependencies, build, dispose y fuga de un controlador"
-  style={{ width: '100%', height: 900, border: 0 }}
-  loading="lazy"
+  height={900}
 />
 
 ### Las Etapas Esenciales

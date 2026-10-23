@@ -19,11 +19,10 @@ The following diagram illustrates the complete processing lifecycle in Spring Bo
 
 Walk through the diagram step by step: follow a request from the browser until it returns converted into HTML, and watch how the data travels between the components.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-8/flujo-ssr-thymeleaf/index.html"
   title="Request flow in Spring Boot with Thymeleaf: DispatcherServlet, controller, Model and template engine"
-  style={{ width: '100%', height: 760, border: 0 }}
-  loading="lazy"
+  height={760}
 />
 
 #### Detailed Explanation of the Flow Components

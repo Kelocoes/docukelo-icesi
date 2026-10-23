@@ -79,11 +79,10 @@ Para solucionar este problema, el `ApplicationContext` de Spring debe instanciar
 
 Recorre el siguiente diagrama paso a paso para ver cómo Tomcat, Catalina, el ServletContext y el contenedor IoC de Spring se conectan mediante el ContextLoaderListener.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-2/spring-en-tomcat/index.html"
   title="Diagrama interactivo de Spring IoC dentro de Tomcat: Catalina, ServletContext y ContextLoaderListener"
-  style={{ width: '100%', height: 700, border: 0 }}
-  loading="lazy"
+  height={700}
 />
 
 ### Desglose de Capas en el Servidor Web

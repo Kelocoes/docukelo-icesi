@@ -86,11 +86,10 @@ Unlike classes instantiated manually with `new`, Spring Beans coexist within the
 
 Walk through the following diagram step by step to see how the IoC container creates, stores, and delivers beans inside the JVM.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-2/contenedor-ioc-y-beans/index.html"
   title="Interactive diagram of the Spring IoC container and its beans inside the JVM"
-  style={{ width: '100%', height: 680, border: 0 }}
-  loading="lazy"
+  height={680}
 />
 
 ### Ways to Register a Bean in XML

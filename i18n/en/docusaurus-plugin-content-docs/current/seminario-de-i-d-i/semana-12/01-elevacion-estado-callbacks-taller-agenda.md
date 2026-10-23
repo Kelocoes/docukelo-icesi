@@ -48,11 +48,10 @@ When two sibling widgets need to interact (the form that creates a contact and t
 
 To solve this need, we **lift the state (*State Lifting*)** to their closest common ancestor (`AgendaPage`). Walk through the contact book's component tree: first you will see why a component cannot hand data to its sibling, and then how lifting solves it, with data flowing down and events flowing up (phases 3 and 4 come back in section 5):
 
-<iframe
+<InteractiveFrame
   src="/interactive/seminario-de-i-d-i/semana-12/elevacion-agenda/index.html"
   title="Contact book component tree: state lifting, data going down and events going up"
-  style={{ width: '100%', height: 780, border: 0 }}
-  loading="lazy"
+  height={780}
 />
 
 In this scheme:

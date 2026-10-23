@@ -16,11 +16,10 @@ Por esta razón, TCP es fundamental en aplicaciones donde **la integridad de los
 
 Recorre el diagrama paso a paso: cada mensaje viaja entre el cliente y el servidor, y puedes simular qué pasa cuando un paquete se pierde.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-1/tcp-en-accion/index.html"
   title="TCP en acción: conectar, transferir y cerrar"
-  style={{ width: '100%', height: 740, border: 0 }}
-  loading="lazy"
+  height={740}
 />
 
 #### Three-Way Handshake
