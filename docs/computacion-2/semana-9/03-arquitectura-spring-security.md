@@ -16,11 +16,10 @@ Cuando un cliente envía una petición hacia un endpoint de nuestra aplicación,
 
 Recorre el diagrama paso a paso: primero conoces cada pieza, luego sigues un login numerado y, al final, una petición ya autenticada.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-9/spring-security-filterchain/index.html"
   title="Arquitectura de Spring Security: cadena de filtros, AuthenticationManager, provider, UserDetailsService y SecurityContext"
-  style={{ width: '100%', height: 780, border: 0 }}
-  loading="lazy"
+  height={780}
 />
 
 ---

@@ -86,11 +86,10 @@ Las llamadas a `setState` no alteran la variable de forma síncrona en la siguie
 
 La siguiente animación interactiva ilustra el ciclo de vida de `useState`, contrastando una actualización inmutable exitosa contra el error silencioso de la mutación directa:
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/ciclo-usestate/index.html"
   title="Ciclo de Vida de useState y la Regla de Inmutabilidad"
-  style={{ width: '100%', height: 700, border: 0 }}
-  loading="lazy"
+  height={700}
 />
 
 ---
@@ -298,11 +297,10 @@ Aunque Context elimina el *Prop Drilling*, **no fue diseñado como un gestor de 
 
 Antes de cerrar, juntemos todo lo anterior mirando la página como lo que realmente es: un **árbol de componentes**. La siguiente pieza recorre, sobre el mismo árbol de rutinas, dónde vive el estado local, cómo se comparte al subirlo al ancestro común (los datos bajan como *props* y los cambios suben como *callbacks*), por qué aparece el *prop drilling* cuando el consumidor está lejos y cómo Context lo evita, con su límite de re-renders.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/arbol-estado/index.html"
   title="El estado en el árbol de componentes: lifting state up, prop drilling y Context"
-  style={{ width: '100%', height: 760, border: 0 }}
-  loading="lazy"
+  height={760}
 />
 
 ---

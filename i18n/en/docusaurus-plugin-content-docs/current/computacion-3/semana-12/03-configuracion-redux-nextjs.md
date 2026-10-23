@@ -51,11 +51,10 @@ To maintain architectural integrity, we must precisely define the boundaries of 
 
 Explore the full lifecycle of a mutation in the following interactive layered diagram:
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/redux-en-clean-architecture/index.html"
   title="Redux Toolkit in Clean Architecture"
-  style={{ width: '100%', height: 740, border: 0 }}
-  loading="lazy"
+  height={740}
 />
 
 ---
@@ -293,11 +292,10 @@ The official solution is defining the factory `makeStore = () => configureStore(
 
 Compare both behaviors in the following interactive widget:
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/makestore-vs-singleton/index.html"
   title="makeStore vs Singleton in Next.js"
-  style={{ width: '100%', height: 700, border: 0 }}
-  loading="lazy"
+  height={700}
 />
 </Step>
 

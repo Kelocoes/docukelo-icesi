@@ -27,11 +27,10 @@ The goal of this case study is to implement an end-to-end authentication flow co
 
 To understand how the user moves between these views and which event triggers each transition, explore the following interactive diagram:
 
-<iframe
+<InteractiveFrame
   src="/interactive/desarrollo-entornos-digitales-web/semana-12/mapa-navegacion/index.html"
   title="Interactive navigation map between public and protected routes in Next.js"
-  style={{ width: '100%', height: 640, border: 0 }}
-  loading="lazy"
+  height={640}
 />
 
 ### Connection to the Course Backend
@@ -218,11 +217,10 @@ To communicate consistently with the NestJS backend, we will implement the data 
 
 Before examining the code, let's analyze how messages flow between the form, the service layer, and the backend when the user logs in:
 
-<iframe
+<InteractiveFrame
   src="/interactive/desarrollo-entornos-digitales-web/semana-12/secuencia-login/index.html"
   title="Interactive sequence of the login authentication flow with JWT token and redirect"
-  style={{ width: '100%', height: 640, border: 0 }}
-  loading="lazy"
+  height={640}
 />
 
 ### Step 1: The Shared HTTP Client (`api.ts`)

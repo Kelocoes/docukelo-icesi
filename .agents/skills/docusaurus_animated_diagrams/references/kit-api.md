@@ -38,6 +38,7 @@ Todo es JavaScript plano (scripts clásicos, sin módulos ni dependencias) y exp
 | `dk-anatomy.js` | `DK.anatomy`: un mensaje o documento real en una caja; cada paso enfoca una parte y a la derecha aparece su explicación | Explicar la estructura de algo (petición HTTP, JWT, JSON, URL) |
 | `dk-tree.js` | `DK.tree`: un árbol de componentes de verdad (nodos y ramas, distribuido solo); cada paso marca roles y hace viajar datos por las ramas o en salto directo | Estado en React/Flutter: lifting state up, prop drilling, Context, store global, re-renders |
 | `dk-phone.js` | `DK.phone`: un teléfono con la app real (que el estudiante puede tocar) y, al lado, el camino del evento, el objeto `State` con sus campos, el árbol de widgets (dirty, build, const reutilizado) y la consola | Estado en Flutter (`setState`, controladores, formularios, listas): causa y efecto provocados por el estudiante |
+| `dk-radial.js` + `dk-radial.css` | `DK.radial`: anillos concéntricos (arquitectura de cebolla), piezas en sus anillos, flechas rectas o curvas que viajan entre ellas y un panel que al tocar una pieza marca en verde lo que puede importar y en rojo lo prohibido (matriz de límites). Carga también `dk-flow.js` | Capas concéntricas y regla de dependencia (Clean Architecture, hexagonal) |
 | `dk-compare.js` | `DK.compare`: dos o más diagramas de secuencia lado a lado, sincronizados paso a paso, con contador y nota por panel | Contrastar alternativas (TCP/UDP, con/sin caché, stateful/stateless) |
 | `dk-player.js` | `DK.player`: pestañas por fase, leyenda, controles, interruptores | Cualquier pieza paso a paso |
 
@@ -48,7 +49,7 @@ Todo es JavaScript plano (scripts clásicos, sin módulos ni dependencias) y exp
 - `DK.reduced` es `true` si el usuario pidió menos movimiento. Las animaciones deben saltarse (el kit ya lo hace en `DK.stepper`).
 - `DK.timers()` devuelve `{ later(fn, ms), clear() }`. Usar siempre esto en vez de `setTimeout` suelto: `clear()` evita que un timer viejo pinte sobre un paso nuevo.
 - `DK.stepper({ count, show, dwell, onChange?, onPlay? })` controla una secuencia de pasos. `show(i, animate)` pinta el paso `i` (`-1` = antes del primero). Devuelve `{ go(n, animate), next, prev, reset, play, toggle, stop, current, playing }`. Maneja también las flechas del teclado.
-- `DK.autoHeight()` hace que la pieza ajuste el alto de su propio `<iframe>` al contenido (solo funciona si la página que la embebe es del mismo origen, como en DocuKelo). **Llamarlo siempre al final del script**; `DK.player` ya lo hace.
+- `DK.autoHeight()` hace que la pieza ajuste el alto de su propio `<iframe>` al contenido (solo funciona si la página que la embebe es del mismo origen, como en DocuKelo). Si el `<iframe>` lleva `data-dk-fixed` (lo pone `InteractiveFrame` en el diálogo de pantalla completa), **no** ajusta el alto: marca `<html class="dk-fs">` y sale, porque el alto lo fija el diálogo. **Llamarlo siempre al final del script**; `DK.player` ya lo hace.
 
 ## dk-icons.js
 
@@ -277,6 +278,12 @@ Cada panel usa un `DK.sequence` de 384 de ancho (para que el texto siga legible 
 
 Pieza de referencia: `candidates/static/interactive/computacion-2/semana-1/tcp-vs-udp/index.html`.
 
+## dk-radial.js: `DK.radial(opciones)`
+
+Escena circular para `DK.player`. La cabecera de `static/interactive/_shared/dk-radial.js` documenta cada opción (anillos con `at` para rótulo recto o `arc` para rótulo curvo, `nodes` como función que se evalúa en cada `setSteps`, `groups` y `matrix` para la matriz de límites, pasos con `focus`, `rings`, `sub` y `msgs` con `bend`/`ctrl`/`lost`/`labelAt`/`labelSide`). Carga `dk-radial.css` después de `dk-base.css`: trae además los estilos de la barra de feature (`.dk-fbar`).
+
+Con `ctrl.rebuild()` (en el objeto que devuelve `DK.player`) la pieza vuelve a ejecutar `build()` sin mover el paso actual; sirve para piezas genéricas que reescriben todos sus textos (por ejemplo, cambiar el nombre de la feature). Pieza de referencia: `static/interactive/computacion-3/semana-12/clean-architecture-circular/index.html`.
+
 ## dk-player.js: `DK.player(opciones)`
 
 ```js
@@ -313,6 +320,34 @@ El panel tiene alto limitado (~196 px) y se **desplaza solo** hasta la primera l
 - **URL con `#fase=N`** (`index.html#fase=3`): la pieza se abre en la fase N (1 = primera). Sirve para usar **la misma pieza en dos secciones** de un capítulo (elevación de estado en una y prop drilling en otra) sin duplicarla. Ojo al probar: navegar a la misma URL con otro `#` no recarga la página.
 
 Contrato de una escena para `DK.player`: `scene(svg, stage)` devuelve un objeto con `setSteps(steps)`, `render(i, animate)` (que devuelve `{ animMs }`) y `msgDuration`; cada paso trae `phase`, `title`, `caption` y `msgs` (para calcular la duración). `DK.sequence` usa el `svg`; `DK.compare` ignora el `svg` y llena `stage`.
+
+## Pantalla completa (`InteractiveFrame` + `html.dk-fs`)
+
+Para ver una pieza compleja con mucho más espacio, el sitio tiene el componente global `<InteractiveFrame>` (`src/components/InteractiveFrame/`, registrado en `src/theme/MDXComponents.js`, sin import en el `.md`):
+
+```mdx
+<InteractiveFrame src="/interactive/<curso>/<semana>/<slug>/index.html" title="Título accesible" height={780} />
+```
+
+- Propiedades: `src`, `title`, `height` (alto en la página; por defecto 700). Pinta el mismo `<iframe>` de siempre y, arriba a la derecha, el botón "Pantalla completa".
+- Al pulsarlo abre un `<dialog>` modal (96 vw por 94 vh, fondo oscurecido; Esc, "Cerrar" o un clic fuera lo cierran; bloquea el desplazamiento de la página). La pieza del diálogo **se crea solo al abrir** y se elimina al cerrar, y su `<iframe>` lleva `data-dk-fixed`.
+- Contrato con la pieza: `DK.autoHeight()` detecta `data-dk-fixed`, no ajusta el alto y pone la clase **`dk-fs`** en `<html>`. El alto del iframe es ahora el de la ventana, así que `100vh` dentro de la pieza vale ese alto.
+- **Reglas genéricas (`dk-base.css`):** toda pieza de `DK.player` cuya figura es un `<svg>` directo en el escenario (`DK.layers`, `DK.tree`, `DK.sequence`) ya aprovecha el diálogo sin tocar su `index.html`: la figura a la izquierda llenando el alto de la ventana y, a la derecha, el texto del paso, los controles y el código. La pieza circular (`DK.radial`) trae sus propias reglas en `dk-radial.css`.
+- **Piezas con escenario HTML** (`DK.anatomy`, `DK.table`, `DK.compare`, `DK.phone`): usan el ancho completo del diálogo (la tarjeta pierde su tope de 760 px) pero no reorganizan su contenido. No las conviertas a `<InteractiveFrame>` salvo que se les agreguen reglas `dk-fs` propias y se pruebe en una captura.
+- **Cómo adaptar una pieza** (el ejemplo real está en `dk-radial.css`): haz que el cuerpo ocupe el alto de la ventana y que la fila de la figura y la del código se estiren, en vez de restar alturas a mano:
+
+```css
+@media (min-width: 821px) {
+  .dk-fs body { height: 100vh; display: flex; flex-direction: column; }
+  .dk-fs #app { flex: 1; min-height: 0; }
+  .dk-fs .dk-card { height: 100%; grid-template-rows: auto auto auto auto auto minmax(0, 1fr); }   /* la última fila se estira */
+  .dk-fs .dk-stage { align-self: stretch; min-height: 0; overflow: hidden; }
+  .dk-fs .dk-stage svg { width: 100%; height: 100%; max-width: none; }   /* meet: la figura llena el alto sin deformarse */
+  .dk-fs .dk-code { align-self: stretch; max-height: none; min-height: 0; }
+}
+```
+
+Restringe esas reglas al diseño ancho (`min-width: 821px`): en una pantalla angosta la pieza se apila y no debe forzarse a 100 vh. Si una escena nueva (o una de las de escenario HTML) necesita reglas `dk-fs`, agrégalas a `dk-base.css` (o a su propio `dk-<escena>.css`) con el mismo patrón y pruébalas en una captura con la ventana grande (por ejemplo 1824x873).
 
 ## Tokens y clases de `dk-base.css`
 

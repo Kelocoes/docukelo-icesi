@@ -165,11 +165,10 @@ async function guardar(datos: { nombre: string }): Promise<boolean> {
 
 Explora en la siguiente animación interactiva cómo viaja el guardado entre el Usuario, el Componente cliente y el Router de Next.js. Activa el interruptor inferior para simular un guardado fallido:
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/navegacion-por-eventos/index.html"
   title="Secuencia interactiva de navegación por eventos tras envío de formulario"
-  style={{ width: '100%', height: 740, border: 0 }}
-  loading="lazy"
+  height={740}
 />
 
 El flujo anterior demuestra dos caminos:

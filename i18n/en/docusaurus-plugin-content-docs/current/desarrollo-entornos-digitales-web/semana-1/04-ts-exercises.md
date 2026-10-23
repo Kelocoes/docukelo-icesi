@@ -5,7 +5,7 @@ description: "Practice TypeScript by converting JavaScript code with gradual exe
 
 # TypeScript Exercises
 
-This file contains 30 exercises designed to practice TypeScript. Each exercise has:
+This file contains 28 exercises designed to practice TypeScript. Each exercise has:
 - **JavaScript** code (the starting point).
 - A **hint** that indicates the TypeScript feature to use and what it is for.
 - A **hidden solution** using `<details>` so students can try first.

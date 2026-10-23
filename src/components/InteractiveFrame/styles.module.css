@@ -1,0 +1,13 @@
+.wrap { margin: 1rem 0; }
+.toolbar { display: flex; justify-content: flex-end; margin-bottom: 4px; }
+.expand { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border: 1px solid var(--ifm-color-emphasis-300); border-radius: 999px; background: var(--ifm-background-surface-color); color: var(--ifm-font-color-base); font: 600 13px var(--ifm-font-family-base); cursor: pointer; }
+.expand:hover { border-color: var(--ifm-color-primary); color: var(--ifm-color-primary); }
+
+.dialog { width: 96vw; height: 94vh; max-width: none; max-height: none; padding: 0; border: 1px solid var(--ifm-color-emphasis-300); border-radius: 14px; background: var(--ifm-background-color); color: var(--ifm-font-color-base); overflow: hidden; }
+.dialog[open] { display: flex; flex-direction: column; }
+.dialog::backdrop { background: rgba(0, 0, 0, 0.6); }
+.header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 14px; border-bottom: 1px solid var(--ifm-color-emphasis-300); }
+.title { font-weight: 700; font-size: 15px; }
+.close { padding: 4px 14px; border: 1px solid var(--ifm-color-emphasis-300); border-radius: 999px; background: transparent; color: inherit; font: 600 13px var(--ifm-font-family-base); cursor: pointer; }
+.close:hover { border-color: var(--ifm-color-primary); color: var(--ifm-color-primary); }
+.full { flex: 1; width: 100%; min-height: 0; border: 0; }

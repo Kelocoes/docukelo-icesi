@@ -13,11 +13,10 @@ En aplicaciones backend que gestionan operaciones críticas (como pagos bancario
 
 Prueba una transferencia entre dos cuentas: recórrela con @Transactional y luego usa los interruptores para quitar la anotación o simular un fallo y ver cuándo ocurre el commit y cuándo el rollback.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-6/transaccion-transferencia/index.html"
   title="@Transactional en una transferencia entre dos cuentas: commit y rollback"
-  style={{ width: '100%', height: 840, border: 0 }}
-  loading="lazy"
+  height={840}
 />
 
 ### Propiedades ACID

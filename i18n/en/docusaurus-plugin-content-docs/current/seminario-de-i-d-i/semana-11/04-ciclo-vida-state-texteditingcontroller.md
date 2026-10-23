@@ -18,11 +18,10 @@ Understanding the **`State` Lifecycle** is essential for initializing resources 
 
 Unlike a `StatelessWidget` (which only contains the `build` method), the `State<T>` class moves through several clearly defined stages throughout its lifetime in the *Element Tree*. Follow each method in the next piece and turn on the **Olvidar controller.dispose()** ("forget controller.dispose()") switch to see what happens to memory when cleanup is omitted:
 
-<iframe
+<InteractiveFrame
   src="/interactive/seminario-de-i-d-i/semana-11/ciclo-vida-state/index.html"
   title="State lifecycle in Flutter: createState, initState, didChangeDependencies, build, dispose and a controller leak"
-  style={{ width: '100%', height: 900, border: 0 }}
-  loading="lazy"
+  height={900}
 />
 
 ### The Essential Stages

@@ -9,6 +9,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import remarkStaticBaseUrl from './src/plugins/remark-static-base-url.js';
 import coursesPlugin from './src/plugins/courses-data/index.js';
+import { redirects } from './src/redirects.js';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -115,7 +116,8 @@ const config = {
 
     themes: ['@docusaurus/theme-mermaid'],
     // Lista de cursos (desde docs/*/_category_.json) para la portada y la pagina de bienvenida
-    plugins: [coursesPlugin],
+    // Redirecciones de las URLs viejas (nombres con mayusculas o guiones bajos, documentos movidos): src/redirects.js
+    plugins: [coursesPlugin, ['@docusaurus/plugin-client-redirects', { redirects }]],
     presets: [
         [
             'classic',

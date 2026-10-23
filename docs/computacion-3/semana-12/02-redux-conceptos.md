@@ -190,11 +190,10 @@ En Redux, la información viaja siempre en un único sentido predecible (*One-Wa
 
 A continuación puedes experimentar interactivamente este ciclo completo utilizando el dominio de rutinas del curso:
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/flujo-redux/index.html"
   title="Flujo de datos unidireccional en Redux Toolkit"
-  style={{ width: '100%', height: 740, border: 0 }}
-  loading="lazy"
+  height={740}
 />
 
 ---
@@ -260,11 +259,10 @@ En un frontend diseñado con **Clean Architecture**, el thunk asíncrono **nunca
 
 Explora en la siguiente pieza interactiva cómo se comporta el ciclo de vida de un thunk asíncrono, alternando el interruptor para comparar una respuesta exitosa frente a un fallo de red:
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/ciclo-thunk/index.html"
   title="Ciclo de vida de un createAsyncThunk con éxito y fallo"
-  style={{ width: '100%', height: 740, border: 0 }}
-  loading="lazy"
+  height={740}
 />
 
 ---

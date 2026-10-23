@@ -30,11 +30,10 @@ Every access control system is founded on strictly and sequentially answering tw
 
 Walk through the diagram step by step: first the two questions, then the example with ana. Turn on the switches to see how each gate fails (401 and 403).
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-9/authn-vs-authz/index.html"
   title="Authentication and authorization: two gates in order, with their 401 and 403 errors"
-  style={{ width: '100%', height: 660, border: 0 }}
-  loading="lazy"
+  height={660}
 />
 
 ### A. Authentication — *Who are you?*

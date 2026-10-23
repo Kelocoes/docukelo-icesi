@@ -108,11 +108,10 @@ If you do `_counter++` **outside `setState`**, the data changes but Flutter does
 
 To understand what is recreated and what is kept when you call `setState`, you need to know the **three parallel trees** Flutter maintains. The following piece follows **a single `Text`** through all three:
 
-<iframe
+<InteractiveFrame
   src="/interactive/seminario-de-i-d-i/semana-11/tres-arboles/index.html"
   title="Flutter's three trees: widgets, elements and render objects, and what is kept during a setState"
-  style={{ width: '100%', height: 780, border: 0 }}
-  loading="lazy"
+  height={780}
 />
 
 1. **Widget Tree:** the declarative description you write in `build()`. It is immutable and cheap to create: it is created again on every rebuild.

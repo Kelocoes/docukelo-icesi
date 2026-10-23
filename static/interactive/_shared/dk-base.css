@@ -48,6 +48,23 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--dk-ctl); ou
    El !important gana al tope inline que pone dk-layers.js en figuras anchas. */
 .dk-card.dk-wide { max-width: none; }
 .dk-card.dk-wide .dk-stage svg { max-width: none !important; }
+/* ---------- pantalla completa (html.dk-fs, lo pone DK.autoHeight dentro del dialogo de InteractiveFrame) ----------
+ * Piezas con figura SVG (layers, tree, sequence): la figura a la izquierda llenando el alto de la ventana y, a la derecha, el
+ * texto del paso, los controles y el codigo. Piezas con escenario HTML (anatomy, table, compare, phone): ancho completo.
+ * La pieza circular (.dk-rlayout) trae sus propias reglas en dk-radial.css. */
+.dk-fs .dk-card:not(.dk-rlayout) { max-width: none; }
+@media (min-width: 821px) {
+  .dk-fs body { height: 100vh; display: flex; flex-direction: column; padding-bottom: 10px; }
+  .dk-fs #app { flex: 1; min-height: 0; }
+  .dk-fs .dk-card:not(.dk-rlayout):has(> .dk-stage > svg) { height: 100%; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); grid-template-rows: auto auto auto auto minmax(0, 1fr); column-gap: 14px; align-items: start; overflow: hidden; }
+  .dk-fs .dk-card:not(.dk-rlayout):has(> .dk-stage > svg) > .dk-tabs { grid-column: 1 / -1; grid-row: 1; }
+  .dk-fs .dk-card:not(.dk-rlayout):has(> .dk-stage > svg) > .dk-dots { grid-column: 1 / -1; grid-row: 2; }
+  .dk-fs .dk-card:not(.dk-rlayout):has(> .dk-stage > svg) > .dk-stage { grid-column: 1; grid-row: 3 / span 3; align-self: stretch; min-height: 0; overflow: hidden; }
+  .dk-fs .dk-card:not(.dk-rlayout):has(> .dk-stage > svg) > .dk-stage > svg { width: 100%; height: 100%; min-width: 0; max-width: none !important; }
+  .dk-fs .dk-card:not(.dk-rlayout):has(> .dk-stage > svg) > .dk-cap { grid-column: 2; grid-row: 3; }
+  .dk-fs .dk-card:not(.dk-rlayout):has(> .dk-stage > svg) > .dk-bar { grid-column: 2; grid-row: 4; }
+  .dk-fs .dk-card:not(.dk-rlayout):has(> .dk-stage > svg) > .dk-code { grid-column: 2; grid-row: 5; align-self: stretch; max-height: none; min-height: 0; }
+}
 .dk-dots { display: flex; gap: 5px; margin-top: 8px; }
 .dk-dots i { height: 5px; flex: 1; border-radius: 3px; background: var(--dk-line); transition: background .3s; }
 .dk-dots i.past { background: var(--dk-ctl); opacity: .55; } .dk-dots i.cur { background: var(--dk-ctl); }

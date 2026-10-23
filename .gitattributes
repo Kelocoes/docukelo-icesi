@@ -1,0 +1,15 @@
+# Texto con saltos de linea LF en el repositorio y en el arbol de trabajo (evita los avisos LF/CRLF en Windows)
+* text=auto eol=lf
+
+# Binarios: nunca se convierten
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.xlsx binary
+*.docx binary
+*.woff binary
+*.woff2 binary

@@ -104,11 +104,10 @@ Si haces `_contador++` **fuera de `setState`**, el dato cambia pero Flutter no s
 
 Para entender qué se recrea y qué se conserva cuando llamas a `setState`, hay que conocer los **tres árboles paralelos** que Flutter mantiene. La siguiente pieza sigue **un solo `Text`** a través de los tres:
 
-<iframe
+<InteractiveFrame
   src="/interactive/seminario-de-i-d-i/semana-11/tres-arboles/index.html"
   title="Los tres árboles de Flutter: widgets, elements y render objects, y qué se conserva en un setState"
-  style={{ width: '100%', height: 780, border: 0 }}
-  loading="lazy"
+  height={780}
 />
 
 1. **Árbol de Widgets (*Widget Tree*):** la descripción declarativa que escribes en `build()`. Es inmutable y barata de crear: se vuelve a crear en cada reconstrucción.

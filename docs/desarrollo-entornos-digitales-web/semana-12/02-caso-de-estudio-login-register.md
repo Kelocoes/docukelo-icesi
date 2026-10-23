@@ -27,11 +27,10 @@ El objetivo de este caso de estudio es implementar un flujo de autenticación de
 
 Para comprender cómo transita el usuario entre estas vistas y qué evento dispara cada transición, explora el siguiente diagrama interactivo:
 
-<iframe
+<InteractiveFrame
   src="/interactive/desarrollo-entornos-digitales-web/semana-12/mapa-navegacion/index.html"
   title="Mapa interactivo de navegación entre rutas públicas y protegidas en Next.js"
-  style={{ width: '100%', height: 640, border: 0 }}
-  loading="lazy"
+  height={640}
 />
 
 ### Conexión con el Backend del Curso
@@ -218,11 +217,10 @@ Para comunicarnos de forma consistente con el backend de NestJS, implementaremos
 
 Antes de revisar el código, analicemos cómo fluyen los mensajes entre el formulario, la capa de servicio y el backend cuando el usuario inicia sesión:
 
-<iframe
+<InteractiveFrame
   src="/interactive/desarrollo-entornos-digitales-web/semana-12/secuencia-login/index.html"
   title="Secuencia interactiva del flujo de autenticación login con token JWT y redirección"
-  style={{ width: '100%', height: 640, border: 0 }}
-  loading="lazy"
+  height={640}
 />
 
 ### Paso 1: El Cliente HTTP Compartido (`api.ts`)

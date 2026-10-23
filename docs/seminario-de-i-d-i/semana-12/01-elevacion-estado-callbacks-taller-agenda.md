@@ -48,11 +48,10 @@ Cuando dos widgets hermanos necesitan interactuar (el formulario que crea un con
 
 Para resolver esta necesidad, **elevamos el estado (*State Lifting*)** a su ancestro común más cercano (`AgendaPage`). Recorre el árbol de componentes de la agenda: primero verás por qué un componente no puede entregarle datos a su hermano y luego cómo la elevación lo resuelve, con los datos bajando y los eventos subiendo (las fases 3 y 4 las retomamos en la sección 5):
 
-<iframe
+<InteractiveFrame
   src="/interactive/seminario-de-i-d-i/semana-12/elevacion-agenda/index.html"
   title="Árbol de componentes de la agenda: elevación de estado, datos hacia abajo y eventos hacia arriba"
-  style={{ width: '100%', height: 780, border: 0 }}
-  loading="lazy"
+  height={780}
 />
 
 En este esquema:

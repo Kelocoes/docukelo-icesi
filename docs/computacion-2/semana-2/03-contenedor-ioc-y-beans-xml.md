@@ -82,11 +82,10 @@ A diferencia de las clases instanciadas de forma manual con `new`, los Spring Be
 
 Recorre el siguiente diagrama paso a paso para ver cómo el contenedor IoC crea, almacena y entrega los beans dentro de la JVM.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-2/contenedor-ioc-y-beans/index.html"
   title="Diagrama interactivo del contenedor IoC de Spring y sus beans dentro de la JVM"
-  style={{ width: '100%', height: 680, border: 0 }}
-  loading="lazy"
+  height={680}
 />
 
 ### Formas de Registrar un Bean en XML

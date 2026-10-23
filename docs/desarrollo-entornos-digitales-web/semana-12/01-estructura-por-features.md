@@ -14,11 +14,10 @@ En esta lección aprenderemos a organizar el código por **features** (funcional
 
 ---
 
-<iframe
+<InteractiveFrame
   src="/interactive/desarrollo-entornos-digitales-web/semana-12/por-tipo-vs-por-feature/index.html"
   title="Comparación interactiva: estructura por tipo frente a estructura por features"
-  style={{ width: '100%', height: 640, border: 0 }}
-  loading="lazy"
+  height={640}
 />
 
 ---

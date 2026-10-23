@@ -6,8 +6,10 @@ Welcome to the DocuKelo Agent System repository configuration. This directory co
 
 * **Memory**
   * [Docusaurus Guidelines](./.agents/memory/docusaurus-guidelines.md): General rules, code formatting guidelines, available MDX components, and UX constraints.
+  * [Brand guidelines Icesi 2026](./.agents/memory/brand-guidelines-icesi-2026.md): Paleta, tipografía y reglas de marca para slides, talleres y gráficos. Consúltalo antes de elegir colores o fuentes.
+  * [Platform backlog](./.agents/memory/backlog.md): Ideas de herramientas y componentes para la plataforma, con su estado (hecho o pendiente) y los pendientes del último análisis de mejoras.
   * [SVG Redesign Project](./.agents/memory/svg-redesign/README.md): Contexto, progreso y criterios del rediseño de gráficos (proyecto de varias semanas). Léelo antes de crear o modificar gráficos.
-  * [Interactive pieces kit](./static/interactive/_shared/dk-base.css): the shared code for interactive graphics (`dk-*.js` and `dk-base.css`). It is documented in `.agents/skills/docusaurus_animated_diagrams/references/kit-api.md`; do not duplicate it inside a piece.
+  * [Interactive pieces kit](./static/interactive/_shared/dk-base.css): the shared code for interactive graphics (`dk-*.js` and `dk-base.css`). It is documented in `.agents/skills/docusaurus_animated_diagrams/references/kit-api.md`; do not duplicate it inside a piece. For complex pieces embed them with `<InteractiveFrame>` (adds a "Pantalla completa" button that opens the piece in a dialog); see the "Pantalla completa" section of that same file.
 * **Skills**
   * [Animated & Interactive Diagrams](./.agents/skills/docusaurus_animated_diagrams/SKILL.md): **Use this skill whenever you create, redesign or animate a graphic for a chapter** (diagrams, flows, protocol/architecture explanations). It contains the process (analyze, build, test, integrate), a reusable kit of interactive pieces that lives in `static/interactive/_shared/` (theme-aware CSS, icons, sequence/compare/architecture/anatomy/table engines, step player, code panel), a ready-to-copy template, and the lessons learned. Read its `SKILL.md` first; every new piece must be built with that kit instead of writing one-off code.
   * [Documentation Auditor](./.agents/skills/documentation_auditor/SKILL.md): Guides agents on how to review and identify improvements in educational content.

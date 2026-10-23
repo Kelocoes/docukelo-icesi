@@ -14,11 +14,10 @@ In this lesson, we will learn how to organize code by **features** (product capa
 
 ---
 
-<iframe
+<InteractiveFrame
   src="/interactive/desarrollo-entornos-digitales-web/semana-12/por-tipo-vs-por-feature/index.html"
   title="Interactive comparison: structure by type vs. structure by features"
-  style={{ width: '100%', height: 640, border: 0 }}
-  loading="lazy"
+  height={640}
 />
 
 ---

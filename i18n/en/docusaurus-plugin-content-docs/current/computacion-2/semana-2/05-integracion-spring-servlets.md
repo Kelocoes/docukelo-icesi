@@ -81,11 +81,10 @@ To resolve this issue, Spring's `ApplicationContext` must be instantiated **once
 
 Walk through the following diagram step by step to see how Tomcat, Catalina, the ServletContext, and the Spring IoC container are connected through the ContextLoaderListener.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-2/semana-2/spring-en-tomcat/index.html"
   title="Interactive diagram of Spring IoC inside Tomcat: Catalina, ServletContext and ContextLoaderListener"
-  style={{ width: '100%', height: 700, border: 0 }}
-  loading="lazy"
+  height={700}
 />
 
 ### Layer Breakdown in the Web Server

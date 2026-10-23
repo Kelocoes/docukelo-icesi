@@ -165,11 +165,10 @@ async function guardar(datos: { nombre: string }): Promise<boolean> {
 
 Explore in the following interactive animation how saving flows between the User, the Client Component, and the Next.js Router. Toggle the bottom switch to simulate a failed save:
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/navegacion-por-eventos/index.html"
   title="Interactive sequence of event-driven navigation after form submission"
-  style={{ width: '100%', height: 740, border: 0 }}
-  loading="lazy"
+  height={740}
 />
 
 The flow above demonstrates two paths:

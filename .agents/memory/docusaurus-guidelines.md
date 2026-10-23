@@ -10,6 +10,8 @@ This document serves as the primary system memory and development reference for 
 
 The portal covers several courses, including:
 - **Computación en Internet 2 & 3**: Focuses on backend engineering (Spring Boot, Node.js), frontend (React), containerization (Docker), testing, and software architectures.
+- **Seminario de Ingeniería de Software (`seminario-de-i-d-i`)**: Flutter y desarrollo móvil (estado, formularios, arquitectura de capas) con piezas interactivas propias.
+- **Computación en Internet 3** incluye, además de backend, la parte de frontend con Next.js, Clean Architecture, Redux Toolkit y Tailwind CSS/daisyUI (semanas 9 a 12).
 - **Diseñando con Algoritmos / Desarrollo de Entornos Digitales Web**: Focuses on UI/UX, responsive layouts, web styling (CSS/Tailwind CSS), and frontend interaction.
 - **IAG al Entorno**: Artificial Intelligence and Generative AI fundamentals.
 - **Flutter**: Mobile application development.
@@ -156,6 +158,33 @@ To structure multi-environment commands (e.g., Windows vs. macOS/Linux):
 </Tabs>
 ```
 
+### PDF Viewer (`<PdfViewer>`)
+Para slides, guías y syllabus en PDF guardados en `static/files/<curso>/...`. Incluye botón de pantalla completa y título derivado del nombre del archivo:
+```mdx
+<PdfViewer src="/files/computacion-3/semana-12/semana-12-estado-navegacion-estilos.pdf" height="600px" title="Semana 12" />
+```
+Propiedades: `src` (obligatoria), `height` (por defecto `600px`), `width` (por defecto `100%`), `title` (opcional). El nombre del PDF va en minúsculas, sin espacios ni acentos.
+
+### Quizzes (`<Quiz>`, `<Question>`, `<Option>`)
+Evaluaciones de opción múltiple con progreso guardado en `localStorage`. Cada `<Quiz>` **debe** llevar un `id` único en kebab-case. El formato completo y las reglas de contenido están en la skill `.agents/skills/docusaurus_quiz/SKILL.md`; léela antes de escribir uno.
+
+### Mermaid ampliable (`<ZoomableMermaid>`)
+Envuelve un diagrama Mermaid y agrega un modal con zoom y arrastre para diagramas grandes. Recibe el código como texto en la propiedad `value`:
+```mdx
+<ZoomableMermaid value={`flowchart LR
+    A[Cliente] --> B[Servidor]`} />
+```
+Para diagramas pequeños basta un bloque ```` ```mermaid ```` normal.
+
+### Vista previa con daisyUI (`<DaisyPreview>`)
+Renderiza en un iframe el ejemplo número `id` de la actividad de componentes daisyUI (`desarrollo-entornos-digitales-web/semana-12`): `<DaisyPreview id={1} height="135px" />`. Carga Tailwind y daisyUI desde un CDN en el navegador, así que necesita internet. Es específico de esa actividad; para mostrar otra interfaz usa `<BrowserWindow>` o una pieza interactiva.
+
+### Gráficos interactivos (`<InteractiveFrame>`)
+Para piezas de `static/interactive/` con botón de pantalla completa. Ver la sección 8.
+
+### Traducciones al crear o mover un documento
+Todo documento nuevo de `docs/` debe tener, cuando se traduzca, su par en `i18n/en/docusaurus-plugin-content-docs/current/` con la **misma ruta y nombre**, mismo `sidebar_position` y categorías con la misma `position`. Quien crea o renombra un documento (incluido un agente) mueve también su traducción si existe; si no existe, se deja pendiente (no es error del linter). Ver la sección 10.
+
 ---
 
 ## 6. Diagram Style Guide (Mermaid)
@@ -201,6 +230,7 @@ Some explanations are understood better by **moving and touching** than by looki
   />
   ```
   The declared height is only a fallback: the piece resizes its own iframe to its content (`DK.autoHeight`).
+* **Pantalla completa (prueba en `clean-architecture-circular`; detalle y cómo adaptar una pieza en `references/kit-api.md` de la skill, sección "Pantalla completa")**: para piezas complejas usa `<InteractiveFrame src="/interactive/..." title="..." height={780} />` en lugar del `<iframe>`. Agrega arriba a la derecha el boton "Pantalla completa", que abre la misma pieza en un dialogo (`<dialog>`) casi del tamano de la ventana (Esc o "Cerrar" lo cierran). La pieza del dialogo se marca con `data-dk-fixed`: `DK.autoHeight` no la ajusta al contenido y pone `html.dk-fs`, que las piezas usan para adaptarse al alto disponible (ver `dk-radial.css`). Las demas piezas funcionan igual en el dialogo, solo que sin ajustes especiales.
 * **Rules that always apply**: it must work in light and dark theme (use the kit tokens, never raw hex colors), no emojis, texts in Spanish with technical terms in English, and the written explanation of the chapter stays around the piece (the piece accompanies the text, it does not replace it).
 * **Review workflow**: new pieces are first built as candidates and reviewed by the teacher before they replace anything in `docs/` (see the skill, step 2 and 4).
 
@@ -223,6 +253,7 @@ Some explanations are understood better by **moving and touching** than by looki
     author: Nombre Apellido
   ```
 * **Editar esta pagina**: apunta a `https://github.com/Kelocoes/docukelo-icesi/tree/main/` + ruta del archivo; en `/en/` apunta a la traduccion dentro de `i18n/en/` (`editLocalizedFiles`).
+* **Redirects de URLs viejas** (`@docusaurus/plugin-client-redirects`, lista en `src/redirects.js`): cuando renombres o muevas un documento que ya estuvo publicado, agrega `['/docs/<ruta vieja>', '/docs/<ruta nueva>']` a `OLD_URLS` (la URL no lleva el prefijo numérico ni la extensión, pero sí las carpetas). Así los enlaces guardados y los buscadores no dan 404. Las redirecciones que solo cambian en mayúsculas (`/FastAPI` a `/fastapi`) se activan únicamente en Linux, porque el plugin falla si el archivo ya existe y Windows/macOS no distinguen mayúsculas; por eso en local se omiten y en el despliegue (Render, Docker, GitHub Actions) sí corren. Las páginas que se eliminan sin reemplazo no llevan redirect.
 * **Build estricto**: `onBrokenLinks`, `onBrokenAnchors` y `onBrokenMarkdownLinks` estan en `throw`: un enlace o ancla rota hace fallar el build (y el despliegue). Valida siempre con `npm run build`. Node 20 o superior (`.nvmrc`), y `future.faster` (Rspack) activo; si algun dia un build falla solo por eso, desactivalo en `docusaurus.config.js`.
 
 ---

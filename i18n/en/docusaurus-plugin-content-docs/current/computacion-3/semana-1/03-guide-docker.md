@@ -142,7 +142,7 @@ In this `docker-compose.yml` file, three services are defined:
 
 - **db**: Uses the official PostgreSQL image and sets the environment variables needed to create a database and a user.
 - **backend**: Builds the Spring Boot backend image from the Dockerfile located in the `demo` folder. It sets the environment variables needed to connect to the PostgreSQL database and exposes port 8080.
-- **frontend**: Builds the React frontend image from the Dockerfile located in the `my-react-app` folder and exposes port 3000.
+- **frontend**: Builds the React frontend image from the Dockerfile located in the `my-react-app` folder and publishes the container's port 80 (where it serves the application) on port 3001 of your machine.
 
 ### Building and running the containers
 
@@ -155,4 +155,4 @@ docker-compose up --build
 ```
 This will build your application's images and start the containers defined in the `docker-compose.yml` file.
 
-4. Once the containers are running, you will be able to access your React application at `http://localhost:3000` and the Spring Boot backend at `http://localhost:8080`.
+4. Once the containers are running, you will be able to access your React application at `http://localhost:3001` and the Spring Boot backend at `http://localhost:8080`.
