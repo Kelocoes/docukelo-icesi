@@ -38,6 +38,7 @@ Todo es JavaScript plano (scripts clásicos, sin módulos ni dependencias) y exp
 | `dk-anatomy.js` | `DK.anatomy`: un mensaje o documento real en una caja; cada paso enfoca una parte y a la derecha aparece su explicación | Explicar la estructura de algo (petición HTTP, JWT, JSON, URL) |
 | `dk-tree.js` | `DK.tree`: un árbol de componentes de verdad (nodos y ramas, distribuido solo); cada paso marca roles y hace viajar datos por las ramas o en salto directo | Estado en React/Flutter: lifting state up, prop drilling, Context, store global, re-renders |
 | `dk-phone.js` | `DK.phone`: un teléfono con la app real (que el estudiante puede tocar) y, al lado, el camino del evento, el objeto `State` con sus campos, el árbol de widgets (dirty, build, const reutilizado) y la consola | Estado en Flutter (`setState`, controladores, formularios, listas): causa y efecto provocados por el estudiante |
+| `dk-radial.js` + `dk-radial.css` | `DK.radial`: anillos concéntricos (arquitectura de cebolla), piezas en sus anillos, flechas rectas o curvas que viajan entre ellas y un panel que al tocar una pieza marca en verde lo que puede importar y en rojo lo prohibido (matriz de límites). Carga también `dk-flow.js` | Capas concéntricas y regla de dependencia (Clean Architecture, hexagonal) |
 | `dk-compare.js` | `DK.compare`: dos o más diagramas de secuencia lado a lado, sincronizados paso a paso, con contador y nota por panel | Contrastar alternativas (TCP/UDP, con/sin caché, stateful/stateless) |
 | `dk-player.js` | `DK.player`: pestañas por fase, leyenda, controles, interruptores | Cualquier pieza paso a paso |
 
@@ -276,6 +277,12 @@ Cada panel usa un `DK.sequence` de 384 de ancho (para que el texto siga legible 
 - El adaptador completa `step.msgs` con la lista del panel más largo para que el player calcule la duración del paso.
 
 Pieza de referencia: `candidates/static/interactive/computacion-2/semana-1/tcp-vs-udp/index.html`.
+
+## dk-radial.js: `DK.radial(opciones)`
+
+Escena circular para `DK.player`. La cabecera de `static/interactive/_shared/dk-radial.js` documenta cada opción (anillos con `at` para rótulo recto o `arc` para rótulo curvo, `nodes` como función que se evalúa en cada `setSteps`, `groups` y `matrix` para la matriz de límites, pasos con `focus`, `rings`, `sub` y `msgs` con `bend`/`ctrl`/`lost`/`labelAt`/`labelSide`). Carga `dk-radial.css` después de `dk-base.css`: trae además los estilos de la barra de feature (`.dk-fbar`).
+
+Con `ctrl.rebuild()` (en el objeto que devuelve `DK.player`) la pieza vuelve a ejecutar `build()` sin mover el paso actual; sirve para piezas genéricas que reescriben todos sus textos (por ejemplo, cambiar el nombre de la feature). Pieza de referencia: `static/interactive/computacion-3/semana-12/clean-architecture-circular/index.html`.
 
 ## dk-player.js: `DK.player(opciones)`
 

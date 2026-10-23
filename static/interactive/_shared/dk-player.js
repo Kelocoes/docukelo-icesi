@@ -141,6 +141,9 @@ DK.player = function (o) {
   var hashPhase = /[#&]fase=(\d+)/.exec(location.hash);
   if (hashPhase && o.phases[Number(hashPhase[1]) - 1] !== undefined) ctrl.go(firstStepOfPhase(Number(hashPhase[1]) - 1), false);
 
+  // ctrl.rebuild(): vuelve a ejecutar build() sin mover el paso actual (lo usa la barra de feature de la pieza circular)
+  ctrl.rebuild = function () { ctrl.stop(); rebuild(ctrl.current()); };
+
   prev.onclick = ctrl.prev;
   next.onclick = ctrl.next;
   play.onclick = ctrl.toggle;

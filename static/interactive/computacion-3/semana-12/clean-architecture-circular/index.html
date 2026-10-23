@@ -1,0 +1,362 @@
+<!doctype html>
+<!--
+  Pieza interactiva: Clean Architecture en círculo (Next.js + Redux Toolkit con Thunks).
+  Genérica: el nombre de la feature se cambia en la barra de arriba y todo el diagrama (nodos, flechas, código) se reescribe.
+  Estructura de datos según .agents/skills/nextjs-clean-redux (capas, matriz de límites, flujo de un thunk) y
+  motor/estilo según .agents/skills/docusaurus_animated_diagrams (kit dk-*, aquí con la escena nueva dk-radial.js).
+  Rutas relativas: static/interactive/_shared/ (kit) y static/interactive/computacion-3/semana-12/clean-architecture-circular/ (esta pieza).
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clean Architecture en círculo</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<link rel="stylesheet" href="../../../_shared/dk-radial.css">
+</head>
+<body>
+<div id="fbar" class="dk-fbar"></div>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-radial.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // ---------- nombre de la feature: Routine -> routine, Routines, routines ----------
+  var FEATURE = 'Routine';
+  var CUR = { write: false, viol: false };   // opciones vigentes (las fija build, las lee makeNodes)
+
+  function plural(s) {
+    if (/s$/i.test(s)) return s;
+    if (/[^aeiou]y$/i.test(s)) return s.slice(0, -1) + 'ies';
+    if (/(x|ch|sh)$/i.test(s)) return s + 'es';
+    return s + 's';
+  }
+  function T(s) {
+    var F = FEATURE, f = F.charAt(0).toLowerCase() + F.slice(1), N = { F: F, f: f, Fs: plural(F), fs: plural(f) };
+    return s.replace(/\{(F|f|Fs|fs)\}/g, function (_, k) { return N[k]; });
+  }
+
+  // ---------- código del panel: filas [texto, claves]; los números de línea se buscan por clave ----------
+  function codeSpec(write) {
+    var rows = write ? [
+      ['// 1 · UI  (components/{F}Form.tsx)', 'ui'],
+      ['await create{F}(data);', 'ui uicall'],
+      ['', ''],
+      ['// 2 · Hook fachada  (hooks/use-{fs}.ts)', 'hook'],
+      ['const create{F} = (params) => dispatch(create{Fs}(params));', 'hook dispatch'],
+      ['const { items } = useAppSelector((s) => s.{fs});', 'hook select'],
+      ['', ''],
+      ['// 3 · Thunk  (slices/{f}.slice.ts)', 'thunk'],
+      ['export const create{Fs} = createAsyncThunk("{fs}/create", async (params) => {', 'thunk dispatch'],
+      ['    const entity = await {f}Container.create{F}.execute(params);', 'exec'],
+      ['    return {F}ViewModelMapper.toViewModel(entity);', 'tovm'],
+      ['});', ''],
+      ['', ''],
+      ['// 4 · Caso de uso  (domain/usecases)', 'uc'],
+      ['class Create{F}UseCase {', 'uc'],
+      ['    execute(params) { return this.repository.create(params); }', 'ucexec'],
+      ['}', ''],
+      ['', ''],
+      ['// 5 · Repositorio  (infrastructure/repositories)', 'repo'],
+      ['async create(params): Promise<{F}> {', 'repo'],
+      ['    const dto = {F}Mapper.toDto(params);', 'todto'],
+      ['    const created = await this.datasource.create{F}(dto);', 'ds'],
+      ['    return {F}Mapper.toDomain(created);', 'map'],
+      ['}', ''],
+      ['', ''],
+      ['// 6 · Reducer  (slices/{f}.slice.ts)', 'red'],
+      ['builder.addCase(create{Fs}.pending, (s) => { s.isMutating = true; });', 'pending'],
+      ['builder.addCase(create{Fs}.fulfilled, (s, a) => {', 'red'],
+      ['    s.isMutating = false;', 'red'],
+      ['    s.items.unshift(a.payload);', 'red items'],
+      ['});', 'red'],
+    ] : [
+      ['// 1 · UI  (components/{F}List.tsx)', 'ui'],
+      ['const { {fs}, isLoading } = use{Fs}();', 'ui uicall'],
+      ['', ''],
+      ['// 2 · Hook fachada  (hooks/use-{fs}.ts)', 'hook'],
+      ['useEffect(() => { dispatch(fetch{Fs}()); }, [dispatch]);', 'hook dispatch'],
+      ['const { items } = useAppSelector((s) => s.{fs});', 'hook select'],
+      ['', ''],
+      ['// 3 · Thunk  (slices/{f}.slice.ts)', 'thunk'],
+      ['export const fetch{Fs} = createAsyncThunk("{fs}/fetch", async () => {', 'thunk dispatch'],
+      ['    const entities = await {f}Container.get{Fs}.execute();', 'exec'],
+      ['    return entities.map({F}ViewModelMapper.toViewModel);', 'tovm'],
+      ['});', ''],
+      ['', ''],
+      ['// 4 · Caso de uso  (domain/usecases)', 'uc'],
+      ['class Get{Fs}UseCase {', 'uc'],
+      ['    execute() { return this.repository.getAll(); }', 'ucexec'],
+      ['}', ''],
+      ['', ''],
+      ['// 5 · Repositorio  (infrastructure/repositories)', 'repo'],
+      ['async getAll(): Promise<{F}[]> {', 'repo'],
+      ['    const dtos = await this.datasource.fetch{Fs}();', 'ds'],
+      ['    return dtos.map({F}Mapper.toDomain);', 'map'],
+      ['}', ''],
+      ['', ''],
+      ['// 6 · Reducer  (slices/{f}.slice.ts)', 'red'],
+      ['builder.addCase(fetch{Fs}.pending, (s) => { s.isLoading = true; });', 'pending'],
+      ['builder.addCase(fetch{Fs}.fulfilled, (s, a) => {', 'red'],
+      ['    s.isLoading = false;', 'red'],
+      ['    s.items = a.payload;', 'red items'],
+      ['});', 'red'],
+    ];
+    var lines = {};
+    rows.forEach(function (r, i) { r[1].split(' ').forEach(function (k) { if (k) (lines[k] = lines[k] || []).push(i + 1); }); });
+    return {
+      title: T('Flujo de una feature · {F}'),
+      text: rows.map(function (r) { return T(r[0]); }).join('\n'),
+      // L('exec', 'ucexec') -> líneas resaltadas; lanza un error si una clave no existe (así no quedan pasos sin resaltado)
+      L: function () {
+        var out = [];
+        [].slice.call(arguments).forEach(function (k) {
+          if (!lines[k]) throw new Error('clave de código inexistente: ' + k);
+          lines[k].forEach(function (n) { if (out.indexOf(n) < 0) out.push(n); });
+        });
+        return out;
+      },
+    };
+  }
+
+  // ---------- matriz de límites (references/boundary-rules-matrix.md) ----------
+  var GROUPS = {
+    domain: { label: 'Dominio' }, infra: { label: 'Infraestructura' }, di: { label: 'DI (container)' },
+    vm: { label: 'ViewModels' }, slice: { label: 'Slices y Thunks' }, hook: { label: 'Hooks' }, comp: { label: 'Componentes' },
+  };
+  var MATRIX = {
+    domain: ['domain'],
+    infra: ['domain', 'infra'],
+    di: ['domain', 'infra', 'di'],
+    vm: ['domain', 'vm'],
+    slice: ['domain', 'di', 'vm', 'slice'],
+    hook: ['domain', 'vm', 'slice', 'hook'],
+    comp: ['vm', 'hook', 'comp'],
+  };
+
+  var RINGS = [
+    { id: 'domain', r0: 0, r1: 140, color: 'var(--dk-p3)', label: 'DOMINIO · TS PURO', at: [450, 517] },
+    { id: 'infra', r0: 140, r1: 240, color: 'var(--dk-p5)', label: 'INFRAESTRUCTURA', arc: [250, 304] },
+    { id: 'di', r0: 240, r1: 290, color: 'var(--dk-p2)', label: 'DI · COMPOSITION ROOT', arc: [70, 130] },
+    { id: 'pres', r0: 290, r1: 392, color: 'var(--dk-p1)', label: 'PRESENTACIÓN', arc: [84, 136] },
+  ];
+
+  // ---------- las piezas (posiciones en un viewBox de 900 x 900, centro en 450,450) ----------
+  function makeNodes() {
+    var W = CUR.write;
+    return [
+      { id: 'user', kind: 'actor', icon: 'user', label: 'Usuario', x: 96, y: 96, w: 116, h: 42,
+        info: 'Quien usa la app. Sólo ve y toca la pantalla (los componentes): no conoce nada de lo que hay detrás.' },
+      { id: 'api', kind: 'actor', icon: 'laptop', label: 'API / Storage', x: 450, y: 866, w: 140, h: 42,
+        info: 'Servicio externo o almacenamiento. Habla en JSON (DTOs), nunca en Entities: por eso hay un Mapper en la frontera.' },
+
+      { id: 'comp', ring: 'pres', group: 'comp', icon: 'browser', label: T(W ? '{F}Form' : '{F}List'), sub: 'UI tonta', x: 150, y: 290,
+        info: T('Componente presentacional: pinta props y captura eventos. Sólo habla con el hook fachada use{Fs}(). No importa Redux, casos de uso ni infraestructura.') },
+      { id: 'hook', ring: 'pres', group: 'hook', icon: 'gear', label: T('use{Fs}()'), sub: 'hook fachada', x: 260, y: 168,
+        info: 'Envuelve useAppDispatch y useAppSelector. Los componentes no saben que existe Redux: si mañana cambias de gestor de estado, sólo cambia el hook.' },
+      { id: 'thunk', ring: 'pres', group: 'slice', icon: 'filecode', label: T(W ? 'create{Fs}' : 'fetch{Fs}'), sub: 'async thunk', x: 450, y: 110,
+        info: 'createAsyncThunk: orquesta. Toma el caso de uso del container, convierte Entity a ViewModel y reporta errores con rejectWithValue. No hace fetch ni instancia repositorios.' },
+      { id: 'vmmapper', ring: 'pres', group: 'vm', icon: 'file', label: 'ViewModel', sub: 'toViewModel()', x: 640, y: 168,
+        info: T('{F}ViewModelMapper: función pura que adapta una Entity a lo que la pantalla necesita (fechas es-CO, etiquetas, banderas como isRecent). Sólo datos serializables entran a Redux.') },
+      { id: 'slice', ring: 'pres', group: 'slice', icon: 'bag', label: T('{f}.slice'), sub: 'items · isLoading', x: 750, y: 290,
+        info: 'Estado global en Redux Toolkit: items, isLoading, isMutating y errorMessage. extraReducers maneja pending, fulfilled y rejected de forma inmutable (Immer).' },
+
+      { id: 'container', ring: 'di', group: 'di', icon: 'filter', label: T('{f}Container'), sub: 'Composition Root', x: 450, y: 188, w: 150,
+        info: 'El único lugar con new: crea el Datasource, se lo da al RepositoryImpl y éste a los casos de uso. Exporta un objeto tipado que consumen los thunks.' },
+
+      { id: 'usecase', ring: 'domain', group: 'domain', icon: 'classbox', label: T(W ? 'Create{F}' : 'Get{Fs}'), sub: 'UseCase', x: 450, y: 358,
+        info: 'Una acción de negocio por clase, con execute(). Recibe el contrato del repositorio por constructor; no sabe de HTTP, Redux ni React.' },
+      { id: 'entity', ring: 'domain', group: 'domain', icon: 'card', label: T('{F}'), sub: 'Entity · valida', x: 376, y: 448,
+        info: 'Clase con campos readonly que se valida a sí misma en el constructor. Modela el concepto de negocio y nunca sabe cómo se guarda.' },
+      { id: 'repoiface', ring: 'domain', group: 'domain', icon: 'lock', label: 'Repository', sub: 'contrato (interfaz)', x: 524, y: 448,
+        info: 'Interfaz que dice qué datos necesita el negocio, no de dónde salen. Vive en el Dominio; la implementa la Infraestructura (inversión de dependencia).' },
+
+      { id: 'mapper', ring: 'infra', group: 'infra', icon: 'coins', label: T('{F}Mapper'), sub: 'toDomain · toDto', x: 318, y: 610,
+        info: 'La aduana: toDomain(dto) construye la Entity y toDto(params) arma el cuerpo de la petición. Ningún DTO cruza hacia el Dominio ni hacia la UI.' },
+      { id: 'repoimpl', ring: 'infra', group: 'infra', icon: 'server', label: 'RepositoryImpl', sub: 'implementa contrato', x: 582, y: 610,
+        info: 'Implementa el contrato del Dominio: llama al datasource, pasa el resultado por el mapper y devuelve Entities.' },
+      { id: 'datasource', ring: 'infra', group: 'infra', icon: 'database', label: 'Datasource', sub: 'API / Mock · DTO', x: 450, y: 668,
+        info: 'Acceso crudo a la red o al storage (cliente de API o mock en memoria). Recibe y devuelve DTOs con la forma exacta del cable.' },
+    ];
+  }
+
+  var m = function (from, to, label, kind, extra) {
+    var o = { from: from, to: to, label: label, kind: kind };
+    for (var k in extra) o[k] = extra[k];
+    return o;
+  };
+
+  function build(opt) {
+    CUR = { write: !!opt.write, viol: !!opt.viol };
+    var W = CUR.write, V = CUR.viol, L = codeSpec(W).L;
+    var steps = [];
+    // st: aplica el nombre de la feature a todos los textos del paso
+    var st = function (phase, title, caption, o) {
+      o = o || {};
+      var s = { phase: phase, title: T(title), caption: T(caption), msgs: (o.msgs || []).map(function (x) { var c = {}; for (var k in x) c[k] = x[k]; if (c.label) c.label = T(c.label); return c; }) };
+      ['focus', 'rings', 'code'].forEach(function (k) { if (o[k]) s[k] = o[k]; });
+      if (o.sub) { s.sub = {}; for (var id in o.sub) s.sub[id] = T(o.sub[id]); }
+      steps.push(s);
+    };
+
+    // ===== Fase 1 · Las capas =====
+    st(0, 'Dominio: el núcleo',
+      'El centro es TypeScript puro: sin React, Next.js, Redux ni fetch. Aquí viven la Entity (reglas e invariantes), el contrato del repositorio (una interfaz) y los Use Cases (una acción de negocio cada uno).',
+      { focus: ['usecase', 'entity', 'repoiface'] });
+    st(0, 'Infraestructura: el traductor',
+      'Habla con el mundo exterior. El Datasource trae DTOs crudos, el Mapper los convierte en Entities (la aduana) y el RepositoryImpl cumple el contrato que definió el Dominio.',
+      { focus: ['datasource', 'mapper', 'repoimpl'] });
+    st(0, 'DI: el ensamblador',
+      'El Composition Root (di/) es el único lugar que hace new: instancia el datasource, el repositorio y los casos de uso y los expone en un container tipado. Nadie más arma dependencias.',
+      { focus: ['container'] });
+    st(0, 'Presentación: lo que ve el usuario',
+      'Componentes tontos, un hook fachada, thunks y slice de Redux, y el ViewModelMapper que adapta Entities a la pantalla. Redux vive sólo en este anillo.',
+      { focus: ['comp', 'hook', 'thunk', 'vmmapper', 'slice'] });
+    st(0, 'Afuera del círculo',
+      'La persona que usa la app y la API o el almacenamiento. Entre ellos y el Dominio hay capas que traducen: nada externo toca el núcleo sin pasar por un mapper.',
+      { focus: ['user', 'api'], rings: [] });
+
+    // ===== Fase 2 · Regla de dependencia =====
+    st(1, 'Las dependencias apuntan hacia adentro',
+      'Cada flecha violeta es un import. La presentación importa al container, el container importa Infraestructura y Dominio, y el Dominio no importa nada de afuera. Lo más interno es lo más estable.',
+      { focus: ['comp', 'hook', 'thunk', 'container', 'usecase', 'repoiface'], rings: ['pres', 'di', 'domain'],
+        msgs: [m('comp', 'hook', 'usa', 'data'), m('hook', 'thunk', 'importa', 'data'), m('thunk', 'container', 'importa', 'data'),
+               m('container', 'usecase', 'importa', 'data'), m('usecase', 'repoiface', 'depende de', 'data')] });
+    st(1, 'Inversión de dependencia',
+      'El caso de uso depende de la interfaz Repository, no de la implementación. RepositoryImpl (Infraestructura) implementa esa interfaz: la flecha del código apunta hacia el Dominio aunque los datos viajen hacia afuera.',
+      { focus: ['usecase', 'repoiface', 'repoimpl'], rings: ['domain', 'infra'],
+        msgs: [m('repoimpl', 'repoiface', 'implements', 'data', { labelSide: 'left' })] });
+    st(1, 'El Composition Root ensambla',
+      'Sólo el container hace new: crea el Datasource, se lo entrega al RepositoryImpl y éste a los casos de uso. Cambiar Mock por API es cambiar una línea aquí; el Dominio ni se entera.',
+      { focus: ['container', 'repoimpl', 'datasource', 'usecase'], rings: ['di', 'infra'],
+        msgs: [m('container', 'repoimpl', 'new', 'data', { ctrl: [740, 330], labelDx: 40 }),
+               m('container', 'datasource', 'new', 'data', { ctrl: [740, 720], labelDx: 40, labelDy: 10 })] });
+    if (V) {
+      st(1, 'Prohibido: la UI llama a Infraestructura',
+        'Un componente que hace fetch() o importa un Datasource se salta los casos de uso, los invariantes y el estado centralizado. Toda ruta pasa por el hook fachada. En este repo lo vigila npm run lint:clean.',
+        { focus: ['comp', 'datasource'], rings: ['pres', 'infra'], msgs: [m('comp', 'datasource', 'fetch() directo', 'err', { lost: true, labelAt: 0.16, labelSide: 'right' })] });
+      st(1, 'Prohibido: el Dominio conoce React',
+        'Una Entity o un Use Case que importa useState, JSX o Redux deja de ser portable y de poder probarse solo. El Dominio es TypeScript puro: nunca mira hacia afuera.',
+        { focus: ['entity', 'hook'], rings: ['domain', 'pres'], msgs: [m('entity', 'hook', 'useState', 'err', { lost: true, labelAt: 0.4, labelSide: 'left' })] });
+    }
+
+    // ===== Fase 3 · Solicitud (ida) =====
+    st(2, '1 · El usuario actúa',
+      W ? 'Todo empieza en la pantalla. El usuario completa y envía el formulario de {F}: el componente {F}Form captura los datos.'
+        : 'Todo empieza en la pantalla. El usuario abre la página de {fs}: el componente {F}List se monta y pide los datos.',
+      { focus: ['user', 'comp'], code: L('ui'), msgs: [m('user', 'comp', W ? 'envía' : 'abre', 'ctl')] });
+    st(2, '2 · El componente llama al hook',
+      'El componente no conoce Redux: sólo llama al hook fachada use{Fs}(). Esa frontera mantiene la UI intercambiable.',
+      { focus: ['comp', 'hook'], code: L('uicall'),
+        msgs: [m('comp', 'hook', W ? 'create{F}(data)' : 'use{Fs}()', 'ctl')] });
+    st(2, '3 · El hook despacha el thunk',
+      'El hook ejecuta dispatch() con el thunk. El reducer reacciona a "pending" y marca ' + (W ? 'isMutating' : 'isLoading') + ' = true: la UI ya puede mostrar un indicador de carga.',
+      { focus: ['hook', 'thunk', 'slice'], code: L('dispatch', 'pending'), sub: { slice: W ? 'isMutating: true' : 'isLoading: true' },
+        msgs: [m('hook', 'thunk', 'dispatch()', 'ctl'), m('thunk', 'slice', 'pending', 'ctl', { ctrl: [600, 240], labelDy: 20 })] });
+    st(2, '4 · El thunk pide el caso de uso al container',
+      'El thunk no instancia nada: toma el caso de uso del Composition Root ({f}Container) y llama execute(). Aquí la presentación cruza hacia el negocio.',
+      { focus: ['thunk', 'container', 'usecase'], code: L('exec'),
+        msgs: [m('thunk', 'container', '{f}Container', 'ctl', { labelSide: 'right' }), m('container', 'usecase', 'execute()', 'ctl')] });
+    st(2, '5 · El caso de uso pide datos al repositorio',
+      'El caso de uso llama al contrato Repository (una interfaz del Dominio). En ejecución, el container ya le inyectó la implementación de Infraestructura.',
+      { focus: ['usecase', 'repoiface', 'repoimpl'], code: L('ucexec'),
+        msgs: [m('usecase', 'repoiface', W ? 'create(params)' : 'getAll()', 'ctl'), m('repoiface', 'repoimpl', 'inyectada', 'ctl')] });
+    st(2, '6 · La infraestructura traduce y llama',
+      W ? 'RepositoryImpl convierte los parámetros a DTO con el Mapper (toDto) y se los entrega al Datasource.'
+        : 'RepositoryImpl le pide los datos crudos al Datasource.',
+      { focus: W ? ['repoimpl', 'mapper', 'datasource'] : ['repoimpl', 'datasource'], code: W ? L('todto', 'ds') : L('ds'),
+        msgs: (W ? [m('repoimpl', 'mapper', 'toDto(params)', 'ctl')] : []).concat([m('repoimpl', 'datasource', W ? 'create{F}(dto)' : 'fetch{Fs}()', 'ctl', { labelSide: 'right', labelDy: 16 })]) });
+    st(2, '7 · Sale al mundo exterior',
+      'El Datasource es el único que habla con la API o el storage: ' + (W ? 'POST' : 'GET') + ' /{fs}. Es la última parada hacia afuera.',
+      { focus: ['datasource', 'api'], code: L('ds'), msgs: [m('datasource', 'api', (W ? 'POST' : 'GET') + ' /{fs}', 'ctl')] });
+
+    // ===== Fase 4 · Respuesta (vuelta) =====
+    st(3, '1 · La API responde',
+      'La API responde JSON y el Datasource lo entrega como DTO: la forma exacta del cable (snake_case, fechas ISO). Todavía no es del negocio.',
+      { focus: ['api', 'datasource', 'repoimpl'], code: L('ds'), msgs: [m('api', 'datasource', W ? '201 JSON' : '200 JSON', 'ack'), m('datasource', 'repoimpl', 'DTO', 'ack')] });
+    st(3, '2 · La aduana: el Mapper',
+      'RepositoryImpl pasa el DTO por {F}Mapper.toDomain(). El Mapper construye la Entity y su constructor valida los invariantes: un dato inválido no entra al Dominio.',
+      { focus: ['repoimpl', 'mapper', 'entity'], code: L('map'), msgs: [m('repoimpl', 'mapper', 'toDomain(dto)', 'ack'), m('mapper', 'entity', 'new {F}()', 'ack')] });
+    st(3, '3 · Sube por el contrato',
+      'El repositorio devuelve Entities a través del contrato y el caso de uso las recibe. Hasta aquí ningún DTO ha cruzado hacia el Dominio.',
+      { focus: ['repoimpl', 'repoiface', 'usecase'], code: L('repo', 'ucexec'), msgs: [m('repoimpl', 'repoiface', W ? '{F}' : '{F}[]', 'ack'), m('repoiface', 'usecase', W ? '{F}' : '{F}[]', 'ack')] });
+    st(3, '4 · El caso de uso responde al thunk',
+      'execute() se resuelve con objetos del Dominio y el thunk los recibe. Son Entities puras: todavía no están listas para pintar.',
+      { focus: ['usecase', 'thunk'], code: L('exec'), msgs: [m('usecase', 'thunk', W ? '{F}' : '{F}[]', 'ack', { ctrl: [300, 250], labelDx: -22 })] });
+    st(3, '5 · Del Dominio al ViewModel',
+      'El thunk convierte cada Entity con ViewModelMapper.toViewModel() (fechas es-CO, etiquetas, banderas) y retorna el resultado. Redux emite "fulfilled" y el reducer actualiza el estado.',
+      { focus: ['thunk', 'vmmapper', 'slice'], code: L('tovm', 'red'), sub: { slice: W ? 'items.unshift(vm)' : 'items = [ … ]' },
+        msgs: [m('thunk', 'vmmapper', 'toViewModel()', 'ack', { labelDy: -16 }), m('vmmapper', 'slice', 'fulfilled', 'ack')] });
+    st(3, '6 · El selector entrega a la UI',
+      'useAppSelector detecta que items cambió; el hook lo expone y el componente recibe los {fs}.',
+      { focus: ['slice', 'hook', 'comp'], code: L('select', 'uicall'),
+        msgs: [m('slice', 'hook', 'useAppSelector', 'ack', { ctrl: [505, 330], labelDy: -14 }), m('hook', 'comp', '{fs}', 'ack')] });
+    st(3, '7 · La pantalla se actualiza',
+      'React vuelve a renderizar el componente y el usuario ve el resultado. El componente nunca importó Redux, un caso de uso ni un DTO.',
+      { focus: ['comp', 'user'], code: L('ui'), msgs: [m('comp', 'user', 're-render', 'ack')] });
+
+    // ===== Fase 5 · Explora =====
+    st(4, 'Pruébalo tú: toca una pieza',
+      'Toca cualquier pieza del círculo (o Tab y Enter). En verde, lo que puede importar; en rojo punteado, lo que le está prohibido. Cambia el nombre de la feature arriba y vuelve a recorrerlo: la forma no cambia.',
+      { rings: [] });
+    return steps;
+  }
+
+  var ctrl = DK.player({
+    mount: document.getElementById('app'),
+    wide: true,
+    ariaLabel: 'Círculo de Clean Architecture con Next.js y Redux Toolkit: anillos de Dominio, Infraestructura, DI y Presentación, y el flujo de una solicitud y su respuesta',
+    phases: ['Las capas', 'Regla de dependencia', 'Solicitud (ida)', 'Respuesta (vuelta)', 'Explora'],
+    scene: function (svg, stage) {
+      return DK.radial({
+        svg: svg, stage: stage, size: 900, cx: 450, cy: 450, outer: 414, trail: 'phase',
+        rings: RINGS, nodes: makeNodes, groups: GROUPS, matrix: MATRIX,
+        hint: 'Toca cualquier pieza del círculo para ver qué hace y qué puede (o no puede) importar.',
+      });
+    },
+    build: build,
+    code: function (opts) { var c = codeSpec(!!opts.write); return { title: c.title, text: c.text, legend: false }; },
+    toggles: [
+      { key: 'write', label: 'Operación de escritura (crear)', affectsPhase: 2 },
+      { key: 'viol', label: 'Mostrar violaciones de la regla', affectsPhase: 1 },
+    ],
+    intro: {
+      kicker: 'Clean Architecture · Next.js + Redux Toolkit',
+      title: 'El círculo de una feature',
+      text: 'Cada anillo es una capa y las dependencias sólo miran hacia el centro. Recorre las capas, la regla de dependencia y el viaje completo de una solicitud. El nombre de la feature es intercambiable.',
+    },
+  });
+
+  // ---------- barra de feature ----------
+  var bar = document.getElementById('fbar');
+  var input = DK.el('input', { id: 'fname', value: FEATURE, maxlength: 24, spellcheck: 'false', autocomplete: 'off', 'aria-label': 'Nombre de la feature' });
+  var chips = DK.el('span', { class: 'chips' }, 'Prueba con:');
+  function setFeature(v, fromInput) {
+    var clean = v.replace(/[^A-Za-z0-9]/g, '').replace(/^[0-9]+/, '');
+    if (!clean) clean = 'Feature';
+    FEATURE = clean.charAt(0).toUpperCase() + clean.slice(1);
+    if (!fromInput) input.value = FEATURE;
+    [].forEach.call(chips.querySelectorAll('button'), function (b) { b.classList.toggle('on', b.textContent === FEATURE); });
+    ctrl.rebuild();
+  }
+  ['Routine', 'Product', 'Order', 'Task'].forEach(function (n) { chips.appendChild(DK.el('button', { text: n, onclick: function () { setFeature(n, false); } })); });
+  input.addEventListener('input', function () { setFeature(input.value, true); });
+  input.addEventListener('keydown', function (e) { e.stopPropagation(); });   // las flechas del campo no mueven los pasos
+  bar.append(DK.el('label', {}, 'Feature', input), chips, DK.el('span', { class: 'spacer' }));
+  if (window.parent === window) {
+    bar.appendChild(DK.el('button', { text: 'Tema claro / oscuro', onclick: function () {
+      var dark = document.documentElement.getAttribute('data-dkt') === 'dark';
+      window.postMessage({ dkTheme: dark ? 'light' : 'dark' }, '*');
+    } }));
+  }
+  [].forEach.call(chips.querySelectorAll('button'), function (b) { b.classList.toggle('on', b.textContent === FEATURE); });
+})();
+</script>
+</body>
+</html>
