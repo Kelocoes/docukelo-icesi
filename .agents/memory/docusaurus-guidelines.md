@@ -10,6 +10,8 @@ This document serves as the primary system memory and development reference for 
 
 The portal covers several courses, including:
 - **Computación en Internet 2 & 3**: Focuses on backend engineering (Spring Boot, Node.js), frontend (React), containerization (Docker), testing, and software architectures.
+- **Seminario de Ingeniería de Software (`seminario-de-i-d-i`)**: Flutter y desarrollo móvil (estado, formularios, arquitectura de capas) con piezas interactivas propias.
+- **Computación en Internet 3** incluye, además de backend, la parte de frontend con Next.js, Clean Architecture, Redux Toolkit y Tailwind CSS/daisyUI (semanas 9 a 12).
 - **Diseñando con Algoritmos / Desarrollo de Entornos Digitales Web**: Focuses on UI/UX, responsive layouts, web styling (CSS/Tailwind CSS), and frontend interaction.
 - **IAG al Entorno**: Artificial Intelligence and Generative AI fundamentals.
 - **Flutter**: Mobile application development.
@@ -155,6 +157,33 @@ To structure multi-environment commands (e.g., Windows vs. macOS/Linux):
   </TabItem>
 </Tabs>
 ```
+
+### PDF Viewer (`<PdfViewer>`)
+Para slides, guías y syllabus en PDF guardados en `static/files/<curso>/...`. Incluye botón de pantalla completa y título derivado del nombre del archivo:
+```mdx
+<PdfViewer src="/files/computacion-3/semana-12/semana-12-estado-navegacion-estilos.pdf" height="600px" title="Semana 12" />
+```
+Propiedades: `src` (obligatoria), `height` (por defecto `600px`), `width` (por defecto `100%`), `title` (opcional). El nombre del PDF va en minúsculas, sin espacios ni acentos.
+
+### Quizzes (`<Quiz>`, `<Question>`, `<Option>`)
+Evaluaciones de opción múltiple con progreso guardado en `localStorage`. Cada `<Quiz>` **debe** llevar un `id` único en kebab-case. El formato completo y las reglas de contenido están en la skill `.agents/skills/docusaurus_quiz/SKILL.md`; léela antes de escribir uno.
+
+### Mermaid ampliable (`<ZoomableMermaid>`)
+Envuelve un diagrama Mermaid y agrega un modal con zoom y arrastre para diagramas grandes. Recibe el código como texto en la propiedad `value`:
+```mdx
+<ZoomableMermaid value={`flowchart LR
+    A[Cliente] --> B[Servidor]`} />
+```
+Para diagramas pequeños basta un bloque ```` ```mermaid ```` normal. `MermaidExample` es una demostración de rutas mínimas que hoy no se usa en ningún documento: no lo uses como plantilla.
+
+### Vista previa con daisyUI (`<DaisyPreview>`)
+Renderiza en un iframe el ejemplo número `id` de la actividad de componentes daisyUI (`desarrollo-entornos-digitales-web/semana-12`): `<DaisyPreview id={1} height="135px" />`. Carga Tailwind y daisyUI desde un CDN en el navegador, así que necesita internet. Es específico de esa actividad; para mostrar otra interfaz usa `<BrowserWindow>` o una pieza interactiva.
+
+### Gráficos interactivos (`<InteractiveFrame>`)
+Para piezas de `static/interactive/` con botón de pantalla completa. Ver la sección 8.
+
+### Traducciones al crear o mover un documento
+Todo documento nuevo de `docs/` debe tener, cuando se traduzca, su par en `i18n/en/docusaurus-plugin-content-docs/current/` con la **misma ruta y nombre**, mismo `sidebar_position` y categorías con la misma `position`. Quien crea o renombra un documento (incluido un agente) mueve también su traducción si existe; si no existe, se deja pendiente (no es error del linter). Ver la sección 10.
 
 ---
 
