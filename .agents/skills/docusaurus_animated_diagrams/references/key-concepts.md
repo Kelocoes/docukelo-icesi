@@ -96,6 +96,22 @@ Si el capítulo afirma algo que se puede comprobar ("escribir en un `TextField` 
 
 Un ejemplo de 120 líneas donde 60 son estilos esconde la lógica. Ofrecer el código en tres vistas (simulador, **lo esencial** sin decoraciones, completo con estilos) y dejar en la pieza solo lo esencial. Lo mismo para diagramas: lo que no enseña el concepto (un `InputDecoration`) sobra.
 
+## 5q. Una metáfora física por concepto, no la misma caja
+
+Si todo es una tarjeta con un icono pequeño y una flecha, el estudiante no distingue un contrato de una clase ni una dependencia de una llamada. Elegir una **metáfora física** para el concepto (toma y enchufe, cinta frente a cápsulas, maraña de hilos, carriles, anillo de cohesión, Venn) y **reutilizarla** en todo el capítulo para que signifique lo mismo cada vez. Escena libre: `DK.canvas`.
+
+## 5r. Contar en vez de decir
+
+El estado se ve (color, forma, contorno punteado, onda) y la diferencia se **cuenta** (`5 de 5 modificados` frente a `1 de 4`, `dependencias concretas: 2` frente a `0`, `clientes que se recompilan: 3 de 3` frente a `1 de 3`). Un subtítulo de 10 px que dice "modificado" no enseña.
+
+## 5s. Un color por actor en todo el capítulo
+
+Cuando hay actores (COO, CFO, CTO o auditor), darles un color fijo y usarlo en cada figura (`c: 'p1' | 'p3' | 'p5'`): el estudiante deja de leer etiquetas para saber quién pide qué. Los estados `err` y `ok` siguen ganando al color del actor.
+
+## 5t. Un selector evita diez piezas
+
+Si el concepto se aplica a muchos casos (diez situaciones de diseño, cuatro reglas rotas), **una pieza con un selector** enseña más que una pieza por caso: el estudiante elige, la pieza responde igual, y compara. Un **deslizador** hace tangible un parámetro continuo y su caso borde.
+
 ## 6. Color con rol, no con nombre
 
 Control, confirmación, datos y fallo tienen un color fijo en todo el kit (`--dk-ctl`, `--dk-ack`, `--dk-data`, `--dk-err`). El estudiante aprende el vocabulario visual una vez y lo reconoce en todas las piezas. Nunca usar un hex suelto; así el tema oscuro funciona sin trabajo extra.

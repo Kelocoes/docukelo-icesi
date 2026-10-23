@@ -17,7 +17,7 @@ Todas las rutas son relativas a la raíz del repo (`docukelo-icesi/`). Si no est
 | **El kit compartido** (CSS, `dk-*.js`) | `static/interactive/_shared/` | Sí |
 | Documentación del kit (API de cada módulo) | `references/kit-api.md` (en esta skill) | Sí |
 | Piezas interactivas ya integradas | `static/interactive/<curso>/<semana>/<slug>/index.html` | Sí |
-| Plantilla para una pieza nueva | `templates/piece/index.html` (secuencia por fases) y `templates/piece-phone/index.html` (simulador de app móvil con `DK.phone`), en esta skill | Sí |
+| Plantilla para una pieza nueva | `templates/piece/index.html` (secuencia por fases), `templates/piece-phone/index.html` (simulador de app móvil con `DK.phone`) y `templates/piece-canvas/index.html` (escena libre `DK.canvas`: toma y enchufes), en esta skill | Sí |
 | Guía general de contenido (sección 8: gráficos interactivos) | `.agents/memory/docusaurus-guidelines.md` | Sí |
 | Contexto, decisiones y estado del proyecto de rediseño | `.agents/memory/svg-redesign/README.md` | **No** (en `.gitignore`, solo en el disco del profesor) |
 | Comentarios y briefs del profesor por gráfico | `.agents/memory/svg-redesign/reviews.json` | **No** |
@@ -68,12 +68,15 @@ Una animación no es decoración: cada movimiento debe revelar un **orden** o un
 | Qué pasa por dentro cuando el usuario toca una app móvil (`setState`, controladores, formularios, listas) | N3 | Kit: `DK.player` + `DK.phone` con `code` (ejemplos: `seminario-de-i-d-i/semana-11/setstate-en-accion`, `formulario-registro`, `agenda-monolitica`) |
 | Un archivo con varias responsabilidades y cómo se corta | N3 | Kit: `DK.anatomy` con `code`, `layout: 'stack'` y un paso final `all: true` (ejemplo: `responsabilidades-agenda`) |
 | Qué se recrea y qué se conserva entre capas paralelas (Widget, Element, RenderObject) | N3 | Kit: `DK.layers` con `sub` por paso e identidades (`#a1`, `#b7`) (ejemplo: `tres-arboles`) |
+| Un contrato y varias implementaciones intercambiables, o cuánto se propaga un cambio (SOLID, GRASP, puertos y adaptadores) | N3 | Kit: `DK.player` + `DK.canvas`: toma y enchufe, contadores, maraña, carriles (plantilla `templates/piece-canvas/`; ejemplos en Saman: `polimorfismo-enchufe`, `ocp-regleta`, `parnas-secretos`) |
+| Un caso que se entiende cambiando un valor continuo o eligiendo entre muchos casos | N3 | Kit: `DK.canvas` con deslizador (`type: 'range'`) o selector (`type: 'select'`) en `toggles` (ejemplos: `simulador-pruebas`, `clasificador-heuristicas`) |
 | Algo que se entiende provocándolo (estado, fallos, parámetros) | N3 | Kit; escena nueva si no existe el patrón (ver `patterns.md`) |
 
 ### 2. Construir en `candidates/`, nunca directo en `docs/` ni `static/img`
 
 - Pieza interactiva: copiar `templates/piece/index.html` a `.agents/memory/svg-redesign/candidates/static/interactive/<curso>/<semana>/<slug>/index.html` y cambiar **solo los datos** (actores, fases, pasos, textos). Si hace falta algo que el kit no tiene, ampliar el kit (ver abajo), no parchar la pieza.
 - SVG existente a animar: `python .agents/skills/docusaurus_animated_diagrams/tools/dk_animate.py inspect|build` (ver más abajo). Salida en `candidates/static/img/<curso>/`.
+- **Si todas las figuras del capítulo se ven como cajas iguales, usa `DK.canvas`** (metáfora física por concepto, iconos sin tarjeta; `key-concepts.md`, 5q a 5t).
 - **Reglas visuales de toda pieza nueva con `DK.layers`:** `labels: 'smart'`, figura ancha (`width: 800`) con 90 a 160 unidades entre recuadros que se conectan, **un icono distinto por rol** (cajas con `h >= 70` llevan el icono arriba) y un panel de código con colores por rol si hay código. Verifica el flujo técnico real del framework antes de dibujar las flechas (`key-concepts.md`, 5h).
 - Para que el visor muestre "Original / Propuesta interactiva" junto al original, agregar `candidates/static/img/<curso>/<nombre>.candidate.json` (ejemplo: `TCP.candidate.json`, con `interactive`, `height`, `finalPath`, `embed`).
 - Re-escanear (`npm run scan` o botón "Re-escanear") y recargar el visor.
@@ -123,7 +126,7 @@ Al terminar cada gráfico, **antes de pasar al siguiente**, actualizar la skill;
 
 ### El kit (`static/interactive/_shared/`)
 
-JavaScript plano y CSS, sin dependencias, con tema claro/oscuro automático. Módulos: `dk-base.css`, `dk-theme.js`, `dk-kit.js`, `dk-icons.js`, `dk-flow.js`, `dk-sequence.js`, `dk-layers.js`, `dk-compare.js`, `dk-anatomy.js`, `dk-table.js`, `dk-tree.js`, `dk-phone.js` (teléfono + `State` + árbol de widgets + consola, con modo libre), `dk-player.js` (con panel de código sincronizado opcional, que puede cambiar con los interruptores). API completa y formato de los pasos en `references/kit-api.md`.
+JavaScript plano y CSS, sin dependencias, con tema claro/oscuro automático. Módulos: `dk-base.css`, `dk-theme.js`, `dk-kit.js`, `dk-icons.js`, `dk-flow.js`, `dk-sequence.js`, `dk-layers.js`, `dk-canvas.js`, `dk-compare.js`, `dk-anatomy.js`, `dk-table.js`, `dk-tree.js`, `dk-phone.js` (teléfono + `State` + árbol de widgets + consola, con modo libre), `dk-player.js` (con panel de código sincronizado opcional, que puede cambiar con los interruptores). API completa y formato de los pasos en `references/kit-api.md`.
 
 Una pieza nueva debería ser ~100 líneas de **datos** (actores, fases, pasos con leyenda). Si estás escribiendo lógica de dibujo, animación, controles o tema dentro de una pieza, para y llévala al kit.
 

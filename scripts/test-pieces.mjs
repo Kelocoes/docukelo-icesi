@@ -21,7 +21,7 @@ import { chromium } from 'playwright-core';
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)), 'static');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.json': 'application/json' };
 // motores cuya figura es un <svg> directo en el escenario: en pantalla completa no deben desbordar verticalmente
-const FITS_FULLSCREEN = ['layers', 'tree', 'sequence', 'radial'];
+const FITS_FULLSCREEN = ['layers', 'tree', 'sequence', 'radial', 'canvas'];
 const HTML_STAGE = ['anatomy', 'table', 'compare', 'phone'];
 const MAX_STEPS = 80;
 
@@ -108,7 +108,7 @@ async function walk(ctx) {
 async function testPiece(browser, base, piece) {
     const result = { piece, engines: [], steps: 0, toggles: 0, errors: [], notes: [] };
     const html = await readFile(join(ROOT, piece, 'index.html'), 'utf8');
-    result.engines = ['radial', 'phone', 'layers', 'tree', 'table', 'anatomy', 'compare', 'sequence'].filter((e) => html.includes(`dk-${e}.js`));
+    result.engines = ['radial', 'phone', 'layers', 'canvas', 'tree', 'table', 'anatomy', 'compare', 'sequence'].filter((e) => html.includes(`dk-${e}.js`));
     const url = `${base}/${piece}/index.html`;
 
     // 1 y 2: pagina normal, tema claro y oscuro

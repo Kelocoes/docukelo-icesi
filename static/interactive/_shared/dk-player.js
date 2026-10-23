@@ -24,7 +24,7 @@
 DK.player = function (o) {
   var el = DK.el;
   var opts = {};
-  (o.toggles || []).forEach(function (t) { opts[t.key] = false; });
+  (o.toggles || []).forEach(function (t) { opts[t.key] = t.type === 'range' ? t.value : t.type === 'select' ? (t.value || 0) : false; });
   var steps = [];
   var scene, ctrl;
 
@@ -39,6 +39,32 @@ DK.player = function (o) {
   var bar = el('div', { class: 'dk-bar' }, el('div', { class: 'dk-btns' }, prev, next, play, reset));
 
   (o.toggles || []).forEach(function (t) {
+    // controles extra (deslizador y selector, ademas del interruptor): deslizador { type: 'range', min, max, step, value, format } y selector { type: 'select', options: [...], value }
+    // el paso actual se conserva (range) o se vuelve al primer paso (select con restart: 'first')
+    if (t.type === 'range') {
+      var fmt = t.format || String;
+      var out = el('output', { text: fmt(t.value) });
+      var rng = el('input', { type: 'range', min: t.min, max: t.max, step: t.step, value: t.value });
+      rng.oninput = function () { opts[t.key] = Number(rng.value); out.textContent = fmt(opts[t.key]); ctrl.stop(); rebuild(ctrl.current()); };
+      bar.appendChild(el('label', { class: 'dk-toggle dk-ctrl' }, t.label, rng, out));
+      return;
+    }
+    if (t.type === 'select') {
+      var sel = el('select', {}, t.options.map(function (label, i) { return el('option', { value: String(i), text: label }); }));
+      sel.value = String(t.value || 0);
+      sel.onchange = function () {
+        opts[t.key] = Number(sel.value); ctrl.stop();
+        var keep = ctrl.current();
+        if (t.restart === 'first') { rebuild(-1); ctrl.go(0, true); return; }
+        if (t.affectsPhase === undefined) { rebuild(keep); return; }
+        // como un interruptor: se vuelve al inicio de la fase afectada si el estudiante ya estaba en ella o mas alla
+        var first = firstStepOfPhase(t.affectsPhase);
+        rebuild(Math.min(keep, first - 1));
+        if (keep >= first) ctrl.go(first, true);
+      };
+      bar.appendChild(el('label', { class: 'dk-toggle dk-ctrl' }, t.label, sel));
+      return;
+    }
     var input = el('input', { type: 'checkbox' });
     input.onchange = function () {
       opts[t.key] = input.checked;

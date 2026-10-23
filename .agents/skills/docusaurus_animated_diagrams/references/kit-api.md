@@ -13,6 +13,7 @@ Orden de carga en el `index.html` de una pieza (rutas relativas, para que funcio
 <script src="../../../_shared/dk-flow.js"></script>      <!-- siempre que se use sequence o layers -->
 <script src="../../../_shared/dk-sequence.js"></script>  <!-- escena: secuencia entre actores -->
 <script src="../../../_shared/dk-layers.js"></script>    <!-- escena: arquitectura recorrida (alternativa a sequence) -->
+<script src="../../../_shared/dk-canvas.js"></script>    <!-- escena: escena libre (iconos sin tarjeta, tomas y enchufes, contadores); alternativa a layers, no necesita dk-flow -->
 <script src="../../../_shared/dk-compare.js"></script>   <!-- escena: comparación A/B (necesita dk-sequence) -->
 <script src="../../../_shared/dk-anatomy.js"></script>   <!-- escena: anatomía explorable (enfoca partes de un mensaje) -->
 <script src="../../../_shared/dk-table.js"></script>     <!-- escena: tabla de datos con estado (paginación, orden, SQL) -->
@@ -34,6 +35,7 @@ Todo es JavaScript plano (scripts clásicos, sin módulos ni dependencias) y exp
 | `dk-flow.js` | `DK.flow.arrow`: una flecha animada con su paquete que viaja (la usan sequence y layers) | Si una escena nueva necesita "algo que viaja de A a B" |
 | `dk-sequence.js` | `DK.sequence`: diagrama de secuencia animado | Flujos entre 2 o más actores en el tiempo |
 | `dk-layers.js` | `DK.layers`: arquitectura recorrida (componentes anidados, mensajes que viajan, resaltado por paso) | Explicar dónde vive algo y por dónde pasa una solicitud (Tomcat/Catalina/servlets) |
+| `dk-canvas.js` | `DK.canvas`: escena libre para `DK.player`: iconos sueltos sin tarjeta, zonas suaves, tomas y enchufes, pastillas contadoras, flechas curvas con paquete, ondas de propagación | Cuando el concepto no es "cajas conectadas": contratos e implementaciones intercambiables, acoplamiento, propagación de un cambio, carriles, Venn, simuladores (Clean Architecture, SOLID, GRASP) |
 | `dk-table.js` | `DK.table`: tabla de datos reales con estado por paso (todas las filas o una página, orden, SQL generado, metadatos de `Page<T>`, medidores de costo) | Paginación, orden, filtros, `LIMIT/OFFSET`: "qué trae esta consulta" |
 | `dk-anatomy.js` | `DK.anatomy`: un mensaje o documento real en una caja; cada paso enfoca una parte y a la derecha aparece su explicación | Explicar la estructura de algo (petición HTTP, JWT, JSON, URL) |
 | `dk-tree.js` | `DK.tree`: un árbol de componentes de verdad (nodos y ramas, distribuido solo); cada paso marca roles y hace viajar datos por las ramas o en salto directo | Estado en React/Flutter: lifting state up, prop drilling, Context, store global, re-renders |
@@ -55,6 +57,8 @@ Todo es JavaScript plano (scripts clásicos, sin módulos ni dependencias) y exp
 
 Cada función devuelve un `<g>`. Los dispositivos reciben `{ x, y }` (x = centro, y = borde superior):
 `laptop` (~72×40), `server` (~52×37), `database` (~48×40), `browser` (~60×42), `user` (~36×44). `piece(n, size)`, `cross(size)` y `check(size)` se dibujan centrados en (0,0). Los iconos usan solo clases `dk-*` y tokens, así que cambian solos con el tema.
+
+**Iconos de dominio y de conexión** (los usa `DK.canvas`; mismo formato `{ x, y, scale }`): `antenna` (receptor GPS), `speed` (velocímetro), `chat` (mensaje), `bell` (alerta), `terminal` (consola), `flask` (prueba), `chip` (computadora de abordo), `pin` (ubicación), `globe` (geodesia), `memory` (RAM), `chain` (pool de conexiones), `wrench` (ensamblaje), `bandaid` (parche), `bus`, `socket` (la toma: abre hacia la **derecha**) y `plug` (el enchufe: clavijas hacia la **izquierda**, para acoplarse en horizontal). `socket` y `plug` aceptan `glyph: '<icono>'`, dibujado pequeño sobre el cuerpo. Altos en `DK.icons.h`.
 
 ## dk-sequence.js: `DK.sequence(opciones)`
 
@@ -122,6 +126,29 @@ scene: function (svg) {
 - **Iconos nuevos:** `lock` (candado: autorización, permisos, cifrado) y `filter` (embudo: un filtro de una cadena).
 
 Piezas de referencia: `candidates/static/interactive/computacion-2/semana-1/servlet-en-tomcat/index.html` (3 niveles), `.../semana-2/contenedor-ioc-y-beans/` (usa `sub` y `trail`) y `.../semana-2/spring-en-tomcat/` (4 niveles de anidamiento, flujo completo de una petición).
+
+## dk-canvas.js: `DK.canvas(opciones)`
+
+Escena libre para `DK.player`, la alternativa a `DK.layers` cuando las cajas no enseñan: el concepto se ve mejor con **iconos sueltos** (sin tarjeta), zonas suaves (manchas, círculos, anillos, carriles), **toma y enchufe**, contadores y flechas curvas. La referencia completa de opciones está en la cabecera de `dk-canvas.js`; aquí lo esencial.
+
+```js
+scene: function (svg) {
+  return DK.canvas({ svg: svg, width: 720, height: 340, trail: 'step', items: [
+    { id: 'svc',  type: 'node', icon: 'gear',   x: 100, y: 190, size: 60, label: 'Servicio', sub: 'el invocador' },
+    { id: 'toma', type: 'node', icon: 'socket', x: 330, y: 190, size: 70, lp: 'above', label: 'Contrato' },
+    { id: 'pg',   type: 'node', icon: 'plug', glyph: 'database', x: 620, y: 85, size: 70, label: 'PostgreSql' },
+    { id: 'cnt',  type: 'tag',  x: 560, y: 52, text: 'archivos modificados: 0', hidden: true },
+  ]});
+}
+```
+
+- **Elementos:** `node` (icono libre con rótulo: `lp` `below` | `above` | `right` | `left`, `ldx`/`ldy`, `rot`, `glyph`), `zone` (`shape`: `blob` | `circle` | `ring` | `round` | `none`; `anchor: 'middle'`), `tag` (pastilla que se ensancha con el texto: contadores y mensajes cortos) y `draw` (una forma propia con `DK.svg`: regletas, paneles de interruptores, agujas). `hidden: true` se revela con `show` y se oculta con `hide`.
+- **Un paso** (`focus`, `solo`, `state`, `badge`, `text`, `sub`, `at`, `rot`, `show`, `hide`, `links`, `pulse`): `state` admite `err`, `ok`, `warn`, `dim` y `ghost` (contorno punteado: "todavía no existe"); `at: { id: [x, y] }` **mueve** un elemento con transición (un enchufe que se acopla a su toma, una pieza que arrastra a otras); `rot` gira una aguja; `pulse` expande ondas (la propagación de un cambio); `text`, `sub`, `at`, `rot` y `show` se **acumulan** (gana el último) y el resto se describe completo en cada paso.
+- **Flechas:** `kind` `ctl` | `ack` | `data` | `err` | `dep` (punteada: dependencia); `curve` o `path` + `c` para no cruzar iconos ni rótulos; `lx`/`ly` colocan la etiqueta; `color: 'p1'..'p5'` la tiñe; `group` hace que varias salgan a la vez. `trail: 'step'` dibuja solo las del paso actual (por defecto quedan atenuadas las de la fase).
+- **Color por actor:** `c: 'p1' | 'p3' | 'p5'` en `node`, `zone` o `tag` colorea el elemento; los estados `err` y `ok` ganan al color.
+- **Ancho 720:** la tarjeta admite hasta 732 px, así el rótulo de 14 px se lee a 14 px. En pantalla completa (`html.dk-fs`) la figura llena el alto sin deformarse (reglas genéricas de `dk-base.css`).
+- **Acoplamiento de un enchufe:** con `size` 50 y la toma en `x`, el enchufe acoplado queda en `x + 82` (en general `x + 65 * (size / 36) - 8`); poner el rótulo de la toma arriba (`lp: 'above'`) y el del enchufe a la derecha (`lp: 'right'`, `ldx`) para que no se pisen. `rot: 180` en ambos los orienta de derecha a izquierda; `rot: 90` en vertical.
+- Pieza de partida: `templates/piece-canvas/index.html`.
 
 ## dk-table.js: `DK.table(opciones)`
 
@@ -313,6 +340,8 @@ code: { title: 'HelloServlet.java', text: CODIGO_COMO_TEXTO },   // en el player
 **Colores del código por rol** (`DK.highlight`, con leyenda automática en la cabecera del panel; se apaga con `legend: false`): **clase o tipo** (verde azulado, negrita: `Product`, `Pageable`), **método** (marrón: lo que va seguido de `(`), **objeto o variable** (morado: `productRepository`, `page`), **palabra clave** (azul, negrita: `public`, `new`, `throw`), texto, número, anotación y comentario (gris cursiva). Reglas del tokenizador: mayúscula inicial = clase; palabra + `(` = método (tras `new`, es la clase del constructor); el resto en minúscula = objeto o variable. Los tokens `--dk-s-kw/ty/fn/ob/st/nu/an` están en `dk-base.css` con variante oscura. Si el código de un capítulo usa otro lenguaje (XML, SQL), ampliar `DK.highlight` o agregar un resaltador por lenguaje. **Dart:** `late` y `required` son palabras clave, y `int double bool num dynamic` se pintan como tipo (no como variable); `String`, `List`, `Widget` ya salen como clase por la mayúscula inicial. Para números de línea que no se desfasen al editar el código, no los escribas a mano: define las líneas en un arreglo y busca por texto (`at('initState')`, `rng('setState(() {', "_mensaje = 'Usuario")`), lanzando un error si el rango queda vacío.
 
 El panel tiene alto limitado (~196 px) y se **desplaza solo** hasta la primera línea resaltada; trae resaltado de sintaxis mínimo (`DK.highlight`: palabras clave, textos, anotaciones, comentarios). Cuidado al numerar: cuenta las líneas en blanco. Pieza de referencia: `candidates/static/interactive/computacion-2/semana-1/ciclo-vida-servlet/index.html`.
+
+**Controles de otros tipos** (además del interruptor `checkbox`): `toggles` acepta un **deslizador** `{ key, type: 'range', label, min, max, step, value, format }` y un **selector** `{ key, type: 'select', label, options: ['A', 'B'], value: 0, affectsPhase | restart: 'first' }`. `build(opts)` recibe el número elegido (`opts[key]`). El deslizador reconstruye los pasos **sin mover** el paso actual (la velocidad cambia y la aguja gira); el selector, como un interruptor, vuelve al inicio de la fase afectada (`affectsPhase`) o, con `restart: 'first'`, al primer paso. Las flechas del teclado dentro de un deslizador o selector **no** cambian de paso. Un selector evita construir una pieza por caso (diez situaciones, cuatro reglas rotas).
 
 **Opciones y campos extra del player:**
 - `scene(svg, stage, api)`: el **tercer argumento** `api` trae `api.code([líneas])`, para que una escena interactiva (`DK.phone` en modo libre) resalte líneas del panel de código por su cuenta.

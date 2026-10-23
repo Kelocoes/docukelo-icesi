@@ -79,6 +79,10 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--dk-ctl); ou
 .dk-btns button:disabled { opacity: .4; cursor: default; }
 .dk-toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--dk-muted); cursor: pointer; user-select: none; }
 .dk-toggle input { width: 16px; height: 16px; accent-color: var(--dk-err); }
+.dk-toggle.dk-ctrl { cursor: default; flex-wrap: wrap; }
+.dk-toggle.dk-ctrl input[type=range] { width: 170px; height: auto; accent-color: var(--dk-ctl); }
+.dk-toggle.dk-ctrl output { font-weight: 700; color: var(--dk-ink); min-width: 4.5em; }
+.dk-toggle.dk-ctrl select { font: 600 13px system-ui, sans-serif; color: var(--dk-ink); background: var(--dk-card); border: 1px solid var(--dk-ctl); border-radius: 8px; padding: 5px 8px; max-width: 100%; }
 
 /* ---------- diagrama de secuencia (dk-sequence.js) ---------- */
 svg text { font-family: inherit; fill: var(--dk-ink); }

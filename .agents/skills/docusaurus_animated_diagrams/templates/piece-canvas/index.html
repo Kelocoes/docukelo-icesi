@@ -1,0 +1,71 @@
+<!doctype html>
+<!--
+  PLANTILLA de pieza interactiva con escena libre (DK.canvas): iconos sueltos sin tarjeta, toma y enchufes, pastillas y contadores.
+  Ejemplo: un contrato (la toma) y dos implementaciones (enchufes) intercambiables, con un interruptor.
+  Copiar a static/interactive/<curso>/<semana>/<slug>/index.html (o, mientras se revisa, a
+  .agents/memory/svg-redesign/candidates/static/interactive/<curso>/<semana>/<slug>/index.html) y cambiar SOLO los DATOS:
+  elementos (items), pasos (build) y textos. No copiar ni reescribir logica del kit: vive en static/interactive/_shared/
+  (ver references/kit-api.md, "dk-canvas.js"). Las rutas ../../../_shared/ asumen la profundidad <curso>/<semana>/<slug>/.
+  Usar width 720 en DK.canvas: el rotulo de 14 px se lee a 14 px.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TITULO DE LA PIEZA</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Los elementos son datos. Las coordenadas son del centro. Ver las opciones en la cabecera de _shared/dk-canvas.js.
+  var DOCK = [443, 190];   // donde se acopla el enchufe a la toma (con size 70: x_toma + 113)
+  var items = [
+    { id: 'cli', type: 'node', icon: 'gear', x: 100, y: 190, size: 60, label: 'Cliente', sub: 'solo conoce la toma' },
+    { id: 'toma', type: 'node', icon: 'socket', lp: 'above', x: 330, y: 190, size: 70, label: 'Contrato', sub: 'la toma: operacion()' },
+    { id: 'a', type: 'node', icon: 'plug', glyph: 'database', x: 620, y: 85, size: 70, label: 'Implementacion A', sub: 'guarda en la base de datos' },
+    { id: 'b', type: 'node', icon: 'plug', glyph: 'memory', x: 620, y: 270, size: 70, label: 'Implementacion B', sub: 'guarda en una lista' },
+  ];
+
+  function build(opt) {
+    var cual = opt.b ? 'b' : 'a', otro = opt.b ? 'a' : 'b';
+    var at = {}; at[cual] = DOCK;
+    var estado = {}; estado[cual] = 'ok'; estado[otro] = 'dim';
+    return [
+      { phase: 0, title: 'El cliente solo conoce el contrato', solo: true, focus: ['cli', 'toma'],
+        links: [{ from: 'cli', to: 'toma', kind: 'ctl', label: 'operacion()' }],
+        caption: 'Lo que el estudiante debe notar en este paso, en una o dos frases.' },
+      { phase: 0, title: 'Varias implementaciones cumplen el contrato', focus: ['a', 'b'],
+        links: [{ from: 'a', to: 'toma', kind: 'dep', label: 'implementa', curve: -28 }, { from: 'b', to: 'toma', kind: 'dep', label: 'implementa', curve: 28 }],
+        badge: { a: { text: 'encaja', tone: 'ok' }, b: { text: 'encaja', tone: 'ok' } },
+        caption: 'Las dos tienen las mismas clavijas: implementan la misma interfaz.' },
+      { phase: 1, title: 'En ejecucion se decide quien responde', focus: ['cli', 'toma', cual], state: estado, at: at,
+        links: [{ from: 'cli', to: 'toma', kind: 'ctl', label: 'operacion()' }],
+        badge: (function () { var m = {}; m[cual] = { text: 'ejecuta operacion()', tone: 'ok' }; return m; })(),
+        caption: 'Activa el interruptor para enchufar la otra implementacion: el cliente no cambia.' },
+    ];
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'DESCRIPCION del diagrama para lectores de pantalla',
+    phases: ['El contrato', 'En ejecucion'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 365, items: items }); },
+    toggles: [{ key: 'b', label: 'Usar la implementacion B', affectsPhase: 1 }],
+    // Otros controles: un deslizador { key, type: 'range', label, min, max, step, value, format } o un selector
+    // { key, type: 'select', label, options: ['a', 'b'], value: 0, restart: 'first' | affectsPhase: n }; build(opt) recibe su valor.
+    build: build,
+    intro: { kicker: 'TEMA', title: 'Antes de empezar', text: 'Pulsa "Siguiente" y recorre la pieza paso a paso.' },
+  });
+})();
+</script>
+</body>
+</html>
