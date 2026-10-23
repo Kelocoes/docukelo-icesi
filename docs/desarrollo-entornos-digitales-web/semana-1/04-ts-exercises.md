@@ -5,7 +5,7 @@ description: "Practica TypeScript convirtiendo código JavaScript con ejercicios
 
 # Ejercicios de Typescript
 
-Este archivo contiene 30 ejercicios pensados para practicar TypeScript. Cada ejercicio tiene:
+Este archivo contiene 28 ejercicios pensados para practicar TypeScript. Cada ejercicio tiene:
 - Código en **JavaScript** (punto de partida).
 - Una **pista** que indica la característica de TypeScript a utilizar y para qué sirve.
 - La **solución oculta** usando `<details>` para que los estudiantes puedan intentar primero.

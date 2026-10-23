@@ -310,7 +310,7 @@ Si todo funcionó correctamente, deberías ver en tu terminal un mensaje indican
 
 ### 7.1 Creación del modelo Usuario
 
-Ahora que tenemos el servidor funcionando, vamos a crear un modelo de datos para representar los juegos de mesa. Dentro de los entorno de desarrollo de Javascript, es común encontrar que los módulos de la aplicación presentan un archivo `index.ts` que exporta todos los módulos del directorio, por lo que crearemos un archivo `index.ts` en la carpeta `models` para exportar nuestro modelo de datos.
+Ahora que tenemos el servidor funcionando, vamos a crear un modelo de datos para representar a nuestros usuarios. Dentro de los entornos de desarrollo de JavaScript, es común encontrar que los módulos de la aplicación presentan un archivo `index.ts` que exporta todos los módulos del directorio, por lo que crearemos un archivo `index.ts` en la carpeta `models` para exportar nuestro modelo de datos.
 
 Crea el archivo `src/models/index.ts` y agrega el siguiente código:
 
@@ -346,7 +346,7 @@ Las instrucciones que deseamos ilustrar con este Script es lo siguiente:
 2. Creamos un esquema de Mongoose llamado `userSchema` que define la estructura del documento de usuario, incluyendo los campos `name`, `email` y `password`. El campo `email` es único y tiene un índice para mejorar el rendimiento de las consultas. Puedes relacionar los esquemas de Mongoose con las entidades en JPA/Hibernate.
 3. Finalmente, exportamos el modelo `UserModel` que se basa en el esquema definido. Este modelo se utilizará para interactuar con la colección de usuarios en la base de datos como se hacía con los repositorios en Spring Data JPA.
 
-> **Nota:** Aún no hemos definido la interfaz `UserInput`, será tu trabajajo definirla en el archivo `src/interfaces/user.interface.ts`. Esta interfaz debe contener los campos `name`, `email` y `password` que se utilizarán al crear un nuevo usuario. Recuerda especificar el archivo `index.ts` en la carpeta `interfaces` para exportar la interfaz `UserInput`.
+> **Nota:** Aún no hemos definido la interfaz `UserInput`, será tu trabajo definirla en el archivo `src/interfaces/user.interface.ts`. Esta interfaz debe contener los campos `name`, `email` y `password` que se utilizarán al crear un nuevo usuario. Recuerda especificar el archivo `index.ts` en la carpeta `interfaces` para exportar la interfaz `UserInput`.
 
 ### 7.2 Creación del modelo Games
 
@@ -501,7 +501,7 @@ public getById(id: string): Promise<UserDocument | null> {
 }
 ```
 
-> **Nota:** Asegúrate de exportar el servicio `userService` al final del archivo `src/services/user.service.ts` para que pueda ser utilizado en otras partes de la aplicación. Esto se hará por medio del archivo `index.ts` en la carpeta `services`. No debes de preocuparte de que cada vez que se importe el servicio, se cree una nueva instancia, ya que en Javascript y Typescript, las clases son singleton por defecto, es decir, solo se crea una instancia de la clase y se reutiliza en todas las importaciones.
+> **Nota:** Asegúrate de exportar el servicio `userService` al final del archivo `src/services/user.service.ts` para que pueda ser utilizado en otras partes de la aplicación. Esto se hará por medio del archivo `index.ts` en la carpeta `services`. No debes de preocuparte de que cada vez que se importe el servicio, se cree una nueva instancia, ya que en JavaScript y TypeScript los módulos se almacenan en caché, por lo que la instancia se crea una sola vez y se reutiliza en todas las importaciones (se comporta como un singleton).
 
 ## 9. Creación de un controlador para la gestión de usuarios
 Ahora que tenemos el servicio `UserService` implementado, vamos a crear un controlador para manejar las solicitudes HTTP relacionadas con los usuarios. Este controlador se encargará de recibir las solicitudes, llamar al servicio correspondiente y devolver las respuestas adecuadas.
