@@ -30,8 +30,8 @@ During standard Java compilation, writing private attributes requires defining d
 
 To use Lombok in a Spring Boot project, declare the dependency in your build tool:
 
-<Tabs>
-  <TabItem value="mvn" label="Maven (pom.xml)" default>
+<Tabs groupId="build-tool">
+  <TabItem value="maven" label="Maven (pom.xml)" default>
 
 ```xml title="pom.xml" showLineNumbers
 <dependencies>

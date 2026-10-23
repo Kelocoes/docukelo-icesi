@@ -15,7 +15,7 @@ A diferencia de compilar manualmente con el comando `javac` o gestionar manualme
 
 Para utilizar Maven en tu entorno local, asegúrate de contar primero con una instalación activa del **Java Development Kit (JDK)**.
 
-<Tabs>
+<Tabs groupId="os">
   <TabItem value="win" label="Windows (Scoop / Choco / Manual)" default>
 
 ### Opción A: Mediante gestores de paquetes (Recomendado)

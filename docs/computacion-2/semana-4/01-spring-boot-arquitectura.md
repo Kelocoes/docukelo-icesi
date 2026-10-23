@@ -315,8 +315,8 @@ La clase principal `DemoApplication.java` (anotada con `@SpringBootApplication`)
 
 Spring Boot incluye ejecutables *Wrapper* (`mvnw` y `gradlew`) para permitir la compilación y ejecución directa sin necesidad de tener Maven o Gradle instalados previamente en el sistema operativo.
 
-<Tabs>
-  <TabItem value="mvn" label="Maven Wrapper" default>
+<Tabs groupId="build-tool">
+  <TabItem value="maven" label="Maven Wrapper" default>
 
 ```bash title="Comandos para ejecutar con Maven Wrapper"
 # En Linux / macOS:
@@ -373,8 +373,8 @@ Configurar `server.servlet.context-path=/demo-api` añade un prefijo obligatorio
 
 Además de definir `spring.profiles.active=dev` en el archivo `application.properties`, es muy común activar perfiles dinámicamente al momento de la ejecución desde la terminal o entornos de CI/CD:
 
-<Tabs>
-  <TabItem value="mvn" label="Maven Wrapper" default>
+<Tabs groupId="build-tool">
+  <TabItem value="maven" label="Maven Wrapper" default>
 
 ```bash title="Ejecución activando el perfil dev en Maven"
 # En Linux / macOS:

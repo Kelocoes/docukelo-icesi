@@ -290,7 +290,7 @@ In local environments, `DB_SYNCHRONIZE=true` allows TypeORM to automatically gen
 
     If the IP address changes or your provider cannot resolve the domain, obtain the active IP address directly through command-line network diagnostics:
 
-    <Tabs>
+    <Tabs groupId="os">
       <TabItem value="win" label="Windows (PowerShell / CMD)" default>
 
       Open your Windows terminal and execute `nslookup` targeting your proxy domain:
@@ -312,7 +312,7 @@ In local environments, `DB_SYNCHRONIZE=true` allows TypeORM to automatically gen
       Copy the value listed under `Addresses` (`66.33.22.220`) and paste it into the **Host** field of your DBeaver connection settings, retaining the assigned TCP port.
 
       </TabItem>
-      <TabItem value="mac-linux" label="macOS and Linux">
+      <TabItem value="unix" label="macOS and Linux">
 
       Open your terminal and query the DNS record using `dig`, `host`, or `nslookup`:
 

@@ -283,8 +283,8 @@ class AccountRepositoryIntegrationTest {
   <Step number="6" title="Ejecutar las Pruebas desde la Terminal o el IDE">
     Para compilar y ejecutar la suite de pruebas automatizadas, puedes emplear el **Maven Wrapper** incluido en el proyecto (`mvnw` o `mvnw.cmd`) o la instalación global de `mvn`.
 
-<Tabs>
-  <TabItem value="wrapper-win" label="Windows (PowerShell / CMD)" default>
+<Tabs groupId="os">
+  <TabItem value="win" label="Windows (PowerShell / CMD)" default>
 
 ```powershell title="Ejecutar todas las pruebas del proyecto"
 # Ejecuta todas las pruebas unitarias y de integración
@@ -301,7 +301,7 @@ class AccountRepositoryIntegrationTest {
 ```
 
   </TabItem>
-  <TabItem value="wrapper-unix" label="macOS y Linux (Bash / Zsh)">
+  <TabItem value="unix" label="macOS y Linux (Bash / Zsh)">
 
 ```bash title="Ejecutar todas las pruebas del proyecto"
 # Asegurar permisos de ejecución en sistemas Unix (si aplica)

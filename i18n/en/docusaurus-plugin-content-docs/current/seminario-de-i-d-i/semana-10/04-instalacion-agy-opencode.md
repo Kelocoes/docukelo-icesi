@@ -37,8 +37,8 @@ To apply the **Human-in-the-Lead** paradigm in our Flutter projects, we need an 
 
 ### Installation Process
 
-<Tabs>
-<TabItem value="windows" label="Windows (PowerShell)" default>
+<Tabs groupId="os">
+<TabItem value="win" label="Windows (PowerShell)" default>
 
 Open a **PowerShell** terminal and run the one-step installation script:
 
@@ -51,7 +51,7 @@ agy --version
 ```
 
 </TabItem>
-<TabItem value="macos" label="macOS (Terminal / zsh)">
+<TabItem value="mac" label="macOS (Terminal / zsh)">
 
 Open your terminal and run the official script via `curl`:
 
@@ -96,8 +96,8 @@ OpenCode is an open-source project distributed as a self-contained binary and vi
 
 ### Binary Installation
 
-<Tabs>
-<TabItem value="powershell" label="Windows (PowerShell)" default>
+<Tabs groupId="os">
+<TabItem value="win" label="Windows (PowerShell)" default>
 
 Run the official installation script for Windows:
 

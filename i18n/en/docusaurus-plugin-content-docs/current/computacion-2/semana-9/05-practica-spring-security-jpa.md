@@ -37,7 +37,7 @@ git clone -b springboot-mvc https://github.com/Kelocoes/compunet2-202502.git
   <Step number="1" title="Add Project Dependencies">
     To enable security capabilities, add the official Spring Security starter to your build manager:
 
-    <Tabs>
+    <Tabs groupId="build-tool">
       <TabItem value="maven" label="Maven (pom.xml)" default>
         ```xml title="pom.xml" showLineNumbers
         <dependency>

@@ -306,8 +306,8 @@ The main class `DemoApplication.java` (annotated with `@SpringBootApplication`) 
 
 ### 4.1. Running the Application from Terminal
 
-<Tabs>
-  <TabItem value="mvn" label="Maven Wrapper" default>
+<Tabs groupId="build-tool">
+  <TabItem value="maven" label="Maven Wrapper" default>
 
 ```bash title="Commands to run with Maven Wrapper"
 # Linux / macOS:
@@ -357,8 +357,8 @@ logging.file.name=logs/application.log
 
 ### 4.3. Activating Environment Profiles via CLI
 
-<Tabs>
-  <TabItem value="mvn" label="Maven Wrapper" default>
+<Tabs groupId="build-tool">
+  <TabItem value="maven" label="Maven Wrapper" default>
 
 ```bash title="Running with dev profile in Maven"
 # Linux / macOS
