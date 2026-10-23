@@ -146,6 +146,8 @@ For external live pages:
 ```
 
 ### OS/Environment Selection Tabs (`<Tabs>`)
+Para que la elección del estudiante se recuerde en todo el sitio, usa `groupId` con valores **estandarizados**: `groupId="os"` con los valores `win`, `mac`, `linux` (o `win` y `unix` cuando macOS y Linux comparten pasos) y `groupId="build-tool"` con `maven` y `gradle`. Solo se sincronizan las pestañas que tienen ese mismo valor; las de otro tipo (por ejemplo "Componente & Vista") no llevan `groupId` para que no se muevan todas a la vez. Aplícalo igual en `i18n/en/`.
+
 To structure multi-environment commands (e.g., Windows vs. macOS/Linux):
 ```mdx
 <Tabs>
@@ -231,6 +233,7 @@ Some explanations are understood better by **moving and touching** than by looki
   ```
   The declared height is only a fallback: the piece resizes its own iframe to its content (`DK.autoHeight`).
 * **Pantalla completa (prueba en `clean-architecture-circular`; detalle y cómo adaptar una pieza en `references/kit-api.md` de la skill, sección "Pantalla completa")**: para piezas complejas usa `<InteractiveFrame src="/interactive/..." title="..." height={780} />` en lugar del `<iframe>`. Agrega arriba a la derecha el boton "Pantalla completa", que abre la misma pieza en un dialogo (`<dialog>`) casi del tamano de la ventana (Esc o "Cerrar" lo cierran). La pieza del dialogo se marca con `data-dk-fixed`: `DK.autoHeight` no la ajusta al contenido y pone `html.dk-fs`, que las piezas usan para adaptarse al alto disponible (ver `dk-radial.css`). Las demas piezas funcionan igual en el dialogo, solo que sin ajustes especiales.
+* **Archivos de línea**: el repo normaliza a LF con `.gitattributes`; los avisos "LF will be replaced by CRLF" de Git en Windows son normales.
 * **Rules that always apply**: it must work in light and dark theme (use the kit tokens, never raw hex colors), no emojis, texts in Spanish with technical terms in English, and the written explanation of the chapter stays around the piece (the piece accompanies the text, it does not replace it).
 * **Review workflow**: new pieces are first built as candidates and reviewed by the teacher before they replace anything in `docs/` (see the skill, step 2 and 4).
 
@@ -302,3 +305,10 @@ Comandos: `npm run lint:docs` (resumen), `-- --verbose` (archivo:linea), `-- --r
 * Dependabot (`.github/dependabot.yml`) abre PR semanales de npm (agrupados: `@docusaurus/*` juntos y el resto de menores/parches), y mensuales de GitHub Actions y de las imagenes del Dockerfile. Las versiones mayores de React y Docusaurus se actualizan a mano.
 * La auditoria del 2026-10-20 dejo 68 avisos (0 criticos, 41 altos, 22 moderados, 5 bajos), todos en herramientas de build/desarrollo salvo `katex` (bajo).
 
+---
+
+## 13. Pruebas automáticas
+
+* **Componentes React** (`npm test`, Vitest + Testing Library + jsdom): las pruebas viven en `tests/components/` y cubren `Quiz`, `PdfViewer`, `InteractiveFrame`, `FocusModeButton`, `CardGrid` y `StepByStep`. La configuración está en `vitest.config.mjs`; los módulos de Docusaurus (`@docusaurus/router`, `@docusaurus/useDocusaurusContext`) se sustituyen por mocks en `tests/mocks/`. Si creas un componente nuevo en `src/components/`, agrega su archivo `tests/components/<Nombre>.test.jsx`; si tocas uno existente, corre `npm test` antes del commit. `npm run test:watch` vuelve a correr al guardar.
+* **Piezas interactivas** (`npm run test:pieces [filtro]`, `scripts/test-pieces.mjs`): abre cada `static/interactive/**/index.html` en un navegador real (Chrome, Edge o el Chromium de Playwright, vía `playwright-core`), recorre todos los pasos, prueba los interruptores, repite con el tema oscuro y la carga en un iframe de pantalla completa (`data-dk-fixed`). Falla si hay errores de JavaScript, recursos locales que no cargan, una pieza que no dibuja o desbordes en pantalla completa. **Córrelo siempre que cambies algo de `static/interactive/_shared/`** (el kit lo usan todas las piezas) y al agregar una pieza nueva. En un equipo sin navegador: `npx playwright install chromium`.
+* Los tests no reemplazan la revisión visual de una pieza nueva (capturas en claro y oscuro, 800 px y 360 px); solo detectan que algo se rompió.

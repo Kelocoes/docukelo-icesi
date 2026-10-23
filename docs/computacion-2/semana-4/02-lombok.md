@@ -30,8 +30,8 @@ Durante la compilación tradicional de Java, escribir atributos privados requier
 
 Para utilizar Lombok en un proyecto de Spring Boot, es necesario incluir la dependencia en el gestor de construcción:
 
-<Tabs>
-  <TabItem value="mvn" label="Maven (pom.xml)" default>
+<Tabs groupId="build-tool">
+  <TabItem value="maven" label="Maven (pom.xml)" default>
 
 ```xml title="pom.xml" showLineNumbers
 <dependencies>

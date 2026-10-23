@@ -280,8 +280,8 @@ class AccountRepositoryIntegrationTest {
   <Step number="6" title="Execute Tests from the Terminal or IDE">
     Use the Maven Wrapper (`mvnw` or `mvnw.cmd`) to run test suites cleanly across any development environment.
 
-<Tabs>
-  <TabItem value="wrapper-win" label="Windows (PowerShell / CMD)" default>
+<Tabs groupId="os">
+  <TabItem value="win" label="Windows (PowerShell / CMD)" default>
 
 ```powershell title="Execute all project tests"
 # Run all unit and integration tests
@@ -298,7 +298,7 @@ class AccountRepositoryIntegrationTest {
 ```
 
   </TabItem>
-  <TabItem value="wrapper-unix" label="macOS & Linux (Bash / Zsh)">
+  <TabItem value="unix" label="macOS & Linux (Bash / Zsh)">
 
 ```bash title="Execute all project tests"
 # Ensure executable permissions on Unix systems

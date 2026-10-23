@@ -114,3 +114,16 @@ Cada entrada: **qué pasó → causa → qué hacer**. Agregar una entrada nueva
 - **Un nodo con `sub` dinámico se dibuja sin la segunda línea** (`DK.tree` decide la posición del rótulo al construir, según `n.sub`): el rótulo y el sub se montaban. → Dar un `sub` base no vacío (un espacio duro) a los nodos cuyo sub cambia.
 - **Probar con el servidor del sitio mientras se edita `static/` recarga la página a mitad de la prueba** (webpack dev server), y una prueba en segundo plano comparte la misma página del navegador con las demás: los resultados salieron contaminados (`final` menor que el esperado, botón "Siguiente" deshabilitado). → Para pruebas automáticas usar un servidor estático aparte (`python serve.py`), **no editar mientras corre una prueba en segundo plano** y no lanzar dos pruebas a la vez con el mismo navegador.
 - **Mismo ejemplo en la pieza y en el capítulo en inglés:** las copias en `i18n/en/` reutilizan la **misma pieza en español** (los identificadores del código en inglés, `_counter`, no coinciden con los de la pieza, `_contador`); se avisa con una nota al inicio del capítulo en inglés.
+
+## Piezas de escena libre (`DK.canvas`, Saman: Paso 3.1 y 3.2)
+
+- **Los elementos ocultos reaparecían atenuados** cuando un paso usaba `solo`: la regla `.st-dim, .solo-off { opacity: .28 }` ganaba a `.hidden { opacity: 0 }` (misma especificidad, más abajo). → `.hidden { opacity: 0 !important }`.
+- **`pathLength="1"` normaliza `stroke-dasharray`:** una flecha punteada con `pathLength` sale **continua** (el guion de 7 vale 7 veces el largo de la ruta). → Las flechas `dep` no llevan `pathLength` y se animan por opacidad.
+- **Las flechas llegaban al centro de una pastilla** (un `tag` no tenía radio de anclaje). → El radio de un `tag` es la mitad de su ancho; las flechas terminan en el borde.
+- **Una flecha larga entre una pastilla y su icono cruza los rótulos de las filas intermedias:** o alinear por fila y dibujar una flecha **curva por encima** del rótulo (`path` + `c`), o rediseñar para que las flechas no crucen.
+- **Los subtítulos de un icono cerca del borde se cortan:** con lienzo de 720, un icono a `x = 62` admite hasta ~11 caracteres; acortar el texto o mover el icono hacia dentro.
+- **Las pastillas inferiores pisan a la fila siguiente** si las filas están a menos de ~110 unidades: anclar la pastilla al panel (`pos: 'right'`) en vez de a la fila.
+- **Dos rótulos pegados cuando un enchufe se acopla a su toma** (el de la toma y el del enchufe quedan en el mismo punto): rótulo de la toma arriba (`lp: 'above'`) y del enchufe a la derecha.
+- **Las flechas del teclado cambiaban de paso mientras el estudiante movía un deslizador:** `DK.stepper` ignora ahora las flechas si el foco está en un `input[type=range]` o un `select`.
+- **Capturas con Playwright:** una captura por elemento puede esperar eternamente "elemento estable" si la pestaña está en segundo plano. → `page.bringToFront()` y `page.screenshot({ clip })` con el rectángulo de la tarjeta.
+- **Heredocs largos con apóstrofes fallan en Git Bash:** escribir los archivos con la herramienta de escritura y parchear con un script en archivo.

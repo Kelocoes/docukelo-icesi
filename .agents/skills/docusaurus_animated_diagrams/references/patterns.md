@@ -17,6 +17,13 @@ Cada patrón dice cuándo usarlo, qué módulo del kit lo resuelve y qué pieza 
 | Simulador de app móvil | Qué pasa por dentro cuando el usuario toca una app: dato que cambia, `setState`, widgets dirty, `build()`, consola; el estudiante lo provoca en un teléfono | `dk-phone.js` + `dk-player.js` con `code` | Hecho | `static/interactive/seminario-de-i-d-i/semana-11/setstate-en-accion/` |
 | Código coloreado por responsabilidad | Un archivo largo con varias responsabilidades mezcladas y cómo se corta (monolito a componentes) | `dk-anatomy.js` (`code`, `layout: 'stack'`, `all: true`) | Hecho | `static/interactive/seminario-de-i-d-i/semana-11/responsabilidades-agenda/` |
 | Capas de identidad (qué se recrea y qué se conserva) | Tres árboles paralelos (Widget, Element, RenderObject): qué objeto cambia de identidad y cuál se reutiliza | `dk-layers.js` (`sub` por paso con ids `#a1`, `#b7`, `trail: 'phase'`) | Hecho | `static/interactive/seminario-de-i-d-i/semana-11/tres-arboles/` |
+| Contrato como toma y enchufe | Un contrato (interfaz) y sus implementaciones intercambiables: polimorfismo, OCP, LSP, DIP, Pure Fabrication, puertos y adaptadores | `dk-canvas.js` + `dk-player.js` (`socket`, `plug`, `at`) | Hecho | piezas de Saman (repo Diseño de Software 1, `body_of_knowledge/saman/build/pieces`): `polimorfismo-enchufe`, `ocp-regleta`, `lsp-contrato`, `mapa-puertos-adaptadores` |
+| Contraste con contador | Un antes y un después con un número que se vuelve tangible (5 de 5 módulos modificados frente a 1 de 4; 3 clientes recompilan frente a 1) | `dk-canvas.js` (`tag` con `text` por paso, `state`, `pulse`) | Hecho | `parnas-secretos`, `isp-herramientas` |
+| Acoplamiento como maraña | Un diseño acoplado como hilos entre piezas que se mueven juntas; propagar un cambio, romper algo lejano, arrastrar piezas | `dk-canvas.js` (`web`, `pulse`, `at`, `webTone`) | Hecho | `sintomas-enredo` |
+| Dos vistas de las mismas piezas | Dos direcciones que no coinciden (flujo de control frente a dependencias de código) en carriles paralelos | `dk-canvas.js` (zonas `round`, flechas `dep` y `ctl`) | Hecho | `dip-carriles` |
+| Matriz de criterios | Candidatos evaluados contra criterios con ✓/✗ que aparecen por columna y un puntaje | `dk-canvas.js` (`draw` para las marcas, `tag`) | Hecho | `creator-matriz` |
+| Clasificador con selector | "Tengo este problema, ¿qué uso?": Venn con el catálogo completo, una regla micro/macro y un selector de situaciones | `dk-canvas.js` + selector de `dk-player.js` | Hecho | `clasificador-heuristicas` |
+| Simulador con deslizador | Un parámetro continuo (velocidad) cuyo valor cambia el desenlace; caso borde visible; aguja que gira | `dk-canvas.js` (`rot`) + deslizador de `dk-player.js` | Hecho | `simulador-pruebas` |
 | Máquina de estados | Estados que cambian por eventos (transacción, sesión, token) | por construir (`dk-states.js`) | Por hacer | — |
 | Antes / después | Efecto de una técnica (refactor, normalización, índice) | por construir | Por hacer | — |
 
@@ -122,3 +129,22 @@ Cada patrón dice cuándo usarlo, qué módulo del kit lo resuelve y qué pieza 
 - **Cuándo:** el concepto es **qué se reemplaza y qué se conserva** entre capas paralelas (Widget, Element, RenderObject). El original dibujaba tres columnas con una `W`, una `E` y una `R`: no decía qué es cada árbol ni qué cambia con `setState`.
 - **Estructura que funcionó:** `DK.layers` con **un solo widget seguido por las tres capas** (el `Text` del contador), filas = árboles y columnas = `ContadorPage` (que no tiene RenderObject: se muestra como "Sin RenderObject") y el `Text`. Fase 1: qué es cada árbol (un paso por fila, foco en la cabecera de la fila). Fase 2: un `setState` con **identidades visibles** en el `sub` (`#a1` pasa a `#b7` en el Widget; `#e2` y `#r1` **siguen siendo los mismos**).
 - **Qué lo hace entendible:** los números de identidad hacen visible lo que un texto solo afirma ("el Element se reutiliza"). El último paso resume qué cambió (el Widget, barato) y qué no (Element, State, RenderObject).
+
+## Ficha del patrón "Contrato como toma y enchufe" (escena libre)
+
+- **Cuándo:** el concepto es un **contrato** y varias cosas que lo cumplen (o no): polimorfismo, OCP, LSP, DIP, puertos y adaptadores, Pure Fabrication. Las cajas con una flecha "implementa" no muestran que **encajan**; una toma y un enchufe sí.
+- **Estructura que funcionó:** la toma (`socket`) con el nombre del contrato y las operaciones en el `sub`; los enchufes (`plug` con `glyph`) esperando a un lado; el enchufe elegido **se acopla** con `at`, brilla en verde y los demás se atenúan. Para una interfaz con varios implementadores, una **regleta** (`draw`) con una toma libre: el canal nuevo es otro enchufe y el contador `archivos existentes que se modifican` queda en 0. Para LSP, cuatro **indicadores** (pastillas) del contrato que se encienden en rojo según la regla que rompe el subtipo (con un selector).
+- **Qué lo hace entendible:** el estudiante **ve** que lo que cambia (el enchufe) no toca al cliente; el caso que rompe el contrato se ve como una pastilla roja y el cliente obligado a preguntar por el tipo.
+- **Cuidado:** rótulo de la toma arriba y de los enchufes a la derecha; el sentido de los iconos importa (`socket` abre a la derecha, `plug` apunta a la izquierda; `rot: 180` los invierte).
+
+## Ficha del patrón "Contraste con contador"
+
+- **Cuándo:** la diferencia entre dos diseños es **cuántas cosas hay que tocar**. Un subtítulo diminuto que dice "modificado" no se lee; un contador y el color sí.
+- **Estructura que funcionó:** las dos alternativas a la vez (cinta compartida frente a cápsulas con candado), una **onda** (`pulse`) que recorre la primera y se queda confinada en la segunda, una pastilla `5 de 5 modificados` en rojo y otra `1 de 4 modificado` en verde.
+- **Parámetros típicos:** 2 fases, 4 a 9 pasos; dos o tres contadores como máximo; `state` por elemento (`err`, `ok`, `dim`).
+
+## Ficha del patrón "Simulador con deslizador"
+
+- **Cuándo:** un valor continuo decide el resultado y el **caso borde** es lo que se debe aprender (en 60,0 km/h exactos no hay alerta porque la regla es estrictamente mayor).
+- **Estructura que funcionó:** tres fases (Arrange, Act, Assert), un velocímetro (`draw`) cuya aguja gira con `rot`, dobles en memoria con contadores (`repository.count() = 1`), y la leyenda del último paso que **cambia según el valor** (alerta, sin alerta, caso borde). El deslizador reconstruye los pasos sin mover el actual.
+- **Cuidado:** `build(opts)` debe leer el valor numérico (`opts.speed`); probar los extremos y el valor exacto del umbral.

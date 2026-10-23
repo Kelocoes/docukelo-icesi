@@ -290,7 +290,7 @@ En tu entorno local, la propiedad `DB_SYNCHRONIZE=true` permite a TypeORM crear 
 
     Si la dirección IP cambia o tu proveedor no la resuelve, puedes obtener la IP vigente en tiempo real mediante comandos de diagnóstico de red en tu terminal:
 
-    <Tabs>
+    <Tabs groupId="os">
       <TabItem value="win" label="Windows (PowerShell / CMD)" default>
 
       Abre tu terminal de Windows y ejecuta el comando `nslookup` apuntando al dominio de tu proxy:
@@ -312,7 +312,7 @@ En tu entorno local, la propiedad `DB_SYNCHRONIZE=true` permite a TypeORM crear 
       Copia el valor listado en `Addresses` (`66.33.22.220`) y pégalo en el campo **Host** de tu conexión en DBeaver, manteniendo el número de puerto asignado por Railway.
 
       </TabItem>
-      <TabItem value="mac-linux" label="macOS y Linux">
+      <TabItem value="unix" label="macOS y Linux">
 
       Abre tu terminal y consulta el registro DNS mediante `dig`, `host` o `nslookup`:
 

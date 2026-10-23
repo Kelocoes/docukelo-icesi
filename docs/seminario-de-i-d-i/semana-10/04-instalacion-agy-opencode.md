@@ -37,8 +37,8 @@ Para aplicar el paradigma de **Human-in-the-Lead** en nuestros proyectos de Flut
 
 ### Proceso de Instalación
 
-<Tabs>
-<TabItem value="windows" label="Windows (PowerShell)" default>
+<Tabs groupId="os">
+<TabItem value="win" label="Windows (PowerShell)" default>
 
 Abre una terminal de **PowerShell** y ejecuta el script de instalación en un solo paso:
 
@@ -51,7 +51,7 @@ agy --version
 ```
 
 </TabItem>
-<TabItem value="macos" label="macOS (Terminal / zsh)">
+<TabItem value="mac" label="macOS (Terminal / zsh)">
 
 Abre tu terminal y ejecuta el script oficial vía `curl`:
 
@@ -96,8 +96,8 @@ OpenCode es un proyecto de código abierto que se distribuye como binario autoco
 
 ### Instalación del Binario
 
-<Tabs>
-<TabItem value="powershell" label="Windows (PowerShell)" default>
+<Tabs groupId="os">
+<TabItem value="win" label="Windows (PowerShell)" default>
 
 Ejecuta el script oficial de instalación para Windows:
 

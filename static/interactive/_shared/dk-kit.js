@@ -70,6 +70,8 @@ window.DK = (function () {
     self.playing = function () { return !!timer; };
     self.current = function () { return cur; };
     document.addEventListener('keydown', function (e) {
+      var t = e.target;   // las flechas de un deslizador o un selector no deben cambiar de paso
+      if (t && ((t.tagName === 'INPUT' && t.type === 'range') || t.tagName === 'SELECT')) return;
       if (e.key === 'ArrowRight') self.next();
       if (e.key === 'ArrowLeft') self.prev();
     });
