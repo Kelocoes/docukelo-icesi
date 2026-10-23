@@ -44,7 +44,7 @@ Estado verificado contra el repositorio; el análisis completo vive en `temp/` d
 
 **Menor**
 - [x] `plugin-client-redirects` para las URLs que cambiaron de mayúsculas a minúsculas (hecho: `src/redirects.js`, 35 redirecciones reconstruidas desde el historial de Git; ver la guía, sección 9).
-- [ ] `DaisyPreview`: fijar la versión de Tailwind/daisyUI o empaquetar el CSS (hoy usa CDN sin SRI).
+- [x] `DaisyPreview`: CSS precompilado en `static/css/daisy-preview.css` (`npm run build:daisy-preview`); ya no usa CDN de Tailwind ni de daisyUI (de ~320 KB comprimidos y 2,9 MB de CSS por iframe a ~14 KB en un solo archivo).
 - [ ] Carpetas vacías del menú: `seminario-de-i-d-i/semana-13` a `16`.
 - [ ] Revisión humana de una muestra de las `description` y los `title=` generados por modelos.
 - [ ] Contrastar `computacion-3/semana-12/03-configuracion-redux-nextjs` con la rama `week-12/next-redux` (ruta del slice y nombre del thunk).
