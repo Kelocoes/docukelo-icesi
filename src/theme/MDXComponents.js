@@ -13,6 +13,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import DaisyPreview from '@site/src/components/DaisyPreview';
 import CourseCards from '@site/src/components/CourseCards';
+import InteractiveFrame from '@site/src/components/InteractiveFrame';
 
 export default {
     // Re-use the default mapping
@@ -35,4 +36,5 @@ export default {
     TabItem,
     DaisyPreview,
     CourseCards,
+    InteractiveFrame,
 };

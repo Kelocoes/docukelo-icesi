@@ -49,7 +49,7 @@ Todo es JavaScript plano (scripts clásicos, sin módulos ni dependencias) y exp
 - `DK.reduced` es `true` si el usuario pidió menos movimiento. Las animaciones deben saltarse (el kit ya lo hace en `DK.stepper`).
 - `DK.timers()` devuelve `{ later(fn, ms), clear() }`. Usar siempre esto en vez de `setTimeout` suelto: `clear()` evita que un timer viejo pinte sobre un paso nuevo.
 - `DK.stepper({ count, show, dwell, onChange?, onPlay? })` controla una secuencia de pasos. `show(i, animate)` pinta el paso `i` (`-1` = antes del primero). Devuelve `{ go(n, animate), next, prev, reset, play, toggle, stop, current, playing }`. Maneja también las flechas del teclado.
-- `DK.autoHeight()` hace que la pieza ajuste el alto de su propio `<iframe>` al contenido (solo funciona si la página que la embebe es del mismo origen, como en DocuKelo). **Llamarlo siempre al final del script**; `DK.player` ya lo hace.
+- `DK.autoHeight()` hace que la pieza ajuste el alto de su propio `<iframe>` al contenido (solo funciona si la página que la embebe es del mismo origen, como en DocuKelo). Si el `<iframe>` lleva `data-dk-fixed` (lo pone `InteractiveFrame` en el diálogo de pantalla completa), **no** ajusta el alto: marca `<html class="dk-fs">` y sale, porque el alto lo fija el diálogo. **Llamarlo siempre al final del script**; `DK.player` ya lo hace.
 
 ## dk-icons.js
 
@@ -320,6 +320,33 @@ El panel tiene alto limitado (~196 px) y se **desplaza solo** hasta la primera l
 - **URL con `#fase=N`** (`index.html#fase=3`): la pieza se abre en la fase N (1 = primera). Sirve para usar **la misma pieza en dos secciones** de un capítulo (elevación de estado en una y prop drilling en otra) sin duplicarla. Ojo al probar: navegar a la misma URL con otro `#` no recarga la página.
 
 Contrato de una escena para `DK.player`: `scene(svg, stage)` devuelve un objeto con `setSteps(steps)`, `render(i, animate)` (que devuelve `{ animMs }`) y `msgDuration`; cada paso trae `phase`, `title`, `caption` y `msgs` (para calcular la duración). `DK.sequence` usa el `svg`; `DK.compare` ignora el `svg` y llena `stage`.
+
+## Pantalla completa (`InteractiveFrame` + `html.dk-fs`)
+
+Para ver una pieza compleja con mucho más espacio, el sitio tiene el componente global `<InteractiveFrame>` (`src/components/InteractiveFrame/`, registrado en `src/theme/MDXComponents.js`, sin import en el `.md`):
+
+```mdx
+<InteractiveFrame src="/interactive/<curso>/<semana>/<slug>/index.html" title="Título accesible" height={780} />
+```
+
+- Propiedades: `src`, `title`, `height` (alto en la página; por defecto 700). Pinta el mismo `<iframe>` de siempre y, arriba a la derecha, el botón "Pantalla completa".
+- Al pulsarlo abre un `<dialog>` modal (96 vw por 94 vh, fondo oscurecido; Esc, "Cerrar" o un clic fuera lo cierran; bloquea el desplazamiento de la página). La pieza del diálogo **se crea solo al abrir** y se elimina al cerrar, y su `<iframe>` lleva `data-dk-fixed`.
+- Contrato con la pieza: `DK.autoHeight()` detecta `data-dk-fixed`, no ajusta el alto y pone la clase **`dk-fs`** en `<html>`. El alto del iframe es ahora el de la ventana, así que `100vh` dentro de la pieza vale ese alto.
+- **Piezas sin cambios:** funcionan igual en el diálogo (tarjeta centrada, con desplazamiento si hace falta); solo no aprovechan el espacio extra. Para que lo aprovechen, agrega reglas bajo `.dk-fs`.
+- **Cómo adaptar una pieza** (el ejemplo real está en `dk-radial.css`): haz que el cuerpo ocupe el alto de la ventana y que la fila de la figura y la del código se estiren, en vez de restar alturas a mano:
+
+```css
+@media (min-width: 821px) {
+  .dk-fs body { height: 100vh; display: flex; flex-direction: column; }
+  .dk-fs #app { flex: 1; min-height: 0; }
+  .dk-fs .dk-card { height: 100%; grid-template-rows: auto auto auto auto auto minmax(0, 1fr); }   /* la última fila se estira */
+  .dk-fs .dk-stage { align-self: stretch; min-height: 0; overflow: hidden; }
+  .dk-fs .dk-stage svg { width: 100%; height: 100%; max-width: none; }   /* meet: la figura llena el alto sin deformarse */
+  .dk-fs .dk-code { align-self: stretch; max-height: none; min-height: 0; }
+}
+```
+
+Restringe esas reglas al diseño ancho (`min-width: 821px`): en una pantalla angosta la pieza se apila y no debe forzarse a 100 vh. `DK.layers`, `DK.sequence` y el resto aún no tienen reglas `dk-fs`: se agregan a `dk-base.css` cuando una de esas piezas lo necesite, probándolo en una captura con la ventana grande.
 
 ## Tokens y clases de `dk-base.css`
 

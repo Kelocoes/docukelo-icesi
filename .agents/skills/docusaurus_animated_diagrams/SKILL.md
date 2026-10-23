@@ -93,6 +93,14 @@ La integración es mecánica y se puede **delegar a otro agente**: ver `referenc
     style={{ width: '100%', height: 740, border: 0 }} loading="lazy" />
   ```
   El alto declarado es solo respaldo: la pieza lo ajusta sola con `DK.autoHeight()`.
+- **Piezas complejas: usa `<InteractiveFrame>` en vez del `<iframe>`** (componente global del sitio, `src/components/InteractiveFrame/`). Mismas propiedades (`src`, `title`, `height`) y agrega arriba a la derecha el botón "Pantalla completa", que abre la misma pieza en un diálogo casi del tamaño de la ventana (Esc, "Cerrar" o clic en el fondo lo cierran). Úsalo cuando la pieza tenga varios paneles (figura + código + explicación), figuras con texto pequeño o más de ~700 px de alto. Una pieza simple puede seguir con `<iframe>`. Ver `references/kit-api.md`, sección "Pantalla completa".
+  ```mdx
+  <InteractiveFrame
+    src="/interactive/<curso>/<semana>/<slug>/index.html"
+    title="Título accesible"
+    height={780}
+  />
+  ```
 - Dejar el archivo original en `static/img/` (para poder volver atrás) y marcar el gráfico como `hecho` en el visor.
 
 ### 5. Cerrar: actualizar ESTA skill (obligatorio en cada gráfico)
@@ -103,6 +111,7 @@ Al terminar cada gráfico, **antes de pasar al siguiente**, actualizar la skill;
 - [ ] **`references/kit-api.md`**: documentar cada función, opción o icono nuevo, en el mismo cambio.
 - [ ] **`references/patterns.md`**: marcar el patrón como hecho y agregar su ficha (cuándo usarlo, estructura que funcionó, parámetros típicos, ejemplo real).
 - [ ] **`references/key-concepts.md`**: agregar cualquier principio pedagógico nuevo que el profesor haya corregido o aprobado.
+- [ ] **Pantalla completa**: si la pieza se integró con `<InteractiveFrame>`, ábrela en el diálogo y revisa que el contenido llene el espacio (ver `kit-api.md`, "Pantalla completa"); si es una escena nueva del kit, agrega sus reglas `.dk-fs`.
 - [ ] **`references/lessons-learned.md`**: cada error o sorpresa, con causa y solución.
 - [ ] **`templates/`**: si el patrón es nuevo, crear su plantilla y **probarla** (una plantilla sin probar es peor que ninguna).
 - [ ] **`.agents/memory/svg-redesign/README.md`**: estado de la pieza y decisiones.

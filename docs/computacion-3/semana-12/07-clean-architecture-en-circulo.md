@@ -15,9 +15,8 @@ La idea central es la que ya conoces: **las dependencias solo apuntan hacia aden
 
 Usa los botones del reproductor para avanzar por las cinco fases. Mientras tanto, observa tres cosas: el anillo que se ilumina, las flechas que aparecen y el código que se resalta a la derecha.
 
-<iframe
+<InteractiveFrame
   src="/interactive/computacion-3/semana-12/clean-architecture-circular/index.html"
   title="Círculo de Clean Architecture con Next.js y Redux Toolkit"
-  style={{ width: '100%', height: 780, border: 0 }}
-  loading="lazy"
+  height={780}
 />

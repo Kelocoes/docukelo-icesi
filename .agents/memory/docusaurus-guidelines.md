@@ -201,6 +201,7 @@ Some explanations are understood better by **moving and touching** than by looki
   />
   ```
   The declared height is only a fallback: the piece resizes its own iframe to its content (`DK.autoHeight`).
+* **Pantalla completa (prueba en `clean-architecture-circular`; detalle y cómo adaptar una pieza en `references/kit-api.md` de la skill, sección "Pantalla completa")**: para piezas complejas usa `<InteractiveFrame src="/interactive/..." title="..." height={780} />` en lugar del `<iframe>`. Agrega arriba a la derecha el boton "Pantalla completa", que abre la misma pieza en un dialogo (`<dialog>`) casi del tamano de la ventana (Esc o "Cerrar" lo cierran). La pieza del dialogo se marca con `data-dk-fixed`: `DK.autoHeight` no la ajusta al contenido y pone `html.dk-fs`, que las piezas usan para adaptarse al alto disponible (ver `dk-radial.css`). Las demas piezas funcionan igual en el dialogo, solo que sin ajustes especiales.
 * **Rules that always apply**: it must work in light and dark theme (use the kit tokens, never raw hex colors), no emojis, texts in Spanish with technical terms in English, and the written explanation of the chapter stays around the piece (the piece accompanies the text, it does not replace it).
 * **Review workflow**: new pieces are first built as candidates and reviewed by the teacher before they replace anything in `docs/` (see the skill, step 2 and 4).
 

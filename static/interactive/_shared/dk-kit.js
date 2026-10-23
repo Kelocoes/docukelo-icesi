@@ -119,6 +119,8 @@ window.DK = (function () {
     var frame = null;
     try { frame = window.frameElement; } catch (e) { /* otro origen */ }
     if (!frame || !window.ResizeObserver) return;
+    // pieza en un dialogo de pantalla completa (InteractiveFrame): el alto lo fija el dialogo; la pieza se adapta a el
+    if (frame.hasAttribute('data-dk-fixed')) { document.documentElement.classList.add('dk-fs'); return; }
     var last = 0;
     new ResizeObserver(function () {
       // se aplica en el siguiente frame: asi no se dispara el aviso "ResizeObserver loop completed"

@@ -18,7 +18,7 @@ Cruza `reviews.json` (estado `hecho`) con los manifiestos `candidates/static/img
      loading="lazy"
    />
    ```
-   El alto es solo un valor de respaldo (la pieza ajusta el suyo con `DK.autoHeight`). No uses `IframeWindow`. No borres la imagen original de `static/img/` (queda de respaldo). No toques el resto del documento.
+   El alto es solo un valor de respaldo (la pieza ajusta el suyo con `DK.autoHeight`). No uses `IframeWindow`. **Si la pieza es compleja** (varios paneles, código al lado de la figura, más de ~700 px), usa `<InteractiveFrame src="..." title="..." height={780} />` en lugar del `<iframe>`: es el mismo bloque, pero con el botón "Pantalla completa" (ver `kit-api.md`). No borres la imagen original de `static/img/` (queda de respaldo). No toques el resto del documento.
 3. Verificar en el sitio real (ver abajo) y revisar una captura.
 4. Actualizar el estado del gráfico en el visor si corresponde y anotarlo en `.agents/memory/svg-redesign/README.md`.
 
@@ -27,6 +27,7 @@ Cruza `reviews.json` (estado `hecho`) con los manifiestos `candidates/static/img
 - Servidor de los docs en español: `npx docusaurus start --port 3001 --locale es --no-open` (el del puerto 3000 sirve `en`). Ruta del capítulo: se quita el prefijo numérico del archivo (`03-contenedor-ioc-y-beans-xml.md` → `/docs/computacion-2/semana-2/contenedor-ioc-y-beans-xml`).
 - Los iframes son `loading="lazy"`: **haz `scrollIntoView` del iframe y espera ~1,5 s antes de inspeccionarlo**, o tu prueba "no lo encuentra" en falso.
 - Desde la página: `const d = iframe.contentDocument; const next = d.querySelectorAll('.dk-btns button')[1];` y pulsa Siguiente hasta que quede deshabilitado (~1,8 s de espera en pasos con flechas). Comprueba pasos recorridos, título final (`.dk-cap h3`), alto del iframe y ausencia de errores de JavaScript. Si la pieza tiene interruptores (`.dk-toggle input`), actívalos y recorre otra vez.
+- Si usaste `<InteractiveFrame>`: pulsa "Pantalla completa" (arriba a la derecha de la pieza), comprueba que el diálogo abre y que cierra con Esc y con "Cerrar", y que el contenido llena el espacio sin barras de desplazamiento sobrantes. El iframe del diálogo se crea al abrir: búscalo con `document.querySelector('dialog iframe')`.
 - Probar también el tema oscuro (botón de tema del sitio): la pieza debe seguirlo.
 - Un script que registra errores solo ve los que ocurren **después** de instalarse; no captura la carga inicial.
 
