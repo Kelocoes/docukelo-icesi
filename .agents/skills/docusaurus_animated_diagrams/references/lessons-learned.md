@@ -127,3 +127,11 @@ Cada entrada: **qué pasó → causa → qué hacer**. Agregar una entrada nueva
 - **Las flechas del teclado cambiaban de paso mientras el estudiante movía un deslizador:** `DK.stepper` ignora ahora las flechas si el foco está en un `input[type=range]` o un `select`.
 - **Capturas con Playwright:** una captura por elemento puede esperar eternamente "elemento estable" si la pestaña está en segundo plano. → `page.bringToFront()` y `page.screenshot({ clip })` con el rectángulo de la tarjeta.
 - **Heredocs largos con apóstrofes fallan en Git Bash:** escribir los archivos con la herramienta de escritura y parchear con un script en archivo.
+
+## Piezas de Zustand (DEDW, semana 13)
+
+- **`trail` por defecto acumula las flechas de todas las fases:** en una pieza donde la fase 3 repite el trayecto de la fase 2 en sentido contrario (`setItem()` y luego `getItem()` entre persist y localStorage), las etiquetas quedaron a 12 unidades una de otra. -> `trail: 'phase'` en `DK.layers`, o revisar que dos flechas de fases distintas no compartan zona.
+- **Un `sub` de 6 unidades por carácter no cabe en una caja de 150:** "JSON con 1 notificación (sigue ahí)" se salía de la caja. Hacer la cuenta (`caracteres <= ancho / 6`) antes de escribir el `sub` que cambia por paso.
+- **`npm run test:pieces` falla sin `playwright-core` en `node_modules`** (es `devDependency`; un `npm install` viejo no la trae) y `docusaurus build` falla igual si falta `@docusaurus/plugin-client-redirects`. Con un `node_modules` desactualizado se puede correr una copia del script con la importación apuntando a otra instalación de `playwright-core` (la de `@playwright/mcp`), sin tocar el repo. Antes de dar por probado algo, confirmar que el comando **imprimió resultados**: con `| tail` el mensaje de error pasó inadvertido.
+- **`addInitScript` con `data-theme` no cambia el tema de una pieza abierta sola:** corre antes de que exista `<html>`. -> Abrirla con `?theme=dark` (prioridad 1 de `dk-theme.js`).
+

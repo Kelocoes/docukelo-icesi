@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Middleware de Zustand como capas</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var CODE = [
+    'export const useNotificationsStore = create<State>()(',                            // 1
+    '  devtools(',                                                                      // 2
+    '    persist(',                                                                     // 3
+    '      immer((set) => ({',                                                          // 4
+    '        notifications: [],',                                                       // 5
+    '        addNotification: (title) =>',                                              // 6
+    '          set((state) => {',                                                       // 7
+    '            state.notifications.unshift({ id: Date.now(), title, read: false });', // 8
+    '          }, undefined, "notifications/add"),',                                    // 9
+    '      })),',                                                                       // 10
+    '      { name: "notifications-storage", skipHydration: true },',                    // 11
+    '    ),',                                                                           // 12
+    '    { name: "NotificationsStore" },',                                              // 13
+    '  ),',                                                                             // 14
+    ');',                                                                               // 15
+    '',                                                                                 // 16
+    '// En el layout, una vez montado el componente:',                                  // 17
+    'useNotificationsStore.persist.rehydrate();',                                       // 18
+  ].join('\n');
+
+  var nodes = [
+    { id: 'devtools', kind: 'outer', label: 'devtools', sub: 'registra cada set() en Redux DevTools', x: 280, y: 4,   w: 440, h: 316 },
+    { id: 'persist',  kind: 'outer', label: 'persist',  sub: 'guarda y restaura en localStorage',     x: 305, y: 54,  w: 390, h: 226 },
+    { id: 'immer',    kind: 'outer', label: 'immer',    sub: 'escribe como si mutaras',               x: 330, y: 104, w: 340, h: 160 },
+    { id: 'creator',  kind: 'box', icon: 'bag',      label: 'Tu store', sub: 'estado + acciones', x: 355, y: 152, w: 290, h: 80 },
+
+    { id: 'comp', kind: 'box', icon: 'browser',  label: 'NotificationForm', sub: 'llama la acción',       x: 20,  y: 150, w: 180, h: 76 },
+    { id: 'ext',  kind: 'box', icon: 'terminal', label: 'Redux DevTools',   sub: 'extensión del navegador', x: 840, y: 24,  w: 150, h: 76 },
+    { id: 'ls',   kind: 'box', icon: 'database', label: 'localStorage',     sub: 'notifications-storage',  x: 840, y: 212, w: 150, h: 76 },
+  ];
+
+  var steps = [
+    // Fase 0: composición
+    {
+      phase: 0, title: 'En el centro está tu store', focus: ['creator'], code: [5, 6, 7, 8, 9], msgs: [],
+      caption: 'Tu store es el objeto con el estado (notifications) y las acciones (addNotification). Los middleware no lo reemplazan: lo envuelven.'
+    },
+    {
+      phase: 0, title: 'immer envuelve a tu store', focus: ['immer'], code: [4, 10], msgs: [],
+      caption: 'La capa más cercana es immer. Te deja escribir la acción como si mutaras (state.notifications.unshift) y por debajo produce un estado nuevo e inmutable.'
+    },
+    {
+      phase: 0, title: 'persist envuelve a immer', focus: ['persist'], code: [3, 11, 12], msgs: [],
+      caption: 'persist observa los cambios del estado y los guarda en localStorage con la clave que le des (name). También sabe restaurarlos.'
+    },
+    {
+      phase: 0, title: 'devtools envuelve todo', focus: ['devtools'], code: [2, 13, 14], msgs: [],
+      caption: 'devtools va por fuera para ver todo lo que ocurre dentro: cada set llega a la extensión Redux DevTools con su nombre de acción y su diferencia de estado.'
+    },
+
+    // Fase 1: una llamada a set()
+    {
+      phase: 1, title: 'El componente llama la acción', focus: ['comp', 'creator'], code: [6, 7],
+      msgs: [{ path: [200, 190, 355, 190], label: 'addNotification()', kind: 'ctl' }],
+      caption: 'Para el componente nada cambió: llama a addNotification como siempre. Las capas actúan sin que él lo sepa.'
+    },
+    {
+      phase: 1, title: 'immer produce el estado inmutable', focus: ['immer', 'creator'], code: [7, 8], msgs: [],
+      sub: { creator: '1 notificación (copia nueva)' },
+      caption: 'La mutación aparente de unshift se aplica sobre un borrador. immer devuelve un estado nuevo y deja intacto el anterior, que es lo que Zustand necesita para detectar el cambio.'
+    },
+    {
+      phase: 1, title: 'persist guarda en localStorage', focus: ['persist', 'ls'], code: [11],
+      msgs: [{ path: [695, 250, 840, 250], label: 'setItem()', kind: 'data' }],
+      sub: { ls: 'JSON con 1 notificación' },
+      caption: 'persist escribe el estado serializado como JSON. Las funciones se descartan solas y, con partialize, puedes elegir qué parte guardar.'
+    },
+    {
+      phase: 1, title: 'devtools registra la acción', focus: ['devtools', 'ext'], code: [9, 13],
+      msgs: [{ path: [720, 62, 840, 62], label: 'notifications/add', kind: 'ctl' }],
+      sub: { ext: 'Historial: 1 acción' },
+      caption: 'El nombre que pasaste como tercer argumento de set aparece en Redux DevTools. Puedes revisar la diferencia de estado y moverte por el historial.'
+    },
+
+    // Fase 2: recarga
+    {
+      phase: 2, title: 'Recarga: el store arranca vacío', focus: ['creator', 'ls'], code: [5, 11],
+      msgs: [],
+      sub: { creator: 'notifications: []', ls: 'sigue guardado' },
+      caption: 'Al recargar la página se pierde la memoria de JavaScript y el store nace con su estado inicial. Con skipHydration, persist todavía no restaura nada: espera a que el layout lo pida.'
+    },
+    {
+      phase: 2, title: 'rehydrate() lee localStorage', focus: ['persist', 'ls'], code: [17, 18],
+      msgs: [{ path: [840, 262, 695, 262], label: 'getItem()', kind: 'data' }],
+      sub: { persist: 'Restaurando...' },
+      caption: 'Cuando el componente se monta, el layout llama rehydrate(). Hacerlo después del primer render evita el desfase entre el HTML del servidor y el del navegador (error de hidratación).'
+    },
+    {
+      phase: 2, title: 'El estado vuelve al store y a la interfaz', focus: ['creator', 'comp'], code: [17, 18],
+      msgs: [{ path: [355, 212, 200, 212], label: 'estado restaurado', kind: 'ack' }],
+      sub: { creator: 'notifications: [1 notificación]', persist: 'Restaurado' },
+      caption: 'El estado restaurado entra al store como cualquier otro set: los selectores se vuelven a evaluar y los componentes suscritos muestran los datos guardados.'
+    },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Middleware de Zustand como capas alrededor del store: immer, persist y devtools, una llamada a set y una recarga de página',
+    wide: true,
+    phases: ['Las capas', 'Una llamada a set()', 'Recargar la página'],
+    scene: function (svg) {
+      return DK.layers({
+        svg: svg,
+        width: 1000,
+        height: 340,
+        nodes: nodes,
+        labels: 'smart',
+        trail: 'phase'
+      });
+    },
+    build: function () { return steps; },
+    code: { title: 'notifications.store.ts', text: CODE },
+    intro: {
+      kicker: 'Middleware de Zustand',
+      title: 'Capas alrededor de tu store',
+      text: 'Un middleware envuelve la función que crea el store y le suma una capacidad sin cambiar tus acciones. Pulsa "Siguiente" para ver cada capa, qué pasa en una llamada a set() y cómo se recupera el estado al recargar.'
+    }
+  });
+})();
+</script>
+</body>
+</html>
