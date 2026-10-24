@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580" width="960" height="580" role="img" aria-label="Mobile-first en Tailwind: cada prefijo aplica desde su ancho en adelante">
+<style>text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}.mono{font-family:ui-monospace,Consolas,"JetBrains Mono",monospace}.title{font-size:20px;font-weight:700}.h{font-size:15px;font-weight:700}.sub{font-size:13px}.lbl{font-size:13px;font-weight:700}.tick{font-size:12px}.cap{font-size:13px;font-weight:600}</style>
+<rect width="960" height="580" rx="16" fill="#1b1b1d"/>
+<text x="32" y="42" class="title" fill="#e6e6e8">Mobile-first: cada prefijo aplica desde su ancho en adelante</text>
+<text x="32" y="68" class="mono sub" fill="#a3a7ae">className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"</text>
+<text x="32" y="112" class="h" fill="#e6e6e8">1. Desde qué ancho aplica cada clase</text>
+<text x="32" y="132" class="sub" fill="#a3a7ae">Tramo fuerte: la clase gana. Tramo tenue: sigue ahí, pero la sobrescribe una clase con un prefijo mayor.</text>
+<text x="32" y="170" class="mono lbl" fill="#9a9aff">grid-cols-1</text>
+<rect x="150.0" y="152" width="450.0" height="26" rx="6" fill="#9a9aff"/>
+<rect x="600.0" y="152" width="300.0" height="26" rx="6" fill="#9a9aff" fill-opacity="0.18"/>
+<text x="750.0" y="170" text-anchor="middle" class="tick" fill="#9a9aff">sobrescrita</text>
+<text x="160.0" y="170" class="tick" font-weight="700" fill="#1b1b1d">gana</text>
+<text x="32" y="208" class="mono lbl" fill="#b79fff">md:grid-cols-2</text>
+<rect x="600.0" y="190" width="150.0" height="26" rx="6" fill="#b79fff"/>
+<rect x="750.0" y="190" width="150.0" height="26" rx="6" fill="#b79fff" fill-opacity="0.18"/>
+<text x="825.0" y="208" text-anchor="middle" class="tick" fill="#b79fff">sobrescrita</text>
+<text x="610.0" y="208" class="tick" font-weight="700" fill="#1b1b1d">gana</text>
+<text x="32" y="246" class="mono lbl" fill="#5fd08f">lg:grid-cols-3</text>
+<rect x="750.0" y="228" width="150.0" height="26" rx="6" fill="#5fd08f"/>
+<text x="760.0" y="246" class="tick" font-weight="700" fill="#1b1b1d">gana</text>
+<line x1="150" y1="278" x2="914" y2="278" stroke="#a3a7ae" stroke-width="2"/>
+<path d="M922,278 L912,273 L912,283 Z" fill="#a3a7ae"/>
+<line x1="150.0" y1="272" x2="150.0" y2="284" stroke="#a3a7ae" stroke-width="2"/>
+<text x="150.0" y="302" text-anchor="middle" class="mono tick" fill="#a3a7ae">0</text>
+<line x1="525.0" y1="272" x2="525.0" y2="284" stroke="#a3a7ae" stroke-width="2"/>
+<text x="525.0" y="302" text-anchor="middle" class="mono tick" fill="#a3a7ae">sm 640</text>
+<line x1="600.0" y1="272" x2="600.0" y2="284" stroke="#a3a7ae" stroke-width="2"/>
+<text x="600.0" y="302" text-anchor="middle" class="mono tick" fill="#a3a7ae">md 768</text>
+<line x1="750.0" y1="272" x2="750.0" y2="284" stroke="#a3a7ae" stroke-width="2"/>
+<text x="750.0" y="302" text-anchor="middle" class="mono tick" fill="#a3a7ae">lg 1024</text>
+<line x1="900.0" y1="272" x2="900.0" y2="284" stroke="#a3a7ae" stroke-width="2"/>
+<text x="900.0" y="302" text-anchor="middle" class="mono tick" fill="#a3a7ae">xl 1280</text>
+<text x="922" y="266" text-anchor="end" class="tick" fill="#a3a7ae">ancho (px)</text>
+<text x="32" y="344" class="h" fill="#e6e6e8">2. Qué ve cada pantalla</text>
+<line x1="369.7265625" y1="310" x2="369.7265625" y2="372" stroke="#9a9aff" stroke-width="1.5" stroke-dasharray="4 4"/>
+<circle cx="369.7265625" cy="278" r="5" fill="#9a9aff"/>
+<rect x="327.7265625" y="378" width="84" height="150" rx="10" fill="#242526" stroke="#6b6f76" stroke-width="2"/>
+<rect x="337.7265625" y="388" width="64.0" height="26" rx="5" fill="#9a9aff" fill-opacity="0.22" stroke="#9a9aff" stroke-width="1.5"/>
+<rect x="337.7265625" y="420" width="64.0" height="26" rx="5" fill="#9a9aff" fill-opacity="0.22" stroke="#9a9aff" stroke-width="1.5"/>
+<rect x="337.7265625" y="452" width="64.0" height="26" rx="5" fill="#9a9aff" fill-opacity="0.22" stroke="#9a9aff" stroke-width="1.5"/>
+<text x="369.7265625" y="552" text-anchor="middle" class="mono cap" fill="#9a9aff">375 px: gana grid-cols-1</text>
+<line x1="618.75" y1="310" x2="618.75" y2="406" stroke="#b79fff" stroke-width="1.5" stroke-dasharray="4 4"/>
+<circle cx="618.75" cy="278" r="5" fill="#b79fff"/>
+<rect x="538.75" y="412" width="160" height="116" rx="10" fill="#242526" stroke="#6b6f76" stroke-width="2"/>
+<rect x="548.75" y="422" width="67.0" height="26" rx="5" fill="#b79fff" fill-opacity="0.22" stroke="#b79fff" stroke-width="1.5"/>
+<rect x="621.75" y="422" width="67.0" height="26" rx="5" fill="#b79fff" fill-opacity="0.22" stroke="#b79fff" stroke-width="1.5"/>
+<rect x="548.75" y="454" width="67.0" height="26" rx="5" fill="#b79fff" fill-opacity="0.22" stroke="#b79fff" stroke-width="1.5"/>
+<rect x="621.75" y="454" width="67.0" height="26" rx="5" fill="#b79fff" fill-opacity="0.22" stroke="#b79fff" stroke-width="1.5"/>
+<text x="618.75" y="552" text-anchor="middle" class="mono cap" fill="#b79fff">800 px: gana md:grid-cols-2</text>
+<line x1="841.40625" y1="310" x2="841.40625" y2="406" stroke="#5fd08f" stroke-width="1.5" stroke-dasharray="4 4"/>
+<circle cx="841.40625" cy="278" r="5" fill="#5fd08f"/>
+<rect x="753.40625" y="412" width="176" height="116" rx="10" fill="#242526" stroke="#6b6f76" stroke-width="2"/>
+<rect x="763.40625" y="422" width="48.0" height="26" rx="5" fill="#5fd08f" fill-opacity="0.22" stroke="#5fd08f" stroke-width="1.5"/>
+<rect x="817.40625" y="422" width="48.0" height="26" rx="5" fill="#5fd08f" fill-opacity="0.22" stroke="#5fd08f" stroke-width="1.5"/>
+<rect x="871.40625" y="422" width="48.0" height="26" rx="5" fill="#5fd08f" fill-opacity="0.22" stroke="#5fd08f" stroke-width="1.5"/>
+<rect x="763.40625" y="454" width="48.0" height="26" rx="5" fill="#5fd08f" fill-opacity="0.22" stroke="#5fd08f" stroke-width="1.5"/>
+<rect x="817.40625" y="454" width="48.0" height="26" rx="5" fill="#5fd08f" fill-opacity="0.22" stroke="#5fd08f" stroke-width="1.5"/>
+<rect x="871.40625" y="454" width="48.0" height="26" rx="5" fill="#5fd08f" fill-opacity="0.22" stroke="#5fd08f" stroke-width="1.5"/>
+<text x="841.40625" y="552" text-anchor="middle" class="mono cap" fill="#5fd08f">1180 px: gana lg:grid-cols-3</text>
+</svg>

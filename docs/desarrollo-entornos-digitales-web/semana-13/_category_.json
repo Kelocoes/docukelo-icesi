@@ -1,0 +1,9 @@
+{
+    "label": "S13 - Estado Global con Zustand",
+    "key": "desarrollo-entornos-digitales-web-semana-13",
+    "position": 13,
+    "link": {
+        "type": "generated-index",
+        "description": "Por qué compartir estado, qué es un store, Zustand paso a paso en Next.js (instalación, tipado, selectores y middleware) y un caso práctico con la sesión y las notificaciones."
+    }
+}

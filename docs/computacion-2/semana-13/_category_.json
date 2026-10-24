@@ -1,8 +1,8 @@
 {
-    "label": "S13 - Postman & Github Spec Kit",
+    "label": "S13 - Postman & Spec-driven Development (SDD)",
     "position": 14,
     "link": {
         "type": "generated-index",
-        "description": "Postman!!"
+        "description": "Pruebas de APIs con Postman (Spring Boot) y metodología Spec-driven Development (SDD) con GitHub Spec Kit y agentes de IA."
     }
 }

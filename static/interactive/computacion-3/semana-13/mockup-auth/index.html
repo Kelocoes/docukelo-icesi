@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup: login, registro y navegación</title>
+<!-- Tailwind CSS v4 y daisyUI 5 reales, como en el proyecto del curso -->
+<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style>body { background: transparent; }</style>
+</head>
+<body class="p-1">
+<div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+  <div role="tablist" class="tabs tabs-box">
+    <button role="tab" class="tab tab-active" data-view="login">Login</button>
+    <button role="tab" class="tab" data-view="register">Registro</button>
+    <button role="tab" class="tab" data-view="app">Aplicación</button>
+  </div>
+  <label class="label cursor-pointer gap-2 text-sm">
+    <input id="mobile" type="checkbox" class="toggle toggle-sm toggle-primary">
+    Vista móvil
+  </label>
+</div>
+
+<div id="frame" class="mockup-browser border border-base-300 w-full mx-auto transition-all">
+  <div class="mockup-browser-toolbar">
+    <div id="url" class="input">http://localhost:3000/login</div>
+  </div>
+
+  <!-- /login -->
+  <section data-screen="login" class="bg-base-200 grid place-items-center px-4 py-10">
+    <div class="card bg-base-100 w-full max-w-sm shadow-md">
+      <form class="card-body" data-form="login" novalidate>
+        <h2 class="card-title text-2xl justify-center">GymRoutines</h2>
+        <p class="text-center text-base-content/70 text-sm">Inicia sesión para ver tus rutinas</p>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Correo</legend>
+          <input type="email" class="input w-full" placeholder="tu@correo.com" required>
+          <legend class="fieldset-legend">Contraseña</legend>
+          <input type="password" class="input w-full" placeholder="********" required>
+          <p class="label text-error hidden" data-error>Completa el correo y la contraseña.</p>
+        </fieldset>
+        <button class="btn btn-primary w-full mt-2">Iniciar sesión</button>
+        <p class="text-center text-sm mt-2">¿No tienes cuenta? <a class="link link-primary" data-go="register">Regístrate</a></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- /register -->
+  <section data-screen="register" class="bg-base-200 grid place-items-center px-4 py-10 hidden">
+    <div class="card bg-base-100 w-full max-w-sm shadow-md">
+      <form class="card-body" data-form="register" novalidate>
+        <h2 class="card-title text-2xl justify-center">Crea tu cuenta</h2>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Nombre</legend>
+          <input type="text" class="input w-full" placeholder="Ana Pérez">
+          <legend class="fieldset-legend">Correo</legend>
+          <input type="email" class="input w-full" placeholder="ana@correo.com">
+          <legend class="fieldset-legend">Contraseña</legend>
+          <input type="password" class="input w-full" data-pass placeholder="********">
+          <legend class="fieldset-legend">Confirmar contraseña</legend>
+          <input type="password" class="input w-full" data-confirm placeholder="********">
+          <p class="label text-error hidden" data-error>Las contraseñas no coinciden.</p>
+        </fieldset>
+        <button class="btn btn-primary w-full mt-2">Crear cuenta</button>
+        <p class="text-center text-sm mt-2">¿Ya tienes cuenta? <a class="link link-primary" data-go="login">Inicia sesión</a></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- /routines: header + navbar + contenido -->
+  <section data-screen="app" class="bg-base-200 hidden">
+    <header class="navbar bg-base-100 shadow-sm px-4">
+      <div class="flex-1 flex items-center gap-2">
+        <div class="dropdown" data-only="mobile">
+          <div tabindex="0" role="button" class="btn btn-ghost btn-square" aria-label="Abrir menú">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </div>
+          <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-10 mt-3 w-48 p-2 shadow">
+            <li><a class="menu-active">Rutinas</a></li>
+            <li><a>Ejercicios</a></li>
+            <li><a>Progreso</a></li>
+          </ul>
+        </div>
+        <span class="text-xl font-bold">GymRoutines</span>
+      </div>
+      <div class="dropdown dropdown-end">
+        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar avatar-placeholder">
+          <div class="bg-primary text-primary-content w-9 rounded-full"><span>AP</span></div>
+        </div>
+        <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-10 mt-3 w-44 p-2 shadow">
+          <li><a>Mi perfil</a></li>
+          <li><a data-go="login">Cerrar sesión</a></li>
+        </ul>
+      </div>
+    </header>
+    <nav class="bg-base-100 border-t border-base-300 px-4" data-only="desktop">
+      <ul class="menu menu-horizontal gap-1 px-0">
+        <li><a class="menu-active">Rutinas</a></li>
+        <li><a>Ejercicios</a></li>
+        <li><a>Progreso</a></li>
+      </ul>
+    </nav>
+    <main class="p-4 grid gap-4" data-grid>
+      <div class="card bg-base-100 shadow-sm"><div class="card-body p-4"><h3 class="card-title text-base">Pierna pesada</h3><p class="text-sm text-base-content/70">Sentadilla, peso muerto y zancadas</p><div class="badge badge-primary badge-outline">Fuerza</div></div></div>
+      <div class="card bg-base-100 shadow-sm"><div class="card-body p-4"><h3 class="card-title text-base">Torso y brazos</h3><p class="text-sm text-base-content/70">Press banca, remo y dominadas</p><div class="badge badge-secondary badge-outline">Hipertrofia</div></div></div>
+      <div class="card bg-base-100 shadow-sm"><div class="card-body p-4"><h3 class="card-title text-base">Cardio suave</h3><p class="text-sm text-base-content/70">Bicicleta y caminata inclinada</p><div class="badge badge-accent badge-outline">Resistencia</div></div></div>
+    </main>
+  </section>
+</div>
+<p class="text-xs text-base-content/60 mt-2">Referencia visual hecha con daisyUI 5. Tu diseño puede ser distinto: colores, textos y detalles quedan a tu criterio.</p>
+
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script>
+(function () {
+  var URLS = { login: '/login', register: '/register', app: '/routines' };
+  var url = document.getElementById('url'), frame = document.getElementById('frame'), mobile = document.getElementById('mobile');
+
+  function show(view) {
+    document.querySelectorAll('[data-screen]').forEach(function (s) { s.classList.toggle('hidden', s.dataset.screen !== view); });
+    document.querySelectorAll('[data-view]').forEach(function (t) { t.classList.toggle('tab-active', t.dataset.view === view); });
+    url.textContent = 'http://localhost:3000' + URLS[view];
+  }
+
+  // Vista móvil: el iframe no cambia de ancho, así que se alterna a mano lo que en el proyecto harían md: y lg:
+  function layout() {
+    var m = mobile.checked;
+    frame.classList.toggle('max-w-sm', m);
+    document.querySelectorAll('[data-only="mobile"]').forEach(function (n) { n.classList.toggle('hidden', !m); });
+    document.querySelectorAll('[data-only="desktop"]').forEach(function (n) { n.classList.toggle('hidden', m); });
+    document.querySelector('[data-grid]').classList.toggle('grid-cols-3', !m);
+  }
+
+  document.querySelectorAll('[data-view]').forEach(function (t) { t.onclick = function () { show(t.dataset.view); }; });
+  document.querySelectorAll('[data-go]').forEach(function (a) { a.onclick = function (e) { e.preventDefault(); show(a.dataset.go); }; });
+  mobile.onchange = layout;
+
+  // Validación visual mínima, como la que se pide en la consigna
+  document.querySelector('[data-form="login"]').onsubmit = function (e) {
+    e.preventDefault();
+    var inputs = this.querySelectorAll('input'), empty = false;
+    inputs.forEach(function (i) { var bad = !i.value.trim(); i.classList.toggle('input-error', bad); empty = empty || bad; });
+    this.querySelector('[data-error]').classList.toggle('hidden', !empty);
+    if (!empty) show('app'); // en el proyecto: router.replace('/routines')
+  };
+  document.querySelector('[data-form="register"]').onsubmit = function (e) {
+    e.preventDefault();
+    var p = this.querySelector('[data-pass]'), c = this.querySelector('[data-confirm]'), bad = !p.value || p.value !== c.value;
+    c.classList.toggle('input-error', bad);
+    this.querySelector('[data-error]').classList.toggle('hidden', !bad);
+    if (!bad) show('login');
+  };
+
+  // daisyUI usa data-theme; dk-theme.js publica el tema del sitio en data-dkt
+  var root = document.documentElement;
+  function syncTheme() { root.setAttribute('data-theme', root.getAttribute('data-dkt') === 'dark' ? 'dark' : 'light'); }
+  new MutationObserver(syncTheme).observe(root, { attributes: true, attributeFilter: ['data-dkt'] });
+  syncTheme();
+
+  layout();
+  DK.autoHeight();
+})();
+</script>
+</body>
+</html>

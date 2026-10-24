@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="100%" height="100%">
+  <defs>
+    <filter id="pm-card-shadow" x="-2%" y="-2%" width="104%" height="105%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <linearGradient id="header-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <marker id="pm-arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <style>
+    .title-main { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 800; }
+    .subtitle-main { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 500; fill: #64748b; }
+    .ui-text { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; font-weight: 600; }
+    .ui-text-sm { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 500; }
+    .code-text { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11.5px; }
+    .badge-text { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 800; fill: #ffffff; }
+    .callout-title { font-family: system-ui, -apple-system, sans-serif; font-size: 12.5px; font-weight: 700; fill: #1e3a8a; }
+    .callout-desc { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 500; fill: #475569; }
+  </style>
+
+  <!-- Canvas Background -->
+  <rect x="10" y="10" width="940" height="520" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Top Title Bar -->
+  <text x="480" y="42" class="title-main" fill="#0f172a" text-anchor="middle">Anatomía de la Interfaz de Postman (Spring Boot)</text>
+  <text x="480" y="62" class="subtitle-main" text-anchor="middle">Componentes esenciales para construir, parametrizar y verificar peticiones HTTP contra APIs REST</text>
+
+  <!-- Simulated Postman Window Container -->
+  <g transform="translate(30, 80)" filter="url(#pm-card-shadow)">
+    <!-- Window Outline -->
+    <rect x="0" y="0" width="620" height="425" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+
+    <!-- App Top Bar (Dark) -->
+    <rect x="0" y="0" width="620" height="34" rx="10" fill="url(#header-grad)"/>
+    <rect x="0" y="24" width="620" height="10" fill="#1e293b"/>
+    <!-- Window Dots -->
+    <circle cx="16" cy="17" r="4.5" fill="#ef4444"/>
+    <circle cx="28" cy="17" r="4.5" fill="#f59e0b"/>
+    <circle cx="40" cy="17" r="4.5" fill="#10b981"/>
+    <!-- Tab in App Header -->
+    <rect x="65" y="6" width="180" height="28" rx="6" fill="#334155"/>
+    <rect x="75" y="14" width="36" height="13" rx="3" fill="#d97706"/>
+    <text x="93" y="24" class="badge-text" font-size="9" text-anchor="middle">POST</text>
+    <text x="120" y="24" class="ui-text-sm" fill="#f1f5f9" font-size="10.5">/auth/login</text>
+
+    <!-- Environment Selector (Top Right of App) -->
+    <rect x="400" y="6" width="205" height="22" rx="4" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+    <circle cx="412" cy="17" r="3.5" fill="#10b981"/>
+    <text x="422" y="21" class="ui-text-sm" fill="#94a3b8" font-size="10">Entorno:</text>
+    <text x="468" y="21" class="ui-text-sm" fill="#38bdf8" font-size="10" font-weight="700">Dev - Spring Boot (Local)</text>
+
+    <!-- Request URL Bar Container -->
+    <rect x="14" y="46" width="592" height="40" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+    <!-- Method Selector Pill -->
+    <rect x="18" y="50" width="65" height="32" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+    <text x="50" y="70" class="ui-text" fill="#b45309" text-anchor="middle">POST</text>
+    <!-- URL Input Text -->
+    <text x="92" y="71" class="code-text" fill="#0284c7">{{base_url}}</text>
+    <text x="175" y="71" class="code-text" fill="#0f172a">/api/v1/auth/login</text>
+    <!-- Send Button -->
+    <rect x="522" y="50" width="80" height="32" rx="4" fill="#2563eb"/>
+    <text x="562" y="70" class="ui-text" fill="#ffffff" text-anchor="middle">Send</text>
+
+    <!-- Request Tabs Bar -->
+    <line x1="14" y1="118" x2="606" y2="118" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="24" y="108" class="ui-text-sm" fill="#64748b">Params</text>
+    <text x="78" y="108" class="ui-text-sm" fill="#64748b">Authorization</text>
+    <text x="162" y="108" class="ui-text-sm" fill="#64748b">Headers <tspan fill="#10b981" font-weight="700">(3)</tspan></text>
+    <text x="238" y="108" class="ui-text" fill="#2563eb" font-weight="700">Body</text>
+    <line x1="236" y1="117" x2="268" y2="117" stroke="#2563eb" stroke-width="2.5"/>
+    <text x="282" y="108" class="ui-text-sm" fill="#64748b">Pre-request Script</text>
+    <text x="390" y="108" class="ui-text-sm" fill="#64748b">Tests <tspan fill="#10b981" font-weight="700">(3)</tspan></text>
+
+    <!-- Body Mode Sub-bar -->
+    <text x="24" y="138" class="ui-text-sm" fill="#64748b" font-size="10.5">none</text>
+    <text x="65" y="138" class="ui-text-sm" fill="#64748b" font-size="10.5">form-data</text>
+    <circle cx="132" cy="134" r="3" fill="#2563eb"/>
+    <text x="140" y="138" class="ui-text-sm" fill="#0f172a" font-size="10.5" font-weight="700">raw</text>
+    <rect x="525" y="125" width="75" height="20" rx="3" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="562" y="139" class="ui-text-sm" fill="#0284c7" font-size="10.5" font-weight="700" text-anchor="middle">JSON ▾</text>
+
+    <!-- Body JSON Editor Panel -->
+    <rect x="14" y="152" width="592" height="100" rx="5" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- Line numbers & code -->
+    <text x="24" y="172" class="code-text" fill="#94a3b8">1</text>
+    <text x="45" y="172" class="code-text" fill="#0f172a">{</text>
+    <text x="24" y="190" class="code-text" fill="#94a3b8">2</text>
+    <text x="55" y="190" class="code-text" fill="#0284c7">"email"</text>
+    <text x="105" y="190" class="code-text" fill="#0f172a">: </text>
+    <text x="115" y="190" class="code-text" fill="#15803d">"estudiante@icesi.edu.co"</text>
+    <text x="280" y="190" class="code-text" fill="#0f172a">,</text>
+    <text x="24" y="208" class="code-text" fill="#94a3b8">3</text>
+    <text x="55" y="208" class="code-text" fill="#0284c7">"password"</text>
+    <text x="130" y="208" class="code-text" fill="#0f172a">: </text>
+    <text x="140" y="208" class="code-text" fill="#15803d">"PasswordSeguro123!"</text>
+    <text x="24" y="226" class="code-text" fill="#94a3b8">4</text>
+    <text x="45" y="226" class="code-text" fill="#0f172a">}</text>
+
+    <!-- Response Divider Bar -->
+    <rect x="14" y="262" width="592" height="34" rx="4" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="26" y="283" class="ui-text" fill="#0f172a" font-weight="700">Response</text>
+    <!-- Response Status Badges -->
+    <rect x="340" y="268" width="70" height="22" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+    <text x="375" y="283" class="ui-text" fill="#15803d" text-anchor="middle">200 OK</text>
+    <rect x="420" y="268" width="85" height="22" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="462" y="283" class="ui-text-sm" fill="#475569" text-anchor="middle">⏱ 45 ms</text>
+    <rect x="515" y="268" width="80" height="22" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="555" y="283" class="ui-text-sm" fill="#475569" text-anchor="middle">📦 824 B</text>
+
+    <!-- Response Tabs Bar -->
+    <line x1="14" y1="324" x2="606" y2="324" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="24" y="316" class="ui-text-sm" fill="#64748b">Body</text>
+    <text x="70" y="316" class="ui-text-sm" fill="#64748b">Cookies</text>
+    <text x="130" y="316" class="ui-text-sm" fill="#64748b">Headers <tspan fill="#64748b">(7)</tspan></text>
+    <text x="210" y="316" class="ui-text" fill="#16a34a" font-weight="700">Test Results (3/3)</text>
+    <line x1="208" y1="323" x2="310" y2="323" stroke="#16a34a" stroke-width="2.5"/>
+
+    <!-- Response Body / Test Results Area -->
+    <rect x="14" y="334" width="592" height="78" rx="5" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- Test item 1 -->
+    <circle cx="30" cy="350" r="5" fill="#10b981"/>
+    <text x="42" y="353" class="ui-text-sm" fill="#0f172a" font-weight="600">PASS · Status code es 200 OK (Spring Security Auth)</text>
+    <!-- Test item 2 -->
+    <circle cx="30" cy="370" r="5" fill="#10b981"/>
+    <text x="42" y="373" class="ui-text-sm" fill="#0f172a" font-weight="600">PASS · Response payload contiene 'accessToken' en formato JWT</text>
+    <!-- Test item 3 -->
+    <circle cx="30" cy="390" r="5" fill="#10b981"/>
+    <text x="42" y="393" class="ui-text-sm" fill="#0f172a" font-weight="600">PASS · Variable de entorno {{jwt_token}} sincronizada exitosamente</text>
+  </g>
+
+  <!-- Right Explanatory Callouts Column -->
+  <g transform="translate(670, 85)">
+    <!-- Callout 1: Environments -->
+    <rect x="0" y="0" width="260" height="90" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.2"/>
+    <circle cx="18" cy="18" r="10" fill="#2563eb"/>
+    <text x="18" y="22" class="badge-text" text-anchor="middle">1</text>
+    <text x="36" y="22" class="callout-title">Gestión de Entornos</text>
+    <text x="12" y="44" class="callout-desc">Permite alternar entre servidor local</text>
+    <text x="12" y="60" class="callout-desc">(<tspan font-family="monospace">localhost:8080</tspan>) y la nube sin</text>
+    <text x="12" y="76" class="callout-desc">editar las URLs manualmente.</text>
+
+    <!-- Callout 2: Request Builder -->
+    <rect x="0" y="105" width="260" height="90" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.2"/>
+    <circle cx="18" cy="123" r="10" fill="#2563eb"/>
+    <text x="18" y="127" class="badge-text" text-anchor="middle">2</text>
+    <text x="36" y="127" class="callout-title">Constructor de Petición</text>
+    <text x="12" y="149" class="callout-desc">Configura verbo HTTP, URL con</text>
+    <text x="12" y="165" class="callout-desc">variables (<tspan font-family="monospace">{{base_url}}</tspan>), Headers</text>
+    <text x="12" y="181" class="callout-desc">y payload JSON para el DTO @Valid.</text>
+
+    <!-- Callout 3: Scripts & Testing -->
+    <rect x="0" y="210" width="260" height="90" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.2"/>
+    <circle cx="18" cy="228" r="10" fill="#2563eb"/>
+    <text x="18" y="232" class="badge-text" text-anchor="middle">3</text>
+    <text x="36" y="232" class="callout-title">Scripts (Pre/Post Sandbox)</text>
+    <text x="12" y="254" class="callout-desc"><tspan font-weight="700">Pre-request</tspan>: genera datos dinámicos.</text>
+    <text x="12" y="270" class="callout-desc"><tspan font-weight="700">Tests</tspan>: ejecuta aserciones en JavaScript</text>
+    <text x="12" y="286" class="callout-desc">y guarda tokens en el entorno activo.</text>
+
+    <!-- Callout 4: Response Inspector -->
+    <rect x="0" y="315" width="260" height="95" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.2"/>
+    <circle cx="18" cy="333" r="10" fill="#2563eb"/>
+    <text x="18" y="337" class="badge-text" text-anchor="middle">4</text>
+    <text x="36" y="337" class="callout-title">Panel de Inspección</text>
+    <text x="12" y="359" class="callout-desc">Visualiza status code (200, 201, 400),</text>
+    <text x="12" y="375" class="callout-desc">latencia en ms, payload de respuesta</text>
+    <text x="12" y="391" class="callout-desc">y el resultado de las aserciones.</text>
+  </g>
+</svg>

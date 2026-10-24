@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Navegación por Eventos en Next.js</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var U = 'user', C = 'client', R = 'router';
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+  var both = function (u, c, r) { return { user: u, client: c, router: r }; };
+
+  var CODE = [
+    'const handleSubmit = async (e: React.FormEvent) => {', // 1
+    '  e.preventDefault();',                                // 2
+    '  setError(null);',                                    // 3
+    '  const ok = await guardar({ nombre });',              // 4
+    '  if (ok) {',                                          // 5
+    '    router.push("/productos");',                       // 6
+    '  } else {',                                           // 7
+    '    setError("No se pudo guardar.");',                 // 8
+    '  }',                                                  // 9
+    '};',                                                   // 10
+  ].join('\n');
+
+  function build(opt) {
+    var fail = opt && opt.fail;
+    var steps = [];
+
+    // FASE 0: Envío del formulario
+    steps.push({
+      phase: 0,
+      title: 'Disparo del submit',
+      code: [1, 2, 3],
+      msgs: [msg(U, C, 'click guardar', 'ctl')],
+      state: both('Envía datos', 'handleSubmit', 'En reposo'),
+      caption: 'El usuario presiona "Guardar". El manejador de evento previene la recarga del navegador con e.preventDefault() y limpia errores previos.'
+    });
+
+    // FASE 1: Operación asíncrona
+    steps.push({
+      phase: 1,
+      title: 'Guardado asíncrono',
+      code: [4],
+      msgs: [msg(C, U, 'Cargando...', 'ack')],
+      state: both('Espera respuesta', 'await guardar()', 'En reposo'),
+      caption: 'El componente ejecuta await guardar(). Muestra un indicador de carga y espera el resultado de la operación.'
+    });
+
+    if (!fail) {
+      // Éxito: ok === true
+      steps.push({
+        phase: 1,
+        title: 'Operación exitosa',
+        code: [5],
+        msgs: [msg(C, U, 'ok = true', 'ack')],
+        state: both('Espera respuesta', 'ok === true', 'En reposo'),
+        caption: 'La función guardar() responde con éxito (ok === true), por lo que el flujo entra al bloque if.'
+      });
+
+      // FASE 2: Navegación programática
+      steps.push({
+        phase: 2,
+        title: 'Llamada a router.push',
+        code: [6],
+        msgs: [msg(C, R, 'router.push("/productos")', 'ctl')],
+        state: both('Espera transición', 'router.push()', 'Navegando'),
+        caption: 'El componente invoca router.push("/productos") para ordenar la transición al router de Next.js.'
+      });
+
+      steps.push({
+        phase: 2,
+        title: 'Nueva ruta montada',
+        code: [6],
+        msgs: [msg(R, U, 'Render /productos', 'data')],
+        state: both('Ve /productos', 'Desmontado', 'Ruta /productos'),
+        caption: 'Next.js monta la vista /productos sin recargar la página completa, completando la navegación en el cliente.'
+      });
+    } else {
+      // Fallo: ok === false
+      steps.push({
+        phase: 1,
+        title: 'Operación fallida',
+        code: [7],
+        msgs: [msg(C, U, 'ok = false', 'err')],
+        state: both('Espera respuesta', 'ok === false', 'En reposo'),
+        caption: 'La operación falla (error de red o validación) y guardar() devuelve false, saltando al bloque else.'
+      });
+
+      // FASE 2: Notificación sin navegación
+      steps.push({
+        phase: 2,
+        title: 'Alerta sin navegar',
+        code: [8],
+        msgs: [msg(C, U, 'Alerta de error', 'err')],
+        state: both('Ve mensaje de error', 'Error en UI', 'En reposo'),
+        caption: 'Se ejecuta setError con el mensaje de fallo. No se llama a router.push(), la URL se mantiene y los datos no se pierden.'
+      });
+    }
+
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    wide: true,
+    ariaLabel: 'Secuencia interactiva de navegación por eventos tras envío de formulario',
+    phases: ['Envío', 'Guardado', 'Resultado'],
+    scene: function (svg) {
+      return DK.sequence({
+        svg: svg,
+        width: 840,
+        margin: 120,
+        idleState: 'En reposo',
+        phases: ['Envío', 'Guardado', 'Resultado'],
+        actors: [
+          { id: U, label: 'Usuario', icon: 'user' },
+          { id: C, label: 'Componente cliente', icon: 'laptop' },
+          { id: R, label: 'Router de Next', icon: 'browser' },
+        ],
+      });
+    },
+    build: build,
+    toggles: [{ key: 'fail', label: 'El guardado falla (simular error)', affectsPhase: 1 }],
+    code: { title: 'FormularioProducto.tsx', text: CODE },
+    kicker: function (p) {
+      return [
+        'Envío del formulario',
+        'Operación asíncrona',
+        'Decisión de navegación'
+      ][p];
+    },
+    intro: {
+      kicker: 'Navegación por eventos',
+      title: 'Antes de empezar',
+      text: 'El formulario envía los datos con await guardar(). Si la operación tiene éxito, navega con router.push("/productos"). Si falla, muestra un error y permanece en la página. Activa el interruptor para simular un fallo.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 6
+sidebar_position: 3
 description: "Build the login and register screens, header, and navigation bar of the routines app with Tailwind CSS in this in-class assignment."
 ---
 
@@ -22,11 +22,10 @@ Build, **at the visual component level only**, the login and register screens, t
 
 This is a reference of how it can look, built with the real daisyUI 5 components. Switch between the screens and try the mobile view:
 
-<iframe
-  src="/interactive/computacion-3/semana-12/mockup-auth/index.html"
+<InteractiveFrame
+  src="/interactive/computacion-3/semana-13/mockup-auth/index.html"
   title="Reference mockup: login, register, header and navbar with daisyUI"
-  style={{ width: '100%', height: 620, border: 0 }}
-  loading="lazy"
+  height={620}
 />
 
 ---

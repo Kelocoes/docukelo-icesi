@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flujo de un cambio de estado en Zustand</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var CODE = [
+    '// 1. El store: estado y acciones en el mismo objeto',                            // 1
+    'export const useNotificationsStore = create<State>()((set) => ({',                // 2
+    '  notifications: [],',                                                            // 3
+    '',                                                                                // 4
+    '  addNotification: (title) =>',                                                   // 5
+    '    set((s) => ({',                                                               // 6
+    '      notifications: [{ id: Date.now(), title, read: false }, ...s.notifications],', // 7
+    '    })),',                                                                        // 8
+    '}));',                                                                            // 9
+    '',                                                                                // 10
+    '// 2. El componente emisor llama la acción (no hay dispatch)',                    // 11
+    'const addNotification = useNotificationsStore((s) => s.addNotification);',        // 12
+    'addNotification("Perfil actualizado");',                                          // 13
+    '',                                                                                // 14
+    '// 3. set() reemplaza el estado y avisa a los suscriptores',                      // 15
+    '// notifications: [] -> [{ id: 1, title: "Perfil actualizado", ... }]',           // 16
+    '',                                                                                // 17
+    '// 4. El selector de NotificationBell se vuelve a evaluar (Object.is)',            // 18
+    'const unread = useNotificationsStore(',                                           // 19
+    '  (s) => s.notifications.filter((n) => !n.read).length',                          // 20
+    ');',                                                                              // 21
+    '',                                                                                // 22
+    '// 5. unread pasó de 0 a 1: solo NotificationBell se re-renderiza',               // 23
+    'return <span className="badge">{unread}</span>;',                                 // 24
+  ].join('\n');
+
+  var nodes = [
+    { id: 'creator', kind: 'box', icon: 'browser',  label: 'NotificationForm',      sub: 'solo selecciona la acción', x: 50,  y: 40,  w: 200, h: 76 },
+    { id: 'act',     kind: 'box', icon: 'gear',     label: 'addNotification()',     sub: 'acción del store',          x: 410, y: 40,  w: 180, h: 76 },
+    { id: 'store',   kind: 'box', icon: 'database', label: 'useNotificationsStore', sub: '0 notificaciones',          x: 740, y: 40,  w: 210, h: 76 },
+    { id: 'sel',     kind: 'box', icon: 'filter',   label: 'Selector',              sub: 's.notifications',           x: 740, y: 260, w: 210, h: 76 },
+    { id: 'bell',    kind: 'box', icon: 'bell',     label: 'NotificationBell',      sub: 'badge de no leídas: 0',     x: 50,  y: 260, w: 200, h: 76 },
+  ];
+
+  var steps = [
+    {
+      phase: 0,
+      title: 'El estado y las acciones viven juntos',
+      focus: ['act', 'store'],
+      code: [1, 2, 3, 5, 6, 7, 8, 9],
+      msgs: [],
+      caption: 'Un store de Zustand es un solo objeto con el estado (notifications) y las funciones que lo cambian (addNotification). No hay reducers, ni objetos action, ni dispatch.'
+    },
+    {
+      phase: 0,
+      title: 'El componente llama la acción',
+      focus: ['creator', 'act'],
+      code: [11, 12, 13],
+      msgs: [{ from: 'creator', to: 'act', label: 'addNotification()', kind: 'ctl' }],
+      sub: { act: 'Recibe "Perfil actualizado"' },
+      caption: 'El formulario selecciona la acción con un selector y la invoca como cualquier función. El componente no necesita saber cómo se guarda ni dónde.'
+    },
+    {
+      phase: 1,
+      title: 'La acción llama a set()',
+      focus: ['act', 'store'],
+      code: [5, 6, 7, 8],
+      msgs: [{ from: 'act', to: 'store', label: 'set(fn)', kind: 'data' }],
+      sub: { act: 'Calcula la nueva lista', store: '1 notificación' },
+      caption: 'set recibe una función con el estado actual y devuelve solo lo que cambia. Zustand fusiona ese resultado con el estado existente y reemplaza la referencia de notifications.'
+    },
+    {
+      phase: 2,
+      title: 'El store avisa a los suscriptores',
+      focus: ['store', 'sel'],
+      code: [15, 16, 18],
+      msgs: [{ from: 'store', to: 'sel', label: 'notifica', kind: 'ctl' }],
+      sub: { sel: 'Compara con Object.is' },
+      caption: 'Después de cada set, el store ejecuta de nuevo el selector de cada componente suscrito y compara el resultado nuevo con el anterior. No hay un Provider de por medio.'
+    },
+    {
+      phase: 2,
+      title: 'Solo se re-renderiza quien cambió',
+      focus: ['sel', 'bell'],
+      code: [19, 20, 21, 23, 24],
+      msgs: [{ from: 'sel', to: 'bell', label: 'Re-render', kind: 'ack' }],
+      sub: { sel: 'Valor distinto', bell: 'badge: 1 (re-render)', creator: 'Sin cambios: no se re-renderiza' },
+      caption: 'El número de no leídas cambió de 0 a 1, así que NotificationBell se vuelve a dibujar. NotificationForm solo seleccionó una función, cuya referencia no cambia, y no se entera.'
+    }
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Flujo de un cambio de estado en Zustand: componente, acción, set, selector y re-render',
+    wide: true,
+    phases: ['Llamar la acción', 'Actualizar el estado', 'Suscripción y re-render'],
+    scene: function (svg) {
+      return DK.layers({
+        svg: svg,
+        width: 1000,
+        height: 380,
+        nodes: nodes,
+        labels: 'smart'
+      });
+    },
+    build: function () { return steps; },
+    code: { title: 'flujo-notificacion.ts', text: CODE },
+    intro: {
+      kicker: 'Flujo en Zustand',
+      title: 'Del clic al re-render, sin dispatch',
+      text: 'En Zustand la acción es una función del propio store. Pulsa "Siguiente" para ver cómo una llamada a addNotification cambia el estado y actualiza solo el componente que lo usa.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

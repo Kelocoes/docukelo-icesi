@@ -1,0 +1,8 @@
+{
+    "label": "S13 - Styling and Navigation",
+    "position": 13,
+    "link": {
+        "type": "generated-index",
+        "description": "Modern styling with Tailwind CSS v4 and daisyUI 5, visual components, mobile-first design, and event navigation in Next.js."
+    }
+}

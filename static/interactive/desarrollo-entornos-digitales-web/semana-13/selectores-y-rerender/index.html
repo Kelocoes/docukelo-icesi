@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selectores y re-renders en Zustand</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-tree.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // El dashboard como árbol de componentes. El store vive afuera del árbol: no se dibuja como nodo.
+  var NODES = [
+    { id: 'layout', label: 'DashboardLayout', sub: 'layout' },
+    { id: 'navbar', label: 'NavBar', parent: 'layout' },
+    { id: 'bell', label: 'NotificationBell', parent: 'navbar', sub: 'badge de no leídas' },
+    { id: 'user', label: 'UserMenu', parent: 'navbar', sub: 'nombre del usuario' },
+    { id: 'main', label: 'MainContent', parent: 'layout' },
+    { id: 'form', label: 'NotificationForm', parent: 'main', sub: 'emite notificaciones' },
+    { id: 'list', label: 'NotificationList', parent: 'main', sub: 'lista completa' },
+    { id: 'footer', label: 'Footer', parent: 'main' },
+  ];
+
+  var step = function (phase, title, caption, extra) {
+    var s = { phase: phase, title: title, caption: caption, msgs: [] };
+    for (var k in extra) s[k] = extra[k];
+    return s;
+  };
+
+  var steps = [
+    // ---- Fase 1: sin selector ----
+    step(0, 'Cuatro componentes llaman useStore() sin selector',
+      'Sin selector, el hook devuelve el store completo y suscribe al componente a todo lo que cambie en él. Footer no usa el store, así que no participa.',
+      { roles: { bell: 'pass', user: 'pass', form: 'pass', list: 'pass' },
+        tags: { bell: 'useStore()', user: 'useStore()', form: 'useStore()', list: 'useStore()', footer: 'no usa el store' } }),
+    step(0, 'Llega una notificación: se renderizan los cuatro',
+      'La lista cambió. Solo NotificationBell y NotificationList necesitan el dato nuevo; UserMenu y NotificationForm se renderizan sin motivo (en naranja), porque su suscripción abarca todo el store.',
+      { roles: { bell: 'use', list: 'use', user: 'need', form: 'need', footer: 'dim', layout: 'dim', navbar: 'dim', main: 'dim' },
+        tags: { bell: 're-render', list: 're-render', user: 're-render innecesario', form: 're-render innecesario', footer: 'sin cambios' } }),
+
+    // ---- Fase 2: con selectores ----
+    step(1, 'Cada componente elige solo lo que usa',
+      'Con un selector por dato, cada componente declara de qué depende. NotificationForm pide únicamente la función addNotification, que nunca cambia de referencia.',
+      { roles: { bell: 'pass', user: 'pass', form: 'pass', list: 'pass' },
+        tags: { bell: 's.notifications.length', user: 's.user', form: 's.addNotification', list: 's.notifications' } }),
+    step(1, 'Llega una notificación: se renderizan dos',
+      'Zustand vuelve a evaluar cada selector y compara con Object.is. El conteo y la lista cambiaron; el usuario y la función no. Los otros dos componentes ni se enteran.',
+      { roles: { bell: 'use', list: 'use', user: 'dim', form: 'dim', footer: 'dim', layout: 'dim', navbar: 'dim', main: 'dim' },
+        tags: { bell: 'cambió: re-render', list: 'cambió: re-render', user: 'igual: sin render', form: 'igual: sin render' } }),
+    step(1, 'Cambia el usuario: solo UserMenu se renderiza',
+      'Una acción distinta modifica otra parte del store. Ahora solo el componente suscrito a s.user se vuelve a dibujar. El árbol entero no se toca.',
+      { roles: { user: 'use', bell: 'dim', list: 'dim', form: 'dim', footer: 'dim', layout: 'dim', navbar: 'dim', main: 'dim' },
+        tags: { user: 'cambió: re-render', bell: 'igual: sin render', list: 'igual: sin render', form: 'igual: sin render' } }),
+
+    // ---- Fase 3: varios valores ----
+    step(2, 'Un selector que devuelve un objeto nuevo',
+      'NotificationList quiere dos valores y los entrega en un objeto: (s) => ({ items, total }). Cada ejecución crea un objeto distinto, Object.is siempre dice "cambió" y el componente se vuelve a renderizar sin fin. En Zustand 5 termina en un error de actualización infinita.',
+      { roles: { list: 'need' },
+        tags: { list: '({ items, total }) = objeto nuevo' } }),
+    step(2, 'useShallow compara el contenido',
+      'useShallow envuelve el selector y compara el objeto propiedad por propiedad. Si items y total son los mismos, el resultado se considera igual y no hay render. La otra opción es un selector por valor.',
+      { roles: { list: 'use' },
+        tags: { list: 'useShallow(...) estable' } }),
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Árbol de componentes de un dashboard que muestra qué componentes se re-renderizan según el selector de Zustand',
+    phases: ['Sin selector', 'Con selectores', 'Varios valores'],
+    wide: true,
+    scene: function (svg) {
+      return DK.tree({ svg: svg, width: 1000, nodes: NODES });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Selectores en Zustand',
+      title: 'Quién se vuelve a renderizar y por qué',
+      text: 'El store vive fuera del árbol y cada componente se suscribe con un selector. Recorre qué pasa cuando llega una notificación sin selector, con un selector por dato y al pedir varios valores a la vez.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

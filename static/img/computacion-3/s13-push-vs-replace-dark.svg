@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="960" height="560" role="img" aria-label="Pila del historial del navegador con router.push y con router.replace">
+<style>text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}.mono{font-family:ui-monospace,Consolas,"JetBrains Mono",monospace;font-size:14px}.small{font-size:12px}.tiny{font-size:11px}.h{font-size:15px;font-weight:700}.title{font-size:20px;font-weight:700}.sub{font-size:13px}.note{font-size:13px;font-weight:600}</style>
+<rect width="960" height="560" rx="16" fill="#1b1b1d"/>
+<text x="32" y="42" class="title" fill="#e6e6e8">push agrega una entrada al historial; replace cambia la actual</text>
+<text x="32" y="66" class="sub" fill="#a3a7ae">Cada columna es la pila del historial (abajo la más vieja). El triángulo marca la página en la que estás.</text>
+<text x="280" y="112" text-anchor="middle" class="h" fill="#e6e6e8">1. Historial inicial</text>
+<text x="530" y="112" text-anchor="middle" class="h" fill="#e6e6e8">2. Navegas a /dashboard</text>
+<text x="780" y="112" text-anchor="middle" class="h" fill="#e6e6e8">3. Pulsas "Atrás"</text>
+<rect x="20" y="130" width="920" height="195" rx="12" fill="#242526"/>
+<text x="40" y="164" class="mono" font-weight="700" fill="#e6e6e8">router.push('/dashboard')</text>
+<text x="40" y="186" class="sub" fill="#a3a7ae">agrega /dashboard encima</text>
+<rect x="202.0" y="256" width="156" height="34" rx="8" fill="#1b1b1d" stroke="#3d3e41" stroke-width="1.5"/>
+<text x="280" y="278.0" text-anchor="middle" class="mono" fill="#e6e6e8">/home</text>
+<rect x="202.0" y="216" width="156" height="34" rx="8" fill="#2b2c52" stroke="#9a9aff" stroke-width="2.5"/>
+<text x="280" y="238.0" text-anchor="middle" class="mono" fill="#e6e6e8">/login</text>
+<path d="M188.0,226.0 L198.0,233.0 L188.0,240.0 Z" fill="#9a9aff"/>
+<rect x="452.0" y="256" width="156" height="34" rx="8" fill="#1b1b1d" stroke="#3d3e41" stroke-width="1.5"/>
+<text x="530" y="278.0" text-anchor="middle" class="mono" fill="#e6e6e8">/home</text>
+<rect x="452.0" y="216" width="156" height="34" rx="8" fill="#1b1b1d" stroke="#3d3e41" stroke-width="1.5"/>
+<text x="530" y="238.0" text-anchor="middle" class="mono" fill="#e6e6e8">/login</text>
+<rect x="452.0" y="176" width="156" height="34" rx="8" fill="#2b2c52" stroke="#9a9aff" stroke-width="2.5"/>
+<text x="530" y="198.0" text-anchor="middle" class="mono" fill="#e6e6e8">/dashboard</text>
+<path d="M438.0,186.0 L448.0,193.0 L438.0,200.0 Z" fill="#9a9aff"/>
+<rect x="702.0" y="256" width="156" height="34" rx="8" fill="#1b1b1d" stroke="#3d3e41" stroke-width="1.5"/>
+<text x="780" y="278.0" text-anchor="middle" class="mono" fill="#e6e6e8">/home</text>
+<rect x="702.0" y="216" width="156" height="34" rx="8" fill="#3a2a24" stroke="#ff8a5c" stroke-width="2.5"/>
+<text x="780" y="238.0" text-anchor="middle" class="mono" fill="#e6e6e8">/login</text>
+<path d="M688.0,226.0 L698.0,233.0 L688.0,240.0 Z" fill="#ff8a5c"/>
+<rect x="702.0" y="176" width="156" height="34" rx="8" fill="#1b1b1d" stroke="#6b6f76" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="780" y="198.0" text-anchor="middle" class="mono" fill="#6b6f76">/dashboard</text>
+<text x="866.0" y="197.0" class="tiny" fill="#6b6f76">adelante</text>
+<line x1="370.0" y1="233.0" x2="424.0" y2="233.0" stroke="#a3a7ae" stroke-width="2"/>
+<path d="M432.0,233.0 L422.0,228.0 L422.0,238.0 Z" fill="#a3a7ae"/>
+<text x="401.0" y="224.0" text-anchor="middle" class="mono small" fill="#a3a7ae">push</text>
+<line x1="620.0" y1="233.0" x2="674.0" y2="233.0" stroke="#a3a7ae" stroke-width="2"/>
+<path d="M682.0,233.0 L672.0,228.0 L672.0,238.0 Z" fill="#a3a7ae"/>
+<text x="651.0" y="224.0" text-anchor="middle" class="mono small" fill="#a3a7ae">Atrás</text>
+<text x="780" y="314" text-anchor="middle" class="note" fill="#ff8a5c">Vuelves al login ya enviado</text>
+<rect x="20" y="345" width="920" height="195" rx="12" fill="#242526"/>
+<text x="40" y="379" class="mono" font-weight="700" fill="#e6e6e8">router.replace('/dashboard')</text>
+<text x="40" y="401" class="sub" fill="#a3a7ae">cambia /login por /dashboard</text>
+<rect x="202.0" y="471" width="156" height="34" rx="8" fill="#1b1b1d" stroke="#3d3e41" stroke-width="1.5"/>
+<text x="280" y="493.0" text-anchor="middle" class="mono" fill="#e6e6e8">/home</text>
+<rect x="202.0" y="431" width="156" height="34" rx="8" fill="#2b2c52" stroke="#9a9aff" stroke-width="2.5"/>
+<text x="280" y="453.0" text-anchor="middle" class="mono" fill="#e6e6e8">/login</text>
+<path d="M188.0,441.0 L198.0,448.0 L188.0,455.0 Z" fill="#9a9aff"/>
+<rect x="452.0" y="471" width="156" height="34" rx="8" fill="#1b1b1d" stroke="#3d3e41" stroke-width="1.5"/>
+<text x="530" y="493.0" text-anchor="middle" class="mono" fill="#e6e6e8">/home</text>
+<rect x="452.0" y="431" width="156" height="34" rx="8" fill="#2b2c52" stroke="#9a9aff" stroke-width="2.5"/>
+<text x="530" y="453.0" text-anchor="middle" class="mono" fill="#e6e6e8">/dashboard</text>
+<path d="M438.0,441.0 L448.0,448.0 L438.0,455.0 Z" fill="#9a9aff"/>
+<rect x="702.0" y="471" width="156" height="34" rx="8" fill="#1f3529" stroke="#5fd08f" stroke-width="2.5"/>
+<text x="780" y="493.0" text-anchor="middle" class="mono" fill="#e6e6e8">/home</text>
+<path d="M688.0,481.0 L698.0,488.0 L688.0,495.0 Z" fill="#5fd08f"/>
+<rect x="702.0" y="431" width="156" height="34" rx="8" fill="#1b1b1d" stroke="#6b6f76" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="780" y="453.0" text-anchor="middle" class="mono" fill="#6b6f76">/dashboard</text>
+<text x="866.0" y="452.0" class="tiny" fill="#6b6f76">adelante</text>
+<line x1="370.0" y1="448.0" x2="424.0" y2="448.0" stroke="#a3a7ae" stroke-width="2"/>
+<path d="M432.0,448.0 L422.0,443.0 L422.0,453.0 Z" fill="#a3a7ae"/>
+<text x="401.0" y="439.0" text-anchor="middle" class="mono small" fill="#a3a7ae">replace</text>
+<line x1="620.0" y1="448.0" x2="674.0" y2="448.0" stroke="#a3a7ae" stroke-width="2"/>
+<path d="M682.0,448.0 L672.0,443.0 L672.0,453.0 Z" fill="#a3a7ae"/>
+<text x="651.0" y="439.0" text-anchor="middle" class="mono small" fill="#a3a7ae">Atrás</text>
+<text x="780" y="529" text-anchor="middle" class="note" fill="#5fd08f">Vuelves a /home: el login ya no está</text>
+</svg>
