@@ -1,5 +1,5 @@
 ---
-sidebar_position: 6
+sidebar_position: 3
 description: "Construye con Tailwind y daisyUI las pantallas de inicio de sesión y registro, el header y la barra de navegación de la aplicación de rutinas."
 ---
 
@@ -22,11 +22,10 @@ Construye, **solo a nivel de componente visual**, las pantallas de inicio de ses
 
 Esta es una referencia de cómo puede verse, hecha con los componentes reales de daisyUI 5. Cambia entre las pantallas y prueba la vista móvil:
 
-<iframe
-  src="/interactive/computacion-3/semana-12/mockup-auth/index.html"
+<InteractiveFrame
+  src="/interactive/computacion-3/semana-13/mockup-auth/index.html"
   title="Mockup de referencia: login, registro, header y navbar con daisyUI"
-  style={{ width: '100%', height: 620, border: 0 }}
-  loading="lazy"
+  height={620}
 />
 
 ---

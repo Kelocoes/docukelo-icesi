@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="100%" height="100%">
+  <defs>
+    <filter id="sdd-shadow" x="-3%" y="-3%" width="106%" height="108%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="sdd-arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+    <marker id="sdd-arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669"/>
+    </marker>
+    <marker id="sdd-arrow-amber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <style>
+    .sdd-title { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 800; fill: #0f172a; }
+    .sdd-sub { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 500; fill: #64748b; }
+    .card-title { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 800; fill: #0f172a; }
+    .card-meta { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 600; fill: #64748b; }
+    .body-text { font-family: system-ui, -apple-system, sans-serif; font-size: 11.5px; font-weight: 500; fill: #334155; }
+    .badge-num { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 800; fill: #ffffff; }
+    .code-pill { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; font-weight: 600; }
+  </style>
+
+  <!-- Background Canvas -->
+  <rect x="10" y="10" width="940" height="520" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Top Title -->
+  <text x="480" y="44" class="sdd-title" text-anchor="middle">Arquitectura de un Proyecto Spec-Driven (SDD Artesanal)</text>
+  <text x="480" y="65" class="sdd-sub" text-anchor="middle">Organización de la verdad técnica con AGENTS.md y la carpeta .agents/ para dirigir agentes de IA</text>
+
+  <!-- Left Column: Constitution & Human Oversight -->
+  <g transform="translate(35, 90)">
+    <!-- Developer Supervisor Card -->
+    <rect x="0" y="0" width="220" height="150" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" filter="url(#sdd-shadow)"/>
+    <rect x="16" y="16" width="34" height="34" rx="8" fill="#dbeafe"/>
+    <!-- User icon -->
+    <circle cx="33" cy="28" r="6" fill="#2563eb"/>
+    <path d="M 23 44 C 23 37, 43 37, 43 44" fill="#2563eb"/>
+    <text x="60" y="32" class="card-title">Desarrollador / Alumno</text>
+    <text x="60" y="47" class="card-meta">Intención &amp; Aprobación</text>
+    <text x="16" y="76" class="body-text">• Define la intención del negocio</text>
+    <text x="16" y="96" class="body-text">• Resuelve dudas en fase Clarify</text>
+    <text x="16" y="116" class="body-text">• Revisa y autoriza tarea por tarea</text>
+    <text x="16" y="136" class="body-text">• Mantiene el control del código</text>
+
+    <!-- Connector down to Constitution -->
+    <path d="M 110 150 L 110 185" stroke="#2563eb" stroke-width="2" marker-end="url(#sdd-arrow-blue)"/>
+    <text x="118" y="172" class="card-meta" fill="#2563eb">redacta</text>
+
+    <!-- Root AGENTS.md Card -->
+    <rect x="0" y="195" width="220" height="215" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="2" filter="url(#sdd-shadow)"/>
+    <rect x="16" y="210" width="34" height="34" rx="8" fill="#2563eb"/>
+    <!-- Document code icon -->
+    <path d="M 27 220 L 39 220 L 43 224 L 43 238 L 27 238 Z" fill="#ffffff"/>
+    <text x="60" y="226" class="card-title" fill="#1e3a8a">AGENTS.md</text>
+    <text x="60" y="241" class="card-meta" fill="#2563eb">Constitución Raíz</text>
+    
+    <text x="16" y="270" class="body-text" font-weight="700">1. Rol &amp; Personalidad:</text>
+    <text x="16" y="286" class="body-text">"Eres un desarrollador Senior en Spring Boot"</text>
+    <text x="16" y="312" class="body-text" font-weight="700">2. Reglas No Negociables:</text>
+    <text x="16" y="328" class="body-text">• No cambiar dependencias sin permiso</text>
+    <text x="16" y="344" class="body-text">• DTOs obligatorios (sin entities en API)</text>
+    <text x="16" y="360" class="body-text">• Manejo global con @ControllerAdvice</text>
+    <text x="16" y="386" class="card-meta" fill="#1e40af">Índice hacia .agents/memory y specs</text>
+  </g>
+
+  <!-- Center Big Outer Box: .agents/ Directory Engine -->
+  <g transform="translate(285, 90)">
+    <rect x="0" y="0" width="385" height="420" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8" stroke-dasharray="6 4" filter="url(#sdd-shadow)"/>
+    
+    <!-- Outer directory header badge -->
+    <rect x="18" y="16" width="348" height="34" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+    <circle cx="36" cy="33" r="5" fill="#f59e0b"/>
+    <circle cx="48" cy="33" r="5" fill="#10b981"/>
+    <text x="64" y="38" class="code-pill" fill="#0f172a" font-size="13">.agents/ (Workspace de Especificación)</text>
+
+    <!-- Subfolder 1: memory/ -->
+    <g transform="translate(18, 62)">
+      <rect x="0" y="0" width="348" height="74" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.2"/>
+      <circle cx="18" cy="18" r="10" fill="#64748b"/>
+      <text x="18" y="22" class="badge-num" text-anchor="middle">1</text>
+      <text x="36" y="22" class="card-title">memory/</text>
+      <text x="110" y="22" class="code-pill" fill="#64748b">tech-stack.md · architecture.md</text>
+      <text x="14" y="44" class="body-text">Contexto permanente inmutable: Spring Boot 3, Java 17,</text>
+      <text x="14" y="60" class="body-text">PostgreSQL, esquemas de BD y convenciones de nombres.</text>
+    </g>
+
+    <!-- Subfolder 2: specs/ -->
+    <g transform="translate(18, 146)">
+      <rect x="0" y="0" width="348" height="74" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.2"/>
+      <circle cx="18" cy="18" r="10" fill="#2563eb"/>
+      <text x="18" y="22" class="badge-num" text-anchor="middle">2</text>
+      <text x="36" y="22" class="card-title" fill="#1e3a8a">specs/</text>
+      <text x="96" y="22" class="code-pill" fill="#2563eb">feat-audit-spec.md (El QUÉ)</text>
+      <text x="14" y="44" class="body-text">Historias de usuario, endpoints HTTP requeridos,</text>
+      <text x="14" y="60" class="body-text">payloads JSON esperados y criterios de aceptación (Gherkin).</text>
+    </g>
+
+    <!-- Subfolder 3: plans/ -->
+    <g transform="translate(18, 230)">
+      <rect x="0" y="0" width="348" height="74" rx="8" fill="#fef3c7" stroke="#fde68a" stroke-width="1.2"/>
+      <circle cx="18" cy="18" r="10" fill="#d97706"/>
+      <text x="18" y="22" class="badge-num" text-anchor="middle">3</text>
+      <text x="36" y="22" class="card-title" fill="#92400e">plans/</text>
+      <text x="96" y="22" class="code-pill" fill="#d97706">feat-audit-plan.md (El CÓMO)</text>
+      <text x="14" y="44" class="body-text">Estrategia arquitectónica: DTOs, interfaces de servicio,</text>
+      <text x="14" y="60" class="body-text">entidades JPA, migraciones SQL y análisis de riesgos.</text>
+    </g>
+
+    <!-- Subfolder 4: tasks/ -->
+    <g transform="translate(18, 314)">
+      <rect x="0" y="0" width="348" height="88" rx="8" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.2"/>
+      <circle cx="18" cy="18" r="10" fill="#059669"/>
+      <text x="18" y="22" class="badge-num" text-anchor="middle">4</text>
+      <text x="36" y="22" class="card-title" fill="#065f46">tasks/</text>
+      <text x="96" y="22" class="code-pill" fill="#059669">feat-audit-tasks.md (PASOS)</text>
+      <text x="14" y="44" class="body-text">Checklist atómico y ordenado:</text>
+      <text x="14" y="60" class="body-text">• [x] Tarea 1: Entidad JPA y repositorio con índice</text>
+      <text x="14" y="76" class="body-text">• [ ] Tarea 2: Servicio y DTOs inmutables con pruebas</text>
+    </g>
+  </g>
+
+  <!-- Connectors: AGENTS.md -> .agents/ -->
+  <path d="M 255 285 L 285 285" stroke="#2563eb" stroke-width="2.5" marker-end="url(#sdd-arrow-blue)"/>
+
+  <!-- Right Column: AI Agent & Spring Boot Codebase -->
+  <g transform="translate(705, 90)">
+    <!-- AI Coding Agent Card -->
+    <rect x="0" y="0" width="220" height="150" rx="12" fill="#faf5ff" stroke="#c084fc" stroke-width="1.8" filter="url(#sdd-shadow)"/>
+    <rect x="16" y="16" width="34" height="34" rx="8" fill="#9333ea"/>
+    <!-- Laptop / AI icon -->
+    <path d="M 23 25 L 43 25 L 43 37 L 23 37 Z" fill="#ffffff"/>
+    <path d="M 20 39 L 46 39 L 44 43 L 22 43 Z" fill="#ffffff"/>
+    <text x="60" y="32" class="card-title" fill="#581c87">Agente de IA</text>
+    <text x="60" y="47" class="card-meta" fill="#7e22ce">Cursor / Claude / Copilot</text>
+    <text x="16" y="76" class="body-text">• Ingiere AGENTS.md y memory/</text>
+    <text x="16" y="96" class="body-text">• Plantea dudas en Clarify</text>
+    <text x="16" y="116" class="body-text">• Ejecuta estrictamente 1 tarea</text>
+    <text x="16" y="136" class="body-text">• Se detiene y pide validación</text>
+
+    <!-- Connector: AI Agent -> Codebase -->
+    <path d="M 110 150 L 110 185" stroke="#059669" stroke-width="2" marker-end="url(#sdd-arrow-emerald)"/>
+    <text x="118" y="172" class="card-meta" fill="#059669">genera código</text>
+
+    <!-- Spring Boot Codebase Card -->
+    <rect x="0" y="195" width="220" height="215" rx="12" fill="#ffffff" stroke="#10b981" stroke-width="2" filter="url(#sdd-shadow)"/>
+    <rect x="16" y="210" width="34" height="34" rx="8" fill="#059669"/>
+    <!-- Server icon -->
+    <rect x="23" y="220" width="20" height="6" rx="1.5" fill="#ffffff"/>
+    <rect x="23" y="228" width="20" height="6" rx="1.5" fill="#ffffff"/>
+    <rect x="23" y="236" width="20" height="6" rx="1.5" fill="#ffffff"/>
+    <text x="60" y="226" class="card-title" fill="#065f46">Spring Boot</text>
+    <text x="60" y="241" class="card-meta" fill="#059669">src/main/java/...</text>
+
+    <text x="16" y="270" class="code-pill" fill="#0f172a">controllers/</text>
+    <text x="32" y="286" class="body-text">AuditLogController.java</text>
+    <text x="16" y="306" class="code-pill" fill="#0f172a">services/</text>
+    <text x="32" y="322" class="body-text">AuditLogService.java</text>
+    <text x="16" y="342" class="code-pill" fill="#0f172a">repositories/</text>
+    <text x="32" y="358" class="body-text">AuditLogRepository.java</text>
+    <text x="16" y="386" class="card-meta" fill="#059669">Código verificado y estructurado</text>
+  </g>
+
+  <!-- Connector: .agents/ -> AI Agent -->
+  <path d="M 670 280 L 705 280" stroke="#059669" stroke-width="2.5" marker-end="url(#sdd-arrow-emerald)"/>
+</svg>

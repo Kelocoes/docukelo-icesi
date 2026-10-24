@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ciclo de Vida Postman y Spring Boot</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  .dk-stage { width: 100% !important; max-width: none !important; }
+  .dk-stage svg { width: 100% !important; max-width: none !important; height: auto !important; display: block; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Ciclo de Vida en Escalera: Postman <-> Tomcat <-> Spring Boot <-> PostgreSQL */
+(function () {
+  var msg = function (from, to, label, kind, extra) {
+    var m = { from: from, to: to, label: label, kind: kind };
+    for (var k in extra) m[k] = extra[k];
+    return m;
+  };
+
+  var nodes = [
+    // Escalón 1 (Cliente externo): Postman UI
+    { id: 'pm', kind: 'actor', icon: 'laptop', label: 'Postman UI', sub: 'Variables & Tests', x: 20, y: 130, w: 160, h: 70 },
+
+    // Servidor Web Embebido Tomcat (Contenedor exterior)
+    { id: 'tomcat', kind: 'outer', label: 'Apache Tomcat (Puerto 8080)', sub: 'Servidor Web Embebido', x: 200, y: 15, w: 680, h: 460 },
+
+    // Contexto de la Aplicación Spring Boot (Contenedor interior con margen generoso)
+    { id: 'app', kind: 'outer', label: 'Spring Boot Application Context', sub: 'Pipeline de Filtros, Dispatcher y Componentes IoC', x: 215, y: 70, w: 650, h: 390 },
+
+    // Escalón 2: Spring Security (JwtAuthFilter)
+    { id: 'sec', kind: 'box', icon: 'lock', label: 'Spring Security', sub: 'JwtAuthFilter', x: 235, y: 130, w: 190, h: 70, iconPos: 'left' },
+
+    // Escalón 3: DispatcherServlet
+    { id: 'servlet', kind: 'box', icon: 'gear', label: 'DispatcherServlet', sub: 'Front Controller', x: 380, y: 215, w: 190, h: 70, iconPos: 'left' },
+
+    // Escalón 4: @RestController
+    { id: 'ctrl', kind: 'box', icon: 'server', label: '@RestController', sub: '@Valid CourseDTO', x: 525, y: 300, w: 190, h: 70, iconPos: 'left' },
+
+    // Escalón 5: Service & Repository
+    { id: 'svc', kind: 'box', icon: 'classbox', label: 'Service & Repo', sub: 'CourseService (JPA)', x: 670, y: 385, w: 185, h: 70, iconPos: 'left' },
+
+    // Escalón 6 (Base de datos externa): PostgreSQL
+    { id: 'db', kind: 'box', icon: 'database', label: 'PostgreSQL', sub: 'Base de Datos (5432)', x: 900, y: 385, w: 160, h: 70 }
+  ];
+
+  function build(opt) {
+    var authError = opt.authError;
+    var steps = [];
+
+    // FASE 1: Pre-request Script (Sandbox de Postman)
+    steps.push({
+      phase: 0,
+      title: 'Fase 1 · Pre-request Script (Sandbox de Postman)',
+      focus: ['pm'],
+      msgs: [],
+      sub: { pm: 'pm.environment.set()' },
+      caption: 'Postman inicia un entorno de ejecución seguro (sandbox) donde corre JavaScript antes de enviar la solicitud. Aquí se instancian variables temporales, se calculan marcas de tiempo (Date.now()) o firmas y se inyectan en el entorno activo.'
+    });
+
+    // FASE 2: Construcción y Transmisión de la Petición
+    if (authError) {
+      steps.push({
+        phase: 1,
+        title: 'Fase 2 · Petición HTTP con Token JWT Inválido',
+        focus: ['pm', 'tomcat', 'app', 'sec'],
+        msgs: [msg('pm', 'sec', 'POST /api/v1/courses (Token inválido)', 'data')],
+        sub: { pm: 'Header: Bearer token_vencido' },
+        caption: 'Postman resuelve {{base_url}} y envía la petición hacia Tomcat en el puerto 8080 con un token JWT vencido o mal firmado.'
+      });
+
+      steps.push({
+        phase: 1,
+        title: 'Fase 3 · JwtAuthenticationFilter Rechaza la Petición',
+        focus: ['sec', 'app', 'pm'],
+        msgs: [msg('sec', 'pm', 'HTTP 401 Unauthorized', 'ctl', { lost: true })],
+        sub: { sec: 'HMAC inválido · 401' },
+        caption: 'La petición entra al SecurityFilterChain. JwtAuthenticationFilter valida la firma HMAC del token. Al fallar, detiene la cadena y responde inmediatamente con HTTP 401 Unauthorized sin tocar el controlador.'
+      });
+    } else {
+      steps.push({
+        phase: 1,
+        title: 'Fase 2 · Construcción y Transmisión de la Petición',
+        focus: ['pm', 'tomcat', 'app', 'sec'],
+        msgs: [msg('pm', 'sec', 'POST /api/v1/courses (Bearer JWT)', 'data')],
+        sub: { pm: 'Payload JSON + Bearer {{jwt_token}}' },
+        caption: 'El cliente compila cabeceras, resuelve {{base_url}} y {{jwt_token}}, empaqueta el cuerpo JSON del curso y envía la solicitud HTTP hacia Tomcat en el puerto 8080.'
+      });
+
+      // FASE 3: Pipeline de Procesamiento en Spring Boot (Bajando la escalera)
+      steps.push({
+        phase: 2,
+        title: 'Fase 3 · Filtro JWT Valida y Pasa al DispatcherServlet',
+        focus: ['sec', 'servlet', 'app'],
+        msgs: [msg('sec', 'servlet', 'SecurityContext OK -> Enrutar', 'ctl')],
+        sub: { sec: 'JWT Válido: ROLE_USER', servlet: 'Enrutando petición' },
+        caption: 'JwtAuthenticationFilter extrae la cabecera Authorization: Bearer, valida la firma HMAC y los claims de expiración. Registra la autenticación en SecurityContextHolder y transfiere la petición al DispatcherServlet.'
+      });
+
+      steps.push({
+        phase: 2,
+        title: 'Fase 3 · DispatcherServlet Enruta al @RestController',
+        focus: ['servlet', 'ctrl', 'app'],
+        msgs: [msg('servlet', 'ctrl', 'handleRequest(CourseDTO)', 'ctl')],
+        sub: { ctrl: 'DTO @Valid verificado' },
+        caption: 'DispatcherServlet localiza el controlador correspondiente mediante HandlerMapping. Bean Validation valida los campos del CourseDTO (@NotBlank, @Positive). Al ser válidos, invoca la capa de servicio.'
+      });
+
+      steps.push({
+        phase: 2,
+        title: 'Fase 3 · Servicio y Persistencia en PostgreSQL',
+        focus: ['ctrl', 'svc', 'db'],
+        msgs: [
+          msg('ctrl', 'svc', 'courseService.create(dto)', 'data'),
+          msg('svc', 'db', 'courseRepository.save(entity)', 'data')
+        ],
+        sub: { svc: 'Lógica transaccional', db: 'INSERT en tabla courses' },
+        caption: 'El @Service ejecuta la lógica de negocio y el Repository JPA interactúa con PostgreSQL, ejecutando el INSERT y retornando la entidad persistida con su ID autogenerado (101).'
+      });
+
+      // FASE 4: Retorno Completo (Subiendo la escalera paso a paso)
+      steps.push({
+        phase: 3,
+        title: 'Fase 4 · Confirmación de Base de Datos al Servicio',
+        focus: ['db', 'svc'],
+        msgs: [
+          msg('db', 'svc', 'Registro confirmado (id: 101)', 'ack')
+        ],
+        sub: { db: 'INSERT OK', svc: 'Entity -> ResponseDTO' },
+        caption: 'PostgreSQL confirma la transacción a la capa de persistencia. El servicio mapea la entidad a un DTO de respuesta inmutable.'
+      });
+
+      steps.push({
+        phase: 3,
+        title: 'Fase 4 · Servicio entrega DTO al Controlador',
+        focus: ['svc', 'ctrl'],
+        msgs: [
+          msg('svc', 'ctrl', 'CourseResponseDTO', 'ack')
+        ],
+        sub: { ctrl: 'Generando ResponseEntity 201' },
+        caption: 'El servicio retorna el DTO de respuesta al @RestController, que construye el objeto ResponseEntity con código 201 Created.'
+      });
+
+      steps.push({
+        phase: 3,
+        title: 'Fase 4 · Retorno por DispatcherServlet y Spring Security a Postman',
+        focus: ['ctrl', 'servlet', 'sec', 'tomcat', 'pm'],
+        msgs: [
+          msg('ctrl', 'servlet', 'ResponseEntity 201', 'ack'),
+          msg('servlet', 'sec', 'Filtros de salida', 'ack'),
+          msg('sec', 'pm', 'HTTP 201 Created JSON', 'ack')
+        ],
+        sub: { ctrl: '201 Created', sec: 'Security Headers', pm: '201 OK (45ms)' },
+        caption: 'La respuesta HTTP asciende en orden inverso por la escalera: atraviesa DispatcherServlet y la cadena de filtros de Spring Security (que adjunta cabeceras de seguridad y métricas), saliendo por Tomcat hacia Postman UI.'
+      });
+    }
+
+    // FASE 5: Post-response Scripts y Tests
+    steps.push({
+      phase: 4,
+      title: 'Fase 5 · Post-response Scripts y Tests (Sandbox)',
+      focus: ['pm'],
+      msgs: [],
+      sub: { pm: 'pm.test() evaluando aserciones' },
+      caption: 'Postman activa de inmediato el sandbox de pruebas. Se ejecutan sincrónicamente las funciones pm.test(), comprobando el código de respuesta (201), la latencia (< 800ms) y la presencia del ID numérico en el payload JSON.'
+    });
+
+    // FASE 6: Reutilización y Persistencia de Variables
+    steps.push({
+      phase: 5,
+      title: 'Fase 6 · Reutilización y Persistencia de Variables',
+      focus: ['pm'],
+      msgs: [],
+      sub: { pm: '{{course_id}} = 101 guardado' },
+      caption: 'Los datos críticos extraídos de la respuesta se guardan en el entorno activo mediante pm.environment.set("course_id", res.id), quedando disponibles de inmediato para las siguientes peticiones de la colección.'
+    });
+
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    wide: true,
+    ariaLabel: 'Ciclo de vida de una petición en escalera entre Postman, Tomcat, Spring Boot y PostgreSQL',
+    phases: [
+      '1. Pre-request',
+      '2. Petición HTTP',
+      '3. Pipeline Spring',
+      '4. Retorno HTTP',
+      '5. Tests',
+      '6. Persistencia'
+    ],
+    scene: function (svg) {
+      return DK.layers({
+        svg: svg,
+        width: 1080,
+        height: 495,
+        trail: 'phase',
+        labels: 'smart',
+        nodes: nodes
+      });
+    },
+    build: build,
+    toggles: [
+      { key: 'authError', label: 'Simular Token JWT inválido o expirado (401)', affectsPhase: 1 }
+    ],
+    kicker: function (p) {
+      return [
+        'Fase 1 · Pre-request Script',
+        'Fase 2 · Petición HTTP',
+        'Fase 3 · Pipeline Spring Boot',
+        'Fase 4 · Retorno de Respuesta',
+        'Fase 5 · Post-response Tests',
+        'Fase 6 · Persistencia de Variables'
+      ][p];
+    },
+    intro: {
+      kicker: 'Ciclo completo de una petición HTTP',
+      title: 'Arquitectura en Escalera (Ida y Retorno)',
+      text: 'Observa cómo la petición desciende por la escalera desde Postman hacia Tomcat, Spring Security, DispatcherServlet, Controlador y Base de Datos, y asciende en orden inverso hasta retornar a Postman.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,9 +1,8 @@
 {
-    "label": "S13 - Next",
-    "className": "hidden",
+    "label": "S13 - Estilos y Navegación",
     "position": 13,
     "link": {
         "type": "generated-index",
-        "description": "Next Intro"
+        "description": "Estilos con Tailwind CSS v4 y daisyUI 5, componentes visuales, mobile-first y navegación por eventos en Next.js."
     }
 }

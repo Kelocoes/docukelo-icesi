@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SDD Artesanal con AGENTS.md y .agents/</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* SDD Artesanal: Arquitectura de .agents/ y flujo Spec-Driven con Agentes de IA */
+(function () {
+  var msg = function (from, to, label, kind, extra) {
+    var m = { from: from, to: to, label: label, kind: kind };
+    for (var k in extra) m[k] = extra[k];
+    return m;
+  };
+
+  var nodes = [
+    { id: 'dev', kind: 'actor', icon: 'user', label: 'Desarrollador', sub: 'Control y Verificación', x: 15, y: 30, w: 160, h: 84 },
+    { id: 'agents_md', kind: 'box', icon: 'filecode', label: 'AGENTS.md', sub: 'Constitución Raíz', x: 15, y: 165, w: 160, h: 84 },
+
+    { id: 'agents_outer', kind: 'outer', label: 'Directorio .agents/ (Workspace de Contexto)', sub: 'Memoria y Especificaciones del Proyecto', x: 185, y: 14, w: 430, h: 410 },
+    { id: 'mem', kind: 'box', icon: 'card', label: 'memory/', sub: 'tech-stack.md · architecture.md', x: 205, y: 60, w: 390, h: 64, iconPos: 'left' },
+    { id: 'specs', kind: 'box', icon: 'file', label: 'specs/', sub: 'feat-audit-spec.md (El QUÉ)', x: 205, y: 145, w: 390, h: 64, iconPos: 'left' },
+    { id: 'plans', kind: 'box', icon: 'gear', label: 'plans/', sub: 'feat-audit-plan.md (El CÓMO)', x: 205, y: 230, w: 390, h: 64, iconPos: 'left' },
+    { id: 'tasks', kind: 'box', icon: 'classbox', label: 'tasks/', sub: 'feat-audit-tasks.md (Checklist)', x: 205, y: 315, w: 390, h: 64, iconPos: 'left' },
+
+    { id: 'agent', kind: 'actor', icon: 'laptop', label: 'Agente de IA', sub: 'Cursor / Claude / Copilot', x: 645, y: 30, w: 255, h: 84 },
+    { id: 'codebase', kind: 'box', icon: 'server', label: 'Spring Boot Codebase', sub: 'src/main/java (Controllers, DTOs, JPA)', x: 645, y: 165, w: 255, h: 210 }
+  ];
+
+  function build() {
+    var steps = [
+      // FASE 0: Constitución & Memoria
+      {
+        phase: 0,
+        title: '1 · Definir la Constitución en AGENTS.md',
+        focus: ['dev', 'agents_md'],
+        msgs: [msg('dev', 'agents_md', 'Redacta normas del proyecto', 'ctl')],
+        caption: 'El desarrollador crea AGENTS.md en la raíz del repositorio. Actúa como la Constitución: define el rol del asistente (Senior Spring Boot), convenciones obligatorias (DTOs con Records, manejo global con @RestControllerAdvice) y enlaces a la memoria del proyecto.'
+      },
+      {
+        phase: 0,
+        title: '2 · Registrar Memoria Técnica en .agents/memory/',
+        focus: ['dev', 'mem'],
+        msgs: [msg('dev', 'mem', 'Guarda stack y convenciones', 'data')],
+        caption: 'En .agents/memory/ se documenta el tech stack inmutable (Java 17, Spring Boot 3, PostgreSQL, esquemas de tablas). Es la verdad arquitectónica permanente que evita que el agente proponga dependencias obsoletas.'
+      },
+      {
+        phase: 0,
+        title: '3 · El Agente ingiere el Contexto Maestro',
+        focus: ['agents_md', 'mem', 'agent'],
+        msgs: [msg('agents_md', 'agent', 'Lee AGENTS.md', 'ctl'),
+               msg('mem', 'agent', 'Carga tech-stack.md', 'ctl')],
+        caption: 'El Agente de IA lee estos archivos al iniciar. Ahora conoce el contexto y las restricciones, eliminando el 90% de las alucinaciones sobre librerías o versiones incompatibles.'
+      },
+
+      // FASE 1: Especificar & Planificar
+      {
+        phase: 1,
+        title: '4 · Redactar la Especificación en .agents/specs/',
+        focus: ['dev', 'specs'],
+        msgs: [msg('dev', 'specs', 'Crea feat-audit-spec.md', 'data')],
+        caption: 'Antes de tocar código, se especifica el QUÉ: historias de usuario, esquemas JSON de petición y respuesta, endpoints HTTP requeridos y criterios de aceptación (formato Gherkin).'
+      },
+      {
+        phase: 1,
+        title: '5 · Fase Clarify: Diálogo Crítico con el Agente',
+        focus: ['specs', 'agent'],
+        msgs: [msg('specs', 'agent', 'Analiza ambigüedades', 'data'),
+               msg('agent', 'specs', 'Preguntas sobre casos borde', 'ack')],
+        caption: 'El agente cuestiona lagunas lógicas: "¿Qué status code retorna si el recurso no existe?", "¿La paginación es requerida en este endpoint?". Se resuelven las dudas en el spec antes de planear.'
+      },
+      {
+        phase: 1,
+        title: '6 · Diseñar el Plan Técnico en .agents/plans/',
+        focus: ['agent', 'plans'],
+        msgs: [msg('agent', 'plans', 'Genera feat-audit-plan.md', 'data')],
+        caption: 'Se plasma el CÓMO técnico: clases involucradas (@RestController, @Service, Entidad JPA), endpoints HTTP y scripts de migración, sin escribir aún código de producción.'
+      },
+
+      // FASE 2: Tareas Atómicas & Ejecución Guiada
+      {
+        phase: 2,
+        title: '7 · Desglosar en Tareas Atómicas en .agents/tasks/',
+        focus: ['plans', 'tasks'],
+        msgs: [msg('plans', 'tasks', 'Desglosa en checklist numerado', 'data')],
+        caption: 'El plan se convierte en tareas pequeñas, verificables e independientes. Cada tarea tiene un criterio de prueba claro (ej. "Crear entidad AuditLog y migración Flyway").'
+      },
+      {
+        phase: 2,
+        title: '8 · Implementación Guiada Tarea por Tarea',
+        focus: ['tasks', 'agent', 'codebase'],
+        msgs: [msg('tasks', 'agent', 'Lee Tarea 1', 'ctl'),
+               msg('agent', 'codebase', 'Genera Entity + Repository', 'data')],
+        caption: 'El agente solo ejecuta la tarea autorizada. Al terminar, se detiene y espera validación humana antes de avanzar. Se evita la deriva descontrolada del código.'
+      },
+      {
+        phase: 2,
+        title: '9 · Verificación y Cierre del Ciclo',
+        focus: ['codebase', 'dev', 'tasks'],
+        msgs: [msg('codebase', 'dev', 'Compila y pasa pruebas Postman', 'ack'),
+               msg('dev', 'tasks', 'Marca [x] Tarea 1 completada', 'ctl')],
+        caption: 'El desarrollador prueba en Spring Boot y Postman. Al verificar el resultado marca la tarea completada y autoriza la siguiente hasta finalizar el feature.'
+      }
+    ];
+
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    wide: true,
+    ariaLabel: 'Diagrama interactivo de arquitectura y flujo de SDD artesanal con AGENTS.md y .agents/',
+    phases: ['1. Constitución & Memoria', '2. Especificar & Planificar', '3. Tareas & Ejecución'],
+    scene: function (svg) {
+      return DK.layers({
+        svg: svg,
+        width: 920,
+        height: 440,
+        trail: 'phase',
+        labels: 'smart',
+        nodes: nodes
+      });
+    },
+    build: build,
+    kicker: function (p) {
+      return ['Fase 1 · Constitución & Memoria', 'Fase 2 · Especificar & Planificar', 'Fase 3 · Tareas & Ejecución'][p];
+    },
+    intro: {
+      kicker: 'Metodología SDD Artesanal para Agentes de IA',
+      title: 'Arquitectura de Carpetas y Flujo de Verdad',
+      text: 'Descubre cómo organizar tu proyecto con AGENTS.md y la carpeta .agents/ para dirigir agentes de IA (Cursor, Claude, Antigravity) con especificaciones formales y sin alucinaciones.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

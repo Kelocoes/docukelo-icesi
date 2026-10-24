@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SDLC vs Spec-driven Development</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  .sdd-stage { width: 100%; display: flex; flex-direction: column; gap: 14px; }
+  .track-card { background: var(--dk-surface, #f8fafc); border: 1.5px solid var(--dk-line, #e2e8f0); border-radius: 12px; padding: 14px 18px; transition: all 0.3s ease; }
+  .track-card.active { border-color: var(--dk-accent, #2563eb); box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12); }
+  .track-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .track-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+  .track-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+  
+  .pipeline { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 6px; }
+  .pipe-step { background: var(--dk-card, #ffffff); border: 1px solid var(--dk-line, #cbd5e1); border-radius: 8px; padding: 10px 6px; text-align: center; transition: all 0.25s ease; }
+  .pipe-step .num { font-size: 10px; font-weight: 800; opacity: 0.6; display: block; margin-bottom: 2px; }
+  .pipe-step .name { font-size: 11.5px; font-weight: 700; line-height: 1.2; display: block; }
+  
+  .pipe-step.current { background: var(--dk-accent, #2563eb); border-color: var(--dk-accent, #2563eb); color: #ffffff; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25); }
+  .pipe-step.current .num { opacity: 0.9; color: #ffffff; }
+  .pipe-step.dim { opacity: 0.38; }
+  .pipe-step.danger { background: #fef2f2; border-color: #f87171; color: #991b1b; }
+  .pipe-step.danger.current { background: #ef4444; color: #ffffff; }
+
+  .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .meta-box { background: var(--dk-card, #ffffff); border: 1px solid var(--dk-line, #e2e8f0); border-radius: 8px; padding: 12px 14px; }
+  .meta-lbl { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: block; }
+  .meta-box.obj .meta-lbl { color: var(--dk-accent, #2563eb); }
+  .meta-box.prev .meta-lbl { color: #dc2626; }
+  .meta-val { font-size: 12.5px; font-weight: 500; line-height: 1.4; color: var(--dk-text); margin: 0; }
+
+  @media (max-width: 680px) {
+    .pipeline { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .meta-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var el = DK.el;
+
+  var phases = [
+    {
+      id: 'constitution',
+      num: '1',
+      name: 'Constitution',
+      kicker: 'Fase 1 · Principios y Reglas de Oro',
+      title: '1 · Constitution (La Constitución del Proyecto)',
+      caption: 'Establece los principios no negociables, el tech stack exacto y el rol del asistente. En el enfoque tradicional, las reglas se transmiten verbalmente y se diluyen; en SDD, la constitución es un documento que el agente lee antes de cualquier interacción.',
+      objetivo: 'Alinear al equipo y al modelo de IA sobre restricciones de arquitectura, versiones y estilo de código.',
+      evita: 'Que el agente invente librerías incompatibles, use anotaciones prohibidas o modifique dependencias sin autorización.',
+      sdlcStage: 'Requisitos Informales / Planning'
+    },
+    {
+      id: 'specify',
+      num: '2',
+      name: 'Specify',
+      kicker: 'Fase 2 · El QUÉ Funcional',
+      title: '2 · Specify (Especificación Técnica y Funcional)',
+      caption: 'Define con precisión el QUÉ: historias de usuario, esquemas JSON de entrada y salida, endpoints HTTP y criterios de aceptación Gherkin. A diferencia de las historias de usuario ambiguas, aquí no hay espacio para la interpretación.',
+      objetivo: 'Fijar el alcance exacto y delimitar las fronteras de entrada y salida de cada endpoint.',
+      evita: 'El alcance inflado (scope creep) y construir interfaces que no resuelven la necesidad real del usuario.',
+      sdlcStage: 'Análisis de Requisitos'
+    },
+    {
+      id: 'clarify',
+      num: '3',
+      name: 'Clarify',
+      kicker: 'Fase 3 · Interrogatorio Crítico',
+      title: '3 · Clarify (Resolución de Ambigüedades)',
+      caption: 'Un diálogo socrático antes de escribir código. El desarrollador y el agente interrogan la especificación buscando contradicciones, casos borde, concurrencia o excepciones no previstas.',
+      objetivo: 'Identificar lagunas lógicas, comportamientos con datos nulos y decisiones de diseño antes de implementar.',
+      evita: 'Descubrir contradicciones lógicas en producción o tener que refactorizar controladores ya terminados.',
+      sdlcStage: 'Diseño Reactivo'
+    },
+    {
+      id: 'plan',
+      num: '4',
+      name: 'Plan',
+      kicker: 'Fase 4 · El CÓMO Arquitectónico',
+      title: '4 · Plan (Plan Técnico de Implementación)',
+      caption: 'Desglose arquitectónico de las clases afectadas: Controller, DTOs con validación, interfaces de Service, Repositorios JPA y migraciones SQL. No se genera código aún; se aprueban las estructuras.',
+      objetivo: 'Planificar la jerarquía de llamadas y el modelo transaccional garantizando el desacoplamiento por capas.',
+      evita: 'Codificar de forma caótica sin visión sistémica, inyectar repositorios en controladores o violar patrones SOLID.',
+      sdlcStage: 'Codificación Temprana (Sin Plan)'
+    },
+    {
+      id: 'tasks',
+      num: '5',
+      name: 'Tasks',
+      kicker: 'Fase 5 · Desglose Atómico',
+      title: '5 · Tasks (Checklist de Tareas Verificables)',
+      caption: 'Convierte el plan técnico en una lista de tareas pequeñas, numeradas e independientes. Cada tarea incluye su criterio de prueba (Definition of Done) para ser ejecutada y revisada de forma aislada.',
+      objetivo: 'Fragmentar el trabajo técnico en unidades verificables con criterios de éxito objetivos.',
+      evita: 'Pedirle al agente cambios gigantescos que saturan su ventana de contexto y producen código incompleto o roto.',
+      sdlcStage: 'Implementación Monolítica'
+    },
+    {
+      id: 'implement',
+      num: '6',
+      name: 'Implement',
+      kicker: 'Fase 6 · Ejecución y Verificación',
+      title: '6 · Implement (Ejecución Guiada con IA)',
+      caption: 'El agente recibe la orden de implementar estrictamente UNA sola tarea. Al finalizar, el desarrollador corre las pruebas de Postman y la suite JUnit; si todo pasa, autoriza la siguiente.',
+      objetivo: 'Generar código de alta calidad con supervisión humana continua y retroalimentación inmediata.',
+      evita: 'La deriva del agente (drift), alucinaciones en cascada y horas de depuración de código que nadie entiende.',
+      sdlcStage: 'Pruebas Tardías y Deuda Técnica'
+    }
+  ];
+
+  var sddStepsNodes = [];
+  var sdlcStepsNodes = [];
+  var metaObjNode, metaPrevNode;
+
+  function render(i) {
+    var cur = phases[i];
+    phases.forEach(function (p, idx) {
+      if (sddStepsNodes[idx]) {
+        sddStepsNodes[idx].className = 'pipe-step' + (idx === i ? ' current' : (i >= 0 && idx < i ? '' : ' dim'));
+      }
+      if (sdlcStepsNodes[idx]) {
+        sdlcStepsNodes[idx].className = 'pipe-step' + (idx === i ? ' danger current' : (i >= 0 && idx < i ? ' danger' : ' dim'));
+      }
+    });
+
+    if (cur) {
+      if (metaObjNode) metaObjNode.textContent = cur.objetivo;
+      if (metaPrevNode) metaPrevNode.textContent = cur.evita;
+    } else {
+      if (metaObjNode) metaObjNode.textContent = 'Pulsa "Siguiente" para iniciar el análisis comparativo fase por fase.';
+      if (metaPrevNode) metaPrevNode.textContent = 'Descubre qué problemas y desalineaciones de código previene cada paso de SDD.';
+    }
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    wide: true,
+    ariaLabel: 'Comparador de SDLC Tradicional vs Spec-driven Development en 6 fases',
+    phases: phases.map(function (p) { return p.name; }),
+    scene: function (svgStage, stage) {
+      var container = el('div', { class: 'sdd-stage' });
+
+      // Track 1: SDLC Tradicional
+      var sdlcGrid = el('div', { class: 'pipeline' });
+      phases.forEach(function (p) {
+        var s = el('div', { class: 'pipe-step danger dim' },
+          el('span', { class: 'num', text: 'SDLC ' + p.num }),
+          el('span', { class: 'name', text: p.sdlcStage }));
+        sdlcStepsNodes.push(s);
+        sdlcGrid.appendChild(s);
+      });
+
+      var sdlcCard = el('div', { class: 'track-card' },
+        el('div', { class: 'track-header' },
+          el('span', { class: 'track-title', text: 'SDLC Tradicional (Flujo Reactivo sin Especificación)' }),
+          el('span', { class: 'track-badge', style: 'background:#fee2e2; color:#991b1b;', text: 'Riesgo Alto de Deuda' })),
+        sdlcGrid);
+
+      // Track 2: SDD con Spec Kit
+      var sddGrid = el('div', { class: 'pipeline' });
+      phases.forEach(function (p) {
+        var s = el('div', { class: 'pipe-step dim' },
+          el('span', { class: 'num', text: 'Paso ' + p.num }),
+          el('span', { class: 'name', text: p.name }));
+        sddStepsNodes.push(s);
+        sddGrid.appendChild(s);
+      });
+
+      var sddCard = el('div', { class: 'track-card active' },
+        el('div', { class: 'track-header' },
+          el('span', { class: 'track-title', text: 'Spec-driven Development (SDD Oficial / Spec Kit)' }),
+          el('span', { class: 'track-badge', style: 'background:#dbeafe; color:#1e40af;', text: 'Verdad en Markdown' })),
+        sddGrid);
+
+      // Metadata Callout Box
+      metaObjNode = el('p', { class: 'meta-val' });
+      metaPrevNode = el('p', { class: 'meta-val' });
+
+      var metaGrid = el('div', { class: 'meta-grid' },
+        el('div', { class: 'meta-box obj' },
+          el('span', { class: 'meta-lbl', text: 'Objetivo Principal de la Fase' }),
+          metaObjNode),
+        el('div', { class: 'meta-box prev' },
+          el('span', { class: 'meta-lbl', text: 'Problema Crítico que Evita' }),
+          metaPrevNode));
+
+      container.appendChild(sdlcCard);
+      container.appendChild(sddCard);
+      container.appendChild(metaGrid);
+      stage.replaceChildren(container);
+
+      return {
+        setSteps: function () {},
+        render: render
+      };
+    },
+    build: function () {
+      return phases.map(function (p, idx) {
+        return {
+          phase: idx,
+          title: p.title,
+          kicker: p.kicker,
+          caption: p.caption
+        };
+      });
+    },
+    kicker: function (p) {
+      return phases[p] ? phases[p].kicker : '';
+    },
+    intro: {
+      kicker: 'Comparativa Metodológica',
+      title: 'SDLC Tradicional vs. SDD con Spec Kit',
+      text: 'Pulsa "Siguiente" para comparar cómo cada una de las 6 fases de SDD transforma la incertidumbre del desarrollo de software tradicional en un proceso predecible y blindado contra alucinaciones.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

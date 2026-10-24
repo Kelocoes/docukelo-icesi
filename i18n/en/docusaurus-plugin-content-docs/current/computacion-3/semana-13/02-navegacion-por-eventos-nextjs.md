@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 2
 description: "Navigate between routes in Next.js App Router using the Link component and the useRouter hook, including event-driven navigation."
 ---
 
@@ -24,7 +24,8 @@ Next.js provides several tools to change routes or modify the URL depending on t
 | **`router.back()`** | Client (`'use client'`) | Going back to the previous page in history. | `router.back()` |
 | **`router.forward()`** | Client (`'use client'`) | Moving forward to the next page in history. | `router.forward()` |
 | **`router.refresh()`** | Client (`'use client'`) | Refreshing server data without losing local client state. | `router.refresh()` |
-| **`redirect()`** | Server | Redirecting before rendering the page or inside an action. | `redirect('/login')` |
+| **`router.prefetch()`** | Client (`'use client'`) | Prefetching a route in the background before navigating. | `router.prefetch('/productos')` |
+| **`redirect()`** | Server (and client render) | Redirecting before rendering the page or inside an action. It does not work inside event handlers. | `redirect('/login')` |
 | **`permanentRedirect()`** | Server | Redirecting permanently (HTTP status code 308). | `permanentRedirect('/nuevo-catalogo')` |
 | **`notFound()`** | Server | Rendering the 404 view when a record does not exist. | `notFound()` |
 | **`pushState / replaceState`** | Client (`'use client'`) | Updating the URL without navigating or requesting the page from the server. | `window.history.pushState(null, '', '?orden=asc')` |
@@ -54,9 +55,15 @@ export function MenuNavegacion({ productoId }: { productoId: string }) {
 
 ### Main Props of Link
 
-- **`replace`**: when `true`, replaces the current URL in the history stack instead of adding a new entry (`replace={true}`).
+- **`href`**: the destination route. It can be a string (`"/productos"` or a template like `` `/productos/${id}` ``) or a `{ pathname, query }` object: `href={{ pathname: '/buscar', query: { q: 'tenis' } }}` navigates to `/buscar?q=tenis`.
+- **`replace`**: when `true`, replaces the current URL in the history stack instead of adding a new entry (`replace={true}`). Defaults to `false`.
 - **`scroll`**: controls whether the page scrolls to the top after navigation. Defaults to `true`. With `scroll={false}`, the vertical scroll position is preserved.
-- **`prefetch`**: controls background prefetching when entering the viewport. In production, it defaults to `true`.
+- **`prefetch`**: controls background prefetching when the link enters the viewport. It defaults to `"auto"` (same as `null`): for a static route it prefetches the full route, and for a dynamic route it prefetches down to the nearest `loading.tsx`. With `true` it prefetches the full route for dynamic routes too, and with `false` it never prefetches.
+- **`onNavigate`**: a function that runs during client-side navigation. Calling `e.preventDefault()` inside it cancels the navigation. It does not run with `Ctrl`/`Cmd` + click or for external links.
+
+:::note[Prefetching only works in production]
+During development (`npm run dev`) Next.js does not prefetch routes. To see the effect of `prefetch`, build the app with `npm run build` and run it with `npm run start`.
+:::
 
 ### Active Link with usePathname
 
@@ -80,6 +87,24 @@ export function NavLink({ href, children }: { href: string; children: React.Reac
 }
 ```
 
+Two more tools are related to the state of a link:
+
+- **`useSelectedLayoutSegment()`**: returns the active segment one level below the layout where it is used (for example, `'productos'`). It is useful in a navbar inside a layout, because the link stays active on every subroute (`/productos/42`) and not only on the exact route.
+- **`useLinkStatus()`**: returns `{ pending }`, which is `true` while the `<Link>` navigation is in progress. It is imported from `next/link` and must be used in a child component of the `<Link>`, for example to show a loading indicator.
+
+```tsx title="components/IndicadorEnlace.tsx"
+'use client';
+
+import { useLinkStatus } from 'next/link';
+
+export function IndicadorEnlace() {
+  const { pending } = useLinkStatus();
+  return <span>{pending ? 'Loading…' : 'Go'}</span>;
+}
+
+// Usage: <Link href="/productos"><IndicadorEnlace /></Link>
+```
+
 ---
 
 ## The useRouter Hook
@@ -94,8 +119,22 @@ It requires the `'use client'` directive because it accesses browser history, wh
 - **`router.replace(href, options?)`**: navigates to the specified route and replaces the current entry in the history stack.
 - **`router.back()`**: navigates back one position in browser history.
 - **`router.forward()`**: navigates forward one position in browser history.
-- **`router.refresh()`**: requests fresh Server Components from the server without resetting client local state.
-- **`router.prefetch(href)`**: manually prefetches the code and data for a route in the background.
+- **`router.refresh()`**: requests fresh Server Components from the server without resetting client local state (for example, the contents of a `useState` or the scroll position). It clears the client cache for the current route but does not invalidate the server cache: use `revalidatePath` or `revalidateTag` for that.
+- **`router.prefetch(href)`**: manually prefetches the code and data for a route in the background, for example `router.prefetch('/productos')`.
+
+Both `push` and `replace` accept a second argument with options; the most common is `{ scroll: false }`, which keeps the page's vertical position:
+
+```tsx title="router.push options"
+router.push('/productos', { scroll: false });
+```
+
+:::caution[Do not pass unvalidated URLs]
+`router.push` and `router.replace` must not receive URLs that come from user input without validating them: a URL with the `javascript:` scheme would run in the context of your page.
+:::
+
+:::note[From next/router to next/navigation]
+In the App Router, `pathname` and `query` from `next/router` are replaced by `usePathname()` and `useSearchParams()`, and `router.events` no longer exists: to react to a route change, combine both hooks inside a `useEffect`.
+:::
 
 ### Navigation with onClick
 
@@ -166,7 +205,7 @@ async function guardar(datos: { nombre: string }): Promise<boolean> {
 Explore in the following interactive animation how saving flows between the User, the Client Component, and the Next.js Router. Toggle the bottom switch to simulate a failed save:
 
 <InteractiveFrame
-  src="/interactive/computacion-3/semana-12/navegacion-por-eventos/index.html"
+  src="/interactive/computacion-3/semana-13/navegacion-por-eventos/index.html"
   title="Interactive sequence of event-driven navigation after form submission"
   height={740}
 />
@@ -187,8 +226,8 @@ The difference between `router.push` and `router.replace` lies in how they manag
 <ThemedImage
   alt="Browser History Stack: push vs. replace"
   sources={{
-    light: useBaseUrl('/img/computacion-3/s12-push-vs-replace-light.svg'),
-    dark: useBaseUrl('/img/computacion-3/s12-push-vs-replace-dark.svg'),
+    light: useBaseUrl('/img/computacion-3/s13-push-vs-replace-light.svg'),
+    dark: useBaseUrl('/img/computacion-3/s13-push-vs-replace-dark.svg'),
   }}
   style={{ width: '100%', maxWidth: 960, margin: '1.5rem auto', display: 'block' }}
 />
@@ -305,9 +344,11 @@ export default async function ProductoPage({ params, searchParams }: Props) {
 
 In Server Components, Route Handlers, and Server Actions, the `useRouter` hook is not available. Navigation is managed using functions from `next/navigation`:
 
-- **`redirect(url)`**: interrupts rendering and redirects the HTTP response to another route.
-- **`permanentRedirect(url)`**: issues a permanent redirect with HTTP status code 308.
+- **`redirect(path, type?)`**: interrupts rendering and redirects to another route. The optional second argument is `'replace'` or `'push'` and decides whether the redirect replaces or adds a history entry. By default it uses `push` in Server Actions and `replace` everywhere else. In a Server Component the argument has no effect.
+- **`permanentRedirect(path, type?)`**: same as `redirect`, but issues a permanent redirect with HTTP status code 308.
 - **`notFound()`**: cancels rendering and displays the nearest `not-found.tsx` file.
+
+`redirect` responds with status 307 (and 303 when it comes from a Server Action submitted by a form). It can be called in Server Components, Route Handlers and Server Actions, and also during the render of a Client Component, but **not inside an event handler**: use `useRouter` there.
 
 ### Example in Server Component and Server Action
 
@@ -360,6 +401,36 @@ export default async function ProductoDetalle({ params }: { params: Promise<{ id
 :::caution[Do Not Catch Redirects in try/catch]
 Both `redirect()` and `notFound()` throw internal errors (`NEXT_REDIRECT` and `NEXT_NOT_FOUND`) to halt execution and pass control to Next.js. If you place them inside a generic `try/catch` block, the block will catch the error and prevent the redirect from working. If you need to catch other errors, call `redirect` outside the `try/catch`.
 :::
+
+---
+
+## Redirects Outside Components
+
+Not every redirect is written inside a page. Next.js offers two more places, depending on the logic you need:
+
+- **`redirects()` in `next.config.js`**: for fixed routes that always redirect to another one (for example, a route that was renamed). With `permanent: true` it responds 308 and with `false` it responds 307.
+- **`proxy.ts`**: to decide the redirect using each request's information (cookies, headers, path). In Next.js 16 the old `middleware.ts` file was renamed to `proxy.ts` and its exported function is called `proxy`.
+
+```javascript title="next.config.js"
+module.exports = {
+  async redirects() {
+    return [
+      { source: '/antiguo', destination: '/nuevo', permanent: true },
+    ];
+  },
+};
+```
+
+```typescript title="proxy.ts"
+import { NextResponse, type NextRequest } from 'next/server';
+
+export function proxy(request: NextRequest) {
+  return NextResponse.redirect(new URL('/home', request.url));
+}
+
+// Only runs on the routes that match the matcher
+export const config = { matcher: '/viejo/:path*' };
+```
 
 ---
 
