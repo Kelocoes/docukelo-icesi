@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Datos de ida y vuelta entre pantallas</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  .dk-pair { display: grid; grid-template-columns: 262px minmax(150px, 1fr) 262px; gap: 8px 6px; align-items: start; justify-content: center; }
+  .dk-pcol { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .dk-pname { margin: 0; font: 700 12.5px ui-monospace, Consolas, monospace; text-align: center; }
+  .dk-pname small { display: block; font: 600 11px system-ui, sans-serif; color: var(--dk-muted); }
+  .dk-pair .dk-phone-screen { transition: opacity .35s, filter .35s; }
+  .dk-pair .dk-phone-screen.ghost { opacity: .35; }
+  .dk-pair .dk-phone-screen.dim .pf-body { filter: grayscale(1) opacity(.55); }
+  .dk-ghost { margin: auto; padding: 16px; text-align: center; color: #79747e; font-size: 12.5px; }
+  .dk-await { position: absolute; left: 10px; right: 10px; bottom: 12px; display: none; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px; background: #322f35; color: #f5eff7; font: 600 12px system-ui, sans-serif; z-index: 2; }
+  .dk-await.on { display: flex; animation: dk-in .3s ease-out; }
+  .dk-await i { width: 9px; height: 9px; border-radius: 50%; background: #fbbf24; animation: dk-pulse 1.1s ease-in-out infinite; }
+  @keyframes dk-pulse { 50% { transform: scale(1.6); opacity: .45; } }
+  .dk-valid, .dk-recv { width: 100%; max-width: 262px; padding: 7px 10px; border: 2px dashed var(--dk-line); border-radius: 10px; font-size: 12px; color: var(--dk-muted); transition: background .3s, border-color .3s, color .3s; }
+  .dk-valid code, .dk-recv code { display: block; font: 700 12px ui-monospace, Consolas, monospace; color: var(--dk-ink); margin-bottom: 2px; word-break: break-word; }
+  .dk-valid.on { border: 2px solid var(--dk-ack); background: color-mix(in srgb, var(--dk-ack) 14%, var(--dk-card)); color: var(--dk-ink); }
+  .dk-recv.on { border: 2px solid var(--dk-data); background: color-mix(in srgb, var(--dk-data) 14%, var(--dk-card)); color: var(--dk-ink); }
+  .dk-chan { align-self: stretch; display: flex; flex-direction: column; justify-content: center; gap: 30px; padding-top: 70px; min-width: 0; }
+  .dk-lane { position: relative; height: 54px; }
+  .dk-lane .cap { position: absolute; left: 0; right: 0; top: 0; text-align: center; font: 700 11px system-ui, sans-serif; color: var(--dk-muted); }
+  .dk-lane .trk { position: absolute; left: 0; right: 0; top: 34px; height: 3px; border-radius: 2px; background: var(--dk-line); }
+  .dk-lane .trk::after { content: ''; position: absolute; top: -4px; width: 0; height: 0; border: 5.5px solid transparent; }
+  .dk-lane.fwd .trk::after { right: -2px; border-left: 9px solid var(--dk-line); border-right: 0; }
+  .dk-lane.bck .trk::after { left: -2px; border-right: 9px solid var(--dk-line); border-left: 0; }
+  .dk-lane.fwd.hot .trk { background: var(--dk-ctl); } .dk-lane.fwd.hot .trk::after { border-left-color: var(--dk-ctl); }
+  .dk-lane.bck.hot .trk { background: var(--dk-ack); } .dk-lane.bck.hot .trk::after { border-right-color: var(--dk-ack); }
+  .dk-pkt { position: absolute; left: 0; top: 18px; padding: 3px 9px; border-radius: 8px; font: 700 11.5px ui-monospace, Consolas, monospace; white-space: nowrap; color: #fff; opacity: 0; z-index: 2; box-shadow: 0 3px 8px rgba(0, 0, 0, .25); }
+  .dk-lane.fwd .dk-pkt { background: var(--dk-ctl); } .dk-lane.bck .dk-pkt { background: color-mix(in srgb, var(--dk-ack) 80%, #000); } .dk-lane.bck .dk-pkt.nul { background: var(--dk-muted); }
+  :root[data-dkt='dark'] .dk-lane.fwd .dk-pkt { color: #12122b; } :root[data-dkt='dark'] .dk-lane.bck .dk-pkt { color: #0a2615; background: var(--dk-ack); } :root[data-dkt='dark'] .dk-lane.bck .dk-pkt.nul { color: #1b1b1d; }
+  .dk-ph-sys { font: 600 12px system-ui, sans-serif; border: 1.5px solid var(--dk-line); background: transparent; color: var(--dk-ink); border-radius: 14px; padding: 4px 14px; cursor: pointer; }
+  .dk-ph-sys:disabled { opacity: .55; cursor: default; }
+  .dk-ph-sys:not(:disabled) { border-color: var(--dk-ctl); color: var(--dk-ctl); }
+  .dk-ph-sys.pressed { background: var(--dk-band-on); border-color: var(--dk-ctl); }
+  @media (max-width: 760px) {
+    .dk-pair { grid-template-columns: 1fr; justify-items: center; }
+    .dk-chan { padding-top: 0; gap: 10px; width: 100%; max-width: 300px; }
+    .dk-lane .trk, .dk-lane .cap { display: none; } .dk-lane { height: 30px; } .dk-pkt { position: static; display: inline-block; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-phone.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Datos de ida (arguments) y de vuelta (pop con resultado). La escena es propia de esta pieza; el marco, los pasos y el código son del kit. */
+(function () {
+  var CODE_LINES = [
+    '// home_screen.dart',                                            // 1
+    'Future<void> _abrirSelector(BuildContext context) async {',     // 2
+    '  final String? categoria = await Navigator.pushNamed<String>(', // 3
+    '    context,',                                                   // 4
+    "    '/seleccion',",                                              // 5
+    "    arguments: {'categoriaId': 10},",                            // 6
+    '  );',                                                           // 7
+    '',                                                               // 8
+    '  if (!context.mounted) return;',                                // 9
+    '',                                                               // 10
+    '  if (categoria != null) {',                                     // 11
+    '    ScaffoldMessenger.of(context).showSnackBar(',                // 12
+    "      SnackBar(content: Text('Seleccionaste: $categoria')),",    // 13
+    '    );',                                                         // 14
+    '  }',                                                            // 15
+    '}',                                                              // 16
+    '',                                                               // 17
+    '// seleccion_screen.dart',                                       // 18
+    'final args = ModalRoute.of(context)!.settings.arguments',        // 19
+    '    as Map<String, dynamic>;',                                   // 20
+    "// args['categoriaId'] vale 10",                                 // 21
+    '',                                                               // 22
+    'ListTile(',                                                      // 23
+    "  title: const Text('Móvil'),",                                  // 24
+    "  onTap: () => Navigator.pop(context, 'Móvil'),",                // 25
+    ')',                                                              // 26
+  ];
+  var CODE = CODE_LINES.join('\n');
+  var PHASES = ['Ida: arguments', 'Recepción', 'Retorno: pop', 'Despertar', 'Pruébalo tú'];
+  var OPTIONS = ['Frontend', 'Backend', 'Móvil'];
+  var PKT_GO = "{ categoriaId: 10 }";
+
+  /* ---------- la escena: dos teléfonos y el canal entre ellos ---------- */
+  function scene(svg, stage, api) {
+    var el = DK.el, t = DK.timers(), steps = [], freeOn = false, f = null;
+
+    function mkPhone(nameTxt, sub) {
+      var bar = el('div', { class: 'pf-appbar' });
+      var body = el('div', { class: 'pf-body' });
+      var snack = el('div', { class: 'pf-snack' });
+      var wait = el('div', { class: 'dk-await' }, el('i'), el('span', { text: 'Pausa en await: esperando el resultado' }));
+      var finger = el('div', { class: 'dk-finger' });
+      var screen = el('div', { class: 'dk-phone-screen' }, bar, body, snack, wait, finger);
+      screen.style.setProperty('--ph-h', '300px');
+      var phone = el('div', { class: 'dk-phone' }, el('i', { class: 'dk-phone-cam' }), screen);
+      var name = el('p', { class: 'dk-pname' }, nameTxt, el('small', { text: sub }));
+      return { bar: bar, body: body, snack: snack, wait: wait, finger: finger, screen: screen, phone: phone, name: name };
+    }
+    var A = mkPhone('HomeScreen', 'emisora · llama a pushNamed'), B = mkPhone('SeleccionScreen', 'receptora · llama a pop');
+    var valid = el('div', { class: 'dk-valid' }, el('code', { text: 'if (!context.mounted) return;' }), el('span', { class: 'tx', text: 'Pendiente: se comprueba al despertar.' }));
+    var recv = el('div', { class: 'dk-recv' }, el('code', { text: 'ModalRoute.of(context)!.settings.arguments' }), el('span', { class: 'tx', text: 'Todavía no se han leído los argumentos.' }));
+    var sysB = el('button', { class: 'dk-ph-sys', text: 'Atrás del sistema', disabled: true, title: 'Botón o gesto Atrás de Android/iOS' });
+    var resetB = el('button', { class: 'dk-ph-reset', text: 'Restablecer', hidden: true });
+    var fwdPkt = el('span', { class: 'dk-pkt' }), bckPkt = el('span', { class: 'dk-pkt' });
+    var fwd = el('div', { class: 'dk-lane fwd' }, el('span', { class: 'cap', text: 'ida · arguments' }), el('i', { class: 'trk' }), fwdPkt);
+    var bck = el('div', { class: 'dk-lane bck' }, el('span', { class: 'cap', text: 'vuelta · valor de pop → Future' }), el('i', { class: 'trk' }), bckPkt);
+    var chan = el('div', { class: 'dk-chan', 'aria-hidden': 'true' }, fwd, bck);
+    var hint = el('p', { class: 'dk-ph-hint' });
+    stage.replaceChildren(el('div', { class: 'dk-pair' },
+      el('div', { class: 'dk-pcol' }, A.name, A.phone, valid),
+      chan,
+      el('div', { class: 'dk-pcol' }, B.name, B.phone, recv, sysB)),
+      el('div', { style: 'text-align:center;margin-top:8px' }, hint, resetB));
+
+    var esc = DK.phone.esc;
+    function tile(txt, act, arg) { return '<div class="pf-tile go" data-act="' + act + '" data-arg="' + arg + '" style="cursor:pointer"><span class="av">' + esc(txt[0]) + '</span><span class="tx"><b>' + esc(txt) + '</b></span></div>'; }
+
+    function paintA(s) {
+      A.bar.textContent = 'Catálogo';
+      A.body.innerHTML = '<p class="pf-h">Directorio</p><div class="pf-kv" style="display:flex;justify-content:space-between"><span style="color:#79747e">Filtro activo</span><b>' + esc(s.filter || 'Todos') + '</b></div>' +
+        '<button class="pf-btn" data-act="open">Seleccionar Filtro</button>';
+      A.screen.classList.toggle('dim', !!s.paused);
+      A.wait.classList.toggle('on', !!s.paused);
+      A.body.toggleAttribute('inert', !(freeOn && !s.paused && !s.bOn));
+      A.snack.textContent = s.snack || '';
+      A.snack.classList.toggle('on', !!s.snack);
+    }
+    function paintB(s) {
+      B.screen.classList.toggle('ghost', !s.bOn);
+      B.bar.textContent = s.bOn ? 'Seleccionar Filtro' : '';
+      if (!s.bOn) {
+        B.body.innerHTML = '<div class="dk-ghost">' + (s.bGone ? 'SeleccionScreen salió de la pila (pop).' : 'SeleccionScreen todavía no existe: nadie ha llamado a pushNamed.') + '</div>';
+      } else {
+        B.body.innerHTML = '<p class="pf-label" style="text-align:left;margin-bottom:8px">' + (s.recv ? 'Filtrando la categoría ' + esc(String(10)) + '. Elige una opción:' : 'Elige una opción:') + '</p>' + OPTIONS.map(function (o) { return tile(o, 'pick', o); }).join('');
+      }
+      B.body.toggleAttribute('inert', !(freeOn && s.bOn));
+      recv.classList.toggle('on', !!s.recv);
+      recv.querySelector('.tx').textContent = s.recv ? "Se extrae el Map: args['categoriaId'] vale 10." : 'Todavía no se han leído los argumentos.';
+      sysB.disabled = !(freeOn && s.bOn);
+    }
+    function paintValid(s) {
+      valid.classList.toggle('on', !!s.valid);
+      valid.querySelector('.tx').textContent = s.valid ? 'El context sigue montado: es seguro usarlo.' : 'Pendiente: se comprueba al despertar.';
+    }
+    function lane(laneEl, pkt, label, nul, state, animate) {
+      // state: 'none' | 'rest' (el paquete ya llegó) | 'go' (viaja ahora)
+      laneEl.classList.toggle('hot', state !== 'none');
+      pkt.textContent = label || '';
+      pkt.classList.toggle('nul', !!nul);
+      pkt.getAnimations().forEach(function (a) { a.cancel(); });
+      if (state === 'none') { pkt.style.opacity = 0; return; }
+      var narrow = pkt.style.position === 'static' || getComputedStyle(pkt).position === 'static';
+      var dist = Math.max(0, laneEl.clientWidth - pkt.offsetWidth);
+      var from = laneEl === fwd ? 0 : dist, to = laneEl === fwd ? dist : 0;
+      pkt.style.opacity = 1;
+      pkt.style.transform = 'translateX(' + (narrow ? 0 : to) + 'px)';
+      if (state === 'go' && animate && !DK.reduced && !narrow) {
+        pkt.animate([{ transform: 'translateX(' + from + 'px)' }, { transform: 'translateX(' + to + 'px)' }], { duration: 850, easing: 'ease-in-out', fill: 'both' });
+      }
+    }
+    function tap(p, name, arg) {
+      var target = p.body.querySelector('[data-act="' + name + '"]' + (arg ? '[data-arg="' + arg + '"]' : ''));
+      if (!target) return;
+      var r = target.getBoundingClientRect(), s = p.screen.getBoundingClientRect();
+      p.finger.style.left = (r.left - s.left + Math.min(r.width / 2, 90)) + 'px';
+      p.finger.style.top = (r.top - s.top + r.height / 2) + 'px';
+      p.finger.classList.remove('go'); void p.finger.offsetWidth; p.finger.classList.add('go');
+      target.classList.add('pressed');
+      t.later(function () { target.classList.remove('pressed'); }, 450);
+    }
+    function paint(s, animate) {
+      paintA(s); paintB(s); paintValid(s);
+      lane(fwd, fwdPkt, PKT_GO, false, s.fwd || 'none', animate);
+      lane(bck, bckPkt, s.bck ? s.bck.label : '', s.bck && s.bck.nul, s.bck ? s.bck.state : 'none', animate);
+    }
+    var IDLE = { paused: false, bOn: false, filter: 'Todos' };
+
+    /* ---------- modo libre ---------- */
+    function enterFree() {
+      t.clear(); f = Object.assign({}, IDLE);
+      paint(f, false);
+    }
+    function open() {
+      f = Object.assign({}, IDLE, { paused: true, bOn: true, fwd: 'go', filter: f.filter });
+      paint(f, true);
+      if (api && api.code) api.code([3, 4, 5, 6, 7]);
+      t.later(function () { f.recv = true; f.fwd = 'rest'; paint(f, false); if (api && api.code) api.code([19, 20, 21]); }, 1100);
+    }
+    function finish(value) {   // value = 'Móvil' o null (Atrás del sistema)
+      if (api && api.code) api.code(value === null ? [3, 9, 11] : [25]);
+      var cur = f;
+      f = Object.assign({}, cur, { bOn: false, bGone: true, recv: false, fwd: 'rest', bck: { state: 'go', label: value === null ? 'null' : 'Resultado: ' + value, nul: value === null } });
+      paint(f, true);
+      t.later(function () {
+        f = { paused: false, bOn: false, bGone: true, filter: value === null ? cur.filter : value, valid: true, bck: { state: 'rest', label: f.bck.label, nul: f.bck.nul },
+          snack: value === null ? '' : 'Seleccionaste: ' + value };
+        paint(f, false);
+        if (api && api.code) api.code(value === null ? [9, 11] : [9, 11, 12, 13, 14, 15]);
+      }, 1100);
+    }
+    stage.addEventListener('click', function (e) {
+      if (!freeOn) return;
+      var n = e.target.closest ? e.target.closest('[data-act]') : null;
+      if (!n) return;
+      if (n.getAttribute('data-act') === 'open' && !f.paused && !f.bOn) { t.clear(); open(); }
+      else if (n.getAttribute('data-act') === 'pick' && f.bOn) { t.clear(); finish(n.getAttribute('data-arg')); }
+    });
+    sysB.addEventListener('click', function () { if (freeOn && f.bOn) { t.clear(); finish(null); } });
+    resetB.addEventListener('click', function () { if (freeOn) enterFree(); });
+
+    /* ---------- contrato con DK.player ---------- */
+    return {
+      msgDuration: 0,
+      setSteps: function (list) { steps = list; },
+      render: function (i, animate) {
+        t.clear(); freeOn = false;
+        var step = steps[i];
+        [A, B].forEach(function (p) { p.finger.classList.remove('go'); });
+        resetB.hidden = true; hint.textContent = ''; hint.classList.remove('live');
+        if (step && step.free) {
+          freeOn = true; resetB.hidden = false;
+          hint.textContent = 'Toca «Seleccionar Filtro» en HomeScreen y elige una opción. También puedes usar Atrás del sistema.'; hint.classList.add('live');
+          enterFree();
+          return { animMs: 0 };
+        }
+        var s = step ? step.s : IDLE;
+        var prev = steps[i - 1];
+        if (animate && step && step.tap) {
+          paint(prev ? prev.s : IDLE, false);
+          var who = step.tap.who === 'B' ? B : A;
+          t.later(function () { if (step.tap.who === 'sys') { sysB.classList.add('pressed'); t.later(function () { sysB.classList.remove('pressed'); }, 450); } else tap(who, step.tap.act, step.tap.arg); }, 150);
+          t.later(function () { paint(s, true); }, 750);
+        } else paint(s, animate);
+        return { animMs: 0 };
+      },
+    };
+  }
+
+  function build(opts) {
+    var nul = !!opts.back;
+    var done = nul ? { label: 'null', nul: true } : { label: 'Resultado: Móvil', nul: false };
+    var s = [];
+    s.push({ phase: 0, title: 'pushNamed envía los argumentos', code: [3, 4, 5, 6, 7], msgs: [], dwell: 5600,
+      tap: { who: 'A', act: 'open' },
+      s: { paused: true, bOn: true, fwd: 'go', filter: 'Todos' },
+      caption: "HomeScreen llama a Navigator.pushNamed con arguments: el paquete { categoriaId: 10 } viaja hacia la nueva ruta. Como la llamada lleva await, HomeScreen se queda pausada en esa línea hasta que la otra pantalla se cierre." });
+    s.push({ phase: 1, title: 'ModalRoute extrae los argumentos', code: [19, 20, 21], msgs: [], dwell: 5600,
+      s: { paused: true, bOn: true, recv: true, fwd: 'rest', filter: 'Todos' },
+      caption: "SeleccionScreen ya está en el tope de la pila. Dentro de build, ModalRoute.of(context)!.settings.arguments entrega el paquete y se castea a Map: así sabe que debe filtrar la categoría 10. HomeScreen sigue pausada debajo." });
+    s.push({ phase: 2, title: nul ? 'Atrás: pop sin valor' : 'pop devuelve un resultado', code: nul ? [3] : [25], msgs: [], dwell: 5800,
+      tap: nul ? { who: 'sys' } : { who: 'B', act: 'pick', arg: 'Móvil' },
+      s: { paused: true, bOn: false, bGone: true, fwd: 'rest', bck: { state: 'go', label: done.label, nul: done.nul }, filter: 'Todos' },
+      caption: nul
+        ? "El usuario sale con el botón Atrás del sistema en vez de elegir. Ese pop no lleva valor: el Future de pushNamed se completa con null."
+        : "El usuario toca «Móvil»: onTap llama a Navigator.pop(context, 'Móvil'). La pantalla sale de la pila y el valor viaja de regreso para completar el Future que HomeScreen estaba esperando." });
+    s.push({ phase: 3, title: nul ? 'El await termina y no hay nada que mostrar' : 'El Future se resuelve y se muestra el SnackBar', code: nul ? [9, 11] : [9, 11, 12, 13, 14, 15], msgs: [], dwell: 6200,
+      s: { paused: false, bOn: false, bGone: true, valid: true, fwd: 'rest', bck: { state: 'rest', label: done.label, nul: done.nul }, filter: 'Todos', snack: nul ? '' : 'Seleccionaste: Móvil' },
+      caption: nul
+        ? "HomeScreen despierta con categoria == null. Primero comprueba context.mounted; luego el if (categoria != null) falla y no se muestra nada. Por eso hay que tratar el null: el usuario puede cancelar."
+        : "HomeScreen despierta. Antes de usar el context comprueba if (!context.mounted) return;: si el usuario hubiera cerrado la pantalla durante la espera, seguir usándolo fallaría. Como sigue montado, el SnackBar se muestra." });
+    s.push({ phase: 4, title: 'Pruébalo tú', free: true, msgs: [], dwell: 1500, s: {},
+      caption: "Pulsa «Seleccionar Filtro», elige una opción y mira cómo viaja cada paquete. Repite usando «Atrás del sistema» en lugar de elegir: el resultado es null y no aparece el SnackBar." });
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Flujo de datos entre dos pantallas de Flutter: arguments en pushNamed y resultado en pop',
+    phases: PHASES,
+    wide: true,
+    code: { title: 'navegacion.dart', text: CODE },
+    toggles: [{ key: 'back', label: 'El usuario sale con Atrás en vez de elegir', affectsPhase: 2 }],
+    scene: scene,
+    build: build,
+    intro: {
+      kicker: 'Datos entre pantallas',
+      title: 'Una tubería de ida y vuelta',
+      text: 'Los datos viajan hacia adelante como arguments al abrir la pantalla y hacia atrás como el valor de pop al cerrarla. Sigue los dos paquetes y la pausa en await.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

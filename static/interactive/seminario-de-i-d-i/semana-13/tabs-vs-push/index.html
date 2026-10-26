@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pestañas o detalle</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<link rel="stylesheet" href="../../../_shared/dk-tabs.css">
+<style>
+  .tv { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+  .tv-ph { display: flex; justify-content: center; }
+  .tv-box { border: 1px solid var(--dk-line); border-radius: 12px; padding: 10px 14px 12px; background: var(--dk-card); min-width: 0; }
+  .tv-box h4 { margin: 0 0 8px; font: 700 12px system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; color: var(--dk-muted); display: flex; justify-content: space-between; }
+  .tv-box h4 b { color: var(--dk-ctl); }
+  .tv-stk { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; min-height: 124px; }
+  .tv-stk li { display: grid; grid-template-columns: 1fr auto; padding: 8px 12px; border: 2px solid var(--dk-line); border-radius: 10px; background: var(--dk-card); font: 700 13px ui-monospace, Consolas, monospace; }
+  .tv-stk li small { font: 600 11px system-ui, sans-serif; color: var(--dk-muted); text-align: right; align-self: center; }
+  .tv-stk li em { grid-column: 1 / -1; font: 600 11.5px system-ui, sans-serif; font-style: normal; color: var(--dk-muted); }
+  .tv-stk li.top { border-color: var(--dk-ctl); background: color-mix(in srgb, var(--dk-ctl) 14%, var(--dk-card)); } .tv-stk li.top small { color: var(--dk-ctl); }
+  .tv-stk li.new { animation: tv-in .45s cubic-bezier(.2, .8, .2, 1); }
+  @keyframes tv-in { from { transform: translateY(-30px); opacity: 0; } }
+  .tv-row { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; margin-top: 10px; font-size: 12.5px; }
+  .tv-row span { color: var(--dk-muted); }
+  .tv-row b.h { color: var(--dk-p3); } .tv-row b.v { color: var(--dk-ctl); }
+  .tv-cases { margin-top: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .tv-cases > b { font-size: 13px; }
+  .tv-cases button { font: 700 12.5px system-ui, sans-serif; padding: 6px 12px; border-radius: 16px; border: 1.5px solid var(--dk-ctl); background: transparent; color: var(--dk-ctl); cursor: pointer; }
+  .tv-cases button:hover { background: var(--dk-band-on); }
+  .tv-cap { margin: 12px 0 0; padding: 9px 14px; border-left: 4px solid var(--dk-ctl); border-radius: 8px; background: var(--dk-band); font-size: 14px; min-height: 44px; }
+  @media (max-width: 700px) { .tv { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-tabs.js"></script>
+<script>
+/* Pestañas frente a detalle: el teléfono (mitad) y la pila de rutas (mitad). Cambiar de pestaña no toca la pila; abrir un detalle sí. */
+(function () {
+  var el = DK.el, NAMES = ['Cursos', 'Guardados', 'Perfil'];
+  var tab = 0, detail = null, q = '';
+  var MSG = {
+    start: 'Toca las pestañas de abajo y mira la pila; después abre un curso. Compara qué cambia en cada caso.',
+    tab: function (i) { return 'Pestaña «' + NAMES[i] + '»: es un setState en MainScreen. La pila sigue con UNA ruta y la barra inferior sigue visible.'; },
+    open: 'Abrir el detalle es un Navigator.push: la pila crece a dos rutas, el detalle tapa la barra inferior y aparece la flecha de volver.',
+    back: 'Navigator.pop desapila el detalle. MainScreen reaparece intacta, en la misma pestaña en la que estaba.',
+    perfil: 'Perfil de usuario: es una sección principal que el usuario visita a menudo. Va como pestaña (setState); no apila nada.',
+    editar: 'Editar el contacto #42: nace de tocar un elemento concreto y se vuelve con Atrás. Es jerárquico: Navigator.push con el id como argumento.',
+    carrito: 'Carrito accesible siempre: es una sección principal independiente. Va como pestaña, para llegar con un solo toque desde cualquier parte.',
+  };
+
+  var ph = DK.tabs.phone({ height: 330, on: function (act, arg) {
+    if (act === 'tab') go('tab', +arg); else if (act === 'open') go('open', arg); else if (act === 'back') go('back');
+  }, onType: function (v) { q = v; } });
+  var stk = el('ol', { class: 'tv-stk' }), depth = el('b'), move = el('b'), bar = el('b');
+  var cap = el('p', { class: 'tv-cap', 'aria-live': 'polite', text: MSG.start });
+  var right = el('div', { class: 'tv-box' }, el('h4', {}, el('span', { text: 'Pila de rutas del Navigator' }), el('span', {}, 'profundidad: ', depth)), stk,
+    el('div', { class: 'tv-row' }, el('span', { text: 'Último movimiento' }), move, el('span', { text: 'Barra inferior' }), bar));
+  var cases = el('div', { class: 'tv-cases' }, el('b', { text: 'Dónde ubicarías…' }),
+    el('button', { text: 'el perfil de usuario', onclick: function () { go('case', 'perfil'); } }),
+    el('button', { text: 'editar el contacto #42', onclick: function () { go('case', 'editar'); } }),
+    el('button', { text: 'el carrito global', onclick: function () { go('case', 'carrito'); } }));
+  document.getElementById('app').replaceChildren(el('div', { class: 'dk-card dk-wide' },
+    el('div', { class: 'tv' }, el('div', { class: 'tv-ph' }, ph.el), right), cases, cap));
+
+  function paint(fresh, how) {
+    ph.render({ tab: tab, detail: detail, q: q });
+    stk.replaceChildren();
+    var rows = [{ r: 'MainScreen', d: 'índice ' + tab + ' · ' + NAMES[tab] }];
+    if (detail) rows.push({ r: 'DetalleCursoScreen', d: detail });
+    rows.slice().reverse().forEach(function (x, i) {
+      var li = el('li', { class: (i === 0 ? 'top' : '') + (fresh && x.r === 'DetalleCursoScreen' ? ' new' : '') }, x.r, el('small', { text: i === 0 ? 'tope · visible' : 'suspendida' }), el('em', { text: x.d }));
+      stk.appendChild(li);
+    });
+    depth.textContent = String(rows.length);
+    bar.textContent = detail ? 'cubierta por el detalle' : 'siempre visible';
+    if (how) { move.textContent = how === 'h' ? 'horizontal (setState)' : 'jerárquico (push / pop)'; move.className = how; }
+  }
+  function go(kind, arg) {
+    if (kind === 'tab') { tab = arg; paint(false, 'h'); cap.textContent = MSG.tab(arg); }
+    else if (kind === 'open') { detail = arg; paint(true, 'v'); cap.textContent = MSG.open; }
+    else if (kind === 'back') { detail = null; paint(false, 'v'); cap.textContent = MSG.back; }
+    else {
+      if (arg === 'editar') { tab = 0; detail = 'Editar contacto #42'; paint(true, 'v'); }
+      else { detail = null; tab = arg === 'perfil' ? 2 : 1; paint(false, 'h'); }
+      cap.textContent = MSG[arg];
+    }
+  }
+  paint(false, null);
+  move.textContent = '—';
+  DK.autoHeight();
+})();
+</script>
+</body>
+</html>

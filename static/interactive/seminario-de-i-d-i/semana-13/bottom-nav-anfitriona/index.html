@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Screen anfitriona</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<link rel="stylesheet" href="../../../_shared/dk-tabs.css">
+<style>
+  .ha { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 14px; align-items: start; }
+  .ha-ph { display: flex; justify-content: center; }
+  .ha-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .ha-box { border: 1px solid var(--dk-line); border-radius: 12px; padding: 8px 12px 10px; background: var(--dk-card); }
+  .ha-box h4 { margin: 0 0 6px; font: 700 11.5px system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; color: var(--dk-muted); }
+  .ha-state { display: flex; align-items: baseline; gap: 8px; font: 700 14px ui-monospace, Consolas, monospace; }
+  .ha-state small { font: 600 11.5px system-ui, sans-serif; color: var(--dk-muted); }
+  .ha-state b { padding: 1px 10px; border-radius: 8px; background: var(--dk-band-on); border: 1.5px solid var(--dk-ctl); color: var(--dk-ctl); }
+  .ha-state b.flash { animation: ha-fl .8s ease-out; }
+  @keyframes ha-fl { 0% { background: color-mix(in srgb, var(--dk-ctl) 45%, transparent); } }
+  .ha-mem { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .ha-pg { min-height: 78px; padding: 7px 9px; border: 2px solid var(--dk-line); border-radius: 10px; background: var(--dk-card); transition: opacity .3s, border-color .3s, background .3s; }
+  .ha-pg b { display: block; font: 700 12.5px ui-monospace, Consolas, monospace; }
+  .ha-pg small { display: block; margin-top: 2px; font: 600 11px system-ui, sans-serif; color: var(--dk-muted); }
+  .ha-pg em { display: block; margin-top: 4px; font: 600 11px system-ui, sans-serif; font-style: normal; }
+  .ha-pg.vis { border-color: var(--dk-ctl); background: color-mix(in srgb, var(--dk-ctl) 12%, var(--dk-card)); }
+  .ha-pg.vis small { color: var(--dk-ctl); }
+  .ha-pg.mem { opacity: .55; border-style: dashed; }
+  .ha-pg.gone { opacity: .35; border-color: var(--dk-err); border-style: dotted; } .ha-pg.gone small { color: var(--dk-err); }
+  .ha-mode { display: flex; gap: 6px; flex-wrap: wrap; }
+  .ha-mode button { font: 700 12.5px system-ui, sans-serif; padding: 5px 12px; border-radius: 16px; border: 1.5px solid var(--dk-line); background: transparent; color: var(--dk-muted); cursor: pointer; }
+  .ha-mode button.on { border-color: var(--dk-ctl); background: var(--dk-band-on); color: var(--dk-ctl); }
+  .ha-code { margin-top: 8px; padding: 6px 0; border: 1px solid var(--dk-line); border-radius: 8px; background: var(--dk-band); font: 12.5px/1.7 ui-monospace, Consolas, monospace; overflow-x: auto; }
+  .ha-code .ln { padding: 0 10px; border-left: 3px solid transparent; white-space: pre; transition: background .3s; }
+  .ha-code .ln.run { background: var(--dk-band-on); border-left-color: var(--dk-ctl); }
+  .ha-code .kw { color: var(--dk-s-kw); font-weight: 700; } .ha-code .ty { color: var(--dk-s-ty); font-weight: 600; } .ha-code .fn { color: var(--dk-s-fn); }
+  .ha-code .ob { color: var(--dk-s-ob); } .ha-code .st { color: var(--dk-s-st); } .ha-code .nu { color: var(--dk-s-nu); } .ha-code .cm { color: var(--dk-muted); font-style: italic; }
+  .ha-cap { margin: 12px 0 0; padding: 9px 14px; border-left: 4px solid var(--dk-ctl); border-radius: 8px; background: var(--dk-band); font-size: 14px; min-height: 44px; }
+  @media (max-width: 700px) { .ha { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-tabs.js"></script>
+<script>
+/* Screen anfitriona: un índice en el State decide qué página se ve; IndexedStack las conserva todas, la lista directa solo deja viva la elegida. */
+(function () {
+  var el = DK.el, NAMES = ['CursosPage', 'GuardadosPage', 'PerfilPage'];
+  var idx = 0, q = '', keep = true, tm = DK.timers();
+  var MSG = {
+    start: 'Escribe algo en «Buscar», cambia de pestaña y vuelve. Luego cambia a «Lista directa» y repite.',
+    tabKeep: 'setState cambia _selectedIndex. IndexedStack deja las otras páginas montadas, solo ocultas: su estado se conserva.',
+    tabDirect: 'setState cambia _selectedIndex y body construye otra página: la anterior se destruyó junto con lo que habías escrito.',
+    back: 'De vuelta en Cursos. ',
+    keep: 'IndexedStack(index: _selectedIndex, children: _paginas): las tres páginas viven a la vez; solo una se ve.',
+    direct: '_paginas[_selectedIndex]: solo existe la página elegida. Al salir de ella, su State se pierde.',
+  };
+
+  var ph = DK.tabs.phone({ height: 360, on: function (act, arg) { if (act === 'tab') pick(+arg); }, onType: function (v) { q = v; paintMem(); } });
+  var stateVal = el('b'), mem = el('div', { class: 'ha-mem' }), code = el('div', { class: 'ha-code' });
+  var bKeep = el('button', { text: 'Con IndexedStack', onclick: function () { setMode(true); } }), bDir = el('button', { text: 'Lista directa', onclick: function () { setMode(false); } });
+  var cap = el('p', { class: 'ha-cap', 'aria-live': 'polite', text: MSG.start });
+  document.getElementById('app').replaceChildren(el('div', { class: 'dk-card dk-wide' },
+    el('div', { class: 'ha' }, el('div', { class: 'ha-ph' }, ph.el),
+      el('div', { class: 'ha-col' },
+        el('div', { class: 'ha-box' }, el('h4', { text: 'State de MainScreen' }), el('div', { class: 'ha-state' }, 'int _selectedIndex = ', stateVal, el('small', { id: 'nm' }))),
+        el('div', { class: 'ha-box' }, el('h4', { text: 'Páginas en memoria' }), mem),
+        el('div', { class: 'ha-box' }, el('h4', { text: 'El body del Scaffold' }), el('div', { class: 'ha-mode' }, bKeep, bDir), code))),
+    cap));
+
+  function paintMem() {
+    mem.replaceChildren();
+    NAMES.forEach(function (n, i) {
+      var vis = i === idx, alive = keep || vis;
+      var cls = 'ha-pg ' + (vis ? 'vis' : alive ? 'mem' : 'gone');
+      var st = vis ? 'visible' : alive ? 'en memoria (oculta)' : 'destruida';
+      var d = el('div', { class: cls }, el('b', { text: n }), el('small', { text: st }));
+      if (i === 0 && alive) d.appendChild(el('em', { text: q ? 'Buscar: «' + q + '»' : 'Buscar: vacío' }));
+      mem.appendChild(d);
+    });
+  }
+  function paintCode(flash) {
+    var L = [
+      ['onDestinationSelected: (i) => setState(() => _selectedIndex = i),', 'tap'],
+      [keep ? 'body: IndexedStack(index: _selectedIndex, children: _paginas),' : 'body: _paginas[_selectedIndex],', 'body'],
+    ];
+    code.replaceChildren();
+    L.forEach(function (l) { var d = el('div', { class: 'ln' + (flash === l[1] ? ' run' : '') }); d.innerHTML = DK.highlight(l[0]); code.appendChild(d); });
+  }
+  function paintAll(flash) {
+    ph.render({ tab: idx, detail: null, q: q });
+    stateVal.textContent = String(idx);
+    document.getElementById('nm').textContent = '→ ' + NAMES[idx];
+    stateVal.classList.remove('flash'); void stateVal.offsetWidth; stateVal.classList.add('flash');
+    bKeep.className = keep ? 'on' : ''; bDir.className = keep ? '' : 'on';
+    paintMem(); paintCode(flash);
+  }
+  function pick(i) {
+    var from = idx; idx = i;
+    if (!keep && from === 0 && i !== 0) q = '';   // la lista directa destruyó CursosPage y su campo
+    paintAll('tap'); tm.clear(); tm.later(function () { paintCode('body'); }, DK.reduced ? 0 : 500);
+    cap.textContent = (i === 0 && from !== 0 ? MSG.back : '') + (keep ? MSG.tabKeep : MSG.tabDirect);
+  }
+  function setMode(k) { keep = k; if (!keep && idx !== 0) q = ''; paintAll('body'); cap.textContent = keep ? MSG.keep : MSG.direct; }
+
+  paintAll(null);
+  DK.autoHeight();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Código y pila de navegación</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  .ide { display: grid; grid-template-columns: minmax(280px, 1fr) minmax(0, 2fr); gap: 12px 16px; align-items: start; }
+  .ide-left { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .ide-left .dk-phone { flex: none; }
+  .ide-btns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .ide-btns button { font: 600 12px system-ui, sans-serif; border: 1.5px solid var(--dk-line); background: transparent; color: var(--dk-ink); border-radius: 14px; padding: 4px 12px; cursor: pointer; }
+  .ide-btns button:hover { border-color: var(--dk-ctl); color: var(--dk-ctl); }
+
+  /* pila en miniatura */
+  .stk { width: 100%; max-width: 262px; border: 1px solid var(--dk-line); border-radius: 12px; padding: 6px 8px 8px; background: var(--dk-card); }
+  .stk h4 { margin: 0 0 6px; font: 700 11px system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; color: var(--dk-muted); display: flex; justify-content: space-between; }
+  .stk h4 b.ok { color: var(--dk-ack); } .stk h4 b.no { color: var(--dk-err); }
+  .stk ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; min-height: 120px; justify-content: flex-start; }
+  .stk li { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 9px; border: 2px solid var(--dk-line); border-radius: 8px; background: var(--dk-card); font: 700 12px ui-monospace, Consolas, monospace; }
+  .stk li small { font: 600 10.5px system-ui, sans-serif; color: var(--dk-muted); }
+  .stk li.top { border-color: var(--dk-ctl); background: color-mix(in srgb, var(--dk-ctl) 14%, var(--dk-card)); } .stk li.top small { color: var(--dk-ctl); }
+  .stk li.new { animation: stk-in .45s cubic-bezier(.2, .8, .2, 1); }
+  @keyframes stk-in { from { transform: translateX(60px); opacity: 0; } }
+
+  /* teléfono (apoyo) */
+  .ide .pf-appbar { display: flex; align-items: center; justify-content: center; position: relative; min-height: 42px; }
+  .ide .pf-appbar .bk { position: absolute; left: 6px; top: 50%; margin-top: -16px; width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: #1c1b1f; cursor: pointer; }
+  .ide .pf-appbar .bk .pf-ic { width: 20px; height: 20px; }
+  .ide .pf-kv { display: flex; justify-content: space-between; margin: 4px 0; font-size: 12.5px; } .ide .pf-kv span:first-child { color: #79747e; }
+  .ide [data-act] { cursor: pointer; }
+  .ide .hov { outline: 3px solid var(--dk-ctl); outline-offset: 1px; border-radius: 12px; }
+  .pf-exit { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 20px; text-align: center; background: rgba(24, 24, 27, .93); color: #fff; z-index: 3; }
+  .pf-exit.on { display: flex; } .pf-exit small { color: #d4d4d8; font-size: 12px; }
+
+  /* editor */
+  .ed { min-width: 0; border: 1px solid var(--dk-line); border-radius: 12px; overflow: hidden; background: var(--dk-card); }
+  .ed-tabs { display: flex; overflow-x: auto; border-bottom: 1px solid var(--dk-line); background: var(--dk-band); }
+  .ed-tabs button { flex: none; display: flex; align-items: center; gap: 6px; padding: 8px 14px; border: 0; border-right: 1px solid var(--dk-line); background: transparent; color: var(--dk-muted); font: 600 12.5px ui-monospace, Consolas, monospace; cursor: pointer; }
+  .ed-tabs button.on { background: var(--dk-card); color: var(--dk-ink); box-shadow: inset 0 -3px 0 var(--dk-ctl); }
+  .ed-tabs button i { width: 8px; height: 8px; border-radius: 50%; background: var(--dk-ack); }
+  .ed-path { padding: 4px 14px; border-bottom: 1px solid var(--dk-line); font: 600 11.5px ui-monospace, Consolas, monospace; color: var(--dk-muted); }
+  .ed-code { height: 440px; overflow: auto; padding: 8px 0; font: 12.5px/1.75 ui-monospace, Consolas, monospace; }
+  .ed-code .kw { color: var(--dk-s-kw); font-weight: 700; } .ed-code .ty { color: var(--dk-s-ty); font-weight: 600; } .ed-code .fn { color: var(--dk-s-fn); }
+  .ed-code .ob { color: var(--dk-s-ob); } .ed-code .st { color: var(--dk-s-st); } .ed-code .nu { color: var(--dk-s-nu); } .ed-code .an { color: var(--dk-s-an); }
+  .ed-code .cm { color: var(--dk-muted); font-style: italic; }
+  .ln { display: flex; align-items: center; gap: 0; padding: 0 10px 0 0; border-left: 3px solid transparent; transition: background .3s; min-width: max-content; }
+  .ln .no { flex: none; width: 36px; text-align: right; padding-right: 12px; color: var(--dk-muted); opacity: .6; user-select: none; }
+  .ln .tx { white-space: pre; }
+  .ln.run { background: var(--dk-band-on); border-left-color: var(--dk-ctl); animation: ln-flash 1.1s ease-out; }
+  .ln.hov { background: var(--dk-band); border-left-color: var(--dk-p3); outline: 0; }
+  @keyframes ln-flash { 0% { background: color-mix(in srgb, var(--dk-ctl) 38%, transparent); } }
+  .lens { margin-left: 14px; flex: none; font: 700 11px system-ui, sans-serif; padding: 1px 9px; border-radius: 10px; border: 1.5px solid var(--dk-ctl); background: var(--dk-band-on); color: var(--dk-ctl); cursor: pointer; }
+  .lens:disabled { border-color: var(--dk-line); background: transparent; color: var(--dk-muted); cursor: not-allowed; opacity: .75; }
+  .lens.sw { border-color: var(--dk-p4); color: var(--dk-p4); background: color-mix(in srgb, var(--dk-p4) 12%, transparent); }
+  .ide-cap { grid-column: 1 / -1; margin: 0; padding: 9px 14px; border-left: 4px solid var(--dk-ctl); border-radius: 8px; background: var(--dk-band); font-size: 14px; min-height: 44px; }
+  .ide .dk-ph-hint { margin: 0; }
+  @media (max-width: 760px) { .ide { grid-template-columns: 1fr; } .ed-code { height: 340px; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script>
+/* Código y pila: el teléfono (1/3) y el código por archivos (2/3), enlazados en los dos sentidos. Solo DATOS: archivos, acciones y mensajes. */
+(function () {
+  var L = function (t, o) { return Object.assign({ t: t }, o); };
+  var IMP = "import 'package:flutter/material.dart';";
+  var FILES = {
+    'main.dart': { path: 'lib/main.dart', route: null, lines: [
+      L(IMP),
+      L("import 'routes/app_routes.dart';"),
+      L(''),
+      L('void main() => runApp(const MiApp());'),
+      L(''),
+      L('class MiApp extends StatelessWidget {'),
+      L('  const MiApp({super.key});'),
+      L(''),
+      L('  @override'),
+      L('  Widget build(BuildContext context) {'),
+      L('    return MaterialApp('),
+      L('      initialRoute: AppRoutes.catalogo,', { run: 'reset', id: 'init', label: '▶ Reiniciar app' }),
+      L('      routes: AppRoutes.routes,'),
+      L('    );'),
+      L('  }'),
+      L('}'),
+    ] },
+    'app_routes.dart': { path: 'lib/routes/app_routes.dart', route: null, lines: [
+      L(IMP),
+      L("import '../screens/catalogo_screen.dart';"),
+      L("import '../screens/detalle_screen.dart';"),
+      L("import '../screens/editar_screen.dart';"),
+      L(''),
+      L('class AppRoutes {'),
+      L('  // Los nombres, en un solo lugar: sin textos sueltos ni errores de tipeo'),
+      L("  static const catalogo = '/';", { pe: 'r-catalogo' }),
+      L("  static const detalle = '/detalle';", { pe: 'r-detalle' }),
+      L("  static const editar = '/editar';", { pe: 'r-editar' }),
+      L(''),
+      L('  // La tabla: a cada nombre le corresponde una pantalla'),
+      L('  static final routes = <String, WidgetBuilder>{'),
+      L('    catalogo: (context) => const CatalogoScreen(),'),
+      L('    detalle: (context) => const DetalleScreen(),'),
+      L('    editar: (context) => const EditarScreen(),'),
+      L('  };'),
+      L('}'),
+    ] },
+    'catalogo_screen.dart': { path: 'lib/screens/catalogo_screen.dart', route: '/', lines: [
+      L(IMP),
+      L("import '../routes/app_routes.dart';"),
+      L(''),
+      L('class CatalogoScreen extends StatelessWidget {'),
+      L('  const CatalogoScreen({super.key});'),
+      L(''),
+      L('  @override'),
+      L('  Widget build(BuildContext context) {'),
+      L('    return Scaffold('),
+      L("      appBar: AppBar(title: const Text('Catálogo')),"),
+      L('      body: Column(children: ['),
+      L("        const TextField(decoration: InputDecoration(labelText: 'Buscar')),", { pe: 'q' }),
+      L('        FilledButton(', { pe: 'detalle' }),
+      L('          onPressed: () => Navigator.pushNamed(context, AppRoutes.detalle),', { run: 'detalle', id: 'push-detalle', pe: 'detalle', label: '▶ Ejecutar' }),
+      L("          child: const Text('Ver detalle'),"),
+      L('        ),'),
+      L('      ]),'),
+      L('    );'),
+      L('  }'),
+      L('}'),
+    ] },
+    'detalle_screen.dart': { path: 'lib/screens/detalle_screen.dart', route: '/detalle', lines: [
+      L(IMP),
+      L("import '../routes/app_routes.dart';"),
+      L(''),
+      L('class DetalleScreen extends StatelessWidget {'),
+      L('  const DetalleScreen({super.key});'),
+      L(''),
+      L('  @override'),
+      L('  Widget build(BuildContext context) {'),
+      L('    return Scaffold('),
+      L('      appBar: AppBar('),
+      L("        title: const Text('Detalle'),"),
+      L('        automaticallyImplyLeading: %imply%,', { toggle: 'imply', id: 'imply', pe: '__back' }),
+      L('      ),'),
+      L('      body: Column(children: ['),
+      L('        FilledButton(', { pe: 'editar' }),
+      L('          onPressed: () => Navigator.pushNamed(context, AppRoutes.editar),', { run: 'editar', id: 'push-editar', pe: 'editar', label: '▶ Ejecutar' }),
+      L("          child: const Text('Editar'),"),
+      L('        ),'),
+      L('        OutlinedButton(', { pe: 'volver' }),
+      L('          onPressed: () => Navigator.pop(context),', { run: 'volver', id: 'pop', pe: 'volver', label: '▶ Ejecutar' }),
+      L("          child: const Text('Volver'),"),
+      L('        ),'),
+      L('      ]),'),
+      L('    );'),
+      L('  }'),
+      L('}'),
+    ] },
+    'editar_screen.dart': { path: 'lib/screens/editar_screen.dart', route: '/editar', lines: [
+      L(IMP),
+      L(''),
+      L('class EditarScreen extends StatelessWidget {'),
+      L('  const EditarScreen({super.key});'),
+      L(''),
+      L('  @override'),
+      L('  Widget build(BuildContext context) {'),
+      L('    return Scaffold('),
+      L('      appBar: AppBar('),
+      L("        title: const Text('Editar'),"),
+      L('        automaticallyImplyLeading: %imply%,', { toggle: 'imply', id: 'imply', pe: '__back' }),
+      L('      ),'),
+      L('      body: Column(children: ['),
+      L('        OutlinedButton(', { pe: 'volver' }),
+      L('          onPressed: () => Navigator.pop(context),', { run: 'volver', id: 'pop', pe: 'volver', label: '▶ Ejecutar' }),
+      L("          child: const Text('Volver'),"),
+      L('        ),'),
+      L('      ]),'),
+      L('    );'),
+      L('  }'),
+      L('}'),
+    ] },
+  };
+  var ORDER = ['main.dart', 'app_routes.dart', 'catalogo_screen.dart', 'detalle_screen.dart', 'editar_screen.dart'];
+  var FILE_OF = { '/': 'catalogo_screen.dart', '/detalle': 'detalle_screen.dart', '/editar': 'editar_screen.dart' };
+
+  var MSG = {
+    start: 'Toca un botón del teléfono o pulsa «▶ Ejecutar» en el código: la pila de la izquierda cambia con cada llamada a Navigator.',
+    reset: "initialRoute: AppRoutes.catalogo ('/') → Navigator arranca con una sola ruta, el Catálogo. Es la base y el tope a la vez.",
+    detalle: "pushNamed(AppRoutes.detalle) apila una ruta nueva. El Catálogo queda suspendido debajo, con su búsqueda intacta.",
+    editar: 'Otro pushNamed: tres rutas. Solo se ve la del tope; las de abajo esperan, en el orden en que llegaron.',
+    pop: 'pop desapila la ruta del tope y libera su State. La de abajo vuelve a ser el tope, tal como estaba.',
+    back: 'La flecha existe porque canPop() es true (hay más de una ruta): AppBar la dibuja sola y la enlaza a Navigator.pop.',
+    sysPop: 'El botón Atrás del sistema hace lo mismo que la flecha: pop de la ruta del tope.',
+    sysExit: 'Con una sola ruta, canPop() es false: no hay a dónde volver y Atrás cierra (minimiza) la app.',
+    implyOff: 'automaticallyImplyLeading: false oculta la flecha, pero no cambia la pila: Atrás del sistema sigue haciendo pop.',
+    implyOn: 'automaticallyImplyLeading: true: si canPop() es true, la AppBar dibuja la flecha de retroceso.',
+  };
+
+  var el = DK.el, t = DK.timers(), esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); };
+  var stack = ['/'], imply = true, q = 'sillas', file = 'catalogo_screen.dart';
+
+  /* ---------- teléfono ---------- */
+  var appbar = el('div', { class: 'pf-appbar' }), body = el('div', { class: 'pf-body' });
+  var exitBox = el('div', { class: 'pf-exit' }, el('b', { text: 'La app se cierra' }), el('small', { text: 'No hay ruta a la que volver' }));
+  var screen = el('div', { class: 'dk-phone-screen' }, appbar, body, exitBox);
+  screen.style.setProperty('--ph-h', '330px');
+  var phone = el('div', { class: 'dk-phone free', 'aria-label': 'Teléfono simulado' }, el('i', { class: 'dk-phone-cam' }), screen);
+  var sysBtn = el('button', { text: 'Atrás del sistema', title: 'Botón o gesto Atrás de Android/iOS' });
+  var resetBtn = el('button', { text: 'Reiniciar' });
+  var stkList = el('ol'), stkInfo = el('b');
+  var stk = el('div', { class: 'stk' }, el('h4', {}, el('span', { text: 'Pila de rutas' }), el('span', {}, 'canPop() = ', stkInfo)), stkList);
+  var left = el('div', { class: 'ide-left' }, phone, el('div', { class: 'ide-btns' }, sysBtn, resetBtn), stk);
+
+  /* ---------- editor ---------- */
+  var pathBar = el('div', { class: 'ed-path' }), tabs = el('div', { class: 'ed-tabs', role: 'tablist' }), code = el('div', { class: 'ed-code', tabindex: '0' });
+  var cap = el('p', { class: 'ide-cap', 'aria-live': 'polite', text: MSG.start });
+  var ide = el('div', { class: 'ide' }, left, el('div', { class: 'ed' }, tabs, pathBar, code), cap);
+  var card = el('div', { class: 'dk-card dk-wide' }, ide);
+  document.getElementById('app').replaceChildren(card);
+
+  var top = function () { return stack[stack.length - 1]; };
+
+  function paintPhone() {
+    var r = top();
+    appbar.replaceChildren();
+    if (stack.length > 1 && imply) {
+      var bk = el('button', { class: 'bk', 'data-act': '__back', 'aria-label': 'Atrás' });
+      bk.innerHTML = '<svg class="pf-ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>';
+      appbar.appendChild(bk);
+    }
+    appbar.appendChild(el('span', { text: { '/': 'Catálogo', '/detalle': 'Detalle', '/editar': 'Editar' }[r] }));
+    body.innerHTML = r === '/'
+      ? '<label class="pf-field" data-pe="q"><span>Buscar</span><input data-in="q" value="' + esc(q) + '"></label><div style="height:14px"></div><button class="pf-btn" data-act="detalle">Ver detalle</button>'
+      : r === '/detalle'
+        ? '<p class="pf-h">Silla ergonómica</p><div class="pf-kv"><span>Precio</span><b>$ 320.000</b></div><button class="pf-btn" data-act="editar">Editar</button><button class="pf-btn out" data-act="volver">Volver</button>'
+        : '<label class="pf-field"><span>Precio</span><input value="320000"></label><button class="pf-btn out" data-act="volver">Volver</button>';
+  }
+  function paintStack(newId) {
+    stkList.replaceChildren();
+    stack.slice().reverse().forEach(function (r, i) {
+      var li = el('li', { class: (i === 0 ? 'top' : '') + (r === newId ? ' new' : '') }, r, el('small', { text: i === 0 ? 'tope · visible' : (i === stack.length - 1 ? 'base · suspendida' : 'suspendida') }));
+      stkList.appendChild(li);
+    });
+    stkInfo.textContent = stack.length > 1 ? 'true' : 'false';
+    stkInfo.className = stack.length > 1 ? 'ok' : 'no';
+  }
+  function paintTabs() {
+    tabs.replaceChildren();
+    ORDER.forEach(function (name) {
+      var b = el('button', { role: 'tab', class: name === file ? 'on' : '', 'aria-selected': String(name === file), onclick: function () { showFile(name); } }, name, FILES[name].route === top() ? el('i', { title: 'Esta pantalla es la que se ve en el teléfono' }) : null);
+      tabs.appendChild(b);
+    });
+  }
+  function paintCode(flashId) {
+    code.replaceChildren();
+    FILES[file].lines.forEach(function (ln, k) {
+      var text = ln.t.replace('%imply%', String(imply));
+      var row = el('div', { class: 'ln', 'data-id': ln.id || '', 'data-pe': ln.pe || '' }, el('span', { class: 'no', text: String(k + 1) }));
+      var tx = el('span', { class: 'tx' }); tx.innerHTML = DK.highlight(text) || ' ';
+      row.appendChild(tx);
+      if (ln.run) {
+        var ok = ln.run === 'reset' || FILES[file].route === top();
+        row.appendChild(el('button', { class: 'lens', text: ln.label, disabled: ok ? null : true, title: ok ? 'Ejecutar esta línea' : 'Esta pantalla no está en el tope de la pila',
+          onclick: function () { exec(ln.run, 'code'); } }));
+      }
+      if (ln.toggle) row.appendChild(el('button', { class: 'lens sw', text: imply ? 'cambiar a false' : 'cambiar a true', title: 'Edita esta línea', onclick: function () { toggleImply(); } }));
+      if (flashId && ln.id === flashId) row.classList.add('run');
+      code.appendChild(row);
+    });
+  }
+  function showFile(name, flashId) { file = name; pathBar.textContent = FILES[name].path; paintTabs(); paintCode(flashId); var r = code.querySelector('.run'); if (r) code.scrollTop = Math.max(0, r.offsetTop - 120); else code.scrollTop = 0; }
+  function say(k) { cap.textContent = MSG[k]; }
+
+  /* ---------- acciones ---------- */
+  function apply(act) {
+    var pushed = null;
+    exitBox.classList.remove('on');
+    if (act === 'reset') { stack = ['/']; q = 'sillas'; say('reset'); }
+    else if (act === 'detalle') { stack.push('/detalle'); pushed = '/detalle'; say('detalle'); }
+    else if (act === 'editar') { stack.push('/editar'); pushed = '/editar'; say('editar'); }
+    else if (act === '__back' || act === 'volver') { stack.pop(); say(act === '__back' ? 'back' : 'pop'); }
+    else if (act === 'sys') {
+      if (stack.length > 1) { stack.pop(); say('sysPop'); } else { exitBox.classList.add('on'); say('sysExit'); }
+    }
+    paintPhone(); paintStack(pushed);
+  }
+  function exec(act, src) {
+    t.clear();
+    var line = act === 'reset' ? { f: 'main.dart', id: 'init' } : act === 'detalle' ? { f: 'catalogo_screen.dart', id: 'push-detalle' }
+      : act === 'editar' ? { f: 'detalle_screen.dart', id: 'push-editar' } : act === 'volver' ? { f: FILE_OF[top()], id: 'pop' }
+      : act === '__back' ? { f: FILE_OF[top()], id: 'imply' } : null;
+    if (line) {
+      showFile(line.f, line.id);   // causa: se ve la línea que se ejecuta...
+      t.later(function () { apply(act); }, DK.reduced ? 0 : 450);   // ...y después cambia la pila y el teléfono
+      t.later(function () { showFile(FILE_OF[top()]); }, DK.reduced ? 0 : 1700);   // el código sigue a la pantalla visible
+    } else {
+      apply(act);
+      t.later(function () { showFile(FILE_OF[top()]); }, DK.reduced ? 0 : 900);
+    }
+  }
+  function toggleImply() {
+    imply = !imply; paintPhone(); paintCode(); say(imply ? 'implyOn' : 'implyOff');
+    var r = code.querySelector('[data-id="imply"]'); if (r) r.classList.add('run');
+  }
+
+  body.addEventListener('click', function (e) { var n = e.target.closest('[data-act]'); if (n) exec(n.getAttribute('data-act'), 'phone'); });
+  appbar.addEventListener('click', function (e) { var n = e.target.closest('[data-act]'); if (n) exec(n.getAttribute('data-act'), 'phone'); });
+  body.addEventListener('input', function (e) { if (e.target.getAttribute('data-in') === 'q') q = e.target.value; });
+  sysBtn.addEventListener('click', function () { exec('sys', 'phone'); });
+  resetBtn.addEventListener('click', function () { exec('reset', 'phone'); });
+
+  // pasar el ratón por un botón del teléfono marca su línea de código, y al revés
+  function hover(on, pe) {
+    if (!pe) return;
+    [].forEach.call(code.querySelectorAll('.ln[data-pe="' + pe + '"]'), function (n) { n.classList.toggle('hov', on); });
+    [].forEach.call(ide.querySelectorAll('.dk-phone [data-act="' + pe + '"], .dk-phone [data-pe="' + pe + '"]'), function (n) { n.classList.toggle('hov', on); });
+  }
+  ide.addEventListener('mouseover', function (e) { var n = e.target.closest('[data-act], .ln[data-pe], [data-pe]'); if (n) hover(true, n.getAttribute('data-act') || n.getAttribute('data-pe')); });
+  ide.addEventListener('mouseout', function (e) { var n = e.target.closest('[data-act], .ln[data-pe], [data-pe]'); if (n) hover(false, n.getAttribute('data-act') || n.getAttribute('data-pe')); });
+
+  paintPhone(); paintStack(); showFile(file);
+  DK.autoHeight();
+})();
+</script>
+</body>
+</html>

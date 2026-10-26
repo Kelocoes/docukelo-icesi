@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Purga de la pila con pushNamedAndRemoveUntil</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<link rel="stylesheet" href="../../../_shared/dk-nav.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-tree.js"></script>
+<script src="../../../_shared/dk-phone.js"></script>
+<script src="../../../_shared/dk-nav.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Tres formas de salir de un flujo profundo: pushNamed, (route) => false y (route) => route.isFirst. Solo DATOS. */
+(function () {
+  var LOGIN = '/login', HOME = '/home', CART = '/carrito', PAY = '/checkout', THX = '/gracias';
+  var L2 = '/login#2';
+  var CALL_A = "Navigator.pushNamed(context, '/login')";
+  var CALL_B = "Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false)";
+  var CALL_C = "Navigator.pushNamedAndRemoveUntil(context, '/gracias', (route) => route.isFirst)";
+  var POP = 'Navigator.pop(context)';
+
+  var PHASES = ['Escenario', 'La llamada', 'Botón Atrás', 'Pruébalo tú'];
+  var ALTS = ['A · pushNamed (anti-patrón)', 'B · (route) => false (recomendada)', 'C · (route) => route.isFirst'];
+
+  // mismo número de líneas en las tres variantes: así las líneas resaltadas de los pasos valen para todas
+  function code(opts) {
+    var a = opts.alt || 0;
+    if (a === 0) return { title: 'cerrar_sesion.dart', text: [
+      'void _cerrarSesion(BuildContext context) {',
+      '  // Anti-patrón: solo apila otra pantalla',
+      '  Navigator.pushNamed(',
+      '    context,',
+      "    '/login',",
+      '    // sin predicado: no se elimina nada',
+      '  );',
+      '}'].join('\n') };
+    if (a === 1) return { title: 'cerrar_sesion.dart', text: [
+      'void _cerrarSesion(BuildContext context) {',
+      '  // Apila el Login y vacía todo lo anterior',
+      '  Navigator.pushNamedAndRemoveUntil(',
+      '    context,',
+      "    '/login',",
+      '    (route) => false,',
+      '  );',
+      '}'].join('\n') };
+    return { title: 'finalizar_compra.dart', text: [
+      'void _finalizarCompra(BuildContext context) {',
+      '  // Apila la confirmación y conserva solo la raíz',
+      '  Navigator.pushNamedAndRemoveUntil(',
+      '    context,',
+      "    '/gracias',",
+      '    (route) => route.isFirst,',
+      '  );',
+      '}'].join('\n') };
+  }
+
+  function build(opts) {
+    var a = opts.alt || 0;
+    var deep = a === 2 ? [HOME, CART, PAY] : [LOGIN, HOME, CART, PAY];
+    var scenario = a === 2
+      ? "El usuario ya inició sesión: la app usó pushNamedAndRemoveUntil al entrar, así que Home es la ruta raíz y encima están Carrito y Checkout. Está pagando."
+      : "El usuario inició sesión con pushNamed, así que el Login sigue en la base. Luego recorrió Home, Carrito y Checkout: cuatro rutas en la pila. Está en la pantalla de pago.";
+    var s = [];
+    s.push({ phase: 0, title: 'Un flujo profundo', stack: deep, msgs: [], dwell: 5600, data: { mode: 'ABC'[a] },
+      note: a === 2 ? 'El tope es Checkout. La raíz de la pila (isFirst) es Home.' : 'El tope es Checkout. Debajo quedan Carrito, Home y Login.',
+      caption: scenario });
+
+    if (a === 0) {
+      s.push({ phase: 1, title: 'pushNamed solo apila', stack: deep.concat([L2]), call: CALL_A, tap: 'cerrar', code: [3, 4, 5, 6, 7], msgs: [], dwell: 5600, data: { mode: 'A' },
+        marks: { '/checkout': { text: 'sigue viva con los datos de pago', tone: 'err' } },
+        note: 'La pila creció a cinco rutas: no se destruyó ninguna.',
+        caption: "«Cerrar sesión» ejecuta pushNamed('/login'). Eso apila un segundo Login arriba, pero Checkout, Carrito, Home y el primer Login siguen vivos debajo con sus datos. La sesión «se cerró» solo en apariencia." });
+      s.push({ phase: 2, title: 'Atrás revela la sesión anterior', stack: deep, call: POP, tap: 'sys', msgs: [], dwell: 6200, data: { mode: 'A' },
+        marks: { '/checkout': { text: 'datos de la sesión visibles', tone: 'err' } },
+        note: 'Fallo de privacidad: cualquiera con el teléfono ve la compra de la persona que salió.',
+        caption: "El usuario pulsa Atrás del sistema: pop saca el segundo Login y reaparece Checkout con la tarjeta y el total de la sesión anterior. Además puede seguir retrocediendo hasta Home. Para cerrar sesión, apilar no sirve." });
+    } else if (a === 1) {
+      s.push({ phase: 1, title: '1. Se apila la ruta nueva', stack: deep.concat([L2]), call: CALL_B, tap: 'cerrar', code: [3, 4, 5], msgs: [], dwell: 5200, data: { mode: 'B' },
+        note: 'Hasta aquí es igual que pushNamed: la pila tiene cinco rutas.',
+        caption: "pushNamedAndRemoveUntil empieza como un pushNamed: el nuevo Login entra y queda en el tope. Todavía no se ha eliminado nada." });
+      s.push({ phase: 1, title: '2. El predicado revisa las rutas de abajo', stack: deep.concat([L2]), code: [6], msgs: [], dwell: 6200, data: { mode: 'B' },
+        marks: {
+          '/checkout': { text: '(route) => false → se elimina', tone: 'err' }, '/carrito': { text: 'false → se elimina', tone: 'err' },
+          '/home': { text: 'false → se elimina', tone: 'err' }, '/login': { text: 'false → se elimina', tone: 'err' },
+        },
+        note: 'Revisa desde el tope hacia abajo, sin contar la ruta nueva. Como siempre responde false, nunca se detiene.',
+        caption: "Luego Flutter le pregunta al predicado por cada ruta anterior, de arriba hacia abajo. Si responde false, esa ruta se elimina; si respondiera true, la purga pararía ahí. (route) => false siempre responde false: se elimina todo." });
+      s.push({ phase: 1, title: '3. Solo queda el Login nuevo', stack: [L2], out: 'left', code: [3, 4, 5, 6, 7], msgs: [], dwell: 5400, data: { mode: 'B' },
+        note: 'Las cuatro rutas se destruyen. La pila tiene una sola ruta: canPop() es false.',
+        caption: "Checkout, Carrito, Home y el Login viejo salen de la pila y liberan su memoria. El Login nuevo es ahora la única ruta: la base y el tope a la vez. Los datos de la sesión anterior ya no existen." });
+      s.push({ phase: 2, title: 'Atrás ya no tiene a dónde volver', stack: [L2], exit: true, call: 'canPop() == false', tap: 'sys', msgs: [], dwell: 6000, data: { mode: 'B' },
+        note: 'El Navigator no hace pop: con una sola ruta, Atrás cierra (minimiza) la app.',
+        caption: "Si el usuario pulsa Atrás, el Navigator no tiene ninguna ruta a la que volver, así que el sistema cierra la app. No hay forma de regresar a Checkout: justo lo que se quiere después de cerrar sesión." });
+    } else {
+      s.push({ phase: 1, title: '1. Se apila la ruta nueva', stack: deep.concat([THX]), call: CALL_C, tap: 'finalizar', code: [3, 4, 5], msgs: [], dwell: 5200, data: { mode: 'C' },
+        note: 'Igual que antes: primero entra la ruta nueva.',
+        caption: "El usuario toca «Finalizar compra». pushNamedAndRemoveUntil apila la pantalla de confirmación. Todavía no se elimina nada." });
+      s.push({ phase: 1, title: '2. El predicado se detiene en la raíz', stack: deep.concat([THX]), code: [6], msgs: [], dwell: 6400, data: { mode: 'C' },
+        marks: {
+          '/checkout': { text: 'isFirst = false → se elimina', tone: 'err' }, '/carrito': { text: 'isFirst = false → se elimina', tone: 'err' },
+          '/home': { text: 'isFirst = true → se detiene, se conserva', tone: 'ack' },
+        },
+        note: 'Checkout y Carrito no son la primera ruta; Home sí. En cuanto el predicado responde true, la purga termina.',
+        caption: "De arriba hacia abajo: Checkout no es la primera ruta (false: se elimina), Carrito tampoco (false: se elimina), Home sí lo es (true): ahí se detiene la purga y Home se conserva." });
+      s.push({ phase: 1, title: '3. Quedan la raíz y la ruta nueva', stack: [HOME, THX], out: 'left', code: [3, 4, 5, 6, 7], msgs: [], dwell: 5400, data: { mode: 'C' },
+        note: 'Ojo: la ruta nueva también queda en la pila, encima de Home: [Home, Gracias].',
+        caption: "La pila queda con dos rutas: Home, que sobrevivió, y Gracias, la ruta nueva en el tope. Se perdió el flujo de compra (Carrito y Checkout), pero no la raíz." });
+      s.push({ phase: 2, title: 'Atrás vuelve a Home, no a Checkout', stack: [HOME], call: POP, tap: 'sys', msgs: [], dwell: 5400, data: { mode: 'C' },
+        note: 'El flujo de pago ya no existe: el usuario no puede volver a pagar dos veces con Atrás.',
+        caption: "Atrás hace pop de Gracias y aparece Home. Carrito y Checkout ya no están en la pila, así que el usuario no puede retroceder a ellos ni repetir el pago por error." });
+    }
+    s.push({ phase: 3, title: 'Pruébalo tú', free: true, stack: deep, msgs: [], dwell: 1500, data: { mode: 'ABC'[a] },
+      caption: a === 0
+        ? "Pulsa «Cerrar sesión» en Checkout y luego Atrás del sistema varias veces. Mira cómo la pila crece y cómo reaparecen las pantallas de la sesión anterior."
+        : a === 1
+          ? "Pulsa «Cerrar sesión» en Checkout y luego Atrás del sistema. Prueba también Ingresar en el Login nuevo: usa la misma purga para entrar a Home."
+          : "Avanza hasta Checkout, pulsa «Finalizar compra» y luego Atrás del sistema. Observa qué rutas sobreviven." });
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Comparación de pushNamed y pushNamedAndRemoveUntil al cerrar sesión: qué rutas quedan en la pila de Flutter',
+    phases: PHASES,
+    wide: true,
+    code: code,
+    toggles: [{ key: 'alt', type: 'select', label: 'Alternativa', options: ALTS, value: 0, restart: 'first' }],
+    scene: function (svg, stage, api) {
+      return DK.nav({
+        stage: stage, api: api, height: 330, sysBack: true,
+        data: { mode: 'A' },
+        hint: 'Navega por la app y prueba el botón Atrás del sistema.',
+        introNote: 'Elige una alternativa arriba a la derecha (selector «Alternativa») y mira qué le pasa a la pila.',
+        screens: {
+          '/login': { title: 'Iniciar sesión', widget: 'LoginScreen', noBack: true,
+            view: function (c) {
+              return '<p class="pf-h" style="margin-top:14px">' + (c.tag ? 'Sesión cerrada' : 'Bienvenido') + '</p>' +
+                '<label class="pf-field"><span>Correo</span><input value="ana@icesi.edu.co"></label>' +
+                '<button class="pf-btn" data-act="ingresar">Ingresar</button>';
+            } },
+          '/home': { title: 'Inicio', widget: 'HomeScreen',
+            view: function () { return '<p class="pf-h">Hola, Ana</p><div class="pf-tile"><span class="av">T</span><span class="tx"><b>Tienda</b><small>12 productos nuevos</small></span></div><button class="pf-btn" data-act="carrito">Ver carrito</button>'; } },
+          '/carrito': { title: 'Carrito', widget: 'CarritoScreen',
+            view: function () { return '<div class="pf-tile"><span class="av">S</span><span class="tx"><b>Silla ergonómica</b><small>x 2 · $ 640.000</small></span></div><div class="pf-tile"><span class="av">L</span><span class="tx"><b>Lámpara LED</b><small>x 1 · $ 220.000</small></span></div><button class="pf-btn" data-act="pagar">Ir a pagar</button>'; } },
+          '/checkout': { title: 'Checkout', widget: 'CheckoutScreen',
+            view: function (c) {
+              return '<div class="pf-kv"><span>Tarjeta</span><b>•••• 4242</b></div><div class="pf-kv"><span>Total</span><b>$ 860.000</b></div>' +
+                '<div class="pf-secret">Datos de pago de la sesión actual</div>' +
+                (c.data.mode === 'C' ? '<button class="pf-btn" data-act="finalizar">Finalizar compra</button>' : '<button class="pf-btn warn" data-act="cerrar">Cerrar sesión</button>');
+            } },
+          '/gracias': { title: 'Gracias', widget: 'GraciasScreen',
+            view: function () { return '<div class="pf-result">Pedido confirmado</div><p class="pf-label" style="margin-top:12px">Te enviamos el recibo por correo.</p>'; } },
+        },
+        actions: {
+          carrito: function (nav) { nav.push(CART); return { call: "Navigator.pushNamed(context, '/carrito')", note: 'pushNamed apila el Carrito.' }; },
+          pagar: function (nav) { nav.push(PAY); return { call: "Navigator.pushNamed(context, '/checkout')", note: 'pushNamed apila Checkout.' }; },
+          cerrar: function (nav, arg, step) {
+            var mode = step.data.mode, tag = '/login#' + (nav.stack().length + 1);
+            if (mode === 'A') { nav.push(tag); return { call: CALL_A, code: [3, 4, 5, 6, 7], note: 'Se apiló otro Login encima; las demás rutas siguen vivas. Prueba Atrás del sistema.' }; }
+            nav.removeUntil(tag, function () { return false; });
+            return { call: CALL_B, code: [3, 4, 5, 6, 7], out: 'left', note: 'Se apiló el Login y se eliminaron todas las rutas anteriores. Prueba Atrás del sistema.' };
+          },
+          ingresar: function (nav, arg, step) {
+            if (step.data.mode === 'B') {
+              nav.removeUntil(HOME, function () { return false; });
+              return { call: "Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false)", out: 'left', note: 'Al entrar también se purga la pila: el Login no queda debajo de Home.' };
+            }
+            nav.push(HOME); return { call: "Navigator.pushNamed(context, '/home')", note: 'pushNamed apila Home sobre el Login: el Login sigue en la pila.' };
+          },
+          finalizar: function (nav) {
+            nav.removeUntil(THX, function (r) { return r.isFirst; });
+            return { call: CALL_C, code: [3, 4, 5, 6, 7], out: 'left', note: 'Se eliminaron las rutas hasta la raíz (Home) y se apiló Gracias encima.' };
+          },
+        },
+      });
+    },
+    build: build,
+    intro: {
+      kicker: 'Reestructurar la pila',
+      title: 'Cerrar sesión sin dejar rastro',
+      text: 'La app está en Checkout y el usuario cierra sesión. Compara qué pasa con la pila si se usa pushNamed, pushNamedAndRemoveUntil con (route) => false o con (route) => route.isFirst.'
+    }
+  });
+})();
+</script>
+</body>
+</html>
