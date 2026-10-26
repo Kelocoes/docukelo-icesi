@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pila y cola</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  .pc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 14px; }
+  .pc-box { border: 1px solid var(--dk-line); border-radius: 12px; padding: 10px 14px 12px; background: var(--dk-card); min-width: 0; }
+  .pc-box h3 { margin: 0; font-size: 15px; }
+  .pc-box h3 small { margin-left: 6px; font: 600 12px system-ui, sans-serif; color: var(--dk-muted); }
+  .pc-box p.an { margin: 2px 0 8px; font-size: 12.5px; color: var(--dk-muted); }
+  /* pila: contenedor abierto por arriba */
+  .pc-stack { position: relative; height: 262px; width: 150px; margin: 34px auto 34px; border: 3px solid var(--dk-muted); border-top: 0; border-radius: 0 0 12px 12px; }
+  /* cola: tubo abierto a los dos lados */
+  .pc-queue { position: relative; height: 62px; margin: 52px 0 70px; border: 3px solid var(--dk-muted); border-left: 0; border-right: 0; }
+  .pc-it { position: absolute; width: 44px; height: 38px; display: grid; place-items: center; border-radius: 8px; font: 800 17px system-ui, sans-serif; color: #fff; background: var(--c); box-shadow: 0 3px 8px rgba(0, 0, 0, .22); transition: transform .45s cubic-bezier(.2, .8, .2, 1), opacity .4s; }
+  :root[data-dkt='dark'] .pc-it { color: #14141a; }
+  .pc-stack .pc-it { left: 50%; margin-left: -56px; width: 112px; }
+  .pc-queue .pc-it { top: 8px; height: 40px; }
+  .pc-it.next { outline: 3px solid var(--dk-ink); outline-offset: 2px; }
+  .pc-tag { position: absolute; font: 700 11px system-ui, sans-serif; color: var(--dk-muted); white-space: nowrap; }
+  .pc-stack .tg { left: 50%; transform: translateX(-50%); top: -26px; }
+  .pc-queue .out { left: 0; top: -22px; } .pc-queue .in { right: 0; top: -22px; }
+  .pc-queue .nx { left: 0; bottom: -24px; color: var(--dk-ink); }
+  .pc-stack .nx { left: 50%; transform: translateX(-50%); bottom: -24px; color: var(--dk-ink); }
+  .pc-ctl { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; align-items: center; }
+  .pc-ctl button { font: 700 13px system-ui, sans-serif; padding: 7px 14px; border-radius: 18px; border: 1.5px solid var(--dk-ctl); background: transparent; color: var(--dk-ctl); cursor: pointer; }
+  .pc-ctl button.solid { background: var(--dk-ctl); color: #fff; }
+  :root[data-dkt='dark'] .pc-ctl button.solid { color: #12122b; }
+  .pc-ctl button:disabled { opacity: .4; cursor: not-allowed; }
+  .pc-ctl button.rs { border-color: var(--dk-line); color: var(--dk-muted); margin-left: auto; }
+  .pc-log { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 26px; margin-top: 4px; font-size: 12.5px; }
+  .pc-log b { font-weight: 700; } .pc-log .ch { width: 24px; height: 24px; display: inline-grid; place-items: center; border-radius: 6px; background: var(--c); color: #fff; font-weight: 800; font-size: 12px; }
+  :root[data-dkt='dark'] .pc-log .ch { color: #14141a; }
+  .pc-cap { margin: 12px 0 0; padding: 9px 14px; border-left: 4px solid var(--dk-ctl); border-radius: 8px; background: var(--dk-band); font-size: 14px; min-height: 44px; }
+  @media (max-width: 700px) { .pc { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script>
+/* Pila (LIFO) frente a cola (FIFO): los mismos elementos entran en las dos; el estudiante los saca y ve el orden de salida. */
+(function () {
+  var el = DK.el, MAX = 6, ROW = 44, COL = 54;
+  var COLORS = ['var(--dk-p1)', 'var(--dk-p3)', 'var(--dk-p4)', 'var(--dk-p2)', 'var(--dk-p5)', 'var(--dk-ctl)'];
+  var next = 0, stack = [], queue = [], outS = [], outQ = [];
+  var nodesS = {}, nodesQ = {};
+
+  var stackBox = el('div', { class: 'pc-stack', role: 'img', 'aria-label': 'Pila' });
+  var stackTag = el('span', { class: 'pc-tag tg', text: 'entra y sale por aquí ↓↑' });
+  var stackNx = el('span', { class: 'pc-tag nx' });
+  stackBox.append(stackTag, stackNx);
+  var queueBox = el('div', { class: 'pc-queue', role: 'img', 'aria-label': 'Cola' });
+  var queueNx = el('span', { class: 'pc-tag nx' });
+  queueBox.append(el('span', { class: 'pc-tag out', text: '← sale por el frente' }), el('span', { class: 'pc-tag in', text: 'entra por el final →' }), queueNx);
+  var logS = el('div', { class: 'pc-log' }), logQ = el('div', { class: 'pc-log' });
+
+  var add = el('button', { class: 'solid', text: 'Agregar elemento' });
+  var popS = el('button', { text: 'Sacar de la pila (pop)' });
+  var popQ = el('button', { text: 'Sacar de la cola (dequeue)' });
+  var rs = el('button', { class: 'rs', text: 'Reiniciar' });
+  var cap = el('p', { class: 'pc-cap', 'aria-live': 'polite' });
+
+  var left = el('div', { class: 'pc-box' }, el('h3', {}, 'Pila', el('small', { text: 'LIFO · el último en entrar es el primero en salir' })), el('p', { class: 'an', text: 'Como una pila de platos: solo tocas el de arriba.' }), stackBox, el('div', { class: 'pc-log' }, el('b', { text: 'Orden de salida:' })), logS);
+  var right = el('div', { class: 'pc-box' }, el('h3', {}, 'Cola', el('small', { text: 'FIFO · el primero en entrar es el primero en salir' })), el('p', { class: 'an', text: 'Como la fila de un banco: se atiende a quien llegó antes.' }), queueBox, el('div', { class: 'pc-log' }, el('b', { text: 'Orden de salida:' })), logQ);
+  document.getElementById('app').replaceChildren(el('div', { class: 'dk-card dk-wide' },
+    el('div', { class: 'pc' }, left, right),
+    el('div', { class: 'pc-ctl' }, add, popS, popQ, rs), cap));
+
+  function node(parent, map, it) {
+    var n = map[it.id];
+    if (n) return n;
+    n = map[it.id] = el('div', { class: 'pc-it', text: it.l });
+    n.style.setProperty('--c', COLORS[it.id % COLORS.length]);
+    parent.appendChild(n);
+    return n;
+  }
+  function leave(map, id, dx, dy) {
+    var n = map[id]; if (!n) return;
+    delete map[id];
+    n.style.opacity = 0; n.style.transform += ' translate(' + dx + 'px,' + dy + 'px)';
+    setTimeout(function () { n.remove(); }, 450);
+  }
+  function paintLog(box, list) {
+    box.replaceChildren();
+    list.forEach(function (it) { var c = el('span', { class: 'ch', text: it.l }); c.style.setProperty('--c', COLORS[it.id % COLORS.length]); box.appendChild(c); });
+    if (!list.length) box.appendChild(el('span', { text: 'todavía no ha salido nadie', style: 'color:var(--dk-muted)' }));
+  }
+  function paint(fresh) {
+    stack.forEach(function (it, k) {
+      var n = node(stackBox, nodesS, it), y = 262 - 4 - (k + 1) * (ROW - 4);
+      if (fresh === it) { n.style.transition = 'none'; n.style.opacity = 0; n.style.transform = 'translateY(' + (y - 70) + 'px)'; void n.offsetWidth; n.style.transition = ''; }
+      n.style.opacity = 1; n.style.top = '0'; n.style.transform = 'translateY(' + y + 'px)';
+      n.classList.toggle('next', k === stack.length - 1);
+    });
+    queue.forEach(function (it, k) {
+      var n = node(queueBox, nodesQ, it), x = 6 + k * COL;
+      if (fresh === it) { n.style.transition = 'none'; n.style.opacity = 0; n.style.transform = 'translateX(' + (x + 70) + 'px)'; void n.offsetWidth; n.style.transition = ''; }
+      n.style.opacity = 1; n.style.left = '0'; n.style.transform = 'translateX(' + x + 'px)';
+      n.classList.toggle('next', k === 0);
+    });
+    stackNx.textContent = stack.length ? 'sale primero: ' + stack[stack.length - 1].l + ' (el último en entrar)' : '';
+    queueNx.textContent = queue.length ? 'sale primero: ' + queue[0].l + ' (el primero en entrar)' : '';
+    paintLog(logS, outS); paintLog(logQ, outQ);
+    add.disabled = next >= MAX; popS.disabled = !stack.length; popQ.disabled = !queue.length;
+  }
+  function say(t) { cap.textContent = t; }
+
+  add.onclick = function () {
+    if (next >= MAX) return;
+    var it = { id: next, l: String.fromCharCode(65 + next) };
+    next++; stack.push(it); queue.push(it); paint(it);
+    say('Entró ' + it.l + ' en las dos estructuras. En la pila queda arriba (tope); en la cola queda al final.' + (next >= MAX ? ' Ya no caben más: saca alguno.' : ''));
+  };
+  popS.onclick = function () {
+    var it = stack.pop(); outS.push(it); leave(nodesS, it.id, 0, -80); paint();
+    say('La pila sacó ' + it.l + ': el último que entró. Los demás siguen en el mismo orden debajo.');
+  };
+  popQ.onclick = function () {
+    var it = queue.shift(); outQ.push(it); leave(nodesQ, it.id, -80, 0); paint();
+    say('La cola sacó ' + it.l + ': el primero que entró. Los demás avanzan un lugar.');
+  };
+  rs.onclick = function () {
+    Object.keys(nodesS).forEach(function (k) { nodesS[k].remove(); }); Object.keys(nodesQ).forEach(function (k) { nodesQ[k].remove(); });
+    nodesS = {}; nodesQ = {}; next = 0; stack = []; queue = []; outS = []; outQ = []; paint();
+    say('Agrega tres o cuatro elementos y sácalos de cada estructura: compara el orden de salida.');
+  };
+  rs.onclick();
+  DK.autoHeight();
+})();
+</script>
+</body>
+</html>

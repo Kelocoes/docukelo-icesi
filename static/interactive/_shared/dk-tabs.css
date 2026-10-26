@@ -1,0 +1,20 @@
+/* DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md. Estilos de dk-tabs.js (teléfono con NavigationBar). Cargar después de dk-base.css. */
+.dk-tabsph .pf-appbar.nav { display: flex; align-items: center; justify-content: center; position: relative; min-height: 42px; }
+.dk-tabsph .pf-appbar .bk { position: absolute; left: 6px; top: 50%; margin-top: -16px; width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: #1c1b1f; cursor: pointer; }
+.dk-tabsph .pf-ic { width: 20px; height: 20px; fill: currentColor; }
+.dk-tabsph .pf-appbar .bk .pf-ic { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.dk-tabsph .pf-body { flex: 1; min-height: 0; overflow: auto; }
+.dk-tabsph .pf-body.slide { animation: tp-slide .35s cubic-bezier(.2, .8, .2, 1); }
+@keyframes tp-slide { from { transform: translateX(40px); opacity: 0; } }
+.dk-tabsph .pf-tile.go, .dk-tabsph [data-act] { cursor: pointer; }
+.dk-tabsph .pf-kv { display: flex; justify-content: space-between; gap: 8px; margin: 4px 0; font-size: 12.5px; }
+.dk-tabsph .pf-kv span:first-child { color: #79747e; }
+.dk-tabsph .tp-av { width: 64px; height: 64px; margin: 14px auto 8px; display: grid; place-items: center; border-radius: 50%; background: #e8def8; color: #4a4458; }
+.dk-tabsph .tp-av .pf-ic { width: 32px; height: 32px; }
+.dk-tabsph .hov { outline: 3px solid var(--dk-ctl); outline-offset: 1px; border-radius: 12px; }
+.pf-bnav { display: flex; justify-content: space-around; padding: 8px 4px 10px; background: #f3edf7; border-top: 1px solid #e7e0ec; }
+.pf-bnav[hidden] { display: none; }
+.pf-bnav .tb { display: flex; flex-direction: column; align-items: center; gap: 2px; border: 0; background: transparent; color: #49454f; font: 600 10.5px system-ui, sans-serif; cursor: pointer; }
+.pf-bnav .tb .pill { width: 52px; height: 28px; display: grid; place-items: center; border-radius: 14px; transition: background .25s; }
+.pf-bnav .tb.on { color: #1c1b1f; }
+.pf-bnav .tb.on .pill { background: #e8def8; }

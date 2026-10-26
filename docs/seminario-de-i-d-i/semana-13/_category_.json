@@ -1,8 +1,8 @@
 {
-    "label": "S13 - Tabs y Spec Driven Development",
+    "label": "S13 - Navegación y Rutas",
     "position": 13,
     "link": {
         "type": "generated-index",
-        "description": "Navegación horizontal con tabs, primera entrega parcial y Spec Driven Development."
+        "description": "Navegación con Navigator, tabla de rutas nombradas, paso de argumentos, retorno de resultados y navegación con pestañas."
     }
 }

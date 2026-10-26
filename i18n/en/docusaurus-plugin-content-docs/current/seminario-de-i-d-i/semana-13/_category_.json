@@ -1,0 +1,8 @@
+{
+    "label": "W13 - Navigation and Routes",
+    "position": 13,
+    "link": {
+        "type": "generated-index",
+        "description": "Navigation with Navigator, named route table, passing arguments, returning results and tab navigation."
+    }
+}

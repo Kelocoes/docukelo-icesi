@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Navegar es apilar pantallas</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<link rel="stylesheet" href="../../../_shared/dk-nav.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-tree.js"></script>
+<script src="../../../_shared/dk-phone.js"></script>
+<script src="../../../_shared/dk-nav.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Navegar es apilar pantallas: teléfono (mitad) y pila de rutas (mitad). Solo DATOS: pantallas y pasos. Sin código: el código está al final del capítulo. */
+(function () {
+  var CAT = '/', DET = '/detalle', EDI = '/editar';
+  var PUSH_DET = "Navigator.pushNamed(context, '/detalle')", PUSH_EDI = "Navigator.pushNamed(context, '/editar')", POP = 'Navigator.pop(context)';
+  var PHASES = ['La pila inicial', 'Entrar: push', 'Volver: pop', 'Pruébalo tú'];
+
+  var steps = [
+    { phase: 0, title: 'La app arranca con una sola ruta', stack: [CAT], msgs: [], dwell: 5200,
+      note: 'Con una sola ruta no hay a dónde volver: la AppBar no dibuja flecha.',
+      caption: 'Al abrir la app, el Navigator crea la primera ruta: el Catálogo. Es la base de la pila y también su tope.' },
+
+    { phase: 1, title: 'Una pantalla nueva entra por arriba', stack: [CAT, DET], call: PUSH_DET, tap: 'detalle', msgs: [], dwell: 5200,
+      caption: 'Al tocar «Ver detalle», la ruta Detalle se apila encima. Ahora Detalle es el tope: es lo único que se ve.' },
+    { phase: 1, title: 'La de abajo no se destruye', stack: [CAT, DET], msgs: [], dwell: 5600,
+      note: 'El Catálogo sigue vivo, tapado, con su búsqueda intacta. Ya hay dos rutas: aparece la flecha.',
+      caption: 'Push no reemplaza: apila. El Catálogo espera debajo con todo lo que el usuario había escrito.' },
+    { phase: 1, title: 'Otra pantalla más', stack: [CAT, DET, EDI], call: PUSH_EDI, tap: 'editar', msgs: [], dwell: 4800,
+      caption: 'Desde Detalle abrimos Editar. La pila tiene tres rutas y se ve solo la última que entró.' },
+
+    { phase: 2, title: 'Volver: sale la ruta del tope', stack: [CAT, DET], call: POP, tap: '__back', msgs: [], dwell: 5000,
+      note: 'Editar sale de la pila y se destruye. Detalle vuelve a ser el tope.',
+      caption: 'La flecha de la AppBar saca la ruta del tope. La última en entrar (Editar) es la primera en salir.' },
+    { phase: 2, title: 'Volver otra vez: la base', stack: [CAT], call: POP, tap: '__back', msgs: [], dwell: 5200,
+      note: 'El Catálogo reaparece con «sillas» todavía escrito: nunca se destruyó.',
+      caption: 'Otro pop saca Detalle. Solo queda el Catálogo, tal como estaba. Ya no hay a dónde volver.' },
+
+    { phase: 3, title: 'Toca tú mismo', stack: [CAT], free: true, msgs: [], dwell: 1500,
+      caption: 'Escribe en «Buscar», abre Detalle y Editar, y vuelve con la flecha o con Atrás del sistema. Mira crecer y achicarse la pila.' },
+  ];
+
+  var tiles = '<div class="pf-tile"><span class="av">S</span><span class="tx"><b>Silla ergonómica</b><small>$ 320.000</small></span></div>' +
+    '<div class="pf-tile"><span class="av">E</span><span class="tx"><b>Escritorio plegable</b><small>$ 540.000</small></span></div>';
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Simulador de navegación: cómo cambia la pila de rutas al abrir y cerrar pantallas',
+    phases: PHASES,
+    wide: true,
+    scene: function (svg, stage, api) {
+      return DK.nav({
+        stage: stage, api: api, height: 330, sysBack: true,
+        data: { q: 'sillas' },
+        hint: 'Escribe en «Buscar» y navega con los botones.',
+        introNote: 'Cada pantalla de la app es una ruta dentro de la pila. Pulsa Siguiente.',
+        screens: {
+          '/': { title: 'Catálogo', widget: 'CatalogoScreen', noBack: true,
+            view: function (c) {
+              return '<label class="pf-field"><span>Buscar</span><input data-in="q" value="' + DK.phone.esc(c.data.q || '') + '"></label>' +
+                '<div style="height:12px"></div>' + tiles + '<button class="pf-btn" data-act="detalle">Ver detalle</button>';
+            } },
+          '/detalle': { title: 'Detalle', widget: 'DetalleScreen',
+            view: function () {
+              return '<p class="pf-h">Silla ergonómica</p><div class="pf-kv"><span>Precio</span><b>$ 320.000</b></div><div class="pf-kv"><span>Stock</span><b>12 unidades</b></div>' +
+                '<button class="pf-btn" data-act="editar">Editar</button><button class="pf-btn out" data-act="volver">Volver</button>';
+            } },
+          '/editar': { title: 'Editar', widget: 'EditarScreen',
+            view: function () { return '<label class="pf-field"><span>Precio</span><input value="320000"></label><button class="pf-btn out" data-act="volver">Volver</button>'; } },
+        },
+        actions: {
+          detalle: function (nav) { nav.push(DET); return { call: PUSH_DET, note: 'pushNamed apila Detalle sobre el Catálogo.' }; },
+          editar: function (nav) { nav.push(EDI); return { call: PUSH_EDI, note: 'Otro push: la pila tiene tres rutas.' }; },
+          volver: function (nav) { nav.pop(); return { call: POP, note: 'pop saca la ruta del tope; la de abajo reaparece como estaba.' }; },
+        },
+      });
+    },
+    build: function () { return steps; },
+    intro: { kicker: 'Navegar es apilar', title: 'Cada pantalla es una ruta en la pila', text: 'Sigue cómo la pila cambia al abrir y cerrar pantallas, y luego pruébalo tú en el teléfono.' }
+  });
+})();
+</script>
+</body>
+</html>

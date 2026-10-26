@@ -19,6 +19,8 @@ Orden de carga en el `index.html` de una pieza (rutas relativas, para que funcio
 <script src="../../../_shared/dk-table.js"></script>     <!-- escena: tabla de datos con estado (paginación, orden, SQL) -->
 <script src="../../../_shared/dk-tree.js"></script>      <!-- escena: árbol de componentes + estado (props, callbacks, Context) -->
 <script src="../../../_shared/dk-phone.js"></script>     <!-- escena: teléfono + State + árbol de widgets + consola (cargar dk-tree.js ANTES de dk-phone.js) -->
+<script src="../../../_shared/dk-nav.js"></script>       <!-- escena: teléfono + pila de rutas del Navigator (cargar dk-phone.js ANTES; con <link> a dk-nav.css) -->
+<script src="../../../_shared/dk-tabs.js"></script>      <!-- teléfono con NavigationBar y detalle que la cubre (con <link> a dk-tabs.css; solo necesita dk-kit.js) -->
 <script src="../../../_shared/dk-player.js"></script>
 ```
 
@@ -40,6 +42,8 @@ Todo es JavaScript plano (scripts clásicos, sin módulos ni dependencias) y exp
 | `dk-anatomy.js` | `DK.anatomy`: un mensaje o documento real en una caja; cada paso enfoca una parte y a la derecha aparece su explicación | Explicar la estructura de algo (petición HTTP, JWT, JSON, URL) |
 | `dk-tree.js` | `DK.tree`: un árbol de componentes de verdad (nodos y ramas, distribuido solo); cada paso marca roles y hace viajar datos por las ramas o en salto directo | Estado en React/Flutter: lifting state up, prop drilling, Context, store global, re-renders |
 | `dk-phone.js` | `DK.phone`: un teléfono con la app real (que el estudiante puede tocar) y, al lado, el camino del evento, el objeto `State` con sus campos, el árbol de widgets (dirty, build, const reutilizado) y la consola | Estado en Flutter (`setState`, controladores, formularios, listas): causa y efecto provocados por el estudiante |
+| `dk-nav.js` + `dk-nav.css` | `DK.nav`: teléfono con navegación real (AppBar con flecha, botón «Atrás del sistema») en una mitad y, en la otra, la **pila de rutas** como tarjetas (TOPE DE LA PILA / BASE, `canPop`) que se apila y desapila; pill con la llamada `Navigator.*` del paso | Navigator de Flutter: `push`, `pop`, `pushNamedAndRemoveUntil`, `popUntil`, qué queda en la pila |
+| `dk-tabs.js` + `dk-tabs.css` | `DK.tabs.phone`: teléfono con `NavigationBar` de 3 pestañas (Cursos, Guardados, Perfil), un detalle que la cubre y la flecha de volver; no guarda estado, la pieza decide qué dibujar | Navegación por pestañas de Flutter: `setState` + `IndexedStack` frente a `push` |
 | `dk-radial.js` + `dk-radial.css` | `DK.radial`: anillos concéntricos (arquitectura de cebolla), piezas en sus anillos, flechas rectas o curvas que viajan entre ellas y un panel que al tocar una pieza marca en verde lo que puede importar y en rojo lo prohibido (matriz de límites). Carga también `dk-flow.js` | Capas concéntricas y regla de dependencia (Clean Architecture, hexagonal) |
 | `dk-compare.js` | `DK.compare`: dos o más diagramas de secuencia lado a lado, sincronizados paso a paso, con contador y nota por panel | Contrastar alternativas (TCP/UDP, con/sin caché, stateful/stateless) |
 | `dk-player.js` | `DK.player`: pestañas por fase, leyenda, controles, interruptores | Cualquier pieza paso a paso |
@@ -273,6 +277,45 @@ scene: function (svg, stage, api) {          // el player pasa un tercer argumen
 - **Modo libre** (`free: true` en un paso): el estudiante toca la pantalla y las `actions` corren de verdad, animando el camino chip a chip. Una acción muta el estado y devuelve `{ set, code, log, snack, note }`: `set: true` recorre todo el camino (setState, dirty, build, pantalla); `set: false` lo corta en `setState` (la variable cambia, la pantalla no). `input` atiende `data-in`: escribir **no** llama a `setState` y marca la fila del `TextField` (`self`). El botón **Restablecer** reinicia el estado.
 - **Qué enseña bien:** que `setState` es avisar y no solo cambiar; que escribir en un `TextField` no reconstruye la página; qué subárbol se reconstruye y qué `const` se reutiliza. Piezas de referencia: `static/interactive/seminario-de-i-d-i/semana-11/` (`setstate-en-accion`, `formulario-registro`, `agenda-monolitica`).
 - Ancho: en pantallas de menos de 700 px el teléfono se apila sobre los paneles.
+
+## dk-nav.js: `DK.nav(opciones)`
+
+Escena para `DK.player` (con `wide: true`; **requiere `dk-phone.js` y `dk-nav.css`**). **Mitad izquierda: teléfono** (AppBar con flecha cuando `canPop`, botón «Atrás del sistema»; en la base de la pila, Atrás cierra la app y sale un aviso). **Mitad derecha: la pila** como tarjetas apiladas (ruta, widget, estado `visible` o `suspendida`, marcas), con las etiquetas TOPE DE LA PILA y BASE y la fila `canPop`. Encima, una pastilla con la llamada `Navigator.*` del paso. En menos de 700 px el teléfono y la pila se apilan.
+
+```js
+scene: function (svg, stage, api) {
+  return DK.nav({
+    stage: stage, api: api, height: 330, sysBack: true,
+    data: { q: 'sillas' },                       // datos de las pantallas (los campos con data-in los modifican)
+    screens: { '/': { title: 'Catálogo', widget: 'CatalogoScreen', noBack: true, view: function (c) { return '<button class="pf-btn" data-act="detalle">Ver detalle</button>'; } },
+               '/detalle': { title: 'Detalle', widget: 'DetalleScreen', view: function (c) { return '...'; } } },
+    actions: { detalle: function (nav) { nav.push('/detalle'); return { call: "Navigator.pushNamed(context, '/detalle')", note: '...' }; } },
+  });
+}
+```
+
+- **`screens`:** por ruta, `title` (AppBar), `widget` (nombre en la tarjeta), `noBack` (sin flecha aunque haya ruta debajo), `view(c)` (HTML con las clases `pf-*`; `c.data` son los datos). Tocable = `data-act`; campo = `data-in`.
+- **Pasos guiados:** `stack` (arreglo de rutas, base primero; una entrada puede ser `'ruta#etiqueta'` para repetir la misma ruta), `call` (texto de la pastilla), `tap` (`'__back'` flecha de la AppBar, `'sys'` Atrás del sistema, o un `data-act`), `out: 'left' | 'right'` (de qué lado sale la tarjeta que se va), `marks` (marcas por tarjeta: `err`, `ack`, `warn`), `data`, `exit: true` (la app se cierra), `note`, `code`, `free: true` (modo libre) y `msgs: []`.
+- **`actions` (modo libre):** `function (nav, arg, step)` con `nav.push(ruta)`, `nav.pop()`, `nav.canPop()`, `nav.removeUntil(predicado)` y `nav.stack()`; devuelve `{ call, code, note, out }`. `sysBack: true` activa el botón de Atrás del sistema en el modo libre.
+- **Qué enseña bien:** que `push` apila y no reemplaza, que la ruta de abajo sigue viva, cuándo aparece la flecha y qué queda en la pila tras `pushNamedAndRemoveUntil`. Piezas de referencia: `static/interactive/seminario-de-i-d-i/semana-13/` (`navegacion-pila`, `push-remove-until`).
+
+## dk-tabs.js: `DK.tabs.phone(opciones)`
+
+Un teléfono (solo `dk-kit.js` y `dk-tabs.css`; no es escena de `DK.player`: se usa dentro de una pieza propia, como en `tabs-vs-push`, `bottom-nav-anfitriona` y `tabs-codigo`). Devuelve `{ el, render }`. **No guarda estado:** la pieza decide qué dibujar y vuelve a llamar a `render`.
+
+```js
+var ph = DK.tabs.phone({
+  height: 330,
+  on: function (act, arg) { /* act: 'tab' (arg = índice), 'open' (arg = título del curso), 'back' */ },
+  onType: function (texto) { /* el campo «Buscar» de la pestaña Cursos */ }
+});
+contenedor.appendChild(ph.el);
+ph.render({ tab: 0, detail: null, q: 'sillas' });   // detail: título del detalle abierto, o null
+```
+
+- Con `detail` distinto de `null` la barra inferior se oculta (el detalle la cubre), la AppBar muestra la flecha y el cuerpo entra deslizándose.
+- Atributos `data-pe` para enlazar con código al pasar el ratón: `tab`, `curso`, `back`, `volver`, `q`; la clase `.hov` marca el elemento (estilo en `dk-tabs.css`).
+- Lo que enseña bien: que cambiar de pestaña es `setState` y no toca la pila, y que `IndexedStack` conserva el estado de las páginas (el campo «Buscar» se pierde con la lista directa). Piezas de referencia: `static/interactive/seminario-de-i-d-i/semana-13/` (`tabs-vs-push`, `bottom-nav-anfitriona`, `tabs-codigo`).
 
 ## dk-compare.js: `DK.compare(opciones)`
 
