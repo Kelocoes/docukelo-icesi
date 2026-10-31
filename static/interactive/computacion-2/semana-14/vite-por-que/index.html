@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Por qué usamos Vite</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Tu codigo (JSX, imports) y sus dependencias a la izquierda; el navegador a la derecha; Vite en medio con sus tres trabajos:
+  // transformar, resolver imports y (en desarrollo) HMR; y, para publicar, empaquetar (build).
+  var nodes = [
+    { id: 'src', kind: 'box', icon: 'filecode', label: 'Tu código', sub: 'App.jsx, main.jsx', x: 10, y: 40, w: 170, h: 96 },
+    { id: 'deps', kind: 'box', icon: 'bag', label: 'node_modules', sub: 'react, react-dom', x: 10, y: 250, w: 170, h: 96 },
+    { id: 'vite', kind: 'outer', label: 'Vite', sub: 'herramienta de desarrollo', x: 290, y: 10, w: 330, h: 380 },
+    { id: 'tf', kind: 'box', icon: 'gear', label: 'Transforma', sub: 'JSX a JavaScript', x: 310, y: 62, w: 290, h: 64 },
+    { id: 'rs', kind: 'box', icon: 'pin', label: 'Resuelve imports', sub: '"react" a una ruta real', x: 310, y: 140, w: 290, h: 64 },
+    { id: 'hmr', kind: 'box', icon: 'antenna', label: 'HMR', sub: 'envía solo lo que cambió', x: 310, y: 218, w: 290, h: 64 },
+    { id: 'bd', kind: 'box', icon: 'wrench', label: 'Empaqueta (build)', sub: 'une, minifica y publica', x: 310, y: 296, w: 290, h: 64 },
+    { id: 'br', kind: 'actor', icon: 'browser', label: 'Navegador', x: 730, y: 90, w: 160, h: 100 },
+    { id: 'app', kind: 'box', label: 'Tu app en pantalla', sub: 'todavía no carga', x: 730, y: 210, w: 160, h: 64 },
+    { id: 'dist', kind: 'box', icon: 'file', label: 'dist/', sub: 'sin publicar', x: 730, y: 306, w: 160, h: 78 },
+  ];
+
+  var steps = [
+    // ---- Fase 1: el problema ----
+    { phase: 0, title: 'El navegador solo entiende HTML, CSS y JavaScript', focus: ['br'],
+      caption: 'Tu aplicación está escrita con JSX, importa paquetes (react, react-dom) y archivos como imágenes. El navegador no sabe qué hacer con todo eso por sí solo.' },
+    { phase: 0, title: 'No entiende JSX', focus: ['src', 'br', 'app'], sub: { app: 'Error: no entiende JSX' },
+      msgs: [{ path: [180, 80, 730, 150], kind: 'err', label: 'App.jsx (JSX)' }],
+      caption: 'Un archivo .jsx no es JavaScript válido: si el navegador lo recibe tal cual, falla.' },
+    { phase: 0, title: 'No encuentra los paquetes', focus: ['deps', 'br', 'app'], sub: { app: 'Error: falta "react"' },
+      msgs: [{ path: [180, 300, 730, 175], kind: 'err', label: 'import "react"' }],
+      caption: 'Un import como "react" no es una ruta que el navegador pueda pedir, y los paquetes viven en node_modules.' },
+    { phase: 0, title: 'Falta alguien en el medio', focus: ['vite'], sub: { app: 'todavía no carga' },
+      caption: 'Necesitamos una herramienta que traduzca tu proyecto a lo que el navegador entiende. Esa es Vite.' },
+
+    // ---- Fase 2: en desarrollo ----
+    { phase: 1, title: 'npm run dev: Vite sirve tu proyecto', focus: ['vite'], sub: { app: 'esperando a Vite' },
+      caption: 'Vite arranca un servidor de desarrollo (por defecto en localhost:5173). No empaqueta todo antes de empezar: responde a lo que el navegador pide, cuando lo pide.' },
+    { phase: 1, title: 'Transforma tu código al vuelo', focus: ['tf', 'br', 'app'], sub: { app: 'main.jsx cargado' },
+      msgs: [{ path: [730, 128, 600, 100], kind: 'ctl', label: 'GET /src/main.jsx' },
+             { path: [180, 80, 310, 86], kind: 'data', label: 'JSX' },
+             { path: [600, 116, 730, 160], kind: 'ack', label: 'JavaScript' }],
+      caption: 'El navegador pide main.jsx. Vite lo lee, convierte el JSX en JavaScript y lo entrega.' },
+    { phase: 1, title: 'Resuelve los imports', focus: ['rs', 'deps', 'br', 'app'], sub: { app: 'react cargado' },
+      msgs: [{ path: [180, 300, 310, 176], kind: 'data', label: 'react' },
+             { path: [600, 176, 730, 196], kind: 'ack', label: 'ruta real' }],
+      caption: 'Vite reescribe imports como "react" a una ruta que el navegador sí puede pedir y sirve el paquete desde node_modules (lo prepara una sola vez y lo guarda en caché).' },
+
+    // ---- Fase 3: guardar un cambio ----
+    { phase: 2, title: 'Editas App.jsx y guardas', focus: ['src', 'hmr'], sub: { app: 'contador = 3' },
+      msgs: [{ path: [180, 110, 310, 250], kind: 'ctl', label: 'App.jsx cambió' }],
+      caption: 'Vite vigila tus archivos. Al guardar, sabe exactamente cuál módulo cambió.' },
+    { phase: 2, title: 'HMR: solo viaja el módulo que cambió', focus: ['hmr', 'app'], sub: { app: 'contador = 3 (sigue)' },
+      msgs: [{ path: [600, 250, 730, 232], kind: 'data', label: 'solo App.jsx' }],
+      caption: 'Con Hot Module Replacement (HMR) la página se actualiza sin recargar y, normalmente, el estado de React (como el contador) se conserva.' },
+
+    // ---- Fase 4: publicar ----
+    { phase: 3, title: 'npm run build: empaquetar', focus: ['bd'], sub: { app: 'contador = 3 (sigue)' },
+      msgs: [{ path: [180, 120, 310, 322], kind: 'data', label: 'todo el código' },
+             { path: [180, 320, 310, 340], kind: 'data', label: 'dependencias' }],
+      caption: 'Para publicar el trabajo es distinto: Vite junta todos los módulos en pocos archivos (bundle), los minifica y agrega un hash al nombre para el caché del navegador. Vite 8 lo hace con Rolldown.' },
+    { phase: 3, title: 'dist/: lo que se publica', focus: ['dist'], sub: { app: 'contador = 3 (sigue)', dist: 'index.html + assets/' },
+      msgs: [{ path: [600, 334, 730, 346], kind: 'ack', label: 'HTML, JS y CSS' }],
+      caption: 'La carpeta dist/ tiene HTML, JavaScript y CSS listos para subir a cualquier servidor estático. npm run preview la sirve en local para probarla.' },
+  ];
+  steps.forEach(function (s) { s.msgs = s.msgs || []; });
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Por qué usamos Vite: el navegador no entiende JSX ni imports de paquetes; Vite transforma el código, resuelve imports, actualiza con HMR en desarrollo y empaqueta con build para publicar',
+    phases: ['El problema', 'En desarrollo', 'Guardar un cambio', 'Para publicar'],
+    wide: true,
+    scene: function (svg) { return DK.layers({ svg: svg, width: 900, height: 400, labels: 'smart', trail: 'phase', nodes: nodes }); },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Vite',
+      title: 'Para qué sirve Vite',
+      text: 'React se escribe con JSX y paquetes de npm, y el navegador no entiende ninguno de los dos. Recorre el problema y mira qué hace Vite mientras desarrollas y cuando publicas.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

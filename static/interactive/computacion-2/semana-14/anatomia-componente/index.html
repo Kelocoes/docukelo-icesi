@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomía de un componente</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Colores: p2 = todo lo que viene de las props (el parametro, {name}, {price}); p1 = el nombre; p3 = lo que devuelve;
+  // p4 = el JSX y sus atributos; p5 = el archivo.
+  var code = [
+    [['function ', ''], ['ProductCard', 'fn'], ['(', ''], ['{ name, price }', 'props'], [') {', '']],
+    [['  ', ''], ['return (', 'ret']],
+    [['    ', ''], ['<article ', 'root'], ['className="card"', 'cls'], ['>', 'root']],
+    [['      <h3>', ''], ['{name}', 'name'], ['</h3>', '']],
+    [['      <p>Precio: $', ''], ['{price}', 'price'], ['</p>', '']],
+    [['    </article>', 'root']],
+    [['  )', 'ret'], [';', '']],
+    [['}', '']],
+    [['', '']],
+    [['export default ProductCard;', 'exp']],
+  ];
+
+  var parts = {
+    file: { label: 'Archivo', color: 'p5', title: 'El archivo termina en .jsx',
+      text: 'La extensión <code>.jsx</code> indica que el archivo contiene <b>JSX</b>: JavaScript con etiquetas parecidas a HTML.',
+      bullets: ['Vite solo procesa JSX en archivos <code>.jsx</code> (o <code>.tsx</code>).', 'El archivo se llama igual que el componente y empieza con mayúscula.', 'Por convención, un archivo por componente.'] },
+    fn: { label: 'Función', color: 'p1', title: 'Un componente es una función',
+      text: 'Se escribe como una función de JavaScript normal. Su nombre <b>empieza con mayúscula</b>: así React distingue <code>&lt;ProductCard /&gt;</code> (un componente) de <code>&lt;article&gt;</code> (una etiqueta HTML).',
+      where: 'En pantalla: la etiqueta con la que se usa el componente.' },
+    props: { label: 'Props', color: 'p2', title: 'Los parámetros son las props',
+      text: 'React llama a la función con <b>un solo objeto</b>, las props, con lo que el padre le pasó. Las llaves del parámetro <code>{ name, price }</code> sacan esas dos propiedades directamente (desestructuración).',
+      bullets: ['Son de solo lectura: el componente las usa pero no las modifica.', 'Al usarlo, el texto va entre comillas (<code>name="Teclado"</code>) y cualquier otro valor entre llaves (<code>price={20}</code>).'],
+      where: 'En pantalla: los atributos del uso y el objeto que recibe.' },
+    ret: { label: 'return', color: 'p3', title: 'return: lo que se dibuja',
+      text: 'El componente devuelve <b>JSX</b>, una descripción de la interfaz. Los paréntesis permiten escribirla en varias líneas.',
+      bullets: ['Debe devolver un solo elemento raíz (o un fragmento <code>&lt;&gt;...&lt;/&gt;</code>).'],
+      where: 'En pantalla: el recuadro punteado, lo que React dibuja.' },
+    root: { label: 'JSX', color: 'p4', title: 'Etiquetas como en HTML',
+      text: 'Las etiquetas de JSX se parecen a HTML, pero son JavaScript: Vite las convierte en llamadas que crean los elementos. Toda etiqueta debe cerrarse, incluso las que no tienen contenido (<code>&lt;img /&gt;</code>).',
+      where: 'En pantalla: el elemento <code>article</code> y todo lo que contiene.' },
+    cls: { label: 'Atributo', color: 'p4', title: 'className, no class',
+      text: 'En JSX los atributos se escriben en camelCase: <code>className</code> en lugar de <code>class</code>, porque <code>class</code> es una palabra reservada de JavaScript.',
+      where: 'En pantalla: aplica la clase CSS <code>card</code> (el borde y el fondo).' },
+    name: { label: 'Llaves', color: 'p2', title: 'Las llaves abren JavaScript dentro del JSX',
+      text: 'Dentro de <code>{ }</code> escribes una <b>expresión</b> de JavaScript y React dibuja su resultado. Aquí, el valor de <code>name</code>.',
+      bullets: ['Caben variables, operaciones, llamadas a funciones y condiciones con <code>? :</code>.', 'No caben sentencias como <code>if</code> o <code>for</code>.', 'Sin llaves, el texto es solo texto: <code>name</code> se dibujaría tal cual.'],
+      where: 'En pantalla: el título muestra <code>Teclado</code>.' },
+    price: { label: 'Llaves', color: 'p2', title: 'Texto y llaves se combinan',
+      text: 'El <code>$</code> es texto normal; lo dinámico es <code>{price}</code>. Dentro de las llaves también podrías calcular: <code>{price * 2}</code>.',
+      where: 'En pantalla: el precio muestra <code>20</code>.' },
+    exp: { label: 'export', color: 'p1', title: 'Exportar para poder usarlo',
+      text: '<code>export default</code> permite que otros archivos importen el componente y lo usen como una etiqueta.',
+      bullets: ['<code>import ProductCard from "./ProductCard.jsx"</code>'],
+      where: 'En pantalla: el import que lo trae a otro archivo.' },
+  };
+
+  function view() {
+    return '' +
+      '<p class="cm-lbl">Cómo se usa</p>' +
+      '<div class="cm-code-sm"><span data-part="fn">&lt;ProductCard</span> <span data-part="props">name="Teclado" price={20}</span> /&gt;</div>' +
+      '<div class="cm-arrow">↓</div>' +
+      '<p class="cm-lbl">Las props que recibe</p>' +
+      '<div class="cm-chip" data-part="props">{ name: "Teclado", price: 20 }</div>' +
+      '<div class="cm-arrow">↓</div>' +
+      '<p class="cm-lbl">Lo que se dibuja</p>' +
+      '<div class="cm-out" data-part="ret"><div class="cm-card" data-part="root"><h3 data-part="name">Teclado</h3><p>Precio: $<span data-part="price">20</span></p></div></div>' +
+      '<div><span class="cm-chip" data-part="cls">class="card"</span></div>' +
+      '<p class="cm-lbl">Para usarlo en otro archivo</p>' +
+      '<div class="cm-code-sm" data-part="exp">import ProductCard from "./ProductCard.jsx"</div>';
+  }
+
+  var steps = [
+    { phase: 0, title: 'El archivo: ProductCard.jsx', focus: 'file',
+      caption: 'Un componente vive en un archivo .jsx. Pasa el mouse por el código o por la pantalla: se ilumina lo que se corresponde.' },
+    { phase: 0, title: 'Un componente es una función', focus: 'fn',
+      caption: 'Una función de JavaScript con nombre en mayúscula: ese nombre es la etiqueta que usarás.' },
+    { phase: 0, title: 'Las props llegan como parámetro', focus: 'props',
+      caption: 'Lo que el padre escribe como atributos llega al componente como un objeto.' },
+    { phase: 1, title: 'return: lo que se dibuja', focus: 'ret',
+      caption: 'Lo que devuelve la función es la interfaz que React dibuja.' },
+    { phase: 1, title: 'Etiquetas JSX', focus: 'root',
+      caption: 'Parecen HTML, pero son JavaScript: por eso se cierran todas y se escriben dentro de un archivo .jsx.' },
+    { phase: 1, title: 'className en lugar de class', focus: 'cls',
+      caption: 'Los atributos de JSX siguen las reglas de JavaScript.' },
+    { phase: 2, title: 'Llaves: un dato dentro del JSX', focus: 'name',
+      caption: 'Las llaves abren una ventana de JavaScript dentro del JSX: lo que pongas ahí se calcula y se dibuja.' },
+    { phase: 2, title: 'Llaves: texto y dato juntos', focus: 'price',
+      caption: 'El texto fijo y el dato conviven: el $ se dibuja tal cual, el 20 sale de la prop.' },
+    { phase: 3, title: 'Exportar e importar', focus: 'exp',
+      caption: 'Con export default otro archivo puede importar el componente y usarlo como una etiqueta.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Anatomía de un componente de React: el archivo .jsx, la función, las props, el return, el JSX, las llaves y el export, enlazados con lo que se ve en pantalla',
+    phases: ['Archivo y función', 'Lo que devuelve', 'Llaves', 'Exportar'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.codemap({ stage: stage, file: 'ProductCard.jsx', filePart: 'file', code: code, parts: parts, view: view });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Anatomía de un componente',
+      title: 'Cada parte del código, en pantalla',
+      text: 'Un componente es una función en un archivo .jsx. Recorre sus partes, o pasa el mouse por el código o por la pantalla, para ver qué produce cada una.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

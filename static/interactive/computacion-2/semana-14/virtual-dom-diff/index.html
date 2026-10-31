@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virtual DOM: render, diff y commit</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-dom.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // La misma tienda de la pieza anterior: a la izquierda el DOM real (la pagina) y a la derecha el Virtual DOM (el arbol).
+  var NODES = [
+    { id: 'body', tag: 'body' },
+    { id: 'header', tag: 'header', parent: 'body' },
+    { id: 'h1', tag: 'h1', parent: 'header', text: 'Mi tienda' },
+    { id: 'badge', tag: 'span', cls: 'badge', parent: 'header', text: '2', sub: 'class="badge"' },
+    { id: 'main', tag: 'main', parent: 'body' },
+    { id: 'ul', tag: 'ul', parent: 'main', sub: 'lista del carrito' },
+    { id: 'li1', tag: 'li', parent: 'ul', text: 'Teclado · $20' },
+    { id: 'li2', tag: 'li', parent: 'ul', text: 'Mouse · $10' },
+    { id: 'li3', tag: 'li', parent: 'ul', text: 'Monitor · $15', hidden: true },
+    { id: 'btn', tag: 'button', parent: 'main', text: 'Agregar monitor' },
+    { id: 'total', tag: 'p', cls: 'total', parent: 'main', text: 'Total: $30', sub: 'class="total"' },
+    { id: 'footer', tag: 'footer', parent: 'body', text: '© 2026 Mi tienda' },
+  ];
+  var IDS = NODES.map(function (n) { return n.id; });
+  var TOTAL = IDS.length;   // 12 nodos en el arbol nuevo (el li3 es nuevo)
+  function all(role) { var m = {}; IDS.forEach(function (id) { m[id] = role; }); return m; }
+  function except(role, others) { var m = all(role); for (var k in others) m[k] = others[k]; return m; }
+
+  var NUEVO = { badge: '3', total: 'Total: $45' };
+
+  function build(opt) {
+    var todo = !!opt.todo;   // "sin Virtual DOM": reconstruir todo
+    var cambios = { badge: 'dirty', li3: 'dirty', total: 'dirty' };
+    var subDiff = { badge: '2 → 3', li3: 'nuevo', total: '$30 → $45' };
+    var sinCambio = {};
+    IDS.forEach(function (id) { if (!cambios[id]) sinCambio[id] = 'igual'; });
+    return [
+      // ---- Fase 1: dos arboles ----
+      { phase: 0, title: 'React guarda una copia ligera', state: 'productos = 2', stage: -1,
+        caption: 'A la izquierda está el DOM real, el del navegador. A la derecha, el Virtual DOM: una copia hecha de objetos de JavaScript que React guarda en memoria. Tocar el DOM real es justo lo que React intenta hacer lo menos posible.' },
+
+      // ---- Fase 2: el estado cambia ----
+      { phase: 1, title: 'El estado cambia', state: 'productos = 3', stage: 0,
+        caption: 'El usuario agrega el monitor y cambia el estado de la aplicación. La pantalla todavía no cambió: en lugar de modificarla, React se prepara para calcular cómo debería verse.' },
+
+      // ---- Fase 3: render y diff ----
+      { phase: 2, title: 'Render: un Virtual DOM nuevo', state: 'productos = 3', stage: 1,
+        treeShow: ['li3'], treeText: NUEVO, marks: all('build'),
+        meter: { label: 'Nodos del DOM real tocados', value: 0, max: TOTAL, text: '0 de ' + TOTAL, tone: 'ack' },
+        caption: 'React vuelve a ejecutar tus componentes y construye un árbol nuevo con los 3 productos. Todo ocurre en memoria: la página de la izquierda sigue igual.' },
+      todo
+        ? { phase: 2, title: 'Sin copia no hay comparación', state: 'productos = 3', stage: 2, stageBlock: true,
+            treeShow: ['li3'], treeText: NUEVO, marks: all('dirty'), sub: all('reconstruir'),
+            meter: { label: 'Nodos por reconstruir', value: TOTAL, max: TOTAL, text: TOTAL + ' de ' + TOTAL, tone: 'err' },
+            caption: 'Sin una copia anterior con qué comparar, no se sabe qué cambió. La única opción segura es borrar la página y reconstruirla completa.' }
+        : { phase: 2, title: 'Diff: ¿qué cambió?', state: 'productos = 3', stage: 2,
+            treeShow: ['li3'], treeText: NUEVO, marks: except('reuse', cambios), sub: (function () { var s = {}; for (var k in sinCambio) s[k] = sinCambio[k]; for (var j in subDiff) s[j] = subDiff[j]; return s; })(),
+            meter: { label: 'Cambios detectados', value: 3, max: TOTAL, text: '3 de ' + TOTAL, tone: 'ctl' },
+            caption: 'React compara el árbol nuevo con el anterior (diffing o reconciliación). Solo 3 nodos son distintos; el resto es idéntico y no se toca.' },
+
+      // ---- Fase 4: commit ----
+      todo
+        ? { phase: 3, title: 'Commit: se reconstruye todo', state: 'productos = 3', stage: 3,
+            text: NUEVO, show: ['li3'], touch: IDS, marks: all('dirty'),
+            meter: { label: 'Nodos del DOM real tocados', value: TOTAL, max: TOTAL, text: TOTAL + ' de ' + TOTAL, tone: 'err' },
+            caption: 'Se reemplaza toda la página. Se pierde lo que el usuario tenía en curso (texto escrito, foco, posición del scroll) y el navegador repinta de más.' }
+        : { phase: 3, title: 'Commit: se actualiza solo lo necesario', state: 'productos = 3', stage: 3,
+            text: NUEVO, show: ['li3'], touch: ['badge', 'li3', 'total'], marks: except('dim', cambios), sub: subDiff,
+            meter: { label: 'Nodos del DOM real tocados', value: 3, max: TOTAL, text: '3 de ' + TOTAL, tone: 'ack' },
+            caption: 'React aplica al DOM real solo esos tres cambios (el parpadeo naranja de la página). El resto de la página queda exactamente como estaba.' },
+      { phase: 3, title: 'Tú describes, React actualiza', state: 'productos = 3', stage: 4,
+        text: NUEVO, show: ['li3'], marks: all('reuse'),
+        caption: 'En la pieza anterior buscaste tres nodos y los cambiaste a mano. Aquí solo cambió el estado: React encontró y aplicó los tres cambios por ti.' },
+    ];
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Cómo React actualiza una página: el estado cambia, React construye un Virtual DOM nuevo, lo compara con el anterior y aplica solo las diferencias al DOM real',
+    phases: ['Dos árboles', 'El estado cambia', 'Render y diff', 'Commit'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.dom({ stage: stage, url: 'mi-tienda.com', treeTitle: 'Virtual DOM (en memoria)',
+        legend: [['build', 'Árbol nuevo'], ['dirty', 'Cambió'], ['reuse', 'Igual']], nodes: NODES,
+        pipeline: [{ label: '1 · Disparo', sub: 'cambia el estado' }, { label: '2 · Render', sub: 'nuevo Virtual DOM' }, { label: '3 · Diff', sub: '¿qué cambió?' }, { label: '4 · Commit', sub: 'se actualiza el DOM real' }] });
+    },
+    toggles: [{ key: 'todo', label: 'Sin Virtual DOM: reconstruir todo', affectsPhase: 2 }],
+    build: build,
+    intro: {
+      kicker: 'Virtual DOM',
+      title: 'Cómo actualiza React la página',
+      text: 'La misma tienda de la pieza anterior, pero ahora solo cambia el estado. Sigue el camino: render, diff y commit, y mira cuántos nodos del DOM real hay que tocar.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -18,6 +18,8 @@
  *   De dominio y conexion (los usa DK.canvas): antenna ~44x44, speed ~48x34, chat ~40x36, bell ~34x38, terminal ~48x36, flask ~34x40,
  *   chip ~44x44, pin ~30x40, globe ~40x40, memory ~52x31, chain ~44x28, wrench ~42x42, bandaid ~48x38, bus ~56x38,
  *   socket (toma que se abre a la derecha) ~57x36 y plug (enchufe con clavijas a la izquierda) ~78x36; ambos aceptan glyph.
+ *   Metafora del restaurante (CSR frente a SSR): waiter ~36x44 (el mayordomo = el medio por el que viaja la informacion), chef ~36x54 (el cocinero = el servidor), tray ~56x32 (bandeja con ingredientes crudos),
+ *   grill ~56x46 (la parrilla de la mesa = el navegador) y dish ~52x34 (plato servido bajo campana = HTML ya cocinado).
  *   Todos aceptan scale: DK.icons.gear({ x, y, scale: 0.8 }). Altos aproximados en DK.icons.h.
  *   DK.icons.piece(n, size)       pieza de rompecabezas centrada en (0,0), con número opcional
  *   DK.icons.cross(size)          X de error, centrada en (0,0)
@@ -273,10 +275,48 @@
         glyphOn(o.glyph, 5, 18, 22),
       ].filter(Boolean));
     },
+    waiter: function (o) {   // mayordomo: persona con mono; es el servidor que "sirve" lo que le piden
+      return at(o, [
+        S('circle', { cx: 0, cy: 11, r: 9, class: 'dk-dev' }),
+        S('path', { d: 'M-18,44 A18,18 0 0 1 18,44 Z', class: 'dk-dev' }),
+        S('path', { d: 'M0,24 L-7,20 V28 Z M0,24 L7,20 V28 Z', class: 'dk-devfill' }),
+      ]);
+    },
+    chef: function (o) {     // cocinero con gorro: el servidor, que prepara (o no) la pagina
+      return at(o, [
+        S('path', { d: 'M-9,12 V7 C-16,6 -14,-3 -6,-2 C-5,-8 5,-8 6,-2 C14,-3 16,6 9,7 V12 Z', class: 'dk-dev', transform: 'translate(0,8)' }),
+        S('circle', { cx: 0, cy: 27, r: 8, class: 'dk-dev' }),
+        S('path', { d: 'M-17,54 A17,17 0 0 1 17,54 Z', class: 'dk-dev' }),
+      ]);
+    },
+    tray: function (o) {     // bandeja con ingredientes crudos (lo que entrega el servidor en CSR)
+      return at(o, [
+        S('rect', { x: -28, y: 25, width: 56, height: 7, rx: 3.5, class: 'dk-dev' }),
+        S('rect', { x: -23, y: 12, width: 21, height: 11, rx: 4, class: 'dk-devfill' }),
+        S('circle', { cx: 9, cy: 17, r: 6, class: 'dk-dev' }),
+        S('path', { d: 'M18,23 Q22,13 28,15', class: 'dk-dev', fill: 'none' }),
+      ]);
+    },
+    grill: function (o) {    // parrilla de mesa: donde el cliente cocina (el navegador ejecutando JavaScript)
+      return at(o, [
+        S('path', { d: 'M-8,3 q-3,-5 0,-9 M2,3 q-3,-5 0,-9 M12,3 q-3,-5 0,-9', class: 'dk-dev', fill: 'none', transform: 'translate(0,6)' }),
+        S('path', { d: 'M-28,20 A28,8 0 0 0 28,20 L20,36 H-20 Z', class: 'dk-dev' }),
+        S('ellipse', { cx: 0, cy: 20, rx: 28, ry: 8, class: 'dk-dev' }),
+        S('path', { d: 'M-14,20 L-9,22 M-3,19 L2,22 M8,20 L13,22', class: 'dk-dev', fill: 'none' }),
+        S('path', { d: 'M-14,36 L-18,46 M14,36 L18,46', class: 'dk-dev', fill: 'none' }),
+      ]);
+    },
+    dish: function (o) {     // plato servido bajo una campana: el resultado ya cocinado
+      return at(o, [
+        S('ellipse', { cx: 0, cy: 28, rx: 26, ry: 6, class: 'dk-dev' }),
+        S('path', { d: 'M-17,28 A17,17 0 0 1 17,28 Z', class: 'dk-dev' }),
+        S('circle', { cx: 0, cy: 8, r: 2.6, class: 'dk-devfill' }),
+      ]);
+    },
   };
   Object.keys(X).forEach(function (k) { DK.icons[k] = X[k]; });
   // alto aproximado de cada icono de dispositivo (para centrarlo; usa DK.icons.h[nombre])
   DK.icons.h = { laptop: 40, server: 37, database: 42, browser: 42, user: 44, classbox: 38, card: 34, coins: 36, file: 40, filecode: 40, gear: 36, bag: 38, lock: 40, filter: 38 };
-  var HX = { antenna: 44, speed: 34, chat: 36, bell: 38, terminal: 36, flask: 40, chip: 44, pin: 40, globe: 40, memory: 31, chain: 28, wrench: 42, bandaid: 38, socket: 36, plug: 36, bus: 38 };
+  var HX = { antenna: 44, speed: 34, chat: 36, bell: 38, terminal: 36, flask: 40, chip: 44, pin: 40, globe: 40, memory: 31, chain: 28, wrench: 42, bandaid: 38, socket: 36, plug: 36, bus: 38, waiter: 44, tray: 32, grill: 46, dish: 34, chef: 54 };
   Object.keys(HX).forEach(function (k) { DK.icons.h[k] = HX[k]; });
 })();

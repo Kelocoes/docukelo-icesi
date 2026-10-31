@@ -70,6 +70,13 @@ Una animación no es decoración: cada movimiento debe revelar un **orden** o un
 | Qué se recrea y qué se conserva entre capas paralelas (Widget, Element, RenderObject) | N3 | Kit: `DK.layers` con `sub` por paso e identidades (`#a1`, `#b7`) (ejemplo: `tres-arboles`) |
 | Un contrato y varias implementaciones intercambiables, o cuánto se propaga un cambio (SOLID, GRASP, puertos y adaptadores) | N3 | Kit: `DK.player` + `DK.canvas`: toma y enchufe, contadores, maraña, carriles (plantilla `templates/piece-canvas/`; ejemplos en Saman: `polimorfismo-enchufe`, `ocp-regleta`, `parnas-secretos`) |
 | Un caso que se entiende cambiando un valor continuo o eligiendo entre muchos casos | N3 | Kit: `DK.canvas` con deslizador (`type: 'range'`) o selector (`type: 'select'`) en `toggles` (ejemplos: `simulador-pruebas`, `clasificador-heuristicas`) |
+| Una página y su árbol DOM (qué nodo es qué), o cómo cambia el DOM real frente al Virtual DOM (render, diff, commit) | N3 | Kit: `DK.player` + `DK.dom` (ejemplos: `computacion-2/semana-14/dom-arbol-pagina`, `virtual-dom-diff`) |
+| Qué es un componente, cómo se corta una página en componentes (árbol de componentes frente a árbol DOM), reutilización y composición | N3 | Kit: `DK.player` + `DK.dom` en modo componentes (ejemplo: `computacion-2/semana-14/componentes-composicion`) |
+| Qué es cada parte de un archivo de código y qué produce (anatomía de un componente) | N3 | Kit: `DK.player` + `DK.codemap` (ejemplo: `computacion-2/semana-14/anatomia-componente`) |
+| Cómo viajan las props por el árbol de componentes y qué cambia en el DOM cuando un dato cambia | N3 | Kit: `DK.dom` en modo componentes con `cmarks` y pestaña de código (ejemplo: `computacion-2/semana-14/props-arbol`) |
+| Estructura de carpetas de un proyecto (tipo `tree -L`) y convenciones | N3 | Kit: `DK.player` + `DK.files` (ejemplo: `computacion-2/semana-14/estructura-proyecto`) |
+| Para qué sirve una herramienta entre tu código y el navegador (Vite: transformar, resolver, HMR, build) | N3 | Kit: `DK.layers` (ejemplo: `computacion-2/semana-14/vite-por-que`) |
+| Una analogía física con interruptor y deslizador (CSR frente a SSR como restaurante) | N3 | Kit: `DK.canvas` con iconos `waiter`/`tray`/`grill`/`dish` (ejemplo: `computacion-2/semana-14/csr-bbq`) |
 | Algo que se entiende provocándolo (estado, fallos, parámetros) | N3 | Kit; escena nueva si no existe el patrón (ver `patterns.md`) |
 
 ### 2. Construir en `candidates/`, nunca directo en `docs/` ni `static/img`
@@ -126,7 +133,7 @@ Al terminar cada gráfico, **antes de pasar al siguiente**, actualizar la skill;
 
 ### El kit (`static/interactive/_shared/`)
 
-JavaScript plano y CSS, sin dependencias, con tema claro/oscuro automático. Módulos: `dk-base.css`, `dk-theme.js`, `dk-kit.js`, `dk-icons.js`, `dk-flow.js`, `dk-sequence.js`, `dk-layers.js`, `dk-canvas.js`, `dk-compare.js`, `dk-anatomy.js`, `dk-table.js`, `dk-tree.js`, `dk-phone.js` (teléfono + `State` + árbol de widgets + consola, con modo libre), `dk-player.js` (con panel de código sincronizado opcional, que puede cambiar con los interruptores). API completa y formato de los pasos en `references/kit-api.md`.
+JavaScript plano y CSS, sin dependencias, con tema claro/oscuro automático. Módulos: `dk-base.css`, `dk-theme.js`, `dk-kit.js`, `dk-icons.js`, `dk-flow.js`, `dk-sequence.js`, `dk-layers.js`, `dk-canvas.js`, `dk-compare.js`, `dk-anatomy.js`, `dk-table.js`, `dk-tree.js`, `dk-dom.js` (página simulada + árbol DOM con resaltado en ambos sentidos), `dk-files.js` (explorador tipo `tree -L`), `dk-codemap.js` (código <-> resultado), `dk-phone.js` (teléfono + `State` + árbol de widgets + consola, con modo libre), `dk-player.js` (con panel de código sincronizado opcional, que puede cambiar con los interruptores). API completa y formato de los pasos en `references/kit-api.md`.
 
 Una pieza nueva debería ser ~100 líneas de **datos** (actores, fases, pasos con leyenda). Si estás escribiendo lógica de dibujo, animación, controles o tema dentro de una pieza, para y llévala al kit.
 

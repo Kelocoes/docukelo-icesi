@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Client Side Rendering: quién cocina la página</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Metafora: la mesa con parrilla es el NAVEGADOR; el cocinero es el SERVIDOR; el mayordomo es el MEDIO por el que viaja la
+  // informacion (la red, HTTP): lleva el pedido y trae lo que el cocinero entrega. En CSR el cocinero entrega ingredientes
+  // crudos y tu cocinas en tu mesa (JavaScript arma la pagina); en SSR entrega el plato terminado (HTML completo).
+  var TABLE = [405, 215], KITCHEN = [535, 215];                       // donde se detiene el mayordomo
+  var CARRY_T = [472, 168], CARRY_K = [602, 168];                     // lo que lleva en la mano (a la derecha y arriba)
+  var items = [
+    { id: 'mesa', type: 'zone', shape: 'round', x: 14, y: 20, w: 330, h: 350, rx: 28, label: 'Tu mesa', sub: 'el navegador (cliente)', lx: 36, ly: 54 },
+    { id: 'cocina', type: 'zone', shape: 'round', x: 596, y: 20, w: 290, h: 350, rx: 28, label: 'La cocina', sub: 'el servidor', lx: 618, ly: 54 },
+    { id: 'grill', type: 'node', icon: 'grill', x: 100, y: 222, size: 104, label: 'Tu navegador', sub: 'la parrilla' },
+    { id: 'plato', type: 'node', icon: 'dish', x: 256, y: 222, size: 80, label: 'La página', sub: 'lista', hidden: true },
+    { id: 'chef', type: 'node', icon: 'chef', x: 742, y: 185, size: 104, label: 'Servidor', sub: 'el cocinero' },
+    { id: 'bandeja', type: 'node', icon: 'tray', x: 742, y: 312, size: 72, hidden: true },
+    { id: 'platoSrv', type: 'node', icon: 'dish', x: 742, y: 312, size: 76, hidden: true },
+    { id: 'datos', type: 'node', icon: 'bag', x: 742, y: 312, size: 60, hidden: true },
+    { id: 'waiter', type: 'node', icon: 'waiter', x: TABLE[0], y: TABLE[1], size: 88, label: 'Mayordomo', sub: 'el medio: lleva y trae' },
+    { id: 'tFirst', type: 'tag', x: 170, y: 398, text: '', hidden: true },
+    { id: 'tNext', type: 'tag', x: 700, y: 398, text: '', hidden: true },
+  ];
+
+  var steps = [
+    // ---- Fase 1: el pedido ----
+    { phase: 0, title: 'Te sientas y haces tu pedido', focus: ['grill', 'waiter'], badge: { waiter: { text: 'pedido: GET /', tone: 'ctl' } },
+      caption: 'Tu navegador (la mesa) pide la página. El mayordomo es el medio por el que viaja la información: lleva el pedido hasta el servidor, que es el cocinero.' },
+    { phase: 0, title: 'El mayordomo lleva el pedido a la cocina', focus: ['waiter', 'chef'], at: { waiter: KITCHEN }, badge: { waiter: { text: 'pedido: GET /', tone: 'ctl' } },
+      caption: 'El pedido llega al servidor.' },
+    { phase: 0, title: 'En CSR el cocinero entrega ingredientes crudos', focus: ['chef', 'bandeja'], show: ['bandeja', 'tFirst'], at: { waiter: KITCHEN },
+      text: { tFirst: 'Qué ves: pantalla en blanco' }, state: { tFirst: 'warn' }, badge: { bandeja: { text: 'HTML casi vacío + app.js', tone: 'warn' } },
+      caption: 'En Client Side Rendering (CSR) el servidor no prepara la página terminada: entrega los ingredientes crudos, un HTML casi vacío y el JavaScript (app.js).' },
+    { phase: 0, title: 'El mayordomo trae la bandeja', focus: ['waiter', 'bandeja'], show: ['bandeja', 'tFirst'], at: { waiter: TABLE, bandeja: CARRY_T },
+      text: { tFirst: 'Qué ves: pantalla en blanco' }, state: { tFirst: 'warn' }, badge: { bandeja: { text: 'ingredientes crudos', tone: 'warn' } },
+      caption: 'El mayordomo solo transporta: no cocina ni cambia lo que trae.' },
+
+    // ---- Fase 2: cocinar en tu mesa ----
+    { phase: 1, title: 'Tú cocinas en tu parrilla', focus: ['grill'], show: ['bandeja', 'tFirst'], at: { waiter: TABLE, bandeja: [100, 128] },
+      state: { grill: 'warn', tFirst: 'warn' }, text: { tFirst: 'Qué ves: pantalla en blanco' }, sub: { grill: 'ejecutando app.js' }, pulse: ['grill'],
+      caption: 'Tu navegador ejecuta app.js y React arma la página elemento por elemento, como cocinar en la parrilla de la mesa.' },
+    { phase: 1, title: 'A comer: la página está lista', focus: ['plato'], show: ['plato', 'tFirst'], hide: ['bandeja'], at: { waiter: TABLE },
+      state: { grill: 'ok', plato: 'ok', tFirst: 'ok' }, text: { tFirst: 'Qué ves: la página lista' }, sub: { grill: 'JavaScript ejecutado' },
+      caption: 'Ya ves la página y es interactiva. Todo el trabajo de armarla lo hizo tu navegador, no el servidor.' },
+
+    // ---- Fase 3: pedir más ----
+    { phase: 2, title: 'Quieres algo más: pides solo ingredientes', focus: ['waiter', 'chef', 'datos'], show: ['plato', 'tFirst', 'datos'], hide: ['bandeja'], at: { waiter: KITCHEN },
+      state: { grill: 'ok', plato: 'ok', tFirst: 'ok' }, text: { tFirst: 'Qué ves: la página lista' }, sub: { grill: 'JavaScript ejecutado' },
+      badge: { waiter: { text: "fetch('/api/...')", tone: 'ctl' } },
+      caption: 'Para actualizar la lista no pides la página otra vez: el mayordomo lleva un pedido pequeño al servidor, solo por los datos.' },
+    { phase: 2, title: 'El mayordomo trae solo los datos', focus: ['waiter', 'datos'], show: ['plato', 'tFirst', 'datos'], hide: ['bandeja'], at: { waiter: TABLE, datos: CARRY_T },
+      state: { grill: 'ok', plato: 'ok', tFirst: 'ok' }, text: { tFirst: 'Qué ves: la página lista' }, sub: { grill: 'JavaScript ejecutado' },
+      badge: { datos: { text: 'JSON (solo datos)', tone: 'ok' } },
+      caption: 'Lo que viaja ahora es solo información (JSON), no una página completa.' },
+    { phase: 2, title: 'Cocinas solo ese pedacito', focus: ['plato'], show: ['plato', 'tFirst', 'datos', 'tNext'], hide: ['bandeja'], at: { waiter: TABLE, datos: [256, 135] },
+      state: { grill: 'ok', plato: 'ok', tFirst: 'ok', tNext: 'ok' }, text: { tFirst: 'Qué ves: la página lista', tNext: 'Cambiar algo: solo viajan datos, sin recargar' },
+      sub: { grill: 'JavaScript ejecutado', plato: 'solo cambia la lista' }, pulse: ['plato'],
+      caption: 'React actualiza únicamente la parte que cambió. No se repite el viaje completo: por eso las aplicaciones con CSR se sienten fluidas.' },
+
+    // ---- Fase 4: la alternativa, SSR ----
+    { phase: 3, title: 'Y si el cocinero entrega el plato terminado (SSR)', focus: ['chef', 'platoSrv'], show: ['platoSrv', 'tFirst', 'tNext'], hide: ['plato', 'datos', 'bandeja'], at: { waiter: KITCHEN },
+      state: { grill: 'dim', tFirst: 'ok', tNext: 'ok' }, text: { tFirst: 'Qué ves: la página, completa', tNext: 'Cambiar algo: solo viajan datos, sin recargar' },
+      badge: { platoSrv: { text: 'HTML completo', tone: 'ok' } },
+      caption: 'En Server Side Rendering (SSR) el cocinero hace todo el trabajo: deja el plato terminado, el HTML completo de la página.' },
+    { phase: 3, title: 'El mayordomo trae el plato servido', focus: ['waiter', 'platoSrv'], show: ['platoSrv', 'tFirst', 'tNext'], hide: ['plato', 'datos', 'bandeja'], at: { waiter: TABLE, platoSrv: CARRY_T },
+      state: { grill: 'dim', tFirst: 'ok', tNext: 'err' }, text: { tFirst: 'Qué ves: la página, completa', tNext: 'Cambiar algo: otro plato, la página se recarga' },
+      badge: { platoSrv: { text: 'HTML completo', tone: 'ok' } },
+      caption: 'La primera pantalla llega lista. A cambio, el servidor trabaja más y cada cambio pide otro plato completo: la página se recarga.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Analogía del restaurante: el navegador es la mesa con parrilla, el servidor es el cocinero y el mayordomo es el medio que lleva y trae la información; en Client Side Rendering el cocinero entrega ingredientes crudos y el navegador cocina la página',
+    phases: ['El pedido', 'Cocinar en tu mesa', 'Pedir más', 'Si cocina el servidor'],
+    wide: true,
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 900, height: 430, items: items, trail: 'step' }); },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Client Side Rendering',
+      title: 'Quién cocina la página',
+      text: 'Tu navegador es la mesa con parrilla, el servidor es el cocinero y el mayordomo es el medio por el que viaja la información. En CSR el cocinero entrega los ingredientes crudos y tú cocinas en tu mesa.'
+    }
+  });
+})();
+</script>
+</body>
+</html>
