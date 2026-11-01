@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dónde va la sesión en tu proyecto</title>
+<title>Dónde va la sesión y la protección en tu proyecto</title>
 <link rel="stylesheet" href="../../../_shared/dk-base.css">
 </head>
 <body>
@@ -16,147 +16,205 @@
 <script src="../../../_shared/dk-player.js"></script>
 <script>
 (function () {
-  // El proyecto del curso (compunet3-202602, rama week-12/next-redux): feature routines con Clean Architecture y Redux.
-  // Fase 1: lo que ya existe. Fase 2: lo que agrega la sesion (items isNew + hidden, aparecen paso a paso).
+  // El proyecto del curso (compunet3-202602): feature routines con Clean Architecture y Redux (semanas 11 y 12) y las pantallas de la semana 13.
+  // Fase 1: lo que ya existe. Fase 2: lo que agrega la sesion (isNew + hidden, aparecen paso a paso). Fase 3: lo que agregan las guardias.
+  // La misma pieza se usa en los dos documentos de la semana: la guia de sesiones abre en la fase 2 (#fase=2) y la de rutas protegidas en la fase 3 (#fase=3).
+  var A = 'src/features/auth/';
+  var R = 'src/features/routines/';
   var items = [
     // ---- carpetas (--dirsfirst) ----
     { path: 'app/', edit: 'sometimes', purpose: 'Las rutas de Next.js (App Router): cada carpeta con un page.tsx es una URL.',
       points: ['Aquí vive solo lo que Next.js necesita: páginas, layouts y la conexión con la feature.', 'La lógica de negocio NO va aquí: está en <code>src/features/</code>.'] },
-    { path: 'app/login/', isNew: true, hidden: true, edit: 'always', purpose: 'La ruta <code>/login</code> del trabajo en clase de la semana 13.', points: ['Ya existe como pantalla visual; ahora su formulario llama a una Server Action.'] },
-    { path: 'app/login/page.tsx', isNew: true, hidden: true, edit: 'sometimes', purpose: 'Muestra el <code>LoginForm</code>.',
-      codeTitle: 'app/login/page.tsx', code: 'import { LoginForm } from "@/features/auth/presentation/components/LoginForm"\n\nexport default function LoginPage() {\n  return <LoginForm />\n}' },
-    { path: 'app/routines/', edit: 'sometimes', purpose: 'La ruta protegida de la aplicación.' },
-    { path: 'app/routines/page.tsx', edit: 'sometimes', purpose: 'La página de rutinas. Es lo único que cambia aquí: llama a <code>requireSession()</code> antes de leer los datos.',
-      points: ['El resto del JSX sigue igual.', 'Si no hay sesión, <code>requireSession()</code> redirige a <code>/login</code>.'],
-      codeTitle: 'app/routines/page.tsx (resumido)', code: 'import { requireSession } from "@/lib/dal"\n\nexport default async function RoutinesPage() {\n  const { userId } = await requireSession()\n  // ...leer las rutinas de userId\n}' },
-    { path: 'app/layout.tsx', edit: 'sometimes', purpose: 'El layout raíz. Se modifica: lee la sesión en el servidor y llena el store con <code>AuthHydrator</code>.',
+    { path: 'app/(auth)/', edit: 'sometimes', purpose: 'Un route group: agrupa el login y el registro bajo un layout centrado. El nombre entre paréntesis no aparece en la URL.' },
+    { path: 'app/(auth)/login/', edit: 'sometimes', purpose: 'La ruta /login del trabajo en clase de la semana 13.' },
+    { path: 'app/(auth)/login/page.tsx', edit: 'sometimes', purpose: 'Muestra el LoginForm.' },
+    { path: 'app/(auth)/register/', edit: 'sometimes', purpose: 'La ruta /register.' },
+    { path: 'app/(auth)/register/page.tsx', edit: 'sometimes', purpose: 'Muestra el RegisterForm.' },
+    { path: 'app/(app)/', edit: 'sometimes', purpose: 'Otro route group: las pantallas internas, que comparten el Header y el Navbar.',
+      points: ['Un route group organiza archivos: <b>no protege nada</b>.'] },
+    { path: 'app/(app)/layout.tsx', edit: 'sometimes', purpose: 'Dibuja el Header y el Navbar alrededor de las pantallas internas.' },
+    { path: 'app/(app)/routines/', edit: 'sometimes', purpose: 'La ruta protegida de la aplicación.' },
+    { path: 'app/(app)/routines/page.tsx', edit: 'sometimes', purpose: 'La página de rutinas. Con las guardias deja de ser un componente de cliente: pasa a ser una página de servidor que exige el permiso y renderiza RoutinesView.',
+      points: ['Un componente de cliente no puede llamar al DAL: usa <code>cookies()</code> y <code>"server-only"</code>.', 'Sin sesión, el DAL redirige a <code>/login</code>; sin el permiso, lanza un error.'],
+      codeTitle: 'app/(app)/routines/page.tsx', code: 'import { requirePermission } from "@/src/lib/dal"\nimport { RoutinesView } from "@/src/features/routines/presentation/components/RoutinesView"\n\nexport default async function RoutinesPage() {\n  await requirePermission("view_routines")\n  return <RoutinesView />\n}' },
+    { path: 'app/layout.tsx', edit: 'sometimes', purpose: 'El layout raíz. Se modifica con la sesión: lee la cookie en el servidor y llena el store con AuthHydrator.',
       points: ['Solo <b>hidrata la interfaz</b>: no protege nada (un layout no se vuelve a renderizar en cada navegación).'],
-      codeTitle: 'layout.tsx (resumido)', code: 'export default async function RootLayout({ children }) {\n  const session = await getSession()\n  const user = session && { id: session.userId, name: session.name, roles: session.roles }\n  return (\n    <html><body>\n      <StoreProvider>\n        <AuthHydrator user={user} />\n        {children}\n      </StoreProvider>\n    </body></html>\n  )\n}' },
+      codeTitle: 'layout.tsx (resumido)', code: 'export default async function RootLayout({ children }) {\n  const session = await getSession()\n  const user = session && {\n    id: session.userId, name: session.name,\n    role: session.role, permissions: session.permissions,\n  }\n  return (\n    <html><body>\n      <StoreProvider>\n        <AuthHydrator user={user} />\n        {children}\n      </StoreProvider>\n    </body></html>\n  )\n}' },
     { path: 'src/', edit: 'always', purpose: 'El código de la aplicación, organizado por capas y por feature.' },
     { path: 'src/features/', edit: 'always', purpose: 'Una carpeta por funcionalidad. Cada una tiene sus propias capas.' },
-    { path: 'src/features/auth/', isNew: true, hidden: true, edit: 'always', purpose: 'La nueva feature: iniciar sesión.',
-      points: ['Misma forma que <code>routines</code>: <code>domain</code>, <code>infrastructure</code>, <code>di</code> y <code>presentation</code>.', 'Si algún día se elimina el login, se elimina esta carpeta.'] },
-    { path: 'src/features/auth/di/', isNew: true, hidden: true, edit: 'always', purpose: 'El Composition Root de la feature: arma las dependencias.' },
-    { path: 'src/features/auth/di/auth.container.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Crea el caso de uso con el repositorio y el datasource. Cambiar el mock por el backend real se hace solo aquí.',
-      codeTitle: 'auth.container.ts', code: 'import "server-only"\n\nconst datasource = new AuthMockDatasource() // luego: new AuthApiDatasource()\nconst repository = new AuthRepositoryImpl(datasource)\n\nexport const authContainer = {\n  login: new LoginUseCase(repository),\n}' },
-    { path: 'src/features/auth/domain/', isNew: true, hidden: true, edit: 'always', purpose: 'Reglas de negocio puras: sin Next.js, sin cookies, sin React.',
-      points: ['<b>La sesión NO está aquí.</b> Una cookie es un detalle de HTTP, no una regla de negocio.', 'El dominio solo sabe responder: ¿estas credenciales son de un usuario?'] },
-    { path: 'src/features/auth/domain/entities/', isNew: true, hidden: true, edit: 'always', purpose: 'Las entidades del dominio.' },
-    { path: 'src/features/auth/domain/entities/auth-tokens.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Lo que entrega el backend al iniciar sesión: un token de acceso.',
-      points: ['Para el dominio es un texto opaco: no sabe que es un JWT ni cómo se firma.'],
-      codeTitle: 'auth-tokens.ts', code: 'export interface AuthTokens {\n  accessToken: string\n}' },
-    { path: 'src/features/auth/domain/repositories/', isNew: true, hidden: true, edit: 'always', purpose: 'Los contratos que el dominio necesita de afuera.' },
-    { path: 'src/features/auth/domain/repositories/auth.repository.ts', isNew: true, hidden: true, edit: 'always', purpose: 'El contrato: dado un correo y una contraseña, devuelve los tokens o <code>null</code>.',
-      codeTitle: 'auth.repository.ts', code: 'export interface AuthRepository {\n  login(email: string, password: string): Promise<AuthTokens | null>\n}' },
-    { path: 'src/features/auth/domain/usecases/', isNew: true, hidden: true, edit: 'always', purpose: 'Un caso de uso por acción del usuario.' },
-    { path: 'src/features/auth/domain/usecases/login.usecase.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Normaliza el correo y le pide los tokens al repositorio.',
-      codeTitle: 'login.usecase.ts', code: 'export class LoginUseCase {\n  constructor(private repository: AuthRepository) {}\n\n  execute(email: string, password: string) {\n    return this.repository.login(email.trim().toLowerCase(), password)\n  }\n}' },
-    { path: 'src/features/auth/infrastructure/', isNew: true, hidden: true, edit: 'always', purpose: 'Implementa los contratos del dominio con una fuente de datos concreta.' },
-    { path: 'src/features/auth/infrastructure/auth.mock.datasource.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Simula al backend: si las credenciales son correctas devuelve un JWT con el id, el nombre y los roles, firmado con un secreto de prueba.',
-      points: ['Arma el JWT a mano con <code>crypto</code> de Node: no usa ninguna librería de tokens.', 'Con un backend real desaparece: lo reemplaza <code>auth.api.datasource.ts</code>.', 'Solo para clase: usuarios y contraseñas en texto plano, en memoria.'],
-      codeTitle: 'auth.mock.datasource.ts (resumido)', code: 'import "server-only"\nimport { createHmac } from "node:crypto"\n\nconst USERS = [\n  { id: "7", name: "Ana", email: "ana@icesi.edu.co", password: "123456", roles: ["USER"] },\n]\n\nfunction signMockToken(payload: object) { /* cabecera.contenido.firma, HS256 */ }\n\nexport class AuthMockDatasource {\n  async login(email: string, password: string) {\n    const u = USERS.find((x) => x.email === email && x.password === password)\n    if (!u) return null\n    return { accessToken: signMockToken({ sub: u.id, name: u.name, roles: u.roles, exp }) }\n  }\n}' },
-    { path: 'src/features/auth/infrastructure/auth.repository.impl.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Cumple el contrato del dominio usando un datasource: el mock hoy, el real mañana.',
-      codeTitle: 'auth.repository.impl.ts', code: 'export class AuthRepositoryImpl implements AuthRepository {\n  constructor(private datasource: AuthDatasource) {}\n\n  login(email: string, password: string) {\n    return this.datasource.login(email, password)\n  }\n}' },
-    { path: 'src/features/auth/infrastructure/auth.api.datasource.ts', isNew: true, hidden: true, edit: 'sometimes', purpose: 'El datasource para el backend real: hace el POST de login y devuelve el token que el backend firmó.',
-      points: ['Reemplaza al mock en el contenedor; el dominio y el resto no cambian.', 'Un 401 es un error esperado (devuelve <code>null</code>); cualquier otra falla es inesperada y se lanza.'],
-      codeTitle: 'auth.api.datasource.ts', code: 'import "server-only"\n\nexport class AuthApiDatasource {\n  async login(email: string, password: string) {\n    const res = await fetch(`${process.env.API_URL}/auth/login`, {\n      method: "POST",\n      headers: { "Content-Type": "application/json" },\n      body: JSON.stringify({ email, password }),\n    })\n    if (res.status === 401) return null\n    if (!res.ok) throw new Error("El backend no respondió")\n    return (await res.json()) as { accessToken: string }\n  }\n}' },
-    { path: 'src/features/auth/presentation/', isNew: true, hidden: true, edit: 'always', purpose: 'Lo que toca React, Redux y Next.js: el formulario, el hook fachada, el thunk y la Server Action.',
-      points: ['Misma forma que <code>routines/presentation</code>: <code>components</code>, <code>hooks</code> y <code>store</code>, más <code>actions</code>.'] },
-    { path: 'src/features/auth/presentation/actions/', isNew: true, hidden: true, edit: 'always', purpose: 'Server Actions: funciones que se ejecutan en el servidor.' },
-    { path: 'src/features/auth/presentation/actions/auth.actions.ts', isNew: true, hidden: true, edit: 'always', purpose: 'La frontera con el servidor: pide el token al caso de uso, lo guarda en la cookie y devuelve el usuario con sus roles.',
+
+    // ---- features/routines ----
+    { path: R, edit: 'never', purpose: 'La feature de rutinas de las semanas 11 y 12: Clean Architecture con Redux Toolkit.',
+      points: ['La sesión no modifica sus capas de dominio ni de infraestructura.', 'Las guardias sí tocan su presentación: las rutinas pasan a leerse y crearse con Server Actions que exigen permisos.'] },
+    { path: R + 'domain/', edit: 'never', purpose: 'Entidad, contrato del repositorio y casos de uso de las rutinas.' },
+    { path: R + 'infrastructure/', edit: 'never', purpose: 'Datasource simulado, mapper y repositorio de las rutinas.' },
+    { path: R + 'di/', edit: 'sometimes', purpose: 'El Composition Root de las rutinas.' },
+    { path: R + 'di/routine.container.ts', edit: 'sometimes', purpose: 'Arma los casos de uso. Se le agrega import "server-only": desde ahora solo lo usan las Server Actions.',
+      codeTitle: 'routine.container.ts (primera línea)', code: 'import "server-only"' },
+    { path: R + 'presentation/', edit: 'sometimes', purpose: 'Slice, hook, componentes y, con las guardias, las Server Actions de rutinas.' },
+    { path: R + 'presentation/actions/', isNew: true, hidden: true, edit: 'always', purpose: 'Las Server Actions de la feature de rutinas.' },
+    { path: R + 'presentation/actions/routines.actions.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Leer y crear rutinas, cada una exigiendo su permiso en el servidor.',
+      points: ['Una Server Action es un endpoint público: el permiso se comprueba <b>dentro</b> de cada una, aunque la página y el proxy ya lo hayan hecho.', '<code>requirePermission</code> va fuera del <code>try/catch</code>: <code>redirect()</code> funciona lanzando una excepción y un <code>catch</code> se la tragaría.'],
+      codeTitle: 'routines.actions.ts (resumido)', code: '"use server"\n\nexport async function getRoutinesAction() {\n  await requirePermission("view_routines")\n  // ...caso de uso y mapeo a ViewModel\n}\n\nexport async function createRoutineAction(params) {\n  await requirePermission("create_routines")\n  // ...caso de uso y mapeo a ViewModel\n}' },
+    { path: R + 'presentation/components/', edit: 'sometimes', purpose: 'Componentes de la feature.' },
+    { path: R + 'presentation/components/RoutinesView.tsx', isNew: true, hidden: true, edit: 'always', purpose: 'La vista de cliente: lo que antes era la página, convertido en componente.',
+      points: ['Usa <code>useRoutines</code>, Redux y los eventos del formulario.', 'Dibuja el formulario de crear rutina solo si <code>hasPermission("create_routines")</code>: eso mejora la experiencia, pero no protege nada.'],
+      codeTitle: 'RoutinesView.tsx (resumido)', code: '"use client"\n\nexport function RoutinesView() {\n  const { hasPermission } = useAuth()\n  const { routines, createRoutine } = useRoutines()\n  const canCreate = hasPermission("create_routines")\n  // ...\n  {canCreate && <RoutineForm onSubmit={createRoutine} />}\n}' },
+    { path: R + 'presentation/store/', edit: 'sometimes', purpose: 'El slice de rutinas.' },
+    { path: R + 'presentation/store/routines.slice.ts', edit: 'sometimes', purpose: 'Sus dos thunks dejan de llamar al contenedor y llaman a las Server Actions.',
+      codeTitle: 'routines.slice.ts (resumido)', code: 'export const fetchRoutines = createAsyncThunk(\n  "routines/fetchAll",\n  async (_, { rejectWithValue }) => {\n    const result = await getRoutinesAction()\n    if (!result.ok) return rejectWithValue(result.message)\n    return result.routines\n  }\n)' },
+
+    // ---- features/auth ----
+    { path: A, edit: 'always', purpose: 'La feature de autenticación. Misma forma que routines: domain, infrastructure, di y presentation.',
+      points: ['De la semana 13 solo existen los formularios, sin lógica.', 'Si algún día se elimina el login, se elimina esta carpeta.'] },
+    { path: A + 'presentation/', edit: 'always', purpose: 'Lo que toca React, Redux y Next.js.' },
+    { path: A + 'presentation/components/', edit: 'always', purpose: 'Componentes de la feature.' },
+    { path: A + 'presentation/components/LoginForm.tsx', edit: 'always', purpose: 'El formulario de la semana 13. Con la sesión deja de tener estado propio de autenticación: usa el hook useAuth.',
+      codeTitle: 'LoginForm.tsx (resumido)', code: '"use client"\n\nexport function LoginForm() {\n  const { login, isLoading, errorMessage } = useAuth()\n  const router = useRouter()\n\n  async function onSubmit(e) {\n    e.preventDefault()\n    if (await login({ email, password })) router.replace("/routines")\n  }\n}' },
+    { path: A + 'presentation/components/RegisterForm.tsx', edit: 'always', purpose: 'El formulario de registro. También usa useAuth; no crea sesión: al terminar manda al usuario a /login.' },
+    { path: A + 'domain/', isNew: true, hidden: true, edit: 'always', purpose: 'Reglas de negocio puras: sin Next.js, sin cookies, sin React.',
+      points: ['<b>La sesión NO está aquí.</b> Una cookie es un detalle de HTTP, no una regla de negocio.', 'El dominio solo sabe responder: ¿estas credenciales dan un token? y ¿este usuario puede registrarse?'] },
+    { path: A + 'domain/entities/', isNew: true, hidden: true, edit: 'always', purpose: 'Las entidades del dominio.' },
+    { path: A + 'domain/entities/auth-tokens.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Lo que entrega el backend al iniciar sesión: un token de acceso.',
+      points: ['Para el dominio es un texto opaco: no sabe que es un JWT ni qué lleva dentro.'],
+      codeTitle: 'auth-tokens.ts', code: 'export interface AuthTokens {\n  readonly accessToken: string\n}' },
+    { path: A + 'domain/entities/user.ts', isNew: true, hidden: true, edit: 'always', purpose: 'El usuario que se registra: nombre y correo, con sus reglas de validez. No tiene contraseña.' },
+    { path: A + 'domain/repositories/', isNew: true, hidden: true, edit: 'always', purpose: 'Los contratos que el dominio necesita de afuera.' },
+    { path: A + 'domain/repositories/auth.repository.ts', isNew: true, hidden: true, edit: 'always', purpose: 'El contrato: iniciar sesión devuelve los tokens o null; registrarse devuelve el usuario creado.',
+      codeTitle: 'auth.repository.ts', code: 'export interface AuthRepository {\n  login(params: LoginParams): Promise<AuthTokens | null>\n  register(params: RegisterParams): Promise<User>\n}' },
+    { path: A + 'domain/usecases/', isNew: true, hidden: true, edit: 'always', purpose: 'Un caso de uso por acción del usuario.' },
+    { path: A + 'domain/usecases/login.usecase.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Normaliza el correo y le pide los tokens al repositorio. Credenciales inválidas no es una excepción: devuelve null.',
+      codeTitle: 'login.usecase.ts', code: 'export class LoginUseCase {\n  constructor(private readonly repository: AuthRepository) {}\n\n  async execute(params: LoginParams) {\n    const email = params.email.trim().toLowerCase()\n    if (email === "" || params.password === "") return null\n    return await this.repository.login({ email, password: params.password })\n  }\n}' },
+    { path: A + 'domain/usecases/register.usecase.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Las reglas del registro: campos completos, contraseñas iguales y un mínimo de caracteres.' },
+    { path: A + 'infrastructure/', isNew: true, hidden: true, edit: 'always', purpose: 'Implementa los contratos del dominio con una fuente de datos concreta.' },
+    { path: A + 'infrastructure/dtos/', isNew: true, hidden: true, edit: 'always', purpose: 'La forma de los datos tal como viajan por la red.' },
+    { path: A + 'infrastructure/dtos/auth.dto.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Los DTOs de login, registro y la respuesta con el token (access_token).' },
+    { path: A + 'infrastructure/mappers/', isNew: true, hidden: true, edit: 'always', purpose: 'Convierten entre los DTOs y el dominio.' },
+    { path: A + 'infrastructure/mappers/user.mapper.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Convierte el DTO de usuario en la entidad y los parámetros del dominio en DTOs.' },
+    { path: A + 'infrastructure/mappers/auth-tokens.mapper.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Convierte access_token en el accessToken del dominio.' },
+    { path: A + 'infrastructure/datasources/', isNew: true, hidden: true, edit: 'always', purpose: 'De dónde salen los datos: el mock hoy, el backend real mañana.' },
+    { path: A + 'infrastructure/datasources/auth-datasource.interface.ts', isNew: true, hidden: true, edit: 'always', purpose: 'El contrato del datasource: login y register.' },
+    { path: A + 'infrastructure/datasources/auth-mock-datasource.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Simula al backend: si las credenciales son correctas devuelve un JWT con el id, el nombre, el rol y los permisos, firmado con un secreto de prueba.',
+      points: ['Arma el JWT a mano con <code>crypto</code> de Node: no usa ninguna librería de tokens.', 'Lleva <code>import "server-only"</code>: contiene usuarios, contraseñas y la clave.', 'USER trae <code>view_routines</code> y ADMIN trae <code>view_routines</code> y <code>create_routines</code>.', 'Solo para clase: contraseñas en texto plano y en memoria. <b>No verifica la firma</b> de los tokens que recibe.'],
+      codeTitle: 'auth-mock-datasource.ts (resumido)', code: 'import "server-only"\nimport { createHmac } from "node:crypto"\n\nconst USER_PERMISSIONS = ["view_routines"]\nconst ADMIN_PERMISSIONS = ["view_routines", "create_routines"]\n\nfunction signMockToken(payload: object) { /* cabecera.contenido.firma, HS256 */ }\n\nexport class AuthMockDatasource {\n  async login(dto) {\n    const found = this.users.find((u) => u.email === dto.email && u.password === dto.password)\n    if (!found) return null\n    const exp = Math.floor(Date.now() / 1000) + 3600\n    return { access_token: signMockToken({\n      sub: String(found.id), name: found.full_name,\n      role: found.role, permissions: found.permissions, exp,\n    }) }\n  }\n}' },
+    { path: A + 'infrastructure/repositories/', isNew: true, hidden: true, edit: 'always', purpose: 'Cumple los contratos del dominio.' },
+    { path: A + 'infrastructure/repositories/auth.repository.impl.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Usa el datasource y los mappers para cumplir el contrato del dominio.' },
+    { path: A + 'di/', isNew: true, hidden: true, edit: 'always', purpose: 'El Composition Root de la feature: arma las dependencias.' },
+    { path: A + 'di/auth.container.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Crea los casos de uso con el repositorio y el datasource. Cambiar el mock por el backend real se hace solo aquí.',
+      codeTitle: 'auth.container.ts', code: 'import "server-only"\n\nconst datasource = new AuthMockDatasource() // luego: AuthApiDatasource\nconst repository = new AuthRepositoryImpl(datasource)\n\nexport const authContainer = {\n  login: new LoginUseCase(repository),\n  register: new RegisterUseCase(repository),\n}' },
+    { path: A + 'presentation/actions/', isNew: true, hidden: true, edit: 'always', purpose: 'Server Actions: funciones que se ejecutan en el servidor.' },
+    { path: A + 'presentation/actions/auth.actions.ts', isNew: true, hidden: true, edit: 'always', purpose: 'La frontera con el servidor: pide el token al caso de uso, lo guarda en la cookie y devuelve el usuario con su rol y sus permisos. También registra usuarios y cierra la sesión.',
       points: ['Empieza con <code>"use server"</code>.', 'La llama el <b>thunk</b> (corre en el navegador); ella corre en el servidor porque solo allí se puede escribir una cookie <code>httpOnly</code>.', 'Devuelve un resultado serializable: <code>{ ok: true, user }</code> o <code>{ ok: false, message }</code>.'],
-      codeTitle: 'auth.actions.ts (resumido)', code: '"use server"\n\nexport async function loginAction(email: string, password: string) {\n  const tokens = await authContainer.login.execute(email, password)\n  if (!tokens) return { ok: false, message: "Credenciales inválidas" }\n  const payload = await createSession(tokens.accessToken)\n  return { ok: true, user: { id: payload.sub, name: payload.name, roles: payload.roles } }\n}' },
-    { path: 'src/features/auth/presentation/components/', isNew: true, hidden: true, edit: 'always', purpose: 'Componentes de la feature.' },
-    { path: 'src/features/auth/presentation/components/LoginForm.tsx', isNew: true, hidden: true, edit: 'always', purpose: 'El formulario de la semana 13. No conoce Redux ni la Server Action: usa el hook <code>useAuth</code>.',
-      codeTitle: 'LoginForm.tsx (resumido)', code: '"use client"\n\nexport function LoginForm() {\n  const { login, isLoading, errorMessage } = useAuth()\n  const router = useRouter()\n\n  async function onSubmit(e: FormEvent) {\n    e.preventDefault()\n    if (await login(email, password)) router.replace("/routines")\n  }\n}' },
-    { path: 'src/features/auth/presentation/components/AuthHydrator.tsx', isNew: true, hidden: true, edit: 'always', purpose: 'Llena el store con la sesión que el servidor decodificó, al cargar o recargar la página.',
-      points: ['El token vive en una cookie <code>httpOnly</code>: el navegador no puede leerlo. Por eso lo decodifica el servidor (en el layout) y le entrega al cliente solo el usuario y sus roles.'],
-      codeTitle: 'AuthHydrator.tsx', code: '"use client"\n\nexport function AuthHydrator({ user }: { user: AuthUser | null }) {\n  const dispatch = useAppDispatch()\n  useEffect(() => { dispatch(setUser(user)) }, [dispatch, user])\n  return null\n}' },
-    { path: 'src/features/auth/presentation/hooks/', isNew: true, hidden: true, edit: 'always', purpose: 'Los hooks fachada de la feature.' },
-    { path: 'src/features/auth/presentation/hooks/use-auth.ts', isNew: true, hidden: true, edit: 'always', purpose: 'El hook fachada: el único que conoce el store. Igual que <code>useRoutines</code>.',
-      points: ['Expone <code>user</code>, <code>isLoading</code>, <code>errorMessage</code>, <code>login()</code>, <code>logout()</code> y <code>hasRole()</code>.', 'Si cambia cómo se guarda el estado, los componentes no se enteran.'],
-      codeTitle: 'use-auth.ts (resumido)', code: 'export function useAuth() {\n  const dispatch = useAppDispatch()\n  const { user, isLoading, errorMessage } = useAppSelector((s) => s.auth)\n\n  const login = async (email: string, password: string) => {\n    const action = await dispatch(loginMutation({ email, password }))\n    return loginMutation.fulfilled.match(action)\n  }\n  const hasRole = (role: string) => !!user?.roles.includes(role)\n  return { user, isLoading, errorMessage, login, hasRole }\n}' },
-    { path: 'src/features/auth/presentation/store/', isNew: true, hidden: true, edit: 'always', purpose: 'El slice de la feature, como <code>routines.slice.ts</code>.' },
-    { path: 'src/features/auth/presentation/store/auth.slice.ts', isNew: true, hidden: true, edit: 'always', purpose: 'La sesión decodificada (<code>user</code> con sus roles) y el estado del login, y los thunks que llaman a las Server Actions.',
+      codeTitle: 'auth.actions.ts (resumido)', code: '"use server"\n\nexport async function loginAction(email: string, password: string) {\n  const tokens = await authContainer.login.execute({ email, password })\n  if (!tokens) return { ok: false, message: "Credenciales inválidas" }\n  const payload = await createSession(tokens.accessToken)\n  return { ok: true, user: {\n    id: payload.sub, name: payload.name,\n    role: payload.role, permissions: payload.permissions,\n  } }\n}\n\nexport async function logoutAction() {\n  await deleteSession()\n}' },
+    { path: A + 'presentation/components/AuthHydrator.tsx', isNew: true, hidden: true, edit: 'always', purpose: 'Llena el store con la sesión que el servidor decodificó, al cargar o recargar la página.',
+      points: ['El token vive en una cookie <code>httpOnly</code>: el navegador no puede leerlo. Por eso lo decodifica el servidor (en el layout) y le entrega al cliente solo el usuario, su rol y sus permisos.'],
+      codeTitle: 'AuthHydrator.tsx', code: '"use client"\n\nexport function AuthHydrator({ user }: { user: AuthUser | null }) {\n  const dispatch = useAppDispatch()\n  useEffect(() => {\n    dispatch(setUser(user ? AuthViewModelMapper.toViewModel(user) : null))\n  }, [dispatch, user])\n  return null\n}' },
+    { path: A + 'presentation/hooks/', isNew: true, hidden: true, edit: 'always', purpose: 'Los hooks fachada de la feature.' },
+    { path: A + 'presentation/hooks/use-auth.ts', isNew: true, hidden: true, edit: 'always', purpose: 'El hook fachada: el único que conoce el store. Igual que useRoutines.',
+      points: ['Expone <code>user</code>, <code>login()</code>, <code>register()</code>, <code>logout()</code>, <code>hasRole()</code> y <code>hasPermission()</code>.', 'Si cambia cómo se guarda el estado, los componentes no se enteran.'],
+      codeTitle: 'use-auth.ts (resumido)', code: 'export function useAuth() {\n  const dispatch = useAppDispatch()\n  const user = useAppSelector((s) => s.auth.user)\n\n  const login = async (params) => {\n    const action = await dispatch(loginMutation(params))\n    return loginMutation.fulfilled.match(action)\n  }\n  const hasRole = (role: string) => user?.role === role\n  const hasPermission = (p: string) => !!user?.permissions.includes(p)\n  return { user, login, hasRole, hasPermission /* ... */ }\n}' },
+    { path: A + 'presentation/store/', isNew: true, hidden: true, edit: 'always', purpose: 'El slice de la feature, como routines.slice.ts.' },
+    { path: A + 'presentation/store/auth.slice.ts', isNew: true, hidden: true, edit: 'always', purpose: 'El usuario de la sesión y el estado del login, y los thunks que llaman a las Server Actions.',
       points: ['El thunk traduce <code>{ ok: false, message }</code> en <code>rejectWithValue(message)</code>.', 'El store guarda lo que la interfaz necesita saber de la sesión. Al recargar nace vacío: el layout lo vuelve a llenar con <code>AuthHydrator</code>.'],
-      codeTitle: 'auth.slice.ts (resumido)', code: 'export const loginMutation = createAsyncThunk(\n  "auth/login",\n  async (p: { email: string; password: string }, { rejectWithValue }) => {\n    const result = await loginAction(p.email, p.password)\n    if (!result.ok) return rejectWithValue(result.message)\n    return result.user // { id, name, roles }\n  }\n)' },
-    { path: 'src/features/routines/', edit: 'never', purpose: 'La feature de rutinas de la semana 12: Clean Architecture con Redux Toolkit.',
-      points: ['No cambia nada dentro de <code>domain</code>, <code>infrastructure</code> ni <code>presentation</code>.', 'Solo la página que la usa pide la sesión antes de leer datos.'] },
-    { path: 'src/lib/', isNew: true, hidden: true, edit: 'always', purpose: 'Código transversal del servidor, como <code>src/store/</code> con Redux: lo usan todas las features.',
+      codeTitle: 'auth.slice.ts (resumido)', code: 'export const loginMutation = createAsyncThunk(\n  "auth/login",\n  async (p, { rejectWithValue }) => {\n    const result = await loginAction(p.email, p.password)\n    if (!result.ok) return rejectWithValue(result.message)\n    return AuthViewModelMapper.toViewModel(result.user)\n  }\n)' },
+    { path: A + 'presentation/viewmodels/', isNew: true, hidden: true, edit: 'always', purpose: 'Lo que la interfaz necesita, ya preparado para pintar.' },
+    { path: A + 'presentation/viewmodels/auth.viewmodel.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Convierte el usuario de la sesión en un ViewModel: agrega las iniciales para el avatar del Header.' },
+
+    // ---- compartido ----
+    { path: 'src/shared/', edit: 'sometimes', purpose: 'Código de interfaz que usan varias pantallas.' },
+    { path: 'src/shared/components/', edit: 'sometimes', purpose: 'Header, Navbar y NavLink de la semana 13.' },
+    { path: 'src/shared/components/Header.tsx', edit: 'sometimes', purpose: 'Con la sesión muestra las iniciales del usuario y cierra la sesión: espera a logout() (que borra la cookie) y luego navega.',
+      codeTitle: 'Header.tsx (resumido)', code: 'const { user, logout } = useAuth()\n\nconst handleLogout = async () => {\n  await logout()\n  router.replace("/login")\n}\n\n<span>{user?.initials ?? "?"}</span>' },
+    { path: 'src/lib/', isNew: true, hidden: true, edit: 'always', purpose: 'Código transversal del servidor, como src/store/ con Redux: lo usan todas las features.',
       points: ['La sesión va aquí y no en <code>features/auth</code> porque cualquier feature protegida la necesita.'] },
-    { path: 'src/lib/dal.ts', isNew: true, hidden: true, edit: 'always', purpose: 'El Data Access Layer: <code>requireSession()</code> exige una sesión (decodifica el token) y devuelve el usuario, sus roles y el token. <code>getSession()</code> hace lo mismo sin redirigir.',
-      codeTitle: 'dal.ts', code: 'import "server-only"\n\nexport async function getSession() {\n  const token = (await cookies()).get("session")?.value\n  const payload = decodeToken(token)\n  if (!payload) return null\n  return { userId: payload.sub, name: payload.name, roles: payload.roles, accessToken: token! }\n}\n\nexport async function requireSession() {\n  const session = await getSession()\n  if (!session) redirect("/login")\n  return session\n}' },
-    { path: 'src/lib/session.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Decodifica el token del backend y lo guarda en la cookie httpOnly. No verifica la firma.',
-      points: ['<b>No crea, ni firma, ni verifica tokens</b>: los emite y verifica el backend.', 'Lo usan la acción de login, el proxy y el DAL.'],
-      codeTitle: 'session.ts (resumido)', code: 'import "server-only"\n\nexport function decodeToken(token?: string) { /* jwtDecode + comprueba exp */ }\nexport async function createSession(token: string) { /* decodifica y guarda la cookie */ }\nexport async function deleteSession() { /* borra la cookie */ }' },
-    { path: 'src/store/', edit: 'sometimes', purpose: 'La infraestructura global de Redux de la semana 12 (<code>makeStore</code>, <code>StoreProvider</code>).',
-      points: ['El store sigue para el estado de la interfaz (la lista de rutinas, los errores, el estado del login).', 'Lo único que cambia: registrar el reducer de <code>auth</code>.'] },
-    { path: 'src/store/store.ts', edit: 'sometimes', purpose: 'La fábrica <code>makeStore</code>: se agrega el reducer de la feature.',
+    { path: 'src/lib/session.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Guarda el token del backend en la cookie httpOnly y la borra. No verifica la firma.',
+      points: ['<b>No crea, ni firma, ni verifica tokens</b>: los emite y verifica el backend.', 'Es el único archivo que escribe la cookie.'],
+      codeTitle: 'session.ts (resumido)', code: 'import "server-only"\n\nexport async function createSession(token: string) { /* decodifica y guarda la cookie */ }\nexport async function deleteSession() { /* borra la cookie */ }' },
+    { path: 'src/lib/token.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Lo que no depende del servidor: el nombre de la cookie, la forma del token y decodeToken.',
+      points: ['Es código puro: lo comparten la sesión, el DAL y el proxy.', 'Decodificar no es verificar: lo que lee solo sirve para decidir qué mostrar.'],
+      codeTitle: 'token.ts (resumido)', code: 'export const SESSION_COOKIE = "session"\n\nexport type TokenPayload = {\n  sub: string; name: string; role: string\n  permissions: string[]; exp: number\n}\n\nexport function decodeToken(token?: string): TokenPayload | null {\n  /* jwtDecode + comprueba exp; null si no sirve */\n}' },
+    { path: 'src/lib/dal.ts', isNew: true, hidden: true, edit: 'always', purpose: 'El Data Access Layer: lee la sesión en el servidor. getSession() la devuelve o null; con las guardias se suman requireSession() y requirePermission().',
+      points: ['<code>requireSession()</code> redirige a <code>/login</code> si no hay sesión.', '<code>requirePermission()</code> además exige que el permiso esté en el token.'],
+      codeTitle: 'dal.ts', code: 'import "server-only"\n\nexport async function getSession() {\n  const token = (await cookies()).get(SESSION_COOKIE)?.value\n  const payload = decodeToken(token)\n  if (!payload || !token) return null\n  return { userId: payload.sub, name: payload.name,\n    role: payload.role, permissions: payload.permissions, accessToken: token }\n}\n\nexport async function requireSession() {\n  const session = await getSession()\n  if (!session) redirect("/login")\n  return session\n}\n\nexport async function requirePermission(permission: string) {\n  const session = await requireSession()\n  if (!session.permissions.includes(permission)) throw new Error("No tienes permiso")\n  return session\n}' },
+    { path: 'src/store/', edit: 'sometimes', purpose: 'La infraestructura global de Redux de la semana 12 (makeStore, StoreProvider).',
+      points: ['El store sigue para el estado de la interfaz (la lista de rutinas, los errores, el usuario).', 'Lo único que cambia: registrar el reducer de <code>auth</code>.'] },
+    { path: 'src/store/store.ts', edit: 'sometimes', purpose: 'La fábrica makeStore: se agrega el reducer de la feature.',
       codeTitle: 'store.ts (resumido)', code: 'export const makeStore = () =>\n  configureStore({\n    reducer: {\n      routines: routinesReducer,\n      auth: authReducer,\n    },\n  })' },
 
     // ---- archivos de la raiz ----
-    { path: '.env.local', isNew: true, hidden: true, edit: 'sometimes', purpose: 'Solo cuando exista el backend real: la dirección de su API.',
-      points: ['Con el mock no hace falta ninguna variable: el mock usa un secreto de prueba fijo y el front no necesita ninguna clave.', '<b>No se sube a Git</b> (Next.js ya lo ignora en <code>.gitignore</code>).'],
-      codeTitle: '.env.local', code: 'API_URL=http://localhost:3001' },
-    { path: 'next.config.ts', edit: 'sometimes', purpose: 'La configuración de Next.js.' },
     { path: 'package.json', edit: 'sometimes', purpose: 'Se agregan tres dependencias para la sesión.',
-      points: ['<code>jwt-decode</code>: decodifica el token (no lo verifica ni lo firma).', '<code>zod</code>: valida el formulario.', '<code>server-only</code>: impide importar un archivo del servidor desde un componente de cliente.'],
+      points: ['<code>jwt-decode</code>: decodifica el token (no lo verifica ni lo firma).', '<code>zod</code>: valida lo que llega a las Server Actions.', '<code>server-only</code>: impide importar un archivo del servidor desde un componente de cliente.'],
       codeTitle: 'terminal', code: 'npm install jwt-decode zod server-only' },
-    { path: 'proxy.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Se ejecuta antes de cada petición: el primer chequeo, local y rápido. En Next.js 15 y anteriores se llamaba <code>middleware.ts</code>.',
-      points: ['Va en la raíz del proyecto, junto a <code>app/</code> (o dentro de <code>src/</code> si usas esa carpeta).', 'Decodifica el token y comprueba que no haya vencido, sin llamar al backend. No verifica la firma: eso lo hace el backend.'],
-      codeTitle: 'proxy.ts (resumido)', code: 'export function proxy(req: NextRequest) {\n  const payload = decodeToken(req.cookies.get("session")?.value)\n  if (isProtected(req) && !payload) {\n    return NextResponse.redirect(new URL("/login", req.url))\n  }\n  return NextResponse.next()\n}' },
+    { path: 'proxy.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Se ejecuta antes de cada petición: el primer chequeo, local y rápido. En Next.js 15 y anteriores se llamaba middleware.ts.',
+      points: ['Va en la raíz del proyecto, junto a <code>app/</code>.', 'Decodifica el token y comprueba que no haya vencido, sin llamar al backend. No verifica la firma y no mira los permisos.', 'Redirige a <code>/login</code> las rutas protegidas sin sesión, y a <code>/routines</code> el login con sesión.'],
+      codeTitle: 'proxy.ts (resumido)', code: 'export function proxy(req: NextRequest) {\n  const payload = decodeToken(req.cookies.get(SESSION_COOKIE)?.value)\n  if (isProtected && !payload) {\n    return NextResponse.redirect(new URL("/login", req.nextUrl))\n  }\n  if (isPublic && payload) {\n    return NextResponse.redirect(new URL("/routines", req.nextUrl))\n  }\n  return NextResponse.next()\n}' },
   ];
 
-  var R = ['src/features/auth/'];
-  var DOMAIN = ['src/features/auth/domain/', 'src/features/auth/domain/entities/', 'src/features/auth/domain/entities/auth-tokens.ts', 'src/features/auth/domain/repositories/', 'src/features/auth/domain/repositories/auth.repository.ts', 'src/features/auth/domain/usecases/', 'src/features/auth/domain/usecases/login.usecase.ts'];
-  var INFRA = ['src/features/auth/infrastructure/', 'src/features/auth/infrastructure/auth.mock.datasource.ts', 'src/features/auth/infrastructure/auth.repository.impl.ts', 'src/features/auth/infrastructure/auth.api.datasource.ts'];
-  var DI = ['src/features/auth/di/', 'src/features/auth/di/auth.container.ts'];
-  var PRES = ['src/features/auth/presentation/', 'src/features/auth/presentation/components/', 'src/features/auth/presentation/components/LoginForm.tsx', 'src/features/auth/presentation/components/AuthHydrator.tsx', 'src/features/auth/presentation/hooks/', 'src/features/auth/presentation/hooks/use-auth.ts', 'src/features/auth/presentation/store/', 'src/features/auth/presentation/store/auth.slice.ts', 'src/features/auth/presentation/actions/', 'src/features/auth/presentation/actions/auth.actions.ts', 'app/login/', 'app/login/page.tsx'];
+  // ---- lo que aparece en cada paso (se acumula) ----
+  var DOMAIN = [A + 'domain/', A + 'domain/entities/', A + 'domain/entities/auth-tokens.ts', A + 'domain/entities/user.ts', A + 'domain/repositories/', A + 'domain/repositories/auth.repository.ts', A + 'domain/usecases/', A + 'domain/usecases/login.usecase.ts', A + 'domain/usecases/register.usecase.ts'];
+  var INFRA = [A + 'infrastructure/', A + 'infrastructure/dtos/', A + 'infrastructure/dtos/auth.dto.ts', A + 'infrastructure/mappers/', A + 'infrastructure/mappers/user.mapper.ts', A + 'infrastructure/mappers/auth-tokens.mapper.ts', A + 'infrastructure/datasources/', A + 'infrastructure/datasources/auth-datasource.interface.ts', A + 'infrastructure/datasources/auth-mock-datasource.ts', A + 'infrastructure/repositories/', A + 'infrastructure/repositories/auth.repository.impl.ts'];
+  var DI = [A + 'di/', A + 'di/auth.container.ts'];
+  var PRES = [A + 'presentation/actions/', A + 'presentation/actions/auth.actions.ts', A + 'presentation/hooks/', A + 'presentation/hooks/use-auth.ts', A + 'presentation/store/', A + 'presentation/store/auth.slice.ts', A + 'presentation/viewmodels/', A + 'presentation/viewmodels/auth.viewmodel.ts', A + 'presentation/components/AuthHydrator.tsx'];
   var LIB = ['src/lib/', 'src/lib/session.ts', 'src/lib/dal.ts'];
-  var ROOT = ['.env.local', 'proxy.ts'];
-  var s1 = R.concat(DOMAIN), s2 = s1.concat(INFRA), s3 = s2.concat(DI), s4 = s3.concat(PRES), s5 = s4.concat(LIB), s6 = s5.concat(ROOT);
+  var G_LIB = ['src/lib/token.ts'];
+  var G_ROUT = [R + 'presentation/components/RoutinesView.tsx', R + 'presentation/actions/', R + 'presentation/actions/routines.actions.ts'];
+  var G_ROOT = ['proxy.ts'];
+  var s1 = DOMAIN, s2 = s1.concat(INFRA), s3 = s2.concat(DI), s4 = s3.concat(PRES), s5 = s4.concat(LIB);
+  var g1 = s5.concat(G_LIB), g2 = g1, g3 = g2.concat(G_ROUT), g4 = g3.concat(G_ROOT);
 
   var steps = [
     // ---- Fase 1: lo que ya tienes ----
     { phase: 0, title: 'El proyecto de las semanas 12 y 13', depth: 3,
-      caption: 'Esta es la forma del proyecto con Redux y Clean Architecture. Pasa el mouse o toca cada línea para ver su función.' },
+      caption: 'Esta es la forma del proyecto con Redux, Clean Architecture y las pantallas de login y registro. Pasa el mouse o toca cada línea para ver su función.' },
     { phase: 0, title: 'app/: solo lo que necesita Next.js', focus: 'app/', depth: 3,
-      caption: 'Las rutas del App Router. La lógica de negocio no va aquí.' },
-    { phase: 0, title: 'features/routines: la feature con capas', focus: 'src/features/routines/', depth: 3,
-      caption: 'La sesión no la modifica. Una feature nueva, auth, seguirá la misma forma.' },
-    { phase: 0, title: 'store/: Redux para el estado de la interfaz', focus: 'src/store/', depth: 3,
-      caption: 'Después del login, Redux ya no es el dueño de la sesión: lo es la cookie.' },
+      caption: 'Las rutas del App Router. Los route groups (auth) y (app) organizan los archivos, pero no aparecen en la URL ni protegen nada.' },
+    { phase: 0, title: 'features/routines: la feature con capas', focus: R, depth: 3,
+      caption: 'Dominio, infraestructura, DI y presentación. La sesión no modifica sus capas internas.' },
+    { phase: 0, title: 'features/auth: solo la parte visual', focus: A + 'presentation/components/LoginForm.tsx', depth: 6,
+      caption: 'De la semana 13 existen los formularios, sin lógica de autenticación. La feature va a seguir la misma forma que routines.' },
 
     // ---- Fase 2: lo que agrega la sesion ----
-    { phase: 1, title: 'Dominio: ¿estas credenciales dan un token?', depth: 6, show: s1, focus: 'src/features/auth/domain/',
-      caption: 'Un tipo, un contrato y un caso de uso. Nada de cookies ni de JWT: la sesión no es una regla de negocio.' },
-    { phase: 1, title: 'Infraestructura: el backend simulado', depth: 6, show: s2, focus: 'src/features/auth/infrastructure/',
-      caption: 'El mock simula al backend y firma el JWT. Con un backend real, un datasource HTTP ocupa su lugar y el dominio no se entera.' },
-    { phase: 1, title: 'DI: se arma la feature', depth: 6, show: s3, focus: 'src/features/auth/di/',
-      caption: 'El Composition Root crea el caso de uso con sus dependencias, igual que en routines.' },
-    { phase: 1, title: 'Presentación: formulario, hook, thunk y acción', depth: 6, show: s4, focus: 'src/features/auth/presentation/hooks/use-auth.ts',
+    { phase: 1, title: 'Dominio: ¿estas credenciales dan un token?', depth: 6, show: s1, focus: A + 'domain/',
+      caption: 'Un tipo, un contrato y los casos de uso. Nada de cookies ni de JWT: la sesión no es una regla de negocio.' },
+    { phase: 1, title: 'Infraestructura: el backend simulado', depth: 6, show: s2, focus: A + 'infrastructure/',
+      caption: 'El mock simula al backend y firma el JWT con el rol y los permisos. Con un backend real, un datasource HTTP ocupa su lugar y el dominio no se entera.' },
+    { phase: 1, title: 'DI: se arma la feature', depth: 6, show: s3, focus: A + 'di/',
+      caption: 'El Composition Root crea los casos de uso con sus dependencias, igual que en routines. Lleva server-only: nunca debe llegar al navegador.' },
+    { phase: 1, title: 'Presentación: formulario, hook, thunk y acción', depth: 6, show: s4, focus: A + 'presentation/hooks/use-auth.ts',
       caption: 'La misma cadena de la semana 12: el formulario llama al hook, el hook despacha el thunk (en el slice) y el thunk invoca la Server Action.' },
-    { phase: 1, title: 'La Server Action: la frontera con el servidor', depth: 6, show: s4, focus: 'src/features/auth/presentation/actions/auth.actions.ts',
-      caption: 'El thunk corre en el navegador; la acción corre en el servidor: pide el token, lo guarda en la cookie httpOnly (que solo el servidor puede escribir) y devuelve el usuario con sus roles.' },
+    { phase: 1, title: 'La Server Action: la frontera con el servidor', depth: 6, show: s4, focus: A + 'presentation/actions/auth.actions.ts',
+      caption: 'El thunk corre en el navegador; la acción corre en el servidor: pide el token, lo guarda en la cookie httpOnly (que solo el servidor puede escribir) y devuelve el usuario con su rol y sus permisos.' },
     { phase: 1, title: 'lib/: la sesión es transversal', depth: 6, show: s5, focus: 'src/lib/',
-      caption: 'session.ts decodifica el token y escribe la cookie; dal.ts entrega la sesión junto al dato. Como src/store/, lo usan todas las features.' },
-    { phase: 1, title: 'proxy.ts y .env.local', depth: 6, show: s6, base: '', focus: 'proxy.ts',
-      caption: 'El proxy es la primera barrera. La variable de entorno solo hace falta cuando exista el backend real.' },
-    { phase: 1, title: 'Quién usa a quién', depth: 6, show: s6, focus: 'src/lib/dal.ts',
-      caption: 'LoginForm usa useAuth; el hook despacha el thunk; el thunk llama a la acción; la acción usa el caso de uso y session.ts. La página usa dal.ts y el proxy usa session.ts. El dominio no conoce a nadie de afuera.' },
+      caption: 'session.ts guarda y borra la cookie; dal.ts lee la sesión en el servidor. Como src/store/, lo usan todas las features.' },
+    { phase: 1, title: 'El layout hidrata la interfaz', depth: 6, show: s5, focus: 'app/layout.tsx',
+      caption: 'Al recargar, Redux nace vacío y el navegador no puede leer la cookie. El layout (servidor) la lee con getSession() y AuthHydrator llena el store.' },
+
+    // ---- Fase 3: lo que agregan las guardias ----
+    { phase: 2, title: 'token.ts: lo que comparten la sesión y el proxy', depth: 6, show: g1, focus: 'src/lib/token.ts',
+      caption: 'El proxy necesita decodificar el token y saber cómo se llama la cookie, pero session.ts depende del servidor. Lo común se separa en un archivo puro.' },
+    { phase: 2, title: 'El DAL exige sesión y permiso', depth: 6, show: g2, focus: 'src/lib/dal.ts',
+      caption: 'requireSession() redirige a /login; requirePermission() además comprueba que el permiso esté en el token. Es el chequeo junto a la página o al dato.' },
+    { phase: 2, title: 'La página se divide en servidor y cliente', depth: 6, show: g3, focus: 'app/(app)/routines/page.tsx',
+      caption: 'La página de servidor exige el permiso y renderiza RoutinesView, la vista de cliente con los hooks. Un componente de cliente no puede llamar al DAL.' },
+    { phase: 2, title: 'Las rutinas pasan por Server Actions', depth: 6, show: g3, focus: R + 'presentation/actions/routines.actions.ts',
+      caption: 'Leer y crear rutinas exigen view_routines y create_routines dentro de cada acción: una acción es un endpoint público, y la página no la protege.' },
+    { phase: 2, title: 'proxy.ts: la primera barrera', depth: 6, show: g4, base: '', focus: 'proxy.ts',
+      caption: 'Redirige antes de renderizar a quien no tiene sesión. Solo mira que haya un token vigente: ni verifica la firma ni decide permisos.' },
+    { phase: 2, title: 'Quién protege qué', depth: 6, show: g4, focus: 'src/lib/dal.ts',
+      caption: 'El proxy comprueba que haya sesión; la página y cada acción comprueban el permiso con el DAL; la interfaz oculta lo que no puedes usar. Ninguna reemplaza al backend, que es quien verifica la firma.' },
   ];
 
   DK.player({
     mount: document.getElementById('app'),
-    ariaLabel: 'Estructura de carpetas del proyecto de rutinas con la feature auth: dominio, infraestructura, DI y presentación, más lib/session.ts, lib/dal.ts, proxy.ts y .env.local',
-    phases: ['Lo que ya tienes', 'Lo que agrega la sesión'],
+    ariaLabel: 'Estructura de carpetas del proyecto de rutinas con la feature auth, la sesión y las guardias: dominio, infraestructura, DI, presentación, lib/session.ts, lib/dal.ts, lib/token.ts, proxy.ts y las acciones de rutinas',
+    phases: ['Lo que ya tienes', 'Lo que agrega la sesión', 'Lo que agregan las guardias'],
     wide: true,
     scene: function (svg, stage) { return DK.files({ stage: stage, items: items }); },
     build: function () { return steps; },
     intro: {
-      kicker: 'Sesión y Clean Architecture',
+      kicker: 'Sesión, guardias y Clean Architecture',
       title: 'Dónde va cada archivo',
-      text: 'Parte del proyecto de las semanas 12 y 13 y mira dónde se ubica cada pieza de la sesión sin romper la regla de dependencia.'
+      text: 'Parte del proyecto de las semanas 12 y 13 y mira dónde se ubica cada pieza de la sesión y de la protección de rutas sin romper la regla de dependencia.'
     }
   });
 })();

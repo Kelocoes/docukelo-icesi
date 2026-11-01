@@ -35,10 +35,10 @@
       'La acción valida los datos y llama a LoginUseCase, que le pide el token al backend (aquí, un mock): un POST con el correo y la contraseña.',
       [msg(S, D, 'POST /auth/login', 'ctl')], { nav: 'En /login', srv: 'LoginUseCase', data: 'Verificando' });
     add(0, '3 · El backend responde con un token',
-      'Si las credenciales son correctas, el backend firma un JWT con el id y el nombre de ana y lo devuelve. Si no, la acción devuelve { ok: false, message } y no crea ninguna cookie.',
+      'Si las credenciales son correctas, el backend firma un JWT con el id, el nombre, el rol y los permisos de ana y lo devuelve. Si no, la acción devuelve { ok: false, message } y no crea ninguna cookie.',
       [msg(D, S, 'accessToken', 'data')], { nav: 'En /login', srv: 'Recibe el token', data: 'Listo' });
     add(0, '4 · El servidor guarda el token en la cookie',
-      'La acción decodifica el token para leer el id, el nombre, los roles y el vencimiento, lo guarda tal cual en una cookie httpOnly y devuelve ese usuario. El navegador guarda la cookie; después el cliente navega con router.replace("/routines").',
+      'La acción decodifica el token para leer el id, el nombre, el rol, los permisos y el vencimiento, lo guarda tal cual en una cookie httpOnly y devuelve ese usuario. El navegador guarda la cookie; después el cliente navega con router.replace("/routines").',
       [msg(S, N, 'Set-Cookie + user', 'ack')], { nav: 'Cookie guardada', srv: 'Token guardado', data: 'Listo' });
 
     if (!opt.sinCookie) {

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qué hace cada capa con los permisos del token</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Los permisos viajan DENTRO del token (cookie httpOnly). La interfaz los lee de Redux (hasPermission) solo para mostrar u ocultar;
+  // el servidor los lee de la cookie (requirePermission) para permitir o impedir. Cuatro casos: Ana abre la pagina, Ana envia un POST a mano,
+  // el administrador crea una rutina y un token con la firma inventada (nadie la verifica en el front).
+  // Fase 1: las piezas. Fase 2: el caso elegido (selector). Verificado con el proyecto del curso.
+  var msg = function (path, label, kind) { return { path: path, label: label, kind: kind }; };
+
+  var nodes = [
+    { id: 'nav', kind: 'actor', icon: 'browser', label: 'Navegador', x: 6, y: 40, w: 96, h: 88 },
+    { id: 'proxy', kind: 'box', icon: 'filter', label: 'proxy.ts', sub: 'hay token vigente', x: 170, y: 40, w: 130, h: 88 },
+    { id: 'page', kind: 'box', icon: 'filecode', label: 'page.tsx', sub: 'exige view_routines', x: 362, y: 40, w: 140, h: 88 },
+    { id: 'ui', kind: 'box', icon: 'classbox', label: 'RoutinesView', sub: 'hasPermission()', x: 564, y: 40, w: 130, h: 88 },
+    { id: 'form', kind: 'box', icon: 'file', label: 'Formulario', sub: 'de crear rutina', x: 756, y: 40, w: 100, h: 88 },
+    { id: 'token', kind: 'box', icon: 'lock', label: 'Cookie session', sub: 'el token', x: 6, y: 190, w: 150, h: 88 },
+    { id: 'action', kind: 'box', icon: 'gear', label: 'createRoutine', sub: 'exige create_routines', x: 362, y: 190, w: 140, h: 88 },
+    { id: 'mock', kind: 'box', icon: 'database', label: 'Mock de rutinas', sub: 'en el servidor', x: 564, y: 190, w: 130, h: 88 },
+    { id: 'deny', kind: 'box', tone: 'err', label: 'No tienes permiso', sub: 'no se crea nada', x: 362, y: 330, w: 140, h: 66 },
+  ];
+
+  var OPTIONS = ['Ana abre la pantalla de rutinas', 'Ana envía un POST a mano para crear', 'El administrador crea una rutina', 'Token con la firma inventada'];
+
+  var P_NP = [102, 84, 170, 84], P_PG = [300, 84, 362, 84], P_GU = [502, 84, 564, 84], P_UF = [694, 84, 756, 84];
+  var P_PA = [250, 128, 372, 200], P_AM = [502, 234, 564, 234], P_AD = [432, 278, 432, 330];
+
+  var TOKEN_ANA = 'view_routines';
+  var TOKEN_ADM = 'view + create';
+
+  function scenario(k) {
+    var S = [];
+    var add = function (title, caption, focus, msgs, sub) { S.push({ phase: 1, title: title, caption: caption, focus: focus, msgs: msgs, sub: sub }); };
+    if (k === 0) {
+      add('1 · Ana inicia sesión', 'El token de ana dice role: USER y permissions: ["view_routines"]. Quedó en una cookie httpOnly.', ['token'], [], { token: TOKEN_ANA });
+      add('2 · Pide /routines', 'Navega a la pantalla de rutinas.', ['nav', 'proxy'], [msg(P_NP, 'GET', 'ctl')]);
+      add('3 · El proxy la deja pasar', 'Solo comprueba que haya un token vigente. No mira los permisos.', ['proxy', 'page'], [msg(P_PG, 'pasa', 'ack')]);
+      add('4 · La página exige view_routines', 'page.tsx llama a requirePermission("view_routines"): el token lo trae, así que renderiza la vista.', ['page', 'ui'], [msg(P_GU, 'renderiza', 'ctl')], { page: 'view_routines: sí' });
+      add('5 · La vista oculta el formulario', 'RoutinesView pregunta hasPermission("create_routines") en el navegador: ana no lo tiene y el formulario no se dibuja. Es solo interfaz: no protege nada.', ['ui', 'form'], [msg(P_UF, 'oculta', 'err')], { ui: 'create_routines: no', form: 'oculto' });
+    } else if (k === 1) {
+      add('1 · Alguien tiene el token de ana', 'Su cookie solo trae permissions: ["view_routines"]. El formulario está oculto, pero eso no la detiene: el POST se puede enviar a mano con curl.', ['token'], [], { token: TOKEN_ANA });
+      add('2 · Envía el POST a la acción', 'Manda el id de createRoutineAction con la cookie de ana. La página no se renderiza.', ['nav', 'proxy'], [msg(P_NP, 'POST + id', 'ctl')]);
+      add('3 · El proxy lo deja pasar', 'El POST va a /routines, que está en el matcher, y el token es válido. El proxy no mira permisos.', ['proxy', 'action'], [msg(P_PA, 'pasa', 'ack')]);
+      add('4 · La acción exige create_routines', 'La primera línea de createRoutineAction llama a requirePermission("create_routines"): lee la cookie en el servidor y no encuentra el permiso.', ['action'], [], { action: 'create_routines: no' });
+      add('5 · Se rechaza antes de crear nada', 'La acción se detiene. Esta es la protección real; ocultar el formulario solo mejoraba la experiencia.', ['action', 'deny'], [msg(P_AD, 'sin permiso', 'err')]);
+    } else if (k === 2) {
+      add('1 · El administrador inicia sesión', 'Su token trae permissions: ["view_routines", "create_routines"].', ['token'], [], { token: TOKEN_ADM });
+      add('2 · Abre /routines', 'El proxy deja pasar y la página comprueba view_routines: lo tiene.', ['nav', 'proxy', 'page'], [msg(P_NP, 'GET', 'ctl'), msg(P_PG, 'pasa', 'ack')], { page: 'view_routines: sí' });
+      add('3 · La vista muestra el formulario', 'hasPermission("create_routines") es verdadero en el navegador, así que el formulario se dibuja.', ['ui', 'form'], [msg(P_GU, 'renderiza', 'ctl'), msg(P_UF, 'muestra', 'ack')], { ui: 'create_routines: sí', form: 'visible' });
+      add('4 · Envía el formulario', 'El thunk llama a createRoutineAction. El proxy deja pasar el POST.', ['nav', 'proxy', 'action'], [msg(P_NP, 'POST', 'ctl'), msg(P_PA, 'pasa', 'ack')]);
+      add('5 · La acción comprueba y crea', 'requirePermission("create_routines") encuentra el permiso en la cookie y la acción guarda la rutina en el mock, que vive en el servidor.', ['action', 'mock'], [msg(P_AM, 'crea', 'data')], { action: 'create_routines: sí', mock: 'rutina guardada' });
+    } else {
+      add('1 · Un token con la firma inventada', 'Alguien arma a mano un token con permissions: ["create_routines"] y una firma cualquiera. Tiene forma de JWT y no ha vencido.', ['token'], [], { token: 'firma falsa' });
+      add('2 · Envía un POST a la acción', 'Va con esa cookie al mismo endpoint de siempre.', ['nav', 'proxy'], [msg(P_NP, 'POST + id', 'ctl')]);
+      add('3 · El proxy solo decodifica', 'No verifica la firma: ve un token con forma válida y vigente, y lo deja pasar.', ['proxy', 'action'], [msg(P_PA, 'pasa', 'ack')]);
+      add('4 · La acción tampoco la verifica', 'requirePermission decodifica y ve create_routines: el permiso «está». Lo que lee el front solo sirve para la interfaz.', ['action'], [], { action: 'create_routines: sí' });
+      add('5 · Se crea la rutina', 'Con un backend real, quien verifica la firma rechazaría el token con 401. El backend simulado del curso no lo hace: por eso las guardias del front no reemplazan al backend.', ['action', 'mock'], [msg(P_AM, 'crea', 'err')], { mock: 'rutina creada' });
+    }
+    return S;
+  }
+
+  function build(opt) {
+    var intro = [
+      { phase: 0, title: 'El token trae el rol y los permisos', focus: ['token'], msgs: [], sub: { token: TOKEN_ANA },
+        caption: 'Al iniciar sesión, el backend firma un JWT con el id, el nombre, el rol y la lista de permisos. El servidor lo guarda en una cookie httpOnly. En este curso: USER trae view_routines y ADMIN trae view_routines y create_routines.' },
+      { phase: 0, title: 'La interfaz los lee para mostrar u ocultar', focus: ['ui', 'form'], msgs: [],
+        caption: 'El navegador no puede leer la cookie: el layout decodifica el token en el servidor y llena Redux. hasPermission() solo decide qué se dibuja. Cualquiera puede alterar lo que ve su propio navegador.' },
+      { phase: 0, title: 'El servidor los lee para permitir o impedir', focus: ['page', 'action'], msgs: [],
+        caption: 'requirePermission() lee la cookie en cada petición, junto a la página y dentro de cada acción. Es lo que impide de verdad. El proxy, en cambio, solo mira que haya un token vigente.' },
+    ];
+    return intro.concat(scenario(opt.caso || 0));
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Cómo usa cada capa los permisos del token: el proxy, la página con requirePermission, la vista con hasPermission y la Server Action, en cuatro casos',
+    phases: ['El token y sus permisos', 'Pruébalo'],
+    wide: true,
+    scene: function (svg) { return DK.layers({ svg: svg, width: 870, height: 420, nodes: nodes, labels: 'smart', trail: 'phase' }); },
+    toggles: [{ key: 'caso', type: 'select', label: 'Caso', options: OPTIONS, value: 0, affectsPhase: 1 }],
+    build: build,
+    intro: { kicker: 'PERMISOS', title: 'Quién decide qué con el token',
+      text: 'Ve dónde viajan los permisos y qué hace cada capa con ellos. Luego elige un caso: ana abriendo la pantalla, ana enviando un POST a mano, el administrador creando una rutina y un token con la firma inventada.' },
+  });
+})();
+</script>
+</body>
+</html>

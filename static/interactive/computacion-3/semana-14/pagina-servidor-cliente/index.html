@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Por qué la página de rutinas se divide en servidor y cliente</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // El DAL usa cookies() y 'server-only': solo existen en el servidor. Los hooks (useRoutines, Redux) solo existen en el navegador.
+  // Una pagina 'use client' no puede llamar al DAL; la solucion es una page.tsx de servidor que exige el permiso y renderiza una vista de cliente.
+  // Fase 1: dos mundos. Fase 2: las dos estructuras (selector). El caso fallido es un error de compilacion de Next.js (server-only).
+  var msg = function (path, label, kind) { return { path: path, label: label, kind: kind }; };
+
+  var nodes = [
+    { id: 'srv', kind: 'outer', label: 'Servidor de Next.js', sub: 'cookies(), server-only, secretos', x: 10, y: 10, w: 390, h: 400 },
+    { id: 'cli', kind: 'outer', label: 'Navegador', sub: 'hooks, Redux, eventos', x: 480, y: 10, w: 360, h: 400 },
+    { id: 'pageS', kind: 'box', icon: 'filecode', label: 'page.tsx', sub: 'Server Component', x: 30, y: 70, w: 140, h: 88 },
+    { id: 'dal', kind: 'box', icon: 'lock', label: 'dal.ts', sub: 'requirePermission', x: 230, y: 210, w: 150, h: 88 },
+    { id: 'err', kind: 'box', tone: 'err', label: 'Error de compilación', sub: 'no se puede importar', x: 230, y: 328, w: 150, h: 66 },
+    { id: 'view', kind: 'box', icon: 'classbox', label: 'RoutinesView', sub: "'use client'", x: 690, y: 70, w: 140, h: 88 },
+    { id: 'pageC', kind: 'box', icon: 'filecode', label: 'page.tsx', sub: "'use client'", x: 490, y: 210, w: 130, h: 88 },
+    { id: 'hook', kind: 'box', icon: 'gear', label: 'useRoutines', sub: 'Redux y thunks', x: 690, y: 210, w: 140, h: 88 },
+  ];
+
+  var OPTIONS = ["Una sola página 'use client'", 'Página de servidor y vista de cliente'];
+
+  var P_CH = [620, 254, 690, 254], P_CD = [490, 254, 380, 254], P_CE = [500, 298, 380, 356];
+  var P_SD = [120, 158, 270, 210], P_SV = [170, 114, 690, 114], P_VH = [760, 158, 760, 210];
+
+  function scenario(k) {
+    var S = [];
+    var add = function (title, caption, focus, msgs, sub) { S.push({ phase: 1, title: title, caption: caption, focus: focus, msgs: msgs, sub: sub }); };
+    if (k === 0) {
+      add('1 · La página usa useRoutines', 'Para leer la lista de rutinas desde Redux, la página necesita hooks: por eso lleva "use client" y corre en el navegador.', ['pageC', 'hook'], [msg(P_CH, 'useRoutines', 'ctl')]);
+      add('2 · Quiere pedir el permiso al DAL', 'Querías proteger la ruta con requirePermission("view_routines") justo en la página.', ['pageC', 'dal'], [msg(P_CD, 'requirePermission', 'ctl')]);
+      add('3 · El DAL no puede ir al navegador', 'dal.ts usa cookies() y "server-only": solo existen en el servidor. Next.js lo detecta al compilar y falla con un error: un componente de cliente no puede importarlo.', ['dal', 'err'], [msg(P_CE, 'import', 'err')], { err: 'server-only en el cliente' });
+      add('4 · Cómo se arregla', 'Se divide en dos: una page.tsx de servidor que exige el permiso, y la vista de cliente con los hooks. Elige la segunda opción en el selector.', ['pageS', 'view'], []);
+    } else {
+      add('1 · page.tsx es de servidor', 'Sin "use client". Puede ser async y llamar al DAL directamente.', ['pageS'], [], { pageS: 'sin use client' });
+      add('2 · Pide el permiso al DAL', 'await requirePermission("view_routines") antes de dibujar nada.', ['pageS', 'dal'], [msg(P_SD, 'requirePermission', 'ctl')]);
+      add('3 · El DAL lee la cookie', 'cookies() solo funciona aquí, en el servidor. Sin sesión redirige a /login; sin permiso lanza un error. Ninguno de los dos llega al navegador.', ['dal'], [], { dal: 'cookie leída: ok' });
+      add('4 · Renderiza la vista de cliente', 'Si todo está bien, page.tsx devuelve <RoutinesView />. El navegador recibe la vista, pero no el token: sigue en la cookie httpOnly.', ['pageS', 'view'], [msg(P_SV, 'renderiza', 'ack')]);
+      add('5 · La vista usa los hooks en el navegador', 'RoutinesView es la página de antes, convertida en componente: usa useRoutines, Redux y los eventos del formulario.', ['view', 'hook'], [msg(P_VH, 'useRoutines', 'ctl')]);
+    }
+    return S;
+  }
+
+  function build(opt) {
+    var intro = [
+      { phase: 0, title: 'El DAL solo existe en el servidor', focus: ['srv', 'dal'], msgs: [],
+        caption: 'Lee la cookie con cookies() y lleva import "server-only". Es lo que permite comprobar la sesión y el permiso sin que el token pase por JavaScript del navegador.' },
+      { phase: 0, title: 'Los hooks solo existen en el navegador', focus: ['cli', 'hook'], msgs: [],
+        caption: 'useRoutines, Redux y los manejadores de eventos necesitan un componente de cliente. Dos mundos distintos: la pregunta es cómo hacer que se hablen.' },
+    ];
+    return intro.concat(scenario(opt.estructura || 0));
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Por qué la página de rutinas se divide: el DAL solo existe en el servidor y los hooks solo en el navegador; una página use client no puede llamar al DAL',
+    phases: ['Dos mundos', 'Pruébalo'],
+    wide: true,
+    scene: function (svg) { return DK.layers({ svg: svg, width: 850, height: 420, nodes: nodes, labels: 'smart', trail: 'phase' }); },
+    toggles: [{ key: 'estructura', type: 'select', label: 'Estructura', options: OPTIONS, value: 0, affectsPhase: 1 }],
+    build: build,
+    intro: { kicker: 'RUTAS PROTEGIDAS', title: 'Servidor y cliente en la misma ruta',
+      text: 'Mira por qué una página con "use client" no puede proteger su propia ruta, y cómo se divide en una página de servidor y una vista de cliente.' },
+  });
+})();
+</script>
+</body>
+</html>

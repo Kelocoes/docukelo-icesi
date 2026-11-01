@@ -18,42 +18,45 @@
 <script src="../../../_shared/dk-player.js"></script>
 <script>
 (function () {
-  // Una ruta protegida, tres puertas: proxy.ts (optimista), el DAL junto al dato (seguro) y la Server Action (otra puerta publica).
+  // Una ruta protegida, tres puertas: proxy.ts (optimista), el DAL junto a la pagina (requirePermission) y la Server Action (otra puerta publica).
   // Fase 1: presentar las piezas. Fase 2: seis peticiones (selector) y donde se detiene cada una.
+  // Verificado con el proyecto del curso: el proxy tambien corre en el POST de una Server Action (la ruta esta en su matcher) y no mira permisos.
   var msg = function (path, label, kind, extra) { var m = { path: path, label: label, kind: kind }; for (var k in extra) m[k] = extra[k]; return m; };
 
   var nodes = [
     { id: 'nav', kind: 'actor', icon: 'browser', label: 'Navegador', x: 6, y: 140, w: 96, h: 88 },
     { id: 'proxy', kind: 'box', icon: 'filter', label: 'proxy.ts', sub: 'lee el token', x: 170, y: 140, w: 124, h: 88 },
     { id: 'page', kind: 'box', icon: 'filecode', label: 'page.tsx', sub: 'Server Component', x: 362, y: 140, w: 124, h: 88 },
-    { id: 'dal', kind: 'box', icon: 'lock', label: 'dal.ts', sub: 'sesión y token', x: 554, y: 140, w: 124, h: 88 },
+    { id: 'dal', kind: 'box', icon: 'lock', label: 'dal.ts', sub: 'sesión y permisos', x: 554, y: 140, w: 124, h: 88 },
     { id: 'data', kind: 'box', icon: 'database', label: 'Backend', sub: 'valida el token', x: 742, y: 140, w: 100, h: 88 },
-    { id: 'action', kind: 'box', icon: 'gear', label: 'Server Action', sub: 'deleteRoutine()', x: 554, y: 290, w: 124, h: 88 },
-    { id: 'rlogin', kind: 'box', tone: 'err', label: '302 redirige', sub: 'rechazada', x: 170, y: 20, w: 124, h: 66 },
-    { id: 'rdal', kind: 'box', tone: 'err', label: 'Acceso denegado', sub: 'redirige o 403', x: 554, y: 20, w: 124, h: 66 },
-    { id: 'ract', kind: 'box', tone: 'err', label: 'No se ejecuta', sub: 'sin sesión', x: 554, y: 430, w: 124, h: 66 },
+    { id: 'action', kind: 'box', icon: 'gear', label: 'Server Action', sub: 'createRoutine()', x: 554, y: 290, w: 124, h: 88 },
+    { id: 'rlogin', kind: 'box', tone: 'err', label: '307 redirige', sub: 'rechazada', x: 170, y: 20, w: 124, h: 66 },
+    { id: 'rdal', kind: 'box', tone: 'err', label: 'Acceso denegado', sub: 'error o redirige', x: 554, y: 20, w: 124, h: 66 },
+    { id: 'ract', kind: 'box', tone: 'err', label: 'No se ejecuta', sub: 'sin permiso', x: 554, y: 430, w: 124, h: 66 },
   ];
 
-  var OPTIONS = ['Sin cookie', 'Rol insuficiente (/admin)', 'Cookie alterada', 'Token válido, rutina de otro usuario', 'POST directo a la acción', 'POST directo, acción SIN chequeo'];
+  var OPTIONS = ['Sin cookie', 'Sin el permiso view_routines', 'Cookie alterada', 'Token válido, rutina de otro usuario', 'POST directo, sin el permiso create_routines', 'POST directo, acción SIN chequeo'];
 
   var P_NP = [102, 184, 170, 184], P_PP = [294, 184, 362, 184], P_PD = [486, 184, 554, 184], P_DD = [678, 184, 742, 184];
   var P_PL = [232, 140, 232, 86], P_DR = [616, 140, 616, 86];
-  var P_NA = [102, 226, 554, 334], P_AD = [616, 290, 616, 228], P_AR = [616, 378, 616, 430], P_AX = [678, 320, 792, 228];
+  var P_PA = [232, 228, 554, 334], P_AD = [616, 290, 616, 228], P_AR = [616, 378, 616, 430], P_AX = [678, 320, 792, 228];
 
   function scenario(k) {
     var S = [];
     var add = function (title, caption, focus, msgs, sub) { S.push({ phase: 1, title: title, caption: caption, focus: focus, msgs: msgs, sub: sub }); };
     if (k === 0) {
       add('1 · Pide /routines sin cookie', 'Otra persona, o un navegador sin sesión, escribe la URL.', ['nav', 'proxy'], [msg(P_NP, 'GET', 'ctl')]);
-      add('2 · El proxy la detiene', 'No hay token: redirige a /login sin renderizar la página ni llamar al backend. Es barato y rápido.', ['proxy', 'rlogin'], [msg(P_PL, 'sin cookie', 'err')], { rlogin: '→ /login' });
+      add('2 · El proxy la detiene', 'No hay token: redirige a /login sin renderizar la página ni llamar al backend. Es barato y rápido. Lo mismo le pasa a un POST sin cookie dirigido a /routines: el proxy también lo intercepta.', ['proxy', 'rlogin'], [msg(P_PL, 'sin cookie', 'err')], { rlogin: '→ /login' });
     } else if (k === 1) {
-      add('1 · Ana (rol USER) pide /admin', 'Ana tiene sesión, pero su token dice roles: [USER].', ['nav', 'proxy'], [msg(P_NP, '/admin', 'ctl')]);
-      add('2 · El proxy mira los roles del token', 'El proxy decodifica el token, ve que /admin exige ADMIN y redirige a Ana a /routines. Es una mejora de experiencia: no verifica nada, y el backend volverá a comprobar el rol en cada petición.', ['proxy', 'rlogin'], [msg(P_PL, 'sin ADMIN', 'err')], { rlogin: '→ /routines' });
+      add('1 · Un usuario sin view_routines pide /routines', 'Su token es válido y vigente, pero su lista de permisos no incluye view_routines.', ['nav', 'proxy'], [msg(P_NP, '/routines', 'ctl')]);
+      add('2 · El proxy la deja pasar', 'El proxy solo comprueba que haya un token vigente: no mira los permisos. La autenticación («¿hay alguien?») está bien.', ['proxy', 'page'], [msg(P_PP, 'pasa', 'ack')]);
+      add('3 · La página exige el permiso', 'page.tsx llama a requirePermission("view_routines"): decodifica el token de la cookie y busca el permiso en su lista.', ['page', 'dal'], [msg(P_PD, 'requirePermission', 'ctl')]);
+      add('4 · El acceso se deniega', 'El permiso no está en el token: el DAL lanza un error antes de entregar nada y la página no se dibuja. Con forbidden() se mostraría una página 403; aquí es un error genérico.', ['dal', 'rdal'], [msg(P_DR, 'sin permiso', 'err')], { rdal: 'No tienes permiso' });
     } else if (k === 2) {
-      add('1 · La cookie llega modificada', 'Alguien cambió el contenido del token (por ejemplo, roles: [ADMIN]) para hacerse pasar por administrador.', ['nav', 'proxy'], [msg(P_NP, 'alterada', 'ctl')]);
+      add('1 · La cookie llega modificada', 'Alguien cambió el contenido del token (por ejemplo, añadió create_routines a permissions) para saltarse una restricción.', ['nav', 'proxy'], [msg(P_NP, 'alterada', 'ctl')]);
       add('2 · El proxy la deja pasar', 'El front no verifica la firma: ve un token bien formado y vigente. Lo que decodifica solo sirve para la interfaz.', ['proxy', 'page'], [msg(P_PP, 'pasa', 'ack')]);
-      add('3 · La página llama al backend', 'La página llama a requireSession() y le pide los datos al backend con el token.', ['page', 'dal'], [msg(P_PD, 'Bearer', 'ctl')]);
-      add('4 · El backend verifica la firma', 'Aquí sí se verifica: la firma ya no coincide con el contenido y el backend rechaza el token.', ['dal', 'data'], [msg(P_DD, 'firma mala', 'ctl')]);
+      add('3 · La página llama al backend', 'La página usa el DAL y le pide los datos al backend con el token.', ['page', 'dal'], [msg(P_PD, 'Bearer', 'ctl')]);
+      add('4 · El backend verifica la firma', 'Aquí sí se verifica: la firma ya no coincide con el contenido y el backend rechaza el token. (El backend simulado del curso no hace esta comprobación: con un backend real, sí.)', ['dal', 'data'], [msg(P_DD, 'firma mala', 'ctl')]);
       add('5 · El acceso se deniega: 401', 'El backend responde 401 y el DAL redirige a /login. El token falso no consiguió ni un dato: la protección real la da el backend.', ['dal', 'rdal'], [msg(P_DR, '401', 'err')], { rdal: 'redirige a /login' });
     } else if (k === 3) {
       add('1 · Sesión válida de luis (id 9)', 'Luis inició sesión y pasa el proxy. Cambia el id de la URL: /routines/12.', ['nav', 'proxy'], [msg(P_NP, 'ruta 12', 'ctl')]);
@@ -62,13 +65,15 @@
       add('4 · La rutina es de ana (id 7)', 'Autenticación (¿quién eres?) no es autorización (¿puedes ver esto?). El backend compara el dueño de la rutina con el id del token.', ['dal', 'data'], [msg(P_DD, 'dueño: 7', 'data')]);
       add('5 · El acceso se deniega: 403', 'El backend responde 403 y el DAL lo muestra. Esa regla vive junto al dato, no en el proxy.', ['dal', 'rdal'], [msg(P_DR, '9 ≠ 7', 'err')], { rdal: '403 forbidden' });
     } else if (k === 4) {
-      add('1 · Un POST directo, sin formulario', 'Alguien con curl envía el id de la acción desde la consola. La página no se renderiza: nada de lo que comprobaste en ella corre.', ['nav', 'action'], [msg(P_NA, 'POST + id', 'ctl')]);
-      add('2 · La acción exige una sesión', 'La primera línea de la acción llama a requireSession(). Cada acción es su propia puerta.', ['action', 'dal'], [msg(P_AD, 'requireSession', 'ctl')]);
-      add('3 · Sin sesión: no se ejecuta', 'La acción se detiene antes de tocar los datos.', ['action', 'ract'], [msg(P_AR, 'sin sesión', 'err')], { ract: '401: no toca datos' });
+      add('1 · Un POST directo, sin formulario', 'Alguien con el token de ana (solo view_routines) envía con curl el id de la acción. La página no se renderiza: nada de lo que comprobaste en ella corre.', ['nav', 'proxy'], [msg(P_NP, 'POST + id', 'ctl')]);
+      add('2 · El proxy lo deja pasar', 'El POST va a /routines, que está en el matcher del proxy, así que pasa por él. El token es válido y el proxy no mira permisos.', ['proxy', 'action'], [msg(P_PA, 'pasa', 'ack')]);
+      add('3 · La acción exige el permiso', 'La primera línea de createRoutineAction llama a requirePermission("create_routines"). Cada acción es su propia puerta.', ['action', 'dal'], [msg(P_AD, 'requirePermission', 'ctl')]);
+      add('4 · Sin el permiso: no se ejecuta', 'La acción se detiene antes de tocar los datos. Ocultar el formulario no habría servido: esta es la protección real.', ['action', 'ract'], [msg(P_AR, 'sin permiso', 'err')], { ract: 'No tienes permiso' });
     } else {
-      add('1 · Un POST directo, sin formulario', 'Igual que antes: el id de la acción enviado desde afuera.', ['nav', 'action'], [msg(P_NA, 'POST + id', 'ctl')]);
-      add('2 · La acción no comprueba nada', 'Alguien pensó «la página ya está protegida». Pero la acción es un endpoint propio, y el proxy solo cubre las rutas de su matcher.', ['action'], []);
-      add('3 · Se borra la rutina de otro', 'Sin sesión ni comprobación del dueño, la acción ejecuta. Es la brecha más común al empezar con Server Actions.', ['action', 'data'], [msg(P_AX, 'delete(12)', 'err')], { data: 'rutina 12 borrada' });
+      add('1 · Un POST directo, sin formulario', 'Igual que antes: el id de la acción enviado desde afuera, con el token de ana.', ['nav', 'proxy'], [msg(P_NP, 'POST + id', 'ctl')]);
+      add('2 · El proxy lo deja pasar', 'Pasa por el proxy y no hay motivo para detenerlo: el token es válido.', ['proxy', 'action'], [msg(P_PA, 'pasa', 'ack')]);
+      add('3 · La acción no comprueba nada', 'Alguien pensó «la página ya está protegida». Pero la acción es un endpoint propio, y el proxy solo comprueba que haya sesión, no permisos.', ['action'], []);
+      add('4 · Se crea una rutina sin permiso', 'Sin comprobar el permiso, la acción ejecuta. Es la brecha más común al empezar con Server Actions.', ['action', 'data'], [msg(P_AX, 'create()', 'err')], { data: 'rutina creada' });
     }
     return S;
   }
@@ -76,9 +81,9 @@
   function build(opt) {
     var intro = [
       { phase: 0, title: 'proxy.ts: la primera barrera', focus: ['proxy', 'nav'], msgs: [],
-        caption: 'Se ejecuta antes de renderizar. Decodifica el token (sin verificar la firma), comprueba que no haya vencido y puede mirar los roles: es rápido pero «optimista». Úsalo para redirigir rutas enteras.' },
-      { phase: 0, title: 'El DAL: el chequeo seguro, junto al dato', focus: ['dal', 'data', 'page'], msgs: [],
-        caption: 'Cada página que lee datos llama a requireSession(), que decodifica el token y entrega el token para llamar al backend; la verificación real y los permisos los decide el backend. No lo pongas solo en el layout: un layout no se vuelve a renderizar en cada navegación.' },
+        caption: 'Se ejecuta antes de renderizar. Decodifica el token (sin verificar la firma) y comprueba que no haya vencido: es rápido pero «optimista». Úsalo para redirigir rutas enteras, no para decidir permisos finos.' },
+      { phase: 0, title: 'El DAL: el chequeo seguro, junto a la página y al dato', focus: ['dal', 'data', 'page'], msgs: [],
+        caption: 'Cada página que lee datos llama a requireSession() o a requirePermission(), que decodifican el token y comprueban la sesión y el permiso; la verificación real de la firma la hace el backend. No lo pongas solo en el layout: un layout no se vuelve a renderizar en cada navegación.' },
       { phase: 0, title: 'La Server Action: otra puerta, también pública', focus: ['action'], msgs: [],
         caption: 'Es un POST que se puede enviar sin pasar por tu página. Verificar la página no la protege: la acción debe exigir la sesión y el permiso por sí misma.' },
     ];
@@ -87,7 +92,7 @@
 
   DK.player({
     mount: document.getElementById('app'),
-    ariaLabel: 'Tres capas de defensa de una ruta protegida en Next.js: proxy.ts, el Data Access Layer y las Server Actions, y dónde se detiene cada tipo de petición',
+    ariaLabel: 'Tres capas de defensa de una ruta protegida en Next.js: proxy.ts, el Data Access Layer con requirePermission y las Server Actions, y dónde se detiene cada tipo de petición',
     phases: ['Las tres puertas', 'Pruébalas'],
     wide: true,
     scene: function (svg) { return DK.layers({ svg: svg, width: 850, height: 510, nodes: nodes, labels: 'smart', trail: 'phase' }); },

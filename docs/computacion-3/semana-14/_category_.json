@@ -1,8 +1,8 @@
 {
-    "label": "S14 - Sesiones y Manejo de Errores",
+    "label": "S14 - Sesiones, Rutas Protegidas y Errores",
     "position": 14,
     "link": {
         "type": "generated-index",
-        "description": "Sesiones con cookies, Server Actions ('use server'), rutas protegidas y manejo de errores en Next.js."
+        "description": "Sesiones con cookies, Server Actions ('use server'), rutas protegidas con proxy, DAL y permisos, y manejo de errores en Next.js."
     }
 }
