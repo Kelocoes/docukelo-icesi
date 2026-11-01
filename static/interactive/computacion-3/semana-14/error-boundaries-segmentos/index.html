@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quién atrapa un error al renderizar</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Las capas de una ruta como rectangulos anidados (de afuera hacia adentro). Un error se lanza en una capa y lo atrapa el error.tsx mas cercano
+  // HACIA AFUERA; un error.tsx no cubre el layout de su propia carpeta. El layout raiz solo lo cubre global-error.tsx.
+  var LEVELS = [
+    'global-error.tsx · si falla el layout raíz',
+    'app/layout.tsx · layout raíz',
+    'app/error.tsx · atrapa lo que tiene dentro',
+    'app/routines/layout.tsx',
+    'app/routines/error.tsx · atrapa lo que tiene dentro',
+    'app/routines/page.tsx',
+  ];
+  var items = [];
+  LEVELS.forEach(function (t, i) {
+    items.push({ id: 'z' + i, type: 'zone', shape: 'round', x: 16 + 20 * i, y: 10 + 30 * i, w: 688 - 40 * i, h: 420 - 60 * i, rx: 14, lx: 30 + 20 * i, ly: 30 + 30 * i, label: t });
+  });
+  items.push({ id: 'res', type: 'tag', x: 360, y: 458, w: 690, text: '—', hidden: true });
+
+  var CASES = [
+    { name: 'En routines/page.tsx', thrown: 5, caught: 4, ghost: -1,
+      res: 'Se muestra routines/error.tsx dentro de los layouts: el layout sigue en pantalla.',
+      why: 'El error.tsx de un segmento envuelve a la página y a los segmentos de abajo: es el más cercano hacia afuera.' },
+    { name: 'En routines/layout.tsx', thrown: 3, caught: 2, ghost: -1,
+      res: 'Lo atrapa app/error.tsx: routines/error.tsx no cubre el layout de su propia carpeta.',
+      why: 'Un error.tsx envuelve lo que está DENTRO de su segmento, no el layout.tsx que está a su lado. Por eso sube un nivel.' },
+    { name: 'En app/layout.tsx (raíz)', thrown: 1, caught: 0, ghost: -1,
+      res: 'Lo atrapa global-error.tsx: reemplaza la página completa y lleva sus propias etiquetas html y body.',
+      why: 'app/error.tsx tampoco cubre el layout de su carpeta. Para el layout raíz existe global-error.tsx.' },
+    { name: 'En routines/error.tsx', thrown: 4, caught: 2, ghost: -1,
+      res: 'Si el propio error.tsx falla, el error sube al error.tsx del nivel superior.',
+      why: 'Un error boundary no se atrapa a sí mismo.' },
+    { name: 'En la página, sin routines/error.tsx', thrown: 5, caught: 2, ghost: 4,
+      res: 'Sin error.tsx en el segmento, el error burbujea hasta el más cercano hacia arriba: app/error.tsx.',
+      why: 'Crear un error.tsx por segmento te deja decidir qué parte de la pantalla se reemplaza.' },
+  ];
+
+  function build(opt) {
+    var c = CASES[opt.caso || 0];
+    var base = {};
+    var thrown = {}, both = {};
+    var tThrow = {}, tBoth = {};
+    tThrow['z' + c.thrown] = LEVELS[c.thrown] + '  ←  lanza el error';
+    tBoth['z' + c.thrown] = tThrow['z' + c.thrown];
+    tBoth['z' + c.caught] = LEVELS[c.caught] + '  ←  lo atrapa';
+    thrown['z' + c.thrown] = 'err';
+    both['z' + c.thrown] = 'err'; both['z' + c.caught] = 'ok';
+    if (c.ghost >= 0) { thrown['z' + c.ghost] = 'ghost'; both['z' + c.ghost] = 'ghost'; }
+    return [
+      { phase: 0, title: 'Las capas de una ruta', focus: ['z1', 'z3', 'z5'],
+        caption: 'Cada carpeta de app/ puede tener un layout.tsx, un error.tsx y una página. Dibujadas de afuera hacia adentro: el layout envuelve al error boundary y este envuelve a la página.' },
+      { phase: 0, title: 'error.tsx atrapa lo que tiene dentro', focus: ['z2', 'z4'],
+        caption: 'Un error.tsx es un error boundary: atrapa los errores de la página y de las rutas de abajo. No cubre el layout.tsx de su propia carpeta, porque el layout está por fuera de él.' },
+      { phase: 1, title: 'El error se lanza: ' + c.name, state: thrown, text: tThrow, focus: ['z' + c.thrown],
+        caption: 'Elige dónde se lanza el error con «Se lanza». El borde naranja marca la capa que falla.' },
+      { phase: 1, title: 'Quién lo atrapa', state: both, focus: ['z' + c.caught], show: ['res'], text: (function () { var t = { res: c.res }; for (var k in tBoth) t[k] = tBoth[k]; return t; })(),
+        caption: c.why },
+    ];
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Quién atrapa un error al renderizar una ruta en Next.js: las capas anidadas global-error, layout raíz, error de app, layout de routines, error de routines y página, y dónde se atrapa un error según dónde se lanza',
+    phases: ['Las capas', 'Un error'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 488, items: items, trail: 'step' }); },
+    toggles: [{ key: 'caso', type: 'select', label: 'Se lanza', options: CASES.map(function (c) { return c.name; }), value: 0, restart: 'first' }],
+    build: build,
+    intro: { kicker: 'ERRORES AL RENDERIZAR', title: 'Qué error.tsx se muestra',
+      text: 'Las capas de una ruta, de afuera hacia adentro. Elige dónde se lanza un error y mira cuál lo atrapa.' },
+  });
+})();
+</script>
+</body>
+</html>

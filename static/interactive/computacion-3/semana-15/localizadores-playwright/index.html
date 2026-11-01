@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cómo encontrar elementos en una prueba</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Los localizadores de Playwright, del mas robusto al mas fragil, cada uno enlazado con el elemento de la pagina que encuentra.
+  // Colores: p2 = los que describen lo que ve el usuario (role, label, placeholder, texto); p5 = el escape (testid); p4 = el CSS fragil.
+  var code = [
+    [['// 1 · Rol y nombre (el preferido)', 'pref']],
+    [["page.getByRole('button', {", 'role']],
+    [["  name: 'Iniciar sesión' })", 'role']],
+    [['', '']],
+    [['// 2 · Etiqueta de un campo', 'pref']],
+    [["page.getByLabel('Correo')", 'label']],
+    [['', '']],
+    [['// 3 · Texto de ayuda', 'pref']],
+    [["page.getByPlaceholder('Buscar rutina')", 'ph']],
+    [['', '']],
+    [['// 4 · Texto visible', 'pref']],
+    [["page.getByText('Bienvenida, ana')", 'text']],
+    [['', '']],
+    [['// 5 · Atributo data-testid', 'pref']],
+    [["page.getByTestId('routine-card')", 'tid']],
+    [['', '']],
+    [['// 6 · CSS: último recurso', 'pref']],
+    [["page.locator(", 'css']],
+    [["  'div.card > button.btn')", 'css']],
+  ];
+
+  var parts = {
+    pref: { label: 'Prioridad', color: 'p1', title: 'Del más robusto al más frágil',
+      text: 'Playwright recomienda localizar los elementos <b>como los percibe un usuario</b>: por su rol, su etiqueta o su texto. Si cambia una clase CSS o la estructura del HTML, esas pruebas siguen pasando.',
+      where: 'A la izquierda: seis formas, en orden de preferencia.' },
+    role: { label: 'getByRole', color: 'p2', title: 'getByRole: rol y nombre accesible',
+      text: 'Busca un elemento por su rol (<code>button</code>, <code>link</code>, <code>heading</code>, <code>textbox</code>) y su nombre. Es la que usa un lector de pantalla: si falla, probablemente tu página tampoco es accesible.',
+      bullets: ['La primera opción para botones, enlaces, títulos y casillas.'],
+      where: 'En pantalla: el botón «Iniciar sesión».' },
+    label: { label: 'getByLabel', color: 'p2', title: 'getByLabel: campos de formulario',
+      text: 'Encuentra el campo asociado a una <code>&lt;label&gt;</code>. Obliga a que tus formularios tengan etiquetas bien conectadas.',
+      where: 'En pantalla: el campo «Correo».' },
+    ph: { label: 'getByPlaceholder', color: 'p2', title: 'getByPlaceholder: sin etiqueta',
+      text: 'Para campos que solo tienen texto de ayuda dentro (como un buscador). Si puedes, mejor agrega una etiqueta y usa <code>getByLabel</code>.',
+      where: 'En pantalla: el buscador.' },
+    text: { label: 'getByText', color: 'p2', title: 'getByText: contenido que se lee',
+      text: 'Encuentra un elemento por el texto que muestra. Sirve para comprobar mensajes, no para encontrar elementos interactivos (para eso, <code>getByRole</code>).',
+      bullets: ['Por defecto busca coincidencias parciales y sin distinguir mayúsculas.'],
+      where: 'En pantalla: el saludo.' },
+    tid: { label: 'getByTestId', color: 'p5', title: 'getByTestId: cuando nada más sirve',
+      text: 'Busca por el atributo <code>data-testid</code> que agregas al componente. No lo ve el usuario, pero tampoco cambia con el texto ni con el diseño.',
+      bullets: ['Úsalo cuando no hay rol ni texto estable (una tarjeta, un contenedor).'],
+      where: 'En pantalla: la tarjeta, que lleva <code>data-testid="routine-card"</code>.' },
+    css: { label: 'CSS', color: 'p4', title: 'locator(css): la más frágil',
+      text: 'Depende de clases y de la estructura del HTML. Un cambio de diseño (de <code>btn</code> a <code>btn-primary</code>, o mover un <code>div</code>) rompe la prueba aunque la aplicación funcione igual.',
+      bullets: ['Úsala solo como último recurso, y con un selector corto.'],
+      where: 'En pantalla: el botón «Eliminar» dentro de la tarjeta.' },
+  };
+
+  function view() {
+    return '' +
+      '<p class="cm-lbl">La página que se prueba</p>' +
+      '<div class="cm-out"><div class="cm-card" style="display:grid;gap:8px">' +
+        '<div class="cm-chip" data-part="text" style="font-weight:700">Bienvenida, ana</div>' +
+        '<div class="cm-chip" data-part="label">Correo: ______________</div>' +
+        '<div class="cm-chip" data-part="ph" style="color:var(--dk-muted)">Buscar rutina…</div>' +
+        '<div class="cm-card" data-part="tid" style="display:grid;gap:6px;border:1.5px solid var(--dk-line);border-radius:10px;padding:8px">' +
+          '<div style="font-weight:700">Rutina: Piernas</div>' +
+          '<div class="cm-chip" data-part="css" style="width:max-content">[ Eliminar ]</div>' +
+        '</div>' +
+        '<div class="cm-chip" data-part="role" style="font-weight:700;width:max-content">[ Iniciar sesión ]</div>' +
+      '</div></div>';
+  }
+
+  var steps = [
+    { phase: 0, title: 'Seis formas de encontrar un elemento', focus: 'pref',
+      caption: 'Pasa el mouse por el código o por la página: se ilumina el elemento que cada línea encuentra.' },
+    { phase: 0, title: 'getByRole: lo preferido', focus: 'role',
+      caption: 'Lo que percibe un usuario o un lector de pantalla.' },
+    { phase: 0, title: 'getByLabel', focus: 'label',
+      caption: 'Para los campos de un formulario.' },
+    { phase: 0, title: 'getByPlaceholder', focus: 'ph',
+      caption: 'Cuando el campo no tiene etiqueta visible.' },
+    { phase: 0, title: 'getByText', focus: 'text',
+      caption: 'Para comprobar el contenido que se muestra.' },
+    { phase: 1, title: 'getByTestId: el atributo de pruebas', focus: 'tid',
+      caption: 'Un identificador que tú agregas cuando no hay nada más estable.' },
+    { phase: 1, title: 'CSS: la más frágil', focus: 'css',
+      caption: 'Si cambia el diseño, la prueba se rompe sin que la aplicación falle.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Localizadores de Playwright en orden de preferencia: getByRole, getByLabel, getByPlaceholder, getByText, getByTestId y CSS, cada uno enlazado con el elemento de la página que encuentra',
+    phases: ['Lo que ve el usuario', 'Los últimos recursos'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.codemap({ stage: stage, file: 'localizadores.ts', filePart: 'pref', code: code, parts: parts, view: view });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Localizadores',
+      title: 'Cómo encontrar un elemento sin romper la prueba',
+      text: 'Seis formas de localizar un elemento, de la más robusta a la más frágil. Recorre cada una o pasa el mouse por el código y por la página.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

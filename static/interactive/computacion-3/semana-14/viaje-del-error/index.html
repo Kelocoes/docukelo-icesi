@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El viaje de un error hasta la pantalla</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // La cadena del login (LoginForm <- useAuth <- thunk <- loginAction <- LoginUseCase) vista de derecha a izquierda: como llega una falla
+  // hasta el mensaje que ve ana. Ninguna de estas fallas llega a error.tsx: el codigo asincrono lo atrapa el thunk, no un error boundary.
+  var msg = function (path, label, kind, extra) { var m = { path: path, label: label, kind: kind }; for (var k in extra) m[k] = extra[k]; return m; };
+  var Y = 165;
+  var nodes = [
+    { id: 'cli', kind: 'outer', label: 'Navegador', sub: 'JavaScript de la página', x: 0, y: 20, w: 560, h: 250 },
+    { id: 'srv', kind: 'outer', label: 'Servidor Next.js', sub: "código con 'use server'", x: 620, y: 20, w: 380, h: 250 },
+    { id: 'form', kind: 'box', icon: 'browser', label: 'LoginForm', sub: 'muestra el mensaje', x: 14, y: 120, w: 170, h: 90 },
+    { id: 'hook', kind: 'box', icon: 'gear', label: 'useAuth()', sub: 'hook fachada', x: 244, y: 120, w: 120, h: 90 },
+    { id: 'thunk', kind: 'box', icon: 'filecode', label: 'loginMutation', sub: 'thunk + slice', x: 424, y: 120, w: 120, h: 90 },
+    { id: 'action', kind: 'box', icon: 'server', label: 'loginAction', sub: 'Server Action', x: 640, y: 120, w: 120, h: 90 },
+    { id: 'uc', kind: 'box', icon: 'classbox', label: 'LoginUseCase', sub: 'dominio', x: 860, y: 120, w: 120, h: 90 },
+  ];
+  var P = {
+    uc_act: [860, Y, 760, Y], act_thunk: [640, Y, 544, Y], thunk_hook: [424, Y, 364, Y], hook_form: [244, Y, 184, Y],
+    thunk_act: [544, Y, 640, Y],
+  };
+
+  var CASES = [
+    { name: 'Credenciales inválidas', kind: 'esperado',
+      what: 'El backend responde 401 y el datasource lo traduce en null: el usuario no existe o la contraseña no coincide. Nadie lanza nada.',
+      path: function () { return [
+        [msg(P.uc_act, 'null', 'err')],
+        [msg(P.act_thunk, '{ ok: false }', 'err')],
+        [msg(P.thunk_hook, 'errorMessage', 'err')],
+        [msg(P.hook_form, 'errorMessage', 'err')]]; },
+      steps: ['El caso de uso responde null', 'La acción lo devuelve como valor', 'El thunk lo convierte en rejectWithValue', 'El hook se lo pasa al formulario'],
+      caps: ['No es un fallo del programa: es una respuesta prevista. No hay excepción.',
+        'La acción devuelve { ok: false, message }. Es un valor: viaja intacto por la red, con su texto.',
+        'El thunk ve ok: false y hace rejectWithValue(message). El slice lo guarda en errorMessage.',
+        'LoginForm lo lee del hook y lo muestra bajo el formulario.'],
+      shown: 'Credenciales inválidas', closing: 'Un error esperado llega con su mensaje exacto porque viajó como valor.' },
+    { name: 'El backend se cae', kind: 'inesperado',
+      what: 'El backend responde con un error 500 y el datasource lanza una excepción dentro del servidor: nadie la previó.',
+      path: function () { return [
+        [msg(P.uc_act, 'throw', 'err')],
+        [msg(P.act_thunk, 'error genérico', 'err')],
+        [msg(P.thunk_hook, 'errorMessage', 'err')],
+        [msg(P.hook_form, 'errorMessage', 'err')]]; },
+      steps: ['El caso de uso lanza una excepción', 'La acción falla y la respuesta es un error', 'El thunk la atrapa', 'El formulario muestra un mensaje genérico'],
+      caps: ['Es un bug o una falla externa. La acción no la atrapa, así que la excepción sube.',
+        'Next.js responde con un error. En producción el mensaje original se oculta (solo viaja un identificador, el digest): el cliente no ve el texto de la excepción.',
+        'La llamada del thunk falla. Su try/catch lo atrapa y hace rejectWithValue con un texto propio. Aunque no tuviera try/catch, createAsyncThunk atrapa las excepciones.',
+        'ana ve el mensaje genérico que escribiste. El error real queda en los registros del servidor.'],
+      shown: 'No se pudo iniciar sesión', closing: 'Un error inesperado llega sin detalles, a propósito: no se le muestra a ana el texto de una excepción interna.' },
+    { name: 'Se cae la red', kind: 'inesperado',
+      what: 'La petición no llega al servidor: ana perdió la conexión.',
+      path: function () { return [
+        [msg(P.thunk_act, 'POST + id', 'ctl', { lost: true })],
+        [msg(P.thunk_hook, 'errorMessage', 'err')],
+        [msg(P.hook_form, 'errorMessage', 'err')]]; },
+      steps: ['El POST no llega', 'El thunk atrapa el fallo', 'El formulario muestra el mensaje'],
+      caps: ['La llamada a la acción nunca llega al servidor: ni el caso de uso ni el backend se ejecutan.',
+        'La promesa del thunk se rechaza y el try/catch lo atrapa: la misma ruta que cualquier otro error inesperado.',
+        'ana ve el mismo mensaje genérico. Lo que sí cambia es el registro: esta vez no hay nada en el servidor.'],
+      shown: 'No se pudo iniciar sesión', closing: 'Dos causas distintas, un mismo camino: por eso el thunk es el lugar de atrapar lo inesperado.' },
+  ];
+
+  function build(opt) {
+    var c = CASES[opt.caso || 0], hops = c.path();
+    var st = [
+      { phase: 0, title: 'La cadena del login', msgs: [], focus: ['cli', 'srv'],
+        caption: 'Las mismas piezas del login. Una falla puede ocurrir en cualquiera, y tiene que llegar a la pantalla de ana como un mensaje que pueda leer.' },
+      { phase: 0, title: 'Dos zonas, una frontera', msgs: [], focus: ['thunk', 'action'],
+        caption: "Entre el thunk y la acción se cruza del navegador al servidor. Ahí un error esperado debe viajar como valor, y uno inesperado se atrapa con try/catch." },
+      { phase: 1, title: 'Qué falla: ' + c.name, msgs: [], focus: c.name === 'Se cae la red' ? ['thunk'] : ['uc'], sub: { form: 'espera la respuesta' },
+        caption: c.what + ' Es un error ' + c.kind + '. Elige otro caso con «Qué falla».' },
+    ];
+    hops.forEach(function (m, i) {
+      var from = i, nodesF = [];
+      st.push({ phase: 1, title: c.steps[i], msgs: m, focus: i === hops.length - 1 ? ['form'] : [], sub: i === hops.length - 1 ? { form: c.shown } : { form: 'espera la respuesta' }, caption: c.caps[i] });
+    });
+    st.push({ phase: 1, title: 'Lo que ve ana', msgs: [], focus: ['form'], sub: { form: c.shown }, caption: c.closing + ' En ningún caso llegó a error.tsx: el código asíncrono lo atrapa el thunk, no un error boundary.' });
+    return st;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'El viaje de un error en el login: credenciales inválidas, backend caído y red caída, desde el caso de uso hasta el mensaje en LoginForm, pasando por la Server Action, el thunk, el slice y el hook',
+    phases: ['La cadena', 'Una falla'],
+    wide: true,
+    scene: function (svg) { return DK.layers({ svg: svg, width: 1000, height: 290, nodes: nodes, labels: 'smart' }); },
+    toggles: [{ key: 'caso', type: 'select', label: 'Qué falla', options: CASES.map(function (c) { return c.name; }), value: 0, restart: 'first' }],
+    build: build,
+    intro: { kicker: 'ERRORES EN EL LOGIN', title: 'Cómo llega una falla a la pantalla',
+      text: 'La cadena de tu login, con tres fallas distintas. Mira dónde se atrapa cada una y qué texto ve ana.' },
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estructura de un proyecto con Playwright</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-files.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Lo que genera `npm init playwright@latest` (eligiendo la carpeta e2e, GitHub Actions y los navegadores) y la organizacion propuesta.
+  var items = [
+    { path: '.github/', edit: 'never', purpose: 'Solo aparece si aceptas el flujo de GitHub Actions en el asistente.' },
+    { path: '.github/workflows/', edit: 'never', purpose: 'Los flujos de trabajo de GitHub Actions.' },
+    { path: '.github/workflows/playwright.yml', edit: 'sometimes', purpose: 'Ejecuta las pruebas en cada push y pull request.',
+      points: ['Instala las dependencias y los navegadores y corre <code>npx playwright test</code>.', 'Sube el reporte HTML como un artefacto que puedes descargar.', 'Para una aplicación Next.js, el <code>webServer</code> de la configuración levanta el servidor dentro del flujo.'],
+      codeTitle: 'playwright.yml (resumido)', code: 'steps:\n  - uses: actions/checkout@v4\n  - uses: actions/setup-node@v4\n  - run: npm ci\n  - run: npx playwright install --with-deps\n  - run: npx playwright test\n  - uses: actions/upload-artifact@v4\n    if: ${{ !cancelled() }}\n    with:\n      name: playwright-report\n      path: playwright-report/' },
+    { path: 'e2e/', edit: 'always', purpose: 'Tus pruebas end-to-end. El asistente pregunta dónde ponerlas: elige <code>e2e</code> para no confundirla con pruebas unitarias.',
+      points: ['Fuera de <code>app/</code> y de <code>src/</code>: así Next.js no las trata como rutas ni las incluye en el build.', 'Los archivos terminan en <code>.spec.ts</code> (o <code>.test.ts</code>): así los encuentra Playwright.'] },
+    { path: 'e2e/example.spec.ts', edit: 'sometimes', purpose: 'Un ejemplo que prueba el sitio de playwright.dev.',
+      points: ['Sirve para comprobar que la instalación funciona.', 'Bórralo cuando escribas tus propias pruebas.'],
+      codeTitle: 'example.spec.ts (resumido)', code: "import { test, expect } from '@playwright/test'\n\ntest('has title', async ({ page }) => {\n  await page.goto('https://playwright.dev/')\n  await expect(page).toHaveTitle(/Playwright/)\n})" },
+    { path: 'tests-examples/', edit: 'never', purpose: 'Ejemplos más completos (una aplicación de tareas).' },
+    { path: 'tests-examples/demo-todo-app.spec.ts', edit: 'never', purpose: 'Una prueba larga con muchas formas de localizar y comprobar.',
+      points: ['Úsala como lectura; no la ejecutes en tu CI.', 'Bórrala cuando ya no la necesites.'] },
+    { path: '.gitignore', edit: 'sometimes', purpose: 'El instalador agrega las carpetas que genera Playwright.',
+      points: ['Agrega a mano <code>/playwright/.auth/</code>: ahí se guarda la sesión de pruebas, con cookies reales.'],
+      codeTitle: '.gitignore (lo que se agrega)', code: '/test-results/\n/playwright-report/\n/blob-report/\n/playwright/.cache/\n/playwright/.auth/' },
+    { path: 'package.json', edit: 'sometimes', purpose: 'Se agrega <code>@playwright/test</code> como dependencia de desarrollo.',
+      points: ['Conviene agregar scripts para no recordar los comandos.'],
+      codeTitle: 'package.json (scripts)', code: '"scripts": {\n  "test:e2e": "playwright test",\n  "test:e2e:ui": "playwright test --ui"\n}' },
+    { path: 'playwright.config.ts', edit: 'always', purpose: 'La configuración de todas las pruebas: dónde están, qué navegadores y cómo levantar la aplicación.',
+      points: ['<code>testDir</code>: la carpeta de pruebas.', '<code>use.baseURL</code>: permite escribir <code>page.goto("/login")</code>.', '<code>webServer</code>: arranca tu aplicación antes de las pruebas.', '<code>projects</code>: un navegador o dispositivo por proyecto.'],
+      codeTitle: 'playwright.config.ts (resumido)', code: "import { defineConfig, devices } from '@playwright/test'\n\nexport default defineConfig({\n  testDir: './e2e',\n  retries: process.env.CI ? 2 : 0,\n  use: { baseURL: 'http://localhost:3000', trace: 'on-first-retry' },\n  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],\n  webServer: {\n    command: 'npm run build && npm run start',\n    url: 'http://localhost:3000',\n    reuseExistingServer: !process.env.CI,\n  },\n})" },
+
+    // ---- organizacion propuesta (fase 2) ----
+    { path: 'e2e/pages/', isNew: true, hidden: true, edit: 'always', purpose: 'Page objects: una clase por pantalla que guarda sus localizadores y acciones.',
+      points: ['Si cambia el texto de un botón, lo corriges en un solo lugar.', 'Las pruebas se leen como historias: <code>await login.enter(email, password)</code>.'] },
+    { path: 'e2e/pages/login.page.ts', isNew: true, hidden: true, edit: 'always', purpose: 'La pantalla de inicio de sesión.',
+      codeTitle: 'login.page.ts', code: "import type { Page } from '@playwright/test'\n\nexport class LoginPage {\n  constructor(private page: Page) {}\n\n  async goto() { await this.page.goto('/login') }\n\n  async enter(email: string, password: string) {\n    await this.page.getByLabel('Correo').fill(email)\n    await this.page.getByLabel('Contraseña').fill(password)\n    await this.page.getByRole('button', { name: 'Iniciar sesión' }).click()\n  }\n}" },
+    { path: 'e2e/auth.setup.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Inicia sesión una sola vez y guarda la sesión en un archivo para reutilizarla.',
+      points: ['Se ejecuta antes que las demás pruebas (es un proyecto de <code>setup</code>).', 'Ver la pieza «Reutilizar la sesión».'],
+      codeTitle: 'auth.setup.ts', code: "import { test as setup, expect } from '@playwright/test'\n\nconst authFile = 'playwright/.auth/user.json'\n\nsetup('autenticar', async ({ page }) => {\n  await page.goto('/login')\n  await page.getByLabel('Correo').fill('ana@icesi.edu.co')\n  await page.getByLabel('Contraseña').fill('123456')\n  await page.getByRole('button', { name: 'Iniciar sesión' }).click()\n  await expect(page).toHaveURL('/routines')\n  await page.context().storageState({ path: authFile })\n})" },
+    { path: 'e2e/login.spec.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Las pruebas del inicio de sesión: éxito, credenciales incorrectas y ruta protegida.',
+      points: ['Estas pruebas empiezan SIN sesión, para poder probar el login.'] },
+    { path: 'e2e/routines.spec.ts', isNew: true, hidden: true, edit: 'always', purpose: 'Las pruebas de la parte protegida: empiezan ya autenticadas.',
+      points: ['Usan la sesión guardada por <code>auth.setup.ts</code>.'] },
+    { path: 'playwright/', isNew: true, hidden: true, edit: 'never', purpose: 'Archivos que Playwright guarda entre ejecuciones.' },
+    { path: 'playwright/.auth/', isNew: true, hidden: true, edit: 'never', purpose: 'La sesión de pruebas.',
+      points: ['<b>Se ignora en Git</b>: contiene cookies de sesión.'] },
+    { path: 'playwright/.auth/user.json', isNew: true, hidden: true, edit: 'never', purpose: 'Las cookies (y el almacenamiento local) del usuario autenticado, en un JSON.',
+      points: ['Incluye cookies <code>httpOnly</code>: Playwright puede guardarlas aunque JavaScript no las lea.', 'Se vuelve a crear en cada ejecución.'],
+      codeTitle: 'user.json (resumido)', code: '{\n  "cookies": [{\n    "name": "session",\n    "value": "eyJhbGciOi…",\n    "httpOnly": true,\n    "sameSite": "Lax"\n  }],\n  "origins": []\n}' },
+    { path: 'playwright-report/', isNew: true, hidden: true, edit: 'never', purpose: 'El reporte HTML de la última ejecución.',
+      points: ['Se abre con <code>npx playwright show-report</code>.', 'Se ignora en Git.'] },
+    { path: 'test-results/', isNew: true, hidden: true, edit: 'never', purpose: 'Capturas, videos y trazas de las pruebas que fallaron.',
+      points: ['Se ignora en Git. La traza se abre con <code>npx playwright show-trace</code>.'] },
+  ];
+
+  var P2 = ['e2e/pages/', 'e2e/pages/login.page.ts'], SETUP = ['e2e/auth.setup.ts', 'playwright/', 'playwright/.auth/', 'playwright/.auth/user.json'];
+  var SPECS = ['e2e/login.spec.ts', 'e2e/routines.spec.ts'], OUT = ['playwright-report/', 'test-results/'];
+  var steps = [
+    { phase: 0, title: 'Lo que genera el instalador', depth: 3,
+      caption: 'Resultado de npm init playwright@latest, eligiendo la carpeta e2e. Pasa el mouse o toca cada línea para ver su función.' },
+    { phase: 0, title: 'playwright.config.ts: el centro', focus: 'playwright.config.ts', depth: 3,
+      caption: 'Dónde están las pruebas, con qué navegadores y cómo arrancar tu aplicación.' },
+    { phase: 0, title: 'e2e/: tus pruebas', focus: 'e2e/', depth: 3,
+      caption: 'Fuera de app/ y src/: Next.js no las toca y Playwright las encuentra por el sufijo .spec.ts.' },
+    { phase: 0, title: '.gitignore: lo que no se sube', focus: '.gitignore', depth: 3,
+      caption: 'Reportes y resultados se regeneran; la sesión de pruebas contiene cookies reales.' },
+
+    { phase: 1, title: 'Tus pruebas, por pantalla y por flujo', depth: 3, show: SPECS, focus: 'e2e/login.spec.ts',
+      caption: 'Un archivo por funcionalidad: login.spec.ts empieza sin sesión, routines.spec.ts ya con ella.' },
+    { phase: 1, title: 'Page objects: una clase por pantalla', depth: 3, show: SPECS.concat(P2), focus: 'e2e/pages/login.page.ts',
+      caption: 'Guardan los localizadores en un solo lugar: si cambia un texto, corriges una línea.' },
+    { phase: 1, title: 'auth.setup.ts: una sola vez', depth: 3, show: SPECS.concat(P2, SETUP), focus: 'e2e/auth.setup.ts',
+      caption: 'Inicia sesión una vez y guarda la sesión en playwright/.auth/user.json para el resto.' },
+    { phase: 1, title: 'Lo que se genera al correr', depth: 3, show: SPECS.concat(P2, SETUP, OUT), focus: 'test-results/',
+      caption: 'Reporte, capturas y trazas. Se ignoran en Git porque se regeneran.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Estructura de carpetas de un proyecto con Playwright: lo que genera el instalador y una organización propuesta con e2e, page objects, auth.setup.ts y la sesión de pruebas',
+    phases: ['Lo que genera el instalador', 'Cómo organizarlo'],
+    wide: true,
+    scene: function (svg, stage) { return DK.files({ stage: stage, items: items }); },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Playwright en el proyecto',
+      title: 'Dónde va cada archivo',
+      text: 'La salida de tree después de instalar Playwright y una organización propuesta para tus pruebas.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

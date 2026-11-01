@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reutilizar la sesión en las pruebas</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Tres pruebas de la parte protegida. Sin storageState cada una inicia sesion (3 logins); con storageState un proyecto "setup"
+  // inicia sesion una vez, guarda las cookies en un archivo y las demas pruebas arrancan ya autenticadas (1 login).
+  var CODE = [
+    '// playwright.config.ts',                                    // 1
+    'projects: [',                                                 // 2
+    "  { name: 'setup', testMatch: /auth\\.setup\\.ts/ },",         // 3
+    '  {',                                                         // 4
+    "    name: 'chromium',",                                       // 5
+    "    use: { storageState: 'playwright/.auth/user.json' },",    // 6
+    "    dependencies: ['setup'],",                                // 7
+    '  },',                                                        // 8
+    '],',                                                          // 9
+    '',                                                            // 10
+    '// auth.setup.ts',                                            // 11
+    "await page.getByRole('button', { name: 'Iniciar sesión' }).click()", // 12
+    "await page.context().storageState({ path: authFile })",      // 13
+  ].join('\n');
+
+  var items = [
+    { id: 't1', type: 'node', icon: 'flask', x: 70, y: 70, size: 46, label: 'rutinas.spec', sub: 'ver la lista' },
+    { id: 't2', type: 'node', icon: 'flask', x: 70, y: 185, size: 46, label: 'crear.spec', sub: 'crear una rutina' },
+    { id: 't3', type: 'node', icon: 'flask', x: 70, y: 300, size: 46, label: 'perfil.spec', sub: 'ver el perfil' },
+    { id: 'app', type: 'node', icon: 'server', x: 640, y: 185, size: 56, label: 'La aplicación', sub: 'Next.js' },
+    { id: 'setup', type: 'node', icon: 'terminal', x: 330, y: 70, size: 46, label: 'auth.setup.ts', sub: 'se ejecuta primero', hidden: true },
+    { id: 'file', type: 'node', icon: 'database', x: 330, y: 300, size: 46, label: 'user.json', sub: 'cookies de la sesión', hidden: true },
+    { id: 'n', type: 'tag', x: 360, y: 24, w: 230, text: 'inicios de sesión: 0' },
+  ];
+
+  var L = function (from, to, kind, label, extra) { var l = { from: from, to: to, kind: kind, label: label }; for (var k in extra) l[k] = extra[k]; return l; };
+
+  var steps = [
+    { phase: 0, title: 'Cada prueba empieza desde cero', focus: ['t1', 't2', 't3'], text: { n: 'inicios de sesión: 0' },
+      caption: 'Un test() recibe un navegador limpio, sin cookies. Para probar la parte protegida, cada prueba tiene que iniciar sesión antes.' },
+    { phase: 1, title: 'La primera inicia sesión', focus: ['t1', 'app'], text: { n: 'inicios de sesión: 1' }, state: { n: 'warn' },
+      links: [L('t1', 'app', 'ctl', 'login')],
+      caption: 'Abre /login, llena el formulario y espera la redirección.' },
+    { phase: 1, title: 'La segunda también', focus: ['t2', 'app'], text: { n: 'inicios de sesión: 2' }, state: { n: 'warn' },
+      links: [L('t1', 'app', 'dep', '', { curve: -10 }), L('t2', 'app', 'ctl', 'login')],
+      caption: 'Repite el mismo recorrido, aunque no es lo que quiere probar.' },
+    { phase: 1, title: 'Y la tercera', focus: ['t3', 'app'], text: { n: 'inicios de sesión: 3' }, state: { n: 'err' },
+      links: [L('t3', 'app', 'ctl', 'login')],
+      caption: 'Con cien pruebas serían cien inicios de sesión: segundos de más en cada ejecución, y cien oportunidades de que el login falle por algo ajeno a la prueba.' },
+
+    { phase: 2, title: 'Un proyecto «setup» inicia sesión una vez', focus: ['setup', 'app'], show: ['setup'], text: { n: 'inicios de sesión: 1' }, state: { n: 'ok' }, code: [2, 3, 11, 12],
+      links: [L('setup', 'app', 'ctl', 'login')],
+      caption: 'En la configuración, un proyecto con auth.setup.ts corre antes que todos los demás.' },
+    { phase: 2, title: 'Guarda las cookies en un archivo', focus: ['setup', 'file', 'app'], show: ['setup', 'file'], text: { n: 'inicios de sesión: 1' }, state: { n: 'ok' }, code: [13],
+      links: [L('app', 'setup', 'data', 'Set-Cookie', { curve: 20 }), L('setup', 'file', 'ack', 'storageState')],
+      caption: 'storageState guarda las cookies del navegador, también la cookie httpOnly que JavaScript no puede leer, en playwright/.auth/user.json.' },
+    { phase: 2, title: 'Las pruebas arrancan ya autenticadas', focus: ['t1', 't2', 't3', 'file'], show: ['setup', 'file'], text: { n: 'inicios de sesión: 1' }, state: { n: 'ok' }, code: [4, 5, 6, 7],
+      links: [L('file', 't1', 'dep', 'carga', { curve: 18 }), L('file', 't2', 'dep', '', { curve: 8 }), L('file', 't3', 'dep', '')],
+      caption: 'Cada prueba carga ese archivo en su navegador nuevo: dependencies hace que el setup corra primero, y storageState le da su sesión.' },
+    { phase: 2, title: 'Un solo inicio de sesión', focus: ['t1', 't2', 't3', 'app'], show: ['setup', 'file'], text: { n: 'inicios de sesión: 1' }, state: { n: 'ok' },
+      links: [L('t1', 'app', 'ack', 'GET /routines', { curve: 12 }), L('t2', 'app', 'ack', '', { curve: 2 }), L('t3', 'app', 'ack', '', { curve: -10 })],
+      caption: 'Cada prueba pide su página protegida con la cookie y entra directo. Las pruebas del propio login sí deben empezar sin sesión: pueden limpiar el storageState.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Reutilizar la sesión en las pruebas de Playwright: sin storageState cada prueba inicia sesión; con un proyecto setup y storageState se inicia sesión una sola vez',
+    phases: ['El problema', 'Sin reutilizar', 'Con storageState'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 370, items: items, trail: 'phase' }); },
+    code: { title: 'playwright.config.ts y auth.setup.ts', text: CODE },
+    build: function () { return steps; },
+    intro: { kicker: 'AUTENTICACIÓN EN PRUEBAS', title: 'Iniciar sesión una sola vez',
+      text: 'Tres pruebas de la parte protegida de la aplicación. Compara iniciar sesión en cada una con guardar la sesión una vez y reutilizarla.' },
+  });
+})();
+</script>
+</body>
+</html>

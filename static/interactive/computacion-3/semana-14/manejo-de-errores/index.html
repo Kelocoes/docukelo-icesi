@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manejo de errores en Next.js</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Dos clases de error segun la guia oficial: los ESPERADOS (validacion, credenciales) se devuelven como valor; los INESPERADOS
+  // (bugs, backend caido) se lanzan y los atrapa un error boundary. Hay ademas helpers que lanzan a proposito (redirect,
+  // notFound, unauthorized, forbidden) y un punto ciego: los event handlers no los atrapa ningun boundary.
+  var CASES = [
+    { name: 'Contraseña incorrecta', kind: 'ok', where: 'Server Action', wIcon: 'gear', how: 'return { ok: false }', hIcon: 'chat',
+      dest: 'El formulario', dIcon: 'browser', dSub: 'state.auth.errorMessage', tag: 'esperado',
+      cap: 'Es un error previsto: la acción lo devuelve como valor, el thunk lo convierte en rejectWithValue y el slice lo guarda en errorMessage. El formulario lo muestra y el usuario sigue en la pantalla.',
+      code: ['// auth.actions.ts', 'const tokens = await authContainer.login.execute(email, password)', 'if (!tokens) {', "  return { ok: false, message: 'Credenciales inválidas' }", '}', '', '// auth.slice.ts (thunk)', 'if (!result.ok) return rejectWithValue(result.message)'],
+      hl: [3, 4, 5, 8], tip: 'No uses throw para esto: en producción Next.js oculta el mensaje de un error lanzado en el servidor y el usuario vería un texto genérico.', tipHl: [4] },
+    { name: 'El backend se cae', kind: 'err', where: 'Página (Server Component)', wIcon: 'filecode', how: 'throw (error inesperado)', hIcon: 'bell',
+      dest: 'error.tsx', dIcon: 'browser', dSub: 'error boundary + retry()', tag: 'inesperado',
+      cap: 'Es un bug o una falla externa: nadie la previó. Si ocurre mientras se renderiza una página, se lanza y el error boundary más cercano muestra error.tsx con un botón para reintentar.',
+      code: ['// app/routines/error.tsx', "'use client'", '', 'export default function Error({ error, retry }) {', '  return (', '    <button onClick={() => retry()}>Reintentar</button>', '  )', '}'],
+      hl: [4, 5, 6], tip: 'error.tsx debe ser un componente de cliente. Una acción llamada desde un thunk es código asíncrono: el thunk la atrapa y queda en errorMessage; ningún boundary la ve.', tipHl: [2, 4] },
+    { name: 'La sesión venció', kind: 'ok', where: 'Página (Server Component)', wIcon: 'filecode', how: "redirect('/login')", hIcon: 'chain',
+      dest: '/login', dIcon: 'browser', dSub: 'nueva petición', tag: 'control de flujo',
+      cap: 'requireSession() no encuentra una sesión válida y redirige. redirect() lanza una excepción especial que Next.js entiende: el código de después no se ejecuta.',
+      code: ['export async function requireSession() {', '  const token = (await cookies()).get("session")?.value', '  const payload = decodeToken(token)', '  if (!payload) {', "    redirect('/login')", '  }', '  return { userId: payload.sub, token }', '}'],
+      hl: [4, 5, 6], tip: 'Como redirect() lanza una excepción, NO lo metas dentro de un try/catch: el catch lo tragaría y no habría redirección.', tipHl: [5] },
+    { name: 'Rutina de otro usuario', kind: 'ok', where: 'DAL / página', wIcon: 'lock', how: 'forbidden() / unauthorized()', hIcon: 'chain',
+      dest: 'forbidden.tsx', dIcon: 'browser', dSub: 'estado 403', tag: 'experimental',
+      cap: 'forbidden() (403, hay sesión pero no permiso) y unauthorized() (401, no hay sesión) muestran su archivo de convención. Requieren activar experimental.authInterrupts en next.config.',
+      code: ['// next.config.ts', 'experimental: { authInterrupts: true }', '', '// dal.ts', 'const routine = await datasource.find(id)', 'if (routine.ownerId !== userId) {', '  forbidden()', '}'],
+      hl: [6, 7, 8], tip: 'Como redirect(), forbidden() lanza una excepción: no la envuelvas en try/catch. Si activas el flag, crea app/forbidden.tsx.', tipHl: [1, 2] },
+    { name: 'La rutina no existe', kind: 'ok', where: 'Página', wIcon: 'filecode', how: 'notFound()', hIcon: 'chain',
+      dest: 'not-found.tsx', dIcon: 'browser', dSub: 'estado 404', tag: 'control de flujo',
+      cap: 'Un recurso que no existe es esperado: no es un bug. notFound() lanza una excepción que Next.js convierte en la página not-found.tsx del segmento.',
+      code: ['export default async function Page({ params }) {', '  const { id } = await params', '  const routine = await getRoutine(id)', '  if (!routine) {', '    notFound()', '  }', '  return <RoutineView routine={routine} />', '}'],
+      hl: [4, 5, 6], tip: 'Crea app/routines/[id]/not-found.tsx para personalizar el mensaje.', tipHl: [5] },
+    { name: 'Falla un thunk o un onClick', kind: 'trap', where: 'Thunk o event handler', wIcon: 'browser', how: 'throw sin atrapar', hIcon: 'bell',
+      dest: 'Nadie lo atrapa', dIcon: 'cross', dSub: 'el error boundary no lo ve', tag: 'punto ciego',
+      cap: 'Los error boundaries no atrapan errores de event handlers ni de código asíncrono. Por eso un thunk usa try/catch y deja el error en el estado para que la interfaz lo muestre.',
+      code: ['export const loginMutation = createAsyncThunk(', '  "auth/login",', '  async (p, { rejectWithValue }) => {', '    try {', '      return (await loginAction(p.email, p.password)).user', '    } catch {', '      return rejectWithValue("No se pudo iniciar sesión")', '    }'],
+      hl: [4, 5, 6, 7, 8], tip: 'Lo mismo vale para un onClick con useState: try/catch y guardar el error. La excepción: dentro de startTransition los errores sí suben al error boundary más cercano.', tipHl: [] },
+  ];
+
+  var items = [
+    { id: 'zone', type: 'zone', shape: 'round', x: 16, y: 150, w: 688, h: 96, rx: 18 },
+    { id: 'o', type: 'node', icon: 'gear', x: 110, y: 200, size: 56, label: 'Server Action', sub: 'dónde ocurre' },
+    { id: 'm', type: 'node', icon: 'chat', x: 360, y: 200, size: 56, label: 'return { message }', sub: 'cómo se señala' },
+    { id: 'd', type: 'node', icon: 'browser', x: 610, y: 200, size: 56, label: 'El formulario', sub: 'lo que ve el usuario' },
+    { id: 'kind', type: 'tag', x: 360, y: 90, w: 240, text: 'esperado' },
+  ];
+
+  function build(opt) {
+    var c = CASES[opt.caso || 0];
+    var st = c.kind === 'err' ? 'err' : c.kind === 'trap' ? 'warn' : 'ok';
+    var fig = {
+      focus: ['o', 'm', 'd'],
+      text: { o: c.where, m: c.how, d: c.dest, kind: c.tag }, sub: { d: c.dSub },
+      state: (function () { var s = { kind: st }; if (c.kind === 'trap') s.d = 'err'; return s; })(),
+      links: [{ from: 'o', to: 'm', kind: c.kind === 'err' ? 'err' : 'ctl', label: '' }, { from: 'm', to: 'd', kind: c.kind === 'ok' ? 'ack' : 'err', label: '' }],
+    };
+    var step = function (title, code, caption) { var x = { phase: 1, title: title, code: code, caption: caption }; for (var k in fig) x[k] = fig[k]; return x; };
+    return [
+      { phase: 0, title: 'Los errores esperados se devuelven', focus: ['kind'], text: { kind: 'esperado = valor de retorno' }, state: { kind: 'ok' },
+        caption: 'Validar un formulario o comprobar credenciales son fallas previstas: la Server Action las devuelve como un objeto y no usa try/catch.' },
+      { phase: 0, title: 'Los inesperados se lanzan', focus: ['kind'], text: { kind: 'inesperado = excepción' }, state: { kind: 'err' },
+        caption: 'Un bug o un backend caído: se lanza una excepción y la atrapa el error boundary (error.tsx) más cercano.' },
+      { phase: 0, title: 'Y algunos se lanzan a propósito', focus: ['kind'], text: { kind: 'redirect · notFound · unauthorized' }, state: { kind: 'warn' },
+        caption: 'redirect(), notFound(), unauthorized() y forbidden() son control de flujo: lanzan una excepción especial que Next.js interpreta. Por eso no van dentro de un try/catch.' },
+
+      step('Qué falló: ' + c.name, c.hl, c.cap),
+      step('Ojo con esto', c.tipHl.length ? c.tipHl : c.hl, c.tip),
+    ];
+  }
+
+  // el codigo depende del caso elegido; todas las variantes tienen 8 lineas
+  function codeFor(opt) { var c = CASES[opt.caso || 0]; return { title: c.name, text: c.code.join('\n') }; }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Manejo de errores en Next.js: errores esperados que se devuelven, inesperados que se lanzan a error.tsx, y los helpers redirect, notFound, unauthorized y forbidden, con seis casos del login y las rutas protegidas',
+    phases: ['Dos clases de error', 'Qué mecanismo usar'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 360, items: items, trail: 'step' }); },
+    code: codeFor,
+    toggles: [{ key: 'caso', type: 'select', label: 'Qué falló', options: CASES.map(function (c) { return c.name; }), value: 0, affectsPhase: 1 }],
+    build: build,
+    intro: { kicker: 'ERRORES', title: 'Qué hacer cuando algo sale mal',
+      text: 'Primero las dos clases de error de Next.js. Luego elige qué falló en tu aplicación de rutinas y mira qué mecanismo corresponde.' },
+  });
+})();
+</script>
+</body>
+</html>

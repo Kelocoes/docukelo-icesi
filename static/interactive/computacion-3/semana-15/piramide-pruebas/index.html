@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dónde se detecta cada error</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // La piramide de pruebas como tres franjas (mas ancha = mas pruebas) y un selector de errores: cada error se detecta mejor en un nivel.
+  var CASES = [
+    { bug: 'El total del carrito suma mal', lvl: 'unit', why: 'Es una función pura: una prueba unitaria la comprueba en milisegundos, sin navegador.' },
+    { bug: 'LoginUseCase falla con el correo en mayúsculas', lvl: 'unit', why: 'Es lógica de dominio sin React ni Next.js: se prueba directo y rápido.' },
+    { bug: 'El formulario no muestra el error bajo el campo', lvl: 'int', why: 'Basta renderizar el componente y simular la acción: no necesita servidor real.' },
+    { bug: 'Una ruta de la API devuelve 500 con datos nulos', lvl: 'int', why: 'Se prueba el handler con una base de datos simulada, sin pasar por la interfaz.' },
+    { bug: 'Tras el login el usuario no llega a /routines', lvl: 'e2e', why: 'Involucra formulario, Server Action, cookie y redirección: solo se ve de punta a punta.' },
+    { bug: 'La cookie no se guarda y la ruta protegida queda abierta', lvl: 'e2e', why: 'Depende del navegador real y del servidor trabajando juntos.' },
+    { bug: 'El menú se rompe en móvil (360 px)', lvl: 'e2e', why: 'Se ve renderizando de verdad con ese ancho de pantalla.' },
+  ];
+
+  var items = [
+    { id: 'e2e', type: 'zone', shape: 'round', x: 230, y: 30, w: 260, h: 78, rx: 16, anchor: 'middle', lx: 360, ly: 62, label: 'E2E · Playwright', sub: 'pocas · segundos · navegador real' },
+    { id: 'int', type: 'zone', shape: 'round', x: 150, y: 120, w: 420, h: 78, rx: 16, anchor: 'middle', lx: 360, ly: 152, label: 'Integración', sub: 'algunas · cientos de ms · componente con datos simulados' },
+    { id: 'unit', type: 'zone', shape: 'round', x: 70, y: 210, w: 580, h: 78, rx: 16, anchor: 'middle', lx: 360, ly: 242, label: 'Unitarias · Vitest', sub: 'muchas · milisegundos · funciones puras y casos de uso' },
+    { id: 'say', type: 'tag', x: 360, y: 326, w: 660, text: '—', hidden: true },
+    { id: 'bug', type: 'tag', x: 360, y: 326, w: 660, text: '—', hidden: true },
+  ];
+
+  function build(opt) {
+    var c = CASES[opt.caso || 0];
+    var st = { e2e: 'dim', int: 'dim', unit: 'dim' }; st[c.lvl] = 'ok';
+    var name = { e2e: 'E2E', int: 'integración', unit: 'unitaria' }[c.lvl];
+    return [
+      { phase: 0, title: 'Arriba: pocas pruebas de punta a punta', focus: ['e2e'],
+        caption: 'Una prueba E2E abre un navegador real y usa la aplicación como un usuario. Es la más confiable y la más lenta: se reserva para los recorridos importantes.' },
+      { phase: 0, title: 'En medio: partes conectadas', focus: ['int'],
+        caption: 'Un componente o un endpoint con sus dependencias simuladas. Más rápidas, pero no prueban el sistema real.' },
+      { phase: 0, title: 'Abajo: muchas pruebas pequeñas', focus: ['unit'],
+        caption: 'Funciones, validaciones y casos de uso aislados. Se ejecutan por cientos en un segundo y señalan el error exacto.' },
+      { phase: 0, title: 'Se complementan, no se reemplazan', focus: ['e2e', 'int', 'unit'],
+        caption: 'Más ancho = más pruebas. Lo que una prueba unitaria no ve (que las piezas funcionen juntas) lo ve una E2E; lo que una E2E hace lento (probar cada caso borde) lo hace una unitaria.' },
+
+      { phase: 1, title: 'El error: ' + c.bug, show: ['say'], text: { say: c.bug }, state: { say: 'err' },
+        caption: 'Elige un error con el selector «Si ocurre este error…». ¿En qué nivel conviene detectarlo?' },
+      { phase: 1, title: 'Lo detecta mejor una prueba ' + name, show: ['say'], text: { say: c.bug + '  →  ' + name }, state: (function () { var s = { say: 'ok' }; for (var k in st) s[k] = st[k]; return s; })(), focus: [c.lvl],
+        caption: c.why },
+    ];
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Pirámide de pruebas con tres niveles, E2E, integración y unitarias, y siete errores comunes con el nivel en el que se detectan mejor',
+    phases: ['La pirámide', 'Dónde se detecta'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 360, items: items, trail: 'step' }); },
+    toggles: [{ key: 'caso', type: 'select', label: 'Si ocurre este error…', options: CASES.map(function (c) { return c.bug; }), value: 4, affectsPhase: 1 }],
+    build: build,
+    intro: { kicker: 'PRUEBAS', title: 'Por qué pruebas end-to-end',
+      text: 'Primero la pirámide de pruebas. Luego elige un error y mira en qué nivel se detecta mejor.' },
+  });
+})();
+</script>
+</body>
+</html>

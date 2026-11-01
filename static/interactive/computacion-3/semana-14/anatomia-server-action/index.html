@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomía de una Server Action</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // loginAction de auth.actions.ts, tal como la usa la arquitectura de la semana 12: LoginForm -> useAuth() -> thunk -> Server Action ->
+  // caso de uso. Enlazada con lo que se ve: la cadena de llamadas, la peticion POST y la respuesta.
+  // Colores: p1 = lo que ocurre en el servidor (directiva, cookie); p2 = quien la llama y lo que recibe; p3 = validar; p4 = el dominio; p5 = errores esperados.
+  var code = [
+    [["'use server'", 'dir']],
+    [['const schema = ', 'parse'], ['z.object({', 'parse']],
+    [['  email: z.string().email(),', 'parse']],
+    [['  password: z.string().min(6),', 'parse']],
+    [['})', 'parse']],
+    [['export async function ', ''], ['loginAction(', 'sig']],
+    [['  email: string,', 'sig']],
+    [['  password: string,', 'sig']],
+    [[') {', 'sig']],
+    [['  const parsed = ', ''], ['schema.safeParse({', 'parse']],
+    [['    email, password,', 'parse']],
+    [['  })', 'parse']],
+    [['  ', ''], ['if (!parsed.success) {', 'errs']],
+    [['    ', ''], ['return { ok: false, message:', 'errs']],
+    [['      ', ''], ['parsed.error.issues[0].message }', 'errs']],
+    [['  ', ''], ['}', 'errs']],
+    [['  ', ''], ['const tokens = await authContainer', 'usecase']],
+    [['    ', ''], ['.login.execute(email, password)', 'usecase']],
+    [['  ', ''], ['if (!tokens) {', 'msg']],
+    [['    ', ''], ['return { ok: false, message:', 'msg']],
+    [['      ', ''], ["'Credenciales inválidas' }", 'msg']],
+    [['  ', ''], ['}', 'msg']],
+    [['  ', ''], ['const payload = await createSession(', 'done']],
+    [['    ', ''], ['tokens.accessToken)', 'done']],
+    [['  ', ''], ['return { ok: true, user: {', 'done']],
+    [['    ', ''], ['id: payload.sub, name: payload.name,', 'done']],
+    [['    ', ''], ['roles: payload.roles } }', 'done']],
+    [['}', '']],
+  ];
+
+  var parts = {
+    dir: { label: "'use server'", color: 'p1', title: "'use server': estas funciones corren en el servidor",
+      text: 'Al inicio del archivo, marca <b>todas sus funciones exportadas</b> como Server Functions (si las usa un formulario se llaman Server Actions). El código no se envía al navegador: Next.js le entrega solo una referencia.',
+      bullets: ['Un componente de cliente no puede definirlas: las importa de un archivo con <code>"use server"</code>.', 'Cada una se convierte en un endpoint <b>POST</b> con un id opaco.'],
+      where: 'A la derecha: la petición POST con el encabezado <code>Next-Action</code>.' },
+    caller: { label: 'Quién la llama', color: 'p2', title: 'La vista no conoce la acción',
+      text: 'Igual que en la semana 12 con Redux: <code>LoginForm</code> llama a <code>useAuth().login()</code>, el hook despacha el thunk <code>loginMutation</code> y el <b>thunk</b> invoca la acción como si fuera una función normal. Next.js convierte esa llamada en un POST.',
+      bullets: ['El hook es la fachada: si mañana la sesión cambia de mecanismo, el formulario no se entera.', 'No se usa <code>&lt;form action&gt;</code> ni <code>useActionState</code> (la forma de la guía oficial): aquí el estado vive en el slice.'],
+      where: 'A la derecha: la cadena de llamadas.' },
+    net: { label: 'POST', color: 'p1', title: 'Es un endpoint público',
+      text: 'Para el navegador, la acción es un POST a la misma URL con el encabezado <code>Next-Action</code> y los argumentos en el cuerpo. Cualquiera con <code>curl</code> puede enviarlo sin pasar por tu formulario.',
+      bullets: ['El thunk corre en el <b>navegador</b>: por eso no puede ejecutar el caso de uso ni escribir una cookie <code>httpOnly</code>. Eso solo lo hace el servidor, dentro de la acción.', 'Next.js cifra el id de la acción y lo recalcula entre builds, pero eso no es autorización: cada acción verifica la sesión por sí misma.'],
+      where: 'Mira la pieza «Capas de defensa» más abajo.' },
+    sig: { label: 'Argumentos', color: 'p2', title: 'Qué recibe la acción',
+      text: 'Argumentos serializables (texto, números, objetos planos), no un <code>FormData</code>: la llama el thunk, no un formulario. Todo lo que recibe viene del cliente y <b>no es de confianza</b>.',
+      where: 'A la derecha: los argumentos viajan en el cuerpo de la petición.' },
+    parse: { label: 'Validar', color: 'p3', title: 'Validar en el servidor, siempre',
+      text: 'La validación del formulario es comodidad para el usuario; una Server Action es accesible con un POST directo y debe validar por su cuenta. <code>safeParse</code> comprueba el formato y no lanza excepciones.',
+      bullets: ['Devuelve <code>{ success, data | error }</code>: no hay <code>try/catch</code>.'],
+      where: 'A la derecha: el mensaje de error que verá el formulario.' },
+    errs: { label: 'Error esperado', color: 'p5', title: 'Un error esperado se devuelve, no se lanza',
+      text: 'Un correo mal escrito no es un fallo del programa: es algo previsto. La acción devuelve <code>{ ok: false, message }</code>. El thunk lo convierte en <code>rejectWithValue(message)</code> y el slice lo guarda en <code>errorMessage</code>.',
+      bullets: ['Si lanzaras un <code>throw</code>, en producción Next.js oculta el mensaje del error al cliente: devolverlo como valor es la forma de que llegue un texto útil.'],
+      where: 'A la derecha: <code>errorMessage</code> del store.' },
+    usecase: { label: 'Caso de uso', color: 'p4', title: 'La acción es un adaptador, no la lógica',
+      text: 'La acción no sabe cómo se comprueban las credenciales: le pide a <code>authContainer</code> que ejecute <code>LoginUseCase</code>, y este pide el <b>token al backend</b> (aquí, el mock que lo firma). Es la misma idea de la semana 12, pero el caso de uso y el datasource corren en el <b>servidor</b>.',
+      where: 'A la derecha: el recorrido hacia el dominio y el datasource.' },
+    msg: { label: 'Error esperado', color: 'p5', title: 'Credenciales inválidas',
+      text: 'Otro error previsto: el correo no existe o la contraseña no coincide. Se devuelve un mensaje genérico, sin decir cuál de los dos falló.',
+      bullets: ['Decir «ese correo no existe» le dice a un atacante qué correos están registrados.'],
+      where: 'A la derecha: el mensaje bajo el formulario.' },
+    done: { label: 'Éxito', color: 'p1', title: 'Guardar el token y devolver el usuario',
+      text: '<code>createSession</code> decodifica el token del backend y lo guarda en la cookie; devuelve su contenido. La acción responde <code>{ ok: true, user }</code> con lo que la interfaz necesita: el id, el nombre y los <b>roles</b> que vienen dentro del token (nunca el token ni una contraseña). La redirección la hace el cliente con <code>router.replace("/routines")</code>.',
+      bullets: ['El front no crea ni verifica el token: lo recibe, lo decodifica y lo guarda. La firma la comprueba el backend.', 'La respuesta trae el <code>Set-Cookie</code>: el navegador la guarda antes de que el thunk se resuelva.'],
+      where: 'A la derecha: la respuesta con la cookie y el usuario.' },
+  };
+
+  function view() {
+    return '' +
+      '<p class="cm-lbl">Quién la llama</p>' +
+      '<div class="cm-code-sm" data-part="caller">LoginForm → <b>useAuth()</b>.login(…)<br>useAuth → dispatch(<b>loginMutation</b>(…))<br>thunk → await <b>loginAction</b>(…)</div>' +
+      '<div class="cm-arrow">↓ POST al servidor</div>' +
+      '<p class="cm-lbl">En la pestaña Network</p>' +
+      '<div class="cm-code-sm" data-part="net" style="word-break:break-all">POST /login<br><span data-part="dir">Next-Action: 7f3c0a…</span><br><span data-part="sig">cuerpo: ["ana@icesi.edu.co", "••••••"]</span></div>' +
+      '<div class="cm-arrow">↓ en el servidor</div>' +
+      '<p class="cm-lbl">Recorrido</p>' +
+      '<div class="cm-code-sm"><span data-part="parse">validar</span> → <span data-part="usecase">LoginUseCase → backend</span> → <span data-part="done">cookie</span></div>' +
+      '<div class="cm-arrow">↓ respuesta</div>' +
+      '<div class="cm-chip" data-part="done">ok: Set-Cookie + { ok: true, user }  →  router.replace("/routines")</div>' +
+      '<div class="cm-chip" data-part="errs">error: { ok: false, message }  →  rejectWithValue  →  <span data-part="msg">state.auth.errorMessage</span></div>';
+  }
+
+  var steps = [
+    { phase: 0, title: "La directiva 'use server'", focus: 'dir',
+      caption: 'Pasa el mouse por el código o por el resultado. Esta línea convierte las funciones del archivo en endpoints del servidor.' },
+    { phase: 0, title: 'Quién la llama: hook, thunk y acción', focus: 'caller',
+      caption: 'La vista llama al hook; el hook despacha el thunk; el thunk invoca la acción. La arquitectura de la semana 12, sin cambios.' },
+    { phase: 0, title: 'Lo que se envía es público', focus: 'net',
+      caption: 'Visto desde afuera es un POST. Por eso todo lo que sigue se hace en el servidor y no se confía en el cliente.' },
+    { phase: 1, title: 'Lo que recibe', focus: 'sig',
+      caption: 'Argumentos simples que le pasa el thunk, no un FormData.' },
+    { phase: 1, title: 'Validar los datos', focus: 'parse',
+      caption: 'safeParse comprueba el formato sin lanzar excepciones.' },
+    { phase: 1, title: 'Error esperado: datos inválidos', focus: 'errs',
+      caption: 'Se devuelve { ok: false, message }; el thunk lo convierte en rejectWithValue y el slice lo guarda.' },
+    { phase: 1, title: 'Delegar en el caso de uso', focus: 'usecase',
+      caption: 'La acción adapta Next.js al dominio: no decide si las credenciales son válidas; el backend entrega el token.' },
+    { phase: 1, title: 'Error esperado: credenciales inválidas', focus: 'msg',
+      caption: 'Un mensaje genérico, sin revelar si el correo existe.' },
+    { phase: 2, title: 'Éxito: token en la cookie y usuario', focus: 'done',
+      caption: 'Se decodifica y se guarda el token del backend, y se devuelve el usuario con sus roles. La navegación la hace el cliente al terminar el thunk.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Anatomía de la Server Action loginAction: la directiva use server, quién la llama (el hook useAuth, el thunk de Redux), los argumentos, la validación con zod, los errores esperados devueltos como valor, el caso de uso y la cookie, enlazados con la petición POST y la respuesta',
+    phases: ['Qué es', 'Validar y ejecutar', 'Responder'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.codemap({ stage: stage, file: 'auth.actions.ts', filePart: 'dir', code: code, parts: parts, view: view });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Server Actions',
+      title: "Qué hace 'use server' en tu login",
+      text: 'La acción de login, línea por línea, junto a quién la llama (el hook y el thunk de Redux), la petición y la respuesta.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

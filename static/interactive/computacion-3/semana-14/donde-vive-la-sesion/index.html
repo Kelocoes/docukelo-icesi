@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dónde vive la sesión</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Ana inicia sesion con el formulario del trabajo en clase (semana 13). Segun el lugar elegido (selector «Guardar en») se ve DONDE queda
+  // el token (el navegador tiene tres almacenes: memoria, localStorage y cookies), que pasa al recargar, que recibe el servidor cuando
+  // ana pide /routines y que puede leer un script malicioso (XSS).
+  var OPTIONS = [
+    { name: 'Memoria (Redux)', chip: 'c0', zone: 0, label: 'token', how: 'dispatch(setUser)' },
+    { name: 'localStorage', chip: 'c1', zone: 1, label: 'token', how: 'setItem(token)' },
+    { name: 'Cookie común', chip: 'c2', zone: 2, label: 'session=eyJ…', how: 'document.cookie =' },
+    { name: 'Cookie httpOnly', chip: 'c3', zone: 2, label: 'session · HttpOnly', how: 'Set-Cookie' },
+  ];
+  var ZY = [185, 267, 349];   // centro vertical de cada almacen (memoria, localStorage, cookies)
+
+  var items = [
+    { id: 'br', type: 'zone', shape: 'round', x: 16, y: 50, w: 500, h: 350, rx: 18, lx: 32, ly: 78, label: 'Navegador de ana' },
+    { id: 'mem', type: 'zone', shape: 'round', x: 196, y: 150, w: 310, h: 70, rx: 14, lx: 210, ly: 178, label: 'Memoria de la página', sub: 'se borra al recargar' },
+    { id: 'ls', type: 'zone', shape: 'round', x: 196, y: 232, w: 310, h: 70, rx: 14, lx: 210, ly: 260, label: 'localStorage', sub: 'persiste · solo JavaScript' },
+    { id: 'ck', type: 'zone', shape: 'round', x: 196, y: 314, w: 310, h: 70, rx: 14, lx: 210, ly: 342, label: 'Cookies', sub: 'persisten · viajan solas' },
+    { id: 'page', type: 'node', icon: 'browser', x: 96, y: 142, size: 52, label: 'Página', sub: 'LoginForm' },
+    { id: 'js', type: 'node', icon: 'terminal', x: 96, y: 335, size: 46, label: 'Script malicioso', sub: 'XSS', hidden: true },
+    { id: 'srv', type: 'node', icon: 'server', x: 640, y: 142, size: 56, label: 'Servidor Next.js', sub: 'proxy y páginas' },
+    { id: 'c0', type: 'tag', x: 436, y: ZY[0], w: 120, text: 'token', hidden: true },
+    { id: 'c1', type: 'tag', x: 436, y: ZY[1], w: 120, text: 'token', hidden: true },
+    { id: 'c2', type: 'tag', x: 436, y: ZY[2], w: 120, text: 'session=eyJ…', hidden: true },
+    { id: 'c3', type: 'tag', x: 436, y: ZY[2], w: 136, text: 'session · HttpOnly', hidden: true },
+  ];
+
+  var L = function (path, kind, label, extra) { var l = { path: path, kind: kind, label: label }; for (var k in extra) l[k] = extra[k]; return l; };
+  var P_REQ = [130, 142, 605, 142];                                  // pagina <-> servidor (por encima de los almacenes)
+  var P_TO = [[126, 168, 196, 184], [118, 172, 196, 266], [110, 176, 196, 348]];   // pagina -> memoria, localStorage, cookies
+  var P_JS = [[130, 322, 196, 195], [130, 334, 196, 275], [130, 346, 196, 350]];   // script -> memoria, localStorage, cookies
+  var P_SK = [604, 246, 508, 346];                                    // servidor <-> cookies
+
+  function build(opt) {
+    var k = opt.donde === undefined ? 3 : opt.donde, o = OPTIONS[k], z = o.zone;
+    var chips = ['c0', 'c1', 'c2', 'c3'];
+    var hideOthers = chips.filter(function (c) { return c !== o.chip; });
+    var cookie = k >= 2;
+
+    var save = k === 0 ? 'Redux guarda el token en el store: vive solo mientras la página siga abierta.'
+      : k === 1 ? 'El código lo guarda con localStorage.setItem: persiste en el navegador, pero solo JavaScript puede leerlo.'
+      : k === 2 ? 'El código la escribe con document.cookie: persiste y el navegador la enviará, pero cualquier script puede leerla.'
+      : 'El navegador guarda la cookie por su cuenta. El código de la página nunca la ve ni la toca.';
+    var reload = k === 0 ? 'Recargar crea un store nuevo desde cero: la sesión desapareció. Por eso Redux solo no basta para recordar quién eres.'
+      : 'Recargar no borra ese almacén: la sesión sigue ahí. Una sesión debe sobrevivir a una recarga.';
+    var req = k === 0 ? 'No hay nada que enviar: la sesión se perdió y el servidor trata a ana como desconocida.'
+      : k === 1 ? 'Al navegar a una URL el navegador no envía el localStorage. El servidor (proxy y páginas) no sabe quién es ana; solo un fetch que tú escribas podría agregar el token a mano.'
+      : 'El navegador adjunta la cookie por sí solo en cada petición. El servidor sabe quién es ana antes de renderizar la página.';
+    var xss = ['Un script inyectado no tiene un camino simple al store de Redux, pero tampoco debes confiar en eso: lo que se pierde al recargar no es una sesión.',
+      'Un script inyectado lee todo el localStorage con una línea: localStorage.getItem. Quien robe el token puede usarlo desde otro equipo.',
+      'document.cookie devuelve las cookies comunes: un script inyectado puede copiar el token.',
+      'document.cookie no devuelve las cookies httpOnly. El token no se puede copiar con JavaScript, aunque la página tenga un XSS.'][k];
+
+    return [
+      { phase: 0, title: 'El login del trabajo en clase', focus: ['page', 'srv'], hide: chips.concat(['js']),
+        links: [L(P_REQ, 'ctl', 'email + contraseña')],
+        caption: 'Ana inicia sesión con el formulario de la semana 13 y el servidor comprueba las credenciales con el backend (aquí, un mock que entrega un JWT). Elige con «Guardar en» dónde quedará la sesión.' },
+      { phase: 0, title: cookie && k === 3 ? 'El servidor responde con Set-Cookie' : 'El servidor responde con el token', focus: ['srv', 'page'], hide: chips.concat(['js']),
+        links: [L([605, 142, 130, 142], 'ack', k === 3 ? 'Set-Cookie' : 'token')],
+        caption: k === 3 ? 'La respuesta trae el encabezado Set-Cookie: el navegador sabe qué hacer con él sin que tu código intervenga.'
+          : 'La respuesta trae el token en el cuerpo. Tu código tiene que decidir dónde guardarlo.' },
+      { phase: 0, title: 'Dónde queda guardada: ' + o.name, focus: [['mem', 'ls', 'ck'][z]], show: [o.chip], hide: hideOthers.concat(['js']),
+        links: [k === 3 ? L(P_SK, 'ack', 'lo guarda el navegador', { labelSide: 'right' }) : L(P_TO[z], 'data', o.how)],
+        caption: save },
+
+      { phase: 1, title: 'Ana recarga la página (F5)', focus: ['page', [ 'mem', 'ls', 'ck'][z]], show: [o.chip], hide: hideOthers.concat(['js']),
+        text: k === 0 ? (function () { var t = {}; t[o.chip] = 'vacío'; return t; })() : {},
+        state: (function () { var s = {}; s[o.chip] = k === 0 ? 'err' : 'ok'; return s; })(),
+        badge: { page: { text: k === 0 ? 'sesión perdida' : 'sesión intacta', tone: k === 0 ? 'err' : 'ok' } },
+        caption: reload },
+      { phase: 1, title: 'Ana pide /routines al servidor', focus: ['page', 'srv'], show: [o.chip], hide: hideOthers.concat(['js']),
+        links: cookie ? [L(P_REQ, 'ctl', 'GET /routines'), L([508, 340, 604, 246], 'ack', 'Cookie: session', { labelSide: 'right' })] : [L(P_REQ, 'ctl', 'GET /routines')],
+        state: (function () { var s = {}; s[o.chip] = cookie ? 'ok' : 'dim'; return s; })(),
+        badge: { srv: { text: cookie ? 've la sesión' : 'no sabe quién es', tone: cookie ? 'ok' : 'err' } },
+        caption: req },
+      { phase: 1, title: 'Un script malicioso intenta leerla (XSS)', focus: ['js', [ 'mem', 'ls', 'ck'][z]], show: ['js', o.chip], hide: hideOthers,
+        links: [L(P_JS[z], k === 3 ? 'err' : 'ctl', k === 0 ? 'store?' : k === 1 ? 'getItem' : 'cookie')],
+        state: (function () { var s = {}; s[o.chip] = k === 0 ? 'warn' : k === 3 ? 'ok' : 'err'; return s; })(),
+        badge: { js: { text: k === 3 ? 'no la ve' : k === 0 ? 'difícil' : 'la lee', tone: k === 3 ? 'ok' : k === 0 ? 'warn' : 'err' } },
+        caption: xss },
+    ];
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Dónde guardar la sesión: con memoria de Redux, localStorage, cookie común o cookie httpOnly, dónde queda guardado el token en el navegador, qué pasa al recargar, qué recibe el servidor y qué puede leer un script malicioso',
+    phases: ['Guardarla', 'Usarla'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 420, items: items, trail: 'step' }); },
+    toggles: [{ key: 'donde', type: 'select', label: 'Guardar en', options: OPTIONS.map(function (o) { return o.name; }), value: 3, restart: 'first' }],
+    build: build,
+    intro: { kicker: 'SESIÓN EN EL FRONTEND', title: 'Qué pasa con cada opción',
+      text: 'Ana inicia sesión como en el trabajo en clase. Elige dónde guardar la sesión y mira dónde queda, qué pasa al recargar, qué recibe el servidor y qué puede leer un script malicioso.' },
+  });
+})();
+</script>
+</body>
+</html>
