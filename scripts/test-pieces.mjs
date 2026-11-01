@@ -2,6 +2,8 @@
 //
 //   npm run test:pieces                 todas las piezas
 //   npm run test:pieces -- redux        solo las que contengan "redux" en su ruta
+//   npm run test:pieces -- --jobs 8     prueba 8 piezas a la vez (por defecto: la mitad de los nucleos, entre 1 y 6)
+//   npm run test:pieces -- --jobs 1     una por una (para depurar una falla que sospechas de la carga)
 //
 // Busca las piezas en <carpeta estatica>/interactive/ (por defecto "static", relativa a donde corres el comando, que debe
 // ser la raiz del proyecto). Otra carpeta: DK_STATIC_DIR=public npm run test:pieces
@@ -17,6 +19,7 @@
 // En un equipo sin ninguno: npx playwright install chromium.
 import { createServer } from 'node:http';
 import { readFile, readdir, stat } from 'node:fs/promises';
+import { cpus } from 'node:os';
 import { extname, join, relative, resolve, sep } from 'node:path';
 import { chromium } from 'playwright-core';
 
@@ -171,28 +174,49 @@ async function testPiece(browser, base, piece) {
     return result;
 }
 
-const filter = process.argv[2];
+const argv = process.argv.slice(2);
+const jIdx = argv.findIndex((a) => a === '--jobs' || a === '-j' || a.startsWith('--jobs='));
+let jobsArg = null;
+if (jIdx >= 0) jobsArg = argv[jIdx].includes('=') ? argv[jIdx].split('=')[1] : argv[jIdx + 1];
+const positional = argv.filter((a, i) => !a.startsWith('-') && !(jIdx >= 0 && !argv[jIdx].includes('=') && i === jIdx + 1));
+const filter = positional[0];
+const jobs = Math.max(1, Math.floor(Number(jobsArg || process.env.DK_JOBS)) || Math.min(6, Math.max(1, Math.floor(cpus().length / 2))));
+
 const pieces = (await findPieces(join(ROOT, 'interactive'))).filter((p) => !filter || p.includes(filter)).sort();
 if (!pieces.length) { console.error('Ninguna pieza coincide con el filtro.'); process.exit(2); }
 
 const server = await startServer();
 const base = `http://127.0.0.1:${server.address().port}`;
 const browser = await launch();
-const results = [];
-for (const piece of pieces) {
-    try {
-        results.push(await testPiece(browser, base, piece));
-    } catch (e) {
-        results.push({ piece, engines: [], steps: 0, toggles: 0, errors: ['excepcion: ' + e.message.split('\n')[0]], notes: [] });
-    }
-    const r = results.at(-1);
+const t0 = Date.now();
+const results = new Array(pieces.length);
+
+function report(r) {
     console.log(`${r.errors.length ? 'FALLA' : 'ok   '}  ${r.piece.replace(/^interactive\//, '')}  [${r.engines.join(',') || 'sin motor dk'}]  pasos=${r.steps} interruptores=${r.toggles}`);
     for (const e of [...new Set(r.errors)]) console.log('        - ' + e);
     for (const n of r.notes) console.log('        . ' + n);
 }
+
+// Varias piezas a la vez: cada una usa sus propios contextos del mismo navegador. Los resultados se imprimen en orden
+// alfabetico (no en orden de llegada) para que la salida sea siempre igual.
+let next = 0, printed = 0;
+async function worker() {
+    while (next < pieces.length) {
+        const i = next++;
+        try {
+            results[i] = await testPiece(browser, base, pieces[i]);
+        } catch (e) {
+            results[i] = { piece: pieces[i], engines: [], steps: 0, toggles: 0, errors: ['excepcion: ' + e.message.split('\n')[0]], notes: [] };
+        }
+        while (printed < pieces.length && results[printed]) report(results[printed++]);
+    }
+}
+console.log(`Probando ${pieces.length} pieza(s), ${jobs} a la vez...`);
+await Promise.all(Array.from({ length: Math.min(jobs, pieces.length) }, worker));
 await browser.close();
 server.close();
 
 const failed = results.filter((r) => r.errors.length);
-console.log(`\n${results.length - failed.length} de ${results.length} piezas sin errores.`);
+console.log(`
+${results.length - failed.length} de ${results.length} piezas sin errores (${((Date.now() - t0) / 1000).toFixed(0)} s, ${jobs} a la vez).`);
 process.exit(failed.length ? 1 : 0);
