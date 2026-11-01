@@ -3,6 +3,9 @@
 //   npm run test:pieces                 todas las piezas
 //   npm run test:pieces -- redux        solo las que contengan "redux" en su ruta
 //
+// Busca las piezas en <carpeta estatica>/interactive/ (por defecto "static", relativa a donde corres el comando, que debe
+// ser la raiz del proyecto). Otra carpeta: DK_STATIC_DIR=public npm run test:pieces
+//
 // Para cada pieza abre un navegador real, la recorre y falla si hay errores de JavaScript, recursos locales que no
 // cargan o si la pieza no dibuja nada:
 //   1. Normal: recorre todos los pasos con "Siguiente", prueba "Reiniciar" y cada interruptor (y vuelve a recorrer).
@@ -15,10 +18,9 @@
 import { createServer } from 'node:http';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { extname, join, relative, resolve, sep } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright-core';
 
-const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)), 'static');
+const ROOT = resolve(process.cwd(), process.env.DK_STATIC_DIR || 'static');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.json': 'application/json' };
 // motores cuya figura es un <svg> directo en el escenario: en pantalla completa no deben desbordar verticalmente
 const FITS_FULLSCREEN = ['layers', 'tree', 'sequence', 'radial', 'canvas'];

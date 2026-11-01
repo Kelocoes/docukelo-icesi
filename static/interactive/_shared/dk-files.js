@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-files.js: un EXPLORADOR DE ARCHIVOS con la salida de `tree -L`. Cada archivo o carpeta es una linea que se puede señalar con
  * el mouse (o tocar, o enfocar con el teclado): al lado aparece para que sirve, que contiene y un fragmento de codigo. Los pasos
  * pueden hacer aparecer carpetas nuevas (una convencion propuesta), enfocar una linea o mostrar solo un subarbol (`tree src`).

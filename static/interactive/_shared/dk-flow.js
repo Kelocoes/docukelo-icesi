@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-flow.js: dibuja una flecha animada entre dos puntos, con su paquete que viaja. Es la pieza común de
  * dk-sequence.js (diagramas de secuencia) y dk-layers.js (arquitecturas recorridas); úsala directamente si una
  * escena nueva necesita mostrar "algo que viaja de A a B".  Requiere dk-kit.js y dk-icons.js.

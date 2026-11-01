@@ -1,33 +1,38 @@
 ---
 name: docusaurus-animated-diagrams
-description: Convierte los gráficos de un capítulo de DocuKelo en animaciones o piezas interactivas que enseñan mejor. Guía el análisis pedagógico (qué debe entender el estudiante y cuál es la forma más clara de mostrarlo) y trae un kit reutilizable (CSS con tema claro/oscuro, iconos, motor de diagramas de secuencia, reproductor paso a paso) más herramientas para animar un SVG existente.
+description: Convierte los gráficos de un sitio de documentación (Docusaurus u otro sitio estático) en animaciones o piezas interactivas que enseñan mejor. Guía el análisis pedagógico (qué debe entender el estudiante y cuál es la forma más clara de mostrarlo) y trae un kit portable (CSS con tema claro/oscuro, iconos, motores de diagramas, reproductor paso a paso), un instalador para otro proyecto, plantillas, una prueba de humo y una herramienta para animar un SVG existente.
 ---
 
-# Gráficos animados e interactivos para DocuKelo (borrador en uso)
+# Gráficos animados e interactivos
 
-Estado: en uso en producción (varios cursos) y enlazada en `AGENTS.md`. Se validó con el piloto `static/interactive/computacion-2/semana-1/tcp-en-accion/`. Contexto del proyecto, decisiones y avance: `.agents/memory/svg-redesign/README.md`.
+Una carpeta autocontenida: el proceso (este archivo), el **kit** (`kit/`), lo que necesita el sitio anfitrión (`host/`), plantillas, herramientas y referencias. Se puede copiar a otro proyecto y funciona: ver `references/host-integration.md`. Lo propio de DocuKelo (el visor, los briefs del profesor, las decisiones) está aparte, en `references/docukelo-project.md`.
 
-## Mapa: dónde está cada cosa (léelo primero)
+## Mapa de la skill (léelo primero)
 
-Todas las rutas son relativas a la raíz del repo (`docukelo-icesi/`). Si no estás seguro de dónde está algo, está aquí.
+Las rutas son relativas a la carpeta de la skill (`<skill>`), salvo que se diga otra cosa.
 
-| Qué | Dónde | ¿En git? |
-|---|---|---|
-| Esta skill (proceso, referencias, plantilla, herramienta) | `.agents/skills/docusaurus_animated_diagrams/` | Sí |
-| **El kit compartido** (CSS, `dk-*.js`) | `static/interactive/_shared/` | Sí |
-| Documentación del kit (API de cada módulo) | `references/kit-api.md` (en esta skill) | Sí |
-| Piezas interactivas ya integradas | `static/interactive/<curso>/<semana>/<slug>/index.html` | Sí |
-| Plantilla para una pieza nueva | `templates/piece/index.html` (secuencia por fases), `templates/piece-phone/index.html` (simulador de app móvil con `DK.phone`) y `templates/piece-canvas/index.html` (escena libre `DK.canvas`: toma y enchufes), en esta skill | Sí |
-| Guía general de contenido (sección 8: gráficos interactivos) | `.agents/memory/docusaurus-guidelines.md` | Sí |
-| Contexto, decisiones y estado del proyecto de rediseño | `.agents/memory/svg-redesign/README.md` | **No** (en `.gitignore`, solo en el disco del profesor) |
-| Comentarios y briefs del profesor por gráfico | `.agents/memory/svg-redesign/reviews.json` | **No** |
-| Propuestas en revisión (antes de integrar) | `.agents/memory/svg-redesign/candidates/` | **No** |
-| El visor donde el profesor revisa (React + Vite) | `temp/svg-diagrams-sandbox/` (`npm run dev`, http://localhost:5199) | **No** (`temp/` ignorado) |
-| Referencia del profesor Domi (clonada) | `temp/seminario-software/` | **No** |
+| Qué | Dónde |
+|---|---|
+| Proceso (este archivo) | `SKILL.md` |
+| **El kit: copia maestra** (CSS y `dk-*.js`) | `kit/` |
+| Instalar el kit y lo del anfitrión en un proyecto; sincronizar y comprobar | `host/install.mjs` |
+| Crear una pieza desde una plantilla, con la ruta al kit calculada | `host/new-piece.mjs` |
+| Prueba de humo con navegador real | `host/test-pieces.mjs` |
+| Componente `InteractiveFrame` (Docusaurus): incrusta la pieza y agrega "Pantalla completa" | `host/InteractiveFrame/` |
+| Plantillas: `piece` (secuencia por fases), `piece-canvas` (escena libre `DK.canvas`), `piece-phone` (simulador de app móvil) | `templates/` |
+| Animar un SVG ya dibujado | `tools/dk_animate.py` |
+| API de cada módulo del kit | `references/kit-api.md` |
+| Qué patrón usar y cuáles están hechos | `references/patterns.md` |
+| Principios pedagógicos para que el gráfico enseñe de verdad | `references/key-concepts.md` |
+| Errores reales ya cometidos | `references/lessons-learned.md` |
+| Requisitos del sitio anfitrión e instalación | `references/host-integration.md` |
+| Flujo, rutas y decisiones de DocuKelo | `references/docukelo-project.md` |
 
-**Cómo se usa el kit en una frase:** cada pieza es un `index.html` que carga `../../../_shared/dk-*.js` (rutas relativas, para que funcione igual en el sitio y en el visor) y solo define **datos** (actores, fases, pasos con leyenda); el motor dibuja, anima y trae los controles. Orden de carga y API: `references/kit-api.md`. Ejemplos reales que funcionan: `static/interactive/computacion-2/semana-1/tcp-en-accion/` y `tcp-vs-udp/`.
+**En un proyecto, el kit instalado** vive por defecto en `static/interactive/_shared/` y es una **copia generada**: se edita `kit/` en la skill y se vuelve a correr `node <skill>/host/install.mjs` (en DocuKelo, `npm run kit:sync`; `npm run kit:check` verifica que coincidan).
 
-**Si no existe la parte "No" (otro equipo, otra máquina):** la skill y el kit siguen funcionando completos; solo faltan los briefs y el visor. Sin brief, **pregunta** al profesor qué debe entender el estudiante antes de dibujar.
+**Cómo se usa el kit en una frase:** cada pieza es un `index.html` que carga `../../../_shared/dk-*.js` (rutas relativas, para que funcione igual en el sitio y abierta como archivo) y solo define **datos** (actores, fases, pasos con leyenda); el motor dibuja, anima y trae los controles. Orden de carga y API: `references/kit-api.md`. Una pieza nueva sale de `node <skill>/host/new-piece.mjs <plantilla> <carpeta>`.
+
+Los **ejemplos de piezas** que se citan en las tablas (`tcp-en-accion`, `semana-14/...`) son piezas del proyecto DocuKelo: en otro proyecto no existen; usa las plantillas.
 
 ## Qué leer y en qué orden
 
@@ -36,8 +41,7 @@ Todas las rutas son relativas a la raíz del repo (`docukelo-icesi/`). Si no est
 3. `references/patterns.md`: qué patrón usar y qué ya está construido.
 4. `references/kit-api.md`: la API del kit, cuando vayas a construir.
 5. `references/lessons-learned.md`: errores reales que ya cometimos (no repetirlos).
-5b. `references/integration-checklist.md`: cómo integrar una pieza aprobada en un capítulo (delegable a otro agente).
-6. Pieza de referencia (el estándar a igualar): `static/interactive/computacion-2/semana-1/tcp-en-accion/index.html`. Son ~80 líneas de datos; el motor vive en el kit.
+6. `references/host-integration.md` si es un proyecto nuevo; `references/docukelo-project.md` si trabajas en DocuKelo (incluye `integration-checklist.md`, la lista para delegar la integración).
 
 ## Principio
 
@@ -47,7 +51,7 @@ Una animación no es decoración: cada movimiento debe revelar un **orden** o un
 
 ### 1. Analizar (antes de escribir código)
 
-- Abrir el gráfico en el visor (`temp/svg-diagrams-sandbox`, `npm run dev`, puerto 5199): ver dónde se usa, el texto de alrededor y el **brief** que dejó el profesor en `.agents/memory/svg-redesign/reviews.json` (campos `concepto`, `problema`, `interaccion`, `formato`, más comentarios). El brief y los comentarios son la instrucción. Si falta información, **preguntar**; no inventar profundidad.
+- Ver dónde se usa el gráfico, el texto de alrededor y el **brief** de quien lo pidió (qué concepto, qué problema, qué interacción). El brief y los comentarios son la instrucción. Si falta información, **preguntar**; no inventar profundidad. (En DocuKelo hay un visor y un archivo de briefs: `references/docukelo-project.md`.)
 - Leer el capítulo completo (y el anterior). Listar las afirmaciones del texto: cada una debería tener algo visible en el gráfico.
 - Responder por escrito: concepto que debe entender el estudiante, error común que evita, qué NO mostrar.
 - Elegir el **nivel** (tabla abajo) y el **patrón** (`references/patterns.md`). Anotar la elección y por qué.
@@ -87,59 +91,45 @@ Una animación no es decoración: cada movimiento debe revelar un **orden** o un
 | Un cliente que espera y reintenta hasta que algo está listo (auto-espera, reintentos) | N3 | Kit: `DK.sequence` con un interruptor de «tarda en responder» (ejemplo: `semana-15/autoespera-playwright`) |
 | Algo que se entiende provocándolo (estado, fallos, parámetros) | N3 | Kit; escena nueva si no existe el patrón (ver `patterns.md`) |
 
-### 2. Construir en `candidates/`, nunca directo en `docs/` ni `static/img`
+### 2. Construir en un lugar de revisión, no directo en el capítulo
 
-- Pieza interactiva: copiar `templates/piece/index.html` a `.agents/memory/svg-redesign/candidates/static/interactive/<curso>/<semana>/<slug>/index.html` y cambiar **solo los datos** (actores, fases, pasos, textos). Si hace falta algo que el kit no tiene, ampliar el kit (ver abajo), no parchar la pieza.
-- SVG existente a animar: `python .agents/skills/docusaurus_animated_diagrams/tools/dk_animate.py inspect|build` (ver más abajo). Salida en `candidates/static/img/<curso>/`.
+- Pieza interactiva: `node <skill>/host/new-piece.mjs <plantilla> <carpeta-de-la-pieza>` (`piece`, `piece-canvas` o `piece-phone`; calcula la ruta al kit) y cambiar **solo los datos** (actores, fases, pasos, textos). Si hace falta algo que el kit no tiene, ampliar el kit (ver abajo), no parchar la pieza. En DocuKelo la carpeta de revisión es `candidates/` (`docukelo-project.md`).
+- SVG existente a animar: `python <skill>/tools/dk_animate.py inspect|build` (ver más abajo).
 - **Si todas las figuras del capítulo se ven como cajas iguales, usa `DK.canvas`** (metáfora física por concepto, iconos sin tarjeta; `key-concepts.md`, 5q a 5t).
 - **Reglas visuales de toda pieza nueva con `DK.layers`:** `labels: 'smart'`, figura ancha (`width: 800`) con 90 a 160 unidades entre recuadros que se conectan, **un icono distinto por rol** (cajas con `h >= 70` llevan el icono arriba) y un panel de código con colores por rol si hay código. Verifica el flujo técnico real del framework antes de dibujar las flechas (`key-concepts.md`, 5h).
-- Para que el visor muestre "Original / Propuesta interactiva" junto al original, agregar `candidates/static/img/<curso>/<nombre>.candidate.json` (ejemplo: `TCP.candidate.json`, con `interactive`, `height`, `finalPath`, `embed`).
-- Re-escanear (`npm run scan` o botón "Re-escanear") y recargar el visor.
 
 ### 3. Probar como lo vería un estudiante
 
-Recorrer todos los pasos, activar cada interruptor, **ambos temas** (claro y oscuro), 800 px y 360 px de ancho, y el espacio con el texto de arriba y de abajo. Para integrar en el sitio ver los docs en español: `npx docusaurus start --port 3001 --locale es --no-open` (el del 3000 del profesor sirve `en`). Capturas de pantalla, no solo comprobar el DOM.
+Recorrer todos los pasos, activar cada interruptor, **ambos temas** (claro y oscuro), 800 px y 360 px de ancho, y el espacio con el texto de arriba y de abajo. Capturas de pantalla, no solo comprobar el DOM. (Cómo levantar el sitio de DocuKelo: `docukelo-project.md`.)
 
-**Prueba automática:** además de la revisión visual, corre `npm run test:pieces -- <parte-de-la-ruta>` (o sin filtro para todas). Recorre los pasos, los interruptores, el tema oscuro y la pantalla completa y falla con errores de JavaScript o desbordes. **Es obligatorio correrlo completo cuando cambies algo de `static/interactive/_shared/`**, porque todas las piezas usan el kit.
+**Prueba automática:** además de la revisión visual, corre la prueba de humo (`npm run test:pieces -- <parte-de-la-ruta>`, o `node <ruta>/test-pieces.mjs`; sin filtro prueba todas). Recorre los pasos, los interruptores, el tema oscuro y la pantalla completa y falla con errores de JavaScript o desbordes. **Es obligatorio correrla completa cuando cambies algo del kit**, porque todas las piezas lo usan.
 
-### 4. Integrar solo con la aprobación del profesor
+### 4. Integrar solo con la aprobación de quien pidió el gráfico
 
-La integración es mecánica y se puede **delegar a otro agente**: ver `references/integration-checklist.md` (pasos, verificación, restricciones y cómo comprobar su reporte). Resumen:
+La integración es mecánica y se puede **delegar a otro agente** (en DocuKelo: `references/integration-checklist.md`). Resumen:
 
-- Copiar la carpeta de la pieza a `static/interactive/<curso>/<semana>/<slug>/`.
-- En el `.md`, reemplazar la imagen por un `<iframe>` normal (no `IframeWindow`: alto fijo de 300 px y marco de navegador):
-  ```mdx
-  <iframe src="/interactive/<curso>/<semana>/<slug>/index.html" title="Título accesible"
-    style={{ width: '100%', height: 740, border: 0 }} loading="lazy" />
-  ```
-  El alto declarado es solo respaldo: la pieza lo ajusta sola con `DK.autoHeight()`.
-- **Piezas complejas: usa `<InteractiveFrame>` en vez del `<iframe>`** (componente global del sitio, `src/components/InteractiveFrame/`). Mismas propiedades (`src`, `title`, `height`) y agrega arriba a la derecha el botón "Pantalla completa", que abre la misma pieza en un diálogo casi del tamaño de la ventana (Esc, "Cerrar" o clic en el fondo lo cierran). Úsalo cuando la pieza tenga varios paneles (figura + código + explicación), figuras con texto pequeño o más de ~700 px de alto. Las piezas de `DK.layers`, `DK.tree` y `DK.sequence` ya traen la disposición de pantalla completa por defecto (reglas genéricas `dk-fs` en `dk-base.css`), así que basta con cambiar el `<iframe>` por `<InteractiveFrame>`. Las de escenario HTML (`anatomy`, `table`, `compare`, `phone`) todavía no se reorganizan: déjalas como `<iframe>`. Una pieza simple puede seguir con `<iframe>`. Ver `references/kit-api.md`, sección "Pantalla completa".
-  ```mdx
-  <InteractiveFrame
-    src="/interactive/<curso>/<semana>/<slug>/index.html"
-    title="Título accesible"
-    height={780}
-  />
-  ```
-- Dejar el archivo original en `static/img/` (para poder volver atrás) y marcar el gráfico como `hecho` en el visor.
+- Dejar la carpeta de la pieza donde el sitio sirve los estáticos (`<estáticos>/interactive/<curso>/<semana>/<slug>/index.html`).
+- En el documento, reemplazar la imagen por un `<iframe>` normal con el `title` accesible y `loading="lazy"`; el alto declarado es solo respaldo, la pieza lo ajusta sola con `DK.autoHeight()`.
+- **Piezas complejas: `<InteractiveFrame>`** en vez del `<iframe>` (mismas propiedades: `src`, `title`, `height`): agrega arriba a la derecha el botón "Pantalla completa", que abre la misma pieza en un diálogo casi del tamaño de la ventana. Úsalo con varios paneles (figura + código + explicación), texto pequeño o más de ~700 px de alto. Requiere el componente de `host/InteractiveFrame/` registrado en el sitio (`host-integration.md`). Las piezas de `DK.layers`, `DK.tree`, `DK.sequence`, `DK.canvas`, `DK.codemap`, `DK.files` y `DK.dom` ya traen la disposición de pantalla completa (`kit-api.md`, "Pantalla completa"); las de escenario HTML (`anatomy`, `table`, `compare`, `phone`) todavía no: déjalas como `<iframe>`.
+- Dejar el archivo original del gráfico (para poder volver atrás).
 
 ### 5. Cerrar: actualizar ESTA skill (obligatorio en cada gráfico)
 
 Al terminar cada gráfico, **antes de pasar al siguiente**, actualizar la skill; no solo `_shared/`. Checklist:
 
-- [ ] **Kit** (`static/interactive/_shared/`): ¿algo se copió o se escribió específico de la pieza que sirve para otras? Moverlo al kit. ¿Se dibujó un icono por segunda vez? A `dk-icons.js`. ¿Una escena nueva que se repetirá? Un módulo `dk-<escena>.js` con la misma forma que `dk-sequence.js`.
+- [ ] **Kit** (`kit/` en la skill; después `install.mjs` o `npm run kit:sync` para actualizar la copia instalada): ¿algo se copió o se escribió específico de la pieza que sirve para otras? Moverlo al kit. ¿Se dibujó un icono por segunda vez? A `dk-icons.js`. ¿Una escena nueva que se repetirá? Un módulo `dk-<escena>.js` con la misma forma que `dk-sequence.js`.
 - [ ] **`references/kit-api.md`**: documentar cada función, opción o icono nuevo, en el mismo cambio.
 - [ ] **`references/patterns.md`**: marcar el patrón como hecho y agregar su ficha (cuándo usarlo, estructura que funcionó, parámetros típicos, ejemplo real).
-- [ ] **`references/key-concepts.md`**: agregar cualquier principio pedagógico nuevo que el profesor haya corregido o aprobado.
+- [ ] **`references/key-concepts.md`**: agregar cualquier principio pedagógico nuevo que quien pidió el gráfico haya corregido o aprobado.
 - [ ] **Pantalla completa**: si la pieza se integró con `<InteractiveFrame>`, ábrela en el diálogo y revisa que el contenido llene el espacio (ver `kit-api.md`, "Pantalla completa"); si es una escena nueva del kit, agrega sus reglas `.dk-fs`.
 - [ ] **`references/lessons-learned.md`**: cada error o sorpresa, con causa y solución.
 - [ ] **`templates/`**: si el patrón es nuevo, crear su plantilla y **probarla** (una plantilla sin probar es peor que ninguna).
-- [ ] **`.agents/memory/svg-redesign/README.md`**: estado de la pieza y decisiones.
-- [ ] Si cambió algo del flujo del visor (formatos, manifiestos), actualizar este archivo.
+- [ ] **Instalación:** si cambió algo de `host/` (el instalador, `InteractiveFrame`, la prueba de humo), corre `install.mjs --check` en un proyecto para comprobar que sigue funcionando, y actualiza `references/host-integration.md`.
+- [ ] En DocuKelo: estado de la pieza y decisiones en `.agents/memory/svg-redesign/README.md` (`docukelo-project.md`).
 
 ## Herramientas
 
-### El kit (`static/interactive/_shared/`)
+### El kit (`kit/`)
 
 JavaScript plano y CSS, sin dependencias, con tema claro/oscuro automático. Módulos: `dk-base.css`, `dk-theme.js`, `dk-kit.js`, `dk-icons.js`, `dk-flow.js`, `dk-sequence.js`, `dk-layers.js`, `dk-canvas.js`, `dk-compare.js`, `dk-anatomy.js`, `dk-table.js`, `dk-tree.js`, `dk-dom.js` (página simulada + árbol DOM con resaltado en ambos sentidos), `dk-files.js` (explorador tipo `tree -L`), `dk-codemap.js` (código <-> resultado), `dk-phone.js` (teléfono + `State` + árbol de widgets + consola, con modo libre), `dk-nav.js` (teléfono + pila del Navigator, con `dk-nav.css`), `dk-tabs.js` (teléfono con pestañas, con `dk-tabs.css`), `dk-radial.js` (capas concéntricas, con `dk-radial.css`), `dk-player.js` (con panel de código sincronizado opcional, que puede cambiar con los interruptores). API completa y formato de los pasos en `references/kit-api.md`.
 
@@ -150,29 +140,14 @@ Una pieza nueva debería ser ~100 líneas de **datos** (actores, fases, pasos co
 Anima un SVG **ya hecho**, sin redibujarlo, a partir de una línea de tiempo JSON; produce un `.animated.svg` (autoplay en bucle, solo CSS, funciona dentro de `![](...)`) y un `.player.html`. Solo biblioteca estándar de Python.
 
 ```bash
-python .agents/skills/docusaurus_animated_diagrams/tools/dk_animate.py inspect static/img/<curso>/figura.svg
-python .agents/skills/docusaurus_animated_diagrams/tools/dk_animate.py build static/img/<curso>/figura.svg spec.json \
-  -o .agents/memory/svg-redesign/candidates/static/img/<curso>
+python <skill>/tools/dk_animate.py inspect static/img/<curso>/figura.svg
+python <skill>/tools/dk_animate.py build static/img/<curso>/figura.svg spec.json -o <carpeta-de-salida>
 ```
 
 Especificación (ver `examples/clean-arch-origins.spec.json`): `id`, `groups`, `steps[{title, caption, do[{target, only, fx, dur, stagger, delay}]}]`. Selectores: `@N` (número de `inspect`), `text:abc`, `after:abc` (hermanos tras el comentario `<!-- abc -->`), `#id`, `.clase`, `tag[attr=valor]`. Efectos: `fade`, `rise`, `pop`, `draw` (solo formas), `pulse`, `flow`. Limitaciones: un efecto de entrada por elemento; los `marker` no se dibujan con `draw` (animar la punta aparte con `fade`).
 
 El player generado usa los tokens de `dk-base.css` y sigue el tema claro/oscuro con `dk-theme.js` (la ruta al kit se calcula sola subiendo desde `-o`, o se fija con `--kit ../../interactive/_shared`; si no encuentra el kit, cae a tema claro). El SVG original trae colores fijos de tema claro, por eso en el player se muestra sobre un panel claro también en tema oscuro; el `.animated.svg` dentro de `<img>` no puede cambiar de tema (para eso, dos variantes con `ThemedImage` o una pieza del kit).
 
-## Decisiones tomadas por el profesor (2026-10-17)
+## Decisiones y estado del proyecto
 
-1. **Tema:** los gráficos se adaptan al modo claro y oscuro, sin tarjeta de fondo fijo. Piezas en iframe: `dk-theme.js` lee el `data-theme` del sitio. SVG estáticos en `<img>`: dos variantes y `ThemedImage` (`import ThemedImage from '@theme/ThemedImage';` en el propio `.md`).
-2. **Embebido sin tocar el sitio:** HTML autocontenido con `<iframe>` normal.
-3. **Estructura de carpetas:**
-   ```
-   static/interactive/
-     _shared/                     el kit (copia maestra única)
-     <curso>/<semana>/<slug>/     index.html de cada pieza
-   ```
-   Los SVG estáticos y animados siguen en `static/img/<curso>/`.
-4. **Alcance:** el recorrido principal es corto y sin exceso de detalle técnico; el detalle avanzado va detrás de un control opcional (interruptor).
-
-## Decisiones abiertas
-
-1. **Mermaid:** mantenerlos o reemplazarlos por SVG animados en los capítulos clave.
-2. **Escenas por construir** (ver `patterns.md`): máquina de estados. Ya existen: secuencia, comparación A/B, arquitectura recorrida, código sincronizado, anatomía explorable, tabla de datos con estado y árbol de componentes + estado.
+Las decisiones del profesor (tema, embebido, estructura de carpetas, alcance) y las abiertas son de DocuKelo: `references/docukelo-project.md`.

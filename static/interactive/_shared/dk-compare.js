@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-compare.js: comparación A/B en paralelo. Dos (o más) diagramas de secuencia lado a lado que avanzan
  * sincronizados con el mismo paso, para contrastar "qué hace A" frente a "qué hace B" en cada momento.
  * Es una escena para DK.player (expone setSteps, render y msgDuration). Requiere dk-sequence.js.

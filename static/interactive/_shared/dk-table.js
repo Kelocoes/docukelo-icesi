@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-table.js: tabla de datos con estado. Muestra filas reales y, en cada paso, qué parte de ellas llega al cliente:
  * todas, o una página, ordenada o no, con el SQL que se genera, los metadatos de Page<T> y medidores de costo.
  * Sirve para paginación, orden, filtros, LIMIT/OFFSET y, en general, "qué trae esta consulta". Es una escena para DK.player.

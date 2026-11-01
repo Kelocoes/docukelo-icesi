@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-kit.js: helpers comunes para piezas interactivas de DocuKelo. JavaScript plano, sin dependencias.
  * Se carga como script clasico y expone window.DK. Inspirado en el patron de los simuladores del profesor Domi:
  * escenario como datos + motor generico + limpieza de timers.

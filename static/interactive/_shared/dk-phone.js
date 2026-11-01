@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-phone.js: un teléfono con la app que se está explicando + lo que pasa "por dentro".
  * A la izquierda, la pantalla de la app (HTML con estilo Material, que el estudiante puede TOCAR en el modo libre).
  * Arriba, el camino del evento (Toque > callback > setState > dirty > build() > Pantalla) con su aviso. A la derecha del

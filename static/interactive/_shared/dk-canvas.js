@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-canvas.js: escena LIBRE para DK.player. Sustituye a DK.layers cuando el concepto no es "cajas conectadas": iconos sueltos sin
  * tarjeta, zonas suaves (manchas, circulos, anillos), tomas y enchufes, contadores y flechas curvas. Requiere dk-kit.js y
  * dk-icons.js (usa DK.icons.<nombre> y DK.icons.h). Escribe su propio <style> (tokens de dk-base.css: claro y oscuro).

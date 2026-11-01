@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-dom.js: una PAGINA SIMULADA (HTML real, siempre en tema claro como una pagina de verdad) junto al ARBOL DEL DOM que la
  * describe. Pasar el mouse (o tocar) por un elemento de la pagina ilumina su nodo en el arbol, y al reves; el padre y los hijos
  * se marcan con otro trazo para enseñar "padre", "hijo" y "hermano". Cada paso puede cambiar el texto, hacer aparecer nodos,

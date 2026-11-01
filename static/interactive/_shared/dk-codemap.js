@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-codemap.js: CODIGO <-> RESULTADO. A la izquierda un archivo de codigo cuyas partes se pueden señalar (el nombre del archivo,
  * la funcion, los parametros, las llaves...); a la derecha, lo que esas partes producen (la interfaz, los datos que llegan, el import).
  * Pasar el mouse (o tocar, o enfocar con el teclado) por una parte del codigo ilumina lo que produce, y al reves; debajo aparece su

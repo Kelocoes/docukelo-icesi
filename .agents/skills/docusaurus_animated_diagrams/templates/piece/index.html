@@ -1,11 +1,9 @@
 <!doctype html>
 <!--
   PLANTILLA de pieza interactiva paso a paso (diagrama de secuencia por fases).
-  Copiar a static/interactive/<curso>/<semana>/<slug>/index.html (o, mientras se revisa,
-  a .agents/memory/svg-redesign/candidates/static/interactive/<curso>/<semana>/<slug>/index.html)
-  y cambiar SOLO los DATOS de abajo: actores, fases, textos y build().
-  No copiar ni reescribir logica del kit: vive en static/interactive/_shared/ (ver references/kit-api.md).
-  Las rutas ../../../_shared/ asumen la profundidad <curso>/<semana>/<slug>/.
+  Crear con: node <skill>/host/new-piece.mjs piece <carpeta-de-la-pieza>  (calcula solo las rutas al kit).
+  Cambiar SOLO los DATOS de abajo: actores, fases, textos y build().
+  No copiar ni reescribir logica del kit: vive en el kit instalado (ver references/kit-api.md).
 -->
 <html lang="es">
 <head>

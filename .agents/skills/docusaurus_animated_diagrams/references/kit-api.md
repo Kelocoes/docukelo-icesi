@@ -1,6 +1,6 @@
 # API del kit de piezas interactivas
 
-Ubicación (copia maestra única): `static/interactive/_shared/`. Una pieza nueva solo debería escribir **datos** y llamar al kit; si se encuentra copiando o escribiendo lógica de dibujo, animación o controles, esa lógica pertenece al kit (ver "Cuándo ampliar el kit").
+Ubicación: la copia maestra es `kit/` en esta skill; en cada proyecto se instala (por defecto en `static/interactive/_shared/`) con `host/install.mjs` y esa copia es generada: no se edita (`host-integration.md`). Las líneas «Pieza de referencia» o «Ejemplo» de este archivo apuntan a piezas del proyecto DocuKelo: en otro proyecto no existen, usa las plantillas (`templates/`). Una pieza nueva solo debería escribir **datos** y llamar al kit; si se encuentra copiando o escribiendo lógica de dibujo, animación o controles, esa lógica pertenece al kit (ver "Cuándo ampliar el kit").
 
 Orden de carga en el `index.html` de una pieza (rutas relativas, para que funcionen igual en el sitio y en el visor):
 
@@ -381,7 +381,7 @@ Pieza de referencia: `candidates/static/interactive/computacion-2/semana-1/tcp-v
 
 ## dk-radial.js: `DK.radial(opciones)`
 
-Escena circular para `DK.player`. La cabecera de `static/interactive/_shared/dk-radial.js` documenta cada opción (anillos con `at` para rótulo recto o `arc` para rótulo curvo, `nodes` como función que se evalúa en cada `setSteps`, `groups` y `matrix` para la matriz de límites, pasos con `focus`, `rings`, `sub` y `msgs` con `bend`/`ctrl`/`lost`/`labelAt`/`labelSide`). Carga `dk-radial.css` después de `dk-base.css`: trae además los estilos de la barra de feature (`.dk-fbar`).
+Escena circular para `DK.player`. La cabecera de `kit/dk-radial.js` documenta cada opción (anillos con `at` para rótulo recto o `arc` para rótulo curvo, `nodes` como función que se evalúa en cada `setSteps`, `groups` y `matrix` para la matriz de límites, pasos con `focus`, `rings`, `sub` y `msgs` con `bend`/`ctrl`/`lost`/`labelAt`/`labelSide`). Carga `dk-radial.css` después de `dk-base.css`: trae además los estilos de la barra de feature (`.dk-fbar`).
 
 Con `ctrl.rebuild()` (en el objeto que devuelve `DK.player`) la pieza vuelve a ejecutar `build()` sin mover el paso actual; sirve para piezas genéricas que reescriben todos sus textos (por ejemplo, cambiar el nombre de la feature). Pieza de referencia: `static/interactive/computacion-3/semana-12/clean-architecture-circular/index.html`.
 

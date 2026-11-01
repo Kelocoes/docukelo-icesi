@@ -18,7 +18,9 @@
     "test:pieces": "node scripts/test-pieces.mjs",
     "build:daisy-preview": "tailwindcss -c scripts/daisy-preview/tailwind.config.cjs -i scripts/daisy-preview/input.css -o static/css/daisy-preview.css --minify",
     "scaffold-week": "node scripts/scaffold-week.mjs",
-    "prepare": "node scripts/install-hooks.mjs || exit 0"
+    "prepare": "node scripts/install-hooks.mjs || exit 0",
+    "kit:sync": "node .agents/skills/docusaurus_animated_diagrams/host/install.mjs",
+    "kit:check": "node .agents/skills/docusaurus_animated_diagrams/host/install.mjs --check"
   },
   "dependencies": {
     "@docusaurus/core": "^3.10.2",

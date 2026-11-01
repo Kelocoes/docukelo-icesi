@@ -1,4 +1,4 @@
-/* DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md. Estilos de dk-tabs.js (teléfono con NavigationBar). Cargar después de dk-base.css. */
+/* DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams. Estilos de dk-tabs.js (teléfono con NavigationBar). Cargar después de dk-base.css. */
 .dk-tabsph .pf-appbar.nav { display: flex; align-items: center; justify-content: center; position: relative; min-height: 42px; }
 .dk-tabsph .pf-appbar .bk { position: absolute; left: 6px; top: 50%; margin-top: -16px; width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: #1c1b1f; cursor: pointer; }
 .dk-tabsph .pf-ic { width: 20px; height: 20px; fill: currentColor; }
