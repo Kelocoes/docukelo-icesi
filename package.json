@@ -5,7 +5,9 @@
   "homepage": "https://docukelo-icesi.onrender.com/",
   "scripts": {
     "docusaurus": "docusaurus",
+    "prestart": "node scripts/build-pieces-manifest.mjs",
     "start": "docusaurus start",
+    "prebuild": "node scripts/build-pieces-manifest.mjs",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "clear": "docusaurus clear",
@@ -16,6 +18,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:pieces": "node scripts/test-pieces.mjs",
+    "pieces:manifest": "node scripts/build-pieces-manifest.mjs",
     "build:daisy-preview": "tailwindcss -c scripts/daisy-preview/tailwind.config.cjs -i scripts/daisy-preview/input.css -o static/css/daisy-preview.css --minify",
     "scaffold-week": "node scripts/scaffold-week.mjs",
     "prepare": "node scripts/install-hooks.mjs || exit 0",

@@ -172,7 +172,9 @@ svg text { font-family: inherit; fill: var(--dk-ink); }
 .dk-callout ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
 .dk-callout li { font: 12.5px ui-monospace, Consolas, monospace; background: var(--dk-chip); border-radius: 8px; padding: 3px 8px; }
 .dk-callout.swap { animation: dk-in .35s ease-out; }
-@keyframes dk-in { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: none; } }
+/* Entra desde la IZQUIERDA a proposito: un desplazamiento hacia la derecha desborda el .dk-stage (overflow-x: auto) y por un instante
+   aparece la barra de scroll horizontal, que empuja el contenido hacia abajo y luego lo devuelve. El desborde a la izquierda no genera scroll. */
+@keyframes dk-in { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: none; } }
 @media (max-width: 560px) { .dk-anatomy { grid-template-columns: 1fr; } }
 /* opciones layout: 'stack' (codigo a todo el ancho, explicacion debajo) y code: true (sintaxis coloreada, sin saltos) */
 .dk-anatomy.stack { grid-template-columns: 1fr; gap: 14px; }

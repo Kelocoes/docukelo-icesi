@@ -102,7 +102,7 @@ Una animación no es decoración: cada movimiento debe revelar un **orden** o un
 
 Recorrer todos los pasos, activar cada interruptor, **ambos temas** (claro y oscuro), 800 px y 360 px de ancho, y el espacio con el texto de arriba y de abajo. Capturas de pantalla, no solo comprobar el DOM. (Cómo levantar el sitio de DocuKelo: `docukelo-project.md`.)
 
-**Prueba automática:** además de la revisión visual, corre la prueba de humo (`npm run test:pieces -- <parte-de-la-ruta>`, o `node <ruta>/test-pieces.mjs`; sin filtro prueba todas). Recorre los pasos, los interruptores, el tema oscuro y la pantalla completa y falla con errores de JavaScript o desbordes. **Es obligatorio correrla completa cuando cambies algo del kit**, porque todas las piezas lo usan.
+**Prueba automática:** además de la revisión visual, corre la prueba de humo (`npm run test:pieces -- <parte-de-la-ruta>`, o `node <ruta>/test-pieces.mjs`; sin filtro prueba todas). Recorre los pasos, los interruptores, el tema oscuro y la pantalla completa y falla con errores de JavaScript, desbordes o parpadeos del layout (una barra de scroll horizontal que aparece y desaparece al pulsar «Siguiente»). **Es obligatorio correrla completa cuando cambies algo del kit**, porque todas las piezas lo usan.
 
 ### 4. Integrar solo con la aprobación de quien pidió el gráfico
 

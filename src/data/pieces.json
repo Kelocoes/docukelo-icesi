@@ -1,0 +1,742 @@
+[
+  {
+    "id": "computacion-2/semana-1/ciclo-vida-servlet",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-1",
+    "weekNumber": 1,
+    "slug": "ciclo-vida-servlet",
+    "title": "Ciclo de vida de un servlet",
+    "src": "/interactive/computacion-2/semana-1/ciclo-vida-servlet/index.html"
+  },
+  {
+    "id": "computacion-2/semana-1/peticion-http",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-1",
+    "weekNumber": 1,
+    "slug": "peticion-http",
+    "title": "Las partes de una petición HTTP",
+    "src": "/interactive/computacion-2/semana-1/peticion-http/index.html"
+  },
+  {
+    "id": "computacion-2/semana-1/servlet-en-tomcat",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-1",
+    "weekNumber": 1,
+    "slug": "servlet-en-tomcat",
+    "title": "El servlet dentro de Tomcat",
+    "src": "/interactive/computacion-2/semana-1/servlet-en-tomcat/index.html"
+  },
+  {
+    "id": "computacion-2/semana-1/tcp-en-accion",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-1",
+    "weekNumber": 1,
+    "slug": "tcp-en-accion",
+    "title": "TCP en acción",
+    "src": "/interactive/computacion-2/semana-1/tcp-en-accion/index.html"
+  },
+  {
+    "id": "computacion-2/semana-1/tcp-vs-udp",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-1",
+    "weekNumber": 1,
+    "slug": "tcp-vs-udp",
+    "title": "TCP frente a UDP",
+    "src": "/interactive/computacion-2/semana-1/tcp-vs-udp/index.html"
+  },
+  {
+    "id": "computacion-2/semana-2/contenedor-ioc-y-beans",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-2",
+    "weekNumber": 2,
+    "slug": "contenedor-ioc-y-beans",
+    "title": "El contenedor IoC y los beans",
+    "src": "/interactive/computacion-2/semana-2/contenedor-ioc-y-beans/index.html"
+  },
+  {
+    "id": "computacion-2/semana-2/spring-en-tomcat",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-2",
+    "weekNumber": 2,
+    "slug": "spring-en-tomcat",
+    "title": "Spring dentro de Tomcat",
+    "src": "/interactive/computacion-2/semana-2/spring-en-tomcat/index.html"
+  },
+  {
+    "id": "computacion-2/semana-6/paginacion-spring",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-6",
+    "weekNumber": 6,
+    "slug": "paginacion-spring",
+    "title": "Paginación en Spring Data JPA",
+    "src": "/interactive/computacion-2/semana-6/paginacion-spring/index.html"
+  },
+  {
+    "id": "computacion-2/semana-6/transaccion-transferencia",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-6",
+    "weekNumber": 6,
+    "slug": "transaccion-transferencia",
+    "title": "@Transactional: commit y rollback",
+    "src": "/interactive/computacion-2/semana-6/transaccion-transferencia/index.html"
+  },
+  {
+    "id": "computacion-2/semana-8/flujo-ssr-thymeleaf",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-8",
+    "weekNumber": 8,
+    "slug": "flujo-ssr-thymeleaf",
+    "title": "Cómo fluyen los datos con Thymeleaf",
+    "src": "/interactive/computacion-2/semana-8/flujo-ssr-thymeleaf/index.html"
+  },
+  {
+    "id": "computacion-2/semana-9/authn-vs-authz",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-9",
+    "weekNumber": 9,
+    "slug": "authn-vs-authz",
+    "title": "Autenticación y autorización",
+    "src": "/interactive/computacion-2/semana-9/authn-vs-authz/index.html"
+  },
+  {
+    "id": "computacion-2/semana-9/spring-security-filterchain",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-9",
+    "weekNumber": 9,
+    "slug": "spring-security-filterchain",
+    "title": "Arquitectura de Spring Security",
+    "src": "/interactive/computacion-2/semana-9/spring-security-filterchain/index.html"
+  },
+  {
+    "id": "computacion-2/semana-13/postman-interface",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "postman-interface",
+    "title": "Anatomía de la Interfaz de Postman",
+    "src": "/interactive/computacion-2/semana-13/postman-interface/index.html"
+  },
+  {
+    "id": "computacion-2/semana-13/postman-spring-lifecycle",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "postman-spring-lifecycle",
+    "title": "Ciclo de Vida Postman y Spring Boot",
+    "src": "/interactive/computacion-2/semana-13/postman-spring-lifecycle/index.html"
+  },
+  {
+    "id": "computacion-2/semana-13/sdd-artesanal-flow",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "sdd-artesanal-flow",
+    "title": "SDD Artesanal con AGENTS.md y .agents/",
+    "src": "/interactive/computacion-2/semana-13/sdd-artesanal-flow/index.html"
+  },
+  {
+    "id": "computacion-2/semana-13/sdlc-vs-sdd",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "sdlc-vs-sdd",
+    "title": "SDLC vs Spec-driven Development",
+    "src": "/interactive/computacion-2/semana-13/sdlc-vs-sdd/index.html"
+  },
+  {
+    "id": "computacion-2/semana-14/anatomia-componente",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "anatomia-componente",
+    "title": "Anatomía de un componente",
+    "src": "/interactive/computacion-2/semana-14/anatomia-componente/index.html"
+  },
+  {
+    "id": "computacion-2/semana-14/componentes-composicion",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "componentes-composicion",
+    "title": "Componentes y composición",
+    "src": "/interactive/computacion-2/semana-14/componentes-composicion/index.html"
+  },
+  {
+    "id": "computacion-2/semana-14/csr-bbq",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "csr-bbq",
+    "title": "Client Side Rendering: quién cocina la página",
+    "src": "/interactive/computacion-2/semana-14/csr-bbq/index.html"
+  },
+  {
+    "id": "computacion-2/semana-14/dom-arbol-pagina",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "dom-arbol-pagina",
+    "title": "La página como árbol: el DOM",
+    "src": "/interactive/computacion-2/semana-14/dom-arbol-pagina/index.html"
+  },
+  {
+    "id": "computacion-2/semana-14/estructura-proyecto",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "estructura-proyecto",
+    "title": "Estructura de un proyecto React con Vite",
+    "src": "/interactive/computacion-2/semana-14/estructura-proyecto/index.html"
+  },
+  {
+    "id": "computacion-2/semana-14/props-arbol",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "props-arbol",
+    "title": "Props: de padre a hijo",
+    "src": "/interactive/computacion-2/semana-14/props-arbol/index.html"
+  },
+  {
+    "id": "computacion-2/semana-14/virtual-dom-diff",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "virtual-dom-diff",
+    "title": "Virtual DOM: render, diff y commit",
+    "src": "/interactive/computacion-2/semana-14/virtual-dom-diff/index.html"
+  },
+  {
+    "id": "computacion-2/semana-14/vite-por-que",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "vite-por-que",
+    "title": "Por qué usamos Vite",
+    "src": "/interactive/computacion-2/semana-14/vite-por-que/index.html"
+  },
+  {
+    "id": "computacion-3/semana-12/anatomia-slice",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-12",
+    "weekNumber": 12,
+    "slug": "anatomia-slice",
+    "title": "Anatomía de un Slice en Redux Toolkit",
+    "src": "/interactive/computacion-3/semana-12/anatomia-slice/index.html"
+  },
+  {
+    "id": "computacion-3/semana-12/arbol-estado",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-12",
+    "weekNumber": 12,
+    "slug": "arbol-estado",
+    "title": "El estado en el árbol de componentes",
+    "src": "/interactive/computacion-3/semana-12/arbol-estado/index.html"
+  },
+  {
+    "id": "computacion-3/semana-12/ciclo-thunk",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-12",
+    "weekNumber": 12,
+    "slug": "ciclo-thunk",
+    "title": "Ciclo de vida de un createAsyncThunk",
+    "src": "/interactive/computacion-3/semana-12/ciclo-thunk/index.html"
+  },
+  {
+    "id": "computacion-3/semana-12/ciclo-usestate",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-12",
+    "weekNumber": 12,
+    "slug": "ciclo-usestate",
+    "title": "Ciclo de Vida de useState y la Regla de Inmutabilidad",
+    "src": "/interactive/computacion-3/semana-12/ciclo-usestate/index.html"
+  },
+  {
+    "id": "computacion-3/semana-12/clean-architecture-circular",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-12",
+    "weekNumber": 12,
+    "slug": "clean-architecture-circular",
+    "title": "Clean Architecture en círculo",
+    "src": "/interactive/computacion-3/semana-12/clean-architecture-circular/index.html"
+  },
+  {
+    "id": "computacion-3/semana-12/flujo-redux",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-12",
+    "weekNumber": 12,
+    "slug": "flujo-redux",
+    "title": "Flujo de datos unidireccional en Redux",
+    "src": "/interactive/computacion-3/semana-12/flujo-redux/index.html"
+  },
+  {
+    "id": "computacion-3/semana-12/makestore-vs-singleton",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-12",
+    "weekNumber": 12,
+    "slug": "makestore-vs-singleton",
+    "title": "makeStore frente a Singleton en Next.js",
+    "src": "/interactive/computacion-3/semana-12/makestore-vs-singleton/index.html"
+  },
+  {
+    "id": "computacion-3/semana-12/mockup-auth",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-12",
+    "weekNumber": 12,
+    "slug": "mockup-auth",
+    "title": "Mockup: login, registro y navegación",
+    "src": "/interactive/computacion-3/semana-12/mockup-auth/index.html"
+  },
+  {
+    "id": "computacion-3/semana-12/navegacion-por-eventos",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-12",
+    "weekNumber": 12,
+    "slug": "navegacion-por-eventos",
+    "title": "Navegación por Eventos en Next.js",
+    "src": "/interactive/computacion-3/semana-12/navegacion-por-eventos/index.html"
+  },
+  {
+    "id": "computacion-3/semana-12/redux-en-clean-architecture",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-12",
+    "weekNumber": 12,
+    "slug": "redux-en-clean-architecture",
+    "title": "Redux Toolkit en Clean Architecture",
+    "src": "/interactive/computacion-3/semana-12/redux-en-clean-architecture/index.html"
+  },
+  {
+    "id": "computacion-3/semana-13/mockup-auth",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "mockup-auth",
+    "title": "Mockup: login, registro y navegación",
+    "src": "/interactive/computacion-3/semana-13/mockup-auth/index.html"
+  },
+  {
+    "id": "computacion-3/semana-13/navegacion-por-eventos",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "navegacion-por-eventos",
+    "title": "Navegación por Eventos en Next.js",
+    "src": "/interactive/computacion-3/semana-13/navegacion-por-eventos/index.html"
+  },
+  {
+    "id": "computacion-3/semana-14/anatomia-cookie-sesion",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "anatomia-cookie-sesion",
+    "title": "Anatomía de la cookie de sesión",
+    "src": "/interactive/computacion-3/semana-14/anatomia-cookie-sesion/index.html"
+  },
+  {
+    "id": "computacion-3/semana-14/anatomia-server-action",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "anatomia-server-action",
+    "title": "Anatomía de una Server Action",
+    "src": "/interactive/computacion-3/semana-14/anatomia-server-action/index.html"
+  },
+  {
+    "id": "computacion-3/semana-14/capas-de-defensa",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "capas-de-defensa",
+    "title": "Capas de defensa de una ruta protegida",
+    "src": "/interactive/computacion-3/semana-14/capas-de-defensa/index.html"
+  },
+  {
+    "id": "computacion-3/semana-14/ciclo-sesion-cookie",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "ciclo-sesion-cookie",
+    "title": "El ciclo de una sesión con cookies",
+    "src": "/interactive/computacion-3/semana-14/ciclo-sesion-cookie/index.html"
+  },
+  {
+    "id": "computacion-3/semana-14/donde-vive-la-sesion",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "donde-vive-la-sesion",
+    "title": "Dónde vive la sesión",
+    "src": "/interactive/computacion-3/semana-14/donde-vive-la-sesion/index.html"
+  },
+  {
+    "id": "computacion-3/semana-14/error-boundaries-segmentos",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "error-boundaries-segmentos",
+    "title": "Quién atrapa un error al renderizar",
+    "src": "/interactive/computacion-3/semana-14/error-boundaries-segmentos/index.html"
+  },
+  {
+    "id": "computacion-3/semana-14/estructura-auth",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "estructura-auth",
+    "title": "Dónde va la sesión en tu proyecto",
+    "src": "/interactive/computacion-3/semana-14/estructura-auth/index.html"
+  },
+  {
+    "id": "computacion-3/semana-14/manejo-de-errores",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "manejo-de-errores",
+    "title": "Manejo de errores en Next.js",
+    "src": "/interactive/computacion-3/semana-14/manejo-de-errores/index.html"
+  },
+  {
+    "id": "computacion-3/semana-14/use-server-que-hace",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "use-server-que-hace",
+    "title": "Qué hace use server",
+    "src": "/interactive/computacion-3/semana-14/use-server-que-hace/index.html"
+  },
+  {
+    "id": "computacion-3/semana-14/viaje-del-error",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "viaje-del-error",
+    "title": "El viaje de un error hasta la pantalla",
+    "src": "/interactive/computacion-3/semana-14/viaje-del-error/index.html"
+  },
+  {
+    "id": "computacion-3/semana-15/anatomia-test-playwright",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "anatomia-test-playwright",
+    "title": "Anatomía de una prueba de Playwright",
+    "src": "/interactive/computacion-3/semana-15/anatomia-test-playwright/index.html"
+  },
+  {
+    "id": "computacion-3/semana-15/autoespera-playwright",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "autoespera-playwright",
+    "title": "Auto-espera de Playwright",
+    "src": "/interactive/computacion-3/semana-15/autoespera-playwright/index.html"
+  },
+  {
+    "id": "computacion-3/semana-15/estructura-playwright",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "estructura-playwright",
+    "title": "Estructura de un proyecto con Playwright",
+    "src": "/interactive/computacion-3/semana-15/estructura-playwright/index.html"
+  },
+  {
+    "id": "computacion-3/semana-15/localizadores-playwright",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "localizadores-playwright",
+    "title": "Cómo encontrar elementos en una prueba",
+    "src": "/interactive/computacion-3/semana-15/localizadores-playwright/index.html"
+  },
+  {
+    "id": "computacion-3/semana-15/piramide-pruebas",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "piramide-pruebas",
+    "title": "Dónde se detecta cada error",
+    "src": "/interactive/computacion-3/semana-15/piramide-pruebas/index.html"
+  },
+  {
+    "id": "computacion-3/semana-15/reutilizar-sesion-playwright",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "reutilizar-sesion-playwright",
+    "title": "Reutilizar la sesión en las pruebas",
+    "src": "/interactive/computacion-3/semana-15/reutilizar-sesion-playwright/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-12/mapa-navegacion",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-12",
+    "weekNumber": 12,
+    "slug": "mapa-navegacion",
+    "title": "Mapa de navegación de la aplicación",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-12/mapa-navegacion/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-12/por-tipo-vs-por-feature",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-12",
+    "weekNumber": 12,
+    "slug": "por-tipo-vs-por-feature",
+    "title": "Estructura por Tipo frente a Estructura por Feature",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-12/por-tipo-vs-por-feature/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-12/secuencia-login",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-12",
+    "weekNumber": 12,
+    "slug": "secuencia-login",
+    "title": "Secuencia de un Login con JWT",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-12/secuencia-login/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-13/flujo-zustand",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "flujo-zustand",
+    "title": "Flujo de un cambio de estado en Zustand",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-13/flujo-zustand/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-13/middleware-en-capas",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "middleware-en-capas",
+    "title": "Middleware de Zustand como capas",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-13/middleware-en-capas/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-13/selectores-y-rerender",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "selectores-y-rerender",
+    "title": "Selectores y re-renders en Zustand",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-13/selectores-y-rerender/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-11/agenda-monolitica",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-11",
+    "weekNumber": 11,
+    "slug": "agenda-monolitica",
+    "title": "Agenda de contactos monolítica",
+    "src": "/interactive/seminario-de-i-d-i/semana-11/agenda-monolitica/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-11/anatomia-stateful",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-11",
+    "weekNumber": 11,
+    "slug": "anatomia-stateful",
+    "title": "Anatomía de un StatefulWidget",
+    "src": "/interactive/seminario-de-i-d-i/semana-11/anatomia-stateful/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-11/ciclo-vida-state",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-11",
+    "weekNumber": 11,
+    "slug": "ciclo-vida-state",
+    "title": "Ciclo de vida de State",
+    "src": "/interactive/seminario-de-i-d-i/semana-11/ciclo-vida-state/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-11/formulario-registro",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-11",
+    "weekNumber": 11,
+    "slug": "formulario-registro",
+    "title": "Formulario con TextEditingController",
+    "src": "/interactive/seminario-de-i-d-i/semana-11/formulario-registro/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-11/responsabilidades-agenda",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-11",
+    "weekNumber": 11,
+    "slug": "responsabilidades-agenda",
+    "title": "Responsabilidades de la agenda monolítica",
+    "src": "/interactive/seminario-de-i-d-i/semana-11/responsabilidades-agenda/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-11/setstate-en-accion",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-11",
+    "weekNumber": 11,
+    "slug": "setstate-en-accion",
+    "title": "setState en acción",
+    "src": "/interactive/seminario-de-i-d-i/semana-11/setstate-en-accion/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-11/tres-arboles",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-11",
+    "weekNumber": 11,
+    "slug": "tres-arboles",
+    "title": "Los tres árboles de Flutter",
+    "src": "/interactive/seminario-de-i-d-i/semana-11/tres-arboles/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-12/elevacion-agenda",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-12",
+    "weekNumber": 12,
+    "slug": "elevacion-agenda",
+    "title": "Elevación de estado y prop drilling",
+    "src": "/interactive/seminario-de-i-d-i/semana-12/elevacion-agenda/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-13/bottom-nav-anfitriona",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "bottom-nav-anfitriona",
+    "title": "Screen anfitriona",
+    "src": "/interactive/seminario-de-i-d-i/semana-13/bottom-nav-anfitriona/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-13/navegacion-pila",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "navegacion-pila",
+    "title": "Navegar es apilar pantallas",
+    "src": "/interactive/seminario-de-i-d-i/semana-13/navegacion-pila/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-13/paso-retorno-datos",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "paso-retorno-datos",
+    "title": "Datos de ida y vuelta entre pantallas",
+    "src": "/interactive/seminario-de-i-d-i/semana-13/paso-retorno-datos/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-13/pila-codigo",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "pila-codigo",
+    "title": "Código y pila de navegación",
+    "src": "/interactive/seminario-de-i-d-i/semana-13/pila-codigo/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-13/pila-vs-cola",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "pila-vs-cola",
+    "title": "Pila y cola",
+    "src": "/interactive/seminario-de-i-d-i/semana-13/pila-vs-cola/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-13/push-remove-until",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "push-remove-until",
+    "title": "Purga de la pila con pushNamedAndRemoveUntil",
+    "src": "/interactive/seminario-de-i-d-i/semana-13/push-remove-until/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-13/tabs-codigo",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "tabs-codigo",
+    "title": "Código de las pestañas",
+    "src": "/interactive/seminario-de-i-d-i/semana-13/tabs-codigo/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-13/tabs-vs-push",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-13",
+    "weekNumber": 13,
+    "slug": "tabs-vs-push",
+    "title": "Pestañas o detalle",
+    "src": "/interactive/seminario-de-i-d-i/semana-13/tabs-vs-push/index.html"
+  }
+]

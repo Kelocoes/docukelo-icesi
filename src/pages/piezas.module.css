@@ -1,0 +1,40 @@
+.page { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+.intro { color: var(--ifm-color-emphasis-700); }
+
+.total { margin: 1rem 0; font-size: 15px; color: var(--ifm-color-emphasis-700); }
+
+.filters { display: grid; grid-template-columns: repeat(2, minmax(180px, 1fr)) minmax(200px, 2fr); gap: 8px; }
+.filters input, .filters select { padding: 8px 10px; border: 1px solid var(--ifm-color-emphasis-300); border-radius: 8px; background: var(--ifm-background-surface-color); color: var(--ifm-font-color-base); font: 14px var(--ifm-font-family-base); }
+.count { margin: 0.6rem 0 1rem; font-size: 13px; color: var(--ifm-color-emphasis-600); }
+.empty { padding: 2rem; text-align: center; color: var(--ifm-color-emphasis-600); }
+
+/* una sola columna: las piezas se ven a lo ancho y una debajo de otra */
+.grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.card { border: 1px solid var(--ifm-color-emphasis-300); border-radius: 12px; background: var(--ifm-background-surface-color); padding: 12px; min-width: 0; }
+.cardHead { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.cardTitle h3 { margin: 0; font-size: 16px; line-height: 1.3; }
+.meta { font-size: 12px; color: var(--ifm-color-emphasis-600); }
+
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 8px; }
+.controls button, .controls a, .dialogHead button { padding: 4px 12px; border: 1px solid var(--ifm-color-emphasis-300); border-radius: 999px; background: transparent; color: inherit; font: 600 13px var(--ifm-font-family-base); cursor: pointer; text-decoration: none; }
+.controls button:hover, .controls a:hover, .dialogHead button:hover:not(:disabled) { border-color: var(--ifm-color-primary); color: var(--ifm-color-primary); text-decoration: none; }
+.controls .solid { background: var(--ifm-color-primary); border-color: var(--ifm-color-primary); color: #fff; }
+.controls .solid:hover { color: #fff; filter: brightness(1.1); }
+.dialogHead button:disabled { opacity: 0.4; cursor: default; }
+.spacer { flex: 1; }
+
+.frame { display: block; width: 100%; height: 420px; border: 0; border-radius: 8px; }
+.placeholder { display: grid; place-items: center; height: 220px; border-radius: 8px; background: var(--ifm-color-emphasis-100); color: var(--ifm-color-emphasis-600); font-size: 13px; }
+
+.dialog { width: 98vw; height: 96vh; max-width: none; max-height: none; padding: 0; border: 1px solid var(--ifm-color-emphasis-300); border-radius: 14px; background: var(--ifm-background-color); color: var(--ifm-font-color-base); overflow: hidden; }
+.dialog[open] { display: flex; flex-direction: column; }
+.dialog::backdrop { background: rgba(0, 0, 0, 0.6); }
+.dialogHead { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-bottom: 1px solid var(--ifm-color-emphasis-300); flex-wrap: wrap; }
+.dialogTitle { flex: 1; font-weight: 700; font-size: 15px; min-width: 200px; }
+.dialogTitle small { font-weight: 400; color: var(--ifm-color-emphasis-600); }
+.dialogFrame { flex: 1; width: 100%; min-height: 0; border: 0; }
+
+@media (max-width: 900px) {
+    .filters { grid-template-columns: 1fr 1fr; }
+    .filters input { grid-column: 1 / -1; }
+}

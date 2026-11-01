@@ -99,13 +99,37 @@ async function clickByText(ctx, text) {
 }
 
 // Avanza con "Siguiente" hasta que se deshabilita. Devuelve cuantos pasos dio.
-async function walk(ctx) {
+// Con `errors`, ademas vigila el parpadeo del layout: despues de cada clic muestrea ~400 ms y si un elemento con
+// overflow-x auto/scroll muestra scroll horizontal por un instante y luego ya no (por ejemplo una animacion que entra
+// desplazada a la derecha), la barra aparece y desaparece y el contenido salta hacia abajo y hacia arriba.
+async function walk(ctx, errors) {
     let n = 0;
     for (; n < MAX_STEPS; n++) {
         const next = await clickByText(ctx, 'Siguiente');
         if (!next || (await next.isDisabled())) break;
-        await next.click();
-        await sleep(90);
+        if (errors) {
+            await ctx.evaluate(() => {
+                const over = (el) => /(auto|scroll)/.test(getComputedStyle(el).overflowX) && el.clientWidth > 0 && el.scrollWidth > el.clientWidth + 1;
+                window.__dkBase = new Set([...document.querySelectorAll('*')].filter(over));
+            });
+            await next.click();
+            const flashes = await ctx.evaluate(async () => {
+                const over = (el) => /(auto|scroll)/.test(getComputedStyle(el).overflowX) && el.clientWidth > 0 && el.scrollWidth > el.clientWidth + 1;
+                const name = (el) => el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className.trim() ? '.' + el.className.trim().split(/\s+/).join('.') : '');
+                const seen = new Set();
+                for (let i = 0; i < 10; i++) {
+                    await new Promise((r) => setTimeout(r, 40));
+                    for (const el of document.querySelectorAll('*')) if (!window.__dkBase.has(el) && over(el)) seen.add(el);
+                }
+                // parpadeo = la barra aparecio y al final ya no esta (una barra estable, como la de una caja de codigo con una
+                // linea larga que se vuelve a crear en cada paso, es legitima)
+                return [...new Set([...seen].filter((el) => !el.isConnected || !over(el)).map(name))];
+            });
+            for (const f of flashes) errors.push(`parpadeo de scroll horizontal en ${f} al avanzar (algo desborda a la derecha durante la animacion)`);
+        } else {
+            await next.click();
+            await sleep(90);
+        }
     }
     return n;
 }
@@ -126,7 +150,7 @@ async function testPiece(browser, base, piece) {
         const drawn = await page.evaluate(() => !!(window.DK && document.querySelector('.dk-card')) || document.body.innerText.trim().length > 40);
         if (!drawn) result.errors.push(`no dibuja nada (${theme})`);
 
-        const steps = await walk(page);
+        const steps = await walk(page, result.errors);
         if (theme === 'light') {
             result.steps = steps;
             const reset = await clickByText(page, 'Reiniciar');
