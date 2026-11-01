@@ -1,0 +1,8 @@
+{
+    "label": "S14 - Sessions and Error Handling",
+    "position": 14,
+    "link": {
+        "type": "generated-index",
+        "description": "Cookie sessions, Server Actions ('use server'), protected routes and error handling in Next.js."
+    }
+}

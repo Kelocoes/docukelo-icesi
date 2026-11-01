@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Componentes y composición</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-dom.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // La misma tienda de las piezas anteriores, ahora cortada en componentes. comp marca la RAIZ de cada instancia.
+  var NODES = [
+    { id: 'app', tag: 'body', comp: 'App' },
+    { id: 'header', tag: 'header', comp: 'Header', parent: 'app' },
+    { id: 'h1', tag: 'h1', parent: 'header', text: 'Mi tienda' },
+    { id: 'badge', tag: 'span', cls: 'badge', parent: 'header', text: '3', sub: 'class="badge"' },
+    { id: 'ul', tag: 'ul', comp: 'CartList', parent: 'app', sub: 'lista del carrito' },
+    { id: 'li1', tag: 'li', comp: 'CartItem', parent: 'ul', text: 'Teclado · $20' },
+    { id: 'li2', tag: 'li', comp: 'CartItem', parent: 'ul', text: 'Mouse · $10' },
+    { id: 'li3', tag: 'li', comp: 'CartItem', parent: 'ul', text: 'Monitor · $15' },
+    { id: 'total', tag: 'p', cls: 'total', comp: 'Total', parent: 'app', text: 'Total: $45', sub: 'class="total"' },
+    { id: 'footer', tag: 'footer', parent: 'app', text: '© 2026 Mi tienda' },
+  ];
+  var COMPS = { App: 'p1', Header: 'p2', CartList: 'p5', CartItem: 'p3', Total: 'p4' };
+  var CTREE = [
+    { id: 'app', comp: 'App', dom: 'app' },
+    { id: 'hd', comp: 'Header', parent: 'app', dom: 'header' },
+    { id: 'cl', comp: 'CartList', parent: 'app', dom: 'ul' },
+    { id: 'ci1', comp: 'CartItem', parent: 'cl', dom: 'li1' },
+    { id: 'ci2', comp: 'CartItem', parent: 'cl', dom: 'li2' },
+    { id: 'ci3', comp: 'CartItem', parent: 'cl', dom: 'li3' },
+    { id: 'tt', comp: 'Total', parent: 'app', dom: 'total' },
+  ];
+
+  // El codigo del capitulo; los numeros de linea se buscan por texto para que no se desfasen al editarlo.
+  function codigo(editado) {
+    return [
+      'function Header() {',
+      '  return (',
+      '    <header>',
+      '      <h1>Mi tienda</h1>',
+      '      <span className="badge">3</span>',
+      '    </header>',
+      '  );',
+      '}',
+      '',
+      'function CartItem({ nombre, precio }) {',
+      editado ? '  return <li>{nombre} · ${precio} · en stock</li>;' : '  return <li>{nombre} · ${precio}</li>;',
+      '}',
+      '',
+      'function CartList() {',
+      '  return (',
+      '    <ul>',
+      '      <CartItem nombre="Teclado" precio={20} />',
+      '      <CartItem nombre="Mouse" precio={10} />',
+      '      <CartItem nombre="Monitor" precio={15} />',
+      '    </ul>',
+      '  );',
+      '}',
+      '',
+      'function Total() {',
+      '  return <p className="total">Total: $45</p>;',
+      '}',
+      '',
+      'function App() {',
+      '  return (',
+      '    <div>',
+      '      <Header />',
+      '      <CartList />',
+      '      <Total />',
+      '      <footer>© 2026 Mi tienda</footer>',
+      '    </div>',
+      '  );',
+      '}',
+    ];
+  }
+  function rng(from, to) {
+    var all = codigo(false), a = -1, b = -1;
+    all.forEach(function (l, i) { if (a < 0 && l.indexOf(from) === 0) a = i; });
+    all.forEach(function (l, i) { if (a >= 0 && b < 0 && i >= a && l.indexOf(to) === 0) b = i; });
+    if (a < 0 || b < a) throw new Error('rango de codigo vacio: ' + from + ' .. ' + to);
+    var r = []; for (var k = a; k <= b; k++) r.push(k + 1); return r;
+  }
+
+  function build(opt) {
+    var editado = !!opt.editar;
+    var texto = editado ? { li1: 'Teclado · $20 · en stock', li2: 'Mouse · $10 · en stock', li3: 'Monitor · $15 · en stock' } : {};
+    var lista = [
+      // ---- Fase 1: un componente ----
+      { phase: 0, title: 'Un componente es una parte de la pantalla', comps: ['Header'], cfocus: ['Header'], view: 'dom', code: rng('function Header', '}'),
+        caption: 'Header es un componente: una función que devuelve un trozo de la interfaz escrito como HTML (JSX). Ese trozo produce tres nodos del DOM: header, h1 y span.' },
+
+      // ---- Fase 2: cortar la pagina ----
+      { phase: 1, title: 'Cortar la página en componentes', comps: true, view: 'dom',
+        caption: 'Cada color es un componente. Pasa el mouse por la página o por los chips de arriba y mira a cuántos nodos del DOM equivale cada uno.' },
+      { phase: 1, title: 'El árbol de componentes', comps: true, view: 'comp', cfocus: ['App'], code: rng('function App', '}'),
+        caption: 'Los componentes forman su propio árbol, distinto al del DOM: App contiene a Header, a CartList (que contiene tres CartItem) y a Total.' },
+
+      // ---- Fase 3: reutilizar ----
+      { phase: 2, title: 'Un componente, muchas copias', comps: ['CartItem'], view: 'comp', cfocus: ['CartItem'], code: rng('function CartItem', '}'),
+        csub: { ci1: 'nombre="Teclado"', ci2: 'nombre="Mouse"', ci3: 'nombre="Monitor"' },
+        caption: 'CartItem se escribe una vez y se usa tres veces. Lo que cambia en cada copia son los datos que recibe, sus props, que veremos en la siguiente sección.' },
+      { phase: 2, title: 'Un cambio, tres copias', comps: ['CartItem'], view: 'dom', cfocus: ['CartItem'], code: [rng('function CartItem', '}')[1]],
+        text: texto, touch: editado ? ['li1', 'li2', 'li3'] : [],
+        caption: editado
+          ? 'Cambiaste una sola línea del componente y las tres copias se actualizaron a la vez.'
+          : 'Esta línea define cómo se ve cada copia. Activa «Editar CartItem» para cambiarla y mira qué pasa en la página.' },
+
+      // ---- Fase 4: componer ----
+      { phase: 3, title: 'Componer es anidar', comps: true, view: 'comp', cfocus: ['App'], code: rng('function App', '}'), text: texto,
+        caption: 'Armar una pantalla es colocar componentes dentro de otros. App no sabe cómo se dibuja un CartItem: solo lo usa.' },
+      { phase: 3, title: 'Piezas pequeñas, pantalla grande', comps: true, view: 'dom', text: texto,
+        caption: 'Cada componente se puede entender, cambiar y reutilizar por separado. Esa es la ventaja de componer en lugar de escribir una página gigante.' },
+    ];
+    // el codigo vive en la pestaña «Código»; solo se abre sola cuando el paso trata de la linea de codigo
+    var abre = { 0: true, 4: true };
+    lista.forEach(function (s, i) { s.codeText = codigo(editado).join('\n'); s.codeTitle = 'Tienda.jsx'; if (abre[i]) s.view = 'code'; });
+    return lista;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Una página de tienda cortada en componentes: se ve el árbol DOM, el árbol de componentes, la reutilización de CartItem y la composición',
+    phases: ['Un componente', 'Cortar la página', 'Reutilizar', 'Componer'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.dom({ stage: stage, url: 'mi-tienda.com', treeTitle: 'Árbol DOM', nodes: NODES, components: COMPS, ctree: CTREE, code: true });
+    },
+    toggles: [{ key: 'editar', label: 'Editar CartItem (agregar «en stock»)', affectsPhase: 2 }],
+    build: build,
+    intro: {
+      kicker: 'Componentes',
+      title: 'De una página a piezas reutilizables',
+      text: 'La misma tienda de antes, pero ahora la cortamos en componentes. Verás qué es uno, cómo se ve su árbol frente al del DOM, cómo se reutiliza y cómo se componen unos dentro de otros.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

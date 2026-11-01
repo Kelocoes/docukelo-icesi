@@ -1,9 +1,8 @@
 {
-    "label": "S15 - GraphQL",
-    "className": "hidden",
+    "label": "S15 - Pruebas E2E con Playwright",
     "position": 15,
     "link": {
         "type": "generated-index",
-        "description": "GraphQL introduction"
+        "description": "Pruebas end-to-end con Playwright: instalación, configuración, localizadores, auto-espera, sesión en las pruebas, depuración y CI."
     }
 }

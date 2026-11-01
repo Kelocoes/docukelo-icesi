@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La página como árbol: el DOM</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-dom.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // La pagina de una tienda pequena. Los nodos son los mismos en la pagina y en el arbol: el estudiante los explora con el mouse.
+  var NODES = [
+    { id: 'body', tag: 'body' },
+    { id: 'header', tag: 'header', parent: 'body' },
+    { id: 'h1', tag: 'h1', parent: 'header', text: 'Mi tienda' },
+    { id: 'badge', tag: 'span', cls: 'badge', parent: 'header', text: '2', sub: 'class="badge"' },
+    { id: 'main', tag: 'main', parent: 'body' },
+    { id: 'ul', tag: 'ul', parent: 'main', sub: 'lista del carrito' },
+    { id: 'li1', tag: 'li', parent: 'ul', text: 'Teclado · $20' },
+    { id: 'li2', tag: 'li', parent: 'ul', text: 'Mouse · $10' },
+    { id: 'li3', tag: 'li', parent: 'ul', text: 'Monitor · $15', hidden: true },
+    { id: 'btn', tag: 'button', parent: 'main', text: 'Agregar monitor' },
+    { id: 'total', tag: 'p', cls: 'total', parent: 'main', text: 'Total: $30', sub: 'class="total"' },
+    { id: 'footer', tag: 'footer', parent: 'body', text: '© 2026 Mi tienda' },
+  ];
+
+  // El codigo del capitulo; los numeros de linea se buscan por texto para que no se desfasen al editarlo.
+  function codigo(olvido) {
+    return [
+      'const contador = document.querySelector(".badge");',
+      'contador.textContent = "3";',
+      '',
+      'const lista = document.querySelector("ul");',
+      'const item = document.createElement("li");',
+      'item.textContent = "Monitor · $15";',
+      'lista.appendChild(item);',
+      '',
+      'const total = document.querySelector(".total");',
+      olvido ? '// total.textContent = "Total: $45";  // se te olvidó' : 'total.textContent = "Total: $45";',
+    ];
+  }
+  function lines(from, to) {
+    var all = codigo(false), a = -1, b = -1;
+    all.forEach(function (l, i) { if (a < 0 && l.indexOf(from) === 0) a = i; if (b < 0 && l.indexOf(to) === 0) b = i; });
+    if (a < 0 || b < a) throw new Error('rango de codigo vacio: ' + from + ' .. ' + to);
+    var r = []; for (var k = a; k <= b; k++) r.push(k + 1); return r;
+  }
+
+  function build(opt) {
+    var olvido = !!opt.olvido;
+    var viejo = { badge: 'need', ul: 'need', total: 'need' };
+    var aldia = { badge: 'reuse', ul: 'reuse', li3: 'reuse', total: olvido ? 'need' : 'reuse' };
+    var lista = [
+      // ---- Fase 1: la pagina es un arbol ----
+      { phase: 0, title: 'El navegador convierte el HTML en un árbol',
+        caption: 'Cada etiqueta es un nodo. Pasa el mouse por la página o por el árbol: se ilumina el mismo nodo en los dos lados.' },
+      { phase: 0, title: 'Padres, hijos y hermanos', focus: ['header'],
+        caption: '<header> contiene un <h1> y un <span>: son sus hijos y son hermanos entre sí. El trazo punteado marca a su padre, <body>.' },
+      { phase: 0, title: 'Los nodos se anidan', focus: ['ul'],
+        caption: 'El <ul> es el padre de cada <li>. Para cambiar algo en pantalla, JavaScript primero tiene que encontrar su nodo en este árbol.' },
+
+      // ---- Fase 2: cambiar el DOM a mano ----
+      { phase: 1, title: 'Cambia el dato, no la pantalla', marks: viejo, mirror: true, state: 'carrito = 3 productos',
+        meter: { label: 'Partes al día', value: 0, max: 3, text: '0 de 3', tone: 'err' },
+        caption: 'Llega un tercer producto. El dato cambió, pero el DOM no sabe nada: la pantalla sigue mostrando 2. Tres partes quedaron desactualizadas.' },
+      { phase: 1, title: 'Primero: el contador', code: lines('const contador', 'contador.textContent'),
+        text: { badge: '3' }, touch: ['badge'], marks: { badge: 'reuse', ul: 'need', total: 'need' }, mirror: true, state: 'carrito = 3 productos',
+        meter: { label: 'Partes al día', value: 1, max: 3, text: '1 de 3', tone: 'ctl' },
+        caption: 'Buscas el nodo con querySelector y cambias su texto. Solo ese nodo se actualiza; la lista y el total siguen viejos.' },
+      { phase: 1, title: 'Después: la lista', code: lines('const lista', 'lista.appendChild'),
+        text: { badge: '3' }, show: ['li3'], touch: ['li3'], marks: { badge: 'reuse', ul: 'reuse', li3: 'reuse', total: 'need' }, mirror: true, state: 'carrito = 3 productos',
+        meter: { label: 'Partes al día', value: 2, max: 3, text: '2 de 3', tone: 'ctl' },
+        caption: 'Creas un <li>, le pones el texto y lo agregas al <ul>. Tú decides cómo y dónde hacerlo.' },
+      olvido
+        ? { phase: 1, title: 'Se olvidó el total', code: [9],
+            text: { badge: '3' }, show: ['li3'], marks: aldia, mirror: true, state: 'carrito = 3 productos',
+            meter: { label: 'Partes al día', value: 2, max: 3, text: '2 de 3', tone: 'err' },
+            caption: 'La pantalla muestra 3 productos pero el total sigue en $30, y nada avisa del error. Es lo que pasa al olvidar una sola línea.' }
+        : { phase: 1, title: 'Por último: el total', code: lines('const total', 'total.textContent'),
+            text: { badge: '3', total: 'Total: $45' }, show: ['li3'], touch: ['total'], marks: aldia, mirror: true, state: 'carrito = 3 productos',
+            meter: { label: 'Partes al día', value: 3, max: 3, text: '3 de 3', tone: 'ack' },
+            caption: 'Tres nodos tocados a mano, uno por uno. Ahora la pantalla es consistente con el dato.' },
+      { phase: 1, title: 'El costo de hacerlo a mano',
+        text: { badge: '3', total: olvido ? 'Total: $30' : 'Total: $45' }, show: ['li3'], marks: aldia, mirror: true,
+        caption: 'Tú describes cada paso (buscar, crear, insertar, actualizar) y debes recordar todos los lugares que dependen del dato. Con tres partes se maneja; con cientos, cada dato nuevo es una fuente de errores.' },
+    ];
+    // el codigo vive en la pestaña «Código»; los pasos que lo explican abren esa pestaña (el estudiante puede volver al árbol)
+    lista.forEach(function (s) { s.codeText = codigo(olvido).join('\n'); s.codeTitle = 'carrito.js'; s.view = s.code ? 'code' : 'dom'; });
+    return lista;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Una página de tienda y su árbol DOM: al pasar el mouse se ilumina el mismo nodo en los dos lados; luego se actualiza a mano con JavaScript',
+    phases: ['La página es un árbol', 'Cambiarla a mano'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.dom({ stage: stage, url: 'mi-tienda.com', treeTitle: 'Árbol DOM',
+        legend: [['need', 'Desactualizado'], ['reuse', 'Al día']], nodes: NODES, code: true });
+    },
+    toggles: [{ key: 'olvido', label: 'Olvidar actualizar el total', affectsPhase: 1 }],
+    build: build,
+    intro: {
+      kicker: 'El DOM',
+      title: 'Antes de React: la página es un árbol',
+      text: 'El navegador no guarda tu página como texto: la convierte en un árbol de nodos llamado DOM. Explóralo con el mouse y luego mira qué pasa cuando JavaScript tiene que mantenerlo al día a mano.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

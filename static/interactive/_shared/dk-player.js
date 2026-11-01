@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-player.js: el marco común de una pieza paso a paso: pestañas por fase, escena, barra de progreso,
  * leyenda, botones (Anterior, Siguiente, Reproducir, Reiniciar) e interruptores opcionales.
  * Requiere dk-kit.js y la escena que se le pase (por ahora DK.sequence).

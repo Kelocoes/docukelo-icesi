@@ -1,4 +1,4 @@
-/* DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md. Estilos de dk-nav.js (pila de rutas + teléfono). Cargar después de dk-base.css. */
+/* DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams. Estilos de dk-nav.js (pila de rutas + teléfono). Cargar después de dk-base.css. */
 .dk-ph.dk-nav { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }   /* teléfono y pila: mitad y mitad */
 .dk-nav .dk-ptop { align-items: flex-start; }
 @media (max-width: 700px) { .dk-ph.dk-nav { grid-template-columns: 1fr; } }

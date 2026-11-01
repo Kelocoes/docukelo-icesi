@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-tree.js: arbol de componentes + estado. Dibuja una jerarquia real (nodos unidos por ramas, raiz arriba) y, paso a
  * paso, marca el rol de cada componente (dueño del estado, solo reenvia, consume, Provider) y hace viajar los datos por
  * las ramas: hacia abajo (props), hacia arriba (callbacks) o en un salto directo (Context, store global).

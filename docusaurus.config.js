@@ -179,6 +179,11 @@ const config = {
                         label: 'Docs',
                     },
                     {
+                        to: '/piezas',
+                        label: 'Piezas',
+                        position: 'left',
+                    },
+                    {
                         type: 'custom-focus-mode',
                         position: 'right',
                     },

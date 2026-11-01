@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qué hace use server</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Fase 1: con 'use server' el thunk llama a loginAction y Next.js la convierte en un POST: el codigo real nunca sale del servidor.
+  // Fase 2: sin la directiva todo viaja al navegador (el caso de uso y el mock con la clave del JWT) y nadie puede escribir la cookie httpOnly.
+  var items = [
+    { id: 'br', type: 'zone', shape: 'round', x: 16, y: 44, w: 300, h: 350, rx: 18, lx: 32, ly: 70, label: 'Navegador', sub: 'el código que descarga ana' },
+    { id: 'sv', type: 'zone', shape: 'round', x: 404, y: 44, w: 300, h: 350, rx: 18, lx: 420, ly: 70, label: 'Servidor Next.js', sub: 'el código no sale de aquí' },
+    { id: 'thunk', type: 'node', icon: 'gear', x: 90, y: 150, size: 50, label: 'Thunk', sub: 'loginMutation' },
+    { id: 'stub', type: 'node', icon: 'plug', x: 240, y: 150, size: 46, label: 'loginAction', sub: 'solo un recibo' },
+    { id: 'action', type: 'node', icon: 'gear', x: 480, y: 150, size: 50, label: 'loginAction', sub: 'la función real' },
+    { id: 'uc', type: 'node', icon: 'classbox', x: 640, y: 150, size: 46, label: 'LoginUseCase', sub: 'dominio' },
+    { id: 'ds', type: 'node', icon: 'database', x: 640, y: 315, size: 46, label: 'Backend (mock)', sub: 'firma el JWT' },
+    { id: 'ck', type: 'node', icon: 'lock', x: 480, y: 315, size: 46, label: 'Cookie', sub: 'httpOnly' },
+    { id: 'bad1', type: 'tag', x: 166, y: 345, w: 290, text: 'usuarios y clave del JWT en el bundle', hidden: true },
+    { id: 'bad2', type: 'tag', x: 166, y: 378, w: 290, text: 'nadie puede escribir la cookie httpOnly', hidden: true },
+  ];
+
+  var L = function (path, kind, label, extra) { var l = { path: path, kind: kind, label: label }; for (var k in extra) l[k] = extra[k]; return l; };
+
+  var steps = [
+    { phase: 0, title: 'El thunk llama a loginAction', focus: ['thunk', 'stub'],
+      links: [L([118, 150, 212, 150], 'ctl', 'llama')],
+      caption: 'Para el thunk es una llamada normal: await loginAction(email, password). Pero en el navegador esa función no es la real: Next.js la reemplazó por un recibo con su id, y el código real no se descargó.' },
+    { phase: 0, title: 'El recibo hace un POST', focus: ['stub', 'action'],
+      links: [L([264, 150, 452, 150], 'ctl', 'POST + id')],
+      caption: "Llamar al recibo envía un POST a la misma URL con el encabezado Next-Action y los argumentos. Es lo que escribe 'use server': tú no creas el endpoint ni el fetch." },
+    { phase: 0, title: 'En el servidor corre la función real', focus: ['action', 'uc', 'ds'],
+      links: [L([506, 150, 614, 150], 'ctl', 'execute()'), L([640, 174, 640, 291], 'ctl', 'POST login')],
+      caption: 'Next.js encuentra la función por su id y la ejecuta. Allí sí existen el caso de uso y el datasource mock, con los usuarios y la clave con que se firma el JWT.' },
+    { phase: 0, title: 'Solo el servidor escribe la cookie', focus: ['action', 'ck'],
+      links: [L([480, 176, 480, 291], 'data', 'Set-Cookie')],
+      caption: 'Una cookie httpOnly solo se puede crear desde el servidor, con el encabezado Set-Cookie en la respuesta. Por eso la acción corre allí.' },
+    { phase: 0, title: 'La respuesta vuelve al thunk', focus: ['action', 'stub', 'thunk'],
+      links: [L([452, 165, 264, 165], 'ack', 'ok + user'), L([212, 165, 118, 165], 'ack', 'user')],
+      caption: 'El navegador guarda la cookie por su cuenta y el recibo termina su promesa con el resultado. El thunk sigue como si hubiera llamado una función local.' },
+
+    { phase: 1, title: "Sin 'use server', el código viaja", focus: ['stub', 'uc', 'ds'], sub: { stub: 'el código real' }, show: ['bad1'],
+      at: { uc: [90, 262], ds: [240, 262] }, state: { action: 'dim', ck: 'dim' },
+      caption: "Sin la directiva, el archivo es un módulo normal: el bundler lo incluye en el JavaScript del navegador con todo lo que importa. El caso de uso y el mock con los usuarios y la clave del JWT se descargan (y 'server-only' haría fallar el build)." },
+    { phase: 1, title: 'Y nadie puede escribir la cookie', focus: ['ck', 'bad2'], sub: { stub: 'el código real' }, show: ['bad1', 'bad2'],
+      at: { uc: [90, 262], ds: [240, 262] }, state: { action: 'dim', ck: 'ghost' },
+      caption: 'JavaScript del navegador no puede crear una cookie httpOnly. La sesión no se podría guardar de forma segura: por eso la acción corre en el servidor.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: "Qué hace la directiva use server: un thunk del navegador llama a loginAction, Next.js la convierte en un POST y la función real corre en el servidor; sin la directiva el caso de uso y el mock viajarían al navegador y nadie podría escribir la cookie httpOnly",
+    phases: ['Con use server', 'Sin use server'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 420, items: items, trail: 'step' }); },
+    build: function () { return steps; },
+    intro: { kicker: 'SERVER ACTIONS', title: "Qué hace 'use server'",
+      text: 'Sigue la llamada del thunk a loginAction: dónde corre cada parte, qué viaja por la red y qué pasaría sin la directiva.' },
+  });
+})();
+</script>
+</body>
+</html>

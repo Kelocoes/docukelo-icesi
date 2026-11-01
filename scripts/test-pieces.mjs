@@ -2,6 +2,11 @@
 //
 //   npm run test:pieces                 todas las piezas
 //   npm run test:pieces -- redux        solo las que contengan "redux" en su ruta
+//   npm run test:pieces -- --jobs 8     prueba 8 piezas a la vez (por defecto: la mitad de los nucleos, entre 1 y 6)
+//   npm run test:pieces -- --jobs 1     una por una (para depurar una falla que sospechas de la carga)
+//
+// Busca las piezas en <carpeta estatica>/interactive/ (por defecto "static", relativa a donde corres el comando, que debe
+// ser la raiz del proyecto). Otra carpeta: DK_STATIC_DIR=public npm run test:pieces
 //
 // Para cada pieza abre un navegador real, la recorre y falla si hay errores de JavaScript, recursos locales que no
 // cargan o si la pieza no dibuja nada:
@@ -14,11 +19,11 @@
 // En un equipo sin ninguno: npx playwright install chromium.
 import { createServer } from 'node:http';
 import { readFile, readdir, stat } from 'node:fs/promises';
+import { cpus } from 'node:os';
 import { extname, join, relative, resolve, sep } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright-core';
 
-const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)), 'static');
+const ROOT = resolve(process.cwd(), process.env.DK_STATIC_DIR || 'static');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.json': 'application/json' };
 // motores cuya figura es un <svg> directo en el escenario: en pantalla completa no deben desbordar verticalmente
 const FITS_FULLSCREEN = ['layers', 'tree', 'sequence', 'radial', 'canvas'];
@@ -94,13 +99,37 @@ async function clickByText(ctx, text) {
 }
 
 // Avanza con "Siguiente" hasta que se deshabilita. Devuelve cuantos pasos dio.
-async function walk(ctx) {
+// Con `errors`, ademas vigila el parpadeo del layout: despues de cada clic muestrea ~400 ms y si un elemento con
+// overflow-x auto/scroll muestra scroll horizontal por un instante y luego ya no (por ejemplo una animacion que entra
+// desplazada a la derecha), la barra aparece y desaparece y el contenido salta hacia abajo y hacia arriba.
+async function walk(ctx, errors) {
     let n = 0;
     for (; n < MAX_STEPS; n++) {
         const next = await clickByText(ctx, 'Siguiente');
         if (!next || (await next.isDisabled())) break;
-        await next.click();
-        await sleep(90);
+        if (errors) {
+            await ctx.evaluate(() => {
+                const over = (el) => /(auto|scroll)/.test(getComputedStyle(el).overflowX) && el.clientWidth > 0 && el.scrollWidth > el.clientWidth + 1;
+                window.__dkBase = new Set([...document.querySelectorAll('*')].filter(over));
+            });
+            await next.click();
+            const flashes = await ctx.evaluate(async () => {
+                const over = (el) => /(auto|scroll)/.test(getComputedStyle(el).overflowX) && el.clientWidth > 0 && el.scrollWidth > el.clientWidth + 1;
+                const name = (el) => el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className.trim() ? '.' + el.className.trim().split(/\s+/).join('.') : '');
+                const seen = new Set();
+                for (let i = 0; i < 10; i++) {
+                    await new Promise((r) => setTimeout(r, 40));
+                    for (const el of document.querySelectorAll('*')) if (!window.__dkBase.has(el) && over(el)) seen.add(el);
+                }
+                // parpadeo = la barra aparecio y al final ya no esta (una barra estable, como la de una caja de codigo con una
+                // linea larga que se vuelve a crear en cada paso, es legitima)
+                return [...new Set([...seen].filter((el) => !el.isConnected || !over(el)).map(name))];
+            });
+            for (const f of flashes) errors.push(`parpadeo de scroll horizontal en ${f} al avanzar (algo desborda a la derecha durante la animacion)`);
+        } else {
+            await next.click();
+            await sleep(90);
+        }
     }
     return n;
 }
@@ -121,7 +150,7 @@ async function testPiece(browser, base, piece) {
         const drawn = await page.evaluate(() => !!(window.DK && document.querySelector('.dk-card')) || document.body.innerText.trim().length > 40);
         if (!drawn) result.errors.push(`no dibuja nada (${theme})`);
 
-        const steps = await walk(page);
+        const steps = await walk(page, result.errors);
         if (theme === 'light') {
             result.steps = steps;
             const reset = await clickByText(page, 'Reiniciar');
@@ -169,28 +198,49 @@ async function testPiece(browser, base, piece) {
     return result;
 }
 
-const filter = process.argv[2];
+const argv = process.argv.slice(2);
+const jIdx = argv.findIndex((a) => a === '--jobs' || a === '-j' || a.startsWith('--jobs='));
+let jobsArg = null;
+if (jIdx >= 0) jobsArg = argv[jIdx].includes('=') ? argv[jIdx].split('=')[1] : argv[jIdx + 1];
+const positional = argv.filter((a, i) => !a.startsWith('-') && !(jIdx >= 0 && !argv[jIdx].includes('=') && i === jIdx + 1));
+const filter = positional[0];
+const jobs = Math.max(1, Math.floor(Number(jobsArg || process.env.DK_JOBS)) || Math.min(6, Math.max(1, Math.floor(cpus().length / 2))));
+
 const pieces = (await findPieces(join(ROOT, 'interactive'))).filter((p) => !filter || p.includes(filter)).sort();
 if (!pieces.length) { console.error('Ninguna pieza coincide con el filtro.'); process.exit(2); }
 
 const server = await startServer();
 const base = `http://127.0.0.1:${server.address().port}`;
 const browser = await launch();
-const results = [];
-for (const piece of pieces) {
-    try {
-        results.push(await testPiece(browser, base, piece));
-    } catch (e) {
-        results.push({ piece, engines: [], steps: 0, toggles: 0, errors: ['excepcion: ' + e.message.split('\n')[0]], notes: [] });
-    }
-    const r = results.at(-1);
+const t0 = Date.now();
+const results = new Array(pieces.length);
+
+function report(r) {
     console.log(`${r.errors.length ? 'FALLA' : 'ok   '}  ${r.piece.replace(/^interactive\//, '')}  [${r.engines.join(',') || 'sin motor dk'}]  pasos=${r.steps} interruptores=${r.toggles}`);
     for (const e of [...new Set(r.errors)]) console.log('        - ' + e);
     for (const n of r.notes) console.log('        . ' + n);
 }
+
+// Varias piezas a la vez: cada una usa sus propios contextos del mismo navegador. Los resultados se imprimen en orden
+// alfabetico (no en orden de llegada) para que la salida sea siempre igual.
+let next = 0, printed = 0;
+async function worker() {
+    while (next < pieces.length) {
+        const i = next++;
+        try {
+            results[i] = await testPiece(browser, base, pieces[i]);
+        } catch (e) {
+            results[i] = { piece: pieces[i], engines: [], steps: 0, toggles: 0, errors: ['excepcion: ' + e.message.split('\n')[0]], notes: [] };
+        }
+        while (printed < pieces.length && results[printed]) report(results[printed++]);
+    }
+}
+console.log(`Probando ${pieces.length} pieza(s), ${jobs} a la vez...`);
+await Promise.all(Array.from({ length: Math.min(jobs, pieces.length) }, worker));
 await browser.close();
 server.close();
 
 const failed = results.filter((r) => r.errors.length);
-console.log(`\n${results.length - failed.length} de ${results.length} piezas sin errores.`);
+console.log(`
+${results.length - failed.length} de ${results.length} piezas sin errores (${((Date.now() - t0) / 1000).toFixed(0)} s, ${jobs} a la vez).`);
 process.exit(failed.length ? 1 : 0);

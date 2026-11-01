@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auto-espera de Playwright</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Tres actores: tu prueba, Playwright y la aplicacion. Las acciones esperan a que el elemento este listo (actionability) y las
+  // aserciones web-first reintentan. Un interruptor hace que la app tarde, para ver los reintentos; al final, el mal habito de dormir.
+  var T = 'test', P = 'pw', A = 'app';
+  var PHASES = ['click()', 'expect()', 'Dormir'];
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+
+  function build(opt) {
+    var st = [];
+    var add = function (phase, title, caption, msgs, state) { st.push({ phase: phase, title: title, caption: caption, msgs: msgs, state: state }); };
+    var slow = !!opt.lenta;
+
+    add(0, '1 · Tu prueba pide un clic', 'Escribes await page.getByRole(...).click(). No escribes ninguna espera.',
+      [msg(T, P, 'click()', 'ctl')], { test: 'Esperando', pw: 'Recibe la orden', app: slow ? 'Cargando…' : 'Lista' });
+    add(0, '2 · Playwright comprueba el botón',
+      'Antes de hacer clic verifica que el elemento esté visible, estable (sin moverse), habilitado y que reciba eventos (que nada lo tape).',
+      [msg(P, A, 'comprobaciones', 'ctl')], { test: 'Esperando', pw: 'Comprobando', app: slow ? 'Cargando…' : 'Lista' });
+    if (slow) {
+      add(0, '3 · El botón aún está deshabilitado', 'La aplicación todavía está cargando: el botón existe pero no se puede pulsar.',
+        [msg(A, P, 'deshabilitado', 'err')], { test: 'Esperando', pw: 'Aún no', app: 'Botón deshabilitado' });
+      add(0, '4 · Playwright reintenta solo',
+        'Vuelve a comprobar hasta que se cumpla o se agote el tiempo de la prueba (30 s por defecto). Tú no escribiste ningún sleep.',
+        [msg(P, A, 'reintenta…', 'ctl')], { test: 'Esperando', pw: 'Reintentando', app: 'Botón deshabilitado' });
+      add(0, '5 · Ahora sí está listo', 'En cuanto el botón se habilita, la acción continúa.',
+        [msg(A, P, 'habilitado', 'ack')], { test: 'Esperando', pw: 'Listo para actuar', app: 'Botón habilitado' });
+    } else {
+      add(0, '3 · Todo en orden', 'Si el botón ya estaba listo, no hay espera alguna.',
+        [msg(A, P, 'todo en orden', 'ack')], { test: 'Esperando', pw: 'Listo para actuar', app: 'Lista' });
+    }
+    add(0, (slow ? '6' : '4') + ' · Se hace el clic', 'Recién ahora Playwright pulsa el botón y le avisa a tu prueba.',
+      [msg(P, A, 'clic', 'data'), msg(P, T, 'listo', 'ack')], { test: 'Continúa', pw: 'Clic hecho', app: 'Recibió el clic' });
+
+    add(1, '1 · Una aserción pide comprobar', 'await expect(heading).toBeVisible(). Las aserciones de Playwright se llaman web-first: reintentan solas.',
+      [msg(T, P, 'toBeVisible()', 'ctl')], { test: 'Esperando', pw: 'Consultando', app: slow ? 'Navegando…' : 'En /routines' });
+    if (slow) {
+      add(1, '2 · Todavía no aparece', 'La página aún está cargando: la comprobación falla, pero no es el final.',
+        [msg(P, A, 'consulta', 'ctl'), msg(A, P, 'aún no', 'err')], { test: 'Esperando', pw: 'Reintentando', app: 'Navegando…' });
+      add(1, '3 · Reintenta y lo encuentra', 'Reintenta hasta 5 s por defecto (el tiempo de una aserción).',
+        [msg(P, A, 'reintenta…', 'ctl'), msg(A, P, 'visible', 'ack')], { test: 'Esperando', pw: 'Lo encontró', app: 'En /routines' });
+    } else {
+      add(1, '2 · Aparece de inmediato', 'La aserción pasó en el primer intento.',
+        [msg(P, A, 'consulta', 'ctl'), msg(A, P, 'visible', 'ack')], { test: 'Esperando', pw: 'Lo encontró', app: 'En /routines' });
+    }
+    add(1, (slow ? '4' : '3') + ' · La prueba pasa', 'Lo importante: esperó lo justo, ni más ni menos.',
+      [msg(P, T, 'pasa', 'ack')], { test: 'Pasó', pw: 'Listo', app: 'En /routines' });
+
+    add(2, 'waitForTimeout(3000): dormir', 'Es lo que escribiría alguien que no conoce la auto-espera: esperar un tiempo fijo antes de seguir.',
+      [msg(T, P, 'espera 3 s', 'ctl')], { test: 'Dormida 3 s', pw: 'Sin hacer nada', app: slow ? 'Cargando…' : 'Lista' });
+    add(2, 'Por qué es mala idea', 'Si la app tarda 3,5 s, la prueba falla (inestable). Si tarda 0,2 s, se pierden 2,8 s en cada ejecución. Con cientos de pruebas, minutos enteros.',
+      [msg(P, T, 'pasaron 3 s', 'ack')], { test: 'Sigue, a ciegas', pw: 'Sin hacer nada', app: 'Quién sabe' });
+    return st;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Auto-espera de Playwright: click espera las comprobaciones de actionability, las aserciones expect reintentan hasta que se cumplan y por qué waitForTimeout es una mala práctica',
+    phases: PHASES,
+    scene: function (svg) {
+      return DK.sequence({
+        svg: svg, trayCount: 0, idleState: 'Sin empezar', phases: PHASES,
+        actors: [
+          { id: T, label: 'Tu prueba', icon: 'laptop' },
+          { id: P, label: 'Playwright', icon: 'server' },
+          { id: A, label: 'La aplicación', icon: 'browser' },
+        ],
+      });
+    },
+    toggles: [{ key: 'lenta', label: 'La aplicación tarda en responder', affectsPhase: 0 }],
+    build: build,
+    intro: { kicker: 'AUTO-ESPERA', title: 'Por qué no escribes esperas',
+      text: 'Playwright espera por ti. Activa «La aplicación tarda en responder» para ver los reintentos.' },
+  });
+})();
+</script>
+</body>
+</html>

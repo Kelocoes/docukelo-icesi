@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estructura de un proyecto React con Vite</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-files.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Lo que entrega `npm create vite@latest mi-app -- --template react` (create-vite 9, Vite 8, React 19, sin TypeScript) y, aparte,
+  // la convencion propuesta para organizar src/ (items isNew + hidden: aparecen paso a paso).
+  var items = [
+    // ---- carpetas (--dirsfirst) ----
+    { path: 'public/', edit: 'sometimes', purpose: 'Archivos estáticos que se sirven tal cual, desde la raíz del sitio.',
+      points: ['No pasan por Vite: no se transforman ni se les agrega un hash.', 'Se piden con una ruta absoluta, por ejemplo <code>/favicon.svg</code>.', 'Úsala para el favicon, <code>robots.txt</code> o archivos que no importas desde el código.'] },
+    { path: 'public/favicon.svg', edit: 'never', purpose: 'El ícono de la pestaña del navegador.',
+      points: ['Lo referencia <code>index.html</code> con <code>&lt;link rel="icon" href="/favicon.svg"&gt;</code>.'] },
+    { path: 'public/icons.svg', edit: 'never', purpose: 'Un sprite de íconos (varios SVG en un solo archivo) que usa la página de ejemplo de App.jsx.',
+      points: ['Se usa con <code>&lt;use href="/icons.svg#github-icon"&gt;</code>.', 'Puedes borrarlo junto con el ejemplo.'] },
+    { path: 'src/', edit: 'always', purpose: 'Todo el código de tu aplicación. Es donde vas a trabajar casi siempre.',
+      points: ['Lo que importas desde aquí pasa por Vite: se transforma y se empaqueta.', 'Vite solo trae <code>main.jsx</code> y <code>App.jsx</code>; cómo organizar el resto lo decides tú.'] },
+    { path: 'src/assets/', edit: 'sometimes', purpose: 'Imágenes y recursos que importas desde el código.',
+      points: ['Se usan con <code>import logo from "./assets/react.svg"</code>.', 'Vite los procesa y, en el build, les agrega un hash al nombre para el caché del navegador.', 'Diferencia con <code>public/</code>: lo que está aquí se importa; lo de public se pide por URL.'] },
+    { path: 'src/assets/hero.png', edit: 'never', purpose: 'Imagen de ejemplo de la plantilla.', points: ['Puedes borrarla junto con el ejemplo de App.jsx.'] },
+    { path: 'src/assets/react.svg', edit: 'never', purpose: 'Logo de React usado en el ejemplo.', points: ['Puedes borrarlo junto con el ejemplo de App.jsx.'] },
+    { path: 'src/assets/vite.svg', edit: 'never', purpose: 'Logo de Vite usado en el ejemplo.', points: ['Puedes borrarlo junto con el ejemplo de App.jsx.'] },
+
+    // ---- convencion propuesta (aparece en la fase 2) ----
+    { path: 'src/components/', isNew: true, hidden: true, edit: 'always', purpose: 'Piezas de interfaz reutilizables: botones, tarjetas, barras de navegación.',
+      points: ['Reciben datos por props y devuelven JSX.', 'No saben en qué pantalla ni en qué URL están.', '<b>Usa a:</b> otros components y utils. <b>Lo usan:</b> pages y otros components.'] },
+    { path: 'src/components/Button.jsx', isNew: true, hidden: true, edit: 'always', purpose: 'Un botón reutilizable: se escribe una vez y se usa en cualquier pantalla.',
+      codeTitle: 'Button.jsx', code: 'export default function Button({ children, onClick }) {\n  return <button onClick={onClick}>{children}</button>\n}' },
+    { path: 'src/hooks/', isNew: true, hidden: true, edit: 'always', purpose: 'Hooks propios: funciones que empiezan con "use" y reutilizan lógica con estado.',
+      points: ['Ejemplos: <code>useFetch</code>, <code>useCart</code>, <code>useForm</code>.', 'Evitan repetir la misma lógica en varios componentes.', '<b>Usa a:</b> services y utils. <b>Lo usan:</b> pages y components.'] },
+    { path: 'src/hooks/useFetch.js', isNew: true, hidden: true, edit: 'always', purpose: 'Un hook que pide datos a una URL y los guarda en el estado.',
+      codeTitle: 'useFetch.js (resumido)', code: 'import { useEffect, useState } from "react"\n\nexport function useFetch(url) {\n  const [data, setData] = useState(null)\n  useEffect(() => {\n    fetch(url).then((r) => r.json()).then(setData)\n  }, [url])\n  return data\n}' },
+    { path: 'src/pages/', isNew: true, hidden: true, edit: 'always', purpose: 'Una por pantalla de la aplicación.',
+      points: ['Arman la pantalla combinando components, hooks y services.', 'Ejemplos: <code>HomePage</code>, <code>CartPage</code>, <code>LoginPage</code>.', '<b>Usa a:</b> components, hooks y services. <b>Lo usan:</b> routes.'] },
+    { path: 'src/pages/HomePage.jsx', isNew: true, hidden: true, edit: 'always', purpose: 'La pantalla de inicio: junta una pieza de UI y datos.',
+      codeTitle: 'HomePage.jsx', code: 'import Button from "../components/Button"\nimport { useFetch } from "../hooks/useFetch"\n\nexport default function HomePage() {\n  const products = useFetch("/api/products")\n  return <Button>Ver {products?.length} productos</Button>\n}' },
+    { path: 'src/routes/', isNew: true, hidden: true, edit: 'sometimes', purpose: 'El mapa entre URLs y pages.',
+      points: ['Aquí defines qué pantalla se muestra en cada ruta (por ejemplo con React Router, que se instala aparte).', '<b>Usa a:</b> pages. <b>Lo usa:</b> <code>App.jsx</code> o <code>main.jsx</code>.'] },
+    { path: 'src/routes/AppRoutes.jsx', isNew: true, hidden: true, edit: 'sometimes', purpose: 'Lista las rutas de la aplicación.',
+      codeTitle: 'AppRoutes.jsx (con React Router)', code: 'import { Routes, Route } from "react-router-dom"\nimport HomePage from "../pages/HomePage"\n\nexport default function AppRoutes() {\n  return (\n    <Routes>\n      <Route path="/" element={<HomePage />} />\n    </Routes>\n  )\n}' },
+    { path: 'src/services/', isNew: true, hidden: true, edit: 'always', purpose: 'La comunicación con el backend y con APIs externas.',
+      points: ['Funciones que hacen las peticiones HTTP y devuelven datos; no tienen JSX.', 'Si cambia la URL o el formato del backend, solo tocas esta carpeta.', '<b>Usa a:</b> utils. <b>Lo usan:</b> hooks y pages.'] },
+    { path: 'src/services/productService.js', isNew: true, hidden: true, edit: 'always', purpose: 'Las peticiones relacionadas con productos.',
+      codeTitle: 'productService.js', code: 'const API_URL = "http://localhost:8080/api"\n\nexport async function getProducts() {\n  const res = await fetch(`${API_URL}/products`)\n  return res.json()\n}' },
+    { path: 'src/utils/', isNew: true, hidden: true, edit: 'sometimes', purpose: 'Funciones puras y pequeñas, sin React: formatear, validar, calcular.',
+      points: ['No dependen de componentes ni de hooks, así que son fáciles de probar.', '<b>Usa a:</b> nadie del proyecto. <b>Lo usan:</b> todas las demás carpetas.'] },
+    { path: 'src/utils/formatPrice.js', isNew: true, hidden: true, edit: 'sometimes', purpose: 'Da formato de moneda a un número.',
+      codeTitle: 'formatPrice.js', code: 'export function formatPrice(value) {\n  return new Intl.NumberFormat("es-CO", {\n    style: "currency",\n    currency: "COP",\n  }).format(value)\n}' },
+
+    // ---- archivos de src ----
+    { path: 'src/App.css', edit: 'sometimes', purpose: 'Los estilos del ejemplo de App.jsx.', points: ['Lo importa <code>App.jsx</code>. Puedes reemplazarlo por tus estilos.'] },
+    { path: 'src/App.jsx', edit: 'always', purpose: 'El componente raíz: el primer componente de tu aplicación.',
+      points: ['La plantilla trae un contador con <code>useState</code> como ejemplo.', 'Lo reemplazas por tu propia pantalla (o por tus rutas).'],
+      codeTitle: 'App.jsx (resumido)', code: 'function App() {\n  const [count, setCount] = useState(0)\n\n  return (\n    <button onClick={() => setCount((c) => c + 1)}>\n      Count is {count}\n    </button>\n  )\n}\n\nexport default App' },
+    { path: 'src/index.css', edit: 'sometimes', purpose: 'Estilos globales: colores, tipografía y reglas base.', points: ['Lo importa <code>main.jsx</code>, así que afecta a toda la aplicación.'] },
+    { path: 'src/main.jsx', edit: 'sometimes', purpose: 'El punto de entrada de JavaScript: aquí React se conecta con la página.',
+      points: ['<code>createRoot</code> toma el <code>div#root</code> de index.html.', '<code>.render(&lt;App /&gt;)</code> dibuja el componente raíz.', '<code>StrictMode</code> activa avisos extra, solo en desarrollo.'],
+      codeTitle: 'main.jsx', code: 'import { StrictMode } from "react"\nimport { createRoot } from "react-dom/client"\nimport "./index.css"\nimport App from "./App.jsx"\n\ncreateRoot(document.getElementById("root")).render(\n  <StrictMode>\n    <App />\n  </StrictMode>,\n)' },
+
+    // ---- archivos de la raiz ----
+    { path: '.gitignore', edit: 'never', purpose: 'La lista de lo que Git no debe subir.',
+      points: ['Lo importante: <code>node_modules</code> y <code>dist</code>. Se regeneran con <code>npm install</code> y <code>npm run build</code>.'] },
+    { path: '.oxlintrc.json', edit: 'never', purpose: 'Las reglas del linter Oxlint, que revisa tu código con <code>npm run lint</code>.',
+      points: ['Trae reglas de React, como <code>rules-of-hooks</code>, que marca un error si usas un hook donde no se puede.', 'Si en el asistente eliges ESLint, aquí aparece <code>eslint.config.js</code>.'] },
+    { path: 'index.html', edit: 'sometimes', purpose: 'La única página HTML de la aplicación. Es el punto de entrada de Vite, y por eso vive en la raíz y no en public/.',
+      points: ['El <code>&lt;div id="root"&gt;</code> es donde React dibuja toda la interfaz.', 'El <code>&lt;script type="module"&gt;</code> carga <code>src/main.jsx</code>.'],
+      codeTitle: 'index.html (body)', code: '<body>\n  <div id="root"></div>\n  <script type="module" src="/src/main.jsx"><\/script>\n</body>' },
+    { path: 'package.json', edit: 'sometimes', purpose: 'La ficha del proyecto: sus scripts y sus dependencias.',
+      points: ['<code>dependencies</code>: <code>react</code> y <code>react-dom</code>.', '<code>devDependencies</code>: <code>vite</code>, <code>@vitejs/plugin-react</code> y <code>oxlint</code>, solo para desarrollar.', '<code>npm install</code> crea <code>node_modules/</code> (no aparece aquí porque el comando lo excluye con <code>-I</code>).'],
+      codeTitle: 'package.json (scripts)', code: '"scripts": {\n  "dev": "vite",\n  "build": "vite build",\n  "lint": "oxlint",\n  "preview": "vite preview"\n}' },
+    { path: 'README.md', edit: 'sometimes', purpose: 'La descripción de la plantilla.', points: ['Reemplázalo por la descripción de tu proyecto: qué hace y cómo ejecutarlo.'] },
+    { path: 'vite.config.js', edit: 'sometimes', purpose: 'La configuración de Vite.',
+      points: ['Registra el plugin <code>@vitejs/plugin-react</code>, que entiende JSX y activa Fast Refresh (el HMR de React).', 'Aquí agregarás después un alias, el puerto o un proxy hacia tu backend.'],
+      codeTitle: 'vite.config.js', code: 'import react from "@vitejs/plugin-react"\nimport { defineConfig } from "vite"\n\nexport default defineConfig({\n  plugins: [react()],\n})' },
+  ];
+
+  var steps = [
+    // ---- Fase 1: lo que entrega Vite ----
+    { phase: 0, title: 'El proyecto recién creado',
+      caption: 'Esto es lo que entrega la plantilla de React (JavaScript) de Vite. Pasa el mouse o toca cada línea para ver para qué sirve.' },
+    { phase: 0, title: 'index.html: la puerta de entrada', focus: 'index.html',
+      caption: 'Es la única página HTML. Vite empieza aquí y encuentra el script que arranca React.' },
+    { phase: 0, title: 'main.jsx: donde arranca React', focus: 'src/main.jsx',
+      caption: 'Conecta React con el div#root de index.html y dibuja el componente App.' },
+    { phase: 0, title: 'App.jsx: tu primer componente', focus: 'src/App.jsx',
+      caption: 'La plantilla trae un ejemplo con un contador. Aquí es donde empezarás a escribir.' },
+    { phase: 0, title: 'package.json: scripts y dependencias', focus: 'package.json',
+      caption: 'Los scripts que usarás todo el tiempo: dev, build, preview y lint.' },
+    { phase: 0, title: 'public/ frente a src/assets/', focus: 'public/',
+      caption: 'Lo de public/ se sirve tal cual y se pide por URL. Lo que importas desde src/assets/ lo procesa Vite.' },
+
+    // ---- Fase 2: como organizar src/ ----
+    { phase: 1, title: 'Vite no decide cómo organizas src/', base: 'src/', focus: 'src/',
+      caption: 'Solo trae main.jsx y App.jsx. Cuando el proyecto crece conviene separar por responsabilidad. Esta es una convención muy usada, no una regla de Vite.' },
+    { phase: 1, title: 'components: piezas de interfaz', base: 'src/', show: ['src/components/', 'src/components/Button.jsx'], focus: 'src/components/',
+      caption: 'Piezas reutilizables que reciben props y devuelven JSX. No saben en qué pantalla están.' },
+    { phase: 1, title: 'pages: una por pantalla', base: 'src/', show: ['src/components/', 'src/components/Button.jsx', 'src/pages/', 'src/pages/HomePage.jsx'], focus: 'src/pages/',
+      caption: 'Cada pantalla combina components, hooks y services.' },
+    { phase: 1, title: 'hooks: lógica reutilizable', base: 'src/', show: ['src/components/', 'src/components/Button.jsx', 'src/pages/', 'src/pages/HomePage.jsx', 'src/hooks/', 'src/hooks/useFetch.js'], focus: 'src/hooks/',
+      caption: 'Funciones que empiezan con "use" y encapsulan lógica con estado para no repetirla.' },
+    { phase: 1, title: 'services: hablar con el backend', base: 'src/', show: ['src/components/', 'src/components/Button.jsx', 'src/pages/', 'src/pages/HomePage.jsx', 'src/hooks/', 'src/hooks/useFetch.js', 'src/services/', 'src/services/productService.js'], focus: 'src/services/',
+      caption: 'Las peticiones HTTP viven aparte: si cambia el backend, solo tocas esta carpeta.' },
+    { phase: 1, title: 'utils: funciones puras', base: 'src/', show: ['src/components/', 'src/components/Button.jsx', 'src/pages/', 'src/pages/HomePage.jsx', 'src/hooks/', 'src/hooks/useFetch.js', 'src/services/', 'src/services/productService.js', 'src/utils/', 'src/utils/formatPrice.js'], focus: 'src/utils/',
+      caption: 'Formatear, validar, calcular: funciones pequeñas que no dependen de React.' },
+    { phase: 1, title: 'routes: el mapa de URLs', base: 'src/', show: ['src/components/', 'src/components/Button.jsx', 'src/pages/', 'src/pages/HomePage.jsx', 'src/hooks/', 'src/hooks/useFetch.js', 'src/services/', 'src/services/productService.js', 'src/utils/', 'src/utils/formatPrice.js', 'src/routes/', 'src/routes/AppRoutes.jsx'], focus: 'src/routes/',
+      caption: 'Decide qué page se muestra en cada URL. Necesita una librería de enrutamiento, como React Router.' },
+    { phase: 1, title: 'Quién usa a quién', base: 'src/', show: ['src/components/', 'src/components/Button.jsx', 'src/pages/', 'src/pages/HomePage.jsx', 'src/hooks/', 'src/hooks/useFetch.js', 'src/services/', 'src/services/productService.js', 'src/utils/', 'src/utils/formatPrice.js', 'src/routes/', 'src/routes/AppRoutes.jsx'], focus: 'src/pages/',
+      caption: 'La dependencia va en un solo sentido: routes usa pages; pages usa components, hooks y services; hooks usa services; todos pueden usar utils. Recórrelas con el mouse: cada una dice a quién usa.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Estructura de carpetas de un proyecto React creado con Vite, como la salida del comando tree, y una propuesta para organizar src con components, pages, hooks, services, utils y routes',
+    phases: ['Lo que entrega Vite', 'Cómo organizar src/'],
+    wide: true,
+    scene: function (svg, stage) { return DK.files({ stage: stage, items: items }); },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Estructura del proyecto',
+      title: 'Qué hay en un proyecto de Vite',
+      text: 'La salida de tree del proyecto recién creado. Explora cada archivo y luego mira cómo se organiza src/ cuando la aplicación crece.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

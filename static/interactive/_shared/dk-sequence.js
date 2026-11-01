@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-sequence.js: motor de diagramas de secuencia animados (cliente/servidor, request/response, handshakes...).
  * Requiere dk-kit.js, dk-icons.js y dk-flow.js, y los estilos de dk-base.css. Dibuja; no tiene controles (los pone dk-player.js).
  *

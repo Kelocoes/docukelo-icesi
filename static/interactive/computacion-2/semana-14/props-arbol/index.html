@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Props: de padre a hijo</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-dom.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Una lista de tarjetas: ProductList (el padre) tiene los datos y le pasa a cada ProductCard (hijo) sus props.
+  var NODES = [
+    { id: 'list', tag: 'div', comp: 'ProductList' },
+    { id: 'c1', tag: 'article', comp: 'ProductCard', parent: 'list' },
+    { id: 'h1', tag: 'h3', parent: 'c1', text: 'Teclado' },
+    { id: 'p1', tag: 'p', parent: 'c1', text: 'Precio: $20' },
+    { id: 'c2', tag: 'article', comp: 'ProductCard', parent: 'list' },
+    { id: 'h2', tag: 'h3', parent: 'c2', text: 'Mouse' },
+    { id: 'p2', tag: 'p', parent: 'c2', text: 'Precio: $10' },
+    { id: 'c3', tag: 'article', comp: 'ProductCard', parent: 'list' },
+    { id: 'h3', tag: 'h3', parent: 'c3', text: 'Monitor' },
+    { id: 'p3', tag: 'p', parent: 'c3', text: 'Precio: $15' },
+  ];
+  var COMPS = { ProductList: 'p5', ProductCard: 'p3' };
+  var CTREE = [
+    { id: 'pl', comp: 'ProductList', dom: 'list' },
+    { id: 'pc1', comp: 'ProductCard', parent: 'pl', dom: 'c1' },
+    { id: 'pc2', comp: 'ProductCard', parent: 'pl', dom: 'c2' },
+    { id: 'pc3', comp: 'ProductCard', parent: 'pl', dom: 'c3' },
+  ];
+  var IDS = NODES.map(function (n) { return n.id; });
+  function all(role, except) { var m = {}; IDS.forEach(function (id) { m[id] = role; }); for (var k in (except || {})) m[k] = except[k]; return m; }
+
+  // El codigo del capitulo; los numeros de linea se buscan por texto para que no se desfasen al editarlo.
+  function codigo(nuevo) {
+    return [
+      'function ProductCard({ name, price }) {',
+      '  return (',
+      '    <article>',
+      '      <h3>{name}</h3>',
+      '      <p>Precio: ${price}</p>',
+      '    </article>',
+      '  );',
+      '}',
+      '',
+      'function ProductList() {',
+      '  const products = [',
+      '    { id: 1, name: "Teclado", price: 20 },',
+      nuevo ? '    { id: 2, name: "Mouse", price: 12 },' : '    { id: 2, name: "Mouse", price: 10 },',
+      '    { id: 3, name: "Monitor", price: 15 },',
+      '  ];',
+      '',
+      '  return (',
+      '    <div>',
+      '      {products.map((p) => (',
+      '        <ProductCard key={p.id} name={p.name} price={p.price} />',
+      '      ))}',
+      '    </div>',
+      '  );',
+      '}',
+    ];
+  }
+  function rng(from, to) {
+    var all = codigo(false), a = -1, b = -1;
+    all.forEach(function (l, i) { if (a < 0 && l.indexOf(from) === 0) a = i; });
+    all.forEach(function (l, i) { if (a >= 0 && b < 0 && i >= a && l.indexOf(to) === 0) b = i; });
+    if (a < 0 || b < a) throw new Error('rango de codigo vacio: ' + from + ' .. ' + to);
+    var r = []; for (var k = a; k <= b; k++) r.push(k + 1); return r;
+  }
+  function line(prefix) { return rng(prefix, prefix); }
+
+  var PROPS = { pc1: 'Teclado, 20', pc2: 'Mouse, 10', pc3: 'Monitor, 15' };
+
+  var steps = [
+    // ---- Fase 1: pasar props ----
+    { phase: 0, title: 'ProductList renderiza tres ProductCard', view: 'comp', comps: true, cfocus: ['ProductList'], cmarks: { pl: 'owner' }, csub: { pl: 'dueño de los datos' },
+      code: rng('function ProductList', '}'),
+      caption: 'ProductList es el componente padre: tiene los datos de tres productos y renderiza un ProductCard por cada uno.' },
+    { phase: 0, title: 'Le pasa a cada hijo sus props', view: 'comp', comps: true, cmarks: { pl: 'owner', pc1: 'use', pc2: 'use', pc3: 'use' }, csub: PROPS,
+      code: line('        <ProductCard'),
+      caption: 'Cada hijo recibe sus propias props: el nombre y el precio de su producto. Los datos viajan hacia abajo, del padre al hijo.' },
+    { phase: 0, title: 'Las props se convierten en pantalla', view: 'dom', comps: true, cfocus: ['ProductCard'], code: rng('function ProductCard', '}'),
+      caption: 'Cada ProductCard usa sus props para dibujar su h3 y su p: el mismo componente, tres resultados distintos.' },
+
+    // ---- Fase 2: cambia un dato ----
+    { phase: 1, title: 'El padre cambia un dato', view: 'code', comps: true, state: 'precio del Mouse = 12', cmarks: { pl: 'owner' }, csub: { pl: 'Mouse: 10 a 12' },
+      code: line('    { id: 2'),
+      caption: 'En el padre, el precio del Mouse pasa de 10 a 12 (más adelante lo haremos con estado). Los hijos no pueden cambiar sus props: solo el padre decide.' },
+    { phase: 1, title: 'React vuelve a ejecutar los componentes', view: 'comp', comps: true, state: 'precio del Mouse = 12',
+      cmarks: { pl: 'build', pc1: 'build', pc2: 'build', pc3: 'build' }, csub: { pl: 'se ejecuta de nuevo', pc1: 'mismas props', pc2: 'price: 12', pc3: 'mismas props' },
+      code: rng('function ProductList', '}'),
+      caption: 'Al cambiar el dato, React vuelve a llamar a ProductList y, con sus props actuales, a cada ProductCard. Pasar props significa que cuando el padre se renderiza, sus hijos también.' },
+    { phase: 1, title: 'Solo cambia el DOM de lo que recibió props distintas', view: 'dom', comps: true, state: 'precio del Mouse = 12',
+      text: { p2: 'Precio: $12' }, touch: ['p2'], marks: all('reuse', { p2: 'dirty' }), sub: { p2: '$10 a $12' },
+      cmarks: { pl: 'reuse', pc1: 'reuse', pc2: 'dirty', pc3: 'reuse' }, csub: { pc1: 'sin cambios', pc2: 'price: 12', pc3: 'sin cambios' },
+      meter: { label: 'Nodos del DOM tocados', value: 1, max: 10, text: '1 de 10', tone: 'ack' },
+      caption: 'React compara el resultado y solo actualiza el DOM donde algo cambió: el precio del Mouse. Los otros dos ProductCard recibieron las mismas props, así que su DOM no se toca.' },
+    { phase: 1, title: 'Las props viajan en un solo sentido', view: 'comp', comps: true, text: { p2: 'Precio: $12' }, state: 'precio del Mouse = 12',
+      cmarks: { pl: 'owner', pc1: 'use', pc2: 'use', pc3: 'use' }, csub: { pl: 'dueño de los datos', pc1: 'solo lee', pc2: 'solo lee', pc3: 'solo lee' },
+      caption: 'Los datos bajan del padre a los hijos, nunca al revés. Si un hijo necesita avisar al padre (por ejemplo, por un clic), el padre le pasa una función como prop; lo veremos más adelante.' },
+  ];
+  // el codigo cambia desde el paso en que el padre modifica el dato
+  steps.forEach(function (s, i) { s.codeText = codigo(i >= 3).join('\n'); s.codeTitle = 'ProductList.jsx'; });
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Una lista de tarjetas: el componente padre ProductList pasa props a cada ProductCard; al cambiar un dato, React vuelve a ejecutar los componentes y solo actualiza el DOM de la tarjeta cuyas props cambiaron',
+    phases: ['Pasar props', 'Cambia un dato'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.dom({ stage: stage, url: 'mi-tienda.com', treeTitle: 'Árbol DOM', nodes: NODES, components: COMPS, ctree: CTREE, code: true, compNodeW: 140,
+        legend: [['owner', 'Dueño del dato'], ['use', 'Recibe props'], ['build', 'Se ejecuta de nuevo'], ['dirty', 'Cambió'], ['reuse', 'Igual']] });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Props',
+      title: 'De padre a hijo',
+      text: 'Una lista de tarjetas: ProductList tiene los datos y le pasa a cada ProductCard sus props. Mira cómo viajan y qué pasa en el árbol cuando un dato cambia.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

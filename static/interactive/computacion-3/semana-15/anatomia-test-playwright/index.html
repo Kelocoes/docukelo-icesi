@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomía de una prueba de Playwright</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Una prueba E2E de un login, enlazada con el navegador que la ejecuta. Estructura Arrange / Act / Assert.
+  // Colores: p1 = estructura de la prueba; p2 = abrir la pagina; p3 = actuar (llenar, clic); p4 = comprobar (expect).
+  var code = [
+    [["import { test, expect } from '@playwright/test'", 'imp']],
+    [["test('inicia sesión y ve sus rutinas', async ({ page }) => {", 'test']],
+    [['  ', ''], ["await page.goto('/login')", 'goto']],
+    [['  ', ''], ["await page.getByLabel('Correo')", 'fill1'], [".fill('ana@icesi.edu.co')", 'fill1']],
+    [['  ', ''], ["await page.getByLabel('Contraseña')", 'fill2'], [".fill('123456')", 'fill2']],
+    [['  ', ''], ["await page.getByRole('button',", 'click'], [" { name: 'Iniciar sesión' })", 'click']],
+    [['    ', ''], ['.click()', 'click']],
+    [['  ', ''], ["await expect(page).toHaveURL('/routines')", 'url']],
+    [['  ', ''], ["await expect(page.getByRole('heading',", 'head'], [" { name: 'Mis rutinas' }))", 'head']],
+    [['    ', ''], ['.toBeVisible()', 'head']],
+    [['})', 'test']],
+  ];
+
+  var parts = {
+    imp: { label: 'import', color: 'p1', title: 'Las dos herramientas',
+      text: '<code>test</code> define una prueba y <code>expect</code> hace las comprobaciones. Vienen de <code>@playwright/test</code>, el ejecutor de pruebas de Playwright.',
+      where: 'A la derecha: nada todavía; la prueba aún no corre.' },
+    test: { label: 'test()', color: 'p1', title: 'Una prueba con nombre y una página',
+      text: 'Cada <code>test()</code> es independiente: Playwright le entrega un <code>page</code> nuevo, una pestaña de un navegador limpio (sin cookies ni historial de otras pruebas).',
+      bullets: ['El nombre dice qué comportamiento se comprueba, no cómo.', '<code>async</code> y <code>await</code>: cada acción del navegador es asíncrona.'],
+      where: 'A la derecha: el navegador de la prueba.' },
+    goto: { label: 'Arrange', color: 'p2', title: 'Preparar: abrir la página',
+      text: '<code>goto("/login")</code> navega a la ruta. Es corta porque en <code>playwright.config.ts</code> se define <code>baseURL</code> (por ejemplo <code>http://localhost:3000</code>).',
+      where: 'A la derecha: la barra de direcciones.' },
+    fill1: { label: 'Act', color: 'p3', title: 'Actuar: llenar el correo',
+      text: 'Primero se <b>localiza</b> el campo por su etiqueta (<code>getByLabel</code>) y luego se actúa sobre él (<code>fill</code>). Escribe como lo haría una persona.',
+      where: 'A la derecha: el campo «Correo».' },
+    fill2: { label: 'Act', color: 'p3', title: 'Actuar: llenar la contraseña',
+      text: 'Mismo patrón: localizar y actuar. Playwright espera a que el campo exista y esté listo antes de escribir.',
+      where: 'A la derecha: el campo «Contraseña».' },
+    click: { label: 'Act', color: 'p3', title: 'Actuar: pulsar el botón',
+      text: 'El botón se localiza por su <b>rol</b> y su nombre accesible, igual que lo haría una persona o un lector de pantalla. <code>click()</code> espera a que esté visible y habilitado.',
+      where: 'A la derecha: el botón «Iniciar sesión».' },
+    url: { label: 'Assert', color: 'p4', title: 'Comprobar: llegó a /routines',
+      text: '<code>toHaveURL</code> reintenta hasta que la URL coincida o se acabe el tiempo. Así no importa si la redirección tarda unos milisegundos.',
+      where: 'A la derecha: la barra de direcciones cambió.' },
+    head: { label: 'Assert', color: 'p4', title: 'Comprobar: se ve el contenido',
+      text: 'Una prueba que solo mira la URL puede pasar con una página vacía. Comprobar un elemento visible confirma que la pantalla correcta cargó.',
+      where: 'A la derecha: el título «Mis rutinas».' },
+  };
+
+  function view() {
+    return '' +
+      '<p class="cm-lbl">El navegador que abre Playwright</p>' +
+      '<div class="cm-out"><div class="cm-card" style="display:grid;gap:8px">' +
+        '<div class="cm-chip"><span data-part="goto">localhost:3000/login</span> <span style="color:var(--dk-muted)">→</span> <span data-part="url">localhost:3000/routines</span></div>' +
+        '<div class="cm-chip" data-part="fill1">Correo: ana@icesi.edu.co</div>' +
+        '<div class="cm-chip" data-part="fill2">Contraseña: ••••••</div>' +
+        '<div class="cm-chip" data-part="click" style="font-weight:700">[ Iniciar sesión ]</div>' +
+        '<div class="cm-chip" data-part="head" style="font-size:1.05em;font-weight:700">Mis rutinas</div>' +
+      '</div></div>' +
+      '<div class="cm-arrow">↓</div>' +
+      '<p class="cm-lbl">Resultado</p>' +
+      '<div class="cm-code-sm" data-part="test">✓ inicia sesión y ve sus rutinas (1.4 s)</div>';
+  }
+
+  var steps = [
+    { phase: 0, title: 'Una prueba, como una persona usa la app', focus: 'imp',
+      caption: 'Pasa el mouse por el código o por el navegador: se ilumina lo que se corresponde. Una prueba E2E cuenta una historia de usuario.' },
+    { phase: 0, title: 'Un test() con su propia página', focus: 'test',
+      caption: 'Cada prueba arranca con un navegador limpio: no depende de las demás.' },
+    { phase: 1, title: 'Arrange: abrir la página', focus: 'goto',
+      caption: 'Preparar el escenario: ir a la ruta donde empieza la historia.' },
+    { phase: 1, title: 'Act: llenar el correo', focus: 'fill1',
+      caption: 'Localizar el campo y escribir en él.' },
+    { phase: 1, title: 'Act: llenar la contraseña', focus: 'fill2',
+      caption: 'Lo mismo con el segundo campo.' },
+    { phase: 1, title: 'Act: pulsar «Iniciar sesión»', focus: 'click',
+      caption: 'El botón se encuentra por rol y nombre, como lo percibe un usuario.' },
+    { phase: 2, title: 'Assert: la URL cambió', focus: 'url',
+      caption: 'La primera comprobación: la redirección ocurrió.' },
+    { phase: 2, title: 'Assert: se ve el contenido', focus: 'head',
+      caption: 'La segunda: la pantalla correcta cargó. Si algo falla, la prueba falla con una captura y un registro de lo que pasó.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Anatomía de una prueba de Playwright de inicio de sesión: import, test, goto, getByLabel y fill, getByRole y click, y las aserciones toHaveURL y toBeVisible, enlazadas con el navegador',
+    phases: ['La prueba', 'Arrange y Act', 'Assert'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.codemap({ stage: stage, file: 'e2e/login.spec.ts', filePart: 'imp', code: code, parts: parts, view: view });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Tu primera prueba',
+      title: 'Cada línea de la prueba, en el navegador',
+      text: 'Una prueba de inicio de sesión: abrir, actuar y comprobar. Recorre las partes o pasa el mouse por el código y por el navegador.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

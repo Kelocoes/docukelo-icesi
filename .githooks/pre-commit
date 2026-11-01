@@ -8,3 +8,10 @@ node scripts/lint-docs.mjs --check --changed || {
     echo "pre-commit: corrige los incumplimientos de arriba (o corre 'npm run lint:docs -- --changed --verbose')."
     exit 1
 }
+# La copia del kit que sirve el sitio (static/interactive/_shared/) es generada desde la skill: no debe desviarse.
+# Si falla: npm run kit:sync
+node .agents/skills/docusaurus_animated_diagrams/host/install.mjs --check --no-frame --no-tests > /dev/null || {
+    echo ""
+    echo "pre-commit: static/interactive/_shared/ no coincide con .agents/skills/docusaurus_animated_diagrams/kit/. Edita el kit en la skill y corre 'npm run kit:sync'."
+    exit 1
+}

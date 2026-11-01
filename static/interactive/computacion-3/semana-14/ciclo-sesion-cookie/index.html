@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El ciclo de una sesión con cookies</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Tres actores (maximo legible): el navegador, el servidor de Next.js (proxy, Server Actions, paginas) y el backend (aqui, un mock
+  // que firma el JWT). El ejemplo es siempre el mismo: ana inicia sesion, pide /routines y cierra sesion.
+  var N = 'nav', S = 'srv', D = 'data';
+  var PHASES = ['Iniciar sesión', 'Ruta protegida', 'Cerrar sesión'];
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+
+  function build(opt) {
+    var st = [];
+    var add = function (phase, title, caption, msgs, state) { st.push({ phase: phase, title: title, caption: caption, msgs: msgs, state: state }); };
+
+    add(0, '1 · El thunk llama a la Server Action',
+      'LoginForm llama a useAuth().login(), el hook despacha el thunk y el thunk invoca loginAction(): un POST al servidor. No escribiste ningún endpoint.',
+      [msg(N, S, 'POST loginAction', 'ctl')], { nav: 'En /login', srv: 'Ejecuta loginAction', data: 'Sin usar' });
+    add(0, '2 · El caso de uso le pide el token al backend',
+      'La acción valida los datos y llama a LoginUseCase, que le pide el token al backend (aquí, un mock): un POST con el correo y la contraseña.',
+      [msg(S, D, 'POST /auth/login', 'ctl')], { nav: 'En /login', srv: 'LoginUseCase', data: 'Verificando' });
+    add(0, '3 · El backend responde con un token',
+      'Si las credenciales son correctas, el backend firma un JWT con el id y el nombre de ana y lo devuelve. Si no, la acción devuelve { ok: false, message } y no crea ninguna cookie.',
+      [msg(D, S, 'accessToken', 'data')], { nav: 'En /login', srv: 'Recibe el token', data: 'Listo' });
+    add(0, '4 · El servidor guarda el token en la cookie',
+      'La acción decodifica el token para leer el id, el nombre, los roles y el vencimiento, lo guarda tal cual en una cookie httpOnly y devuelve ese usuario. El navegador guarda la cookie; después el cliente navega con router.replace("/routines").',
+      [msg(S, N, 'Set-Cookie + user', 'ack')], { nav: 'Cookie guardada', srv: 'Token guardado', data: 'Listo' });
+
+    if (!opt.sinCookie) {
+      add(1, '5 · El navegador pide /routines con la cookie',
+        'No escribes código para adjuntarla: el navegador envía la cookie en cada petición al mismo sitio. El proxy decodifica el token en el propio servidor de Next.js, comprueba que no haya vencido (sin llamar al backend) y deja pasar.',
+        [msg(N, S, 'GET /routines', 'ctl')], { nav: 'Pide /routines', srv: 'Proxy: token vigente', data: 'Listo' });
+      add(1, '6 · La página exige la sesión y pide los datos',
+        'La página llama a requireSession(): decodifica el token y obtiene el id de ana. Recién entonces le pide las rutinas al backend, enviando el token en Authorization: Bearer.',
+        [msg(S, D, 'GET + Bearer', 'ctl')], { nav: 'Esperando', srv: 'requireSession(): ana', data: 'Consultando' });
+      add(1, '7 · El backend devuelve las rutinas',
+        'El backend verifica la firma del token: él es quien lo valida. Solo devuelve las rutinas de ese usuario.',
+        [msg(D, S, 'rutinas', 'data')], { nav: 'Esperando', srv: 'Arma la página', data: 'Listo' });
+      add(1, '8 · El servidor responde con la página',
+        'El usuario ve /routines. Todo ocurrió en el servidor: el navegador nunca vio el token.',
+        [msg(S, N, '200 HTML', 'ack')], { nav: 'Ve /routines', srv: 'Listo', data: 'Listo' });
+    } else {
+      add(1, '5 · Pide /routines sin cookie',
+        'Otro navegador, una ventana de incógnito o una cookie vencida: la petición llega sin el encabezado Cookie.',
+        [msg(N, S, 'GET /routines', 'ctl')], { nav: 'Pide /routines', srv: 'Proxy: sin cookie', data: 'Sin usar' });
+      add(1, '6 · El proxy redirige a /login',
+        'El proxy ni siquiera deja renderizar la página: responde con una redirección. El backend nunca se consulta.',
+        [msg(S, N, '302 /login', 'err')], { nav: 'En /login', srv: 'Rechazada', data: 'Sin usar' });
+    }
+
+    add(2, (opt.sinCookie ? '7' : '9') + ' · Cerrar sesión es un POST',
+      'El botón «Cerrar sesión» llama a useAuth().logout(): el thunk invoca la Server Action logoutAction().',
+      [msg(N, S, 'POST logoutAction', 'ctl')], { nav: 'Cerrando', srv: 'Ejecuta logoutAction', data: 'Sin usar' });
+    add(2, (opt.sinCookie ? '8' : '10') + ' · El servidor borra la cookie',
+      'Solo el servidor puede borrar una cookie httpOnly. La acción responde con Set-Cookie y Max-Age=0; el cliente navega a /login con router.replace.',
+      [msg(S, N, 'borra la cookie', 'ack')], { nav: 'Sin cookie', srv: 'Sesión cerrada', data: 'Sin usar' });
+    return st;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Ciclo de una sesión con cookies httpOnly en Next.js: iniciar sesión con un thunk y una Server Action, pedir una página protegida y cerrar sesión',
+    phases: PHASES,
+    scene: function (svg) {
+      return DK.sequence({
+        svg: svg, trayCount: 0, idleState: 'Sin sesión', phases: PHASES,
+        actors: [
+          { id: N, label: 'Navegador de ana', icon: 'browser' },
+          { id: S, label: 'Servidor Next.js', icon: 'server' },
+          { id: D, label: 'Backend (mock)', icon: 'database' },
+        ],
+      });
+    },
+    toggles: [{ key: 'sinCookie', label: 'Pedir la página sin cookie', affectsPhase: 1 }],
+    build: build,
+    intro: { kicker: 'SESIÓN CON COOKIES', title: 'Qué viaja entre el navegador y el servidor',
+      text: 'Sigue a ana desde que inicia sesión hasta que la cierra. Activa «Pedir la página sin cookie» para ver qué pasa cuando no hay sesión.' },
+  });
+})();
+</script>
+</body>
+</html>

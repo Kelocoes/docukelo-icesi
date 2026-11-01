@@ -1,4 +1,4 @@
-/* DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit. */
+/* DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites. */
 /* dk-base.css: estilos comunes de las piezas interactivas de DocuKelo.
  *
  * TOKENS (colores con rol, no con nombre de color). Siempre usar el rol, nunca un hex suelto:
@@ -164,7 +164,7 @@ svg text { font-family: inherit; fill: var(--dk-ink); }
 .dk-msg .ln { display: block; min-height: 1.85em; }
 .dk-msg [data-part] { border-radius: 4px; padding: 1px 3px; margin: 0 -3px; border-bottom: 2px solid transparent; transition: opacity .3s, background .3s, border-color .3s; }
 .dk-msg.has-focus [data-part] { opacity: .42; }
-.dk-msg.has-focus [data-part].on { opacity: 1; background: color-mix(in srgb, var(--pc) 16%, transparent); border-bottom-color: var(--pc); }
+.dk-msg.has-focus [data-part].on { opacity: 1; background: color-mix(in srgb, var(--pc) 9%, transparent); border-bottom-color: color-mix(in srgb, var(--pc) 70%, transparent); }
 .dk-callout { min-height: 170px; border: 1px solid var(--dk-line); border-left: 5px solid var(--pc, var(--dk-line)); border-radius: 12px; background: var(--dk-card); padding: 12px 14px; }
 .dk-callout .tag { display: inline-block; font: 700 11px system-ui, sans-serif; letter-spacing: .05em; text-transform: uppercase; color: var(--pc, var(--dk-muted)); }
 .dk-callout h4 { margin: 2px 0 6px; font-size: 17px; }
@@ -172,7 +172,9 @@ svg text { font-family: inherit; fill: var(--dk-ink); }
 .dk-callout ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
 .dk-callout li { font: 12.5px ui-monospace, Consolas, monospace; background: var(--dk-chip); border-radius: 8px; padding: 3px 8px; }
 .dk-callout.swap { animation: dk-in .35s ease-out; }
-@keyframes dk-in { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: none; } }
+/* Entra desde la IZQUIERDA a proposito: un desplazamiento hacia la derecha desborda el .dk-stage (overflow-x: auto) y por un instante
+   aparece la barra de scroll horizontal, que empuja el contenido hacia abajo y luego lo devuelve. El desborde a la izquierda no genera scroll. */
+@keyframes dk-in { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: none; } }
 @media (max-width: 560px) { .dk-anatomy { grid-template-columns: 1fr; } }
 /* opciones layout: 'stack' (codigo a todo el ancho, explicacion debajo) y code: true (sintaxis coloreada, sin saltos) */
 .dk-anatomy.stack { grid-template-columns: 1fr; gap: 14px; }
@@ -181,7 +183,7 @@ svg text { font-family: inherit; fill: var(--dk-ink); }
 .dk-msg.code .ln { padding: 0 18px; border-left: 3px solid transparent; }
 .dk-msg.code .ln[data-part] { margin: 0; border-radius: 0; border-bottom: 0; }
 .dk-msg.code.has-focus .ln[data-part] { opacity: .45; }
-.dk-msg.code.has-focus .ln[data-part].on { opacity: 1; border-left-color: var(--pc); background: color-mix(in srgb, var(--pc) 12%, transparent); }
+.dk-msg.code.has-focus .ln[data-part].on { opacity: 1; border-left-color: color-mix(in srgb, var(--pc) 70%, transparent); background: color-mix(in srgb, var(--pc) 7%, transparent); }
 .dk-msg.code .kw { color: var(--dk-s-kw); font-weight: 700; } .dk-msg.code .ty { color: var(--dk-s-ty); font-weight: 600; } .dk-msg.code .fn { color: var(--dk-s-fn); }
 .dk-msg.code .ob { color: var(--dk-s-ob); } .dk-msg.code .st { color: var(--dk-s-st); } .dk-msg.code .nu { color: var(--dk-s-nu); } .dk-msg.code .an { color: var(--dk-s-an); }
 .dk-msg.code .cm { color: var(--dk-muted); font-style: italic; }
@@ -308,4 +310,4 @@ svg text { font-family: inherit; fill: var(--dk-ink); }
 }
 
 /* anatomia: step.all = true colorea todas las partes a la vez (resumen) */
-.dk-msg.code.show-all .ln[data-part] { opacity: 1; border-left-color: var(--pc); background: color-mix(in srgb, var(--pc) 12%, transparent); }
+.dk-msg.code.show-all .ln[data-part] { opacity: 1; border-left-color: color-mix(in srgb, var(--pc) 70%, transparent); background: color-mix(in srgb, var(--pc) 7%, transparent); }

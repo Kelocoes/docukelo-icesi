@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomía de la cookie de sesión</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // src/lib/session.ts cuando el BACKEND emite el token: el front NO lo crea, NO lo firma y NO verifica la firma. Solo lo decodifica (jwt-decode)
+  // para leer id, nombre, roles y vencimiento, y lo guarda en una cookie httpOnly. La verificacion la hace el backend cuando recibe el token.
+  // Colores: p1 = solo servidor; p2 = decodificar y el token; p3 = guardar la cookie; p4 = banderas de seguridad; p5 = vencimiento y alcance.
+  var code = [
+    [["import 'server-only'", 'only']],
+    [["import { jwtDecode } from 'jwt-decode'", '']],
+    [["import { cookies } from 'next/headers'", '']],
+    [['export function decodeToken(', 'decode'], ['token?: string', 'decode'], [') {', 'decode']],
+    [['  if (!token) return null', 'decode']],
+    [['  try {', 'decode']],
+    [['    const payload = jwtDecode<TokenPayload>(token)', 'decode']],
+    [['    if (payload.exp * 1000 < Date.now())', 'expires']],
+    [['      return null', 'expires']],
+    [['    return payload', 'decode']],
+    [['  } catch { return null }', 'decode']],
+    [['}', 'decode']],
+    [['export async function createSession(', 'token'], ['token: string', 'token'], [') {', 'token']],
+    [['  const payload = decodeToken(token)', 'token']],
+    [['  if (!payload) throw new Error()', 'token']],
+    [['  const store = await cookies()', 'jar']],
+    [['  ', ''], ["store.set('session', token, {", 'set']],
+    [['    ', ''], ['httpOnly: true,', 'httponly']],
+    [['    ', ''], ['secure: true,', 'secure']],
+    [['    ', ''], ["sameSite: 'lax',", 'samesite']],
+    [['    ', ''], ['expires: new Date(', 'expires']],
+    [['      ', ''], ['payload.exp * 1000),', 'expires']],
+    [['    ', ''], ["path: '/',", 'path']],
+    [['  ', ''], ['})', 'set']],
+    [['  return payload', '']],
+    [['}', '']],
+  ];
+
+  var parts = {
+    only: { label: 'server-only', color: 'p1', title: 'Este archivo solo corre en el servidor',
+      text: 'El paquete <code>server-only</code> hace que el <b>build falle</b> si un componente de cliente importa este archivo. La cookie <code>httpOnly</code> y el token solo existen en el servidor.',
+      where: 'A la derecha: todo lo que ocurre con el token es del lado del servidor.' },
+    decode: { label: 'Decodificar', color: 'p2', title: 'Decodificar: leer el contenido del token',
+      text: '<code>jwtDecode</code> abre el token y devuelve su contenido (<code>sub</code>, <code>name</code>, <code>roles</code>, <code>exp</code>). No necesita ninguna clave: un JWT se puede <b>leer</b> sin ella, porque está en base64.',
+      bullets: ['Devuelve <code>null</code> si no hay token o si no tiene forma de JWT: «no hay sesión» es un resultado normal, no una falla.', 'Con esto el front sabe quién es el usuario y qué roles tiene sin hacer ninguna petición.'],
+      where: 'A la derecha: el contenido del token, ya decodificado.' },
+    nverify: { label: 'Sin firma', color: 'p4', title: 'El front no verifica la firma',
+      text: 'Decodificar <b>no comprueba</b> que nadie haya modificado el token. Un token alterado (por ejemplo con <code>roles: ["ADMIN"]</code>) se decodifica igual de bien.',
+      bullets: ['Por eso lo que el front lee solo sirve para la interfaz: mostrar u ocultar cosas.', 'La firma la verifica el <b>backend</b> cada vez que recibe el token: con un token falso no entrega ningún dato.'],
+      where: 'A la derecha: la verificación ocurre en el backend.' },
+    token: { label: 'El token', color: 'p2', title: 'El token lo emite el backend',
+      text: '<code>createSession</code> recibe el <code>accessToken</code> que entregó el backend. El front <b>no lo crea ni lo firma</b>: lo decodifica para leer el vencimiento y lo guarda tal cual.',
+      bullets: ['Firmado no es cifrado: su contenido se lee, pero solo el backend puede crear uno válido.', 'Si el token no se puede decodificar, la sesión no se crea.'],
+      where: 'A la derecha: el JWT que llega.' },
+    jar: { label: 'cookies()', color: 'p3', title: 'cookies() es asíncrona',
+      text: 'Desde Next.js 15 hay que esperarla: <code>await cookies()</code>. Devuelve un objeto para leer y escribir cookies de la petición.',
+      bullets: ['<code>set</code> y <code>delete</code> solo funcionan en una <b>Server Action</b> o un <b>Route Handler</b>.', 'No se pueden usar mientras se renderiza un Server Component: para entonces la respuesta ya empezó a enviarse.'],
+      where: 'A la derecha: la respuesta que el servidor le envía al navegador.' },
+    set: { label: 'set()', color: 'p3', title: 'Guardar la cookie',
+      text: '<code>set(nombre, valor, opciones)</code> agrega a la respuesta el encabezado <code>Set-Cookie</code>. El navegador guarda el token y lo envía en cada petición posterior a este sitio.',
+      bullets: ['Después de <code>set</code>, Next.js vuelve a renderizar la página con la cookie nueva.'],
+      where: 'A la derecha: el encabezado <code>Set-Cookie</code> de la respuesta.' },
+    httponly: { label: 'httpOnly', color: 'p4', title: 'httpOnly: JavaScript no la puede leer',
+      text: 'La cookie viaja en cada petición, pero <code>document.cookie</code> no la muestra. Un script malicioso inyectado en la página (XSS) no puede copiar el token.',
+      bullets: ['No impide que ese script haga peticiones como el usuario: reduce el daño, no lo elimina.', 'Por eso el cliente no puede decodificar el token: lo decodifica el servidor y le entrega a la interfaz solo lo necesario (id, nombre, roles).'],
+      where: 'A la derecha: la consola del navegador no ve la cookie.' },
+    secure: { label: 'secure', color: 'p4', title: 'secure: solo por HTTPS',
+      text: 'El navegador solo envía la cookie en conexiones cifradas, así nadie en la red puede copiarla.',
+      bullets: ['En <code>http://localhost</code> los navegadores modernos suelen aceptarla igual; en producción exige HTTPS.'],
+      where: 'A la derecha: la bandera <code>Secure</code>.' },
+    samesite: { label: 'sameSite', color: 'p4', title: "sameSite: 'lax' frena el CSRF",
+      text: 'Con <code>lax</code> el navegador no manda la cookie en peticiones que otro sitio dispara por ti (por ejemplo, un formulario POST de otra página). Sí la manda cuando navegas a tu sitio con un enlace.',
+      bullets: ['<code>strict</code>: nunca en peticiones entre sitios (ni siquiera al llegar con un enlace).', '<code>none</code>: siempre; exige <code>secure</code>.', 'Las Server Actions además comparan <code>Origin</code> con <code>Host</code>.'],
+      where: 'A la derecha: la bandera <code>SameSite=Lax</code>.' },
+    expires: { label: 'Vigencia', color: 'p5', title: 'El token vence, y la cookie con él',
+      text: 'Dos usos del campo <code>exp</code> (segundos desde 1970): <code>decodeToken</code> devuelve <code>null</code> si ya pasó, y la cookie se crea con esa misma fecha (por eso se multiplica por 1000). Así <b>cookie y token caducan a la vez</b>.',
+      bullets: ['Comprobar <code>exp</code> no es verificar la firma: solo evita mostrar una sesión que ya no sirve.', 'Cuando vence, el proxy no encuentra sesión y redirige al login. Con un <i>refresh token</i> se podría renovar (no lo vemos aquí).'],
+      where: 'A la derecha: <code>Expires</code> y el campo <code>exp</code> del token.' },
+    path: { label: 'path', color: 'p5', title: "path: '/' = todo el sitio",
+      text: 'La cookie se envía a todas las rutas. Es el valor por defecto: el proxy y las páginas de cualquier ruta necesitan leerla.',
+      where: 'A la derecha: <code>Path=/</code>.' },
+  };
+
+  function view() {
+    return '' +
+      '<p class="cm-lbl">El backend (aquí, un mock)</p>' +
+      '<div class="cm-code-sm" data-part="only">firma el token y responde { accessToken }</div>' +
+      '<div class="cm-arrow">↓ llega al servidor de Next.js</div>' +
+      '<p class="cm-lbl">El token (JWT): cabecera . contenido . firma</p>' +
+      '<div class="cm-code-sm" data-part="token" style="word-break:break-all"><span style="color:var(--dk-p1)">eyJhbGciOiJIUzI1NiIs…</span>.<span style="color:var(--dk-p3)">eyJzdWIiOiI3IiwibmFtZSI6IkFuYSIs…</span>.<span style="color:var(--dk-p4)">zqGUQ50b0qXk60f…</span></div>' +
+      '<div class="cm-arrow">↓ el front lo decodifica</div>' +
+      '<div class="cm-chip" data-part="decode">jwtDecode(token) → { sub: "7", name: "Ana", roles: ["USER"], <span data-part="expires">exp: 1 hora</span> }</div>' +
+      '<div class="cm-chip" data-part="nverify" style="border-color:#e9683b">la firma NO se comprueba aquí: la comprueba el backend</div>' +
+      '<div class="cm-arrow">↓ y lo guarda</div>' +
+      '<p class="cm-lbl" data-part="jar">Encabezado de la respuesta</p>' +
+      '<div class="cm-code-sm" data-part="set" style="word-break:break-all">Set-Cookie: session=eyJhbG…; <span data-part="path">Path=/</span>; <span data-part="expires">Expires=Sun, 01 Nov 2026</span>; <span data-part="httponly">HttpOnly</span>; <span data-part="secure">Secure</span>; <span data-part="samesite">SameSite=Lax</span></div>' +
+      '<p class="cm-lbl">Consola del navegador</p>' +
+      '<div class="cm-code-sm" data-part="httponly">&gt; document.cookie<br>""<span style="color:var(--dk-muted)">&nbsp; // la cookie existe, pero JavaScript no la ve</span></div>';
+  }
+
+  var steps = [
+    { phase: 0, title: 'Un archivo que solo corre en el servidor', focus: 'only',
+      caption: 'Pasa el mouse por el código o por el resultado: se ilumina lo que se corresponde. El backend emite el token; el front solo lo decodifica y lo guarda.' },
+    { phase: 0, title: 'Decodificar el token', focus: 'decode',
+      caption: 'jwtDecode lee el contenido sin necesitar ninguna clave: de ahí salen el id, el nombre y los roles.' },
+    { phase: 0, title: 'Y la firma, ¿quién la comprueba?', focus: 'nverify',
+      caption: 'No el front. Decodificar no verifica nada: la firma la comprueba el backend cada vez que recibe el token.' },
+    { phase: 1, title: 'El token que entrega el backend', focus: 'token',
+      caption: 'createSession lo decodifica para leer el vencimiento y lo guarda tal cual: el front no lo modifica.' },
+    { phase: 1, title: 'Guardarlo en una cookie', focus: 'jar',
+      caption: 'cookies() se espera con await y solo permite escribir dentro de una Server Action o un Route Handler.' },
+    { phase: 1, title: 'set(): la respuesta lleva Set-Cookie', focus: 'set',
+      caption: 'El navegador guarda el token y lo reenvía solo en cada petición a este sitio.' },
+    { phase: 2, title: 'httpOnly', focus: 'httponly',
+      caption: 'La cookie viaja, pero JavaScript no puede leerla. Es lo que la separa de localStorage.' },
+    { phase: 2, title: 'secure', focus: 'secure',
+      caption: 'Solo se envía por conexiones HTTPS.' },
+    { phase: 2, title: 'sameSite', focus: 'samesite',
+      caption: 'No se manda en peticiones que otro sitio dispara por el usuario: la defensa básica contra CSRF.' },
+    { phase: 2, title: 'Vigencia', focus: 'expires',
+      caption: 'El mismo exp sirve para descartar un token vencido y para fijar el vencimiento de la cookie.' },
+    { phase: 2, title: 'path', focus: 'path',
+      caption: "Con '/' la cookie acompaña a todas las rutas del sitio." },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Anatomía del archivo session.ts cuando el backend emite el token: jwtDecode para leer el contenido sin verificar la firma, el token y su contenido, cookies().set y las opciones httpOnly, secure, sameSite, expires y path, enlazados con el encabezado Set-Cookie que produce',
+    phases: ['Decodificar', 'Guardar', 'Opciones'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.codemap({ stage: stage, file: 'src/lib/session.ts', filePart: 'only', code: code, parts: parts, view: view });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Cookie de sesión',
+      title: 'Decodificar y guardar el token del backend',
+      text: 'El backend emite el JWT; el front lo decodifica y lo guarda en una cookie. Recorre el código o pasa el mouse por el código y por el resultado.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,5 +1,7 @@
 # Integrar una pieza aprobada en un capítulo (checklist, delegable)
 
+> **Flujo de DocuKelo** (visor, `reviews.json`, `candidates/`). En otro proyecto, adapta los nombres de las carpetas o usa solo la sección «Pasos por pieza» y «Verificación».
+
 Úsalo cuando el profesor marcó un gráfico como `hecho` en el visor y la pieza todavía vive en `candidates/`. Es una tarea **mecánica y acotada**: se puede delegar a otro agente (subagente, Gemini, Kimi...) dándole este archivo y la lista de piezas. Ya se hizo así con un subagente (piezas de semana 2) y funcionó.
 
 ## Cómo saber qué falta integrar
@@ -8,7 +10,7 @@ Cruza `reviews.json` (estado `hecho`) con los manifiestos `candidates/static/img
 
 ## Pasos por pieza
 
-1. Copiar **solo** el `index.html` de la carpeta del candidato a `finalPath` (el kit NO se copia: es la copia maestra `static/interactive/_shared/`).
+1. Copiar **solo** el `index.html` de la carpeta del candidato a `finalPath` (el kit NO se copia: lo instala y lo sincroniza `host/install.mjs` / `npm run kit:sync`).
 2. En el `.md`, reemplazar el bloque de la imagen (a veces envuelto en un `<div>`) por: una frase corta de introducción que invite a recorrer el diagrama (español natural, sin emojis) y el `<iframe>` con este formato exacto:
    ```mdx
    <iframe

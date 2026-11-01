@@ -1,0 +1,246 @@
+// Prueba de humo de las piezas interactivas (static/interactive/**/index.html).
+//
+//   npm run test:pieces                 todas las piezas
+//   npm run test:pieces -- redux        solo las que contengan "redux" en su ruta
+//   npm run test:pieces -- --jobs 8     prueba 8 piezas a la vez (por defecto: la mitad de los nucleos, entre 1 y 6)
+//   npm run test:pieces -- --jobs 1     una por una (para depurar una falla que sospechas de la carga)
+//
+// Busca las piezas en <carpeta estatica>/interactive/ (por defecto "static", relativa a donde corres el comando, que debe
+// ser la raiz del proyecto). Otra carpeta: DK_STATIC_DIR=public npm run test:pieces
+//
+// Para cada pieza abre un navegador real, la recorre y falla si hay errores de JavaScript, recursos locales que no
+// cargan o si la pieza no dibuja nada:
+//   1. Normal: recorre todos los pasos con "Siguiente", prueba "Reiniciar" y cada interruptor (y vuelve a recorrer).
+//   2. Tema oscuro: recarga con el tema oscuro y recorre los pasos.
+//   3. Pantalla completa: la carga dentro de un iframe fijo de 1400x800 con data-dk-fixed (como InteractiveFrame)
+//      y comprueba que adopta el modo dk-fs y que no se desborda.
+//
+// Usa playwright-core (sin descargar navegadores): prueba Chrome, Edge o el Chromium de Playwright, en ese orden.
+// En un equipo sin ninguno: npx playwright install chromium.
+import { createServer } from 'node:http';
+import { readFile, readdir, stat } from 'node:fs/promises';
+import { cpus } from 'node:os';
+import { extname, join, relative, resolve, sep } from 'node:path';
+import { chromium } from 'playwright-core';
+
+const ROOT = resolve(process.cwd(), process.env.DK_STATIC_DIR || 'static');
+const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.json': 'application/json' };
+// motores cuya figura es un <svg> directo en el escenario: en pantalla completa no deben desbordar verticalmente
+const FITS_FULLSCREEN = ['layers', 'tree', 'sequence', 'radial', 'canvas'];
+const HTML_STAGE = ['anatomy', 'table', 'compare', 'phone'];
+const MAX_STEPS = 80;
+
+async function findPieces(dir, out = []) {
+    for (const name of await readdir(dir)) {
+        const p = join(dir, name);
+        if ((await stat(p)).isDirectory()) {
+            if (name !== '_shared') await findPieces(p, out);
+        } else if (name === 'index.html') {
+            out.push(relative(ROOT, dir).split(sep).join('/'));
+        }
+    }
+    return out;
+}
+
+function startServer() {
+    return new Promise((done) => {
+        const server = createServer(async (req, res) => {
+            const url = new URL(req.url, 'http://localhost');
+            if (url.pathname === '/__wrap.html') {
+                res.writeHead(200, { 'content-type': MIME['.html'] });
+                res.end(`<!doctype html><body style="margin:0"><iframe id="f" data-dk-fixed="true" src="${url.searchParams.get('src')}" style="width:1400px;height:800px;border:0"></iframe>`);
+                return;
+            }
+            let file = resolve(ROOT, '.' + decodeURIComponent(url.pathname));
+            if (!file.startsWith(ROOT)) { res.writeHead(403).end(); return; }
+            try {
+                if ((await stat(file)).isDirectory()) file = join(file, 'index.html');
+                const body = await readFile(file);
+                res.writeHead(200, { 'content-type': MIME[extname(file)] || 'application/octet-stream' });
+                res.end(body);
+            } catch {
+                res.writeHead(404).end('not found');
+            }
+        });
+        server.listen(0, '127.0.0.1', () => done(server));
+    });
+}
+
+async function launch() {
+    const attempts = [{ channel: 'chrome' }, { channel: 'msedge' }, {}];
+    let last;
+    for (const opts of attempts) {
+        try { return await chromium.launch({ headless: true, ...opts }); } catch (e) { last = e; }
+    }
+    throw new Error('No se encontro ningun navegador (Chrome, Edge o Chromium de Playwright). Ejecuta: npx playwright install chromium\n' + last.message);
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const isLocal = (url, base) => url.startsWith(base) || url.startsWith('data:') || url.startsWith('about:');
+
+function watch(page, base, errors) {
+    page.on('pageerror', (e) => errors.push('JS: ' + e.message));
+    page.on('console', (m) => {
+        if (m.type() !== 'error') return;
+        const loc = m.location()?.url || '';
+        // un CDN caido o el favicon no son culpa de la pieza
+        if (loc && (!isLocal(loc, base) || loc.endsWith('/favicon.ico'))) return;
+        errors.push('consola: ' + m.text().slice(0, 160));
+    });
+    page.on('response', (r) => {
+        if (r.status() >= 400 && isLocal(r.url(), base) && !r.url().endsWith('/favicon.ico')) errors.push(`HTTP ${r.status()}: ${r.url().replace(base, '')}`);
+    });
+}
+
+async function clickByText(ctx, text) {
+    const btn = ctx.getByRole('button', { name: text, exact: true });
+    if (!(await btn.count())) return null;
+    return btn.first();
+}
+
+// Avanza con "Siguiente" hasta que se deshabilita. Devuelve cuantos pasos dio.
+// Con `errors`, ademas vigila el parpadeo del layout: despues de cada clic muestrea ~400 ms y si un elemento con
+// overflow-x auto/scroll muestra scroll horizontal por un instante y luego ya no (por ejemplo una animacion que entra
+// desplazada a la derecha), la barra aparece y desaparece y el contenido salta hacia abajo y hacia arriba.
+async function walk(ctx, errors) {
+    let n = 0;
+    for (; n < MAX_STEPS; n++) {
+        const next = await clickByText(ctx, 'Siguiente');
+        if (!next || (await next.isDisabled())) break;
+        if (errors) {
+            await ctx.evaluate(() => {
+                const over = (el) => /(auto|scroll)/.test(getComputedStyle(el).overflowX) && el.clientWidth > 0 && el.scrollWidth > el.clientWidth + 1;
+                window.__dkBase = new Set([...document.querySelectorAll('*')].filter(over));
+            });
+            await next.click();
+            const flashes = await ctx.evaluate(async () => {
+                const over = (el) => /(auto|scroll)/.test(getComputedStyle(el).overflowX) && el.clientWidth > 0 && el.scrollWidth > el.clientWidth + 1;
+                const name = (el) => el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className.trim() ? '.' + el.className.trim().split(/\s+/).join('.') : '');
+                const seen = new Set();
+                for (let i = 0; i < 10; i++) {
+                    await new Promise((r) => setTimeout(r, 40));
+                    for (const el of document.querySelectorAll('*')) if (!window.__dkBase.has(el) && over(el)) seen.add(el);
+                }
+                // parpadeo = la barra aparecio y al final ya no esta (una barra estable, como la de una caja de codigo con una
+                // linea larga que se vuelve a crear en cada paso, es legitima)
+                return [...new Set([...seen].filter((el) => !el.isConnected || !over(el)).map(name))];
+            });
+            for (const f of flashes) errors.push(`parpadeo de scroll horizontal en ${f} al avanzar (algo desborda a la derecha durante la animacion)`);
+        } else {
+            await next.click();
+            await sleep(90);
+        }
+    }
+    return n;
+}
+
+async function testPiece(browser, base, piece) {
+    const result = { piece, engines: [], steps: 0, toggles: 0, errors: [], notes: [] };
+    const html = await readFile(join(ROOT, piece, 'index.html'), 'utf8');
+    result.engines = ['radial', 'phone', 'layers', 'canvas', 'tree', 'table', 'anatomy', 'compare', 'sequence'].filter((e) => html.includes(`dk-${e}.js`));
+    const url = `${base}/${piece}/index.html`;
+
+    // 1 y 2: pagina normal, tema claro y oscuro
+    for (const theme of ['light', 'dark']) {
+        const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: theme });
+        const page = await context.newPage();
+        watch(page, base, result.errors);
+        await page.goto(url, { waitUntil: 'load' });
+        await sleep(400);
+        const drawn = await page.evaluate(() => !!(window.DK && document.querySelector('.dk-card')) || document.body.innerText.trim().length > 40);
+        if (!drawn) result.errors.push(`no dibuja nada (${theme})`);
+
+        const steps = await walk(page, result.errors);
+        if (theme === 'light') {
+            result.steps = steps;
+            const reset = await clickByText(page, 'Reiniciar');
+            if (reset) { await reset.click(); await sleep(200); }
+            const toggles = page.locator('.dk-toggle input[type=checkbox]');
+            result.toggles = await toggles.count();
+            for (let i = 0; i < result.toggles; i++) {
+                await toggles.nth(i).click({ force: true });
+                await sleep(200);
+                await walk(page);
+                const again = await clickByText(page, 'Reiniciar');
+                if (again) { await again.click(); await sleep(150); }
+            }
+        }
+        await context.close();
+    }
+
+    // 3: pantalla completa (iframe fijo como el del dialogo de InteractiveFrame)
+    const context = await browser.newContext({ viewport: { width: 1400, height: 800 } });
+    const page = await context.newPage();
+    watch(page, base, result.errors);
+    await page.goto(`${base}/__wrap.html?src=/${piece}/index.html`, { waitUntil: 'load' });
+    await sleep(900);
+    const frame = page.frames().find((f) => f !== page.mainFrame());
+    if (!frame) {
+        result.errors.push('pantalla completa: no cargo el iframe');
+    } else {
+        const m = await frame.evaluate(() => ({
+            fs: document.documentElement.classList.contains('dk-fs'),
+            overX: document.documentElement.scrollWidth - window.innerWidth,
+            overY: document.documentElement.scrollHeight - window.innerHeight,
+        }));
+        if (!m.fs && result.engines.length) result.errors.push('pantalla completa: no se marco html.dk-fs (DK.autoHeight)');
+        if (m.overX > 2) result.errors.push(`pantalla completa: desborde horizontal de ${m.overX}px`);
+        if (m.overY > 2) {
+            const msg = `pantalla completa: desborde vertical de ${m.overY}px`;
+            // solo las piezas de figura SVG pura se exigen sin desborde; con un motor de escenario HTML (anatomy, table,
+            // compare, phone) la pieza se desplaza dentro del dialogo, como en un iframe normal
+            const svgOnly = result.engines.some((e) => FITS_FULLSCREEN.includes(e)) && !result.engines.some((e) => HTML_STAGE.includes(e));
+            if (svgOnly) result.errors.push(msg);
+            else result.notes.push(msg + ' (escenario HTML: se desplaza)');
+        }
+    }
+    await context.close();
+    return result;
+}
+
+const argv = process.argv.slice(2);
+const jIdx = argv.findIndex((a) => a === '--jobs' || a === '-j' || a.startsWith('--jobs='));
+let jobsArg = null;
+if (jIdx >= 0) jobsArg = argv[jIdx].includes('=') ? argv[jIdx].split('=')[1] : argv[jIdx + 1];
+const positional = argv.filter((a, i) => !a.startsWith('-') && !(jIdx >= 0 && !argv[jIdx].includes('=') && i === jIdx + 1));
+const filter = positional[0];
+const jobs = Math.max(1, Math.floor(Number(jobsArg || process.env.DK_JOBS)) || Math.min(6, Math.max(1, Math.floor(cpus().length / 2))));
+
+const pieces = (await findPieces(join(ROOT, 'interactive'))).filter((p) => !filter || p.includes(filter)).sort();
+if (!pieces.length) { console.error('Ninguna pieza coincide con el filtro.'); process.exit(2); }
+
+const server = await startServer();
+const base = `http://127.0.0.1:${server.address().port}`;
+const browser = await launch();
+const t0 = Date.now();
+const results = new Array(pieces.length);
+
+function report(r) {
+    console.log(`${r.errors.length ? 'FALLA' : 'ok   '}  ${r.piece.replace(/^interactive\//, '')}  [${r.engines.join(',') || 'sin motor dk'}]  pasos=${r.steps} interruptores=${r.toggles}`);
+    for (const e of [...new Set(r.errors)]) console.log('        - ' + e);
+    for (const n of r.notes) console.log('        . ' + n);
+}
+
+// Varias piezas a la vez: cada una usa sus propios contextos del mismo navegador. Los resultados se imprimen en orden
+// alfabetico (no en orden de llegada) para que la salida sea siempre igual.
+let next = 0, printed = 0;
+async function worker() {
+    while (next < pieces.length) {
+        const i = next++;
+        try {
+            results[i] = await testPiece(browser, base, pieces[i]);
+        } catch (e) {
+            results[i] = { piece: pieces[i], engines: [], steps: 0, toggles: 0, errors: ['excepcion: ' + e.message.split('\n')[0]], notes: [] };
+        }
+        while (printed < pieces.length && results[printed]) report(results[printed++]);
+    }
+}
+console.log(`Probando ${pieces.length} pieza(s), ${jobs} a la vez...`);
+await Promise.all(Array.from({ length: Math.min(jobs, pieces.length) }, worker));
+await browser.close();
+server.close();
+
+const failed = results.filter((r) => r.errors.length);
+console.log(`
+${results.length - failed.length} de ${results.length} piezas sin errores (${((Date.now() - t0) / 1000).toFixed(0)} s, ${jobs} a la vez).`);
+process.exit(failed.length ? 1 : 0);

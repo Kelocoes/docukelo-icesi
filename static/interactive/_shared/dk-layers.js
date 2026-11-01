@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-layers.js: arquitectura recorrida. Muestra componentes anidados (un servidor que contiene un conector y un
  * contenedor, que a su vez contiene servlets...) y hace viajar mensajes entre ellos, paso a paso, resaltando la
  * pieza que se está explicando. Es una escena para DK.player. Requiere dk-kit.js, dk-icons.js y dk-flow.js.

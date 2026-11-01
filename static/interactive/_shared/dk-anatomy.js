@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-anatomy.js: anatomía explorable. Muestra un mensaje o documento real (una petición HTTP, un JWT, un JSON...)
  * dentro de una caja, y en cada paso ENFOCA una de sus partes mientras a la derecha aparece su explicación con una
  * pequeña animación. Arriba, una franja opcional de "cable" muestra el mensaje viajando entre cliente y servidor.

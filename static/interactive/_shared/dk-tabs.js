@@ -1,4 +1,4 @@
-/* DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md. DK.tabs.phone: teléfono con NavigationBar y un detalle que la cubre. Cargar dk-kit.js antes y dk-tabs.css. */
+/* DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams. DK.tabs.phone: teléfono con NavigationBar y un detalle que la cubre. Cargar dk-kit.js antes y dk-tabs.css. */
 (function () {
   var DK = window.DK = window.DK || {};
   var ICON = {

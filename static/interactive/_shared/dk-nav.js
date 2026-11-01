@@ -1,4 +1,4 @@
-// DOCS: .agents/skills/docusaurus_animated_diagrams/references/kit-api.md (API) y SKILL.md (proceso). Copia maestra unica del kit.
+// DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams (API) y SKILL.md (proceso). Copia maestra: kit/ de la skill; la carpeta instalada en un proyecto es generada, no la edites.
 /* dk-nav.js: un teléfono con una app de varias pantallas + la PILA DE RUTAS del Navigator dibujada al lado.
  * A la izquierda, el teléfono (HTML con estilo Material; en el modo libre se toca de verdad). A la derecha, la pila como
  * tarjetas: la de arriba es el tope (la que se ve en el teléfono), las de abajo siguen vivas pero suspendidas. Una tarjeta
