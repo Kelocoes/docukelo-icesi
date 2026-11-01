@@ -1,11 +1,11 @@
 ---
 name: docusaurus-animated-diagrams
-description: BORRADOR EN USO (piloto TCP validado). Convierte los gráficos de un capítulo de DocuKelo en animaciones o piezas interactivas que enseñan mejor. Guía el análisis pedagógico (qué debe entender el estudiante y cuál es la forma más clara de mostrarlo) y trae un kit reutilizable (CSS con tema claro/oscuro, iconos, motor de diagramas de secuencia, reproductor paso a paso) más herramientas para animar un SVG existente.
+description: Convierte los gráficos de un capítulo de DocuKelo en animaciones o piezas interactivas que enseñan mejor. Guía el análisis pedagógico (qué debe entender el estudiante y cuál es la forma más clara de mostrarlo) y trae un kit reutilizable (CSS con tema claro/oscuro, iconos, motor de diagramas de secuencia, reproductor paso a paso) más herramientas para animar un SVG existente.
 ---
 
 # Gráficos animados e interactivos para DocuKelo (borrador en uso)
 
-Estado: validada con un piloto en producción local, `static/interactive/computacion-2/semana-1/tcp-en-accion/` (aprobado por el profesor). Aún no está enlazada en `AGENTS.md`; se enlaza cuando el profesor la dé por estable. Contexto del proyecto, decisiones y avance: `.agents/memory/svg-redesign/README.md`.
+Estado: en uso en producción (varios cursos) y enlazada en `AGENTS.md`. Se validó con el piloto `static/interactive/computacion-2/semana-1/tcp-en-accion/`. Contexto del proyecto, decisiones y avance: `.agents/memory/svg-redesign/README.md`.
 
 ## Mapa: dónde está cada cosa (léelo primero)
 
@@ -77,6 +77,14 @@ Una animación no es decoración: cada movimiento debe revelar un **orden** o un
 | Estructura de carpetas de un proyecto (tipo `tree -L`) y convenciones | N3 | Kit: `DK.player` + `DK.files` (ejemplo: `computacion-2/semana-14/estructura-proyecto`) |
 | Para qué sirve una herramienta entre tu código y el navegador (Vite: transformar, resolver, HMR, build) | N3 | Kit: `DK.layers` (ejemplo: `computacion-2/semana-14/vite-por-que`) |
 | Una analogía física con interruptor y deslizador (CSR frente a SSR como restaurante) | N3 | Kit: `DK.canvas` con iconos `waiter`/`tray`/`grill`/`dish` (ejemplo: `computacion-2/semana-14/csr-bbq`) |
+| Dónde se guarda algo y qué cambia según la opción (cookie, localStorage, memoria), partiendo del ejemplo del trabajo en clase | N3 | Kit: `DK.canvas` con selector, el navegador dibujado con sus almacenes, el servidor y un script; el dato aparece en el almacén elegido (ejemplo: `computacion-3/semana-14/donde-vive-la-sesion`) |
+| Un código real y lo que produce fuera de él (cookie, petición POST, navegador de una prueba E2E) | N3 | Kit: `DK.player` + `DK.codemap` con `view` HTML (ejemplos: `semana-14/anatomia-cookie-sesion`, `anatomia-server-action`, `anatomia-test-playwright`, `localizadores-playwright`) |
+| Por cuántas puertas pasa una petición y en cuál se detiene según su tipo | N3 | Kit: `DK.layers` con selector de peticiones y nodos de salida `tone: 'err'` (ejemplo: `semana-14/capas-de-defensa`) |
+| Dónde corre cada parte cuando algo cruza del navegador al servidor, y qué pasaría sin la directiva (`'use server'`) | N3 | Kit: `DK.canvas` con dos zonas, un recibo que viaja y `at` para mover nodos de una zona a otra (ejemplo: `computacion-3/semana-14/use-server-que-hace`) |
+| Por dónde viaja una falla hasta la pantalla, según cuál falle | N3 | Kit: `DK.layers` con `outer` (navegador y servidor), flechas `err` hacia atrás y selector (ejemplo: `semana-14/viaje-del-error`) |
+| Capas anidadas y cuál atrapa un error según dónde se lanza (`error.tsx`) | N3 | Kit: `DK.canvas` con zonas `round` anidadas (6 niveles), selector y `text` por zona (ejemplo: `semana-14/error-boundaries-segmentos`) |
+| Qué mecanismo usar según qué falló (errores, excepciones) | N3 | Kit: `DK.canvas` con selector y `code` función (ejemplo: `semana-14/manejo-de-errores`) |
+| Un cliente que espera y reintenta hasta que algo está listo (auto-espera, reintentos) | N3 | Kit: `DK.sequence` con un interruptor de «tarda en responder» (ejemplo: `semana-15/autoespera-playwright`) |
 | Algo que se entiende provocándolo (estado, fallos, parámetros) | N3 | Kit; escena nueva si no existe el patrón (ver `patterns.md`) |
 
 ### 2. Construir en `candidates/`, nunca directo en `docs/` ni `static/img`
@@ -133,7 +141,7 @@ Al terminar cada gráfico, **antes de pasar al siguiente**, actualizar la skill;
 
 ### El kit (`static/interactive/_shared/`)
 
-JavaScript plano y CSS, sin dependencias, con tema claro/oscuro automático. Módulos: `dk-base.css`, `dk-theme.js`, `dk-kit.js`, `dk-icons.js`, `dk-flow.js`, `dk-sequence.js`, `dk-layers.js`, `dk-canvas.js`, `dk-compare.js`, `dk-anatomy.js`, `dk-table.js`, `dk-tree.js`, `dk-dom.js` (página simulada + árbol DOM con resaltado en ambos sentidos), `dk-files.js` (explorador tipo `tree -L`), `dk-codemap.js` (código <-> resultado), `dk-phone.js` (teléfono + `State` + árbol de widgets + consola, con modo libre), `dk-player.js` (con panel de código sincronizado opcional, que puede cambiar con los interruptores). API completa y formato de los pasos en `references/kit-api.md`.
+JavaScript plano y CSS, sin dependencias, con tema claro/oscuro automático. Módulos: `dk-base.css`, `dk-theme.js`, `dk-kit.js`, `dk-icons.js`, `dk-flow.js`, `dk-sequence.js`, `dk-layers.js`, `dk-canvas.js`, `dk-compare.js`, `dk-anatomy.js`, `dk-table.js`, `dk-tree.js`, `dk-dom.js` (página simulada + árbol DOM con resaltado en ambos sentidos), `dk-files.js` (explorador tipo `tree -L`), `dk-codemap.js` (código <-> resultado), `dk-phone.js` (teléfono + `State` + árbol de widgets + consola, con modo libre), `dk-nav.js` (teléfono + pila del Navigator, con `dk-nav.css`), `dk-tabs.js` (teléfono con pestañas, con `dk-tabs.css`), `dk-radial.js` (capas concéntricas, con `dk-radial.css`), `dk-player.js` (con panel de código sincronizado opcional, que puede cambiar con los interruptores). API completa y formato de los pasos en `references/kit-api.md`.
 
 Una pieza nueva debería ser ~100 líneas de **datos** (actores, fases, pasos con leyenda). Si estás escribiendo lógica de dibujo, animación, controles o tema dentro de una pieza, para y llévala al kit.
 

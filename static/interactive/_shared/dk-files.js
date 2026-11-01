@@ -186,6 +186,13 @@ DK.files = function (o) {
     // un elemento oculto que aparece se anima una vez; si se vuelve atras y adelante, no
     paintLines(step, sh);
     paintDetail();
+    // si el arbol es mas largo que el terminal, la linea enfocada por el paso debe quedar a la vista
+    var fn = step.focus && lines.querySelector('.dkf-ln[data-id="' + step.focus + '"]');
+    if (fn) {
+      var lr = lines.getBoundingClientRect(), nr = fn.getBoundingClientRect();
+      if (nr.bottom > lr.bottom - 8) lines.scrollTop += nr.bottom - lr.bottom + 28;
+      else if (nr.top < lr.top) lines.scrollTop -= lr.top - nr.top + 28;
+    }
     return { animMs: 0 };
   }
   return { setSteps: setSteps, render: render, msgDuration: 700 };

@@ -164,7 +164,7 @@ svg text { font-family: inherit; fill: var(--dk-ink); }
 .dk-msg .ln { display: block; min-height: 1.85em; }
 .dk-msg [data-part] { border-radius: 4px; padding: 1px 3px; margin: 0 -3px; border-bottom: 2px solid transparent; transition: opacity .3s, background .3s, border-color .3s; }
 .dk-msg.has-focus [data-part] { opacity: .42; }
-.dk-msg.has-focus [data-part].on { opacity: 1; background: color-mix(in srgb, var(--pc) 16%, transparent); border-bottom-color: var(--pc); }
+.dk-msg.has-focus [data-part].on { opacity: 1; background: color-mix(in srgb, var(--pc) 9%, transparent); border-bottom-color: color-mix(in srgb, var(--pc) 70%, transparent); }
 .dk-callout { min-height: 170px; border: 1px solid var(--dk-line); border-left: 5px solid var(--pc, var(--dk-line)); border-radius: 12px; background: var(--dk-card); padding: 12px 14px; }
 .dk-callout .tag { display: inline-block; font: 700 11px system-ui, sans-serif; letter-spacing: .05em; text-transform: uppercase; color: var(--pc, var(--dk-muted)); }
 .dk-callout h4 { margin: 2px 0 6px; font-size: 17px; }
@@ -181,7 +181,7 @@ svg text { font-family: inherit; fill: var(--dk-ink); }
 .dk-msg.code .ln { padding: 0 18px; border-left: 3px solid transparent; }
 .dk-msg.code .ln[data-part] { margin: 0; border-radius: 0; border-bottom: 0; }
 .dk-msg.code.has-focus .ln[data-part] { opacity: .45; }
-.dk-msg.code.has-focus .ln[data-part].on { opacity: 1; border-left-color: var(--pc); background: color-mix(in srgb, var(--pc) 12%, transparent); }
+.dk-msg.code.has-focus .ln[data-part].on { opacity: 1; border-left-color: color-mix(in srgb, var(--pc) 70%, transparent); background: color-mix(in srgb, var(--pc) 7%, transparent); }
 .dk-msg.code .kw { color: var(--dk-s-kw); font-weight: 700; } .dk-msg.code .ty { color: var(--dk-s-ty); font-weight: 600; } .dk-msg.code .fn { color: var(--dk-s-fn); }
 .dk-msg.code .ob { color: var(--dk-s-ob); } .dk-msg.code .st { color: var(--dk-s-st); } .dk-msg.code .nu { color: var(--dk-s-nu); } .dk-msg.code .an { color: var(--dk-s-an); }
 .dk-msg.code .cm { color: var(--dk-muted); font-style: italic; }
@@ -308,4 +308,4 @@ svg text { font-family: inherit; fill: var(--dk-ink); }
 }
 
 /* anatomia: step.all = true colorea todas las partes a la vez (resumen) */
-.dk-msg.code.show-all .ln[data-part] { opacity: 1; border-left-color: var(--pc); background: color-mix(in srgb, var(--pc) 12%, transparent); }
+.dk-msg.code.show-all .ln[data-part] { opacity: 1; border-left-color: color-mix(in srgb, var(--pc) 70%, transparent); background: color-mix(in srgb, var(--pc) 7%, transparent); }

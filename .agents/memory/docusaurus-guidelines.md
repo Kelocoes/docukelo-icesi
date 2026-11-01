@@ -219,7 +219,7 @@ Some explanations are understood better by **moving and touching** than by looki
 
 * **Always start from the skill**: [`.agents/skills/docusaurus_animated_diagrams/SKILL.md`](../skills/docusaurus_animated_diagrams/SKILL.md). It defines the analysis you must do first (what the student must understand, which level of interactivity is justified), the build process, the quality checklist and the lessons learned. Do not write a piece from scratch.
 * **Where things live**
-  * Shared kit (single master copy, plain JS/CSS, theme-aware): `static/interactive/_shared/` (`dk-base.css`, `dk-theme.js`, `dk-kit.js`, `dk-icons.js`, `dk-flow.js`, `dk-sequence.js`, `dk-compare.js`, `dk-layers.js`, `dk-anatomy.js`, `dk-table.js`, `dk-player.js`). API: `.agents/skills/docusaurus_animated_diagrams/references/kit-api.md`.
+  * Shared kit (single master copy, plain JS/CSS, theme-aware): `static/interactive/_shared/` (`dk-base.css`, `dk-theme.js`, `dk-kit.js`, `dk-icons.js`, `dk-flow.js`, `dk-player.js` and one scene per pattern: `dk-sequence.js`, `dk-compare.js`, `dk-layers.js`, `dk-canvas.js`, `dk-radial.js`, `dk-anatomy.js`, `dk-table.js`, `dk-tree.js`, `dk-dom.js`, `dk-files.js`, `dk-codemap.js`, `dk-phone.js`, `dk-nav.js`, `dk-tabs.js`). API: `.agents/skills/docusaurus_animated_diagrams/references/kit-api.md`.
   * Each piece: `static/interactive/<course>/<week>/<slug>/index.html`, written mostly as **data** (steps, captions, actors) on top of the kit. Copy `.agents/skills/docusaurus_animated_diagrams/templates/piece/index.html`.
   * Plain `.svg` diagrams still go in `static/img/<course>/` as described above.
 * **How to embed (do not use `IframeWindow`, it fixes the height to 300 px and draws a browser frame)**:

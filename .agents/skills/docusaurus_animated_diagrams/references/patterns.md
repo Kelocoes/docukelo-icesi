@@ -29,6 +29,10 @@ Cada patrón dice cuándo usarlo, qué módulo del kit lo resuelve y qué pieza 
 | Matriz de criterios | Candidatos evaluados contra criterios con ✓/✗ que aparecen por columna y un puntaje | `dk-canvas.js` (`draw` para las marcas, `tag`) | Hecho | `creator-matriz` |
 | Clasificador con selector | "Tengo este problema, ¿qué uso?": Venn con el catálogo completo, una regla micro/macro y un selector de situaciones | `dk-canvas.js` + selector de `dk-player.js` | Hecho | `clasificador-heuristicas` |
 | Simulador con deslizador | Un parámetro continuo (velocidad) cuyo valor cambia el desenlace; caso borde visible; aguja que gira | `dk-canvas.js` (`rot`) + deslizador de `dk-player.js` | Hecho | `simulador-pruebas` |
+| Página <-> árbol DOM | Qué nodo del DOM es qué, y qué toca el DOM real frente al Virtual DOM | `dk-dom.js` + `dk-player.js` | Hecho | `static/interactive/computacion-2/semana-14/dom-arbol-pagina/`, `virtual-dom-diff/` |
+| Estructura de carpetas | Un proyecto como la salida de `tree`, con convenciones propuestas que aparecen por paso | `dk-files.js` + `dk-player.js` | Hecho | `computacion-2/semana-14/estructura-proyecto/`, `computacion-3/semana-14/estructura-auth/`, `computacion-3/semana-15/estructura-playwright/` |
+| Código <-> resultado | Cada parte de un código real y lo que produce (pantalla, cookie, petición, navegador) | `dk-codemap.js` + `dk-player.js` | Hecho | `computacion-2/semana-14/anatomia-componente/`, `computacion-3/semana-14/anatomia-cookie-sesion/` |
+| Selector de escenarios | Una pieza con un selector de casos (peticiones, errores, tipos de fallo) en vez de una pieza por caso | `dk-layers.js` o `dk-canvas.js` + selector de `dk-player.js` | Hecho | `computacion-3/semana-14/capas-de-defensa/`, `manejo-de-errores/`, `donde-vive-la-sesion/`, `computacion-3/semana-15/piramide-pruebas/` |
 | Máquina de estados | Estados que cambian por eventos (transacción, sesión, token) | por construir (`dk-states.js`) | Por hacer | — |
 | Antes / después | Efecto de una técnica (refactor, normalización, índice) | por construir | Por hacer | — |
 
@@ -173,3 +177,17 @@ Cada patrón dice cuándo usarlo, qué módulo del kit lo resuelve y qué pieza 
 - **Orden (mismo que en pila de navegación):** (1) concepto de los dos movimientos con `tabs-vs-push` (teléfono mitad | pila mitad, y tres casos prácticos que reaccionan); (2) la anfitriona y `IndexedStack` con `bottom-nav-anfitriona` (State, páginas en memoria y el `body` en las dos variantes); (3) el código por archivos al final con `tabs-codigo` (`main.dart`, `screens/`, `pages/`).
 - **Qué lo hace entendible:** el campo «Buscar» es la prueba visible de qué se conserva: con `IndexedStack` el texto sigue al volver; con la lista directa desaparece y la tarjeta de la página pasa a «destruida».
 - **Cuidado de contenido:** las `Page` no llevan `Scaffold`; la anfitriona sí. No abrir pestañas con `pushNamed`.
+
+## Ficha del patrón "Selector de escenarios" (semana 14: sesiones y pruebas)
+
+- **Cuándo:** el concepto se aprende **comparando casos** (¿dónde guardo la sesión?, ¿en qué capa se detiene esta petición?, ¿qué mecanismo uso para este error?, ¿en qué nivel de la pirámide se detecta?). Una pieza con un selector enseña más que seis piezas, y el estudiante compara.
+- **Estructura que funcionó:** una **fase de presentación** sin selector (2 a 4 pasos que nombran las piezas) y una **fase «Pruébalo»** con el selector (`type: 'select'`, `affectsPhase: 1`) y 2 a 5 pasos por caso: el recorrido y, al final, «Ojo con esto» (la trampa del caso). `build(opts)` genera los pasos del caso elegido; las salidas de error son nodos `tone: 'err'` fijos y la flecha `kind: 'err'` llega hasta ellos.
+- **Que el caso malo se vea:** incluye el caso **sin protección** (`POST directo, acción SIN chequeo`) y dibuja la flecha de fallo hasta el dato dañado (`rutina 12 borrada`): es el que más enseña.
+- **Un solo ejemplo del capítulo:** ana (id 7) y luis (id 9), el mismo `/routines`, el mismo `LoginUseCase` de las semanas 12 y 13.
+- **Cuidado:** si cada opción necesita su propio icono, usa un nodo `hidden` por opción (el icono no cambia por paso). Con `code` función, todas las variantes deben tener el mismo número de líneas.
+
+## Ficha del patrón "Código <-> resultado con salida externa" (cookie, POST, navegador)
+
+- **Cuándo:** el código produce algo que el estudiante **nunca ve** (el encabezado `Set-Cookie`, la petición con `Next-Action`, lo que hace Playwright en el navegador). `DK.codemap` pone el código a la izquierda y esa salida a la derecha, y el mouse ilumina en los dos sentidos.
+- **Estructura:** 8 a 11 pasos en 3 fases que siguen el orden del código (el token, la cookie, las opciones; qué es, validar, responder; arrange, act, assert). Una parte que existe **solo en el resultado** (`net`: la petición POST) se explica con un paso sin línea de código.
+- **Cuidado de contenido:** *firmado no es cifrado* (el contenido del JWT se lee); `httpOnly` reduce el robo del token pero no impide que un script haga peticiones como el usuario; `redirect()` lanza una excepción y no va en `try/catch`. Verificar cada afirmación contra la documentación oficial (ver `key-concepts.md`, 5h).

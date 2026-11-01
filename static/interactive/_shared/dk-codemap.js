@@ -36,15 +36,15 @@ DK.codemap = function (o) {
       '.cm-ln { display: flex; white-space: pre; min-height: 1.75em; }',
       '.cm-no { flex: none; width: 34px; padding-right: 10px; text-align: right; color: var(--dk-muted); opacity: .6; user-select: none; }',
       '.cm-code { padding-right: 14px; }',
-      '.cm-seg[data-part] { --pc: var(--dk-p1); border-radius: 4px; border-bottom: 2px solid var(--pc); background: color-mix(in srgb, var(--pc) 10%, transparent); cursor: pointer; transition: background .15s, opacity .15s; outline: none; }',
+      '.cm-seg[data-part] { --pc: var(--dk-p1); border-radius: 4px; border-bottom: 1px solid color-mix(in srgb, var(--pc) 38%, transparent); background: color-mix(in srgb, var(--pc) 4%, transparent); cursor: pointer; transition: background .15s, opacity .15s; outline: none; }',
       '.cm-lines .kw { color: var(--dk-s-kw); font-weight: 700; } .cm-lines .ty { color: var(--dk-s-ty); font-weight: 600; } .cm-lines .fn { color: var(--dk-s-fn); }',
       '.cm-lines .ob { color: var(--dk-s-ob); } .cm-lines .st { color: var(--dk-s-st); } .cm-lines .nu { color: var(--dk-s-nu); } .cm-lines .an { color: var(--dk-s-an); } .cm-lines .cm { color: var(--dk-muted); font-style: italic; }',
       '.cmx.has-on .cm-seg[data-part]:not(.on) { opacity: .5; }',
-      '.cmx .cm-seg.on { background: color-mix(in srgb, var(--pc) 30%, transparent); }',
+      '.cmx .cm-seg.on { background: color-mix(in srgb, var(--pc) 15%, transparent); border-bottom-color: color-mix(in srgb, var(--pc) 70%, transparent); }',
       /* el resultado: una pantalla clara simulada, siempre en tema claro */
       '.cm-ui { padding: 12px; border: 1px solid var(--dk-line); border-radius: 12px; background: #fff; color: #1c1e21; display: grid; gap: 8px; font: 13px/1.4 system-ui, "Segoe UI", Roboto, sans-serif; }',
       '.cm-ui [data-part] { --pc: #5454e9; border-radius: 8px; outline: 2px solid transparent; outline-offset: 2px; transition: outline-color .15s, background-color .15s, opacity .15s; cursor: pointer; }',
-      '.cm-ui .on { outline-color: var(--pc); background-color: color-mix(in srgb, var(--pc) 16%, #fff); }',
+      '.cm-ui .on { outline-color: color-mix(in srgb, var(--pc) 60%, transparent); background-color: color-mix(in srgb, var(--pc) 9%, #fff); }',
       '.cmx.has-on .cm-ui [data-part]:not(.on):not(:has(.on)) { opacity: .55; }',
       '.cm-lbl { font: 700 10.5px system-ui, sans-serif; letter-spacing: .05em; text-transform: uppercase; color: #79747e; margin: 0; }',
       '.cm-chip { display: inline-block; padding: 2px 10px; border: 1.5px solid #dfe2e8; border-radius: 999px; font: 700 12px ui-monospace, Consolas, monospace; background: #f7f7fb; }',
@@ -69,7 +69,8 @@ DK.codemap = function (o) {
       /* en pantalla completa sobra ancho y falta alto: tres columnas (codigo, pantalla, explicacion) con letra mas grande */
       '  .dk-fs .cmx { height: 100%; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); align-items: stretch; }',
       '  .dk-fs .cm-left, .dk-fs .cm-right { min-height: 0; overflow: auto; }',
-      '  .dk-fs .cm-ed { height: 100%; } .dk-fs .cm-lines { font-size: 20px; } .dk-fs .cm-tab span { font-size: 15px; }',
+      /* el codigo largo se desplaza dentro del editor (antes se recortaba) */
+      '  .dk-fs .cm-ed { height: 100%; display: flex; flex-direction: column; } .dk-fs .cm-tab { flex: none; } .dk-fs .cm-lines { flex: 1; min-height: 0; overflow: auto; font-size: 20px; } .dk-fs .cm-tab span { font-size: 15px; }',
       '  .dk-fs .cm-ui { zoom: 1.5; }',
       '  .dk-fs .cm-call { grid-column: 3; grid-row: 1; min-height: 0; overflow: auto; font-size: 18px; } .dk-fs .cm-call h4 { font-size: 22px; } .dk-fs .cm-call code { font-size: 16px; }',
       '}',
@@ -136,6 +137,17 @@ DK.codemap = function (o) {
   root.addEventListener('click', function (e) { var id = partOf(e.target); pinned = (id && id !== pinned) ? id : null; paint(); });
 
   function setSteps(list) { steps = list; steps.forEach(function (s) { s.msgs = s.msgs || []; }); }
-  function render(i) { cur = i; paint(); return { animMs: 0 }; }
+  // si el codigo no cabe (pantalla completa, o un archivo largo), la parte enfocada por el paso debe quedar a la vista
+  function bring(n, sc) {
+    if (!n || !sc || sc.scrollHeight <= sc.clientHeight + 2) return;
+    var sr = sc.getBoundingClientRect(), nr = n.getBoundingClientRect();
+    if (nr.bottom > sr.bottom - 12 || nr.top < sr.top + 8) sc.scrollTop += (nr.top + nr.height / 2) - (sr.top + sr.height / 2);
+  }
+  function reveal() {
+    var f = steps[cur] && steps[cur].focus; if (!f) return;
+    bring(lines.querySelector('[data-part="' + f + '"]'), lines);                           // el codigo
+    bring(ui.querySelector('[data-part="' + f + '"]'), root.querySelector('.cm-right'));   // el resultado (en pantalla completa puede no caber)
+  }
+  function render(i) { cur = i; paint(); reveal(); return { animMs: 0 }; }
   return { setSteps: setSteps, render: render, msgDuration: 700 };
 };
