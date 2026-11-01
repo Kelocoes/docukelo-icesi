@@ -17,7 +17,7 @@
 <script>
 (function () {
   // src/lib/session.ts cuando el BACKEND emite el token: el front NO lo crea, NO lo firma y NO verifica la firma. Solo lo decodifica (jwt-decode)
-  // para leer id, nombre, roles y vencimiento, y lo guarda en una cookie httpOnly. La verificacion la hace el backend cuando recibe el token.
+  // para leer id, nombre, rol, permisos y vencimiento, y lo guarda en una cookie httpOnly. La verificacion la hace el backend cuando recibe el token.
   // Colores: p1 = solo servidor; p2 = decodificar y el token; p3 = guardar la cookie; p4 = banderas de seguridad; p5 = vencimiento y alcance.
   var code = [
     [["import 'server-only'", 'only']],
@@ -53,11 +53,11 @@
       text: 'El paquete <code>server-only</code> hace que el <b>build falle</b> si un componente de cliente importa este archivo. La cookie <code>httpOnly</code> y el token solo existen en el servidor.',
       where: 'A la derecha: todo lo que ocurre con el token es del lado del servidor.' },
     decode: { label: 'Decodificar', color: 'p2', title: 'Decodificar: leer el contenido del token',
-      text: '<code>jwtDecode</code> abre el token y devuelve su contenido (<code>sub</code>, <code>name</code>, <code>roles</code>, <code>exp</code>). No necesita ninguna clave: un JWT se puede <b>leer</b> sin ella, porque está en base64.',
-      bullets: ['Devuelve <code>null</code> si no hay token o si no tiene forma de JWT: «no hay sesión» es un resultado normal, no una falla.', 'Con esto el front sabe quién es el usuario y qué roles tiene sin hacer ninguna petición.'],
+      text: '<code>jwtDecode</code> abre el token y devuelve su contenido (<code>sub</code>, <code>name</code>, <code>role</code>, <code>permissions</code>, <code>exp</code>). No necesita ninguna clave: un JWT se puede <b>leer</b> sin ella, porque está en base64.',
+      bullets: ['Devuelve <code>null</code> si no hay token o si no tiene forma de JWT: «no hay sesión» es un resultado normal, no una falla.', 'Con esto el front sabe quién es el usuario, qué rol y qué permisos tiene sin hacer ninguna petición.'],
       where: 'A la derecha: el contenido del token, ya decodificado.' },
     nverify: { label: 'Sin firma', color: 'p4', title: 'El front no verifica la firma',
-      text: 'Decodificar <b>no comprueba</b> que nadie haya modificado el token. Un token alterado (por ejemplo con <code>roles: ["ADMIN"]</code>) se decodifica igual de bien.',
+      text: 'Decodificar <b>no comprueba</b> que nadie haya modificado el token. Un token alterado (por ejemplo con <code>permissions: ["create_routines"]</code>) se decodifica igual de bien.',
       bullets: ['Por eso lo que el front lee solo sirve para la interfaz: mostrar u ocultar cosas.', 'La firma la verifica el <b>backend</b> cada vez que recibe el token: con un token falso no entrega ningún dato.'],
       where: 'A la derecha: la verificación ocurre en el backend.' },
     token: { label: 'El token', color: 'p2', title: 'El token lo emite el backend',
@@ -101,7 +101,7 @@
       '<p class="cm-lbl">El token (JWT): cabecera . contenido . firma</p>' +
       '<div class="cm-code-sm" data-part="token" style="word-break:break-all"><span style="color:var(--dk-p1)">eyJhbGciOiJIUzI1NiIs…</span>.<span style="color:var(--dk-p3)">eyJzdWIiOiI3IiwibmFtZSI6IkFuYSIs…</span>.<span style="color:var(--dk-p4)">zqGUQ50b0qXk60f…</span></div>' +
       '<div class="cm-arrow">↓ el front lo decodifica</div>' +
-      '<div class="cm-chip" data-part="decode">jwtDecode(token) → { sub: "7", name: "Ana", roles: ["USER"], <span data-part="expires">exp: 1 hora</span> }</div>' +
+      '<div class="cm-chip" data-part="decode">jwtDecode(token) → { sub: "1", name: "Ana Pérez", role: "USER", permissions: ["view_routines"], <span data-part="expires">exp: 1 hora</span> }</div>' +
       '<div class="cm-chip" data-part="nverify" style="border-color:#e9683b">la firma NO se comprueba aquí: la comprueba el backend</div>' +
       '<div class="cm-arrow">↓ y lo guarda</div>' +
       '<p class="cm-lbl" data-part="jar">Encabezado de la respuesta</p>' +
@@ -114,7 +114,7 @@
     { phase: 0, title: 'Un archivo que solo corre en el servidor', focus: 'only',
       caption: 'Pasa el mouse por el código o por el resultado: se ilumina lo que se corresponde. El backend emite el token; el front solo lo decodifica y lo guarda.' },
     { phase: 0, title: 'Decodificar el token', focus: 'decode',
-      caption: 'jwtDecode lee el contenido sin necesitar ninguna clave: de ahí salen el id, el nombre y los roles.' },
+      caption: 'jwtDecode lee el contenido sin necesitar ninguna clave: de ahí salen el id, el nombre, el rol y los permisos.' },
     { phase: 0, title: 'Y la firma, ¿quién la comprueba?', focus: 'nverify',
       caption: 'No el front. Decodificar no verifica nada: la firma la comprueba el backend cada vez que recibe el token.' },
     { phase: 1, title: 'El token que entrega el backend', focus: 'token',

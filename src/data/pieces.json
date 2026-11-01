@@ -426,7 +426,7 @@
     "week": "semana-14",
     "weekNumber": 14,
     "slug": "estructura-auth",
-    "title": "Dónde va la sesión en tu proyecto",
+    "title": "Dónde va la sesión y la protección en tu proyecto",
     "src": "/interactive/computacion-3/semana-14/estructura-auth/index.html"
   },
   {
@@ -438,6 +438,36 @@
     "slug": "manejo-de-errores",
     "title": "Manejo de errores en Next.js",
     "src": "/interactive/computacion-3/semana-14/manejo-de-errores/index.html"
+  },
+  {
+    "id": "computacion-3/semana-14/pagina-servidor-cliente",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "pagina-servidor-cliente",
+    "title": "Por qué la página de rutinas se divide en servidor y cliente",
+    "src": "/interactive/computacion-3/semana-14/pagina-servidor-cliente/index.html"
+  },
+  {
+    "id": "computacion-3/semana-14/permisos-por-capa",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "permisos-por-capa",
+    "title": "Qué hace cada capa con los permisos del token",
+    "src": "/interactive/computacion-3/semana-14/permisos-por-capa/index.html"
+  },
+  {
+    "id": "computacion-3/semana-14/proxy-reglas",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "proxy-reglas",
+    "title": "Qué decide proxy.ts en cada petición",
+    "src": "/interactive/computacion-3/semana-14/proxy-reglas/index.html"
   },
   {
     "id": "computacion-3/semana-14/use-server-que-hace",

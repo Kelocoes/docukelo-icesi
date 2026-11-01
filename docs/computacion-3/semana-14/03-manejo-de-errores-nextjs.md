@@ -1,11 +1,11 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: "Manejo de errores en Next.js: errores esperados y inesperados, el viaje de un error en el login con Redux y Server Actions, error.tsx y global-error.tsx, notFound, redirect, unauthorized y forbidden."
 ---
 
 # Manejo de errores en Next.js
 
-En el [documento anterior](./01-sesiones-en-nextjs.md) construimos el login con sesión y rutas protegidas, pero casi siempre asumimos que todo sale bien. En una aplicación real fallan cosas todo el tiempo: el usuario se equivoca de contraseña, el servicio de datos se cae, alguien abre una rutina que no existe. Lo importante es que **cada falla llegue a la pantalla de forma controlada**, con un mensaje que el usuario entienda, sin romper el resto de la página.
+En los documentos anteriores construimos el login con sesión ([Sesiones](./01-sesiones-en-nextjs.md)) y las rutas protegidas ([Rutas protegidas](./02-rutas-protegidas-en-nextjs.md)), pero casi siempre asumimos que todo sale bien. En una aplicación real fallan cosas todo el tiempo: el usuario se equivoca de contraseña, el servicio de datos se cae, alguien abre una rutina que no existe. Lo importante es que **cada falla llegue a la pantalla de forma controlada**, con un mensaje que el usuario entienda, sin romper el resto de la página.
 
 Este documento responde tres preguntas:
 

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qué decide proxy.ts en cada petición</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // proxy.ts del proyecto: protectedRoutes = ['/routines'], publicRoutes = ['/login', '/register'].
+  // 1) el matcher decide si el proxy corre (excluye _next/static, _next/image, favicon.ico...). 2) decodeToken(cookie). 3) tres salidas: redirigir a /login,
+  // redirigir a /routines o seguir con NextResponse.next(). El proxy corre tambien en el POST de una Server Action cuando la ruta esta en el matcher.
+  // Fase 1: las partes. Fase 2: seis peticiones (selector).
+  var msg = function (path, label, kind) { return { path: path, label: label, kind: kind }; };
+
+  var nodes = [
+    { id: 'nav', kind: 'actor', icon: 'browser', label: 'Navegador', x: 6, y: 160, w: 96, h: 88 },
+    { id: 'matcher', kind: 'box', icon: 'filter', label: 'matcher', sub: 'qué rutas revisa', x: 170, y: 160, w: 130, h: 88 },
+    { id: 'proxy', kind: 'box', icon: 'gear', label: 'proxy()', sub: 'decodeToken(cookie)', x: 362, y: 160, w: 140, h: 88 },
+    { id: 'page', kind: 'box', icon: 'filecode', label: 'La página', sub: 'next()', x: 620, y: 160, w: 130, h: 88 },
+    { id: 'rlogin', kind: 'box', tone: 'err', label: '307 a /login', sub: 'sin sesión', x: 620, y: 40, w: 150, h: 66 },
+    { id: 'rrout', kind: 'box', tone: 'err', label: '307 a /routines', sub: 'ya hay sesión', x: 620, y: 300, w: 150, h: 66 },
+    { id: 'stat', kind: 'box', icon: 'file', label: 'Archivo estático', sub: 'sin pasar por el proxy', x: 362, y: 300, w: 160, h: 88 },
+  ];
+
+  var OPTIONS = ['/routines sin sesión', '/routines con sesión', '/login con sesión', '/login sin sesión', 'Un archivo de _next/static', 'POST de una acción en /routines, sin cookie'];
+
+  var P_NM = [102, 204, 170, 204], P_MP = [300, 204, 362, 204], P_PG = [502, 204, 620, 204];
+  var P_PL = [470, 160, 620, 90], P_PR = [470, 248, 620, 322], P_MS = [235, 248, 362, 344];
+
+  function scenario(k) {
+    var S = [];
+    var add = function (title, caption, focus, msgs, sub) { S.push({ phase: 1, title: title, caption: caption, focus: focus, msgs: msgs, sub: sub }); };
+    if (k === 0) {
+      add('1 · Pide /routines sin cookie', 'Un navegador sin sesión escribe la URL.', ['nav', 'matcher'], [msg(P_NM, 'GET /routines', 'ctl')]);
+      add('2 · Está en el matcher: el proxy corre', 'El matcher excluye solo archivos estáticos y metadatos. /routines no está excluida.', ['matcher', 'proxy'], [msg(P_MP, 'corre', 'ack')]);
+      add('3 · No hay token', 'decodeToken(undefined) devuelve null: «no hay sesión» es un resultado normal, no una falla.', ['proxy'], [], { proxy: 'payload: null' });
+      add('4 · Ruta protegida y sin sesión', 'isProtected && !payload: redirige a /login sin renderizar la página ni llamar al backend.', ['proxy', 'rlogin'], [msg(P_PL, '307', 'err')]);
+    } else if (k === 1) {
+      add('1 · Pide /routines con la cookie', 'El navegador adjunta la cookie solo.', ['nav', 'matcher'], [msg(P_NM, 'GET /routines', 'ctl')]);
+      add('2 · El proxy corre', '/routines está en el matcher.', ['matcher', 'proxy'], [msg(P_MP, 'corre', 'ack')]);
+      add('3 · Token vigente', 'decodeToken lee el contenido y comprueba exp. No verifica la firma y no mira los permisos.', ['proxy'], [], { proxy: 'payload: Ana' });
+      add('4 · Sigue a la página', 'No hay motivo para detenerla: NextResponse.next(). La página volverá a comprobar el permiso por su cuenta.', ['proxy', 'page'], [msg(P_PG, 'next()', 'ack')]);
+    } else if (k === 2) {
+      add('1 · Pide /login estando conectada', 'Ana ya tiene sesión y escribe /login.', ['nav', 'matcher'], [msg(P_NM, 'GET /login', 'ctl')]);
+      add('2 · El proxy corre', '/login está en el matcher.', ['matcher', 'proxy'], [msg(P_MP, 'corre', 'ack')]);
+      add('3 · Token vigente', 'Hay una sesión válida.', ['proxy'], [], { proxy: 'payload: Ana' });
+      add('4 · Ruta pública con sesión', 'isPublic && payload: no tiene sentido mostrarle el login, así que la manda a /routines.', ['proxy', 'rrout'], [msg(P_PR, '307', 'err')]);
+    } else if (k === 3) {
+      add('1 · Pide /login sin sesión', 'Alguien que aún no inició sesión.', ['nav', 'matcher'], [msg(P_NM, 'GET /login', 'ctl')]);
+      add('2 · El proxy corre', '/login está en el matcher.', ['matcher', 'proxy'], [msg(P_MP, 'corre', 'ack')]);
+      add('3 · No hay token', 'payload es null.', ['proxy'], [], { proxy: 'payload: null' });
+      add('4 · Ruta pública y sin sesión', 'Ninguna regla se cumple: NextResponse.next() y se muestra el formulario.', ['proxy', 'page'], [msg(P_PG, 'next()', 'ack')], { page: 'login' });
+    } else if (k === 4) {
+      add('1 · Pide un archivo de _next/static', 'El navegador descarga el JavaScript y el CSS de la aplicación.', ['nav', 'matcher'], [msg(P_NM, 'GET /_next/static/…', 'ctl')]);
+      add('2 · El matcher lo excluye', 'El patrón del matcher tiene (?!_next/static|_next/image|favicon.ico|…): el proxy ni se ejecuta. Sin esa exclusión correría en cada archivo.', ['matcher', 'stat'], [msg(P_MS, 'excluida', 'data')]);
+    } else {
+      add('1 · Un POST con el id de la acción', 'Alguien con curl envía la petición de una Server Action, sin cookie. Una acción es un POST a la ruta donde se usa: aquí, /routines.', ['nav', 'matcher'], [msg(P_NM, 'POST /routines', 'ctl')]);
+      add('2 · El proxy corre', 'La ruta está en el matcher, así que el proxy también ve los POST de las acciones.', ['matcher', 'proxy'], [msg(P_MP, 'corre', 'ack')]);
+      add('3 · No hay token', 'decodeToken(undefined) devuelve null.', ['proxy'], [], { proxy: 'payload: null' });
+      add('4 · Se frena antes de la acción', 'Redirige a /login: la acción ni se ejecuta. Si el matcher hubiera excluido esa ruta, el proxy no la cubriría: por eso cada acción debe comprobar por su cuenta.', ['proxy', 'rlogin'], [msg(P_PL, '307', 'err')]);
+    }
+    return S;
+  }
+
+  function build(opt) {
+    var intro = [
+      { phase: 0, title: 'El matcher decide en qué peticiones corre', focus: ['matcher', 'nav'], msgs: [],
+        caption: 'Sin un matcher, el proxy se ejecutaría en todas las peticiones, incluidos los archivos estáticos. El del proyecto los excluye y revisa el resto.' },
+      { phase: 0, title: 'proxy() decodifica la cookie', focus: ['proxy'], msgs: [],
+        caption: 'Lee la cookie session con decodeToken: comprueba que tenga forma de JWT y que no haya vencido. No verifica la firma y no mira los permisos: es un chequeo optimista.' },
+      { phase: 0, title: 'Y devuelve una de tres respuestas', focus: ['page', 'rlogin', 'rrout'], msgs: [],
+        caption: 'Redirigir a /login (ruta protegida sin sesión), redirigir a /routines (ruta pública con sesión) o dejar pasar con NextResponse.next().' },
+    ];
+    return intro.concat(scenario(opt.peticion || 0));
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Qué decide proxy.ts en cada petición: el matcher, la lectura de la cookie y las tres respuestas posibles, en seis peticiones',
+    phases: ['Las partes', 'Pruébalo'],
+    wide: true,
+    scene: function (svg) { return DK.layers({ svg: svg, width: 850, height: 420, nodes: nodes, labels: 'smart', trail: 'phase' }); },
+    toggles: [{ key: 'peticion', type: 'select', label: 'Petición', options: OPTIONS, value: 0, affectsPhase: 1 }],
+    build: build,
+    intro: { kicker: 'PROXY', title: 'Qué decide proxy.ts',
+      text: 'Ve las tres piezas del proxy y elige una petición para ver qué respuesta recibe: seis casos, incluido el de un archivo estático y el POST de una Server Action.' },
+  });
+})();
+</script>
+</body>
+</html>

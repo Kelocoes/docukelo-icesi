@@ -46,7 +46,8 @@
     [['    ', ''], ['tokens.accessToken)', 'done']],
     [['  ', ''], ['return { ok: true, user: {', 'done']],
     [['    ', ''], ['id: payload.sub, name: payload.name,', 'done']],
-    [['    ', ''], ['roles: payload.roles } }', 'done']],
+    [['    ', ''], ['role: payload.role,', 'done']],
+    [['    ', ''], ['permissions: payload.permissions } }', 'done']],
     [['}', '']],
   ];
 
@@ -82,7 +83,7 @@
       bullets: ['Decir «ese correo no existe» le dice a un atacante qué correos están registrados.'],
       where: 'A la derecha: el mensaje bajo el formulario.' },
     done: { label: 'Éxito', color: 'p1', title: 'Guardar el token y devolver el usuario',
-      text: '<code>createSession</code> decodifica el token del backend y lo guarda en la cookie; devuelve su contenido. La acción responde <code>{ ok: true, user }</code> con lo que la interfaz necesita: el id, el nombre y los <b>roles</b> que vienen dentro del token (nunca el token ni una contraseña). La redirección la hace el cliente con <code>router.replace("/routines")</code>.',
+      text: '<code>createSession</code> decodifica el token del backend y lo guarda en la cookie; devuelve su contenido. La acción responde <code>{ ok: true, user }</code> con lo que la interfaz necesita: el id, el nombre, el <b>rol</b> y los <b>permisos</b> que vienen dentro del token (nunca el token ni una contraseña). La redirección la hace el cliente con <code>router.replace("/routines")</code>.',
       bullets: ['El front no crea ni verifica el token: lo recibe, lo decodifica y lo guarda. La firma la comprueba el backend.', 'La respuesta trae el <code>Set-Cookie</code>: el navegador la guarda antes de que el thunk se resuelva.'],
       where: 'A la derecha: la respuesta con la cookie y el usuario.' },
   };
@@ -120,7 +121,7 @@
     { phase: 1, title: 'Error esperado: credenciales inválidas', focus: 'msg',
       caption: 'Un mensaje genérico, sin revelar si el correo existe.' },
     { phase: 2, title: 'Éxito: token en la cookie y usuario', focus: 'done',
-      caption: 'Se decodifica y se guarda el token del backend, y se devuelve el usuario con sus roles. La navegación la hace el cliente al terminar el thunk.' },
+      caption: 'Se decodifica y se guarda el token del backend, y se devuelve el usuario con su rol y sus permisos. La navegación la hace el cliente al terminar el thunk.' },
   ];
 
   DK.player({
