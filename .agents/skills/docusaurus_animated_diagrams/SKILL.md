@@ -89,6 +89,9 @@ Una animación no es decoración: cada movimiento debe revelar un **orden** o un
 | Capas anidadas y cuál atrapa un error según dónde se lanza (`error.tsx`) | N3 | Kit: `DK.canvas` con zonas `round` anidadas (6 niveles), selector y `text` por zona (ejemplo: `semana-14/error-boundaries-segmentos`) |
 | Qué mecanismo usar según qué falló (errores, excepciones) | N3 | Kit: `DK.canvas` con selector y `code` función (ejemplo: `semana-14/manejo-de-errores`) |
 | Un cliente que espera y reintenta hasta que algo está listo (auto-espera, reintentos) | N3 | Kit: `DK.sequence` con un interruptor de «tarda en responder» (ejemplo: `semana-15/autoespera-playwright`) |
+| Qué ve la interfaz mientras espera una operación de red (cargando, error, datos) y qué responde el servidor | N3 | Kit: `DK.player` + `DK.phone` con selector `type: 'select'` y `restart: 'first'`; `build(opts)` genera los pasos de cada caso (ejemplo: `seminario-de-i-d-i/semana-14/estados-asincronos`) |
+| Qué petición HTTP produce cada consulta del SDK y qué SQL ejecuta la base de datos (CRUD, PostgREST) | N3 | Kit: `DK.player` + `DK.codemap`, la columna derecha lista las 5 peticiones (ejemplo: `semana-14/crud-postgrest`) |
+| Arquitectura por capas con ida y vuelta de una petición (app, servicio, SDK, API, base de datos) | N3 | Kit: `DK.layers` en U con trayectos rectos paralelos (ejemplo: `semana-14/arquitectura-flutter-supabase`) |
 | Algo que se entiende provocándolo (estado, fallos, parámetros) | N3 | Kit; escena nueva si no existe el patrón (ver `patterns.md`) |
 
 ### 2. Construir en un lugar de revisión, no directo en el capítulo

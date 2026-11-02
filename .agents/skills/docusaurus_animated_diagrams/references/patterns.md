@@ -191,3 +191,24 @@ Cada patrón dice cuándo usarlo, qué módulo del kit lo resuelve y qué pieza 
 - **Cuándo:** el código produce algo que el estudiante **nunca ve** (el encabezado `Set-Cookie`, la petición con `Next-Action`, lo que hace Playwright en el navegador). `DK.codemap` pone el código a la izquierda y esa salida a la derecha, y el mouse ilumina en los dos sentidos.
 - **Estructura:** 8 a 11 pasos en 3 fases que siguen el orden del código (el token, la cookie, las opciones; qué es, validar, responder; arrange, act, assert). Una parte que existe **solo en el resultado** (`net`: la petición POST) se explica con un paso sin línea de código.
 - **Cuidado de contenido:** *firmado no es cifrado* (el contenido del JWT se lee); `httpOnly` reduce el robo del token pero no impide que un script haga peticiones como el usuario; `redirect()` lanza una excepción y no va en `try/catch`. Verificar cada afirmación contra la documentación oficial (ver `key-concepts.md`, 5h).
+
+## Ficha del patrón "Estados de una operación asíncrona" (cargando, error, datos)
+
+- **Cuándo:** el concepto es qué dibuja la interfaz mientras espera una operación de red (Flutter + Supabase, pero sirve para cualquier `await`). `DK.phone` muestra la pantalla; el árbol de widgets cambia de rama (`when`) con las variables `_cargando` y `_error`.
+- **Estructura que funcionó:** 4 fases (`Pedir`, `Esperar`, `Resolver`, `Resumen`) y un **selector** «¿Qué responde el servidor?» con cuatro casos (bien, lento, error de la API, sin conexión). `build(opts)` genera los pasos de cada caso; el caso lento solo agrega un paso de espera; los de error agregan el reintento (toque en el botón y vuelta a cargar). Sin modo libre: una acción síncrona no puede demostrar una espera.
+- **Detalles que enseñan:** `_cargando` arranca en `true`; el `setState` de los datos reconstruye pero **sigue en el indicador** hasta que `finally` apaga la bandera; dos `catch` (excepción de la API frente a falla de red).
+- **Ejemplo real:** `seminario-de-i-d-i/semana-14/estados-asincronos`. Clases nuevas del kit: `pf-spin`, `pf-error`.
+
+## Ficha del patrón "Arquitectura en U con ida y vuelta" (`DK.layers`)
+
+- **Cuándo:** una petición baja por varias capas de un lado, cruza la red y sube por las del otro (app, servicio, SDK, API, base de datos).
+- **Estructura que funcionó:** dos contenedores `outer` lado a lado, tres cajas apiladas en el primero y dos en el segundo; la caja de salida y la de llegada a la **misma altura** para que el cruce sea una recta horizontal (los `path` de `DK.layers` solo admiten rectas). Ida y vuelta son dos rectas paralelas separadas ~30 unidades; una fase para presentar las piezas, una para la ida, una para la vuelta y una para «por qué una capa».
+- **Cuidado:** en tramos verticales cortos (~35 unidades) la etiqueta de la ida y la de la vuelta se pisan si son largas: etiquetas de ≤ 15 caracteres (`from().select()`, no `.from('contactos').select()`).
+- **Ejemplo real:** `seminario-de-i-d-i/semana-14/arquitectura-flutter-supabase`.
+
+## Ficha del patrón "Código <-> petición HTTP y SQL" (`DK.codemap`)
+
+- **Cuándo:** un conjunto de operaciones de un SDK (CRUD) que el estudiante debe ver como peticiones HTTP y SQL. Código a la izquierda (solo las consultas, no las firmas), y a la derecha una tarjeta por petición con método, ruta, cuerpo, respuesta y SQL.
+- **Estructura que funcionó:** 3 fases (Leer, Escribir, Seguridad); partes por operación (`list`, `one`, `create`, `edit`, `del`), una parte compartida (`from`, `eq`) que ilumina varias líneas a la vez, y una parte que existe solo en el resultado (`rls`).
+- **Cuidado:** `.cm-lbl` se muestra en MAYÚSCULAS (CSS): una ruta como `/rest/v1/contactos` en una etiqueta sale `/REST/V1/CONTACTOS`; ponla en un `cm-code-sm`.
+- **Ejemplo real:** `seminario-de-i-d-i/semana-14/crud-postgrest`.

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRUD con Supabase y PostgREST</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Las cinco operaciones del CRUD de la agenda (listar, detalle, crear, editar, borrar), cada una enlazada con la peticion HTTP que el SDK
+   envia a PostgREST y con el SQL que ejecuta Postgres. Solo se muestran las consultas del servicio (lo esencial).
+   Colores: p1 = la tabla; p2 = leer; p3 = escribir; p4 = filtro; p5 = borrar. */
+(function () {
+  var code = [
+    [['final _db = Supabase.instance.client;', '']],
+    [['', '']],
+    [['// listar()', '']],
+    [["_db.from('contactos')", 'from']],
+    [['   ', ''], ['.select()', 'list']],
+    [['   ', ''], [".order('nombre')", 'list']],
+    [['', '']],
+    [['// obtener(id)', '']],
+    [["_db.from('contactos')", 'from']],
+    [['   ', ''], ['.select()', 'list']],
+    [['   ', ''], [".eq('id', id)", 'eq']],
+    [['   ', ''], ['.single()', 'one']],
+    [['', '']],
+    [['// crear(datos)', '']],
+    [["_db.from('contactos')", 'from']],
+    [['   ', ''], ['.insert(datos)', 'create']],
+    [['', '']],
+    [['// editar(id, datos)', '']],
+    [["_db.from('contactos')", 'from']],
+    [['   ', ''], ['.update(datos)', 'edit']],
+    [['   ', ''], [".eq('id', id)", 'eq']],
+    [['', '']],
+    [['// borrar(id)', '']],
+    [["_db.from('contactos')", 'from']],
+    [['   ', ''], ['.delete()', 'del']],
+    [['   ', ''], [".eq('id', id)", 'eq']],
+  ];
+
+  var parts = {
+    from: { label: ".from('contactos')", color: 'p1', title: 'from(): elige la tabla, y con ella la ruta',
+      text: 'Cada tabla del esquema <code>public</code> tiene su propia ruta en la API: <code>/rest/v1/contactos</code>. Todas las operaciones empiezan igual; lo que cambia es el método HTTP y los parámetros.',
+      bullets: ['La URL base (<code>https://&lt;proyecto&gt;.supabase.co</code>) la pusiste al inicializar el SDK.', 'En cada petición el SDK agrega el encabezado <code>apikey</code> con tu llave publishable.'],
+      where: 'A la derecha: la ruta que comparten las cinco peticiones.' },
+    list: { label: 'select()', color: 'p2', title: 'Listar: select() es un GET',
+      text: 'Leer filas es un <b>GET</b> sin cuerpo. <code>select()</code> pide todas las columnas (<code>select=*</code>) y <code>order(\'nombre\')</code> se convierte en el parámetro <code>order=nombre.asc</code>. La respuesta es un <b>arreglo JSON</b> con una fila por contacto.',
+      bullets: ['Equivale a <code>SELECT * FROM contactos ORDER BY nombre</code>.', 'Sin filtros trae toda la tabla: con muchas filas, limita con <code>.limit(20)</code> o <code>.range(0, 19)</code>.'],
+      where: 'A la derecha: el GET y el SQL equivalente.' },
+    one: { label: 'single()', color: 'p2', title: 'Detalle: una sola fila con single()',
+      text: 'Para el detalle se filtra por <code>id</code> y se pide <b>un objeto</b> en vez de un arreglo: <code>single()</code> agrega el encabezado <code>Accept: application/vnd.pgrst.object+json</code>. El SDK te devuelve un <code>Map</code>, no una lista de un elemento.',
+      bullets: ['Si no existe ninguna fila (o hay más de una), la API responde <b>406</b> y el SDK lanza una <code>PostgrestException</code>.', 'Si el id puede no existir, usa <code>maybeSingle()</code>: devuelve <code>null</code> en lugar de lanzar.'],
+      where: 'A la derecha: el GET con <code>id=eq.7</code> y su respuesta de un solo objeto.' },
+    eq: { label: "eq('id', id)", color: 'p4', title: 'Los filtros son parámetros de la URL',
+      text: "<code>.eq('id', 7)</code> se convierte en <code>?id=eq.7</code>: columna, operador y valor. Es el <code>WHERE</code> de SQL. Hay un operador por cada comparación: <code>neq</code>, <code>gt</code>, <code>lt</code>, <code>like</code>, <code>in_</code>…",
+      bullets: ['El mismo filtro sirve para leer, editar y borrar: así se elige <b>qué fila</b>.', 'El orden no importa: el filtro puede ir antes o después de <code>update()</code> o <code>delete()</code>.'],
+      where: 'A la derecha: el <code>?id=eq.7</code> de la URL y el <code>WHERE id = 7</code> de SQL.' },
+    create: { label: 'insert()', color: 'p3', title: 'Crear: insert() es un POST',
+      text: 'Crear es un <b>POST</b> a la ruta de la tabla, con la fila nueva como <b>cuerpo JSON</b>. El <code>id</code> y el <code>created_at</code> los genera Postgres, no los envías. La API responde <b>201 Created</b>.',
+      bullets: ['Por defecto la respuesta no trae la fila creada. Si la necesitas (por ejemplo, para saber su id), encadena <code>.select().single()</code>.', 'Un dato inválido (campo obligatorio vacío, correo repetido) devuelve un error 4xx con el motivo.'],
+      where: 'A la derecha: el POST con su cuerpo y el INSERT.' },
+    edit: { label: 'update()', color: 'p3', title: 'Editar: update() es un PATCH',
+      text: 'Editar es un <b>PATCH</b>: el cuerpo trae <b>solo las columnas que cambian</b> y el filtro de la URL dice a qué fila(s) aplican. Responde <b>204 No Content</b>: salió bien y no hay nada que devolver.',
+      bullets: ['Si el filtro no coincide con ninguna fila, también responde 204: no es un error, simplemente no cambió nada.'],
+      where: 'A la derecha: el PATCH con el filtro <code>id=eq.7</code> y el UPDATE.' },
+    del: { label: 'delete()', color: 'p5', title: 'Borrar: delete() es un DELETE',
+      text: 'Borrar es un <b>DELETE</b> sin cuerpo; el filtro dice qué fila(s). Responde <b>204 No Content</b>.',
+      bullets: ['<b>Sin <code>.eq()</code> la petición no tiene filtro y afectaría a todas las filas</b> que tu política de seguridad permita borrar. Revisa siempre que <code>update()</code> y <code>delete()</code> lleven su filtro.'],
+      where: 'A la derecha: el DELETE y su filtro.' },
+    rls: { label: 'RLS', color: 'p5', title: 'Quién decide qué filas puedes tocar: RLS',
+      text: 'La API REST es pública: cualquiera que tenga tu URL y tu llave puede llamarla. Lo que protege los datos son las <b>políticas de Row Level Security (RLS)</b> de Postgres, que deciden por tabla y por operación qué filas se pueden leer, crear, editar o borrar.',
+      bullets: ['Con RLS activado y <b>sin políticas</b>, <code>select</code> devuelve una lista vacía, <code>insert</code> falla con un error 403 («new row violates row-level security policy») y <code>update</code>/<code>delete</code> no cambian nada y responden 204. Es el motivo más común de «no me trae nada» o «no se guarda».', 'La llave publishable es pública por diseño; nunca pongas en la app la llave <b>secret</b> (la que se salta RLS).'],
+      where: 'A la derecha: lo que decide Postgres antes de responder.' },
+  };
+
+  function row(part, method, url, extra, resp, sql) {
+    return '<div class="cm-code-sm" data-part="' + part + '" style="word-break:break-all;margin-bottom:6px">' +
+      '<b>' + method + '</b> ' + url + (extra ? '<br>' + extra : '') +
+      '<br><span style="opacity:.8">→ ' + resp + '</span><br><span style="opacity:.8">SQL: ' + sql + '</span></div>';
+  }
+
+  function view() {
+    return '' +
+      '<p class="cm-lbl">Una ruta por tabla</p><div class="cm-code-sm" data-part="from" style="margin-bottom:6px">/rest/v1/contactos</div>' +
+      row('list', 'GET', '…/contactos?select=*&amp;order=nombre.asc', '', '200 [ {…}, {…} ]', 'SELECT * … ORDER BY nombre') +
+      row('one', 'GET', '…/contactos?select=*&amp;<span data-part="eq">id=eq.7</span>', 'Accept: …pgrst.object+json', '200 { "id": 7, … }', 'SELECT * … <span data-part="eq">WHERE id = 7</span>') +
+      row('create', 'POST', '…/contactos', '{ "nombre": "Ana", "email": "ana@…" }', '201 Created', 'INSERT INTO contactos (nombre, email) …') +
+      row('edit', 'PATCH', '…/contactos?<span data-part="eq">id=eq.7</span>', '{ "nombre": "Ana Pérez" }', '204 No Content', 'UPDATE contactos SET … <span data-part="eq">WHERE id = 7</span>') +
+      row('del', 'DELETE', '…/contactos?<span data-part="eq">id=eq.7</span>', '', '204 No Content', 'DELETE FROM contactos <span data-part="eq">WHERE id = 7</span>') +
+      '<div class="cm-chip" data-part="rls">Antes de ejecutar: Postgres comprueba las políticas RLS de la tabla</div>';
+  }
+
+  var steps = [
+    { phase: 0, title: "from('contactos'): la ruta", focus: 'from',
+      caption: 'Pasa el mouse por el código o por las peticiones. Todas las operaciones empiezan eligiendo la tabla, y la tabla es la ruta de la API.' },
+    { phase: 0, title: 'Listar: select() es un GET', focus: 'list',
+      caption: 'Leer es un GET sin cuerpo; la respuesta es un arreglo JSON con las filas.' },
+    { phase: 0, title: "Filtrar: eq('id', 7)", focus: 'eq',
+      caption: 'El filtro es un parámetro de la URL, el WHERE de SQL. Se usa para leer, editar y borrar una fila concreta.' },
+    { phase: 0, title: 'Detalle: una sola fila', focus: 'one',
+      caption: 'single() pide un objeto en vez de un arreglo, y falla si la fila no existe.' },
+    { phase: 1, title: 'Crear: insert() es un POST', focus: 'create',
+      caption: 'La fila nueva viaja en el cuerpo JSON; Postgres genera el id.' },
+    { phase: 1, title: 'Editar: update() es un PATCH', focus: 'edit',
+      caption: 'El cuerpo trae solo las columnas que cambian y el filtro elige la fila.' },
+    { phase: 1, title: 'Borrar: delete() es un DELETE', focus: 'del',
+      caption: 'Sin cuerpo; el filtro elige la fila. Sin filtro, afectaría a todas las que la política permita.' },
+    { phase: 2, title: 'RLS decide qué puedes hacer', focus: 'rls',
+      caption: 'La API es pública; la seguridad vive en las políticas de Postgres.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'El CRUD de la agenda con supabase_flutter: cada consulta del servicio (select, eq, single, insert, update, delete) enlazada con la petición HTTP que envía a PostgREST, el SQL equivalente y las políticas RLS',
+    phases: ['Leer', 'Escribir', 'Seguridad'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.codemap({ stage: stage, file: 'contacto_service.dart (solo las consultas)', filePart: 'from', code: code, parts: parts, view: view });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'CRUD con PostgREST',
+      title: 'Qué petición HTTP sale de cada consulta',
+      text: 'Las cinco operaciones del servicio de la agenda, junto a la petición que el SDK envía a la API REST de Supabase y el SQL que ejecuta Postgres.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arquitectura de una app Flutter con Supabase</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Una app Flutter con Supabase: la pagina llama a la capa de servicio, el servicio usa el SDK y el SDK habla HTTPS con la API REST
+   de Supabase (PostgREST), que consulta Postgres. Ejemplo unico: listar los contactos de la agenda. Solo DATOS.
+   Disposicion en U: la peticion baja por la app, cruza la red en la fila de abajo y sube por Supabase hasta la base de datos. */
+(function () {
+  var NODES = [
+    { id: 'app', kind: 'outer', label: 'App Flutter', sub: 'tu código en Dart, en el teléfono', x: 10, y: 10, w: 330, h: 380 },
+    { id: 'page', kind: 'box', icon: 'filecode', label: 'ContactosPage', sub: 'widget: pinta y atiende al usuario', x: 40, y: 62, w: 270, h: 72 },
+    { id: 'service', kind: 'box', icon: 'gear', label: 'ContactoService', sub: 'capa de servicio', x: 40, y: 168, w: 270, h: 72 },
+    { id: 'sdk', kind: 'box', icon: 'classbox', label: 'supabase_flutter', sub: 'SDK: SupabaseClient', x: 40, y: 274, w: 270, h: 72 },
+    { id: 'cloud', kind: 'outer', label: 'Supabase', sub: 'tu proyecto en la nube', x: 460, y: 10, w: 330, h: 380 },
+    { id: 'db', kind: 'box', icon: 'database', label: 'Postgres', sub: 'la tabla contactos', x: 490, y: 62, w: 270, h: 72 },
+    { id: 'api', kind: 'box', icon: 'server', label: 'API REST (PostgREST)', sub: 'convierte HTTP en SQL', x: 490, y: 274, w: 270, h: 72 },
+  ];
+
+  // trayectos (rectas): bajada por la app, cruce de la red, subida por Supabase; la ida va por una linea y la vuelta por otra
+  var P = {
+    pageService:   [110, 134, 110, 168], servicePage: [240, 168, 240, 134],
+    serviceSdk:    [110, 240, 110, 274], sdkService:  [240, 274, 240, 240],
+    sdkApi:        [310, 298, 490, 298], apiSdk:      [490, 326, 310, 326],
+    apiDb:         [570, 274, 570, 134], dbApi:       [680, 134, 680, 274],
+  };
+
+  var steps = [
+    // ---- Fase 1: las piezas ----
+    { phase: 0, title: 'La página: la interfaz', focus: ['app', 'page'], msgs: [],
+      caption: 'ContactosPage es un widget. Dibuja la lista y atiende los toques. No sabe qué base de datos hay detrás, ni siquiera que existe una: solo pide datos y espera la respuesta.' },
+    { phase: 0, title: 'El servicio: la frontera', focus: ['service'], msgs: [],
+      caption: 'ContactoService es la capa de servicio: una clase de Dart con un método por operación (listar, crear, borrar). Es la única que conoce a Supabase; la interfaz solo conoce al servicio.' },
+    { phase: 0, title: 'El SDK: supabase_flutter', focus: ['sdk'], msgs: [],
+      caption: 'El paquete supabase_flutter trae el SupabaseClient. Guarda la URL y la llave del proyecto, arma las peticiones HTTP y convierte las respuestas JSON en listas y mapas de Dart.' },
+    { phase: 0, title: 'La API REST de Supabase', focus: ['cloud', 'api'], msgs: [],
+      caption: 'Cada proyecto de Supabase expone una API REST generada automáticamente por PostgREST a partir de tus tablas. No escribes ni despliegas ningún servidor: la API ya existe.' },
+    { phase: 0, title: 'Postgres: los datos', focus: ['db'], msgs: [],
+      caption: 'Debajo de la API hay una base de datos Postgres completa. La tabla contactos es una tabla normal: la puedes consultar con SQL en el panel de Supabase.' },
+
+    // ---- Fase 2: la petición ----
+    { phase: 1, title: 'La página pide los contactos', focus: ['page', 'service'],
+      msgs: [{ from: 'page', to: 'service', path: P.pageService, label: 'listar()', kind: 'ctl' }],
+      caption: 'En initState la página llama a servicio.listar() y se queda esperando con await. Es una llamada normal de Dart: no hay URLs ni JSON a la vista.' },
+    { phase: 1, title: 'El servicio usa el SDK', focus: ['service', 'sdk'],
+      msgs: [{ from: 'service', to: 'sdk', path: P.serviceSdk, label: 'from().select()', kind: 'ctl' }],
+      caption: "El servicio traduce «listar» a la API del SDK: elige la tabla (from) y la operación (select). Aquí vive todo lo que depende de Supabase." },
+    { phase: 1, title: 'El SDK envía una petición HTTPS', focus: ['sdk', 'api'],
+      msgs: [{ from: 'sdk', to: 'api', path: P.sdkApi, label: 'GET /rest/v1/contactos', kind: 'data' }],
+      caption: 'El SDK convierte la llamada en una petición HTTP y la envía por Internet con la llave del proyecto en el encabezado apikey. Para Supabase es una petición como cualquier otra.' },
+    { phase: 1, title: 'PostgREST consulta Postgres', focus: ['api', 'db'],
+      msgs: [{ from: 'api', to: 'db', path: P.apiDb, label: 'SELECT *', kind: 'ctl' }],
+      caption: 'PostgREST traduce la ruta y los parámetros de la URL a una consulta SQL y la ejecuta en Postgres, aplicando las políticas de seguridad (RLS) de la tabla.' },
+
+    // ---- Fase 3: la respuesta ----
+    { phase: 2, title: 'Postgres devuelve las filas', focus: ['db', 'api'],
+      msgs: [{ from: 'db', to: 'api', path: P.dbApi, label: 'filas', kind: 'ack' }],
+      caption: 'Postgres responde con las filas de la tabla; PostgREST las convierte a JSON.' },
+    { phase: 2, title: 'La API responde 200 con JSON', focus: ['api', 'sdk'],
+      msgs: [{ from: 'api', to: 'sdk', path: P.apiSdk, label: '200 + JSON', kind: 'ack' }],
+      caption: 'La respuesta HTTP trae un código de estado (200 = bien) y el cuerpo en JSON: una lista de objetos, uno por fila.' },
+    { phase: 2, title: 'El SDK entrega datos de Dart', focus: ['sdk', 'service'],
+      msgs: [{ from: 'sdk', to: 'service', path: P.sdkService, label: 'List<Map>', kind: 'ack' }],
+      caption: 'El SDK decodifica el JSON y completa el Future con una lista de mapas de Dart. Si algo sale mal, lo completa con un error (PostgrestException).' },
+    { phase: 2, title: 'La página recibe y se redibuja', focus: ['service', 'page'],
+      msgs: [{ from: 'service', to: 'page', path: P.servicePage, label: 'datos', kind: 'ack' }],
+      caption: 'El servicio entrega los datos a la página, que los guarda con setState y reconstruye la lista. El recorrido completo tardó unas decenas o cientos de milisegundos: de ahí los estados de carga.' },
+
+    // ---- Fase 4: por qué una capa ----
+    { phase: 3, title: 'La página no importa a Supabase', focus: ['page', 'service'], msgs: [],
+      caption: 'Regla de la capa de servicio: solo ContactoService importa supabase_flutter. La página depende de un contrato (listar, crear, borrar) y no de una tecnología. Es la misma separación de capas de las semanas anteriores.' },
+    { phase: 3, title: 'Un solo lugar para cambiar', focus: ['service', 'sdk', 'cloud'], msgs: [],
+      caption: 'Si la tabla cambia de nombre, si cambias de proveedor o si quieres probar la pantalla con datos falsos, se cambia el servicio y la interfaz no se toca.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Arquitectura de una app Flutter con Supabase: la página llama al servicio, el servicio usa el SDK de Supabase, el SDK envía una petición HTTPS a la API REST (PostgREST), que consulta Postgres, y la respuesta vuelve por el mismo camino',
+    phases: ['Las piezas', 'La petición', 'La respuesta', 'Por qué una capa'],
+    wide: true,
+    scene: function (svg) {
+      return DK.layers({ svg: svg, width: 800, height: 400, labels: 'smart', nodes: NODES });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Flutter + Supabase',
+      title: 'Cómo llega un dato de Postgres a tu pantalla',
+      text: 'Las cinco piezas de la arquitectura y el recorrido de una petición: listar los contactos de la agenda. Mira por dónde pasa y quién conoce a quién.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

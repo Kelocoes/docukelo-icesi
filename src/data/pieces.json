@@ -768,5 +768,35 @@
     "slug": "tabs-vs-push",
     "title": "Pestañas o detalle",
     "src": "/interactive/seminario-de-i-d-i/semana-13/tabs-vs-push/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-14/arquitectura-flutter-supabase",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "arquitectura-flutter-supabase",
+    "title": "Arquitectura de una app Flutter con Supabase",
+    "src": "/interactive/seminario-de-i-d-i/semana-14/arquitectura-flutter-supabase/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-14/crud-postgrest",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "crud-postgrest",
+    "title": "CRUD con Supabase y PostgREST",
+    "src": "/interactive/seminario-de-i-d-i/semana-14/crud-postgrest/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-14/estados-asincronos",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-14",
+    "weekNumber": 14,
+    "slug": "estados-asincronos",
+    "title": "Estados de una petición asíncrona",
+    "src": "/interactive/seminario-de-i-d-i/semana-14/estados-asincronos/index.html"
   }
 ]
