@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estados de una petición asíncrona</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-tree.js"></script>
+<script src="../../../_shared/dk-phone.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* La pantalla de contactos frente a una llamada a Supabase: cargando, datos o error. Un selector elige que responde Supabase (bien, lento,
+   error de la API, sin conexion). Solo DATOS: la app, el arbol de widgets, el codigo esencial y los pasos. Los numeros de linea se buscan por texto. */
+(function () {
+  var LINES = [
+    'class _ContactosPageState extends State<ContactosPage> {',
+    '  final _servicio = ContactoService();',
+    '  bool _cargando = true;',
+    '  String? _error;',
+    '  List<Contacto> _contactos = [];',
+    '',
+    '  @override',
+    '  void initState() {',
+    '    super.initState();',
+    '    _cargar();',
+    '  }',
+    '',
+    '  Future<void> _cargar() async {',
+    '    setState(() {',
+    '      _cargando = true;',
+    '      _error = null;',
+    '    });',
+    '    try {',
+    '      final filas = await _servicio.listar();',
+    '      setState(() => _contactos = filas);',
+    '    } on PostgrestException catch (e) {',
+    '      setState(() => _error = e.message);',
+    '    } catch (e) {',
+    "      setState(() => _error = 'Sin conexión');",
+    '    } finally {',
+    '      setState(() => _cargando = false);',
+    '    }',
+    '  }',
+    '',
+    '  @override',
+    '  Widget build(BuildContext context) {',
+    '    if (_cargando) {',
+    '      return const CircularProgressIndicator();',
+    '    }',
+    '    if (_error != null) {',
+    '      return ErrorVista(_error!, onReintentar: _cargar);',
+    '    }',
+    '    return ListView(children: [',
+    '      for (final c in _contactos) ContactoTile(c),',
+    '    ]);',
+    '  }',
+    '}',
+  ];
+  var at = function (s) { for (var i = 0; i < LINES.length; i++) if (LINES[i].indexOf(s) >= 0) return i + 1; throw new Error('línea no encontrada: ' + s); };
+  var rng = function (a, b) { var r = []; if (at(b) < at(a)) throw new Error('rango vacío: ' + a + ' .. ' + b); for (var i = at(a); i <= at(b); i++) r.push(i); return r; };
+
+  var L = {
+    flags: rng('bool _cargando = true', 'List<Contacto> _contactos'),
+    init: rng('void initState', '_cargar();'),
+    setLoading: rng('setState(() {', '_error = null;'),
+    await: [at('final filas = await')],
+    setData: [at('setState(() => _contactos')],
+    catchApi: rng('on PostgrestException', 'setState(() => _error = e.message)'),
+    catchAny: rng('} catch (e) {', "'Sin conexión'"),
+    fin: rng('} finally {', 'setState(() => _cargando = false)'),
+    retry: [at('return ErrorVista')],
+    build: rng('Widget build', 'return ListView'),
+  };
+
+  var CONTACTOS = [
+    { n: 'Ana Pérez', e: 'ana@icesi.edu.co' },
+    { n: 'Luis Gómez', e: 'luis@icesi.edu.co' },
+    { n: 'Marta Ríos', e: 'marta@icesi.edu.co' },
+  ];
+  var API_MSG = "Could not find the table 'public.contactos' in the schema cache";
+  var NET_MSG = 'Sin conexión';
+  var bld = function (t) { return '--> build(): ' + t; };
+
+  var OPTIONS = ['Responde bien', 'Responde lento', 'Error de la API', 'Sin conexión'];
+
+  function build(o) {
+    var c = o.caso || 0, ok = c < 2, slow = c === 1;
+    var errMsg = c === 2 ? API_MSG : NET_MSG;
+    var s = [];
+
+    s.push({ phase: 0, title: 'initState() lanza la carga', code: L.init, msgs: [], dwell: 4500, tree: {}, changed: ['_cargando'],
+      caption: 'La pantalla se abre sin datos: los contactos viven en Supabase. initState llama a _cargar() una sola vez. Como _cargando arranca en true, el primer build() ya dibuja el indicador de carga y no una lista vacía.' });
+    s.push({ phase: 0, title: 'setState: cargando = true, error = null', code: L.setLoading, msgs: [], dwell: 4200, tree: 'build', log: [bld('cargando')], changed: ['_cargando', '_error'],
+      caption: 'Antes de pedir nada, _cargar() deja el estado limpio: cargando sí, error no. Así sirve también para reintentar después de un fallo.' });
+
+    s.push({ phase: 1, title: 'await: la función espera, la app no', code: L.await, msgs: [], dwell: 5200,
+      note: 'Esperando la respuesta de Supabase…',
+      caption: 'La petición viaja por la red. _cargar() queda suspendida en el await, pero el hilo de la interfaz sigue libre: la app responde a toques y al scroll. Sin el indicador de carga, el usuario vería la pantalla vacía y no sabría si algo pasa.' });
+    if (slow) {
+      s.push({ phase: 1, title: 'Sigue esperando…', code: L.await, msgs: [], dwell: 5200,
+        note: 'Han pasado 3 segundos y Supabase aún no responde.',
+        caption: 'Con una conexión móvil lenta esto es lo normal, no la excepción. Mientras el Future no se complete, el estado no cambia: la pantalla muestra el indicador, y eso es lo correcto. Sin él, parecería que la app se colgó.' });
+    }
+
+    if (ok) {
+      s.push({ phase: 2, title: 'Llegan los datos: se guardan en _contactos', code: L.setData, msgs: [], dwell: 5200, tree: 'build', log: [bld('cargando')],
+        state: { _contactos: CONTACTOS }, changed: ['_contactos'],
+        caption: 'El Future se completa con la lista y setState la guarda. La pantalla se reconstruye, pero _cargando sigue en true: build() todavía elige el indicador de carga. Los datos ya están y aún no se ven.' });
+      s.push({ phase: 2, title: 'finally: cargando = false', code: L.fin, msgs: [], dwell: 5200, tree: 'build', log: [bld('3 contactos')],
+        state: { _cargando: false }, changed: ['_cargando'],
+        caption: 'finally se ejecuta siempre, haya salido bien o mal. Al apagar _cargando, build() pasa a la tercera rama y dibuja la lista.' });
+    } else {
+      s.push({ phase: 2, title: c === 2 ? 'La API responde con un error: catch de PostgrestException' : 'No hay conexión: salta el catch genérico',
+        code: c === 2 ? L.catchApi : L.catchAny, msgs: [], dwell: 6200, tree: 'build', log: [bld('cargando')],
+        state: { _error: errMsg }, changed: ['_error'],
+        caption: c === 2
+          ? 'Supabase sí respondió, pero con un error (aquí, una tabla que no existe: un nombre mal escrito en from()). El SDK lo convierte en una PostgrestException con un mensaje, y se guarda en _error. Es lo que pasa también con una política RLS que no deja leer o con un dato inválido.'
+          : 'La petición ni siquiera llegó: sin red, el SDK lanza otra clase de excepción (no una PostgrestException), así que la atrapa el catch genérico. Si solo atraparas PostgrestException, este fallo cerraría la app.' });
+      s.push({ phase: 2, title: 'finally: cargando = false y se muestra el error', code: L.fin, msgs: [], dwell: 5200, tree: 'build', log: [bld('error')],
+        state: { _cargando: false }, changed: ['_cargando'],
+        caption: 'Con _cargando en false y _error con texto, build() elige la segunda rama: un mensaje y un botón para reintentar. El usuario sabe qué pasó y qué hacer.' });
+      s.push({ phase: 2, title: 'El usuario toca «Reintentar»', code: L.retry, msgs: [], dwell: 4800, tap: 'reintentar',
+        caption: 'El botón llama a la misma función _cargar(). No hay un segundo camino para reintentar: se vuelve a empezar desde el principio.' });
+      s.push({ phase: 2, title: 'Otra vez cargando', code: L.setLoading, msgs: [], dwell: 4200, tree: 'build', log: [bld('cargando')],
+        state: { _cargando: true, _error: null }, changed: ['_cargando', '_error'],
+        caption: 'Lo primero que hace _cargar() es limpiar el error y volver a cargando: el mensaje desaparece y vuelve el indicador.' });
+      s.push({ phase: 2, title: 'Esta vez sí responde', code: L.fin, msgs: [], dwell: 5200, tree: 'build', log: [bld('3 contactos')],
+        state: { _contactos: CONTACTOS, _cargando: false }, changed: ['_contactos', '_cargando'],
+        caption: 'Con la conexión de vuelta (o la tabla corregida), el Future se completa bien, se guarda la lista y finally apaga el indicador.' });
+    }
+
+    s.push({ phase: 3, title: 'Un build(), tres vistas', code: L.build, msgs: [], dwell: 6000, tree: {},
+      caption: 'La pantalla es una función del estado: build() lee _cargando, luego _error y por último los datos, y dibuja una sola cosa. Toda operación asíncrona tiene estos tres estados; cámbiale la respuesta a Supabase con el selector y compara los recorridos.' });
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'La pantalla de contactos de Flutter mientras espera una respuesta de Supabase: estado de carga, datos o error, según la respuesta (bien, lenta, error de la API o sin conexión)',
+    phases: ['Pedir', 'Esperar', 'Resolver', 'Resumen'],
+    wide: true,
+    code: { title: 'contactos_page.dart (lo esencial; los estilos se omiten)', text: LINES.join('\n') },
+    toggles: [{ key: 'caso', type: 'select', label: '¿Qué responde Supabase?', options: OPTIONS, value: 0, restart: 'first' }],
+    scene: function (svg, stage, api) {
+      return DK.phone({
+        stage: stage, api: api,
+        title: 'Agenda', height: 390,
+        className: '_ContactosPageState',
+        init: { _cargando: true, _error: null, _contactos: [] },
+        fields: [
+          { key: '_cargando', type: 'bool' },
+          { key: '_error', type: 'String?', show: function (v) { return v === null ? 'null' : "'" + (v.length > 22 ? v.slice(0, 21) + '…' : v) + "'"; } },
+          { key: '_contactos', type: 'List<Contacto>', show: function (v) { return v.length ? v.length + ' contactos' : '[]'; } },
+        ],
+        initLog: [bld('cargando')],
+        buildLog: function (st) { return bld(st._cargando ? 'cargando' : st._error ? 'error' : st._contactos.length + ' contactos'); },
+        hint: 'Cambia la respuesta de Supabase con el selector y vuelve a recorrer los pasos.',
+        tree: [
+          { id: 'scaffold', label: 'Scaffold', d: 0 },
+          { id: 'page', label: 'ContactosPage', d: 1, state: true },
+          { id: 'prog', label: 'Progress', sub: 'CircularIndicator', d: 2, when: function (st) { return st._cargando; } },
+          { id: 'err', label: 'ErrorVista', sub: 'mensaje + botón', d: 2, when: function (st) { return !st._cargando && !!st._error; } },
+          { id: 'list', label: 'ListView', d: 2, when: function (st) { return !st._cargando && !st._error; } },
+          { id: 'tile', label: 'ContactoTile', sub: function (st) { return '× ' + st._contactos.length; }, d: 3, when: function (st) { return !st._cargando && !st._error && st._contactos.length > 0; } },
+        ],
+        view: function (st) {
+          var e = DK.phone.esc;
+          if (st._cargando) return '<div class="pf-empty" style="padding-top:70px"><div class="pf-spin"></div>Cargando contactos…</div>';
+          if (st._error) return '<div class="pf-error"><b>No se pudo cargar</b>' + e(st._error) + '</div><button class="pf-btn" data-act="reintentar">' + DK.phone.icon('refresh') + 'Reintentar</button>';
+          if (!st._contactos.length) return '<div class="pf-empty">Aún no hay contactos</div>';
+          return '<p class="pf-h">Contactos</p>' + st._contactos.map(function (c) {
+            return '<div class="pf-tile"><span class="av">' + e(c.n.charAt(0)) + '</span><span class="tx"><b>' + e(c.n) + '</b><small>' + e(c.e) + '</small></span></div>';
+          }).join('');
+        },
+        actions: {},
+      });
+    },
+    build: build,
+    intro: {
+      kicker: 'Operaciones asíncronas',
+      title: 'Qué ve el usuario mientras Supabase responde',
+      text: 'Una pantalla de contactos que pide su lista a Supabase. Elige qué responde el servidor y sigue los tres estados de la interfaz: cargando, error y datos.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+    "label": "W14 - Spec-driven Development (SDD) and Supabase",
+    "position": 14,
+    "link": {
+        "type": "generated-index",
+        "description": "Spec-driven Development (SDD) with GitHub Spec Kit and AI agents, and a Flutter app connected to Supabase: service layer, CRUD with PostgREST and loading and error states."
+    }
+}
