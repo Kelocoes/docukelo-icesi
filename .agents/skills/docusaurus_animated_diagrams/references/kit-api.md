@@ -24,6 +24,7 @@ Orden de carga en el `index.html` de una pieza (rutas relativas, para que funcio
 <script src="../../../_shared/dk-radial.js"></script>    <!-- escena: capas concéntricas (con <link> a dk-radial.css; necesita dk-flow.js) -->
 <script src="../../../_shared/dk-phone.js"></script>     <!-- escena: teléfono + State + árbol de widgets + consola (cargar dk-tree.js ANTES de dk-phone.js) -->
 <script src="../../../_shared/dk-nav.js"></script>       <!-- escena: teléfono + pila de rutas del Navigator (cargar dk-phone.js ANTES; con <link> a dk-nav.css) -->
+<script src="../../../_shared/dk-history.js"></script>   <!-- escena: navegador (URL, Atrás/Adelante) + historial como pila con puntero (con <link> a dk-nav.css y dk-history.css; solo necesita dk-kit.js) -->
 <script src="../../../_shared/dk-tabs.js"></script>      <!-- teléfono con NavigationBar y detalle que la cubre (con <link> a dk-tabs.css; solo necesita dk-kit.js) -->
 <script src="../../../_shared/dk-player.js"></script>
 ```
@@ -329,6 +330,23 @@ scene: function (svg, stage, api) {
 - **`actions` (modo libre):** `function (nav, arg, step)` con `nav.push(ruta)`, `nav.pop()`, `nav.canPop()`, `nav.removeUntil(predicado)` y `nav.stack()`; devuelve `{ call, code, note, out }`. `sysBack: true` activa el botón de Atrás del sistema en el modo libre.
 - **`hint`:** texto de ayuda del modo libre (por defecto «Toca los botones del teléfono y mira cómo cambia la pila.»).
 - **Qué enseña bien:** que `push` apila y no reemplaza, que la ruta de abajo sigue viva, cuándo aparece la flecha y qué queda en la pila tras `pushNamedAndRemoveUntil`. Piezas de referencia: `static/interactive/seminario-de-i-d-i/semana-13/` (`navegacion-pila`, `push-remove-until`).
+
+## dk-history.js: `DK.history(opciones)`
+
+Escena para `DK.player` (con `wide: true`; **requiere `dk-nav.css` y `dk-history.css`**, en ese orden, después de `dk-base.css`). La versión **web** de `DK.nav`: **mitad izquierda, un navegador** (flechas Atrás y Adelante, barra de dirección y la página; en el modo libre se usa de verdad); **mitad derecha, el historial** como pila de tarjetas con la entrada más nueva arriba, la **entrada actual resaltada** («estás aquí») y las de adelante atenuadas y punteadas. Arriba, la llamada que se ejecuta (`navigate('/x')`) y un aviso. La diferencia con `DK.nav`: el historial del navegador tiene un **puntero**. Atrás/Adelante solo lo mueven (nada se destruye) y un `push` desde una entrada intermedia **descarta lo de adelante**; `replace` sustituye la actual. Sirve para React Router (`navigate`), `history.pushState` y cualquier explicación de «pila de páginas».
+
+```js
+scene: function (svg, stage, api) {
+  return DK.history({ stage: stage, api: api, height: 260, host: 'mi-tienda.com',
+    view: function (path) { return '<p class="pf-h">Inicio</p><button class="pf-btn" data-to="/productos">Ver productos</button>'; } });
+}
+```
+
+- **`view(path, c)`:** devuelve el HTML de la página de una ruta (clases `pf-*` de `dk-base.css`; la página siempre es clara). En el HTML, los atributos hacen de enlaces **solos**, en el recorrido guiado y en el modo libre: `data-to="/x"` (`navigate('/x')`, push), `data-replace="/x"` (`navigate('/x', { replace: true })`) y `data-go="-1"` (`navigate(-1)`; `1` = Adelante). Un campo con `data-in="clave"` guarda lo escrito en `c.data`.
+- **Un paso describe el historial completo:** `entries: ['/', '/productos']` (la más antigua primero; `'/productos#2'` repite una ruta), `index` (el puntero; por defecto la última), `call`, `note`, `tap` (selector CSS del elemento que toca el cursor antes del cambio; `'__back'` y `'__fwd'` son las flechas), `marks: { '/ruta': { text, tone: 'err' | 'ack' | 'warn' } }`, `data`, `code` y `free: true` (modo libre: el estudiante usa el navegador y la pila cambia de verdad).
+- **Tamaño:** a 690 px de columna se dibuja en **dos columnas** (se apila bajo 520 px). La pila del modo libre crece sola. En pantalla completa (`html.dk-fs`) las dos mitades crecen con `zoom: 1.3`.
+- **Qué enseña bien:** que `push` apila y mueve el puntero, que Atrás no destruye, que un push desde el medio corta lo de adelante, y para qué sirve `replace` (tras pagar o iniciar sesión).
+- Pieza de referencia: `static/interactive/computacion-2/semana-15/historial-navegacion/`.
 
 ## dk-tabs.js: `DK.tabs.phone(opciones)`
 

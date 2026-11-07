@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: "Realiza peticiones HTTP desde React con Axios, entendiendo sus ventajas frente a fetch y su configuración básica."
 ---
 

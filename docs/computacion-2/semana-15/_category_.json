@@ -1,8 +1,8 @@
 {
-    "label": "S15 - React Router & Axios",
+    "label": "S15 - React Hooks & React Router",
     "position": 16,
     "link": {
         "type": "generated-index",
-        "description": "Introducción a React Router y Axios"
+        "description": "Estado y efectos con useState, useEffect y custom hooks, y navegación entre páginas con React Router"
     }
 }

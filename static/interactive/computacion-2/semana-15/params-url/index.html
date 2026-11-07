@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Path variables y query params</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  .pu-url { margin: 0 0 8px; padding: 6px 10px; border-radius: 10px; background: var(--dk-chip); font: 700 12px ui-monospace, Consolas, monospace; word-break: break-all; }
+  .pu-url .h { color: var(--dk-muted); font-weight: 600; }
+  .pu-kv { margin: 0 0 8px; padding: 5px 10px; border: 1.5px solid var(--dk-line); border-radius: 8px; font: 12px ui-monospace, Consolas, monospace; }
+  .pu-kv .t { display: block; font: 700 10.5px system-ui, sans-serif; color: var(--dk-muted); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // p1 = path variable (:id / useParams); p2 = query params (? / useSearchParams); p5 = la parte fija del path.
+  var code = [
+    [['// path: ', ''], ['"productos/:id"', 'route']],
+    [['', '']],
+    [['function Detalle() {', '']],
+    [['  const { id } = ', ''], ['useParams()', 'hookp'], [';', '']],
+    [['  const [params] = ', ''], ['useSearchParams()', 'hookq'], [';', '']],
+    [['  const color = ', ''], ['params.get("color")', 'get'], [';', '']],
+    [['', '']],
+    [['  return (', '']],
+    [['    <h1>Producto ', ''], ['{id}', 'useid'], [' en ', ''], ['{color}', 'usecolor'], ['</h1>', '']],
+    [['  );', '']],
+    [['}', '']],
+  ];
+
+  var parts = {
+    fixed: { label: 'Path', color: 'p5', title: 'La parte fija del path',
+      text: 'Los segmentos sin <code>:</code> deben coincidir tal cual. <code>/productos</code> elige la ruta; no cambia de una visita a otra.',
+      where: 'En la URL: <code>/productos</code>.' },
+    route: { label: ':id', color: 'p1', title: 'Path variable: un segmento con nombre',
+      text: 'El <code>:id</code> de la ruta reserva un segmento de la URL y le pone nombre. Sirve para identificar <b>cuál</b> recurso se pide: el producto 42, el usuario 7.',
+      bullets: ['Es parte de la ruta: sin ese segmento la URL no coincide.', 'Puedes tener varias: <code>/tiendas/:tienda/productos/:id</code>.'],
+      where: 'En la URL: <code>42</code>.' },
+    hookp: { label: 'useParams', color: 'p1', title: 'useParams() lee las path variables',
+      text: '<code>useParams()</code> devuelve un objeto con todos los segmentos dinámicos de la URL actual. Su <b>valor siempre es un texto</b>: <code>"42"</code>, no <code>42</code>.',
+      bullets: ['Para usarlo como número: <code>Number(id)</code>.', 'Si cambia el <code>id</code> de la URL, el componente se vuelve a ejecutar.'],
+      where: 'Resultado: <code>{ id: "42" }</code>.' },
+    query: { label: '?query', color: 'p2', title: 'Query params: opciones después del ?',
+      text: 'Lo que va después del <code>?</code> son pares <code>clave=valor</code> separados por <code>&amp;</code>. No forman parte de la ruta: son <b>opcionales</b> y sirven para filtrar, ordenar o paginar.',
+      bullets: ['La ruta <code>productos/:id</code> coincide con o sin query params.', 'Se pueden copiar y compartir en el enlace.'],
+      where: 'En la URL: <code>?color=negro&amp;orden=precio</code>.' },
+    hookq: { label: 'useSearchParams', color: 'p2', title: 'useSearchParams() lee (y cambia) el query',
+      text: 'Devuelve un <code>URLSearchParams</code> y una función para modificarlo, igual que <code>useState</code>. Cambiar los params cambia la URL y vuelve a dibujar el componente.',
+      bullets: ['<code>params.get("color")</code> devuelve <code>null</code> si la clave no existe.', '<code>setParams({ color: "rojo" })</code> actualiza la URL.'],
+      where: 'Resultado: un objeto con <code>color</code> y <code>orden</code>.' },
+    get: { label: 'get', color: 'p2', title: 'get("color"): un valor del query',
+      text: '<code>get</code> busca una clave y devuelve su valor como texto (o <code>null</code>).',
+      where: 'Resultado: <code>"negro"</code>.' },
+    useid: { label: '{id}', color: 'p1', title: 'Usar el id en el JSX',
+      text: 'Con el <code>id</code> ya puedes buscar el producto (en un <code>loader</code> o con un <code>useEffect</code>) y mostrarlo.',
+      where: 'En pantalla: el título muestra <code>42</code>.' },
+    usecolor: { label: '{color}', color: 'p2', title: 'Usar el query en el JSX',
+      text: 'El valor del query se usa como cualquier otro dato: para mostrarlo o para filtrar.',
+      where: 'En pantalla: el título muestra <code>negro</code>.' },
+  };
+
+  function view() {
+    return '' +
+      '<p class="cm-lbl">La URL</p>' +
+      '<div class="pu-url"><span data-part="fixed">/productos</span>/<span data-part="route">42</span><span data-part="query">?<span data-part="get">color=negro</span>&amp;orden=precio</span></div>' +
+      '<p class="cm-lbl">Lo que lee cada hook</p>' +
+      '<div class="pu-kv" data-part="hookp"><span class="t">useParams()</span>{ id: <b data-part="route">"42"</b> }</div>' +
+      '<div class="pu-kv" data-part="hookq"><span class="t">useSearchParams()</span>color → <b data-part="get">"negro"</b><br>orden → "precio"</div>' +
+      '<div class="cm-arrow">↓</div>' +
+      '<p class="cm-lbl">Lo que se dibuja</p>' +
+      '<div class="cm-out"><div class="cm-card"><h3>Producto <span data-part="useid">42</span> en <span data-part="usecolor">negro</span></h3></div></div>';
+  }
+
+  var steps = [
+    { phase: 0, title: 'Path variable: qué recurso', focus: 'route',
+      caption: 'El :id de la ruta reserva un segmento de la URL. Aquí vale 42: el producto que se pide.' },
+    { phase: 0, title: 'useParams lee el segmento', focus: 'hookp',
+      caption: 'useParams() entrega los segmentos dinámicos como texto. Con ellos el componente sabe qué producto mostrar.' },
+    { phase: 0, title: 'Usarlo en la página', focus: 'useid',
+      caption: 'El id es un dato más: se usa para pedir y mostrar el producto.' },
+    { phase: 1, title: 'Query params: opciones', focus: 'query',
+      caption: 'Después del ? van opciones opcionales: filtros, orden, página. La ruta coincide igual con o sin ellos.' },
+    { phase: 1, title: 'useSearchParams lee el query', focus: 'hookq',
+      caption: 'Devuelve los pares clave=valor y una función para cambiarlos, parecida a useState.' },
+    { phase: 1, title: 'get("color")', focus: 'get',
+      caption: 'Se pide cada clave por su nombre; si no existe, el resultado es null.' },
+    { phase: 1, title: 'Usarlo en la página', focus: 'usecolor',
+      caption: 'El valor del query se usa para mostrar o para filtrar lo que se dibuja.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Anatomía de una URL con path variable y query params y cómo se leen en un componente con useParams y useSearchParams',
+    phases: ['Path variable', 'Query params'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.codemap({ stage: stage, file: 'Detalle.jsx', code: code, parts: parts, view: view });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Datos en la URL',
+      title: 'De la URL a tu componente',
+      text: 'Una URL puede llevar datos: cuál recurso (path variable) y con qué opciones (query params). Recorre cómo los lee un componente.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>useEffect: cuándo corre y cuándo se limpia</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El chat de react.dev: un efecto que conecta a una sala. El selector cambia el arreglo de dependencias y se ve cuándo se conecta y cuándo se limpia. Solo DATOS. */
+(function () {
+  var C = 'comp', R = 'react', S = 'srv';
+  var DEPS = ['[roomId]', '[]', 'sin arreglo'];
+  var PH = ['Montar', 'Cambia sala', 'Escribes', 'Desmontar'];
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+
+  // las líneas son las mismas en las tres variantes: solo cambia la 7
+  function codigo(opt) {
+    var d = ['  }, [roomId]);', '  }, []);', '  });'][opt.deps];
+    return ['function Chat({ roomId }) {', '  const [message, setMessage] = useState("");', '', '  useEffect(() => {', '    const conn = connect(roomId);', '    return () => conn.disconnect();', d, '}'].join('\n');
+  }
+
+  function build(opt) {
+    var d = opt.deps;
+    var steps = [];
+    steps.push({ phase: 0, title: 'Al montar, el efecto se ejecuta',
+      caption: 'El componente se dibuja y, ya en pantalla, React ejecuta el efecto: se conecta a la sala "general". Pasa siempre, con cualquier arreglo de dependencias.',
+      msgs: [msg(C, R, 'render: "general"', 'ctl'), msg(R, S, 'connect("general")', 'data')], state: { comp: 'En pantalla', react: 'Efecto hecho', srv: 'Sala: general' }, code: [4, 5, 7] });
+
+    if (d === 1) {
+      steps.push({ phase: 1, title: 'roomId cambia y el efecto no se entera',
+        caption: 'Con [] el efecto solo corre al montar. La pantalla ya dice "musica", pero el chat sigue en "general": un error muy común.',
+        msgs: [msg(C, R, 'render: "musica"', 'ctl')], state: { comp: 'Sala: musica', react: 'No hace nada', srv: 'Sala: general' }, code: [7] });
+    } else {
+      steps.push({ phase: 1, title: 'roomId cambia: limpiar y volver a conectar',
+        caption: 'React primero ejecuta la limpieza del efecto anterior y después el efecto nuevo con el valor actual: se sale de "general" y se entra a "musica".',
+        msgs: [msg(C, R, 'render: "musica"', 'ctl'), msg(R, S, 'disconnect("general")', 'ack'), msg(R, S, 'connect("musica")', 'data')], state: { comp: 'Sala: musica', react: 'Efecto hecho', srv: 'Sala: musica' }, code: [4, 5, 6, 7] });
+    }
+
+    if (d === 2) {
+      steps.push({ phase: 2, title: 'Sin arreglo: se reconecta en cada render',
+        caption: 'Sin arreglo de dependencias el efecto corre después de cada render. Escribir un mensaje cambia el estado y el chat se desconecta y se vuelve a conectar en cada tecla.',
+        msgs: [msg(C, R, 'render: escribes', 'ctl'), msg(R, S, 'disconnect("musica")', 'ack'), msg(R, S, 'connect("musica")', 'data')], state: { comp: 'Escribiendo', react: 'Efecto hecho', srv: 'Reconectado' }, code: [2, 7] });
+    } else {
+      steps.push({ phase: 2, title: 'Otro estado cambia: el efecto no corre',
+        caption: d === 0
+          ? 'Escribir un mensaje vuelve a ejecutar Chat, pero roomId no cambió: React se salta el efecto y la conexión se conserva.'
+          : 'Escribir un mensaje vuelve a ejecutar Chat, pero con [] el efecto nunca se repite.',
+        msgs: [msg(C, R, 'render: escribes', 'ctl')], state: { comp: 'Escribiendo', react: 'Salta el efecto', srv: d === 0 ? 'Sala: musica' : 'Sala: general' }, code: [2, 7] });
+    }
+
+    steps.push({ phase: 3, title: 'Al desmontar, solo la limpieza',
+      caption: d === 1
+        ? 'El componente sale de la pantalla y React ejecuta la última limpieza. La del [] cierra "general": la sala que sí abrió.'
+        : 'Al salir de la pantalla React ejecuta la limpieza por última vez: la conexión se cierra y no queda nada abierto.',
+      msgs: [msg(C, R, 'sale de la pantalla', 'ctl'), msg(R, S, 'disconnect("' + (d === 1 ? 'general' : 'musica') + '")', 'ack')], state: { comp: 'Desmontado', react: 'Limpieza hecha', srv: 'Sin conexión' }, code: [6] });
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Cuándo se ejecuta y cuándo se limpia un useEffect que conecta a una sala de chat, según el arreglo de dependencias',
+    phases: PH,
+    scene: function (svg) {
+      return DK.sequence({ svg: svg, trayCount: 0, idleState: '—', phases: PH,
+        actors: [{ id: C, label: 'Chat', icon: 'filecode' }, { id: R, label: 'React', icon: 'gear' }, { id: S, label: 'Servidor de chat', icon: 'server' }] });
+    },
+    toggles: [{ key: 'deps', type: 'select', label: 'Dependencias', options: DEPS, value: 0, restart: 'first' }],
+    code: function (opt) { return { title: 'Chat.jsx', text: codigo(opt) }; },
+    build: build,
+    kicker: function (p) { return 'Fase ' + (p + 1) + ' · ' + PH[p]; },
+    intro: { kicker: 'useEffect', title: 'Un efecto que conecta a un chat', text: 'El efecto se conecta a una sala y su limpieza se desconecta. Recorre la pieza y cambia las dependencias para ver cuándo corre cada cosa.' },
+  });
+})();
+</script>
+</body>
+</html>

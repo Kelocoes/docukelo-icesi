@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rutas anidadas y Outlet</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  .ra-url { display: inline-block; margin: 0 0 4px; padding: 1px 8px; border-radius: 8px; background: var(--dk-chip); font: 700 11.5px ui-monospace, Consolas, monospace; }
+  .ra-box { margin: 0 0 8px; padding: 6px 8px; border: 1.5px solid var(--dk-line); border-radius: 8px; }
+  .ra-box .ra-hd { font: 700 11.5px ui-monospace, Consolas, monospace; }
+  .ra-box .ra-nav { margin: 2px 0 4px; font-size: 10.5px; color: var(--dk-muted); }
+  .ra-slot { padding: 4px 8px; border: 1.5px dashed var(--dk-ctl); border-radius: 6px; background: color-mix(in srgb, var(--dk-ctl) 8%, transparent); }
+  .ra-slot .ra-o { display: block; font: 600 10px ui-monospace, Consolas, monospace; color: var(--dk-ctl); }
+  .ra-slot b { font: 700 11.5px ui-monospace, Consolas, monospace; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // p1 = el layout (Root); p2 = Home; p3 = el prefijo "productos"; p4 = la lista; p5 = la ruta dinamica ":id".
+  var code = [
+    [['const router = createBrowserRouter([', '']],
+    [['  {', '']],
+    [['    path: "/",', 'root'], ['', '']],
+    [['    Component: Root,', 'root']],
+    [['    children: [', 'kids']],
+    [['      { ', ''], ['index: true', 'home'], [', Component: Home },', 'home']],
+    [['      {', '']],
+    [['        path: "productos",', 'prefix']],
+    [['        children: [', 'kids']],
+    [['          { ', ''], ['index: true', 'lista'], [', Component: Lista },', 'lista']],
+    [['          { ', ''], ['path: ":id"', 'dyn'], [', Component: Detalle },', 'dyn']],
+    [['        ],', 'kids']],
+    [['      },', '']],
+    [['    ],', 'kids']],
+    [['  },', '']],
+    [['])', '']],
+  ];
+
+  var parts = {
+    root: { label: 'Layout', color: 'p1', title: 'La ruta raíz es el layout',
+      text: 'Una ruta con <code>Component</code> y <code>children</code> es un <b>layout</b>: dibuja lo que se repite (barra de navegación, pie) y deja un hueco para que las rutas hijas dibujen lo suyo.',
+      bullets: ['El hueco se escribe <code>&lt;Outlet /&gt;</code> dentro del componente <code>Root</code>.', 'El layout no se vuelve a crear al cambiar de página hija.'],
+      where: 'En pantalla: el recuadro exterior, siempre presente.' },
+    kids: { label: 'children', color: 'p1', title: 'children: las rutas hijas',
+      text: 'Cada ruta del arreglo <code>children</code> se dibuja <b>dentro del Outlet</b> de su padre. La ruta del padre se suma a la de los hijos: <code>"/"</code> + <code>"productos"</code> + <code>":id"</code>.',
+      where: 'En pantalla: el hueco punteado <code>&lt;Outlet /&gt;</code>.' },
+    home: { label: 'index', color: 'p2', title: 'index: la hija por defecto',
+      text: '<code>index: true</code> marca la ruta que se dibuja cuando la URL coincide <b>exactamente con la del padre</b>, sin segmentos extra. No lleva <code>path</code> ni puede tener hijos.',
+      where: 'En pantalla: en <code>/</code> el Outlet muestra <code>Home</code>.' },
+    prefix: { label: 'Prefijo', color: 'p3', title: 'path sin Component: un prefijo',
+      text: 'Una ruta con solo <code>path</code> y <code>children</code> agrupa a sus hijas bajo un prefijo de URL, sin dibujar nada propio.',
+      where: 'En pantalla: la parte <code>/productos</code> de la URL.' },
+    lista: { label: 'index', color: 'p4', title: 'La lista vive en /productos',
+      text: 'La hija <code>index</code> del prefijo se dibuja cuando la URL es justo <code>/productos</code>.',
+      where: 'En pantalla: en <code>/productos</code> el Outlet muestra <code>Lista</code>.' },
+    dyn: { label: ':id', color: 'p5', title: ':id es un segmento dinámico',
+      text: 'Un segmento que empieza con <code>:</code> coincide con <b>cualquier valor</b>: <code>/productos/42</code>, <code>/productos/7</code>… Una sola ruta atiende todos los productos y el valor queda disponible en <code>useParams()</code>.',
+      where: 'En pantalla: en <code>/productos/42</code> el Outlet muestra <code>Detalle</code>.' },
+  };
+
+  function card(url, partsOut, inner, innerPart) {
+    return '<div class="ra-url" data-part="' + partsOut + '">' + url + '</div>' +
+      '<div class="ra-box" data-part="root"><span class="ra-hd">&lt;Root /&gt;</span><div class="ra-nav">Inicio · Productos</div>' +
+      '<div class="ra-slot" data-part="kids"><span class="ra-o">&lt;Outlet /&gt;</span><b data-part="' + innerPart + '">' + inner + '</b></div></div>';
+  }
+  function view() {
+    return card('/', 'home', '&lt;Home /&gt;', 'home') + card('/productos', 'lista', '&lt;Lista /&gt;', 'lista') + card('/productos/42', 'dyn', '&lt;Detalle /&gt;', 'dyn');
+  }
+
+  var steps = [
+    { phase: 0, title: 'Una ruta es un objeto', focus: 'root',
+      caption: 'Cada ruta es un objeto con su path y el Component que dibuja. La raíz hace de layout: lo fijo de la página.' },
+    { phase: 0, title: 'children: rutas dentro de rutas', focus: 'kids',
+      caption: 'Las rutas hijas se dibujan en el hueco <Outlet /> de su padre. Así las páginas comparten el layout.' },
+    { phase: 1, title: 'index: lo que se ve en "/"', focus: 'home',
+      caption: 'Sin segmentos extra en la URL, el Outlet muestra la ruta marcada con index.' },
+    { phase: 1, title: 'Un prefijo agrupa subpáginas', focus: 'prefix',
+      caption: 'path: "productos" suma un segmento a la URL de sus hijas, sin dibujar nada propio.' },
+    { phase: 1, title: 'index dentro del prefijo', focus: 'lista',
+      caption: 'En /productos el Outlet muestra la lista: la hija index del prefijo.' },
+    { phase: 2, title: ':id coincide con cualquier valor', focus: 'dyn',
+      caption: 'Una sola ruta sirve para /productos/42, /productos/7… El valor se lee con useParams().' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Rutas anidadas de React Router en modo Data: la ruta raíz como layout con Outlet, rutas index, un prefijo y una ruta dinámica, enlazadas con lo que se dibuja para cada URL',
+    phases: ['Layout y Outlet', 'Páginas y subpáginas', 'Ruta dinámica'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.codemap({ stage: stage, file: 'router.jsx', code: code, parts: parts, view: view });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Rutas anidadas',
+      title: 'De la configuración a la pantalla',
+      text: 'La configuración del router es un árbol de rutas. Recorre sus partes, o pasa el mouse por el código o por la pantalla, para ver qué se dibuja con cada URL.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

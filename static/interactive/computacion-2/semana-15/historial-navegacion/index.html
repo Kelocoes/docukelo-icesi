@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Navegar es mover un puntero en el historial</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<link rel="stylesheet" href="../../../_shared/dk-nav.css">
+<link rel="stylesheet" href="../../../_shared/dk-history.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-history.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El historial del navegador como pila con puntero: push apila, Atrás/Adelante mueven el puntero, replace reemplaza. Solo DATOS: páginas y pasos. */
+(function () {
+  var NAV = '<nav><a data-to="/">Inicio</a><a data-to="/productos">Productos</a><a data-to="/carrito">Carrito</a></nav>';
+  var TILE = function (to, av, name, price) { return '<div class="pf-tile" data-to="' + to + '"><span class="av">' + av + '</span><span class="tx"><b>' + name + '</b><small>' + price + '</small></span></div>'; };
+  var PAGES = {
+    '/': function () { return NAV + '<p class="pf-h">Mi tienda</p><p class="pf-label" style="text-align:left">Bienvenido. Mira lo que tenemos.</p><button class="pf-btn" data-to="/productos">Ver productos</button>'; },
+    '/productos': function () { return NAV + '<p class="pf-h">Productos</p>' + TILE('/productos/42', 'T', 'Teclado', '$ 20') + TILE('/productos/7', 'M', 'Mouse', '$ 10'); },
+    '/productos/42': function () { return NAV + '<p class="pf-h">Teclado</p><div class="pf-kv"><span>Precio</span><b>$ 20</b></div><div class="pf-kv"><span>Stock</span><b>12 unidades</b></div><button class="pf-btn" data-to="/carrito">Agregar al carrito</button><button class="pf-btn out" data-go="-1">Volver</button>'; },
+    '/productos/7': function () { return NAV + '<p class="pf-h">Mouse</p><div class="pf-kv"><span>Precio</span><b>$ 10</b></div><button class="pf-btn" data-to="/carrito">Agregar al carrito</button><button class="pf-btn out" data-go="-1">Volver</button>'; },
+    '/carrito': function () { return NAV + '<p class="pf-h">Tu carrito</p><div class="pf-kv"><span>Teclado</span><b>$ 20</b></div><button class="pf-btn" data-replace="/gracias">Pagar</button>'; },
+    '/gracias': function () { return NAV + '<p class="pf-h">¡Gracias por tu compra!</p><p class="pf-label" style="text-align:left">Tu pedido va en camino.</p>'; },
+  };
+
+  var H = ['/', '/productos', '/productos/42'];
+  var steps = [
+    { phase: 0, title: 'El historial arranca con una entrada', entries: ['/'], dwell: 4600,
+      note: 'Con una sola entrada no hay a dónde volver: la flecha Atrás está apagada.',
+      caption: 'Al abrir la app el navegador anota la primera página: «/». Es la más antigua y la actual a la vez.' },
+
+    { phase: 1, title: 'navigate apila una entrada nueva', entries: ['/', '/productos'], call: "navigate('/productos')", tap: '.pf-btn[data-to="/productos"]', dwell: 5000,
+      caption: 'Al pulsar «Ver productos» se agrega la entrada «/productos» encima y el puntero pasa a ella. Es un push.' },
+    { phase: 1, title: 'Otra más', entries: H, call: "navigate('/productos/42')", tap: '.pf-tile[data-to="/productos/42"]', dwell: 5000,
+      note: 'Las entradas de abajo siguen en el historial, solo que ya no se ven.',
+      caption: 'Entrar al detalle del Teclado apila una tercera entrada. Cuantas más páginas visitas, más alta la pila.' },
+
+    { phase: 2, title: 'Atrás mueve el puntero', entries: H, index: 1, call: 'navigate(-1)', tap: '__back', dwell: 5400,
+      note: '«/productos/42» no se destruye: solo queda adelante del puntero.',
+      caption: 'Atrás no saca la entrada de la pila: mueve el puntero una posición hacia abajo. La entrada de adelante queda atenuada.' },
+    { phase: 2, title: 'Adelante lo devuelve', entries: H, index: 2, call: 'navigate(1)', tap: '__fwd', dwell: 4800,
+      caption: 'Adelante mueve el puntero hacia arriba. Eso solo es posible mientras haya entradas por delante.' },
+
+    { phase: 3, title: 'Atrás y luego navegas a otro sitio', entries: H, index: 1, call: 'navigate(-1)', tap: '__back', dwell: 5000,
+      marks: { '/productos/42': { text: 'se descartará', tone: 'warn' } },
+      caption: 'Estás en «/productos» y el Teclado sigue adelante. ¿Qué pasa si ahora abres el carrito en vez de volver al Teclado?' },
+    { phase: 3, title: 'Un push desde el medio corta lo de adelante', entries: ['/', '/productos', '/carrito'], call: "navigate('/carrito')", tap: 'nav a[data-to="/carrito"]', dwell: 6000,
+      note: 'La entrada «/productos/42» desapareció del historial: Adelante ya no tiene a dónde ir.',
+      caption: 'Navegar a una página nueva descarta todo lo que había por delante del puntero. Solo se conserva lo que está atrás.' },
+
+    { phase: 4, title: 'replace reemplaza la entrada actual', entries: ['/', '/productos', '/gracias'], call: "navigate('/gracias', { replace: true })", tap: '.pf-btn[data-replace="/gracias"]', dwell: 6000,
+      note: 'El historial no creció: «/carrito» fue reemplazado por «/gracias».',
+      caption: 'Tras pagar no quieres que Atrás vuelva al carrito. Con replace la entrada actual se sustituye en lugar de apilar otra.' },
+    { phase: 4, title: 'Atrás salta el carrito', entries: ['/', '/productos', '/gracias'], index: 1, call: 'navigate(-1)', tap: '__back', dwell: 5200,
+      caption: 'Atrás lleva a «/productos»: el carrito ya no está en el historial.' },
+
+    { phase: 5, title: 'Pruébalo tú', entries: ['/'], free: true, dwell: 1500,
+      caption: 'Abre productos, entra a un detalle, ve Atrás y navega a otra página. Mira cuándo se descartan las entradas de adelante y qué hace «Pagar».' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Simulador del historial de navegación: cómo cambian la pila de entradas y el puntero al navegar con navigate, Atrás, Adelante y replace',
+    phases: ['El historial', 'Navegar: push', 'Atrás y adelante', 'Descartar lo de adelante', 'Reemplazar', 'Pruébalo tú'],
+    wide: true,
+    scene: function (svg, stage, api) {
+      return DK.history({ stage: stage, api: api, height: 260, host: 'mi-tienda.com', view: function (p) { return (PAGES[p] || PAGES['/'])(); },
+        hint: 'Usa los enlaces, «Pagar» y las flechas del navegador.', introNote: 'El navegador anota cada página que visitas en una pila. Pulsa Siguiente.' });
+    },
+    build: function () { return steps; },
+    intro: { kicker: 'Navegar es mover un puntero', title: 'El historial es una pila con puntero', text: 'Sigue cómo crece el historial al navegar, qué hacen Atrás y Adelante, cuándo se descartan entradas y cómo replace evita que se acumulen. Al final lo pruebas tú.' }
+  });
+})();
+</script>
+</body>
+</html>

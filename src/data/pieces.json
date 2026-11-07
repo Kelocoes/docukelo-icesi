@@ -240,6 +240,86 @@
     "src": "/interactive/computacion-2/semana-14/vite-por-que/index.html"
   },
   {
+    "id": "computacion-2/semana-15/custom-hook-reuso",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "custom-hook-reuso",
+    "title": "Custom hook: reutilizar lógica",
+    "src": "/interactive/computacion-2/semana-15/custom-hook-reuso/index.html"
+  },
+  {
+    "id": "computacion-2/semana-15/historial-navegacion",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "historial-navegacion",
+    "title": "Navegar es mover un puntero en el historial",
+    "src": "/interactive/computacion-2/semana-15/historial-navegacion/index.html"
+  },
+  {
+    "id": "computacion-2/semana-15/params-url",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "params-url",
+    "title": "Path variables y query params",
+    "src": "/interactive/computacion-2/semana-15/params-url/index.html"
+  },
+  {
+    "id": "computacion-2/semana-15/rutas-anidadas",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "rutas-anidadas",
+    "title": "Rutas anidadas y Outlet",
+    "src": "/interactive/computacion-2/semana-15/rutas-anidadas/index.html"
+  },
+  {
+    "id": "computacion-2/semana-15/spa-vs-multipagina",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "spa-vs-multipagina",
+    "title": "Sitio clásico frente a una SPA",
+    "src": "/interactive/computacion-2/semana-15/spa-vs-multipagina/index.html"
+  },
+  {
+    "id": "computacion-2/semana-15/useeffect-dependencias",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "useeffect-dependencias",
+    "title": "useEffect: cuándo corre y cuándo se limpia",
+    "src": "/interactive/computacion-2/semana-15/useeffect-dependencias/index.html"
+  },
+  {
+    "id": "computacion-2/semana-15/usestate-actualiza",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "usestate-actualiza",
+    "title": "useState: un clic y el árbol de componentes",
+    "src": "/interactive/computacion-2/semana-15/usestate-actualiza/index.html"
+  },
+  {
+    "id": "computacion-2/semana-15/usestate-instantanea",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "usestate-instantanea",
+    "title": "setState: la foto y la cola",
+    "src": "/interactive/computacion-2/semana-15/usestate-instantanea/index.html"
+  },
+  {
     "id": "computacion-3/semana-12/anatomia-slice",
     "course": "computacion-3",
     "courseName": "Computación 3",
