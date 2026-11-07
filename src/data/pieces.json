@@ -760,6 +760,56 @@
     "src": "/interactive/desarrollo-entornos-digitales-web/semana-13/selectores-y-rerender/index.html"
   },
   {
+    "id": "desarrollo-entornos-digitales-web/semana-15/modal-interceptado",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "modal-interceptado",
+    "title": "Rutas paralelas e interceptadas: el modal del ejercicio",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-15/modal-interceptado/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-15/server-action-flujo",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "server-action-flujo",
+    "title": "Qué pasa al enviar el formulario con una Server Action",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-15/server-action-flujo/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-15/streaming-suspense",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "streaming-suspense",
+    "title": "Cuándo ve la persona algo en pantalla: loading.tsx y Suspense",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-15/streaming-suspense/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-15/ui-optimista",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "ui-optimista",
+    "title": "UI optimista: mostrar el cambio antes de que el servidor responda",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-15/ui-optimista/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-15/url-como-estado",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "url-como-estado",
+    "title": "La URL como estado de los filtros",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-15/url-como-estado/index.html"
+  },
+  {
     "id": "seminario-de-i-d-i/semana-11/agenda-monolitica",
     "course": "seminario-de-i-d-i",
     "courseName": "Seminario de I+D+I",

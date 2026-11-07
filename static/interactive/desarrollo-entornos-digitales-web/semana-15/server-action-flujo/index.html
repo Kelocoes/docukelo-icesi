@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qué pasa al enviar el formulario con una Server Action</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El formulario «Nueva rutina»: el navegador envía los datos a una Server Action, que valida, guarda y redirige. Interruptor: datos inválidos. Solo DATOS. */
+(function () {
+  var F = 'form', A = 'act', D = 'data';
+  var PH = ['Enviar', 'En el servidor', 'Resultado'];
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+
+  function build(opt) {
+    var bad = !!opt.bad;
+    var s = [
+      { phase: 0, title: 'La persona envía el formulario', msgs: [msg(F, A, 'FormData (nombre, nivel…)', 'ctl')], state: { form: 'Guardando…', act: 'Recibe los datos' },
+        caption: 'El formulario usa <form action={formAction}>: al enviarlo, el navegador manda los campos a la Server Action. El botón se desactiva mientras isPending.'.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<') },
+      { phase: 1, title: 'La acción valida en el servidor', msgs: [], state: { act: 'validateRoutine()' },
+        caption: 'Las reglas se comprueban siempre en el servidor, aunque el navegador ya haya revisado algo: nadie puede saltárselas.' },
+    ];
+    if (bad) {
+      s.push({ phase: 2, title: 'Hay errores: se devuelven al formulario', msgs: [msg(A, F, 'errores + lo que escribió', 'err')], state: { form: 'Muestra los errores', act: 'No guarda nada', data: 'Sin cambios' },
+        caption: 'La acción devuelve un objeto con los errores y los valores. useActionState lo recibe y el formulario no se vacía.' });
+    } else {
+      s.push({ phase: 2, title: 'Se guarda la rutina', msgs: [msg(A, D, 'routinesStore.create()', 'data')], state: { act: 'revalidatePath(/routines)', data: 'Rutina nueva' },
+        caption: 'Los datos son válidos: se guarda y se le avisa a Next que la lista de /routines quedó vieja.' });
+      s.push({ phase: 2, title: 'Se redirige a la lista', msgs: [msg(D, A, 'ok', 'ack'), msg(A, F, 'redirect(/routines)', 'ack')], state: { form: 'Ya en /routines', act: 'Listo', data: 'Rutina nueva' },
+        caption: 'La acción termina con redirect(). La lista se vuelve a pintar con la rutina nueva incluida.' });
+    }
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Qué ocurre cuando se envía el formulario de nueva rutina: el navegador manda los datos a una Server Action que valida, guarda y redirige, o devuelve los errores al formulario',
+    phases: PH,
+    scene: function (svg) {
+      return DK.sequence({ svg: svg, trayCount: 0, idleState: '—', phases: PH,
+        actors: [{ id: F, label: 'Formulario', icon: 'browser' }, { id: A, label: 'Server Action', icon: 'gear' }, { id: D, label: 'Datos', icon: 'database' }] });
+    },
+    toggles: [{ key: 'bad', label: 'La persona deja campos vacíos', affectsPhase: 2 }],
+    build: build,
+    kicker: function (p) { return 'Fase ' + (p + 1) + ' · ' + PH[p]; },
+    intro: { kicker: 'Server Actions', title: 'Del formulario al servidor y de vuelta', text: 'Sigue el recorrido del formulario «Nueva rutina». Activa «La persona deja campos vacíos» para ver cómo vuelven los errores.' },
+  });
+})();
+</script>
+</body>
+</html>

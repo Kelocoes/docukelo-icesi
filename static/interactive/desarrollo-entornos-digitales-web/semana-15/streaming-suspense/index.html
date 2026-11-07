@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cuándo ve la persona algo en pantalla: loading.tsx y Suspense</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* La página de ejercicios tarda 0,8 s en tener sus datos. Selector: cómo está escrita la página; se ve qué recibe el navegador y cuándo. Solo DATOS. */
+(function () {
+  var N = 'nav', S = 'srv';
+  var PH = ['Pedir', 'Esperar', 'Resultado'];
+  var HOW = ['Sin loading ni Suspense', 'Con loading.tsx', 'Con Suspense en la lista'];
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+
+  function build(opt) {
+    var h = opt.how;
+    var s = [{ phase: 0, title: 'El navegador pide /exercises', msgs: [msg(N, S, 'GET /exercises', 'ctl')], state: { nav: 'Pantalla en blanco', srv: 'Pide los datos' },
+      caption: 'La página necesita los ejercicios, y el servicio tarda unos 0,8 segundos en tenerlos.' }];
+    if (h === 0) {
+      s.push({ phase: 1, title: 'El servidor espera los datos', msgs: [], state: { nav: 'Pantalla en blanco', srv: 'Esperando datos…' },
+        caption: 'Sin nada que mostrar mientras tanto, el servidor no responde hasta tener todo: la persona ve una pantalla en blanco.' });
+      s.push({ phase: 2, title: 'Llega la página completa', msgs: [msg(S, N, 'página completa', 'data')], state: { nav: 'Página completa', srv: 'Listo' },
+        caption: 'Todo aparece de golpe. Funciona, pero se siente lento.' });
+    } else if (h === 1) {
+      s.push({ phase: 1, title: 'loading.tsx se envía enseguida', msgs: [msg(S, N, 'esqueleto de toda la página', 'ack')], state: { nav: 'Esqueleto (toda la página)', srv: 'Esperando datos…' },
+        caption: 'Con loading.tsx, Next envía de inmediato un esqueleto que reemplaza a toda la página mientras los datos llegan.' });
+      s.push({ phase: 2, title: 'La página reemplaza al esqueleto', msgs: [msg(S, N, 'página completa', 'data')], state: { nav: 'Página completa', srv: 'Listo' },
+        caption: 'Cuando los datos están listos, el servidor manda el resto y el esqueleto se cambia por la página.' });
+    } else {
+      s.push({ phase: 1, title: 'Lo que no espera datos se envía ya', msgs: [msg(S, N, 'título, filtros y esqueleto', 'ack')], state: { nav: 'Título y filtros visibles', srv: 'Esperando datos…' },
+        caption: 'Con Suspense solo la lista espera. El título y los filtros ya se pueden usar mientras el esqueleto ocupa el lugar de las tarjetas.' });
+      s.push({ phase: 2, title: 'Las tarjetas llegan por streaming', msgs: [msg(S, N, 'tarjetas', 'data')], state: { nav: 'Página completa', srv: 'Listo' },
+        caption: 'El servidor sigue enviando datos por la misma respuesta: solo se reemplaza el esqueleto de la lista.' });
+    }
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Qué recibe el navegador y cuándo según la página no tenga nada, tenga loading.tsx o tenga un Suspense alrededor de la lista de ejercicios',
+    phases: PH,
+    scene: function (svg) {
+      return DK.sequence({ svg: svg, trayCount: 0, idleState: '—', phases: PH,
+        actors: [{ id: N, label: 'Navegador', icon: 'browser' }, { id: S, label: 'Servidor de Next', icon: 'server' }] });
+    },
+    toggles: [{ key: 'how', type: 'select', label: 'La página tiene', options: HOW, value: 2, restart: 'first' }],
+    build: build,
+    kicker: function (p) { return 'Fase ' + (p + 1) + ' · ' + PH[p]; },
+    intro: { kicker: 'Carga y streaming', title: 'Qué ve la persona mientras esperas datos', text: 'La lista de ejercicios tarda 0,8 segundos. Elige cómo está escrita la página y mira qué recibe el navegador y cuándo.' },
+  });
+})();
+</script>
+</body>
+</html>

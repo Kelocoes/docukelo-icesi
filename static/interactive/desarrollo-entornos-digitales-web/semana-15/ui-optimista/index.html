@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UI optimista: mostrar el cambio antes de que el servidor responda</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Marcar un ejercicio como hecho: la pantalla cambia al instante (useOptimistic) mientras el servidor tarda 0,8 s. Interruptor: el servidor falla. Solo DATOS. */
+(function () {
+  var P = 'per', V = 'pan', S = 'srv';
+  var PH = ['Clic', 'Mientras tanto', 'Respuesta'];
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+
+  function build(opt) {
+    var fail = !!opt.fail;
+    var s = [
+      { phase: 0, title: 'La persona marca «Plancha»', msgs: [msg(P, V, 'clic en la casilla', 'ctl')], state: { per: 'Espera', pan: '1 de 2 hechos (optimista)' },
+        caption: 'toggleOptimistic() cambia la pantalla en el mismo instante: no hay que esperar al servidor para ver el efecto.' },
+      { phase: 1, title: 'La acción viaja al servidor', msgs: [msg(V, S, 'toggleDoneAction()', 'ctl')], state: { srv: 'Guardando… (0,8 s)', pan: '1 de 2 hechos (optimista)' },
+        caption: 'Mientras el servidor guarda, la persona ya puede seguir. Sin UI optimista vería la casilla sin cambiar durante casi un segundo.' },
+    ];
+    if (fail) {
+      s.push({ phase: 2, title: 'El servidor falla', msgs: [msg(S, V, 'error', 'err')], state: { srv: 'Error', pan: '0 de 2 hechos (vuelve atrás)' },
+        caption: 'Al terminar la acción con error, React descarta el cambio optimista y la pantalla vuelve al valor real. Conviene avisar a la persona.' });
+    } else {
+      s.push({ phase: 2, title: 'El servidor confirma', msgs: [msg(S, V, 'listo', 'ack')], state: { srv: 'Guardado', pan: '1 de 2 hechos (confirmado)' },
+        caption: 'El valor real coincide con el que ya se veía, así que la pantalla no parpadea: parecía instantáneo y lo era.' });
+    }
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Cómo la interfaz optimista muestra el cambio al instante mientras el servidor guarda, y cómo vuelve atrás si el servidor falla',
+    phases: PH,
+    scene: function (svg) {
+      return DK.sequence({ svg: svg, trayCount: 0, idleState: '—', phases: PH,
+        actors: [{ id: P, label: 'Persona', icon: 'user' }, { id: V, label: 'Pantalla', icon: 'browser' }, { id: S, label: 'Servidor', icon: 'server' }] });
+    },
+    toggles: [{ key: 'fail', label: 'El servidor falla', affectsPhase: 2 }],
+    build: build,
+    kicker: function (p) { return 'Fase ' + (p + 1) + ' · ' + PH[p]; },
+    intro: { kicker: 'useOptimistic', title: 'Se ve primero, se confirma después', text: 'Marca un ejercicio como hecho y mira qué ve la persona mientras el servidor guarda. Activa «El servidor falla» para ver el retroceso.' },
+  });
+})();
+</script>
+</body>
+</html>

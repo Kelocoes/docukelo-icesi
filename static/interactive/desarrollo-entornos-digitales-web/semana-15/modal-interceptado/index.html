@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rutas paralelas e interceptadas: el modal del ejercicio</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* La misma URL (/exercises/4) muestra un modal si se llega con un clic dentro de la app y una página completa si se llega de otra forma. Selector: cómo llegas. Solo DATOS. */
+(function () {
+  var items = [
+    { id: 'how', type: 'node', icon: 'user', x: 75, y: 110, size: 56, label: 'La persona', sub: '' },
+    { id: 'next', type: 'node', icon: 'gear', x: 290, y: 110, size: 60, label: 'Next.js', sub: '¿vengo de dentro de la app?' },
+    { id: 'modal', type: 'node', icon: 'card', x: 560, y: 60, size: 56, label: '@modal', sub: '(.)exercises/[id]', hidden: true },
+    { id: 'page', type: 'node', icon: 'file', x: 560, y: 190, size: 56, label: 'exercises/[id]', sub: 'la página completa', hidden: true },
+    { id: 'tag', type: 'tag', x: 560, y: 262, text: '', hidden: true },
+  ];
+  var OPT = [
+    { a: 'Haces clic en una tarjeta de la lista', inside: true, how: 'clic en un enlace', res: 'Modal sobre la lista (la lista sigue detrás)' },
+    { a: 'Escribes /exercises/4 en la barra', inside: false, how: 'dirección escrita', res: 'Página completa del ejercicio' },
+    { a: 'Recargas con el modal abierto', inside: false, how: 'recarga (F5)', res: 'Página completa del ejercicio' },
+  ];
+
+  function build(opt) {
+    var o = OPT[opt.a], hit = o.inside ? 'modal' : 'page';
+    return [
+      { phase: 0, title: o.a, focus: ['how'], text: { how: o.how }, caption: 'La URL de destino es siempre la misma: /exercises/4.' },
+      { phase: 1, title: 'Next decide qué mostrar', focus: ['how', 'next'], text: { how: o.how }, links: [{ from: 'how', to: 'next', kind: 'ctl', label: '/exercises/4' }],
+        caption: o.inside ? 'Es una navegación dentro de la app: existe una ruta interceptada que puede ocupar el lugar.' : 'No es una navegación dentro de la app: Next pide la ruta de verdad al servidor.' },
+      { phase: 2, title: o.inside ? 'Se usa la ruta interceptada' : 'Se usa la ruta normal', focus: ['next', hit], show: [hit], links: [{ from: 'next', to: hit, kind: o.inside ? 'ack' : 'data', label: o.inside ? 'intercepta' : 'normal' }], state: (function () { var s = {}; s[hit] = 'ok'; return s; })(),
+        caption: o.inside ? 'El espacio paralelo @modal muestra el ejercicio encima de la lista. El layout recibe el modal como una propiedad más.' : 'Sin ruta interceptada que aplique, se dibuja la página completa del ejercicio.' },
+      { phase: 2, title: 'Resultado', focus: [hit, 'tag'], show: [hit, 'tag'], text: { tag: o.res }, state: (function () { var s = { tag: 'ok' }; s[hit] = 'ok'; return s; })(),
+        caption: o.inside ? 'La URL cambió pero la lista sigue viva detrás. Cerrar el modal es volver atrás en el historial.' : 'Quien comparte o guarda el enlace siempre ve la página completa, con su título y su contenido.' },
+    ];
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Cómo Next.js decide si mostrar el ejercicio en un modal o en una página completa según se llegue por un clic dentro de la app, escribiendo la dirección o recargando',
+    phases: ['La persona llega', 'Next decide', 'Qué se ve'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 300, items: items, trail: 'step' }); },
+    toggles: [{ key: 'a', type: 'select', label: 'La persona', options: OPT.map(function (o) { return o.a; }), value: 0, restart: 'first' }],
+    build: build,
+    intro: { kicker: 'Rutas interceptadas', title: 'La misma URL, dos pantallas', text: 'Elige cómo llega la persona a /exercises/4 y mira qué muestra Next.js.' },
+  });
+})();
+</script>
+</body>
+</html>
