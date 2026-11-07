@@ -106,7 +106,7 @@ Add scripts so you do not have to remember the commands:
 ```
 
 :::tip[With Next.js, test against the production build]
-The [Next.js guide](https://nextjs.org/docs/app/guides/testing/playwright) recommends testing against `npm run build` and `npm run start`: it is what users will see and it avoids `next dev` compiling each page on the first visit. With `webServer` Playwright starts the server for you. To get started quickly there is also `npx create-next-app@latest --example with-playwright`.
+The [Next.js guide](https://nextjs.org/docs/app/guides/testing/playwright) says to run `npm run build` and `npm run start` and, in another terminal, `npx playwright test`; `webServer` is the alternative so that Playwright starts the server and waits until it is ready. Here we configure it with the production build because it is what users will see and it avoids `next dev` compiling each page on its first visit, which makes tests slow and unstable. To get started quickly there is also `npx create-next-app@latest --example with-playwright`.
 :::
 
 ---
@@ -131,9 +131,24 @@ test('inicia sesión y ve sus rutinas', async ({ page }) => {
   await page.getByRole('button', { name: 'Iniciar sesión' }).click()
 
   await expect(page).toHaveURL('/routines')
-  await expect(page.getByRole('heading', { name: 'Mis rutinas' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Mis Rutinas' })).toBeVisible()
 })
 ```
+
+:::note[The test depends on the interface]
+`getByLabel('Correo')` only finds the field if the form has a `<label>` associated with the `<input>` (with `htmlFor` and `id`). If your form does not have them, the test fails even though the application works. This is an advantage: locating things the way a user perceives them pushes you to build an **accessible** interface. The form from week 14 must have, at a minimum:
+
+```tsx title="LoginForm.tsx (the fields the test uses)" showLineNumbers
+<label htmlFor="email">Correo</label>
+<input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+
+<label htmlFor="password">Contraseña</label>
+<input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+
+<button type="submit">Iniciar sesión</button>
+{errorMessage && <p role="alert">{errorMessage}</p>}
+```
+:::
 
 Run it:
 
@@ -214,7 +229,7 @@ test('muestra un error con credenciales incorrectas', async ({ page }) => {
   await page.getByLabel('Contraseña').fill('incorrecta')
   await page.getByRole('button', { name: 'Iniciar sesión' }).click()
 
-  await expect(page.getByText('Credenciales inválidas')).toBeVisible()
+  await expect(page.getByRole('alert')).toHaveText('Credenciales inválidas')
   await expect(page).toHaveURL('/login')
 })
 
@@ -241,7 +256,7 @@ import { test, expect } from '@playwright/test'
 // Uses the session saved by auth.setup.ts (configured in the "chromium" project)
 test('ve la lista de rutinas', async ({ page }) => {
   await page.goto('/routines')
-  await expect(page.getByRole('heading', { name: 'Mis rutinas' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Mis Rutinas' })).toBeVisible()
 })
 ```
 
@@ -275,32 +290,51 @@ It is the fastest way to understand why a test fails: you see each action, the s
 
 ## 8. Run them on every change (CI)
 
-The wizard can generate a GitHub Actions workflow. This is the idea:
+**Continuous integration** (CI) runs the tests automatically on every `push` and every pull request, on a clean machine. That way, a change that breaks the login is detected before it reaches `main`. The Playwright wizard can generate a GitHub Actions workflow; this is the idea:
 
 ```yaml title=".github/workflows/playwright.yml" showLineNumbers
 name: Playwright Tests
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
-    branches: [main]
+    branches: [main, master]
 
 jobs:
   test:
     timeout-minutes: 30
     runs-on: ubuntu-latest
+    env:
+      API_URL: ${{ vars.API_URL }} # what the app needs for the build and startup
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: lts/*
       - run: npm ci
       - run: npx playwright install --with-deps
       - run: npx playwright test
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
 ```
+
+| Step | What it does |
+| :--- | :--- |
+| `checkout` | Downloads the repository code onto the machine. |
+| `setup-node` | Installs Node.js. |
+| `npm ci` | Installs the exact dependencies from `package-lock.json`. |
+| `playwright install --with-deps` | Downloads the browsers and the system libraries they need. |
+| `playwright test` | Runs the tests; `webServer` does the build and starts the app. |
+| `upload-artifact` | Saves the HTML report even if the tests fail, so you can review it. |
+
+:::warning[The app also needs its variables in CI]
+Since `webServer` runs `npm run build && npm run start`, the application needs on the CI machine the same variables as in your `.env.local` (for example `API_URL`). If one is missing, the build or the login fails and it looks like a test error. Non-secret ones go in **Settings > Secrets and variables > Actions > Variables** (`${{ vars.NAME }}`); secret ones, in **Secrets** (`${{ secrets.NAME }}`). Never write them in the workflow file.
+:::
+
+:::tip[And against the deployed application?]
+This workflow tests a copy of the app started inside the CI machine itself. In the [next document](./02-despliegue-vercel.md) we deploy to Vercel and run these same tests against the deployment URL.
+:::

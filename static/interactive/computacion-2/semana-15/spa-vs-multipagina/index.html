@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sitio clásico frente a una SPA</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>.dk-pane { flex-basis: 280px; }</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-compare.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Sitio clásico (un archivo HTML por URL) frente a una SPA con React Router (un solo HTML): qué se le pide al servidor en cada paso. Solo DATOS. */
+(function () {
+  var N = 'nav', S = 'srv';
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+  var PH = ['Entrar', 'Productos', 'Detalle', 'Recargar'];
+
+  function build() {
+    var steps = [];
+    var step = function (phase, title, caption, classic, spa) { steps.push({ phase: phase, title: title, caption: caption, panes: { classic: classic, spa: spa } }); };
+
+    step(0, 'Entrar a la página principal',
+      'En los dos casos el navegador pide la dirección y el servidor responde con un HTML. La SPA además trae el JavaScript de la aplicación: ahí vive React Router.',
+      { msgs: [msg(N, S, 'GET /', 'ctl'), msg(S, N, 'index.html', 'data')], state: { nav: 'Ve index.html', srv: 'Sirve archivos' }, note: 'Un archivo por página' },
+      { msgs: [msg(N, S, 'GET /', 'ctl'), msg(S, N, 'index.html + app.js', 'data')], state: { nav: 'Router: /', srv: 'Sirve un solo HTML' }, note: 'Un HTML y todo el código' });
+
+    step(1, 'Clic en «Productos» (/productos)',
+      'El sitio clásico pide otro archivo y recarga la página completa. La SPA no pide nada: el router lee la URL, escoge el componente y React cambia el DOM.',
+      { msgs: [msg(N, S, 'GET /productos', 'ctl'), msg(S, N, 'productos.html', 'data')], state: { nav: 'Ve productos.html', srv: 'Sirve archivos' }, note: 'Pide otro HTML y recarga' },
+      { msgs: [], state: { nav: 'Router: /productos', srv: 'Sin actividad' }, note: 'Sin petición: cambia el DOM' });
+
+    step(2, 'Clic en un producto (/productos/42)',
+      'Un sitio clásico necesitaría un archivo por producto. En la SPA una sola ruta con parámetro (productos/:id) sirve para todos.',
+      { msgs: [msg(N, S, 'GET /productos/42', 'ctl'), msg(S, N, '42.html', 'data')], state: { nav: 'Ve 42.html', srv: 'Sirve archivos' }, note: 'Un archivo por producto' },
+      { msgs: [], state: { nav: 'Router: /productos/42', srv: 'Sin actividad' }, note: 'Una ruta con :id para todos' });
+
+    step(3, 'Recargar la página (F5)',
+      'Al recargar, el navegador sí le pregunta al servidor por la URL. Una SPA solo tiene index.html: el servidor debe devolverlo para cualquier ruta, y entonces el router vuelve a armar la página.',
+      { msgs: [msg(N, S, 'GET /productos/42', 'ctl'), msg(S, N, '42.html', 'data')], state: { nav: 'Ve 42.html', srv: 'Sirve archivos' }, note: 'El archivo existe' },
+      { msgs: [msg(N, S, 'GET /productos/42', 'ctl'), msg(S, N, 'index.html + app.js', 'data')], state: { nav: 'Router: /productos/42', srv: 'Devuelve index.html' }, note: 'El servidor responde index.html' });
+    return steps;
+  }
+
+  var seq = function () {
+    return { trayCount: 0, idleState: '—', phases: PH,
+      actors: [{ id: N, label: 'Navegador', icon: 'browser' }, { id: S, label: 'Servidor', icon: 'server' }] };
+  };
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Comparación entre un sitio clásico, con un archivo HTML por URL, y una aplicación de una sola página con React Router',
+    phases: PH,
+    scene: function (svg, stage) {
+      return DK.compare({
+        stage: stage, statLabel: 'mensajes',
+        panes: [
+          { id: 'classic', title: 'Sitio clásico', subtitle: 'un HTML por cada URL', sequence: seq() },
+          { id: 'spa', title: 'SPA con React Router', subtitle: 'un solo HTML', sequence: seq() },
+        ],
+      });
+    },
+    build: build,
+    kicker: function (p) { return 'Paso ' + (p + 1) + ' · ' + PH[p]; },
+    intro: {
+      kicker: 'Varias páginas, una sola',
+      title: 'Qué le pide cada sitio al servidor',
+      text: 'Navegas por la misma tienda en dos tipos de sitio. Pulsa «Siguiente» y mira qué mensajes viajan en cada clic.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

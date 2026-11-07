@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Custom hook: reutilizar lógica</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  #app .cmx { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+  #app .cm-lines { font-size: 12.5px; }
+  .ch-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 8px; }
+  .ch-comp { padding: 6px 8px; border: 1.5px solid var(--dk-line); border-radius: 8px; }
+  .ch-comp .n { display: block; font: 700 11px ui-monospace, Consolas, monospace; }
+  .ch-comp .s { display: block; margin: 2px 0; font: 11px ui-monospace, Consolas, monospace; color: var(--dk-muted); }
+  .ch-comp .o { display: block; font-weight: 700; font-size: 12.5px; }
+  .ch-hook { margin: 0 0 8px; padding: 6px 10px; border: 1.5px dashed var(--dk-ctl); border-radius: 8px; text-align: center; font: 700 12px ui-monospace, Consolas, monospace; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // p1 = el hook (nombre y retorno); p2 = el estado; p3 = el efecto; p4 = la limpieza; p5 = el uso en un componente.
+  var code = [
+    [['function ', ''], ['useOnlineStatus', 'name'], ['() {', 'name']],
+    [['  const ', ''], ['[online, setOnline] = useState(true);', 'state']],
+    [['  ', ''], ['useEffect(() => {', 'effect']]  ,
+    [['    ', ''], ['const on = () => setOnline(true);', 'effect']],
+    [['    ', ''], ['const off = () => setOnline(false);', 'effect']],
+    [['    ', ''], ['addEventListener("online", on);', 'effect']],
+    [['    ', ''], ['addEventListener("offline", off);', 'effect']],
+    [['    ', ''], ['return () => {', 'clean']],
+    [['      ', ''], ['removeEventListener("online", on);', 'clean']],
+    [['      ', ''], ['removeEventListener("offline", off);', 'clean']],
+    [['    ', ''], ['};', 'clean']],
+    [['  ', ''], ['}, []);', 'effect']],
+    [['  ', ''], ['return online;', 'ret']],
+    [['}', '']],
+    [['', '']],
+    [['function StatusBar() {', 'use']],
+    [['  ', 'use'], ['const online = useOnlineStatus();', 'use']],
+    [['  return <h1>{online ? "Sí" : "No"}</h1>;', 'use']],
+    [['}', 'use']],
+  ];
+
+  var parts = {
+    name: { label: 'Nombre', color: 'p1', title: 'Un custom hook es una función que empieza con use',
+      text: 'Es una función normal de JavaScript. El prefijo <code>use</code> le dice a React (y al linter) que dentro hay hooks, y que debe llamarse con las mismas reglas: solo en el nivel superior de un componente o de otro hook.',
+      bullets: ['El nombre dice <b>qué hace</b>: <code>useOnlineStatus</code>, no <code>useEffectOnline</code>.', 'No es una API nueva de React: tú decides cómo se llama y qué recibe.'],
+      where: 'En pantalla: la barra y el botón usan el mismo hook.' },
+    state: { label: 'useState', color: 'p2', title: 'El hook puede tener su propio estado',
+      text: 'Dentro del hook llamas a <code>useState</code> como en cualquier componente. Ese estado <b>pertenece al componente que usa el hook</b>, no al hook.',
+      where: 'En pantalla: cada componente tiene su propio <code>online</code>.' },
+    effect: { label: 'useEffect', color: 'p3', title: 'Y sincronizarse con algo externo',
+      text: 'Aquí el hook se suscribe a los eventos <code>online</code> y <code>offline</code> del navegador: algo que React no controla. Con <code>[]</code> se suscribe al montar y una sola vez.',
+      bullets: ['Cada vez que el navegador pierde o recupera la red, <code>on</code> y <code>off</code> llaman a <code>setOnline</code>.'],
+      where: 'En pantalla: el valor cambia cuando la red cambia.' },
+    clean: { label: 'Limpieza', color: 'p4', title: 'Y limpiar al desmontar',
+      text: 'La función que devuelve el efecto se ejecuta al desmontar el componente. Sin ella, los eventos seguirían llamando a <code>setOnline</code> de un componente que ya no existe.',
+      where: 'En pantalla: al quitar la barra, deja de escuchar.' },
+    ret: { label: 'return', color: 'p1', title: 'Devuelve lo que los componentes necesitan',
+      text: 'Un hook devuelve lo que quieras: un valor, un arreglo, un objeto, funciones. Quien lo usa no ve cómo se obtiene, solo el resultado.',
+      where: 'En pantalla: cada componente recibe un booleano.' },
+    use: { label: 'Uso', color: 'p5', title: 'Cualquier componente puede usarlo',
+      text: 'Una línea reemplaza todo el estado y el efecto. El mismo hook sirve para la barra de estado, el botón de guardar o lo que necesites mañana.',
+      bullets: ['Se comparte la <b>lógica</b>, no el <b>estado</b>: cada llamada crea su propio <code>online</code>.'],
+      where: 'En pantalla: dos componentes, cada uno con su propio valor.' },
+  };
+
+  function view() {
+    return '' +
+      '<p class="cm-lbl">Un hook, dos componentes</p>' +
+      '<div class="ch-hook" data-part="name">useOnlineStatus()</div>' +
+      '<div class="cm-arrow">↓ ↓</div>' +
+      '<div class="ch-row">' +
+        '<div class="ch-comp" data-part="use"><span class="n">&lt;StatusBar /&gt;</span><span class="s" data-part="state">online = true</span><span class="o" data-part="ret">¿En línea? Sí</span></div>' +
+        '<div class="ch-comp" data-part="use"><span class="n">&lt;SaveButton /&gt;</span><span class="s" data-part="state">online = true</span><span class="o" data-part="ret">Guardar</span></div>' +
+      '</div>' +
+      '<p class="cm-lbl">Del navegador al componente</p>' +
+      '<div class="cm-code-sm" data-part="effect">evento "online" / "offline"</div>' +
+      '<div class="cm-arrow">↓ setOnline</div>' +
+      '<div class="cm-code-sm" data-part="clean">al desmontar: se quitan los eventos</div>';
+  }
+
+  var steps = [
+    { phase: 0, title: 'Una función que empieza con use', focus: 'name',
+      caption: 'Un custom hook es una función normal con un nombre que empieza con use: así React sabe que dentro hay hooks.' },
+    { phase: 0, title: 'Puede guardar estado', focus: 'state',
+      caption: 'Dentro llamas a useState como en un componente: ese estado es de quien use el hook.' },
+    { phase: 0, title: 'Puede sincronizarse con algo externo', focus: 'effect',
+      caption: 'Aquí se suscribe a los eventos de red del navegador cuando el componente aparece.' },
+    { phase: 0, title: 'Y limpia lo que abrió', focus: 'clean',
+      caption: 'La función que devuelve el efecto deshace la suscripción cuando el componente se desmonta.' },
+    { phase: 0, title: 'Devuelve lo que necesitan', focus: 'ret',
+      caption: 'Quien lo usa recibe solo el resultado: aquí, si hay conexión o no.' },
+    { phase: 1, title: 'Cualquier componente lo usa', focus: 'use',
+      caption: 'Una sola línea trae el estado y el efecto completos al componente que la escribe.' },
+    { phase: 1, title: 'Se comparte la lógica, no el estado', focus: 'state',
+      caption: 'StatusBar y SaveButton ejecutan el mismo código, pero cada uno tiene su propio online: dos llamadas a useState, dos estados.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Anatomía de un custom hook de React, useOnlineStatus, con su estado, su efecto y su limpieza, y dos componentes que lo usan',
+    phases: ['Crear el hook', 'Usarlo'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.codemap({ stage: stage, file: 'useOnlineStatus.js', code: code, parts: parts, view: view });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Custom hooks',
+      title: 'Sacar la lógica a una función',
+      text: 'Cuando varios componentes repiten el mismo estado y el mismo efecto, se extraen a un custom hook. Recorre sus partes y luego mira cómo se usa.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

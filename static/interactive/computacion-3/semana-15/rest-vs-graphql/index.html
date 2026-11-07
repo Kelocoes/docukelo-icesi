@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REST frente a GraphQL: la misma pantalla</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>.dk-pane { flex-basis: 280px; }</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-compare.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* La misma pantalla (nombre del usuario y los títulos de sus posts) con REST y con GraphQL. Interruptor: la pantalla también muestra comentarios. Solo DATOS. */
+(function () {
+  var A = 'app', S = 'api';
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+  var PH = ['Pedir', 'Seguir pidiendo', 'Resultado'];
+
+  function build(opt) {
+    var more = !!opt.more, steps = [];
+    var step = function (phase, title, caption, rest, gql) { steps.push({ phase: phase, title: title, caption: caption, panes: { rest: rest, gql: gql } }); };
+
+    step(0, 'Primera petición',
+      'La pantalla necesita el nombre del usuario y los títulos de sus posts. REST empieza por el recurso del usuario; GraphQL describe todo lo que necesita en una sola consulta.',
+      { msgs: [msg(A, S, 'GET /users/1', 'ctl'), msg(S, A, 'usuario completo', 'data')], note: 'Llegan todos los campos del usuario' },
+      { msgs: [msg(A, S, 'POST /graphql', 'ctl'), msg(S, A, 'justo lo pedido', 'data')], note: 'Una consulta con lo que se necesita' });
+
+    step(1, 'Siguiente petición',
+      more
+        ? 'REST necesita un endpoint por cada recurso: los posts y luego los comentarios. GraphQL ya recibió todo en la primera respuesta.'
+        : 'Los posts son otro recurso: REST necesita otra petición. GraphQL ya trajo los títulos junto con el usuario.',
+      { msgs: more
+          ? [msg(A, S, 'GET /users/1/posts', 'ctl'), msg(S, A, 'posts completos', 'data'), msg(A, S, 'GET /posts/5/comments', 'ctl'), msg(S, A, 'comentarios', 'data')]
+          : [msg(A, S, 'GET /users/1/posts', 'ctl'), msg(S, A, 'posts completos', 'data')],
+        note: more ? 'Una petición más por cada recurso' : 'Otra petición para los posts' },
+      { msgs: [], note: 'No hace falta nada más' });
+
+    step(2, 'Resultado',
+      more
+        ? 'REST: tres peticiones y muchos campos que la pantalla no usa. GraphQL: una petición y exactamente los campos pedidos, aunque la consulta creció.'
+        : 'REST: dos peticiones y campos de sobra. GraphQL: una sola petición y exactamente los campos pedidos.',
+      { msgs: [], note: (more ? '3 peticiones' : '2 peticiones') + ' y campos de sobra' },
+      { msgs: [], note: '1 petición, sin campos de sobra' });
+    return steps;
+  }
+
+  var seq = function () {
+    return { trayCount: 0, idleState: '—', phases: PH,
+      actors: [{ id: A, label: 'Aplicación', icon: 'browser' }, { id: S, label: 'API', icon: 'server' }] };
+  };
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Comparación entre REST y GraphQL para una misma pantalla: cuántas peticiones hacen y cuántos campos de sobra reciben',
+    phases: PH,
+    scene: function (svg, stage) {
+      return DK.compare({
+        stage: stage, statLabel: 'mensajes',
+        panes: [
+          { id: 'rest', title: 'REST', subtitle: 'un endpoint por recurso', sequence: seq() },
+          { id: 'gql', title: 'GraphQL', subtitle: 'un endpoint, tú eliges los campos', sequence: seq() },
+        ],
+      });
+    },
+    toggles: [{ key: 'more', label: 'La pantalla también muestra los comentarios', affectsPhase: 1 }],
+    build: build,
+    kicker: function (p) { return 'Paso ' + (p + 1) + ' · ' + PH[p]; },
+    intro: { kicker: 'REST frente a GraphQL', title: 'La misma pantalla, dos formas de pedirla', text: 'La pantalla muestra el nombre de un usuario y los títulos de sus posts. Mira cuántas peticiones y cuántos datos necesita cada enfoque.' },
+  });
+})();
+</script>
+</body>
+</html>

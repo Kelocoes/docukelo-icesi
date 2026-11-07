@@ -4,6 +4,7 @@
 export const OLD_URLS = [
     ['/docs/computacion-2/congratulations', '/docs/computacion-2/intro'],
     ['/docs/computacion-2/documentacion-guia-springboot/Guia_spring_boot', '/docs/computacion-2/documentacion-guia-springboot/guia-spring-boot'],
+    ['/docs/computacion-2/semana-15/axios', '/docs/computacion-2/semana-16/axios'],
     ['/docs/computacion-2/semana-2/comandos-linux', '/docs/computacion-2/semana-1/comandos-linux'],
     ['/docs/computacion-2/semana-2/tomcat-commands', '/docs/computacion-2/semana-1/tomcat-commands'],
     ['/docs/computacion-2/semana-2/tomcat-config', '/docs/computacion-2/semana-1/tomcat-config'],

@@ -33,6 +33,12 @@ Cada patrón dice cuándo usarlo, qué módulo del kit lo resuelve y qué pieza 
 | Estructura de carpetas | Un proyecto como la salida de `tree`, con convenciones propuestas que aparecen por paso | `dk-files.js` + `dk-player.js` | Hecho | `computacion-2/semana-14/estructura-proyecto/`, `computacion-3/semana-14/estructura-auth/`, `computacion-3/semana-15/estructura-playwright/` |
 | Código <-> resultado | Cada parte de un código real y lo que produce (pantalla, cookie, petición, navegador) | `dk-codemap.js` + `dk-player.js` | Hecho | `computacion-2/semana-14/anatomia-componente/`, `computacion-3/semana-14/anatomia-cookie-sesion/` |
 | Selector de escenarios | Una pieza con un selector de casos (peticiones, errores, tipos de fallo) en vez de una pieza por caso | `dk-layers.js` o `dk-canvas.js` + selector de `dk-player.js` | Hecho | `computacion-3/semana-14/capas-de-defensa/`, `manejo-de-errores/`, `donde-vive-la-sesion/`, `computacion-3/semana-15/piramide-pruebas/` |
+| Historial del navegador (pila con puntero) | Cómo crece la pila de páginas al navegar, qué mueven Atrás y Adelante, cuándo se descarta lo de adelante y qué cambia con `replace` (React Router, `history`) | `dk-history.js` + `dk-player.js` | Hecho | `computacion-2/semana-15/historial-navegacion/` |
+| Sitio clásico frente a SPA | Qué se le pide al servidor en cada clic cuando hay un HTML por URL frente a una SPA con un router (y por qué al recargar hay que devolver `index.html`) | `dk-compare.js` + `dk-sequence.js` (`trayCount: 0`) | Hecho | `computacion-2/semana-15/spa-vs-multipagina/` |
+| Configuración <-> pantalla | Una configuración (rutas anidadas, URL con parámetros) y lo que produce para cada caso, con `focus` por parte | `dk-codemap.js` con `view()` propio | Hecho | `computacion-2/semana-15/rutas-anidadas/`, `params-url/` |
+| Estado de un componente (un clic) | Qué ejecuta React al llamar a `setState` y qué cambia en el DOM; dos copias con estado propio | `dk-dom.js` (modo componentes + pestaña «Código») | Hecho | `computacion-2/semana-15/usestate-actualiza/` |
+| Foto y cola de actualizaciones | `setState` como instrucciones en una cola frente a la foto del render (`setCount(count + 1)` x3 frente a la forma funcional) con interruptor | `dk-canvas.js` (`tag` ocultos por variante) + `code` función | Hecho | `computacion-2/semana-15/usestate-instantanea/` |
+| Efecto y dependencias | Cuándo corre y cuándo se limpia un `useEffect` según el arreglo de dependencias (selector `[x]`, `[]`, sin arreglo) | `dk-sequence.js` + selector + `code` función | Hecho | `computacion-2/semana-15/useeffect-dependencias/` |
 | Máquina de estados | Estados que cambian por eventos (transacción, sesión, token) | por construir (`dk-states.js`) | Por hacer | — |
 | Antes / después | Efecto de una técnica (refactor, normalización, índice) | por construir | Por hacer | — |
 
@@ -212,3 +218,16 @@ Cada patrón dice cuándo usarlo, qué módulo del kit lo resuelve y qué pieza 
 - **Estructura que funcionó:** 3 fases (Leer, Escribir, Seguridad); partes por operación (`list`, `one`, `create`, `edit`, `del`), una parte compartida (`from`, `eq`) que ilumina varias líneas a la vez, y una parte que existe solo en el resultado (`rls`).
 - **Cuidado:** `.cm-lbl` se muestra en MAYÚSCULAS (CSS): una ruta como `/rest/v1/contactos` en una etiqueta sale `/REST/V1/CONTACTOS`; ponla en un `cm-code-sm`.
 - **Ejemplo real:** `seminario-de-i-d-i/semana-14/crud-postgrest`.
+
+## Ficha del patrón "Historial del navegador" (`DK.history`, React Router)
+
+- **Cuándo:** el concepto es «cada página que visito queda anotada» y sus consecuencias (Atrás, Adelante, `navigate`, `replace`). Si la app es móvil con `Navigator` de Flutter, usa `DK.nav` (no hay puntero ni Adelante).
+- **Estructura que funcionó (6 fases, 10 pasos):** 1) el historial arranca con una entrada, 2) `navigate` apila, 3) Atrás y Adelante mueven el puntero, 4) un push desde el medio descarta lo de adelante (`marks` en la entrada que se perderá, en el paso anterior), 5) `replace` tras pagar, 6) modo libre. La pila se explicó antes con `pila-vs-cola` (platos), reutilizada tal cual desde `seminario-de-i-d-i/semana-13/`.
+- **Parámetros típicos:** `height: 260`, `host`, una función `view(path)` con una tienda de 5 páginas, `tap` con selectores CSS (`'.pf-tile[data-to="/productos/42"]'`, `'__back'`).
+- **Evitar:** pasos que no cambian `entries` ni `index` (el cursor se mueve sin efecto) y rutas repetidas sin etiqueta (`'/x#2'`).
+
+## Ficha del patrón "Configuración <-> pantalla" (`DK.codemap` con `view()` propio)
+
+- **Cuándo:** un objeto de configuración (rutas, URL) produce resultados distintos según el caso y el estudiante debe ver la correspondencia parte por parte.
+- **Estructura:** el código a la izquierda con 5 a 8 partes de color; a la derecha, **una tarjeta por caso** (`/`, `/productos`, `/productos/42`) con las mismas `data-part`, de modo que enfocar `index` ilumina el código y la tarjeta que lo usa. El hueco de un `<Outlet />` se dibuja con borde punteado.
+- **Ajustes de la pieza:** si el código tiene líneas largas, `#app .cmx { grid-template-columns: 1.55fr 1fr }` y `#app .cm-lines { font-size: 12.5px }` (con `#app` porque el kit inyecta su CSS después). Mantener las líneas en <= 40 caracteres.

@@ -1,0 +1,8 @@
+{
+    "label": "W15 - React Hooks & React Router",
+    "position": 16,
+    "link": {
+        "type": "generated-index",
+        "description": "State and effects with useState, useEffect and custom hooks, and navigation between pages with React Router"
+    }
+}

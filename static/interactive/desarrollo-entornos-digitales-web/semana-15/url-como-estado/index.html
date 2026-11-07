@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La URL como estado de los filtros</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Los filtros viven en la URL: el cliente la cambia, el servidor la lee (searchParams) y pinta la lista. Selector: qué hace la persona. Solo DATOS. */
+(function () {
+  var items = [
+    { id: 'bar', type: 'node', icon: 'browser', x: 90, y: 110, size: 60, label: 'Navegador', sub: 'la barra de direcciones' },
+    { id: 'url', type: 'tag', x: 90, y: 200, text: '/exercises', hidden: false },
+    { id: 'srv', type: 'node', icon: 'server', x: 360, y: 110, size: 62, label: 'Page (servidor)', sub: 'lee searchParams' },
+    { id: 'lst', type: 'node', icon: 'file', x: 630, y: 110, size: 56, label: 'Lista filtrada', sub: '' },
+    { id: 'res', type: 'tag', x: 630, y: 200, text: '', hidden: true },
+    { id: 'st', type: 'tag', x: 360, y: 255, text: 'con useState se perdería al recargar', hidden: true },
+  ];
+  var OPT = [
+    { a: 'Escribes «plan» en el buscador', url: '/exercises?q=plan', res: 'Plancha', verb: 'El cliente espera 300 ms desde la última tecla y cambia la URL con router.replace.' },
+    { a: 'Pulsas «Cardio»', url: '/exercises?category=cardio', res: 'Saltos, Trote', verb: 'El botón cambia el parámetro category de la URL y conserva los demás.' },
+    { a: 'Recargas la página con ?q=plan', url: '/exercises?q=plan', res: 'Plancha', verb: 'La URL no cambia, así que la lista sale igual: el filtro sobrevivió a la recarga.' },
+    { a: 'Compartes el enlace por mensaje', url: '/exercises?category=movilidad', res: 'Isquiotibiales, Gato y vaca', verb: 'Quien abre el enlace recibe exactamente la misma lista: el estado viaja en la dirección.' },
+  ];
+
+  function build(opt) {
+    var o = OPT[opt.a];
+    return [
+      { phase: 0, title: o.a, focus: ['bar', 'url'], text: { url: '/exercises' }, caption: 'Empezamos en /exercises, sin filtros.' },
+      { phase: 1, title: 'La URL cambia', focus: ['bar', 'url'], text: { url: o.url }, state: { url: 'ok' },
+        caption: opt.a === 2 ? 'La dirección ya tiene el filtro: la recarga vuelve a pedir esa misma URL.' : o.verb },
+      { phase: 1, title: 'El servidor lee los parámetros', focus: ['srv', 'bar'], text: { url: o.url }, links: [{ from: 'bar', to: 'srv', kind: 'ctl', label: 'GET' + (opt.a === 3 ? ' (otra persona)' : '') }],
+        caption: 'La página recibe searchParams como una promesa: await searchParams da q y category.' },
+      { phase: 2, title: 'Pinta la lista filtrada', focus: ['srv', 'lst', 'res'], text: { url: o.url, res: o.res }, show: ['res'], links: [{ from: 'srv', to: 'lst', kind: 'data', label: 'HTML' }], state: { res: 'ok' },
+        caption: 'Mismo código, distinto resultado según la URL. El estado vive en la dirección, no en la memoria del componente.' },
+    ];
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Cómo los filtros de la lista de ejercicios viven en la URL: el cliente cambia la dirección, el servidor lee los parámetros y pinta la lista, y por eso sobreviven a una recarga y se pueden compartir',
+    phases: ['La persona actúa', 'El servidor lee', 'Se pinta la lista'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 290, items: items, trail: 'step' }); },
+    toggles: [{ key: 'a', type: 'select', label: 'La persona', options: OPT.map(function (o) { return o.a; }), value: 0, restart: 'first' }],
+    build: build,
+    intro: { kicker: 'Estado en la URL', title: 'Los filtros viven en la dirección', text: 'Elige qué hace la persona y mira por dónde pasa el filtro hasta llegar a la lista.' },
+  });
+})();
+</script>
+</body>
+</html>

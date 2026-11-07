@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomía de una consulta GraphQL</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  .aq-json { padding: 8px 10px; border: 1px solid #dfe2e8; border-radius: 8px; background: #fff; font: 12.5px/1.65 ui-monospace, Consolas, monospace; white-space: pre; overflow-x: auto; }
+  .aq-var { padding: 5px 10px; border: 1.5px solid #dfe2e8; border-radius: 8px; background: #f7f7fb; font: 12.5px ui-monospace, Consolas, monospace; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // p1 = operación y nombre; p2 = variables; p3 = el campo raíz y sus argumentos; p4 = los campos pedidos; p5 = el campo anidado.
+  var code = [
+    [['query ', 'op'], ['ObtenerUsuario', 'name'], ['(', ''], ['$id: ID!', 'vars'], [') {', '']],
+    [['  ', ''], ['user', 'root'], ['(', ''], ['id: $id', 'args'], [') {', '']],
+    [['    ', ''], ['name', 'leaf']],
+    [['    ', ''], ['posts', 'nest'], ['(', ''], ['last: 3', 'nargs'], [') {', '']],
+    [['      ', ''], ['title', 'leaf2']],
+    [['    }', '']],
+    [['  }', '']],
+    [['}', '']],
+  ];
+
+  var parts = {
+    op: { label: 'query', color: 'p1', title: 'El tipo de operación',
+      text: 'Dice qué quieres hacer: <code>query</code> para <b>leer</b>, <code>mutation</code> para <b>escribir</b> y <code>subscription</code> para recibir datos en tiempo real. Si omites la palabra, se asume <code>query</code>.',
+      where: 'Resultado: una lectura; no cambia nada en el servidor.' },
+    name: { label: 'Nombre', color: 'p1', title: 'El nombre de la operación',
+      text: 'Es opcional, pero conviene ponerlo: identifica la consulta en los registros, las herramientas y los mensajes de error.',
+      where: 'No aparece en la respuesta.' },
+    vars: { label: 'Variables', color: 'p2', title: 'Las variables',
+      text: '<code>$id: ID!</code> declara una variable con su tipo; el <code>!</code> dice que es obligatoria. Los valores viajan aparte, en un objeto JSON, así la consulta no se arma pegando texto.',
+      bullets: ['Evita inyectar valores dentro del texto de la consulta.', 'Permite reutilizar la misma consulta con valores distintos.'],
+      where: 'Resultado: los valores van en <code>variables</code>.' },
+    root: { label: 'Campo raíz', color: 'p3', title: 'El campo raíz: dónde empieza',
+      text: 'Cada consulta empieza en un campo del tipo <code>Query</code> del schema. Aquí <code>user</code>, que devuelve un usuario.',
+      where: 'Resultado: la respuesta empieza en <code>data.user</code>.' },
+    args: { label: 'Argumentos', color: 'p3', title: 'Los argumentos',
+      text: 'Cada campo puede recibir argumentos entre paréntesis. <code>id: $id</code> usa el valor de la variable para elegir qué usuario.',
+      where: 'Selecciona al usuario con <code>id</code> igual a 1.' },
+    leaf: { label: 'Campo', color: 'p4', title: 'Los campos que pides',
+      text: 'Dentro de las llaves (el <b>selection set</b>) escribes solo los campos que necesitas. Aquí <code>name</code>.',
+      bullets: ['Lo que no pides, no llega.'],
+      where: 'Resultado: <code>"name": "Ana"</code>.' },
+    nest: { label: 'Campo anidado', color: 'p5', title: 'Pedir datos relacionados',
+      text: 'Un campo puede devolver otro objeto o una lista, y entonces vuelves a escoger sus campos. Así se recorre el grafo en <b>una sola petición</b>: del usuario a sus posts.',
+      where: 'Resultado: una lista <code>posts</code> dentro del usuario.' },
+    nargs: { label: 'Argumento', color: 'p5', title: 'Argumentos en un campo anidado',
+      text: 'Los argumentos también valen en campos anidados. <code>last: 3</code> pide solo los tres últimos posts.',
+      where: 'Resultado: la lista trae como máximo 3 posts.' },
+    leaf2: { label: 'Campo', color: 'p5', title: 'Y sus campos',
+      text: 'De cada post solo se pide el <code>title</code>: el resto de los campos del post no viaja por la red.',
+      where: 'Resultado: cada post trae solo <code>"title"</code>.' },
+  };
+
+  function view() {
+    return '' +
+      '<p class="cm-lbl">Variables enviadas</p>' +
+      '<div class="aq-var" data-part="vars">{ "id": "1" }</div>' +
+      '<div class="cm-arrow">↓ POST /graphql</div>' +
+      '<p class="cm-lbl">Respuesta</p>' +
+      '<div class="aq-json" data-part="root">{\n  "data": {\n    "<span data-part="root">user</span>": {\n      "<span data-part="leaf">name</span>": "Ana",\n      "<span data-part="nest">posts</span>": [\n        { "<span data-part="leaf2">title</span>": "Hola GraphQL" },\n        { "<span data-part="leaf2">title</span>": "Otro post" }\n      ]\n    }\n  }\n}</div>';
+  }
+
+  var steps = [
+    { phase: 0, title: 'El tipo de operación', focus: 'op', caption: 'Dice qué quieres hacer: leer (query), escribir (mutation) o escuchar (subscription).' },
+    { phase: 0, title: 'El nombre de la operación', focus: 'name', caption: 'Es opcional, pero identifica la consulta en registros y errores.' },
+    { phase: 0, title: 'Las variables', focus: 'vars', caption: 'Declaran los valores que cambian y viajan aparte, no pegados al texto.' },
+    { phase: 1, title: 'El campo raíz', focus: 'root', caption: 'Cada consulta empieza en un campo del tipo Query.' },
+    { phase: 1, title: 'Los argumentos', focus: 'args', caption: 'Los argumentos eligen qué recurso quieres.' },
+    { phase: 1, title: 'Los campos que pides', focus: 'leaf', caption: 'Solo llegan los campos que escribes dentro de las llaves.' },
+    { phase: 2, title: 'Datos relacionados', focus: 'nest', caption: 'Un campo puede devolver otro objeto o una lista: se recorre el grafo en una sola petición.' },
+    { phase: 2, title: 'Argumentos anidados', focus: 'nargs', caption: 'Los campos anidados también aceptan argumentos.' },
+    { phase: 2, title: 'Campos de lo anidado', focus: 'leaf2', caption: 'Se escogen los campos de cada post, igual que en el nivel de arriba.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Anatomía de una consulta de GraphQL: operación, nombre, variables, campo raíz, argumentos, campos y campos anidados, enlazados con la respuesta JSON que producen',
+    phases: ['Operación y variables', 'Campo raíz', 'Datos relacionados'],
+    wide: true,
+    scene: function (svg, stage) { return DK.codemap({ stage: stage, file: 'consulta.graphql', code: code, parts: parts, view: view }); },
+    build: function () { return steps; },
+    intro: { kicker: 'GraphQL', title: 'De la consulta a la respuesta', text: 'Una consulta de GraphQL parece un JSON sin valores: la respuesta tiene exactamente su forma. Recorre sus partes, o pasa el mouse por el código o por la respuesta.' },
+  });
+})();
+</script>
+</body>
+</html>

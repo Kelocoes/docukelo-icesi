@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>setState: la foto y la cola</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El estado es una foto de cada render y setState deja instrucciones en una cola. Interruptor: valor (count + 1) o función (c => c + 1). Solo DATOS. */
+(function () {
+  var items = [
+    { id: 'user', type: 'node', icon: 'user', x: 70, y: 150, size: 56, label: 'Clic', sub: 'el usuario' },
+    { id: 'handler', type: 'node', icon: 'filecode', x: 235, y: 150, size: 56, label: 'Manejador', sub: 'count vale 0' },
+    { id: 'queue', type: 'zone', shape: 'round', x: 372, y: 48, w: 186, h: 206, rx: 16, label: 'Cola de React', anchor: 'middle', lx: 465, ly: 70 },
+    { id: 'a1', type: 'tag', x: 465, y: 112, text: 'poner 0 + 1', hidden: true },
+    { id: 'a2', type: 'tag', x: 465, y: 162, text: 'poner 0 + 1', hidden: true },
+    { id: 'a3', type: 'tag', x: 465, y: 212, text: 'poner 0 + 1', hidden: true },
+    { id: 'b1', type: 'tag', x: 465, y: 112, text: 'c ⇒ c + 1', hidden: true },
+    { id: 'b2', type: 'tag', x: 465, y: 162, text: 'c ⇒ c + 1', hidden: true },
+    { id: 'b3', type: 'tag', x: 465, y: 212, text: 'c ⇒ c + 1', hidden: true },
+    { id: 'react', type: 'node', icon: 'gear', x: 640, y: 150, size: 56, label: 'React', sub: 'procesa la cola' },
+    { id: 'ra', type: 'tag', x: 640, y: 262, text: 'count = 1', hidden: true },
+    { id: 'rb', type: 'tag', x: 640, y: 262, text: 'count = 3', hidden: true },
+  ];
+
+  // las líneas 2 a 4 son siempre las tres llamadas, así los números valen en las dos variantes
+  function codigo(opt) {
+    var f = opt.fn ? 'setCount((c) => c + 1);' : 'setCount(count + 1);';
+    return ['<button onClick={() => {', '  ' + f, '  ' + f, '  ' + f, '}}>', '  +3', '</button>'].join('\n');
+  }
+
+  function build(opt) {
+    var k = opt.fn ? 'b' : 'a', n = [k + '1', k + '2', k + '3'];
+    var res = opt.fn ? 'rb' : 'ra';
+    return [
+      { phase: 0, title: 'El manejador corre con una foto', focus: ['user', 'handler'], links: [{ from: 'user', to: 'handler', kind: 'ctl', label: 'onClick' }], code: [1],
+        caption: 'Cada pantalla tiene su propia foto del estado: en este render count vale 0. El manejador ve siempre ese 0, aunque pida cambiarlo.' },
+      { phase: 1, title: 'Cada setCount deja una instrucción', focus: ['handler', 'queue'].concat(n), show: n, code: [2, 3, 4],
+        links: n.map(function (id, i) { return { from: 'handler', to: id, kind: 'data', group: 1, curve: (i - 1) * 14 }; }),
+        caption: opt.fn
+          ? 'setCount(c => c + 1) no usa la foto: deja la instrucción «súmale 1 a lo que haya». Las tres se encolan.'
+          : 'setCount(count + 1) usa la foto: en las tres count vale 0, así que las tres piden «poner 0 + 1».' },
+      { phase: 2, title: 'React procesa la cola en orden', focus: n.concat(['react']), show: n, code: [2, 3, 4],
+        links: n.map(function (id, i) { return { from: id, to: 'react', kind: 'ctl', group: 1, curve: (i - 1) * -10 }; }),
+        badge: { react: { text: opt.fn ? '0 → 1 → 2 → 3' : '1 → 1 → 1', tone: opt.fn ? 'ok' : 'warn', pos: 'top' } },
+        caption: opt.fn
+          ? 'Cada función recibe el resultado de la anterior: 0 → 1 → 2 → 3.'
+          : 'Las tres instrucciones dicen lo mismo: poner 1. Se aplican una tras otra y el resultado es 1.' },
+      { phase: 2, title: 'El siguiente render usa el valor nuevo', focus: ['react', res], show: n.concat([res]), state: (function () { var s = {}; s[res] = opt.fn ? 'ok' : 'warn'; return s; })(), code: [5, 6],
+        caption: opt.fn
+          ? 'Después del clic count vale 3 y React dibuja una pantalla nueva con una foto nueva.'
+          : 'Un solo +1 en lugar de +3. Si el nuevo valor depende del anterior, usa la forma funcional.' },
+    ];
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Cómo React procesa varias llamadas a setCount dentro de un mismo manejador: con un valor basado en la foto del render y con una función actualizadora',
+    phases: ['La foto', 'La cola', 'El resultado'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 300, items: items, trail: 'step' }); },
+    toggles: [{ key: 'fn', label: 'Usar la forma funcional: setCount(c => c + 1)', affectsPhase: 0 }],
+    code: function (opt) { return { title: 'Contador.jsx', text: codigo(opt) }; },
+    build: build,
+    intro: { kicker: 'setState', title: 'El estado es una foto, no una variable', text: 'Un clic llama tres veces a setCount. ¿Cuánto vale count después? Recorre la pieza y luego activa el interruptor para comparar.' },
+  });
+})();
+</script>
+</body>
+</html>

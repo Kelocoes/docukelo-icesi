@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entornos de Vercel y variables de entorno</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Los tres entornos de Vercel (Development, Preview, Production) y qué valor de cada variable usa cada uno. Selector: de dónde viene el cambio. Solo DATOS. */
+(function () {
+  var items = [
+    { id: 'z0', type: 'zone', shape: 'round', x: 15, y: 110, w: 215, h: 175, rx: 16 },
+    { id: 'z1', type: 'zone', shape: 'round', x: 252, y: 110, w: 215, h: 175, rx: 16 },
+    { id: 'z2', type: 'zone', shape: 'round', x: 489, y: 110, w: 215, h: 175, rx: 16 },
+    { id: 'chg', type: 'node', icon: 'filecode', x: 360, y: 38, size: 44, lp: 'right', label: 'Tu cambio', sub: 'código nuevo' },
+    { id: 'e0', type: 'node', icon: 'laptop', x: 122, y: 168, size: 56, label: 'Development', sub: 'tu computador' },
+    { id: 'e1', type: 'node', icon: 'browser', x: 360, y: 168, size: 56, label: 'Preview', sub: 'ramas y pull requests' },
+    { id: 'e2', type: 'node', icon: 'server', x: 597, y: 168, size: 56, label: 'Production', sub: 'la rama main' },
+    { id: 'v0', type: 'tag', x: 122, y: 262, text: 'API_URL → localhost', hidden: true },
+    { id: 'v1', type: 'tag', x: 360, y: 262, text: 'API_URL → pruebas', hidden: true },
+    { id: 'v2', type: 'tag', x: 597, y: 262, text: 'API_URL → producción', hidden: true },
+  ];
+  var WHO = [
+    { t: 'Corres npm run dev', c: 'Trabajas en tu computador. Las variables de Development se bajan con vercel env pull a .env.local.' },
+    { t: 'Empujas una rama o abres un PR', c: 'Cualquier rama distinta de main crea un despliegue de Preview.' },
+    { t: 'Haces push a main', c: 'La rama de producción crea un despliegue de Production.' },
+  ];
+
+  function build(opt) {
+    var k = opt.where, z = 'z' + k, e = 'e' + k, v = 'v' + k, w = WHO[k];
+    var dim = {}; [0, 1, 2].forEach(function (i) { if (i !== k) { dim['z' + i] = 'dim'; dim['e' + i] = 'dim'; } });
+    var st = Object.assign({}, dim); st[e] = 'ok';
+    return [
+      { phase: 0, title: w.t, focus: ['chg'], text: { chg: w.t }, caption: w.c },
+      { phase: 1, title: 'Vercel elige el entorno', focus: [z, e], state: st, links: [{ from: 'chg', to: e, kind: 'ctl', curve: k === 1 ? 0 : (k === 0 ? -40 : 40) }],
+        caption: 'El entorno depende de dónde corre el código, no de lo que escribiste.' },
+      { phase: 2, title: 'Usa los valores de ese entorno', focus: [e, v], state: st, show: [v], badge: (function () { var b = {}; b[e] = { text: ['Development', 'Preview', 'Production'][k], tone: 'ok', pos: 'top' }; return b; })(),
+        caption: 'Cada variable puede tener un valor distinto por entorno: la misma app se conecta a la API de pruebas en Preview y a la real en Production.' },
+      { phase: 2, title: 'Cambiar una variable no toca lo ya desplegado', focus: [e, v], state: st, show: [v], pulse: [v],
+        caption: 'Los cambios en las variables solo se aplican a los despliegues nuevos. Para ver uno, hay que volver a desplegar.' },
+    ];
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Los tres entornos de Vercel, Development, Preview y Production, y qué valor de la variable API_URL usa cada uno según de dónde proviene el cambio',
+    phases: ['El cambio', 'El entorno', 'Las variables'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 300, items: items, trail: 'step' }); },
+    toggles: [{ key: 'where', type: 'select', label: 'El cambio viene de', options: ['Tu computador', 'Una rama o un PR', 'Push a main'], value: 1, restart: 'first' }],
+    build: build,
+    intro: { kicker: 'Entornos', title: 'Una app, tres entornos', text: 'Vercel separa Development, Preview y Production. Elige de dónde viene el cambio y mira qué entorno y qué valores de las variables se usan.' },
+  });
+})();
+</script>
+</body>
+</html>

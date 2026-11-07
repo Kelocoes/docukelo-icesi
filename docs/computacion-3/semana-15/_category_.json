@@ -1,8 +1,8 @@
 {
-    "label": "S15 - Pruebas E2E con Playwright",
+    "label": "S15 - Pruebas, Despliegue y GraphQL",
     "position": 15,
     "link": {
         "type": "generated-index",
-        "description": "Pruebas end-to-end con Playwright: instalación, configuración, localizadores, auto-espera, sesión en las pruebas, depuración y CI."
+        "description": "Pruebas end-to-end con Playwright en Next.js, despliegue en Vercel con GitHub Actions e introducción a GraphQL."
     }
 }
