@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El schema valida lo que pides y la respuesta tiene tu forma</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Un cliente elige los campos de User; el servidor valida contra el schema y responde con esa forma. Selector: qué se pide. Solo DATOS. */
+(function () {
+  var items = [
+    { id: 'cli', type: 'node', icon: 'browser', x: 75, y: 120, size: 58, label: 'Cliente', sub: 'pide campos' },
+    { id: 'q', type: 'tag', x: 75, y: 205, text: '{ user { name } }', hidden: true },
+    { id: 'srv', type: 'node', icon: 'server', x: 360, y: 120, size: 60, label: 'Servidor GraphQL', sub: 'valida y resuelve' },
+    { id: 'sch', type: 'zone', shape: 'round', x: 245, y: 195, w: 230, h: 98, rx: 14, label: 'Schema de User', anchor: 'middle', lx: 360, ly: 215 },
+    { id: 's1', type: 'tag', x: 290, y: 243, text: 'name', hidden: false },
+    { id: 's2', type: 'tag', x: 360, y: 243, text: 'email', hidden: false },
+    { id: 's3', type: 'tag', x: 430, y: 243, text: 'posts', hidden: false },
+    { id: 'res', type: 'tag', x: 590, y: 262, text: '{ "name": "Ana" }', hidden: true },
+    { id: 'out', type: 'node', icon: 'file', x: 625, y: 120, size: 52, label: 'Respuesta', sub: 'JSON' },
+  ];
+  var OPT = [
+    { q: '{ user { name } }', ok: true, r: '{ "name": "Ana" }', fields: ['s1'] },
+    { q: '{ user { name email } }', ok: true, r: '{ "name": "Ana", "email": "a@x.co" }', fields: ['s1', 's2'] },
+    { q: '{ user { name posts } }', ok: true, r: '{ "name": "Ana", "posts": [...] }', fields: ['s1', 's3'] },
+    { q: '{ user { phone } }', ok: false, r: 'Cannot query field "phone"', fields: [] },
+  ];
+
+  function build(opt) {
+    var o = OPT[opt.q], bad = !o.ok;
+    var s = [
+      { phase: 0, title: 'El cliente escribe su consulta', focus: ['cli', 'q'], show: ['q'], text: { q: o.q },
+        caption: 'Escoge solo los campos de <code>User</code> que necesita. Cambia la opción para probar otros.'.replace(/<\/?code>/g, '') },
+      { phase: 1, title: 'El servidor la valida contra el schema', focus: ['srv', 'sch'].concat(o.fields), show: ['q'], text: { q: o.q }, state: bad ? { srv: 'err' } : { srv: 'ok' },
+        links: [{ from: 'q', to: 'srv', kind: bad ? 'err' : 'ctl', label: 'POST /graphql', curve: -20 }],
+        badge: { srv: { text: bad ? 'campo inexistente' : 'consulta válida', tone: bad ? 'err' : 'ok', pos: 'top' } },
+        caption: bad ? 'El schema no tiene un campo con ese nombre: la consulta se rechaza antes de ejecutar nada.' : 'Todos los campos pedidos existen en el schema: la consulta es válida.' },
+    ];
+    if (bad) {
+      s.push({ phase: 2, title: 'La respuesta es un error', focus: ['srv', 'out', 'res'], show: ['q', 'res'], text: { q: o.q, res: o.r }, state: { srv: 'err', res: 'err' },
+        links: [{ from: 'srv', to: 'out', kind: 'err', label: 'errors' }],
+        caption: 'La respuesta trae un mensaje de error que dice exactamente qué campo no existe. Nadie llegó a la base de datos.' });
+    } else {
+      s.push({ phase: 2, title: 'Se resuelve solo lo pedido', focus: ['srv'].concat(o.fields), show: ['q'], text: { q: o.q }, state: { srv: 'ok' }, pulse: o.fields,
+        caption: 'Cada campo pedido se resuelve con su propia función (resolver). Los campos que no pediste no se calculan.' });
+      s.push({ phase: 2, title: 'La respuesta tiene la forma de la consulta', focus: ['out', 'res'], show: ['q', 'res'], text: { q: o.q, res: o.r }, state: { res: 'ok' },
+        links: [{ from: 'srv', to: 'out', kind: 'ack', label: 'data' }],
+        caption: 'El JSON que vuelve tiene exactamente los campos que pediste, en ese orden y con esa forma.' });
+    }
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Cómo el servidor GraphQL valida la consulta contra el schema, resuelve solo los campos pedidos y devuelve una respuesta con la misma forma, o un error si se pide un campo que no existe',
+    phases: ['La consulta', 'La validación', 'La respuesta'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 310, items: items, trail: 'step' }); },
+    toggles: [{ key: 'q', type: 'select', label: 'El cliente pide', options: OPT.map(function (o) { return o.q; }), value: 0, restart: 'first' }],
+    build: build,
+    intro: { kicker: 'Schema y validación', title: 'Pide solo lo que necesitas', text: 'El schema de User tiene los campos name, email y posts. Elige una consulta y mira cómo la valida el servidor y qué responde.' },
+  });
+})();
+</script>
+</body>
+</html>

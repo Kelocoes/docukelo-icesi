@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El problema N+1 de GraphQL</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Pedir una lista de usuarios con sus posts: un resolver por usuario provoca 1 + N consultas SQL; un DataLoader las agrupa en 2. Deslizador: cuántos usuarios; interruptor: DataLoader. Solo DATOS. */
+(function () {
+  var MAX = 10;
+  var items = [
+    { id: 'q', type: 'node', icon: 'browser', x: 70, y: 105, size: 56, label: 'Consulta', sub: 'users { name posts }' },
+    { id: 'res', type: 'node', icon: 'gear', x: 300, y: 105, size: 58, label: 'Resolvers', sub: 'uno por campo' },
+    { id: 'db', type: 'node', icon: 'database', x: 560, y: 105, size: 58, label: 'Base de datos', sub: 'consultas SQL' },
+    { id: 'cnt', type: 'tag', x: 560, y: 188, text: 'consultas SQL: 0', hidden: true },
+    { id: 'lbl', type: 'zone', shape: 'none', cx: 360, cy: 232, label: 'cada pastilla es una consulta SQL', anchor: 'middle', lx: 360, ly: 232 },
+  ];
+  for (var i = 0; i < MAX + 1; i++) items.push({ id: 'sq' + i, type: 'tag', x: 50 + i * 62, y: 262, text: i === 0 ? 'users' : 'u' + i, hidden: true });
+
+  function ids(n) { var a = []; for (var i = 0; i < n; i++) a.push('sq' + i); return a; }
+
+  function build(opt) {
+    var n = opt.n, batch = !!opt.batch, total = batch ? 2 : 1 + n;
+    var s = [
+      { phase: 0, title: 'Pides ' + n + ' usuarios con sus posts', focus: ['q', 'res'], links: [{ from: 'q', to: 'res', kind: 'ctl', label: 'users { posts }' }],
+        caption: 'Una sola consulta GraphQL, pero detrás cada campo se resuelve con su propia función.' },
+      { phase: 1, title: 'El resolver de users: 1 consulta', focus: ['res', 'db', 'sq0'], show: ['cnt', 'sq0'], text: { cnt: 'consultas SQL: 1' }, links: [{ from: 'res', to: 'db', kind: 'data', label: 'SELECT * FROM users' }],
+        caption: 'Primero se trae la lista de usuarios: una consulta a la base de datos.' },
+    ];
+    if (!batch) {
+      s.push({ phase: 2, title: 'Un resolver de posts por cada usuario', focus: ['res', 'db'].concat(ids(n + 1)), show: ['cnt'].concat(ids(n + 1)), text: { cnt: 'consultas SQL: ' + total }, state: { cnt: n > 4 ? 'err' : 'warn' },
+        links: [{ from: 'res', to: 'db', kind: 'data', label: 'SELECT … WHERE user_id = ?  (x' + n + ')' }],
+        caption: 'El campo <code>posts</code> se resuelve una vez por cada usuario, y cada vez pregunta a la base de datos. Con ' + n + ' usuarios son ' + total + ' consultas.'.replace(/<\/?code>/g, '') });
+      s.push({ phase: 2, title: 'Es el problema N+1', focus: ['cnt'].concat(ids(n + 1)), show: ['cnt'].concat(ids(n + 1)), text: { cnt: '1 + ' + n + ' = ' + total + ' consultas' }, state: { cnt: n > 4 ? 'err' : 'warn' }, pulse: ['cnt'],
+        caption: 'Una consulta para la lista y N para sus relaciones. Crece con cada usuario: con 100 usuarios serían 101 consultas.' });
+    } else {
+      s.push({ phase: 2, title: 'El DataLoader agrupa las peticiones', focus: ['res', 'db', 'sq1'], show: ['cnt', 'sq0', 'sq1'], text: { cnt: 'consultas SQL: 2', sq1: 'posts' }, state: { cnt: 'ok' },
+        links: [{ from: 'res', to: 'db', kind: 'ack', label: 'WHERE user_id IN (…)' }],
+        caption: 'Un DataLoader junta todos los pedidos de posts de la misma ronda y hace una sola consulta con todos los ids.' });
+      s.push({ phase: 2, title: 'Siempre 2 consultas', focus: ['cnt', 'sq0', 'sq1'], show: ['cnt', 'sq0', 'sq1'], text: { cnt: '2 consultas, sin importar N', sq1: 'posts' }, state: { cnt: 'ok' }, pulse: ['cnt'],
+        caption: 'Con ' + n + ' usuarios o con cien, son 2 consultas: una por lista y una por relación.' });
+    }
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'El problema N+1 en GraphQL: con N usuarios se hacen 1 más N consultas a la base de datos, y con un DataLoader solo 2',
+    phases: ['La consulta', 'La lista', 'Las relaciones'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 300, items: items, trail: 'step' }); },
+    toggles: [
+      { key: 'n', type: 'range', label: 'Usuarios', min: 2, max: MAX, step: 1, value: 6, format: function (v) { return v; } },
+      { key: 'batch', label: 'Agrupar con DataLoader', affectsPhase: 2 },
+    ],
+    build: build,
+    intro: { kicker: 'Desventajas de GraphQL', title: 'El problema N+1', text: 'Pedir una lista y, para cada elemento, sus relaciones puede multiplicar las consultas a la base de datos. Cambia el número de usuarios y activa el DataLoader.' },
+  });
+})();
+</script>
+</body>
+</html>

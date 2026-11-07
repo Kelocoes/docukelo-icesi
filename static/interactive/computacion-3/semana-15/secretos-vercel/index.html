@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>De dónde sale cada credencial del despliegue</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  #app .cmx { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+  #app .cm-lines { font-size: 12.5px; }
+  .sv-src { margin: 0 0 8px; padding: 6px 10px; border: 1.5px solid #dfe2e8; border-radius: 8px; background: #f7f7fb; font-size: 12px; line-height: 1.4; }
+  .sv-src b { display: block; font: 700 12.5px ui-monospace, Consolas, monospace; }
+  .sv-src small { display: block; color: #6b6c70; font-size: 11.5px; }
+  .sv-json { margin: 0 0 8px; padding: 6px 10px; border: 1px solid #dfe2e8; border-radius: 8px; background: #fff; font: 12px/1.5 ui-monospace, Consolas, monospace; white-space: pre; }
+  .sv-gh { margin: 0; padding: 6px 10px; border: 1.5px dashed #5454e9; border-radius: 8px; font-size: 12px; text-align: center; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // p1 = token; p2 = id de la organización; p3 = id del proyecto; p4 = pull; p5 = build y deploy.
+  var code = [
+    [['env:', '']],
+    [['  VERCEL_TOKEN:', 'token']],
+    [['    ${{ secrets.VERCEL_TOKEN }}', 'token']],
+    [['  VERCEL_ORG_ID:', 'org']],
+    [['    ${{ secrets.VERCEL_ORG_ID }}', 'org']],
+    [['  VERCEL_PROJECT_ID:', 'proj']],
+    [['    ${{ secrets.VERCEL_PROJECT_ID }}', 'proj']],
+    [['', '']],
+    [['steps:', '']],
+    [['  - uses: actions/checkout@v6', '']],
+    [['  - run: npm i -g vercel@latest', '']],
+    [['  - run: vercel pull --yes', 'pull']],
+    [['      --environment=production', 'pull']],
+    [['  - run: vercel build --prod', 'build']],
+    [['  - run: vercel deploy --prebuilt', 'deploy']],
+    [['      --prod', 'deploy']],
+  ];
+
+  var parts = {
+    token: { label: 'VERCEL_TOKEN', color: 'p1', title: 'El token: la llave de tu cuenta',
+      text: 'Le dice a Vercel que quien ejecuta la CLI eres tú (o una cuenta de servicio). La CLI lo lee de la variable <code>VERCEL_TOKEN</code>; la guía oficial también lo pasa con <code>--token</code>, que tiene prioridad.',
+      bullets: ['Se crea en la página de tokens de tu cuenta de Vercel (o con <code>vercel tokens add</code>).', 'Se muestra <b>una sola vez</b>: cópialo al crearlo.', 'Quien lo tenga puede desplegar en tu nombre: nunca va en el repositorio.'],
+      where: 'Se guarda como <code>VERCEL_TOKEN</code> en los <b>secrets</b> del repositorio.' },
+    org: { label: 'ORG_ID', color: 'p2', title: 'El id de la organización',
+      text: 'Identifica la cuenta o el equipo de Vercel dueño del proyecto. No es un secreto fuerte, pero la CLI lo necesita para no preguntar por él en una máquina sin terminal.',
+      bullets: ['Aparece en <code>.vercel/project.json</code> como <code>orgId</code>.'],
+      where: 'Se copia de <code>.vercel/project.json</code> a un secret.' },
+    proj: { label: 'PROJECT_ID', color: 'p3', title: 'El id del proyecto',
+      text: 'Identifica cuál de tus proyectos de Vercel recibe el despliegue. Con los dos ids la CLI sabe a dónde enviar el resultado sin <code>vercel link</code>.',
+      bullets: ['Aparece en <code>.vercel/project.json</code> como <code>projectId</code>.'],
+      where: 'Se copia de <code>.vercel/project.json</code> a un secret.' },
+    pull: { label: 'vercel pull', color: 'p4', title: 'vercel pull: traer la configuración',
+      text: 'Descarga del proyecto en Vercel las <b>variables de entorno</b> y la configuración del entorno elegido (<code>preview</code> o <code>production</code>) a la carpeta <code>.vercel</code>. Sin esto el build no vería <code>API_URL</code> ni las demás.',
+      where: 'El entorno decide qué valores de las variables se descargan.' },
+    build: { label: 'vercel build', color: 'p5', title: 'vercel build: construir aquí',
+      text: 'Construye la aplicación <b>dentro de la máquina de GitHub Actions</b> y deja el resultado en <code>.vercel/output</code>. <code>--prod</code> usa el modo y las variables de producción.',
+      where: 'El build corre en tu flujo, no en Vercel.' },
+    deploy: { label: 'deploy', color: 'p5', title: 'vercel deploy --prebuilt: solo subir',
+      text: '<code>--prebuilt</code> sube el resultado ya construido. Sin esa bandera, Vercel volvería a construir lo mismo: dos builds por cada commit.',
+      bullets: ['<code>--prod</code> lo publica en el dominio de producción; sin él se crea un despliegue de <i>preview</i>.', 'Imprime la URL del despliegue como salida.'],
+      where: 'El resultado es la URL de tu aplicación.' },
+  };
+
+  function view() {
+    return '' +
+      '<p class="cm-lbl">Dónde se obtiene cada dato</p>' +
+      '<div class="sv-src" data-part="token"><b>VERCEL_TOKEN</b>Cuenta de Vercel &gt; Tokens</div>' +
+      '<div class="sv-json" data-part="org">{ "<span data-part="org">orgId</span>": "team_xxx",\n  "<span data-part="proj">projectId</span>": "prj_xxx" }</div>' +
+      '<div class="sv-src" data-part="proj"><b>.vercel/project.json</b><small>lo crea <code>vercel link</code> en tu computador</small></div>' +
+      '<div class="cm-arrow">↓</div>' +
+      '<p class="sv-gh">GitHub &gt; Settings &gt; Secrets and variables &gt; Actions<br><b>3 secrets</b></p>' +
+      '<div class="cm-arrow">↓</div>' +
+      '<div class="cm-code-sm" data-part="pull">vercel pull → build → deploy</div>';
+  }
+
+  var steps = [
+    { phase: 0, title: 'El token', focus: 'token', caption: 'Es la llave de tu cuenta de Vercel: se crea una vez y se guarda como secret.' },
+    { phase: 0, title: 'El id de la organización', focus: 'org', caption: 'Dice de quién es el proyecto. Sale de .vercel/project.json.' },
+    { phase: 0, title: 'El id del proyecto', focus: 'proj', caption: 'Dice cuál proyecto recibe el despliegue. También sale de .vercel/project.json.' },
+    { phase: 1, title: 'pull: traer variables y configuración', focus: 'pull', caption: 'Trae las variables del entorno desde Vercel para poder construir.' },
+    { phase: 1, title: 'build: construir en Actions', focus: 'build', caption: 'La aplicación se construye en la máquina de GitHub.' },
+    { phase: 1, title: 'deploy --prebuilt: subir lo construido', focus: 'deploy', caption: 'Vercel solo recibe y publica el resultado: no repite el build.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Las tres credenciales del flujo de despliegue en Vercel, de dónde sale cada una, y los cuatro comandos de la CLI que las usan',
+    phases: ['Las credenciales', 'Los comandos'],
+    wide: true,
+    scene: function (svg, stage) { return DK.codemap({ stage: stage, file: 'deploy.yml', code: code, parts: parts, view: view }); },
+    build: function () { return steps; },
+    intro: { kicker: 'Vercel + GitHub Actions', title: 'De dónde sale cada credencial', text: 'El flujo necesita tres secrets y cuatro comandos. Recorre qué es cada uno y de dónde se obtiene, o pasa el mouse por el código.' },
+  });
+})();
+</script>
+</body>
+</html>

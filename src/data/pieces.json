@@ -570,6 +570,16 @@
     "src": "/interactive/computacion-3/semana-14/viaje-del-error/index.html"
   },
   {
+    "id": "computacion-3/semana-15/anatomia-consulta",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "anatomia-consulta",
+    "title": "Anatomía de una consulta GraphQL",
+    "src": "/interactive/computacion-3/semana-15/anatomia-consulta/index.html"
+  },
+  {
     "id": "computacion-3/semana-15/anatomia-test-playwright",
     "course": "computacion-3",
     "courseName": "Computación 3",
@@ -590,6 +600,16 @@
     "src": "/interactive/computacion-3/semana-15/autoespera-playwright/index.html"
   },
   {
+    "id": "computacion-3/semana-15/entornos-vercel",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "entornos-vercel",
+    "title": "Entornos de Vercel y variables de entorno",
+    "src": "/interactive/computacion-3/semana-15/entornos-vercel/index.html"
+  },
+  {
     "id": "computacion-3/semana-15/estructura-playwright",
     "course": "computacion-3",
     "courseName": "Computación 3",
@@ -598,6 +618,16 @@
     "slug": "estructura-playwright",
     "title": "Estructura de un proyecto con Playwright",
     "src": "/interactive/computacion-3/semana-15/estructura-playwright/index.html"
+  },
+  {
+    "id": "computacion-3/semana-15/flujo-cicd-vercel",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "flujo-cicd-vercel",
+    "title": "Del push al despliegue: CI/CD con GitHub Actions y Vercel",
+    "src": "/interactive/computacion-3/semana-15/flujo-cicd-vercel/index.html"
   },
   {
     "id": "computacion-3/semana-15/localizadores-playwright",
@@ -610,6 +640,26 @@
     "src": "/interactive/computacion-3/semana-15/localizadores-playwright/index.html"
   },
   {
+    "id": "computacion-3/semana-15/n-mas-uno",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "n-mas-uno",
+    "title": "El problema N+1 de GraphQL",
+    "src": "/interactive/computacion-3/semana-15/n-mas-uno/index.html"
+  },
+  {
+    "id": "computacion-3/semana-15/pide-lo-que-necesitas",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "pide-lo-que-necesitas",
+    "title": "El schema valida lo que pides y la respuesta tiene tu forma",
+    "src": "/interactive/computacion-3/semana-15/pide-lo-que-necesitas/index.html"
+  },
+  {
     "id": "computacion-3/semana-15/piramide-pruebas",
     "course": "computacion-3",
     "courseName": "Computación 3",
@@ -620,6 +670,16 @@
     "src": "/interactive/computacion-3/semana-15/piramide-pruebas/index.html"
   },
   {
+    "id": "computacion-3/semana-15/rest-vs-graphql",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "rest-vs-graphql",
+    "title": "REST frente a GraphQL: la misma pantalla",
+    "src": "/interactive/computacion-3/semana-15/rest-vs-graphql/index.html"
+  },
+  {
     "id": "computacion-3/semana-15/reutilizar-sesion-playwright",
     "course": "computacion-3",
     "courseName": "Computación 3",
@@ -628,6 +688,16 @@
     "slug": "reutilizar-sesion-playwright",
     "title": "Reutilizar la sesión en las pruebas",
     "src": "/interactive/computacion-3/semana-15/reutilizar-sesion-playwright/index.html"
+  },
+  {
+    "id": "computacion-3/semana-15/secretos-vercel",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "secretos-vercel",
+    "title": "De dónde sale cada credencial del despliegue",
+    "src": "/interactive/computacion-3/semana-15/secretos-vercel/index.html"
   },
   {
     "id": "desarrollo-entornos-digitales-web/semana-12/mapa-navegacion",

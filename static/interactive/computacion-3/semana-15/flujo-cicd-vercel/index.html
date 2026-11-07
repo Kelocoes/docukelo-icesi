@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Del push al despliegue: CI/CD con GitHub Actions y Vercel</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El camino de un cambio: push o pull request, pruebas E2E en GitHub Actions, despliegue en Vercel. Selector: evento; interruptor: fallan las pruebas. Solo DATOS. */
+(function () {
+  var items = [
+    { id: 'dev', type: 'node', icon: 'laptop', x: 65, y: 105, size: 60, label: 'Tu código', sub: 'git push' },
+    { id: 'gh', type: 'node', icon: 'filecode', x: 210, y: 105, size: 56, label: 'GitHub', sub: 'repositorio' },
+    { id: 'ci', type: 'node', icon: 'gear', x: 355, y: 105, size: 60, label: 'Actions', sub: 'pruebas E2E' },
+    { id: 'vc', type: 'node', icon: 'server', x: 500, y: 105, size: 60, label: 'Vercel', sub: 'hosting' },
+    { id: 'url', type: 'node', icon: 'browser', x: 645, y: 105, size: 60, label: 'Usuarios', sub: 'abren la URL' },
+    { id: 'tp', type: 'tag', x: 575, y: 205, text: 'URL de preview (solo para el PR)', hidden: true },
+    { id: 'tpr', type: 'tag', x: 575, y: 205, text: 'producción: tu-app.vercel.app', hidden: true },
+    { id: 'tx', type: 'tag', x: 430, y: 205, text: 'no se despliega nada', hidden: true },
+  ];
+
+  function build(opt) {
+    var prod = opt.evt === 1, fail = !!opt.fail, ev = prod ? 'push a main' : 'pull request';
+    var s = [
+      { phase: 0, title: prod ? 'Alguien hace push a main' : 'Abres un pull request', focus: ['dev', 'gh'], links: [{ from: 'dev', to: 'gh', kind: 'ctl', label: ev }],
+        caption: prod ? 'El código nuevo llega a la rama principal del repositorio.' : 'Tu rama se propone para entrar a main y GitHub lo registra como un pull request.' },
+      { phase: 1, title: 'GitHub dispara el flujo', focus: ['gh', 'ci'], links: [{ from: 'gh', to: 'ci', kind: 'ctl', label: prod ? 'on: push' : 'on: pull_request' }],
+        caption: 'El archivo de .github/workflows dice qué eventos arrancan el flujo: GitHub lo ejecuta en una máquina limpia.' },
+      { phase: 1, title: fail ? 'Una prueba E2E falla' : 'Las pruebas E2E pasan', focus: ['ci'], state: { ci: fail ? 'err' : 'ok' }, badge: { ci: { text: fail ? 'falló' : 'pasaron', tone: fail ? 'err' : 'ok', pos: 'top' } },
+        caption: fail ? 'Playwright detecta que algo del recorrido ya no funciona (por ejemplo, el login).' : 'Playwright recorre el login y las rutas protegidas y todo funciona como se esperaba.' },
+    ];
+    if (fail) {
+      s.push({ phase: 2, title: 'El despliegue se bloquea', focus: ['ci', 'vc'], state: { ci: 'err', vc: 'dim' }, show: ['tx'], links: [{ from: 'ci', to: 'vc', kind: 'err', label: 'needs: test' }],
+        caption: 'El trabajo de despliegue declara needs: test: si el de pruebas falla, no corre.' });
+      s.push({ phase: 3, title: prod ? 'Producción sigue igual' : 'El pull request queda en rojo', focus: ['url'], state: { vc: 'dim', url: 'ok' },
+        caption: prod ? 'Los usuarios siguen viendo la versión anterior, que sí funcionaba. El error se arregla sin que nadie lo haya sufrido.' : 'El PR muestra la ✗ y no hay URL de preview. Arreglas el código y vuelves a empujar.' });
+    } else {
+      s.push({ phase: 2, title: 'Se despliega a Vercel', focus: ['ci', 'vc'], state: { vc: 'ok' }, links: [{ from: 'ci', to: 'vc', kind: 'data', label: 'vercel deploy --prebuilt' }],
+        caption: 'El trabajo de despliegue construye la app y le entrega a Vercel el resultado ya compilado (--prebuilt).' });
+      s.push({ phase: 3, title: prod ? 'La nueva versión está en producción' : 'Hay una URL de preview', focus: ['vc', 'url'], state: { url: 'ok' }, show: [prod ? 'tpr' : 'tp'],
+        links: [{ from: 'vc', to: 'url', kind: 'ack', label: prod ? 'producción' : 'preview' }],
+        caption: prod ? 'El dominio de producción apunta a la versión nueva. Si algo sale mal, Vercel permite volver a la anterior al instante.' : 'Cada pull request tiene su propia URL: puedes revisar el cambio funcionando antes de aprobarlo.' });
+    }
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'El camino de un cambio desde el push hasta el despliegue en Vercel: GitHub Actions ejecuta las pruebas E2E y solo si pasan se despliega, a una URL de preview o a producción',
+    phases: ['El cambio', 'Las pruebas', 'El despliegue', 'El resultado'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 240, items: items, trail: 'step' }); },
+    toggles: [
+      { key: 'evt', type: 'select', label: 'Evento', options: ['Pull request', 'Push a main'], value: 0, restart: 'first' },
+      { key: 'fail', label: 'Fallan las pruebas', affectsPhase: 1 },
+    ],
+    build: build,
+    intro: { kicker: 'CI/CD', title: 'Del push al despliegue', text: 'Sigue un cambio desde tu computador hasta Vercel. Cambia el evento (pull request o push a main) y activa «Fallan las pruebas» para ver qué se bloquea.' },
+  });
+})();
+</script>
+</body>
+</html>

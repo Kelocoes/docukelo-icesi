@@ -27,7 +27,7 @@
     [['  ', ''], ["await page.getByRole('button',", 'click'], [" { name: 'Iniciar sesión' })", 'click']],
     [['    ', ''], ['.click()', 'click']],
     [['  ', ''], ["await expect(page).toHaveURL('/routines')", 'url']],
-    [['  ', ''], ["await expect(page.getByRole('heading',", 'head'], [" { name: 'Mis rutinas' }))", 'head']],
+    [['  ', ''], ["await expect(page.getByRole('heading',", 'head'], [" { name: 'Mis Rutinas' }))", 'head']],
     [['    ', ''], ['.toBeVisible()', 'head']],
     [['})', 'test']],
   ];
@@ -57,7 +57,7 @@
       where: 'A la derecha: la barra de direcciones cambió.' },
     head: { label: 'Assert', color: 'p4', title: 'Comprobar: se ve el contenido',
       text: 'Una prueba que solo mira la URL puede pasar con una página vacía. Comprobar un elemento visible confirma que la pantalla correcta cargó.',
-      where: 'A la derecha: el título «Mis rutinas».' },
+      where: 'A la derecha: el título «Mis Rutinas».' },
   };
 
   function view() {
@@ -68,7 +68,7 @@
         '<div class="cm-chip" data-part="fill1">Correo: ana@icesi.edu.co</div>' +
         '<div class="cm-chip" data-part="fill2">Contraseña: ••••••</div>' +
         '<div class="cm-chip" data-part="click" style="font-weight:700">[ Iniciar sesión ]</div>' +
-        '<div class="cm-chip" data-part="head" style="font-size:1.05em;font-weight:700">Mis rutinas</div>' +
+        '<div class="cm-chip" data-part="head" style="font-size:1.05em;font-weight:700">Mis Rutinas</div>' +
       '</div></div>' +
       '<div class="cm-arrow">↓</div>' +
       '<p class="cm-lbl">Resultado</p>' +
