@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La petición de autenticación en Supabase</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El recorrido completo de la autenticación: registrarse, iniciar sesión y pedir datos con el JWT.
+   Dos interruptores muestran los dos casos que más confunden: el correo sin confirmar y pedir datos sin sesión. Solo DATOS. */
+(function () {
+  var APP = 'app', AUTH = 'auth', API = 'api', DB = 'db';
+  var PHASES = ['signUp()', 'Iniciar sesión', 'Pedir datos'];
+  var msg = function (from, to, label, kind, extra) { var m = { from: from, to: to, label: label, kind: kind }; for (var k in extra) m[k] = extra[k]; return m; };
+
+  function build(opt) {
+    var s = [];
+    var step = function (phase, title, caption, msgs, state) { s.push({ phase: phase, title: title, caption: caption, msgs: msgs, state: state }); };
+
+    // ---- Fase 1: registrarse ----
+    step(0, 'Registrar: signUp()',
+      'La app llama a auth.signUp(email, password). El SDK envía una petición HTTPS a Supabase Auth con la llave publishable; la contraseña viaja cifrada por HTTPS y nunca se guarda en claro.',
+      [msg(APP, AUTH, 'POST /signup', 'ctl')], { app: 'Sin sesión', auth: 'Crea el usuario' });
+    if (opt.confirmar) {
+      step(0, 'Con «Confirm email»: queda pendiente',
+        'El usuario se crea, pero Supabase manda un correo y la respuesta NO trae sesión (response.session es null). Hasta que abra el enlace del correo no podrá iniciar sesión.',
+        [msg(AUTH, APP, 'usuario, sin sesión', 'ack')], { app: 'Sin sesión', auth: 'Correo enviado' });
+    } else {
+      step(0, 'Sin «Confirm email»: entra directo',
+        'Con la confirmación desactivada, la respuesta ya trae la sesión: el usuario queda dentro al registrarse. Es lo más cómodo para practicar en clase.',
+        [msg(AUTH, APP, 'usuario + sesión (JWT)', 'data', { piece: 1 })], { app: 'Con sesión', auth: 'Usuario creado' });
+    }
+
+    // ---- Fase 2: iniciar sesión ----
+    step(1, 'Iniciar sesión: signInWithPassword()',
+      opt.confirmar
+        ? 'Ya con el correo confirmado, la app llama a auth.signInWithPassword(email, password). Auth compara la contraseña con la que guardó (como un hash).'
+        : 'Más tarde, o en otro dispositivo, la app llama a auth.signInWithPassword(email, password). Auth compara la contraseña con la que guardó (como un hash).',
+      [msg(APP, AUTH, 'POST /token', 'ctl')], { app: 'Sin sesión', auth: 'Verifica' });
+    step(1, 'Auth entrega la sesión',
+      'Si coincide, responde con un access_token (el JWT, vale ~1 hora) y un refresh_token. El SDK los guarda en el dispositivo y renueva el JWT solo: la sesión sobrevive aunque cierres la app.',
+      [msg(AUTH, APP, 'access_token (JWT)', 'data', { piece: 2 })], { app: 'Con sesión', auth: 'Sesión emitida' });
+
+    // ---- Fase 3: pedir datos ----
+    if (opt.sinSesion) {
+      step(2, 'Sin sesión: solo la llave',
+        'La app pide los contactos sin haber iniciado sesión. La petición lleva únicamente la llave publishable, así que Postgres la atiende con el rol «anon».',
+        [msg(APP, API, 'GET /contactos (solo apikey)', 'ctl')], { app: 'Sin sesión', api: 'Rol: anon' });
+      step(2, 'RLS compara el rol con la política',
+        'La política de la tabla dice «to authenticated». El rol anon no cumple y Postgres no devuelve ninguna fila.',
+        [msg(API, DB, 'SELECT como anon', 'ctl')], { api: 'Rol: anon', db: 'Política no coincide' });
+      step(2, 'Respuesta: 200 con lista vacía',
+        'Detalle importante: un select bloqueado por RLS NO es un error. La respuesta es 200 con [] y la app solo ve una lista vacía. Si falta sesión, revisa esto antes de culpar a la red.',
+        [msg(DB, API, '0 filas', 'ack'), msg(API, APP, '200 + []', 'err')], { app: 'Lista vacía', db: 'Sin filas' });
+    } else {
+      step(2, 'Con sesión: la llave y el JWT',
+        'Ahora cada petición lleva dos cosas: la llave publishable (apikey) y el JWT en el encabezado Authorization: Bearer. El SDK agrega ambos solo.',
+        [msg(APP, API, 'GET /contactos + JWT', 'ctl')], { app: 'Con sesión', api: 'Lee el JWT' });
+      step(2, 'RLS compara el rol con la política',
+        'PostgREST lee el JWT, ve que el rol es «authenticated» y consulta Postgres con ese rol. La política «to authenticated» coincide: la consulta se permite.',
+        [msg(API, DB, 'SELECT como authenticated', 'ctl')], { api: 'Rol: authenticated', db: 'Política coincide' });
+      step(2, 'Respuesta: 200 con las filas',
+        'Postgres devuelve las filas permitidas y la API responde 200 con el JSON. La misma consulta que antes, pero ahora con identidad.',
+        [msg(DB, API, 'filas', 'ack'), msg(API, APP, '200 + JSON', 'ack')], { app: 'Muestra contactos', db: 'Filas entregadas' });
+    }
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Recorrido de la autenticación en Supabase entre la app Flutter, Supabase Auth, la API REST y Postgres: registro, inicio de sesión con JWT y petición de datos con el rol authenticated',
+    phases: PHASES,
+    scene: function (svg) {
+      return DK.sequence({
+        svg: svg, trayCount: 0, idleState: '—', phases: PHASES, width: 720,
+        actors: [
+          { id: APP, label: 'App Flutter', icon: 'laptop' },
+          { id: AUTH, label: 'Supabase Auth', icon: 'lock' },
+          { id: API, label: 'API REST', icon: 'server' },
+          { id: DB, label: 'Postgres', icon: 'database' },
+        ],
+      });
+    },
+    build: build,
+    toggles: [
+      { key: 'confirmar', label: '«Confirm email» activado', affectsPhase: 0 },
+      { key: 'sinSesion', label: 'Pedir datos sin sesión', affectsPhase: 2 },
+    ],
+    intro: { kicker: 'Supabase Auth', title: 'De signUp() a una consulta con identidad', text: 'Sigue la petición en sus tres momentos: registrarse, iniciar sesión y pedir datos con el JWT. Los dos interruptores muestran los casos que más confunden.' },
+  });
+})();
+</script>
+</body>
+</html>

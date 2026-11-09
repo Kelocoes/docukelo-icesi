@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Un bucket y sus reglas</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Un bucket es una carpeta de primer nivel con reglas: público o privado, tamaño máximo y tipos de archivo permitidos.
+   Se elige un archivo y se ve qué regla lo acepta o lo rechaza. Solo DATOS. */
+(function () {
+  var FILES = [
+    { name: 'foto.png', mime: 'image/png', mb: 0.8, icon: 'file', label: 'foto.png · 0,8 MB' },
+    { name: 'selfie.jpg', mime: 'image/jpeg', mb: 5, icon: 'file', label: 'selfie.jpg · 5 MB' },
+    { name: 'guia.pdf', mime: 'application/pdf', mb: 0.3, icon: 'file', label: 'guia.pdf · 0,3 MB' },
+  ];
+  var items = [
+    { id: 'file', type: 'node', icon: 'file', x: 90, y: 175, size: 60, label: 'Archivo', sub: '…' },
+    { id: 'bucket', type: 'zone', shape: 'round', x: 310, y: 40, w: 390, h: 270, rx: 18, label: 'Bucket «fotos»', sub: 'una carpeta de primer nivel con sus reglas', lx: 330, ly: 66 },
+    { id: 'pub', type: 'tag', x: 405, y: 118, text: 'Público: leer sin sesión' },
+    { id: 'size', type: 'tag', x: 405, y: 170, text: 'Tamaño máximo: 2 MB' },
+    { id: 'mime', type: 'tag', x: 405, y: 222, text: 'Tipos permitidos: image/*' },
+    { id: 'store', type: 'node', icon: 'database', x: 610, y: 190, size: 46, label: 'Guardado', sub: 'queda en el bucket', hidden: true },
+  ];
+
+  function build(opt) {
+    var f = FILES[opt.archivo];
+    var okMime = f.mime.indexOf('image/') === 0, okSize = f.mb <= 2, ok = okMime && okSize;
+    var s = [];
+    s.push({ phase: 0, title: 'Un archivo quiere subirse', focus: ['file'], text: { file: f.name }, sub: { file: f.mime + ' · ' + f.mb.toString().replace('.', ',') + ' MB' },
+      caption: 'Storage guarda cualquier tipo de archivo: imágenes, video, audio, PDF, documentos. El estudiante elige cuál subir; cada archivo trae su tipo (MIME) y su tamaño.' });
+    s.push({ phase: 0, title: 'El bucket: una carpeta con reglas', focus: ['bucket', 'pub'], text: { file: f.name }, sub: { file: f.mime + ' · ' + f.mb.toString().replace('.', ',') + ' MB' },
+      badge: { pub: { text: 'solo lectura abierta', tone: 'ok', pos: 'right', dx: 0 } },
+      caption: 'Todo archivo vive dentro de un bucket. Si es público, cualquiera puede LEER sus archivos con la URL; para subir, cambiar o borrar siguen mandando las políticas RLS.' });
+    s.push({ phase: 1, title: 'Regla 1: el tipo de archivo', focus: ['file', 'mime'], text: { file: f.name }, sub: { file: f.mime + ' · ' + f.mb.toString().replace('.', ',') + ' MB' },
+      state: okMime ? { mime: 'ok' } : { mime: 'err', file: 'err' },
+      links: [{ from: 'file', to: 'mime', kind: okMime ? 'ack' : 'err', label: f.mime, curve: -20 }],
+      caption: okMime
+        ? f.mime + ' encaja con image/*: pasa la primera regla.'
+        : f.mime + ' no encaja con image/*. Storage rechaza la subida con error 415 (tipo no permitido).' });
+    s.push({ phase: 1, title: 'Regla 2: el tamaño', focus: ['file', 'size'], text: { file: f.name }, sub: { file: f.mime + ' · ' + f.mb.toString().replace('.', ',') + ' MB' },
+      state: okSize ? { size: 'ok', mime: okMime ? 'ok' : 'err' } : { size: 'err', file: 'err', mime: okMime ? 'ok' : 'err' },
+      links: [{ from: 'file', to: 'size', kind: okSize ? 'ack' : 'err', label: f.mb.toString().replace('.', ',') + ' MB', curve: 20 }],
+      caption: okSize
+        ? 'Pesa ' + f.mb.toString().replace('.', ',') + ' MB, por debajo del límite de 2 MB del bucket (el plan gratuito permite hasta 50 MB por archivo en total).'
+        : 'Pesa 5 MB y el bucket admite 2 MB: Storage rechaza la subida con error 413 (archivo demasiado grande).' });
+    s.push({ phase: 1, title: ok ? 'Resultado: subida aceptada' : 'Resultado: subida rechazada', focus: ['bucket'], show: ok ? ['store'] : [],
+      text: { file: f.name }, sub: { file: f.mime + ' · ' + f.mb.toString().replace('.', ',') + ' MB' },
+      state: ok ? { store: 'ok', file: 'ok' } : { file: 'err' },
+      links: ok ? [{ from: 'file', to: 'store', kind: 'ack', label: '200 · guardado', curve: 0 }] : [],
+      caption: ok
+        ? 'Cumplió las dos reglas y además la política de subida lo permite: el archivo queda guardado y ya se puede pedir por su URL.'
+        : 'Las reglas del bucket protegen tu almacenamiento: un PDF o una foto enorme nunca llegan a guardarse. En la app, el error llega como StorageException con un mensaje y un código de estado.' });
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Un archivo se compara con las reglas de un bucket público: tipo permitido image/* y tamaño máximo de 2 MB; según el archivo elegido la subida se acepta o se rechaza con 415 o 413',
+    phases: ['El bucket', 'Las reglas'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 340, trail: 'step', items: items }); },
+    toggles: [{ key: 'archivo', type: 'select', label: 'Archivo', options: FILES.map(function (f) { return f.label; }), value: 0, restart: 'first' }],
+    build: build,
+    intro: { kicker: 'Storage', title: 'Qué es un bucket y qué acepta', text: 'Elige un archivo y mira qué reglas del bucket lo aceptan o lo rechazan: tipo permitido y tamaño máximo.' },
+  });
+})();
+</script>
+</body>
+</html>

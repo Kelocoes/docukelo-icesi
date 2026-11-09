@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Subir una foto y mostrarla</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El ciclo completo de una foto de contacto: subirla a Storage (con sesión), guardar su ruta en la tabla, y después
+   leer la ruta, construir la URL pública y pedir la imagen sin llave. El interruptor quita la política de subida. Solo DATOS. */
+(function () {
+  var APP = 'app', ST = 'st', DB = 'db';
+  var PHASES = ['Subir', 'Guardar ruta', 'Mostrar'];
+  var msg = function (from, to, label, kind, extra) { var m = { from: from, to: to, label: label, kind: kind }; for (var k in extra) m[k] = extra[k]; return m; };
+
+  function build(opt) {
+    var s = [];
+    var step = function (phase, title, caption, msgs, state) { s.push({ phase: phase, title: title, caption: caption, msgs: msgs, state: state }); };
+
+    step(0, 'La app tiene los bytes de la foto',
+      'El usuario elige una imagen con image_picker y la app lee sus bytes (readAsBytes). Todavía no hay red: la foto solo existe en el teléfono.',
+      [], { app: 'Foto en memoria' });
+    step(0, 'uploadBinary(): subir a Storage',
+      'La app llama a storage.from(\'fotos\').uploadBinary(ruta, bytes). El SDK envía una petición POST con el JWT del usuario y el archivo en el cuerpo.',
+      [msg(APP, ST, 'POST /object/fotos/…', 'data', { piece: 1 })], { app: 'Subiendo', st: 'Recibe el archivo' });
+    if (opt.sinPolitica) {
+      step(0, 'Sin política de subida: 403',
+        'Storage revisa la política de INSERT sobre storage.objects. Como no existe una para este bucket, rechaza: «new row violates row-level security policy». Un bucket público abre la lectura, no la escritura.',
+        [msg(ST, APP, '403 · RLS', 'err')], { app: 'StorageException', st: 'Rechazado' });
+      step(0, 'Qué hacer', 'Crear la política «to authenticated with check (bucket_id = \'fotos\')» en Storage › Policies (o con SQL). Activa el interruptor otra vez para ver el recorrido completo.',
+        [], { app: 'Sin foto', st: 'Esperando política' });
+      return s;
+    }
+    step(0, 'La política de subida deja pasar',
+      'Storage revisa la política de INSERT: el usuario está autenticado y el bucket es «fotos», así que se permite. Los bytes se guardan en el bucket.',
+      [msg(ST, APP, '200 · { path }', 'ack')], { app: 'Subida lista', st: 'Guardado en fotos' });
+
+    step(1, 'La ruta se guarda en la tabla',
+      'La foto ya está en Storage, pero la tabla no lo sabe. La app actualiza el contacto con foto_path = \'contactos/ana.png\' (una sola columna de texto). Se guarda la ruta, no la imagen.',
+      [msg(APP, DB, 'update foto_path', 'ctl')], { app: 'Guardando ruta', db: 'foto_path = ruta' });
+    step(1, 'El contacto queda con su foto',
+      'Postgres confirma. Los datos y el archivo viven en sitios distintos y los une una ruta: ese es el patrón de Storage.',
+      [msg(DB, APP, 'ok', 'ack')], { app: 'Contacto actualizado', db: 'Fila con ruta' });
+
+    step(2, 'Más tarde: leer el contacto',
+      'Cuando la app abre la lista, pide los contactos como siempre. Cada fila trae su foto_path.',
+      [msg(APP, DB, 'select()', 'ctl'), msg(DB, APP, 'filas + foto_path', 'ack')], { app: 'Tiene la ruta', db: 'Entrega filas' });
+    step(2, 'getPublicUrl(): construir la URL',
+      'getPublicUrl(ruta) NO usa la red: solo arma el texto https://<proyecto>.supabase.co/storage/v1/object/public/fotos/<ruta>. Por eso es instantáneo.',
+      [], { app: 'URL armada', st: '—' });
+    step(2, 'Image.network(): pedir la imagen',
+      'Image.network descarga la imagen con un GET normal. En un bucket público no hace falta llave ni sesión: la URL basta (por eso cualquiera con la URL puede verla).',
+      [msg(APP, ST, 'GET /object/public/fotos/…', 'ctl')], { app: 'Descargando', st: 'Sirve el archivo' });
+    step(2, 'La foto aparece en pantalla',
+      'Storage responde 200 con el archivo y Flutter lo dibuja. Ciclo completo: subir (con sesión), guardar la ruta, leerla y mostrar la imagen (sin llave).',
+      [msg(ST, APP, '200 · image/png', 'ack')], { app: 'Foto en pantalla', st: 'Entregado' });
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Ciclo de una foto de contacto con Supabase Storage entre la app Flutter, Storage y Postgres: subir con uploadBinary, guardar la ruta en la tabla, y luego leer la ruta, construir la URL pública y mostrar la imagen con Image.network',
+    phases: PHASES,
+    scene: function (svg) {
+      return DK.sequence({
+        svg: svg, trayCount: 0, idleState: '—', phases: PHASES, width: 720,
+        actors: [
+          { id: APP, label: 'App Flutter', icon: 'laptop' },
+          { id: ST, label: 'Supabase Storage', icon: 'bag' },
+          { id: DB, label: 'Postgres', icon: 'database' },
+        ],
+      });
+    },
+    build: build,
+    toggles: [{ key: 'sinPolitica', label: 'Sin política de subida', affectsPhase: 0 }],
+    intro: { kicker: 'Supabase Storage', title: 'De la galería a la pantalla', text: 'Sigue una foto de contacto: se sube a Storage, se guarda su ruta en la tabla y después se muestra. El interruptor quita la política de subida para ver el error más común.' },
+  });
+})();
+</script>
+</body>
+</html>

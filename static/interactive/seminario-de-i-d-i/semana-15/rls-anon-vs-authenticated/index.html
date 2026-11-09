@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RLS: de anon a authenticated</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* La política dice a qué ROL se aplica; la petición llega con el rol que le da su sesión. Dos selectores (sesión y política)
+   producen cuatro combinaciones; la que sorprende es «con sesión + política to anon»: iniciar sesión te quita el rol anon. Solo DATOS. */
+(function () {
+  var items = [
+    { id: 'app', type: 'node', icon: 'laptop', x: 80, y: 175, size: 64, label: 'App Flutter', sub: 'pide los contactos' },
+    { id: 'role', type: 'tag', x: 80, y: 262, text: 'rol: …', hidden: true },
+    { id: 'rls', type: 'node', icon: 'lock', x: 330, y: 175, size: 64, label: 'Política RLS', sub: 'to …' },
+    { id: 'tbl', type: 'node', icon: 'database', x: 575, y: 175, size: 60, label: 'contactos', sub: 'Ana · Luis' },
+    { id: 'res', type: 'tag', x: 575, y: 262, text: '…', hidden: true },
+  ];
+
+  function build(opt) {
+    var conSesion = opt.sesion === 1, polAuth = opt.politica === 1;
+    var rol = conSesion ? 'authenticated' : 'anon';
+    var pol = polAuth ? 'authenticated' : 'anon';
+    var pasa = rol === pol;
+    var s = [];
+    s.push({ phase: 0, title: 'La petición lleva un rol', focus: ['app', 'role'], show: ['role'],
+      text: { role: 'rol: ' + rol },
+      links: [{ from: 'app', to: 'rls', kind: 'ctl', label: 'GET /contactos' }],
+      caption: conSesion
+        ? 'Con la sesión iniciada, la petición lleva el JWT del usuario y Postgres la atiende con el rol «authenticated».'
+        : 'Sin sesión, la petición solo lleva la llave publishable y Postgres la atiende con el rol «anon».' });
+    s.push({ phase: 0, title: 'La política dice a qué rol se aplica', focus: ['rls'], show: ['role'],
+      text: { role: 'rol: ' + rol }, sub: { rls: 'to ' + pol },
+      badge: { rls: { text: 'create policy … to ' + pol, tone: 'ctl', pos: 'bottom' } },
+      caption: 'Cada política se escribe «to <rol>». Es una regla para ese rol y para ningún otro: la política creada en la semana 14 era «to anon».' });
+    s.push({ phase: 1, title: pasa ? '¿Coincide? Sí' : '¿Coincide? No', focus: ['role', 'rls'], show: ['role'],
+      text: { role: 'rol: ' + rol }, sub: { rls: 'to ' + pol },
+      state: pasa ? { rls: 'ok', role: 'ok' } : { rls: 'err', role: 'err' },
+      badge: { rls: { text: rol + (pasa ? ' = ' : ' ≠ ') + pol, tone: pasa ? 'ok' : 'err', pos: 'bottom' } },
+      links: [{ from: 'app', to: 'rls', kind: pasa ? 'ack' : 'err', label: pasa ? 'rol válido' : 'rol distinto' }],
+      caption: pasa
+        ? 'El rol de la petición es el mismo de la política: la política aplica y deja pasar la consulta.'
+        : 'El rol de la petición no es el de la política: para Postgres es como si esa política no existiera, y sin otra política que aplique, la consulta no ve nada.' });
+    s.push({ phase: 1, title: pasa ? 'Resultado: llegan las dos filas' : 'Resultado: lista vacía, sin error', focus: ['tbl', 'res'], show: ['role', 'res'],
+      text: { role: 'rol: ' + rol, res: pasa ? '200 · 2 filas' : '200 · []' }, sub: { rls: 'to ' + pol },
+      state: pasa ? { tbl: 'ok', res: 'ok' } : { tbl: 'err', res: 'err' },
+      links: [{ from: 'rls', to: 'tbl', kind: pasa ? 'ack' : 'err', label: pasa ? 'permitido' : 'bloqueado' }],
+      caption: !pasa && conSesion && !polAuth
+        ? 'El tropiezo típico tras la semana 14: las políticas seguían en «to anon» y, al iniciar sesión, el usuario dejó de ser anon. La lista queda vacía aunque haya contactos. Hay que cambiar la política a «to authenticated».'
+        : !pasa
+          ? 'Un select bloqueado por RLS no lanza error: responde 200 con una lista vacía. Por eso «no me llegan datos» suele ser un tema de política o de sesión, no de red.'
+          : (conSesion
+            ? 'Con sesión y política «to authenticated» la consulta funciona. Solo quien haya iniciado sesión puede leer: el visitante anónimo ya no.'
+            : 'Funciona, pero cualquiera con la llave publishable (que va dentro de la app) puede leer y escribir. Sirve para una demo, no para una app real.') });
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Una petición llega con el rol anon o authenticated según tenga sesión; la política RLS se aplica solo al rol que nombra, y si no coincide la consulta devuelve una lista vacía',
+    phases: ['La petición', 'La decisión'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 340, trail: 'step', items: items }); },
+    toggles: [
+      { key: 'sesion', type: 'select', label: 'Usuario', options: ['Sin sesión (anon)', 'Con sesión (authenticated)'], value: 1, restart: 'first' },
+      { key: 'politica', type: 'select', label: 'La política dice', options: ['to anon', 'to authenticated'], value: 0, restart: 'first' },
+    ],
+    build: build,
+    intro: { kicker: 'Row Level Security', title: 'Por qué la lista queda vacía al iniciar sesión', text: 'Combina un usuario con o sin sesión y una política «to anon» o «to authenticated». Empieza por la que sorprende: con sesión y política «to anon».' },
+  });
+})();
+</script>
+</body>
+</html>

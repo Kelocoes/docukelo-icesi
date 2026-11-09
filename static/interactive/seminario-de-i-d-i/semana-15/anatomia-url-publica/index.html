@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Las partes de una URL de Storage</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-anatomy.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Las partes de la URL de un archivo de Storage: qué proyecto, qué servicio, si es pública, qué bucket y qué ruta.
+   Un interruptor muestra cómo cambia con un bucket privado (URL firmada con token). Solo DATOS. */
+(function () {
+  var PARTS = {
+    host:   { label: 'Tu proyecto',     color: 'p1' },
+    svc:    { label: 'Servicio Storage', color: 'p2' },
+    vis:    { label: 'Pública o firmada', color: 'p3' },
+    bucket: { label: 'Bucket',           color: 'p4' },
+    path:   { label: 'Ruta del archivo', color: 'p5' },
+    token:  { label: 'Token',            color: 'p3' },
+  };
+
+  function build(opt) {
+    var priv = opt.privado;
+    var doc = [
+      [['https://tu-proyecto.supabase.co', 'host']],
+      [['/storage/v1/object', 'svc'], [priv ? '/sign' : '/public', 'vis']],
+      [['/fotos', 'bucket']],
+      [['/contactos/ana.png', 'path']],
+    ];
+    if (priv) doc.push([['?token=eyJhbGciOi…', 'token']]);
+    var step = function (phase, title, caption, focus, callout, msgs) { return { phase: phase, title: title, caption: caption, doc: doc, focus: focus, callout: callout, msgs: msgs || [] }; };
+
+    var steps = [
+      step(0, 'Cada archivo tiene su propia dirección',
+        priv ? 'Un bucket privado también da una URL, pero con un token temporal.' : 'Un archivo de un bucket público tiene una URL fija que cualquiera puede abrir.', null,
+        { text: priv
+            ? 'La URL firmada (createSignedUrl) caduca: el token dice quién la pidió y por cuánto tiempo sirve. No es lo que usamos hoy.'
+            : 'Esta es la URL que devuelve getPublicUrl(). Está formada por partes con un orden fijo. Puedes pegarla en el navegador y ver la imagen, sin llave ni sesión.' }),
+      step(1, 'Tu proyecto', 'El subdominio identifica tu proyecto de Supabase.', 'host',
+        { text: 'Es la misma URL base que le pasaste a Supabase.initialize. Cada proyecto tiene la suya.', examples: ['https://<id-del-proyecto>.supabase.co'] }),
+      step(1, 'Servicio Storage', 'Esta parte dirige la petición al módulo de archivos.', 'svc',
+        { text: 'La API REST de la base de datos vive en /rest/v1; la de archivos, en /storage/v1. Es la señal de que se trata de un archivo y no de una tabla.', examples: ['/rest/v1: la base de datos', '/storage/v1: los archivos'] }),
+      step(1, priv ? 'Firmada' : 'Pública', priv ? 'Un bucket privado necesita un permiso temporal.' : 'Esta palabra es la que hace pública la lectura.', 'vis',
+        { text: priv
+            ? '«sign» indica una URL firmada: solo funciona con su token, mientras no caduque.'
+            : '«public» indica que se pide un archivo de un bucket público: no se revisa ninguna sesión. Si el bucket no es público, esta URL responde 400.',
+          examples: priv ? ['/sign + ?token=…: privado y temporal'] : ['/public: lectura abierta', '/sign: privado, con token'] }),
+      step(1, 'Bucket', 'El primer nombre después de la visibilidad es el bucket.', 'bucket',
+        { text: 'Es el nombre que le pusiste al crearlo («fotos»). No se puede cambiar después. Un proyecto puede tener varios buckets, cada uno con sus reglas.', examples: ['fotos', 'documentos', 'avatares'] }),
+      step(1, 'Ruta del archivo', 'Lo que sigue es la ruta dentro del bucket.', 'path',
+        { text: 'Las «carpetas» son parte del nombre del archivo: contactos/ana.png es un solo objeto cuyo nombre incluye una barra. Es la misma ruta que guardas en foto_path.', examples: ['contactos/ana.png', 'Evita espacios y tildes en los nombres'] }),
+    ];
+    if (priv) steps.push(step(1, 'Token', 'El token es el permiso temporal.', 'token',
+      { text: 'Lo genera createSignedUrl(ruta, segundos). Cuando se vence, la URL deja de funcionar y hay que pedir otra.', examples: ['createSignedUrl(\'contactos/ana.png\', 60)'] }));
+    steps.push(step(2, 'Todo junto', 'Con estas partes siempre puedes reconstruir la URL.', null,
+      { text: 'getPublicUrl(\'contactos/ana.png\') hace exactamente eso: concatena el proyecto, el servicio, «public», el bucket y la ruta. Por eso guardamos solo la ruta en la tabla y la URL se arma al mostrar.' }));
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Anatomía de la URL de un archivo de Supabase Storage: proyecto, servicio de storage, pública o firmada, bucket y ruta del archivo',
+    phases: ['La URL', 'Sus partes', 'Resumen'],
+    scene: function (svg, stage) { return DK.anatomy({ stage: stage, parts: PARTS, clientLabel: 'App Flutter', serverLabel: 'Storage' }); },
+    build: build,
+    toggles: [{ key: 'privado', label: 'Ver un bucket privado', affectsPhase: 0 }],
+    intro: { kicker: 'Supabase Storage', title: 'Cómo se lee una URL de archivo', text: 'Una URL pública está hecha de cinco partes. Enfócalas una a una y compara con la de un bucket privado.' },
+  });
+})();
+</script>
+</body>
+</html>

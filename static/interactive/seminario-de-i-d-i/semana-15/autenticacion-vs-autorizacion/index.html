@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Autenticación frente a autorización</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Dos preguntas distintas, dos puertas: la autenticación (¿quién eres?) y la autorización (¿qué puedes hacer?).
+   Una selección de quién llega cambia lo que ocurre en cada puerta. Solo DATOS. */
+(function () {
+  var items = [
+    { id: 'user', type: 'node', icon: 'user', x: 70, y: 170, size: 64, label: 'Quien llega', sub: 'la app con un usuario' },
+    { id: 'authn', type: 'node', icon: 'lock', x: 270, y: 170, size: 64, label: 'Autenticación', sub: '¿quién eres?' },
+    { id: 'authz', type: 'node', icon: 'filter', x: 470, y: 170, size: 64, label: 'Autorización', sub: '¿qué puedes hacer?' },
+    { id: 'mine', type: 'node', icon: 'database', x: 655, y: 95, size: 52, lp: 'below', label: 'Sus contactos', sub: 'filas de Ana' },
+    { id: 'other', type: 'node', icon: 'database', x: 655, y: 250, size: 52, lp: 'below', label: 'Contactos de otro', sub: 'filas de Luis' },
+    { id: 'tok', type: 'tag', x: 370, y: 112, text: 'sesión + JWT', hidden: true },
+  ];
+
+  function build(opt) {
+    var ana = opt.quien === 0;
+    var s = [];
+    s.push({ phase: 0, title: 'Alguien llega a la app', solo: true, focus: ['user'],
+      caption: ana
+        ? 'Ana ya tiene una cuenta. Todavía nadie sabe que es ella: la app solo ve a «alguien» que quiere entrar.'
+        : 'Un visitante abre la app. No tiene cuenta ni ha demostrado nada: para el sistema es un anónimo.' });
+    s.push({ phase: 0, title: 'Autenticación: demostrar quién eres', focus: ['user', 'authn'],
+      state: ana ? { authn: 'ok' } : { authn: 'err' },
+      links: [{ from: 'user', to: 'authn', kind: ana ? 'ctl' : 'err', label: ana ? 'correo + contraseña' : 'sin credenciales' }],
+      badge: { authn: ana ? { text: 'identidad confirmada', tone: 'ok', pos: 'bottom' } : { text: 'anónimo', tone: 'err', pos: 'bottom' } },
+      show: ana ? ['tok'] : [],
+      caption: ana
+        ? 'Autenticar es comprobar la identidad: Ana envía su correo y contraseña y Supabase Auth se lo confirma. A cambio le entrega una sesión con un JWT (el «carné»).'
+        : 'Sin credenciales no hay identidad que confirmar. El visitante sigue siendo anónimo: en Supabase se le trata como el rol «anon».' });
+    s.push({ phase: 1, title: 'Autorización: qué le dejan hacer', focus: ['authn', 'authz'],
+      state: ana ? { authz: 'ok' } : { authz: 'warn' },
+      links: [{ from: 'authn', to: 'authz', kind: ana ? 'data' : 'ctl', label: ana ? 'carné (JWT)' : 'rol: anon' }],
+      badge: { authz: ana ? { text: 'rol: authenticated', tone: 'ok', pos: 'bottom' } : { text: 'rol: anon', tone: 'warn', pos: 'bottom' } },
+      caption: 'Autorizar es decidir qué puede hacer una identidad ya conocida. En Supabase lo deciden las políticas RLS de cada tabla, que miran el rol y el id del usuario en el carné.' });
+    s.push({ phase: 1, title: 'El resultado depende de la política', focus: ['authz', 'mine', 'other'],
+      state: ana ? { mine: 'ok', other: 'err' } : { mine: 'err', other: 'err' },
+      links: ana
+        ? [{ from: 'authz', to: 'mine', kind: 'ack', label: 'permitido' }, { from: 'authz', to: 'other', kind: 'err', label: 'bloqueado' }]
+        : [{ from: 'authz', to: 'mine', kind: 'err', label: 'bloqueado' }, { from: 'authz', to: 'other', kind: 'err', label: 'bloqueado' }],
+      caption: ana
+        ? 'Ana está autenticada y además autorizada para sus propias filas, pero no para las de Luis. Tener sesión no significa poder hacerlo todo.'
+        : 'Sin sesión, la política `to authenticated` no se cumple y no ve ninguna fila. Es la pareja completa: primero saber quién eres, después decidir qué te toca.' });
+    s.push({ phase: 1, title: 'Una idea para llevarse', solo: true, focus: ['authn', 'authz'],
+      caption: 'Autenticación = identidad (Supabase Auth: registro e inicio de sesión). Autorización = permisos (RLS: qué filas y archivos ve cada quien). Son dos mecanismos distintos y se necesitan los dos.' });
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Autenticación y autorización como dos puertas: la primera confirma quién eres y entrega una sesión, la segunda decide qué filas puedes ver según tu rol',
+    phases: ['Autenticación', 'Autorización'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 340, trail: 'step', items: items }); },
+    toggles: [{ key: 'quien', type: 'select', label: 'Quién llega', options: ['Ana, con cuenta', 'Visitante sin cuenta'], value: 0, restart: 'first' }],
+    build: build,
+    intro: { kicker: 'Seguridad', title: 'Dos preguntas, dos puertas', text: 'Elige quién llega y recorre la autenticación («¿quién eres?») y la autorización («¿qué puedes hacer?»).' },
+  });
+})();
+</script>
+</body>
+</html>
