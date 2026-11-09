@@ -36,6 +36,13 @@ Cada patrón dice cuándo usarlo, qué módulo del kit lo resuelve y qué pieza 
 | Historial del navegador (pila con puntero) | Cómo crece la pila de páginas al navegar, qué mueven Atrás y Adelante, cuándo se descarta lo de adelante y qué cambia con `replace` (React Router, `history`) | `dk-history.js` + `dk-player.js` | Hecho | `computacion-2/semana-15/historial-navegacion/` |
 | Sitio clásico frente a SPA | Qué se le pide al servidor en cada clic cuando hay un HTML por URL frente a una SPA con un router (y por qué al recargar hay que devolver `index.html`) | `dk-compare.js` + `dk-sequence.js` (`trayCount: 0`) | Hecho | `computacion-2/semana-15/spa-vs-multipagina/` |
 | Configuración <-> pantalla | Una configuración (rutas anidadas, URL con parámetros) y lo que produce para cada caso, con `focus` por parte | `dk-codemap.js` con `view()` propio | Hecho | `computacion-2/semana-15/rutas-anidadas/`, `params-url/` |
+| Dos puertas (identidad y permisos) | Autenticación frente a autorización: quién eres y qué puedes hacer, con un selector de quién llega | `dk-canvas.js` + selector (`restart: 'first'`) | Hecho | `seminario-de-i-d-i/semana-15/autenticacion-vs-autorizacion/` |
+| Módulos detrás de un cliente | Qué ofrece una plataforma (Supabase: Database, Auth, Storage…), cómo se usa cada módulo desde el SDK y qué se configura | `dk-canvas.js` (iconos con `lp: 'right'`, `state: dim` para los demás) | Hecho | `seminario-de-i-d-i/semana-15/modulos-supabase/` |
+| Recorrido de autenticación con casos | Registro, inicio de sesión con JWT y petición con rol; interruptores para «Confirm email» y «sin sesión» | `dk-sequence.js` (4 actores, `trayCount: 0`) con `kind: 'err'` | Hecho | `seminario-de-i-d-i/semana-15/peticion-auth/` |
+| Rol de la petición frente a política | Dos selectores (sesión, política) y el resultado de cada combinación; destaca la combinación que sorprende | `dk-canvas.js` con dos selectores | Hecho | `seminario-de-i-d-i/semana-15/rls-anon-vs-authenticated/` |
+| Reglas de un contenedor | Un archivo se compara con las reglas de un bucket (tipo, tamaño) y se acepta o se rechaza con su código de error | `dk-canvas.js` con zona `round` y selector de archivo | Hecho | `seminario-de-i-d-i/semana-15/bucket-reglas/` |
+| Ciclo de un archivo (subir, guardar ruta, mostrar) | El archivo va a un servicio y la tabla guarda solo su ruta; interruptor que quita la política de subida | `dk-sequence.js` (3 actores) | Hecho | `seminario-de-i-d-i/semana-15/subir-y-mostrar/` |
+| Partes de una URL | Qué parte de una URL es el proyecto, el servicio, el bucket y la ruta; interruptor para la variante privada | `dk-anatomy.js` (sin `code`) | Hecho | `seminario-de-i-d-i/semana-15/anatomia-url-publica/` |
 | Estado de un componente (un clic) | Qué ejecuta React al llamar a `setState` y qué cambia en el DOM; dos copias con estado propio | `dk-dom.js` (modo componentes + pestaña «Código») | Hecho | `computacion-2/semana-15/usestate-actualiza/` |
 | Foto y cola de actualizaciones | `setState` como instrucciones en una cola frente a la foto del render (`setCount(count + 1)` x3 frente a la forma funcional) con interruptor | `dk-canvas.js` (`tag` ocultos por variante) + `code` función | Hecho | `computacion-2/semana-15/usestate-instantanea/` |
 | Efecto y dependencias | Cuándo corre y cuándo se limpia un `useEffect` según el arreglo de dependencias (selector `[x]`, `[]`, sin arreglo) | `dk-sequence.js` + selector + `code` función | Hecho | `computacion-2/semana-15/useeffect-dependencias/` |
@@ -231,3 +238,22 @@ Cada patrón dice cuándo usarlo, qué módulo del kit lo resuelve y qué pieza 
 - **Cuándo:** un objeto de configuración (rutas, URL) produce resultados distintos según el caso y el estudiante debe ver la correspondencia parte por parte.
 - **Estructura:** el código a la izquierda con 5 a 8 partes de color; a la derecha, **una tarjeta por caso** (`/`, `/productos`, `/productos/42`) con las mismas `data-part`, de modo que enfocar `index` ilumina el código y la tarjeta que lo usa. El hueco de un `<Outlet />` se dibuja con borde punteado.
 - **Ajustes de la pieza:** si el código tiene líneas largas, `#app .cmx { grid-template-columns: 1.55fr 1fr }` y `#app .cm-lines { font-size: 12.5px }` (con `#app` porque el kit inyecta su CSS después). Mantener las líneas en <= 40 caracteres.
+
+## Ficha del patrón "Dos selectores que producen un resultado" (`DK.canvas`, RLS)
+
+- **Cuándo:** el resultado depende de la **combinación** de dos decisiones (el rol de la petición y el rol de la política) y una de las combinaciones es la que sorprende (iniciar sesión deja la lista vacía).
+- **Estructura que funcionó:** 5 elementos (la app con una pastilla `rol: …`, la política, la tabla y una pastilla de resultado `hidden`), 4 pasos en 2 fases (La petición, La decisión) y dos `select` con `restart: 'first'`. `build(opt)` calcula `pasa = rol === politica` y arma los textos: el último paso cambia de leyenda según el caso.
+- **Cuidado:** valor inicial del selector en la combinación que sorprende (`sesion: 1`, `politica: 0`): es lo primero que ve el estudiante.
+- **Ejemplo real:** `seminario-de-i-d-i/semana-15/rls-anon-vs-authenticated`.
+
+## Ficha del patrón "Recorrido con interruptores de casos" (`DK.sequence`)
+
+- **Cuándo:** un flujo con tres momentos y dos casos que confunden (registro con correo sin confirmar, petición sin sesión). Cada interruptor usa `affectsPhase` para volver al inicio de su fase.
+- **Estructura:** 4 actores con `icon` (`laptop`, `lock`, `server`, `database`), 3 fases con nombre de ≤ 14 caracteres, `kind: 'err'` para el 200 con lista vacía (llega, pero es el resultado inesperado).
+- **Ejemplos reales:** `seminario-de-i-d-i/semana-15/peticion-auth`, `subir-y-mostrar` (con el interruptor «Sin política de subida», que corta el flujo en el paso 3 y devuelve `steps` antes de las fases siguientes).
+
+## Ficha del patrón "Archivo frente a reglas" (`DK.canvas` con zona `round`)
+
+- **Cuándo:** hay reglas independientes (tipo, tamaño) y un elemento de entrada que las cumple o no.
+- **Estructura:** el archivo a la izquierda, una zona `round` con una pastilla (`tag`) por regla y un nodo `hidden` de resultado; un paso por regla con `state: ok | err` y una flecha `ack | err` con `curve` para que no cruce la pastilla vecina. Selector con 3 archivos: uno que pasa y uno que falla por cada regla.
+- **Ejemplo real:** `seminario-de-i-d-i/semana-15/bucket-reglas`.

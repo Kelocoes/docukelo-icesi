@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Los módulos de Supabase</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Un proyecto de Supabase es varios módulos detrás de un mismo cliente. La app solo configura dos datos (URL y llave) y
+   cada módulo se usa desde una propiedad del cliente. Solo DATOS. */
+(function () {
+  var items = [
+    { id: 'app', type: 'node', icon: 'laptop', x: 70, y: 170, size: 64, label: 'Tu app Flutter', sub: 'supabase_flutter' },
+    { id: 'cfg', type: 'tag', x: 70, y: 262, text: 'URL + llave publishable', hidden: true },
+    { id: 'client', type: 'node', icon: 'classbox', x: 290, y: 170, size: 64, label: 'SupabaseClient', sub: 'Supabase.instance.client' },
+    { id: 'db', type: 'node', icon: 'database', x: 510, y: 40, size: 40, lp: 'right', label: 'Database', sub: 'client.from(\'tabla\')' },
+    { id: 'auth', type: 'node', icon: 'lock', x: 510, y: 105, size: 40, lp: 'right', label: 'Auth', sub: 'client.auth' },
+    { id: 'storage', type: 'node', icon: 'bag', x: 510, y: 170, size: 40, lp: 'right', label: 'Storage', sub: 'client.storage' },
+    { id: 'rt', type: 'node', icon: 'chat', x: 510, y: 235, size: 40, lp: 'right', label: 'Realtime', sub: 'client.channel(\'sala\')' },
+    { id: 'fn', type: 'node', icon: 'gear', x: 510, y: 300, size: 40, lp: 'right', label: 'Edge Functions', sub: 'client.functions' },
+  ];
+  var MODS = ['db', 'auth', 'storage', 'rt', 'fn'];
+  function only(id) { var st = {}; MODS.forEach(function (m) { if (m !== id) st[m] = 'dim'; }); return st; }
+  function toMod(id, label) { return [{ from: 'client', to: id, kind: 'ctl', label: label, curve: 0 }]; }
+
+  function build() {
+    return [
+      { phase: 0, title: 'Tu app configura solo dos datos', focus: ['app', 'cfg'], show: ['cfg'],
+        caption: 'Para hablar con Supabase la app necesita la URL de tu proyecto (a cuál conectarse) y la llave publishable (con qué identificarse). Se pasan una sola vez, al inicializar el SDK en main().' },
+      { phase: 0, title: 'Un solo cliente para todo', focus: ['client'], show: ['cfg'],
+        links: [{ from: 'app', to: 'client', kind: 'ctl', label: 'initialize()' }],
+        caption: 'Supabase.initialize crea el SupabaseClient. Desde ahí, toda la app usa Supabase.instance.client: no hay un cliente distinto por módulo ni más credenciales que configurar.' },
+
+      { phase: 1, title: 'Database: tus tablas', focus: ['db'], state: only('db'), show: ['cfg'], links: toMod('db', 'from()'),
+        caption: 'Lo que usaste la semana pasada: tablas de Postgres con una API REST automática. Es el módulo del CRUD de contactos.' },
+      { phase: 1, title: 'Auth: usuarios y sesiones', focus: ['auth'], state: only('auth'), show: ['cfg'], links: toMod('auth', 'auth'),
+        badge: { auth: { text: 'hoy', tone: 'ok', pos: 'top' } },
+        caption: 'Registra usuarios, inicia sesión, guarda la sesión y entrega el JWT que las políticas RLS leen. Es la primera parte de esta semana.' },
+      { phase: 1, title: 'Storage: archivos', focus: ['storage'], state: only('storage'), show: ['cfg'], links: toMod('storage', 'storage'),
+        badge: { storage: { text: 'hoy', tone: 'ok', pos: 'top' } },
+        caption: 'Guarda archivos (imágenes, PDF, video) en «buckets» y da una URL para cada uno. Es la segunda parte de esta semana.' },
+      { phase: 1, title: 'Realtime y Edge Functions', focus: ['rt', 'fn'], state: { db: 'dim', auth: 'dim', storage: 'dim' }, show: ['cfg'],
+        links: [{ from: 'client', to: 'rt', kind: 'ctl', label: 'channel()', curve: 0 }, { from: 'client', to: 'fn', kind: 'ctl', label: 'invoke()', curve: 0 }],
+        caption: 'Realtime avisa a la app cuando cambian los datos y Edge Functions ejecuta código de servidor. Existen en el mismo cliente, pero no los usaremos en el curso.' },
+
+      { phase: 2, title: 'Qué se configura en el panel', solo: true, focus: ['auth', 'storage'], show: ['cfg'],
+        badge: { auth: { text: 'Authentication › Sign In / Providers', tone: 'ctl', pos: 'bottom', dx: 60 }, storage: { text: 'Storage › New bucket', tone: 'ctl', pos: 'bottom', dx: 60 } },
+        caption: 'Cada módulo tiene su sección en el panel. Auth: activar el proveedor de correo y decidir si se confirma el correo. Storage: crear el bucket y sus reglas. En ambos casos, el acceso lo siguen decidiendo las políticas RLS.' },
+    ];
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Los módulos de Supabase detrás de un solo cliente: Database, Auth, Storage, Realtime y Edge Functions, y los dos datos que la app configura: la URL del proyecto y la llave publishable',
+    phases: ['La app', 'Los módulos', 'En el panel'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 340, trail: 'step', items: items }); },
+    build: build,
+    intro: { kicker: 'Supabase', title: 'Un cliente, varios módulos', text: 'Qué ofrece Supabase, cómo se usa cada módulo desde Flutter y qué debes configurar en la app y en el panel.' },
+  });
+})();
+</script>
+</body>
+</html>
