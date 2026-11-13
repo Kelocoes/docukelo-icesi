@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es" class="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Un pedido en el restaurante</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Un pedido en el restaurante: ejemplo general (no técnico) para la charla. Solo datos. */
+(function () {
+  var A = 'cliente', M = 'mesero', K = 'cocina';
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+  var st = function (a, m, k) { return { cliente: a, mesero: m, cocina: k }; };
+
+  function build(opt) {
+    var steps = [];
+    var step = function (phase, title, caption, msgs, state) { steps.push({ phase: phase, title: title, caption: caption, msgs: msgs, state: state }); };
+
+    step(0, 'Pedir', 'El cliente le pide al mesero una lasaña. El mesero no cocina: su trabajo es llevar el pedido.',
+      [msg(A, M, 'Una lasaña', 'data')], st('Esperando', 'Anotando', 'Libre'));
+    step(0, 'La comanda', 'El mesero pasa la comanda a la cocina con la mesa y el plato.',
+      [msg(M, K, 'Mesa 4: lasaña', 'ctl')], st('Esperando', 'Atendiendo', 'Cocinando'));
+
+    if (opt.agotado) {
+      step(1, 'Se acabó un ingrediente', 'La cocina avisa que no queda lasaña. El cliente aún no lo sabe.',
+        [msg(K, M, 'No hay lasaña', 'err')], st('Esperando', 'Atendiendo', 'Sin lasaña'));
+      step(1, 'Ofrecer otra opción', 'El mesero vuelve a la mesa y el cliente elige otro plato.',
+        [msg(M, A, '¿Le traigo pasta?', 'ctl'), msg(A, M, 'Sí, pasta', 'data')], st('Esperando', 'Anotando', 'Libre'));
+      step(1, 'Nueva comanda', 'La cocina recibe el cambio y empieza de nuevo.',
+        [msg(M, K, 'Mesa 4: pasta', 'ctl')], st('Esperando', 'Atendiendo', 'Cocinando'));
+    }
+
+    step(2, 'Plato listo', 'La cocina avisa que el plato está listo y el mesero lo lleva a la mesa.',
+      [msg(K, M, 'Plato listo', 'ack'), msg(M, A, 'Su plato', 'data')], st('Comiendo', 'Libre', 'Libre'));
+    step(3, 'La cuenta', 'El cliente pide la cuenta y paga. El pedido termina.',
+      [msg(A, M, 'La cuenta', 'ctl'), msg(M, A, 'Cuenta', 'ack')], st('Pagó', 'Libre', 'Libre'));
+    return steps;
+  }
+
+  var PH = ['Pedir', 'Cocina', 'Servir', 'Pagar'];
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Diagrama de secuencia de un pedido entre cliente, mesero y cocina',
+    phases: PH,
+    wide: true,
+    scene: function (svg) {
+      return DK.sequence({
+        svg: svg, width: 1000, trayCount: 0, idleState: 'Esperando', phases: PH,
+        actors: [{ id: A, label: 'Cliente', icon: 'user' }, { id: M, label: 'Mesero', icon: 'user' }, { id: K, label: 'Cocina', icon: 'gear' }],
+      });
+    },
+    build: build,
+    toggles: [{ key: 'agotado', label: 'Se acabó un ingrediente', affectsPhase: 1 }],
+    kicker: function (p) { return 'Fase ' + (p + 1) + ' · ' + PH[p]; },
+    intro: { kicker: 'Un pedido, paso a paso', title: 'Antes de empezar',
+      text: 'Tres personajes y un pedido. Pulsa "Siguiente" y sigue quién le dice qué a quién. Activa el interruptor para ver qué pasa si falta un ingrediente.' },
+  });
+})();
+</script>
+</body>
+</html>

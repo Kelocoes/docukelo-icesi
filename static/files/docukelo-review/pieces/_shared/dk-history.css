@@ -1,0 +1,37 @@
+/* DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams. Estilos de dk-history.js (navegador + historial). Cargar después de dk-base.css y dk-nav.css. */
+.dk-hist .dk-ph-left { align-items: stretch; }
+.bw { position: relative; width: 100%; border: 1.5px solid var(--dk-line); border-radius: 12px; overflow: hidden; background: #fff; color: #1c1b1f; box-shadow: 0 6px 16px rgba(0, 0, 0, .12); }
+.bw.free { border-color: var(--dk-ctl); }
+.bw-bar { display: flex; align-items: center; gap: 4px; padding: 6px 8px; background: #ece9f1; border-bottom: 1px solid #d9d4e0; }
+.bw-btn { flex: none; width: 28px; height: 28px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: #1c1b1f; cursor: pointer; }
+.bw-btn:disabled { opacity: .3; cursor: default; }
+.bw-btn.pressed { background: #cfc9d8; }
+.bw-url { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 0; padding: 4px 12px; border-radius: 14px; background: #fff; font: 12.5px ui-monospace, Consolas, monospace; white-space: nowrap; overflow: hidden; }
+.bw-host { color: #79747e; }
+.bw-path { font-weight: 700; color: #1c1b1f; overflow: hidden; text-overflow: ellipsis; }
+.bw-body { overflow-y: auto; padding: 14px; background: #fff; }
+.bw-body a[data-to], .bw-body a[data-replace], .bw-body a[data-go] { color: #4338ca; text-decoration: underline; cursor: pointer; font-weight: 600; }
+.bw-body [data-to].pressed, .bw-body [data-replace].pressed, .bw-body [data-go].pressed { background: #e0e7ff; }
+.bw-body .pf-tile[data-to] { cursor: pointer; }
+.bw-body nav { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px solid #e7e0ec; font-size: 12.5px; }
+.bw-body .pf-kv { display: flex; justify-content: space-between; gap: 8px; margin: 4px 0; font-size: 12.5px; }
+.bw-body .pf-kv span:first-child { color: #79747e; }
+.bw-body .pf-btn { width: auto; display: inline-flex; margin-right: 6px; }
+
+/* ---------- el historial ---------- */
+.dk-hist .dk-ncard { width: calc(100% - 124px); height: 38px; padding: 4px 12px; }
+.dk-hist .dk-ncard .rt { grid-row: 1 / 3; align-self: center; }
+.dk-hist .dk-ncard .st { grid-column: 2; grid-row: 1; justify-self: end; font-style: normal; }
+.dk-hist .dk-ncard.cur { border-color: var(--dk-ctl); background: color-mix(in srgb, var(--dk-ctl) 14%, var(--dk-card)); box-shadow: 0 8px 18px color-mix(in srgb, var(--dk-ctl) 28%, transparent); }
+.dk-hist .dk-ncard.cur .st { color: var(--dk-ctl); font-weight: 800; }
+.dk-hist .dk-ncard.ahead { border-style: dashed; opacity: .6 !important; background: transparent; box-shadow: none; }
+.dk-hist .dk-ncard.behind { filter: none; }
+.dk-hist .dk-ncard .mk { grid-column: 2; grid-row: 2; }
+.dk-hist .dk-ntop { height: 34px; }
+@media (max-width: 700px) { .dk-hist .dk-ncard { width: calc(100% - 96px); } }
+
+/* navegador e historial en dos columnas incluso en la columna del sitio (~690 px); se apilan solo en pantallas angostas */
+@media (min-width: 521px) { .dk-ph.dk-nav.dk-hist { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .dk-hist .dk-ncard { width: calc(100% - 100px); } .dk-hist .dk-ntop, .dk-hist .dk-nbase { width: 94px; padding-left: 8px; } }
+
+/* pantalla completa (InteractiveFrame): navegador e historial crecen con zoom para usar el ancho y el alto del diálogo */
+@media (min-width: 821px) { .dk-fs .dk-hist .dk-ph-left, .dk-fs .dk-hist .dk-ph-right { zoom: 1.3; } }

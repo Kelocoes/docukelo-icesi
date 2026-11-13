@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>useState: un clic y el árbol de componentes</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-dom.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // Dos copias del mismo Contador dentro de App: cada copia tiene su propio estado.
+  var NODES = [
+    { id: 'app', tag: 'div', comp: 'App' },
+    { id: 'a1', tag: 'article', comp: 'Contador', parent: 'app' },
+    { id: 't1', tag: 'p', parent: 'a1', text: 'Clics: 0' },
+    { id: 'b1', tag: 'button', parent: 'a1', text: 'Sumar' },
+    { id: 'a2', tag: 'article', comp: 'Contador', parent: 'app' },
+    { id: 't2', tag: 'p', parent: 'a2', text: 'Clics: 0' },
+    { id: 'b2', tag: 'button', parent: 'a2', text: 'Sumar' },
+  ];
+  var COMPS = { App: 'p5', Contador: 'p3' };
+  var CTREE = [
+    { id: 'ap', comp: 'App', dom: 'app' },
+    { id: 'c1', comp: 'Contador', parent: 'ap', dom: 'a1' },
+    { id: 'c2', comp: 'Contador', parent: 'ap', dom: 'a2' },
+  ];
+  var IDS = NODES.map(function (n) { return n.id; });
+  function all(role, except) { var m = {}; IDS.forEach(function (id) { m[id] = role; }); for (var k in (except || {})) m[k] = except[k]; return m; }
+
+  var CODE = [
+    'function Contador() {',
+    '  const [count, setCount] = useState(0);',
+    '',
+    '  return (',
+    '    <article>',
+    '      <p>Clics: {count}</p>',
+    '      <button onClick={() => setCount(count + 1)}>',
+    '        Sumar',
+    '      </button>',
+    '    </article>',
+    '  );',
+    '}',
+  ];
+  function line(prefix) {
+    var r = [];
+    CODE.forEach(function (l, i) { if (l.indexOf(prefix) === 0) r.push(i + 1); });
+    if (!r.length) throw new Error('linea no encontrada: ' + prefix);
+    return r;
+  }
+  function rng(from, to) {
+    var a = line(from)[0], b = line(to)[0];
+    if (b < a) throw new Error('rango vacio');
+    var r = []; for (var k = a; k <= b; k++) r.push(k); return r;
+  }
+
+  var steps = [
+    // ---- Fase 1: el primer render ----
+    { phase: 0, title: 'React ejecuta Contador una vez por copia', view: 'comp', comps: true, cfocus: ['Contador'], cmarks: { c1: 'build', c2: 'build' },
+      csub: { c1: 'count = 0', c2: 'count = 0' }, code: rng('function Contador', '}'),
+      caption: 'En el primer render React llama a la función Contador dos veces, una por cada copia. Cada llamada recibe su propio count, que parte de 0.' },
+    { phase: 0, title: 'useState guarda el valor fuera de la función', view: 'comp', comps: true, cmarks: { c1: 'owner', c2: 'owner' },
+      csub: { c1: 'React guarda: 0', c2: 'React guarda: 0' }, code: line('  const [count'),
+      caption: 'La función termina y sus variables desaparecen. Por eso el valor vive en React: useState se lo devuelve cada vez que Contador se ejecuta.' },
+
+    // ---- Fase 2: un clic ----
+    { phase: 1, title: 'El usuario pulsa el primer botón', view: 'dom', comps: true, touch: ['b1'], marks: { b1: 'owner' },
+      csub: { c1: 'count = 0', c2: 'count = 0' }, code: line('      <button'),
+      caption: 'El manejador onClick llama a setCount(count + 1): pide a React un valor nuevo para esa copia. La pantalla todavía no cambió.' },
+    { phase: 1, title: 'React vuelve a ejecutar solo esa copia', view: 'comp', comps: true, state: 'count de la copia 1 = 1',
+      cmarks: { ap: 'reuse', c1: 'build', c2: 'reuse' }, csub: { ap: 'no se ejecuta', c1: 'count = 1', c2: 'no se ejecuta' }, code: rng('function Contador', '}'),
+      caption: 'setCount avisa a React que ese estado cambió. React vuelve a llamar a Contador, esta vez con count = 1, pero solo la copia que cambió.' },
+    { phase: 1, title: 'Solo cambia un nodo del DOM', view: 'dom', comps: true, state: 'count de la copia 1 = 1',
+      text: { t1: 'Clics: 1' }, touch: ['t1'], marks: all('reuse', { t1: 'dirty' }), sub: { t1: '0 a 1' },
+      cmarks: { ap: 'reuse', c1: 'dirty', c2: 'reuse' }, csub: { c1: 'count = 1', c2: 'count = 0' },
+      meter: { label: 'Nodos del DOM tocados', value: 1, max: 7, text: '1 de 7', tone: 'ack' }, code: line('      <p>'),
+      caption: 'React compara el resultado nuevo con el anterior y solo actualiza el texto que cambió. El resto del DOM no se toca.' },
+
+    // ---- Fase 3: estado propio ----
+    { phase: 2, title: 'Cada copia tiene su propio estado', view: 'comp', comps: true, text: { t1: 'Clics: 1', t2: 'Clics: 2' }, state: 'copia 1 = 1 · copia 2 = 2',
+      cmarks: { ap: 'reuse', c1: 'owner', c2: 'owner' }, csub: { c1: 'count = 1', c2: 'count = 2' }, code: line('  const [count'),
+      caption: 'Pulsa dos veces el segundo botón: su count sube a 2 y el del primero sigue en 1. El estado pertenece a la copia, no al código de la función.' },
+    { phase: 2, title: 'El estado depende de su lugar en el árbol', view: 'comp', comps: true, text: { t1: 'Clics: 1', t2: 'Clics: 2' }, state: 'copia 1 = 1 · copia 2 = 2',
+      cmarks: { ap: 'use', c1: 'owner', c2: 'owner' }, csub: { ap: 'no tiene estado', c1: 'estado propio', c2: 'estado propio' }, cfocus: ['Contador'], code: rng('function Contador', '}'),
+      caption: 'React asocia cada estado al lugar que ocupa la copia en el árbol. Dos copias del mismo componente nunca comparten su estado.' },
+  ];
+  steps.forEach(function (s) { s.codeText = CODE.join('\n'); s.codeTitle = 'Contador.jsx'; });
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Qué pasa en el árbol de componentes y en el DOM cuando se pulsa un botón que cambia un estado con useState, y cómo cada copia del componente conserva su propio estado',
+    phases: ['Primer render', 'Un clic', 'Estado propio'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.dom({ stage: stage, url: 'mi-app.com', treeTitle: 'Árbol DOM', nodes: NODES, components: COMPS, ctree: CTREE, code: true, compNodeW: 150,
+        legend: [['build', 'Se ejecuta'], ['owner', 'Guarda estado'], ['dirty', 'Cambió'], ['reuse', 'Igual']] });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'useState',
+      title: 'Un clic, paso a paso',
+      text: 'Dos copias de un contador dentro de App. Mira qué ejecuta React cuando pulsas un botón y qué cambia en el DOM.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

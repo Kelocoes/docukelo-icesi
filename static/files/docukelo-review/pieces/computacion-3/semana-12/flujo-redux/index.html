@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flujo de datos unidireccional en Redux</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var CODE = [
+    '// 1. En el componente: el usuario guarda una rutina',           // 1
+    'const handleSave = () => {',                                     // 2
+    '  dispatch(addRoutine({ id: "r3", name: "Hipertrofia" }));',     // 3
+    '};',                                                             // 4
+    '',                                                               // 5
+    '// 2. Objeto Action enviado al Store',                            // 6
+    '// { type: "routines/addRoutine", payload: { id: "r3", ... } }', // 7
+    '',                                                               // 8
+    '// 3. Reducer puro procesa la acción mediante Immer',            // 9
+    'addRoutine: (state, action) => {',                               // 10
+    '  state.items.unshift(action.payload);',                         // 11
+    '},',                                                             // 12
+    '',                                                               // 13
+    '// 4. El Store actualiza su árbol de estado global',             // 14
+    '// state = { routines: { items: [r3, r2, r1], isLoading: false } }', // 15
+    '',                                                               // 16
+    '// 5. Selector extrae los datos y evalúa si cambiaron',          // 17
+    'const routines = useSelector((state) => state.routines.items);', // 18
+    '',                                                               // 19
+    '// 6. El componente se re-renderiza con los nuevos datos',       // 20
+    'return <RoutineList items={routines} />;',                       // 21
+  ].join('\n');
+
+  var nodes = [
+    { id: 'comp',  kind: 'box', icon: 'browser',  label: 'Componente UI',  sub: 'RoutineForm / List', x: 50,  y: 40,  w: 180, h: 76 },
+    { id: 'disp',  kind: 'box', icon: 'gear',     label: 'dispatch()',     sub: 'Función del Store',  x: 410, y: 40,  w: 180, h: 76 },
+    { id: 'red',   kind: 'box', icon: 'classbox', label: 'Reducer (Slice)', sub: 'Immer (state, action)', x: 770, y: 40,  w: 180, h: 76 },
+    { id: 'store', kind: 'box', icon: 'database', label: 'Redux Store',    sub: 'Fuente de verdad',   x: 770, y: 260, w: 180, h: 76 },
+    { id: 'sel',   kind: 'box', icon: 'filter',   label: 'useSelector',    sub: 'Suscripción reactiva', x: 50,  y: 260, w: 180, h: 76 },
+  ];
+
+  var steps = [
+    {
+      phase: 0,
+      title: 'El usuario interactúa y despacha la acción',
+      focus: ['comp', 'disp'],
+      code: [1, 2, 3, 4],
+      msgs: [{ from: 'comp', to: 'disp', label: 'dispatch(addRoutine)', kind: 'ctl' }],
+      sub: { disp: 'Recibe addRoutine', store: '2 rutinas' },
+      caption: 'El usuario confirma el formulario de rutinas. El componente invoca dispatch() pasando un Action Creator con la información de la nueva rutina.'
+    },
+    {
+      phase: 0,
+      title: 'Dispatch envía el objeto Action al Reducer',
+      focus: ['disp', 'red'],
+      code: [6, 7],
+      msgs: [{ from: 'disp', to: 'red', label: 'Action { type, payload }', kind: 'data' }],
+      sub: { red: 'Procesa acción' },
+      caption: 'Dispatch entrega el objeto Action plano ({ type: "routines/addRoutine", payload }) al reducer correspondiente. En Redux ningún estado cambia sin una acción formal.'
+    },
+    {
+      phase: 1,
+      title: 'El reducer genera el nuevo estado con Immer',
+      focus: ['red', 'store'],
+      code: [9, 10, 11, 12],
+      msgs: [{ from: 'red', to: 'store', label: 'state.items.unshift()', kind: 'ack', labelSide: 'left' }],
+      sub: { red: 'Calcula nuevo estado', store: 'Actualizando estado...' },
+      caption: 'El reducer recibe (state, action). Gracias a Immer en Redux Toolkit, redactamos el cambio con mutación directa aparente mientras se produce un nuevo árbol inmutable.'
+    },
+    {
+      phase: 2,
+      title: 'El Store actualiza la fuente única de verdad',
+      focus: ['store', 'sel'],
+      code: [14, 15],
+      msgs: [{ from: 'store', to: 'sel', label: 'Notifica nuevo árbol', kind: 'ctl' }],
+      sub: { store: '3 rutinas guardadas', sel: 'Evalúa useSelector' },
+      caption: 'El Store reemplaza su referencia de estado global con el nuevo árbol y emite una notificación a todos los selectores suscritos.'
+    },
+    {
+      phase: 2,
+      title: 'El selector evalúa la referencia y re-renderiza',
+      focus: ['sel', 'comp'],
+      code: [17, 18, 20, 21],
+      msgs: [{ from: 'sel', to: 'comp', label: 'Re-render selectivo', kind: 'ack' }],
+      sub: { sel: 'Referencia distinta', comp: 'Re-render: 3 rutinas' },
+      caption: 'useSelector detecta que state.routines.items cambió de referencia. React programa el re-render exclusivo del componente visual con los nuevos datos.'
+    }
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Flujo de datos unidireccional en Redux Toolkit: Componente UI, Dispatch, Reducer, Store y Selector',
+    wide: true,
+    phases: ['Despacho de la Acción', 'Reducción y Actualización', 'Suscripción y Re-render'],
+    scene: function (svg) {
+      return DK.layers({
+        svg: svg,
+        width: 1000,
+        height: 380,
+        nodes: nodes,
+        labels: 'smart'
+      });
+    },
+    build: function () { return steps; },
+    code: { title: 'flujo-rutina.ts', text: CODE },
+    intro: {
+      kicker: 'Flujo Unidireccional',
+      title: 'El ciclo de vida de un cambio en Redux',
+      text: 'Los datos en Redux viajan en un solo sentido estricto. Pulsa "Siguiente" para recorrer paso a paso cómo una acción del usuario actualiza el estado y refresca la interfaz.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

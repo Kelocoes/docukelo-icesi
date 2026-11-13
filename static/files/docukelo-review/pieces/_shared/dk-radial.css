@@ -1,0 +1,79 @@
+/* dk-radial.css: estilos de la escena circular (dk-radial.js) y de la barra de feature. Se carga después de dk-base.css.
+ * Usa solo los tokens del kit; el color de cada anillo llega en --rc. */
+
+/* ---------- anillos ---------- */
+.dk-rext { fill: none; stroke: var(--dk-line); stroke-width: 1.5; stroke-dasharray: 3 7; }
+.dk-ring { --rc: var(--dk-muted); }
+.dk-ring path.fill { fill: color-mix(in srgb, var(--rc) 7%, var(--dk-card)); stroke: color-mix(in srgb, var(--rc) 45%, var(--dk-line)); stroke-width: 1.5; transition: fill .35s, stroke .35s; }
+.dk-ring.on path.fill { fill: color-mix(in srgb, var(--rc) 17%, var(--dk-card)); stroke: var(--rc); stroke-width: 2.5; }
+.dk-ring path.arc { fill: none; stroke: none; }
+.dk-ring text.rl { font-size: 11.5px; font-weight: 700; letter-spacing: .12em; fill: color-mix(in srgb, var(--rc) 65%, var(--dk-ink)); }
+.dk-ring text.rl.mid { text-anchor: middle; }
+
+/* ---------- piezas ---------- */
+.dk-rnode { --rc: var(--dk-muted); cursor: pointer; outline: none; transition: opacity .3s; }
+.dk-rnode rect { fill: var(--dk-card); stroke: color-mix(in srgb, var(--rc) 70%, var(--dk-line)); stroke-width: 2; transition: fill .35s, stroke .35s; }
+.dk-rnode.actor rect { stroke-dasharray: 6 4; stroke: var(--dk-muted); }
+.dk-rnode text { text-anchor: middle; pointer-events: none; }
+.dk-rnode .nl { font-size: 13.5px; font-weight: 700; }
+.dk-rnode .ns { font-size: 11px; fill: var(--dk-muted); }
+.dk-rnode .badge { fill: var(--dk-card); stroke: var(--rc); stroke-width: 2; }
+.dk-rnode:hover rect { fill: color-mix(in srgb, var(--rc) 9%, var(--dk-card)); }
+.dk-rnode.on rect { fill: color-mix(in srgb, var(--rc) 20%, var(--dk-card)); stroke: var(--rc); stroke-width: 3; }
+.dk-rnode:focus-visible rect { stroke: var(--dk-ctl); stroke-width: 3.5; }
+.dk-rnode.sel rect { stroke: var(--dk-ink); stroke-width: 3.5; fill: color-mix(in srgb, var(--rc) 22%, var(--dk-card)); }
+.dk-rnode.ok rect { stroke: var(--dk-ack); stroke-width: 3; fill: color-mix(in srgb, var(--dk-ack) 15%, var(--dk-card)); }
+.dk-rnode.no { opacity: .42; }
+.dk-rnode.no rect { stroke: var(--dk-err); stroke-dasharray: 5 4; }
+
+/* ---------- panel "qué puede importar" ---------- */
+.dk-rinfo { --rc: var(--dk-muted); min-height: 128px; margin: 10px 0 0; padding: 10px 14px; border: 1px solid var(--dk-line); border-left: 5px solid var(--rc); border-radius: 12px; background: var(--dk-card); }
+.dk-rinfo .hint { margin: 0; color: var(--dk-muted); font-size: 13px; }
+.dk-rinfo .tag { display: inline-block; font: 700 11px system-ui, sans-serif; letter-spacing: .05em; text-transform: uppercase; color: color-mix(in srgb, var(--rc) 70%, var(--dk-ink)); }
+.dk-rinfo h4 { margin: 2px 0 4px; font-size: 16px; }
+.dk-rinfo p { margin: 0 0 8px; font-size: 13px; }
+.dk-rinfo .row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; margin-top: 4px; font-size: 12px; }
+.dk-rinfo .row b { min-width: 118px; }
+.dk-rinfo .row .chip { padding: 1px 9px; border-radius: 999px; border: 1.5px solid var(--dk-line); font-weight: 600; }
+.dk-rinfo .row.ok .chip { border-color: var(--dk-ack); background: color-mix(in srgb, var(--dk-ack) 12%, var(--dk-card)); }
+.dk-rinfo .row.no .chip { border-color: var(--dk-err); border-style: dashed; background: color-mix(in srgb, var(--dk-err) 9%, var(--dk-card)); }
+
+/* ---------- disposición de la tarjeta ----------
+ * Ancha: el círculo a la izquierda y, a la derecha, el texto del paso, los controles, el panel de la pieza y el código,
+ * para ver todo a la vez sin desplazarse. Angosta (iframe menor de 820 px): una sola columna. */
+.dk-card.dk-rlayout { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); column-gap: 14px; align-items: start; }
+.dk-rlayout > .dk-tabs { grid-column: 1 / -1; grid-row: 1; }
+.dk-rlayout > .dk-dots { grid-column: 1 / -1; grid-row: 2; }
+.dk-rlayout > .dk-stage { grid-column: 1; grid-row: 3 / span 4; width: 100%; margin-top: 2px; }
+.dk-rlayout .dk-stage svg { min-width: 0; }
+.dk-rlayout > .dk-cap { grid-column: 2; grid-row: 3; }
+.dk-rlayout > .dk-bar { grid-column: 2; grid-row: 4; }
+.dk-rlayout > .dk-rinfo { grid-column: 2; grid-row: 5; min-height: 0; }
+.dk-rlayout > .dk-code { grid-column: 2; grid-row: 6; max-height: 232px; }
+/* pantalla completa (html.dk-fs): la tarjeta ocupa todo el alto de la ventana y la fila del codigo y el circulo se estiran
+ * para llenarlo, sea cual sea el tamano de la pantalla (sin restar alturas a mano) */
+@media (min-width: 821px) {
+  .dk-fs body { height: 100vh; display: flex; flex-direction: column; padding-bottom: 10px; }
+  .dk-fs #app { flex: 1; min-height: 0; }
+  .dk-fs .dk-card.dk-rlayout { height: 100%; grid-template-rows: auto auto auto auto auto minmax(0, 1fr); }
+  .dk-fs .dk-rlayout > .dk-stage { align-self: stretch; min-height: 0; overflow: hidden; }
+  .dk-fs .dk-rlayout > .dk-stage svg { width: 100%; height: 100%; max-width: none; }
+  .dk-fs .dk-rlayout > .dk-code { align-self: stretch; max-height: none; min-height: 0; }
+}
+@media (max-width: 820px) {
+  .dk-card.dk-rlayout { grid-template-columns: minmax(0, 1fr); }
+  .dk-rlayout > .dk-tabs, .dk-rlayout > .dk-dots, .dk-rlayout > .dk-stage, .dk-rlayout > .dk-cap, .dk-rlayout > .dk-bar,
+  .dk-rlayout > .dk-rinfo, .dk-rlayout > .dk-code { grid-column: 1; grid-row: auto; }
+  .dk-rlayout > .dk-cap { order: 3; } .dk-rlayout > .dk-bar { order: 4; } .dk-rlayout > .dk-stage { order: 5; max-width: 640px; justify-self: center; }
+  .dk-rlayout > .dk-rinfo { order: 6; } .dk-rlayout > .dk-code { order: 7; }
+}
+
+/* ---------- barra de feature (fuera del player) ---------- */
+.dk-fbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 0 auto 10px; padding: 8px 14px; border: 1px solid var(--dk-line); border-radius: 12px; background: var(--dk-card); font-size: 13px; }
+.dk-fbar label { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.dk-fbar input { width: 150px; padding: 4px 10px; border: 1px solid var(--dk-line); border-radius: 8px; background: var(--dk-chip); color: var(--dk-ink); font: 600 13px ui-monospace, Consolas, monospace; }
+.dk-fbar .chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--dk-muted); }
+.dk-fbar button { padding: 2px 11px; border: 1px solid var(--dk-line); border-radius: 14px; background: transparent; color: var(--dk-ctl); font: 600 12px system-ui, sans-serif; cursor: pointer; }
+.dk-fbar button.on { border-color: var(--dk-ctl); background: var(--dk-ctl); color: var(--dk-card); }
+.dk-fbar .spacer { flex: 1; }
+.dk-fbar .nomore { color: var(--dk-muted); font-size: 12px; }
