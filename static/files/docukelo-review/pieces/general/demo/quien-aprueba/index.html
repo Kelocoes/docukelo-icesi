@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es" class="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¿Quién aprueba el pedido?</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-tree.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* ¿Quién aprueba el pedido?: organigrama de una empresa (ejemplo general, no técnico). Solo datos. */
+(function () {
+  var NODES = [
+    { id: 'ger', label: 'Gerencia general' },
+    { id: 'com', label: 'Comercial', parent: 'ger' },
+    { id: 'fin', label: 'Finanzas', parent: 'ger' },
+    { id: 'ope', label: 'Operaciones', parent: 'ger' },
+    { id: 'ven', label: 'Ventas', parent: 'com' },
+    { id: 'mer', label: 'Mercadeo', parent: 'com' },
+    { id: 'con', label: 'Contabilidad', parent: 'fin' },
+    { id: 'bod', label: 'Bodega', parent: 'ope' },
+  ];
+
+  function build(opt) {
+    var steps = [];
+    var step = function (s) { steps.push(s); };
+    step({ phase: 0, title: 'Llega un pedido grande', caption: 'Un cliente pide 500 unidades con 20 % de descuento. Ventas lo recibe, pero no puede aprobar ese descuento.',
+      roles: { ven: 'use' }, tags: { ven: '500 u. · -20 %' }, msgs: [] });
+
+    if (opt.delegar) {
+      step({ phase: 1, title: 'Ventas decide', caption: 'Con la regla nueva, Ventas aprueba descuentos hasta del 20 % sin subir el pedido. Solo confirma el inventario con Bodega.',
+        roles: { ven: 'owner', bod: 'use' }, tags: { ven: 'aprueba' },
+        msgs: [{ from: 'ven', to: 'bod', direct: true, label: '¿hay 500?', kind: 'ctl' }] });
+      step({ phase: 2, title: 'Respuesta el mismo día', caption: 'Bodega responde directo y Ventas cierra el negocio. Menos saltos, respuesta más rápida.',
+        roles: { ven: 'owner', bod: 'use' }, tags: { ven: 'cerrado', bod: '300 hoy' },
+        msgs: [{ from: 'bod', to: 'ven', direct: true, label: '300 hoy, 200 luego', kind: 'ack' }] });
+      return steps;
+    }
+
+    step({ phase: 1, title: 'El pedido sube', caption: 'Ventas lo pasa a Comercial y Comercial a Gerencia. Cada nivel solo reenvía: nadie más puede decidir.',
+      roles: { ven: 'pass', com: 'pass', ger: 'owner' }, tags: { ger: 'decide' },
+      msgs: [{ path: ['ven', 'com', 'ger'], label: 'pedido', kind: 'data' }] });
+    step({ phase: 1, title: 'Gerencia pregunta', caption: 'Antes de decidir, Gerencia consulta el margen con Finanzas y el inventario con Operaciones, que pregunta a Bodega.',
+      roles: { ger: 'owner', fin: 'use', ope: 'pass', bod: 'use' },
+      msgs: [{ path: ['ger', 'fin'], label: '¿margen?', kind: 'ctl' }, { path: ['ger', 'ope', 'bod'], label: '¿hay 500?', kind: 'ctl' }] });
+    step({ phase: 1, title: 'Llegan las respuestas', caption: 'Finanzas dice que el descuento deja margen. Bodega solo tiene 300 unidades hoy.',
+      roles: { ger: 'owner', fin: 'use', ope: 'pass', bod: 'use' },
+      msgs: [{ path: ['fin', 'ger'], label: 'margen OK', kind: 'ack' }, { path: ['bod', 'ope', 'ger'], label: '300 hoy', kind: 'ack' }] });
+    step({ phase: 2, title: 'La decisión baja', caption: 'Gerencia aprueba: 300 unidades hoy y 200 en dos semanas. La respuesta baja por el mismo camino hasta Ventas.',
+      roles: { ger: 'owner', com: 'pass', ven: 'use' }, tags: { ven: 'cerrado' },
+      msgs: [{ path: ['ger', 'com', 'ven'], label: 'aprobado', kind: 'ack' }] });
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Organigrama de una empresa por el que sube y baja la aprobación de un pedido',
+    phases: ['Llega', 'Sube', 'Responde'],
+    wide: true,
+    scene: function (svg) { return DK.tree({ svg: svg, width: 1000, levelGap: 110, nodes: NODES }); },
+    build: build,
+    toggles: [{ key: 'delegar', label: 'Ventas puede aprobar descuentos', affectsPhase: 1 }],
+    kicker: function (p) { return ['El pedido llega', 'El pedido sube', 'La respuesta'][p]; },
+    intro: { kicker: 'Un organigrama que se mueve', title: '¿Quién aprueba el pedido?',
+      text: 'Sigue un pedido grande por la empresa. Después activa el interruptor y compara cuántos saltos se ahorran si Ventas puede decidir.' },
+  });
+})();
+</script>
+</body>
+</html>
