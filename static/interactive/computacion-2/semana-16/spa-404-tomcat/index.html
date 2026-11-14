@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recargar una ruta de la SPA en Tomcat</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El usuario recarga /dashboard (F5). Con web.xml, Tomcat responde con index.html y el router decide; sin él, 404. Solo DATOS. */
+(function () {
+  var B = 'nav', T = 'tomcat', R = 'router';
+  var PH = ['Recargar', 'Tomcat', 'Resultado'];
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+
+  var XML = ['<web-app version="4.0">',
+    '  <error-page>',
+    '    <error-code>404</error-code>',
+    '    <location>/index.html</location>',
+    '  </error-page>',
+    '</web-app>'].join('\n');
+
+  function build(opt) {
+    var con = opt.web;
+    var steps = [];
+    steps.push({ phase: 0, title: 'El usuario pulsa F5 en /dashboard', code: [],
+      caption: 'Estás dentro de la app, en la ruta /dashboard. Al recargar, el navegador no le pregunta al router: le pide esa URL entera a Tomcat.',
+      msgs: [msg(B, T, 'GET /app/dashboard', 'ctl')], state: { nav: 'Pide /app/dashboard', tomcat: 'Recibió la petición', router: 'Sin cargar' } });
+    steps.push({ phase: 1, title: 'Tomcat busca un archivo llamado dashboard', code: [],
+      caption: 'Tomcat solo sabe de archivos y carpetas. «dashboard» no existe en el .war: esa ruta solo existe dentro de React Router, en el navegador.',
+      msgs: [], state: { nav: 'Esperando', tomcat: 'No existe ese archivo', router: 'Sin cargar' } });
+    if (!con) {
+      steps.push({ phase: 2, title: 'Sin web.xml: 404', code: [],
+        caption: 'Sin ninguna regla, Tomcat responde 404 Not Found. La app nunca llega a cargarse. Al navegar con enlaces funciona (no hay petición al servidor), pero recargar rompe la página: el error clásico del primer despliegue.',
+        msgs: [msg(T, B, '404 Not Found', 'ack')], state: { nav: 'Página de error de Tomcat', tomcat: 'Respondió 404', router: 'Nunca se cargó' } });
+    } else {
+      steps.push({ phase: 1, title: 'La regla error-page se activa', code: [2, 3, 4, 5],
+        caption: 'El web.xml dice: cuando el error sea 404, entrega /index.html. Tomcat entrega el index.html de la app en lugar del error.',
+        msgs: [msg(T, B, 'index.html + JS', 'ack')], state: { nav: 'Recibe la app', tomcat: 'Entregó index.html', router: 'Sin cargar' } });
+      steps.push({ phase: 2, title: 'React Router lee la URL y dibuja', code: [],
+        caption: 'El navegador carga el JavaScript, arranca React y el router lee la URL actual (/dashboard). Es como si hubieras llegado navegando: el guarda revisa el token y se dibuja el Dashboard.',
+        msgs: [msg(B, R, 'location: /dashboard', 'ctl')], state: { nav: 'Dashboard en pantalla', tomcat: 'Libre', router: 'Resuelve /dashboard' } });
+    }
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Qué pasa al recargar una ruta de la aplicación React desplegada en Tomcat, con y sin web.xml',
+    phases: PH,
+    scene: function (svg) {
+      return DK.sequence({ svg: svg, trayCount: 0, idleState: '—', phases: PH,
+        actors: [{ id: B, label: 'Navegador', icon: 'browser' }, { id: T, label: 'Tomcat', icon: 'server' }, { id: R, label: 'React Router', icon: 'gear' }] });
+    },
+    toggles: [{ key: 'web', label: 'Con WEB-INF/web.xml', affectsPhase: 1 }],
+    code: function (opt) { return opt.web ? { title: 'WEB-INF/web.xml', text: XML } : { title: 'WEB-INF/web.xml', text: '<!-- El archivo no existe en el .war -->' }; },
+    build: build,
+    kicker: function (p) { return 'Fase ' + (p + 1) + ' · ' + PH[p]; },
+    intro: { kicker: 'Rutas en Tomcat', title: 'Por qué recargar da 404 y cómo se arregla', text: 'Activa y desactiva el web.xml y mira qué pasa cuando recargas una ruta que solo existe dentro de React Router.' },
+  });
+})();
+</script>
+</body>
+</html>

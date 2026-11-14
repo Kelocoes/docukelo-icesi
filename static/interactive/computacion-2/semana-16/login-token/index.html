@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login con Axios y token en localStorage</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<link rel="stylesheet" href="../../../_shared/dk-browser.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-browser.js"></script>
+<script src="../../../_shared/dk-views.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El recorrido completo: login (POST), guardar el token y una petición protegida (GET) que lo usa.
+   Pestañas Flujo y Pantalla sobre los mismos pasos; tres archivos en el editor. Solo DATOS. */
+(function () {
+  var L = 'comp', K = 'store', A = 'api', S = 'srv';
+  var CASOS = ['Credenciales correctas', 'Contraseña incorrecta'];
+  var PH = ['Login', 'Guardar', 'Usar token'];
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+
+  var LOGIN = [
+    'import api from "../api";',                                      // 1
+    '',                                                               // 2
+    'async function handleSubmit(e) {',                               // 3
+    '  e.preventDefault();',                                          // 4
+    '  try {',                                                        // 5
+    '    const res = await api.post("/auth/login", {',               // 6
+    '      email, password,',                                         // 7
+    '    });',                                                        // 8
+    '    localStorage.setItem("token", res.data.token);',            // 9
+    '    navigate("/dashboard");',                                    // 10
+    '  } catch (err) {',                                              // 11
+    '    setError("Credenciales incorrectas");',                      // 12
+    '  }',                                                            // 13
+    '}'                                                               // 14
+  ].join('\n');
+
+  var APIJS = [
+    'import axios from "axios";',                                     // 1
+    '',                                                               // 2
+    'const api = axios.create({',                                     // 3
+    '  baseURL: import.meta.env.VITE_API_URL,',                       // 4
+    '});',                                                            // 5
+    '',                                                               // 6
+    'api.interceptors.request.use((config) => {',                     // 7
+    '  const token = localStorage.getItem("token");',                 // 8
+    '  if (token) {',                                                 // 9
+    '    config.headers.Authorization = `Bearer ${token}`;',          // 10
+    '  }',                                                            // 11
+    '  return config;',                                               // 12
+    '});',                                                            // 13
+    '',                                                               // 14
+    'export default api;'                                             // 15
+  ].join('\n');
+
+  var RUTINAS = [
+    'useEffect(() => {',                                              // 1
+    '  api.get("/rutinas")',                                          // 2
+    '    .then((res) => setRutinas(res.data));',                      // 3
+    '}, []);'                                                         // 4
+  ].join('\n');
+
+  // la pantalla simulada
+  var form = function (btn, extra) {
+    return '<h2 class="bw-h">Iniciar sesión</h2><div class="bw-form"><div><span class="bw-lbl">Correo</span><div class="bw-in">ana@icesi.edu.co</div></div>' +
+      '<div><span class="bw-lbl">Contraseña</span><div class="bw-in">••••••••</div></div>' +
+      '<div class="bw-btn' + (btn === 'Entrar' ? '' : ' dis') + '">' + btn + '</div>' + (extra || '') + '</div>';
+  };
+  var NAV = '<div class="bw-nav">Dashboard <small>ana@icesi.edu.co</small></div>';
+  var DASH_LOAD = NAV + '<p class="bw-ok">Sesión iniciada</p><p class="bw-load">Cargando tus rutinas...</p>';
+  var DASH_LIST = NAV + '<div class="bw-li"><b>Lunes</b> · Pecho y tríceps</div><div class="bw-li"><b>Miércoles</b> · Piernas</div><div class="bw-li"><b>Viernes</b> · Espalda y bíceps</div>';
+  var TOKEN = [['token', 'eyJhbGciOiJIUzI1NiJ9…']];
+  var post = function (st) { return { m: 'POST', url: '/auth/login', st: st, auth: false }; };
+
+  function build(opt) {
+    var ok = opt.caso === 0;
+    var login = function (page, net, extra) { var s = { url: 'localhost:5173/login', page: page, dev: 'net', net: net, storage: [] }; for (var k in extra) s[k] = extra[k]; return s; };
+    var steps = [];
+    steps.push({ phase: 0, title: 'El formulario llama a api.post', file: 'Login.jsx', code: [4, 6, 7, 8],
+      caption: 'Al enviar el formulario, el componente pide el login con el correo y la contraseña en el cuerpo. Todavía no hay token, así que el interceptor no agrega ningún encabezado: mira la columna Authorization.',
+      msgs: [msg(L, A, 'api.post("/auth/login")', 'ctl'), msg(A, S, 'POST /auth/login', 'data')],
+      state: { comp: 'Enviando...', store: 'Vacío', api: 'Sin token', srv: 'Validando' }, screen: login(form('Entrando...'), [post('…')]) });
+    if (!ok) {
+      steps.push({ phase: 0, title: 'El servidor rechaza: 401', file: 'Login.jsx', code: [11, 12],
+        caption: 'Las credenciales no coinciden: el servidor responde 401. Axios lanza el error y se ejecuta el catch. No se guardó nada: localStorage sigue vacío y no se navega.',
+        msgs: [msg(S, A, '401', 'ack'), msg(A, L, 'error', 'ack')],
+        state: { comp: 'Muestra el error', store: 'Vacío', api: 'Rechazada', srv: 'Listo' }, screen: login(form('Entrar', '<p class="bw-err">Credenciales incorrectas</p>'), [post('401')]) });
+      return steps;
+    }
+    steps.push({ phase: 0, title: 'El servidor responde con el token', file: 'Login.jsx', code: [6],
+      caption: 'Credenciales correctas: el servidor responde 200 con un JWT firmado en el cuerpo. El token es la «llave de sesión»: quien lo presente será tratado como ese usuario.',
+      msgs: [msg(S, A, '200 { token }', 'ack'), msg(A, L, 'res.data.token', 'ack')],
+      state: { comp: 'Tiene el token', store: 'Vacío', api: 'Resuelta', srv: 'Listo' }, screen: login(form('Entrando...'), [post('200')]) });
+    steps.push({ phase: 1, title: 'Se guarda en localStorage', file: 'Login.jsx', code: [9],
+      caption: 'setItem guarda el token en el navegador, como texto, bajo la clave «token». Abre la pestaña Application: sobrevive a recargar la página y a cerrar la pestaña, hasta que se borre.',
+      msgs: [msg(L, K, 'setItem("token")', 'data')],
+      state: { comp: 'Guardó el token', store: 'token: eyJhbG…', api: 'Libre', srv: 'Libre' }, screen: login(form('Entrando...'), [post('200')], { dev: 'app', storage: TOKEN }) });
+    steps.push({ phase: 1, title: 'navigate lleva al dashboard', file: 'Login.jsx', code: [10],
+      caption: 'Con la sesión guardada se navega a la ruta protegida: la URL cambia sin recargar. En el siguiente capítulo verás cómo un guarda decide si deja pasar leyendo ese mismo token.',
+      msgs: [], state: { comp: '/dashboard', store: 'token: eyJhbG…', api: 'Libre', srv: 'Libre' },
+      screen: { url: 'localhost:5173/dashboard', page: DASH_LOAD, dev: 'app', net: [post('200')], storage: TOKEN } });
+    steps.push({ phase: 2, title: 'Rutinas pide su lista', file: 'Rutinas.jsx', code: [2],
+      caption: 'Otro componente hace api.get("/rutinas") sin preocuparse del token. La petición pasa por el interceptor de api.js.',
+      msgs: [msg(L, A, 'api.get("/rutinas")', 'ctl')],
+      state: { comp: 'Rutinas.jsx', store: 'token: eyJhbG…', api: 'Interceptor', srv: 'Libre' },
+      screen: { url: 'localhost:5173/dashboard', page: DASH_LOAD, dev: 'net', net: [post('200')], storage: TOKEN } });
+    steps.push({ phase: 2, title: 'El interceptor lee el token', file: 'api.js', code: [8, 9],
+      caption: 'Antes de salir, el interceptor hace localStorage.getItem("token") y recibe el JWT guardado en el login.',
+      msgs: [msg(A, K, 'getItem("token")', 'ctl'), msg(K, A, 'eyJhbG…', 'ack')],
+      state: { comp: 'Rutinas.jsx', store: 'token: eyJhbG…', api: 'Con token', srv: 'Libre' },
+      screen: { url: 'localhost:5173/dashboard', page: DASH_LOAD, dev: 'app', net: [post('200')], storage: TOKEN } });
+    steps.push({ phase: 2, title: 'La petición viaja con Bearer', file: 'api.js', code: [10],
+      caption: 'La petición sale con Authorization: Bearer <token> (mira la columna en Network). El servidor verifica la firma, sabe quién eres y responde con tus rutinas.',
+      msgs: [msg(A, S, 'GET + Bearer', 'data'), msg(S, A, '200 [rutinas]', 'ack'), msg(A, L, 'res.data', 'ack')],
+      state: { comp: 'Lista en pantalla', store: 'token: eyJhbG…', api: 'Libre', srv: 'Identificó al usuario' },
+      screen: { url: 'localhost:5173/dashboard', page: DASH_LIST, dev: 'net', net: [post('200'), { m: 'GET', url: '/rutinas', st: '200', auth: true }], storage: TOKEN } });
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Recorrido de un login con Axios: el POST, el token guardado en localStorage y una petición protegida que lo envía en el encabezado Authorization, con el flujo, la pantalla del navegador y el código de tres archivos',
+    phases: PH,
+    scene: function (svg, stage) {
+      return DK.views({ stage: stage, views: [
+        { label: 'Flujo', aria: 'Flujo entre el componente, localStorage, api.js y el servidor', scene: function (s) {
+          return DK.sequence({ svg: s, trayCount: 0, idleState: '—', phases: PH,
+            actors: [{ id: L, label: 'Componente', icon: 'filecode' }, { id: K, label: 'localStorage', icon: 'bag' }, { id: A, label: 'api.js', icon: 'gear' }, { id: S, label: 'Servidor', icon: 'server' }] });
+        } },
+        { label: 'Pantalla', html: true, scene: function (s, box) { return DK.browser({ stage: box }); } },
+      ] });
+    },
+    toggles: [{ key: 'caso', type: 'select', label: 'Login', options: CASOS, value: 0, restart: 'first' }],
+    code: { files: [{ name: 'Login.jsx', text: LOGIN }, { name: 'api.js', text: APIJS }, { name: 'Rutinas.jsx', text: RUTINAS }] },
+    build: build,
+    kicker: function (p) { return 'Fase ' + (p + 1) + ' · ' + PH[p]; },
+    intro: { kicker: 'Login con Axios', title: 'De la contraseña al token y de vuelta al servidor', text: 'Sigue el viaje del token: se pide con un POST, se guarda en el navegador y se reutiliza en cada petición. Alterna entre Flujo y Pantalla, y prueba también un login fallido.' },
+  });
+})();
+</script>
+</body>
+</html>

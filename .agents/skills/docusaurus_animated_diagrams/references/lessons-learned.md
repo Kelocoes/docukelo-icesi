@@ -180,3 +180,16 @@ Cada entrada: **qué pasó → causa → qué hacer**. Agregar una entrada nueva
 - **El SQL Editor de Supabase pregunta antes de salir de una consulta sin guardar** (diálogo `beforeunload`) y avisa «Potential issue detected» ante un `drop policy`. -> En Playwright, `browser_handle_dialog` con `accept: true` y pulsar «Run query» en el aviso. El primer `textbox` de la página era el buscador de consultas: apuntar a `div.monaco-editor[role="code"] textarea`.
 - **`browser_run_code_unsafe` fue bloqueado** por el clasificador de permisos del modo automático. -> Usar las herramientas normales (`click`, `type`, `fill_form`, `file_upload`); alcanzan para todo el flujo del panel.
 - **En las diapositivas (SVG a mano de 1216 de ancho):** una pastilla de `x + ancho > 1216` se corta en la derecha (`rol: authenticated` salía cortada), y dos flechas paralelas a menos de ~35 unidades pisan el rótulo del nodo (`Supabase Auth`). -> Calcular `x + ancho` antes y dejar las flechas entre los iconos, no debajo.
+
+## Piezas con pestañas de vistas y varios archivos (Compunet 2, semana 16)
+
+- **Una pieza de 920 px no se ve entera en un portátil:** el estudiante veía el diagrama pero no los botones (hay que bajar el scroll de la página). -> Presupuesto de ~750 px: código de 164 px, página simulada de ~112 px, explicación corta; `DK.codemap` con `compact: true`.
+- **Líneas partidas para que quepan = más líneas = pieza más alta**, con espacio vacío a la derecha. -> Ensanchar el código (`split: '1.9fr'`) y dejar la línea entera, en vez de partirla.
+- **`DK.anatomy` comparte un único `doc` entre todos los pasos:** un `doc` por paso se ignora (el paso «decodificar» seguía mostrando el token). -> Un solo `doc` con todo (el token y, debajo, lo que devuelve `jwtDecode`).
+- **Sin `focus`, `DK.anatomy` pinta todo en gris:** el estudiante pidió ver cada parte del JWT de su color. -> `all: true` en el primer paso.
+- **`DK.anatomy` necesita `dk-icons.js` y `dk-flow.js`** (la franja de cable usa `DK.icons.laptop`), aunque la pieza no dibuje cable: sin ellos falla con «Cannot read properties of undefined (reading 'laptop')».
+- **En `DK.player` el interruptor `checkbox` siempre arranca apagado** (`value` se ignora): pensar el texto como «activar la corrección» (sin `web.xml` primero, con `web.xml` después).
+- **Una barra de pestañas pegajosa (`position: sticky`) con fondo translúcido deja ver las líneas de código por detrás.** -> Fondo opaco (`color-mix` con `--dk-card`) y sin `padding-top` en el contenedor.
+- **`DK.tree` con un nodo envoltorio (`AuthProvider`) entre la raíz y el resto:** para la etapa «sin Context» se oculta el nodo con el rol `hide` y las flechas usan el camino sin él (`['app', 'layout', ...]`); queda un hueco en el árbol, que es justo donde aparecerá el wrapper.
+- **Decir que «solo se repintan los consumidores» sin matiz es incompleto:** un componente que cambia su estado repinta a todo lo que él dibuja; solo los `children` recibidos de arriba se reutilizan. La pieza muestra los dos casos.
+- **Scripts de Python con comillas dentro de un heredoc de Bash se rompen** (`unexpected EOF`) y `'\n'` se convierte en un salto de línea real dentro del JS. -> Escribir el script con la herramienta de archivos y ejecutarlo, o usar `Edit`.

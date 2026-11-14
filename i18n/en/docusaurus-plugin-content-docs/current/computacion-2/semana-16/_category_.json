@@ -1,0 +1,8 @@
+{
+    "label": "W16 - Axios, Guards, Context API & Deployment",
+    "position": 17,
+    "link": {
+        "type": "generated-index",
+        "description": "Consuming APIs with Axios and useEffect, route guards with React Router, Context API and deployment on Tomcat"
+    }
+}

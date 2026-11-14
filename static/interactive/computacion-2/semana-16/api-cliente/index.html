@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>api.js: el cliente de Axios con interceptor</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  .ac-card { margin: 0 0 8px; padding: 6px 8px; border: 1.5px solid var(--dk-line); border-radius: 8px; }
+  .ac-hd { display: block; margin-bottom: 3px; font: 700 10.5px system-ui, sans-serif; color: var(--dk-muted); }
+  .ac-m { display: block; font: 600 11px ui-monospace, Consolas, monospace; word-break: break-all; }
+  .ac-pipe { margin: 0 0 8px; padding: 6px 8px; border: 1.5px dashed var(--dk-ctl); border-radius: 8px; background: color-mix(in srgb, var(--dk-ctl) 7%, transparent); }
+  .ac-pipe .ac-hd { color: var(--dk-ctl); }
+  .ac-arrow { text-align: center; color: var(--dk-muted); font-size: 12px; line-height: 1; margin: -3px 0 3px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // p1 = la URL base (.env); p2 = el cliente; p3 = el interceptor; p4 = leer el token; p5 = el encabezado.
+  var code = [
+    [['import axios from "axios";', '']],
+    [['', '']],
+    [['const api = ', 'cliente'], ['axios.create({', 'cliente']],
+    [['  baseURL: ', 'base'], ['import.meta.env.VITE_API_URL', 'base'], [',', 'base']],
+    [['});', 'cliente']],
+    [['', '']],
+    [['api.interceptors.request.use((config) => {', 'inter']],
+    [['  const token = ', 'token'], ['localStorage.getItem("token")', 'token'], [';', 'token']],
+    [['  if (token) {', 'header']],
+    [['    config.headers.Authorization =', 'header']],
+    [['      `Bearer ${token}`;', 'header']],
+    [['  }', 'header']],
+    [['  return config;', 'inter']],
+    [['});', 'inter']],
+    [['', '']],
+    [['export default api;', 'exp']],
+  ];
+
+  var parts = {
+    base: { label: 'baseURL', color: 'p1', title: 'La URL se escribe una sola vez',
+      text: 'La dirección del servidor vive en el archivo <code>.env</code> y se lee con <code>import.meta.env</code>. Cambiar de la máquina de pruebas a la del servidor es cambiar una línea del <code>.env</code>, no buscar la URL en cada componente.',
+      bullets: ['En Vite, la variable debe empezar por <code>VITE_</code> o no llega al código.', 'El <code>.env</code> se lee al arrancar: si lo editas, reinicia <code>npm run dev</code>.', 'Todo lo que vive en <code>VITE_*</code> termina en el JavaScript del navegador: nunca guardes claves secretas ahí.'],
+      where: 'En pantalla: el archivo <code>.env</code> y el principio de la URL final.' },
+    cliente: { label: 'axios.create', color: 'p2', title: 'Un cliente configurado',
+      text: '<code>axios.create</code> devuelve una instancia con la configuración ya puesta (URL base, tiempo máximo, encabezados). Los componentes importan <code>api</code> y nunca el <code>axios</code> «pelado».',
+      bullets: ['Sirve también para <code>timeout</code> y <code>headers</code> comunes.', 'Un único archivo: si cambia algo del servidor, cambias un solo lugar.'],
+      where: 'En pantalla: <code>api.get("/rutinas")</code> en el componente: solo la ruta, sin URL.' },
+    inter: { label: 'interceptor', color: 'p3', title: 'Un interceptor se ejecuta antes de cada petición',
+      text: '<code>interceptors.request.use</code> registra una función que recibe la configuración de <b>cualquier</b> petición hecha con <code>api</code> justo antes de salir. Puede modificarla y debe devolverla.',
+      bullets: ['Se registra una vez, en <code>api.js</code>; el efecto es global.', 'Olvidar el <code>return config</code> deja la petición colgada.'],
+      where: 'En pantalla: el recuadro punteado entre el componente y la petición.' },
+    token: { label: 'Leer token', color: 'p4', title: 'El token se lee en cada petición',
+      text: 'El interceptor consulta <code>localStorage</code> <b>cada vez</b>, no al cargar el archivo. Así, después del login la siguiente petición ya lleva el token nuevo y después del logout deja de llevarlo, sin recargar la página.',
+      where: 'En pantalla: la caja «localStorage».' },
+    header: { label: 'Authorization', color: 'p5', title: 'Authorization: Bearer <token>',
+      text: 'Si hay token, se agrega el encabezado <code>Authorization</code> con el prefijo <code>Bearer</code>. Es el formato que el backend (Spring Security con JWT) espera para saber quién hace la petición.',
+      bullets: ['Sin token, la petición sale sin encabezado (por ejemplo, la del login).', 'El componente ni se entera: el token se agrega solo.'],
+      where: 'En pantalla: la línea <code>Authorization</code> de la petición final.' },
+    exp: { label: 'export', color: 'p2', title: 'Un solo cliente para toda la app',
+      text: 'Se exporta la instancia. Cualquier componente o servicio la importa con <code>import api from "../api"</code> y obtiene la misma configuración.',
+      where: 'En pantalla: el componente usa <code>api</code>, no <code>axios</code>.' },
+  };
+
+  function view() {
+    return '<div class="ac-card" data-part="base"><span class="ac-hd">.env</span><span class="ac-m">VITE_API_URL=http://192.168.131.110:8081/compunet2-2026/rest</span></div>' +
+      '<div class="ac-card" data-part="exp"><span class="ac-hd">Rutinas.jsx</span><span class="ac-m"><span data-part="cliente">api</span>.get("/rutinas")</span></div>' +
+      '<div class="ac-arrow">↓</div>' +
+      '<div class="ac-pipe" data-part="inter"><span class="ac-hd">Interceptor</span>' +
+        '<div class="ac-card" data-part="token" style="margin:0 0 6px"><span class="ac-hd">localStorage</span><span class="ac-m">token = eyJhbGciOiJIUzI1NiJ9…</span></div>' +
+        '<span class="ac-m" data-part="header">+ Authorization: Bearer eyJhbGci…</span></div>' +
+      '<div class="ac-arrow">↓</div>' +
+      '<div class="ac-card"><span class="ac-hd">Petición que sale</span><span class="ac-m"><span data-part="base">GET http://192.168.131.110:8081/compunet2-2026/rest</span><span data-part="cliente">/rutinas</span></span><span class="ac-m" data-part="header">Authorization: Bearer eyJhbGci…</span></div>';
+  }
+
+  var steps = [
+    { phase: 0, title: 'Un archivo, una URL', focus: 'base',
+      caption: 'La dirección del servidor sale del .env. Ningún componente la repite.' },
+    { phase: 0, title: 'axios.create arma el cliente', focus: 'cliente',
+      caption: 'La instancia api ya trae la URL base: en el componente basta con escribir la ruta.' },
+    { phase: 1, title: 'El interceptor se mete en el camino', focus: 'inter',
+      caption: 'Antes de que salga cualquier petición, el interceptor recibe su configuración.' },
+    { phase: 1, title: 'Lee el token del navegador', focus: 'token',
+      caption: 'Cada vez consulta localStorage: el login y el logout se notan al instante.' },
+    { phase: 1, title: 'Agrega Authorization', focus: 'header',
+      caption: 'Si hay token, la petición sale con Bearer <token>. Sin token, sale sin el encabezado.' },
+    { phase: 2, title: 'Se exporta para toda la app', focus: 'exp',
+      caption: 'Los componentes importan api y escriben solo la ruta; URL y token se resuelven solos.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'El archivo api.js: la URL base leída del .env, la instancia de Axios y el interceptor que agrega el token a cada petición, enlazados con la petición que sale',
+    phases: ['URL y cliente', 'Interceptor', 'Uso'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.codemap({ stage: stage, file: 'src/api.js', code: code, parts: parts, view: view, split: '1.9fr', compact: true });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'api.js',
+      title: 'Un cliente que ya sabe la URL y manda el token',
+      text: 'Recorre el archivo, o pasa el mouse por el código o por la petición, para ver de dónde sale cada parte de lo que viaja al servidor.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

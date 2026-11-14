@@ -998,5 +998,75 @@
     "slug": "estados-asincronos",
     "title": "Estados de una petición asíncrona",
     "src": "/interactive/seminario-de-i-d-i/semana-14/estados-asincronos/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-15/anatomia-url-publica",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "anatomia-url-publica",
+    "title": "Las partes de una URL de Storage",
+    "src": "/interactive/seminario-de-i-d-i/semana-15/anatomia-url-publica/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-15/autenticacion-vs-autorizacion",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "autenticacion-vs-autorizacion",
+    "title": "Autenticación frente a autorización",
+    "src": "/interactive/seminario-de-i-d-i/semana-15/autenticacion-vs-autorizacion/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-15/bucket-reglas",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "bucket-reglas",
+    "title": "Un bucket y sus reglas",
+    "src": "/interactive/seminario-de-i-d-i/semana-15/bucket-reglas/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-15/modulos-supabase",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "modulos-supabase",
+    "title": "Los módulos de Supabase",
+    "src": "/interactive/seminario-de-i-d-i/semana-15/modulos-supabase/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-15/peticion-auth",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "peticion-auth",
+    "title": "La petición de autenticación en Supabase",
+    "src": "/interactive/seminario-de-i-d-i/semana-15/peticion-auth/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-15/rls-anon-vs-authenticated",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "rls-anon-vs-authenticated",
+    "title": "RLS: de anon a authenticated",
+    "src": "/interactive/seminario-de-i-d-i/semana-15/rls-anon-vs-authenticated/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-15/subir-y-mostrar",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "subir-y-mostrar",
+    "title": "Subir una foto y mostrarla",
+    "src": "/interactive/seminario-de-i-d-i/semana-15/subir-y-mostrar/index.html"
   }
 ]

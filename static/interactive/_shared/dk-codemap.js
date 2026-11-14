@@ -15,6 +15,8 @@
  *       view: function () { return '<div data-part="name">Teclado</div>'; },     // HTML del resultado; data-part enlaza con el codigo
  *     });
  *   }
+ * Opciones de tamano: split: '1.7fr' (mas ancho para el codigo: lineas largas sin partir) y compact: true (letra y alturas menores,
+ * para que la pieza entera quepa en una pantalla de portatil).
  * Un paso: { phase, title, caption, msgs: [], focus: 'fn' }   (la parte que se ilumina mientras el mouse no toque nada)
  * Dentro de `view` se pueden usar las clases cm-ui (pantalla clara simulada), cm-card, cm-chip, cm-code, cm-arrow y cm-lbl (rotulo).
  */
@@ -27,7 +29,7 @@ DK.codemap = function (o) {
     var st = document.createElement('style');
     st.id = 'dk-codemap-css';
     st.textContent = [
-      '.cmx { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); gap: 12px 16px; align-items: stretch; }',
+      '.cmx { display: grid; grid-template-columns: minmax(0, var(--cm-l, 1.12fr)) minmax(0, 1fr); gap: 12px 16px; align-items: stretch; }',
       '.cm-left, .cm-right { min-width: 0; } .cm-left .cm-ed { height: 100%; }',
       '.cm-ed { border: 1px solid var(--dk-line); border-radius: 12px; background: var(--dk-card); overflow: hidden; }',
       '.cm-tab { display: flex; padding: 0 8px; background: var(--dk-band); border-bottom: 1px solid var(--dk-line); }',
@@ -74,6 +76,8 @@ DK.codemap = function (o) {
       '  .dk-fs .cm-ui { zoom: 1.5; }',
       '  .dk-fs .cm-call { grid-column: 3; grid-row: 1; min-height: 0; overflow: auto; font-size: 18px; } .dk-fs .cm-call h4 { font-size: 22px; } .dk-fs .cm-call code { font-size: 16px; }',
       '}',
+      '.cmx.cm-compact .cm-lines { font-size: 12.5px; line-height: 1.55; } .cmx.cm-compact .cm-ln { min-height: 1.55em; } .cmx.cm-compact .cm-no { width: 26px; padding-right: 8px; }',
+      '.cmx.cm-compact .cm-call { min-height: 128px; padding: 8px 12px; } .cmx.cm-compact .cm-call h4 { font-size: 15px; margin-bottom: 4px; } .cmx.cm-compact .cm-ui { padding: 8px; gap: 6px; }',
       '@media (max-width: 560px) { .cmx { grid-template-columns: 1fr; } }',
     ].join('\n');
     document.head.appendChild(st);
@@ -107,7 +111,8 @@ DK.codemap = function (o) {
     var p = parts[n.getAttribute('data-part')]; if (p && p.color) n.style.setProperty('--pc', PAGE_C[p.color]);
     n.setAttribute('tabindex', '0');
   });
-  var root = el('div', { class: 'cmx' }, el('div', { class: 'cm-left' }, el('div', { class: 'cm-ed' }, tab, lines)), el('div', { class: 'cm-right' }, ui), call);   // la explicacion ocupa todo el ancho, debajo
+  var root = el('div', { class: 'cmx' + (o.compact ? ' cm-compact' : '') }, el('div', { class: 'cm-left' }, el('div', { class: 'cm-ed' }, tab, lines)), el('div', { class: 'cm-right' }, ui), call);   // la explicacion ocupa todo el ancho, debajo
+  if (o.split) root.style.setProperty('--cm-l', o.split);   // ancho del codigo respecto del resultado, p. ej. '1.7fr'
   o.stage.replaceChildren(root);
 
   // ---------- resaltado ----------

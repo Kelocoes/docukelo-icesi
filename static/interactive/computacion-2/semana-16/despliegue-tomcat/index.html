@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Del proyecto al .war en Tomcat</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Los pasos del despliegue: tu computador prepara el .war, lo copia al servidor y Tomcat lo publica. Solo DATOS. */
+(function () {
+  var D = 'dev', T = 'tomcat', B = 'browser';
+  var PH = ['Build', 'Empaquetar', 'Publicar', 'Probar'];
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+
+  var CODIGO = [
+    '# 1. Generar la versión de producción',      // 1
+    'npm run build',                              // 2
+    '',                                           // 3
+    '# 2. Agregar la configuración de Tomcat',    // 4
+    'cp -r WEB-INF dist/',                        // 5
+    '',                                           // 6
+    '# 3. Crear el .war (el nombre es la URL)',   // 7
+    'cd dist',                                    // 8
+    'zip -r iaslab#compu2#apellido.war *',        // 9
+    '',                                           // 10
+    '# 4. Copiarlo a webapps/ del servidor',      // 11
+    'scp iaslab#compu2#apellido.war \\',          // 12
+    '  usuario@servidor:/opt/tomcat/webapps/'     // 13
+  ].join('\n');
+
+  var steps = [
+    { phase: 0, title: 'npm run build genera dist/', code: [1, 2],
+      caption: 'Vite compila el proyecto: el JSX se convierte en JavaScript, se minimiza y queda en dist/ junto con index.html. Aquí se lee el .env.production con la URL del backend.',
+      msgs: [], state: { dev: 'dist/ listo', tomcat: 'Corriendo', browser: '—' } },
+    { phase: 1, title: 'WEB-INF/ entra a dist/', code: [4, 5],
+      caption: 'Copias la carpeta WEB-INF (con el web.xml que hace funcionar las rutas del router) dentro de dist/. Tomcat solo la lee si va dentro del paquete.',
+      msgs: [], state: { dev: 'dist/ + WEB-INF', tomcat: 'Corriendo', browser: '—' } },
+    { phase: 1, title: 'zip crea el .war', code: [7, 8, 9],
+      caption: 'Un .war es un zip con extensión distinta. Se comprime el contenido de dist/ (no la carpeta) y el nombre manda: el # separa niveles, así que iaslab#compu2#apellido.war se publica en /iaslab/compu2/apellido.',
+      msgs: [], state: { dev: '.war creado', tomcat: 'Corriendo', browser: '—' } },
+    { phase: 2, title: 'Se copia a webapps/', code: [11, 12, 13],
+      caption: 'Tomcat vigila su carpeta webapps/. Copiar allí el .war (con scp, o por el explorador de archivos remoto) es todo el «despliegue».',
+      msgs: [msg(D, T, '.war', 'data')], state: { dev: 'Subió el .war', tomcat: 'Recibió el .war', browser: '—' } },
+    { phase: 2, title: 'Tomcat lo descomprime y lo publica', code: [],
+      caption: 'Sin reiniciar nada, Tomcat detecta el archivo, crea la carpeta con su contenido y registra la ruta. Si subes un .war con el mismo nombre, reemplaza la versión anterior.',
+      msgs: [], state: { dev: 'Libre', tomcat: 'App publicada', browser: '—' } },
+    { phase: 3, title: 'Abres la URL en el navegador', code: [],
+      caption: 'En http://IP:8080/iaslab/compu2/apellido/ Tomcat entrega el index.html y los archivos de dist/. A partir de ahí, React corre en el navegador y llama al backend por la URL del .env.',
+      msgs: [msg(B, T, 'GET /iaslab/compu2/apellido/', 'ctl'), msg(T, B, 'index.html + JS', 'ack')], state: { dev: 'Libre', tomcat: 'Entregó la app', browser: 'App funcionando' } },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Pasos para desplegar una aplicación de Vite en Tomcat: build, copiar WEB-INF, crear el .war, copiarlo a webapps y abrir la URL',
+    phases: PH,
+    scene: function (svg) {
+      return DK.sequence({ svg: svg, trayCount: 0, idleState: '—', phases: PH,
+        actors: [{ id: D, label: 'Tu computador', icon: 'laptop' }, { id: T, label: 'Tomcat (sala)', icon: 'server' }, { id: B, label: 'Navegador', icon: 'browser' }] });
+    },
+    code: { title: 'terminal', text: CODIGO },
+    build: function () { return steps; },
+    kicker: function (p) { return 'Fase ' + (p + 1) + ' · ' + PH[p]; },
+    intro: { kicker: 'Despliegue', title: 'De tu proyecto a una URL en el servidor', text: 'Recorre los cuatro pasos: generar la versión de producción, empaquetarla como .war, copiarla a Tomcat y abrirla desde el navegador.' },
+  });
+})();
+</script>
+</body>
+</html>
