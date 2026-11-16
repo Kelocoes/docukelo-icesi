@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Del botón a la Edge Function</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El viaje de una llamada a la función resumen-contactos: la app invoca, la función revisa quién llama, consulta la tabla como
+   ese usuario, cuenta por dominio y responde un JSON pequeño. Un selector cambia el desenlace (200, 401, sin conexión) y el código
+   real de la app y de la función se resalta en cada paso. Solo DATOS. */
+(function () {
+  var APP = 'app', FN = 'fn', DB = 'db';
+  var PHASES = ['Invocar', 'En la nube', 'Respuesta'];
+  var CASOS = ['Con sesión (200)', 'Sin sesión (401)', 'Sin conexión'];
+
+  // Los archivos reales: el servicio de la app Flutter y la función desplegada.
+  var DART = [
+    "import 'package:supabase_flutter/supabase_flutter.dart';",
+    "",
+    "class ContactoService {",
+    "  final _db = Supabase.instance.client;",
+    "",
+    "  Future<Map<String, int>> resumenPorDominio() async {",
+    "    try {",
+    "      final res = await _db.functions",
+    "          .invoke('resumen-contactos');",
+    "      final datos = res.data as Map<String, dynamic>;",
+    "      return Map<String, int>.from(datos['porDominio']);",
+    "    } on FunctionException catch (e) {",
+    "      final d = e.details;",
+    "      throw Exception(d is Map",
+    "          ? (d['message'] ?? d['error'])",
+    "          : 'Sin conexión');",
+    "    }",
+    "  }",
+    "}",
+  ];
+  var TS = [
+    "import { withSupabase } from \"npm:@supabase/server@1\";",
+    "",
+    "export default {",
+    "  fetch: withSupabase({ auth: \"user\" }, async (_req, ctx) => {",
+    "    // ctx.supabase aplica las políticas RLS del usuario",
+    "    const { data, error } = await ctx.supabase",
+    "      .from(\"contactos\").select(\"email\");",
+    "    if (error) {",
+    "      return Response.json(",
+    "        { error: error.message }, { status: 400 });",
+    "    }",
+    "",
+    "    // Agrupar por dominio: la cuenta se hace aquí",
+    "    const porDominio: Record<string, number> = {};",
+    "    for (const { email } of data) {",
+    "      const dominio =",
+    "        email.split(\"@\")[1]?.toLowerCase() ?? \"sin dominio\";",
+    "      porDominio[dominio] = (porDominio[dominio] ?? 0) + 1;",
+    "    }",
+    "",
+    "    return Response.json({ total: data.length, porDominio });",
+    "  }),",
+    "};",
+  ];
+
+  // Número de línea (desde 1) de la primera línea que contiene el texto; falla si el texto ya no existe.
+  function at(lines, text) {
+    for (var i = 0; i < lines.length; i++) if (lines[i].indexOf(text) >= 0) return i + 1;
+    throw new Error('No existe la línea: ' + text);
+  }
+  var D = {
+    invoke: [at(DART, 'final res = await'), at(DART, "invoke('resumen-contactos')")],
+    ok: [at(DART, 'final datos'), at(DART, 'return Map<String')],
+    fail: [at(DART, 'on FunctionException'), at(DART, "'Sin conexión'")],
+  };
+  var T = {
+    wrap: [at(TS, 'withSupabase({ auth')],
+    consulta: [at(TS, 'const { data, error }'), at(TS, '.from("contactos")')],
+    cuenta: [at(TS, 'const porDominio'), at(TS, 'porDominio[dominio] =')],
+    fin: [at(TS, 'return Response.json({ total')],
+  };
+  var rango = function (a) { var r = []; for (var i = a[0]; i <= a[a.length - 1]; i++) r.push(i); return r; };
+
+  var msg = function (from, to, label, kind, lost) { var m = { from: from, to: to, label: label, kind: kind }; if (lost) m.lost = true; return m; };
+
+  function build(opt) {
+    var c = opt.caso, s = [];
+    var step = function (phase, title, caption, msgs, state, file, code) {
+      s.push({ phase: phase, title: title, caption: caption, msgs: msgs, state: state, file: file, code: code });
+    };
+
+    if (c === 2) {
+      step(0, 'La app llama a invoke()',
+        'El usuario abre el resumen. El servicio llama a functions.invoke con el nombre de la función. Pero el teléfono no tiene internet: la petición nunca sale.',
+        [msg(APP, FN, 'POST (sin red)', 'ctl', true)], { app: 'Sin conexión', fn: 'No se entera' },
+        'contacto_service.dart', rango(D.invoke));
+      step(2, 'La app recibe una excepción',
+        'No hubo respuesta, así que no hay cuerpo que decodificar: el SDK lanza FunctionsFetchException (una FunctionException) y details NO es un mapa. Por eso el catch comprueba d is Map antes de leer el mensaje.',
+        [], { app: 'FunctionsFetchException', fn: 'Esperando' }, 'contacto_service.dart', rango(D.fail));
+      return s;
+    }
+
+    step(0, 'La app llama a invoke()',
+      'El usuario abre el resumen. El servicio llama a functions.invoke con el nombre de la función. El SDK agrega solo la llave publishable y, si hay sesión, el JWT en Authorization.',
+      [msg(APP, FN, 'POST /resumen-contactos', 'ctl')], { app: c === 1 ? 'Sin sesión' : 'Con sesión', fn: 'Recibe la petición' },
+      'contacto_service.dart', rango(D.invoke));
+
+    step(1, 'withSupabase: ¿quién llama?',
+      c === 1
+        ? 'La función exige auth: "user", es decir, un JWT de usuario. La petición llegó solo con la llave publishable, que identifica al proyecto y no a una persona: la función la rechaza antes de ejecutar tu lógica.'
+        : 'La función exige auth: "user". withSupabase valida el JWT y prepara ctx: un cliente que actúa como el usuario que llamó (ctx.supabase). Aquí empieza el código tuyo.',
+      c === 1 ? [msg(FN, APP, '401 UNUSABLE_CREDENTIAL', 'err')] : [],
+      c === 1 ? { app: 'Sin sesión', fn: 'Rechaza' } : { fn: 'Usuario verificado' },
+      'index.ts', T.wrap);
+
+    if (c === 1) {
+      step(2, 'La app recibe una FunctionException',
+        'Un código distinto de 2xx NO devuelve datos: el SDK lanza FunctionException con status 401 y el cuerpo en details. Si no la capturas con try/catch, la pantalla se rompe.',
+        [], { app: 'FunctionException 401', fn: 'Esperando' }, 'contacto_service.dart', rango(D.fail));
+      return s;
+    }
+
+    step(1, 'La función consulta como el usuario',
+      'La función lee los correos con ctx.supabase: las políticas RLS de la semana 15 siguen aplicando, así que solo ve las filas que ese usuario puede ver. Estas filas viajan dentro de la nube, no hasta el teléfono.',
+      [msg(FN, DB, 'select email', 'ctl'), msg(DB, FN, 'filas (según RLS)', 'data')],
+      { db: 'Entrega filas', fn: 'Consultando' }, 'index.ts', rango(T.consulta));
+
+    step(1, 'La función cuenta por dominio',
+      'Con las filas en memoria, la función agrupa por dominio del correo. El trabajo pesado ocurre aquí, no en el teléfono.',
+      [], { fn: 'Agrupa por dominio' }, 'index.ts', rango(T.cuenta));
+
+    step(2, 'Respuesta: 200 con un JSON pequeño',
+      'La función devuelve solo el resultado: { total, porDominio }, unos cientos de bytes. El SDK decodifica el JSON y la app lo recibe en res.data.',
+      [msg(FN, APP, '200 + { total, porDominio }', 'ack')], { app: 'Recibe el resumen', fn: 'Listo' }, 'index.ts', T.fin);
+
+    step(2, 'La app usa el resultado',
+      'De vuelta en Dart, res.data ya es un mapa. La app lo convierte a Map<String, int> y la interfaz muestra los números.',
+      [], { app: 'Muestra el resumen', db: 'Sin cambios' }, 'contacto_service.dart', rango(D.ok));
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Recorrido de una llamada a la Edge Function resumen-contactos entre la app Flutter, la función y Postgres, con tres desenlaces: respuesta 200, sin sesión (401) y sin conexión',
+    phases: PHASES,
+    scene: function (svg) {
+      return DK.sequence({
+        svg: svg, trayCount: 0, idleState: '—', phases: PHASES, width: 720,
+        actors: [
+          { id: APP, label: 'App Flutter', icon: 'laptop' },
+          { id: FN, label: 'Edge Function', icon: 'server' },
+          { id: DB, label: 'Postgres', icon: 'database' },
+        ],
+      });
+    },
+    build: build,
+    toggles: [{ key: 'caso', type: 'select', label: 'Qué pasa', options: CASOS, value: 0, restart: 'first' }],
+    code: { files: [{ name: 'contacto_service.dart', text: DART.join('\n') }, { name: 'index.ts', text: TS.join('\n') }] },
+    intro: { kicker: 'Edge Functions', title: 'Del botón a la función y de vuelta', text: 'Sigue una llamada a resumen-contactos: la app invoca, la función revisa quién llama, consulta y cuenta, y la app recibe el resultado. Cambia «Qué pasa» para ver los tres desenlaces.' },
+  });
+})();
+</script>
+</body>
+</html>

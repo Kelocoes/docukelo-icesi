@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Con y sin Edge Function</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El mismo resumen de contactos (cuántos hay por dominio) hecho de dos maneras: la app descarga todas las filas y cuenta, o una
+   Edge Function cuenta dentro de la nube y devuelve un JSON pequeño. Un deslizador cambia cuántos contactos hay y se compara
+   qué cruza la red móvil. Cifras aproximadas: ~110 bytes por fila (id, nombre, correo y fecha en JSON) y ~0,2 KB de respuesta.
+   El deslizador llega a 1000, el tope por defecto de filas por consulta de la API (Max rows), que limita a los dos caminos.
+   Escena libre DK.canvas + deslizador. Solo DATOS. */
+(function () {
+  var BYTES_FILA = 110, BYTES_JSON = 200;
+  var kb = function (b) { var v = b / 1024; return (v < 10 ? v.toFixed(1) : Math.round(v)).toString().replace('.', ',') + ' KB'; };
+
+  var items = [
+    { id: 'za', type: 'zone', shape: 'round', x: 10, y: 22, w: 700, h: 140, rx: 18, label: 'Sin función: la app descarga y cuenta', lx: 30, ly: 46 },
+    { id: 'zb', type: 'zone', shape: 'round', x: 10, y: 178, w: 700, h: 140, rx: 18, label: 'Con función: la cuenta ocurre en la nube', lx: 30, ly: 202 },
+    { id: 'appA', type: 'node', icon: 'laptop', x: 90, y: 100, size: 50, label: 'App Flutter', sub: 'cuenta aquí' },
+    { id: 'dbA', type: 'node', icon: 'database', x: 630, y: 100, size: 50, label: 'Postgres', sub: 'contactos' },
+    { id: 'ta', type: 'tag', x: 360, y: 148, text: '…', hidden: true },
+    { id: 'appB', type: 'node', icon: 'laptop', x: 90, y: 256, size: 50, label: 'App Flutter', sub: 'solo muestra' },
+    { id: 'fnB', type: 'node', icon: 'server', x: 360, y: 256, size: 50, label: 'Edge Function', sub: 'resumen-contactos' },
+    { id: 'dbB', type: 'node', icon: 'database', x: 630, y: 256, size: 50, label: 'Postgres', sub: 'contactos' },
+    { id: 'tb', type: 'tag', x: 495, y: 300, text: '…', hidden: true },
+  ];
+
+  function build(opt) {
+    var n = opt.n;
+    var bytesA = n * BYTES_FILA, bytesB = BYTES_JSON;
+    var s = [];
+    var sA = n + ' contactos', rate = Math.round(bytesA / bytesB);
+
+    s.push({ phase: 0, title: 'La app pide todos los contactos', focus: ['appA', 'dbA'], text: { dbA: 'Postgres' }, sub: { dbA: sA },
+      links: [{ from: 'appA', to: 'dbA', kind: 'ctl', label: 'select()', curve: 0 }],
+      caption: 'Sin función, para saber cuántos contactos hay por dominio la app tiene que pedirlos: from(\'contactos\').select().' });
+    s.push({ phase: 0, title: 'Las filas cruzan la red móvil', focus: ['appA', 'dbA', 'ta'], show: ['ta'], text: { ta: '≈ ' + kb(bytesA) + ' · red móvil' }, sub: { dbA: sA },
+      links: [{ from: 'dbA', to: 'appA', kind: 'data', label: n + ' filas', curve: 0 }],
+      caption: 'Cada fila viaja al teléfono (~110 bytes: id, nombre, correo y fecha). Con ' + n + ' filas son ≈ ' + kb(bytesA) + ' que pagan batería y datos del usuario.' });
+    s.push({ phase: 0, title: 'La app cuenta en el teléfono', focus: ['appA'], sub: { appA: 'cuenta ' + n, dbA: sA }, state: { appA: 'ok' },
+      caption: 'La app recorre las filas y agrupa por dominio. Funciona, pero el trabajo y los datos viajaron todos hasta el teléfono. (La API devuelve como máximo 1000 filas por consulta; más allá habría que paginar.)' });
+
+    s.push({ phase: 1, title: 'La app llama a la función', focus: ['appB', 'fnB'], text: { dbB: 'Postgres' }, sub: { dbB: sA },
+      links: [{ from: 'appB', to: 'fnB', kind: 'ctl', label: 'invoke()', curve: 0 }],
+      caption: 'Con función, la app solo llama a invoke(\'resumen-contactos\'). No pide filas: pide el resultado.' });
+    s.push({ phase: 1, title: 'La función consulta dentro de la nube', focus: ['fnB', 'dbB'], sub: { dbB: sA },
+      links: [{ from: 'fnB', to: 'dbB', kind: 'ctl', label: 'select email', curve: -12 }, { from: 'dbB', to: 'fnB', kind: 'data', label: n + ' filas', curve: 12 }],
+      caption: 'Las filas sí se leen, pero entre la función y la base de datos, que están en la misma red del proveedor: rápido, sin gastar los datos del teléfono.' });
+    s.push({ phase: 1, title: 'Solo viaja el resultado', focus: ['fnB', 'appB', 'tb'], show: ['tb'], text: { tb: '≈ ' + kb(bytesB) + ' · red móvil' }, sub: { dbB: sA },
+      links: [{ from: 'fnB', to: 'appB', kind: 'ack', label: '1 JSON', curve: 0 }],
+      state: { appB: 'ok' },
+      caption: 'La función agrupa por dominio y responde un JSON pequeño: { "total": ' + n + ', "porDominio": {...} }. La app solo lo muestra.' });
+
+    s.push({ phase: 2, title: 'La diferencia', focus: ['ta', 'tb'], show: ['ta', 'tb'],
+      text: { ta: '≈ ' + kb(bytesA) + ' · red móvil', tb: '≈ ' + kb(bytesB) + ' · red móvil' },
+      sub: { dbA: sA, dbB: sA }, state: { ta: 'err', tb: 'ok' },
+      caption: 'Por la red móvil viajan ≈ ' + rate + ' veces menos datos con la función' + '. Mueve el deslizador: la respuesta de la función casi no cambia, mientras la descarga crece con la tabla.' + ' El costo: una función más que desplegar y mantener.' });
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Comparación entre contar los contactos en la app, descargando todas las filas, y hacerlo en una Edge Function que responde un JSON pequeño; un deslizador cambia el número de contactos',
+    phases: ['Sin función', 'Con función', 'Comparar'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 340, trail: 'step', items: items }); },
+    toggles: [{ key: 'n', type: 'range', label: 'Contactos', min: 10, max: 1000, step: 10, value: 500, format: function (v) { return v; } }],
+    build: build,
+    intro: { kicker: 'Edge Functions', title: 'Qué cruza la red: filas o resultado', text: 'El mismo resumen de contactos, hecho en la app y en una función. Mueve el deslizador y compara cuánto viaja hasta el teléfono.' },
+  });
+})();
+</script>
+</body>
+</html>

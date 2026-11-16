@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¿Dónde va esta lógica?</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Tres preguntas para decidir dónde vive una regla de la agenda: la app, una política RLS, una Edge Function, o nada especial
+   (consulta directa con el SDK). Cada pestaña es un caso concreto que recorre las mismas preguntas. Solo DATOS. */
+(function () {
+  var msg = function (path, label, kind) { return { path: path, label: label, kind: kind }; };
+
+  var nodes = [
+    { id: 'q1', kind: 'box', icon: 'user', label: '¿Solo es presentación?', sub: 'se ve, pero no protege datos', x: 10, y: 110, w: 190, h: 90 },
+    { id: 'q2', kind: 'box', icon: 'lock', label: '¿Es un permiso de filas?', sub: 'quién ve o escribe qué', x: 300, y: 110, w: 190, h: 90 },
+    { id: 'q3', kind: 'box', icon: 'gear', label: '¿Secreto o cálculo pesado?', sub: 'llave privada o muchos datos', x: 590, y: 110, w: 190, h: 90 },
+    { id: 'app', kind: 'box', icon: 'laptop', label: 'En la app Flutter', sub: 'un widget o un validador', x: 10, y: 250, w: 190, h: 74 },
+    { id: 'rls', kind: 'box', icon: 'lock', label: 'Política RLS', sub: 'using / with check en Postgres', x: 300, y: 250, w: 190, h: 74 },
+    { id: 'fn', kind: 'box', icon: 'server', label: 'Edge Function', sub: 'código en la nube y secretos', x: 590, y: 250, w: 190, h: 74 },
+    { id: 'direct', kind: 'box', icon: 'database', label: 'Consulta directa', sub: 'el SDK habla con PostgREST', x: 590, y: 4, w: 190, h: 74 },
+  ];
+
+  // Flechas: «Sí» baja al resultado (verde); «No» sigue a la pregunta siguiente.
+  var SI1 = msg([105, 200, 105, 250], 'Sí', 'ack'), NO1 = msg([200, 155, 300, 155], 'No', 'ctl');
+  var SI2 = msg([395, 200, 395, 250], 'Sí', 'ack'), NO2 = msg([490, 155, 590, 155], 'No', 'ctl');
+  var SI3 = msg([685, 200, 685, 250], 'Sí', 'ack'), NO3 = msg([685, 110, 685, 78], 'No', 'ctl');
+
+  var steps = [
+    // 1. Deshabilitar el botón
+    { phase: 0, title: 'Deshabilitar «Guardar» sin nombre', focus: ['q1'], msgs: [],
+      caption: 'Requerimiento: el botón «Guardar» debe verse apagado mientras el campo nombre esté vacío.' },
+    { phase: 0, title: 'Solo cambia lo que se ve', focus: ['q1', 'app'], msgs: [SI1],
+      caption: 'Es presentación: ayuda al usuario, pero no protege nada. Va en la app. Aunque la app lo impida, alguien puede mandar la petición por otro camino; por eso esta regla nunca reemplaza a las del servidor.' },
+
+    // 2. Cada usuario ve lo suyo
+    { phase: 1, title: 'Cada usuario ve solo sus contactos', focus: ['q1'], msgs: [],
+      caption: 'Requerimiento: al listar, cada usuario debe recibir únicamente los contactos que creó él.' },
+    { phase: 1, title: 'No es presentación', focus: ['q1', 'q2'], msgs: [NO1],
+      caption: 'Esconder filas en la pantalla no sirve: los datos ya habrían viajado al teléfono. La regla tiene que aplicarse antes de que salgan de la base de datos.' },
+    { phase: 1, title: 'Decide quién ve qué fila', focus: ['q2', 'rls'], msgs: [NO1, SI2],
+      caption: 'Es un permiso sobre filas: una política RLS con using (auth.uid() = user_id). La base de datos la aplica sola, en cada consulta, sin tocar código.' },
+
+    // 3. Resumen por dominio
+    { phase: 2, title: 'Resumen por dominio de correo', focus: ['q1'], msgs: [],
+      caption: 'Requerimiento: mostrar cuántos contactos hay en total y cuántos por dominio de correo.' },
+    { phase: 2, title: 'Ni presentación ni permiso', focus: ['q1', 'q2'], msgs: [NO1],
+      caption: 'No es cuestión de cómo se ve, y tampoco decide quién puede leer o escribir una fila: es un cálculo sobre los datos.' },
+    { phase: 2, title: 'Calcular exige leer todas las filas', focus: ['q2', 'q3'], msgs: [NO1, NO2],
+      caption: 'Para contar hay que leer todos los contactos. Hacerlo en la app obliga a descargarlos todos al teléfono: datos móviles y batería para entregar solo unos números.' },
+    { phase: 2, title: 'Edge Function', focus: ['q3', 'fn'], msgs: [NO1, NO2, SI3],
+      caption: 'La función resumen-contactos cuenta dentro de la nube y devuelve un JSON pequeño. Es el ejemplo de esta guía.' },
+
+    // 4. Correo de bienvenida
+    { phase: 3, title: 'Enviar un correo de bienvenida', focus: ['q1'], msgs: [],
+      caption: 'Requerimiento: al crear un contacto, enviarle un correo usando un servicio externo como Resend.' },
+    { phase: 3, title: 'Necesita una llave secreta', focus: ['q2', 'q3'], msgs: [NO1, NO2],
+      caption: 'Esos servicios cobran por uso y se autentican con una llave privada. Si la pones en la app, cualquiera puede extraerla del instalador y gastar tu cuota.' },
+    { phase: 3, title: 'Edge Function con un secreto', focus: ['q3', 'fn'], msgs: [NO1, NO2, SI3],
+      caption: 'La llave se guarda como secreto de la función (Edge Functions › Secrets) y la app nunca la ve: solo llama a la función.' },
+
+    // 5. Mostrar la lista
+    { phase: 4, title: 'Mostrar la lista de contactos', focus: ['q1'], msgs: [],
+      caption: 'Requerimiento: la pantalla principal muestra los contactos ordenados por nombre.' },
+    { phase: 4, title: 'Nada de lo anterior', focus: ['q2', 'q3'], msgs: [NO1, NO2],
+      caption: 'Leer filas no cambia lo que se ve, no necesita un secreto ni una regla crítica: los permisos ya los resuelve RLS.' },
+    { phase: 4, title: 'Consulta directa con el SDK', focus: ['q3', 'direct'], msgs: [NO1, NO2, NO3],
+      caption: 'Basta from(\'contactos\').select(). No toda lógica necesita una función: cada una es código que mantener, desplegar y vigilar. Úsala cuando haga falta.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Árbol de decisión para ubicar una regla de la agenda: en la app, en una política RLS, en una Edge Function o con una consulta directa, aplicado a cinco requerimientos',
+    phases: ['Botón', 'Filas', 'Resumen', 'Envío', 'Lista'],
+    scene: function (svg) { return DK.layers({ svg: svg, width: 800, height: 336, nodes: nodes, trail: 'phase', labels: 'smart' }); },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Edge Functions', title: 'Tres preguntas para ubicar una regla',
+      text: 'Cada pestaña es un requerimiento distinto de la agenda. Hazle al árbol las tres preguntas y mira dónde termina.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

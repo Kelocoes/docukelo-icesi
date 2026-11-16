@@ -320,6 +320,96 @@
     "src": "/interactive/computacion-2/semana-15/usestate-instantanea/index.html"
   },
   {
+    "id": "computacion-2/semana-16/api-cliente",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "api-cliente",
+    "title": "api.js: el cliente de Axios con interceptor",
+    "src": "/interactive/computacion-2/semana-16/api-cliente/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/context-configuracion",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "context-configuracion",
+    "title": "AuthContext: las tres piezas de Context API",
+    "src": "/interactive/computacion-2/semana-16/context-configuracion/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/despliegue-tomcat",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "despliegue-tomcat",
+    "title": "Del proyecto al .war en Tomcat",
+    "src": "/interactive/computacion-2/semana-16/despliegue-tomcat/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/guarda-outlet",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "guarda-outlet",
+    "title": "Guarda de ruta con Outlet",
+    "src": "/interactive/computacion-2/semana-16/guarda-outlet/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/jwt-anatomia",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "jwt-anatomia",
+    "title": "Anatomía de un token JWT",
+    "src": "/interactive/computacion-2/semana-16/jwt-anatomia/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/login-token",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "login-token",
+    "title": "Login con Axios y token en localStorage",
+    "src": "/interactive/computacion-2/semana-16/login-token/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/prop-drilling-context",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "prop-drilling-context",
+    "title": "Prop drilling y Context API",
+    "src": "/interactive/computacion-2/semana-16/prop-drilling-context/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/spa-404-tomcat",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "spa-404-tomcat",
+    "title": "Recargar una ruta de la SPA en Tomcat",
+    "src": "/interactive/computacion-2/semana-16/spa-404-tomcat/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/useeffect-axios",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "useeffect-axios",
+    "title": "useEffect + Axios: pedir datos al montar",
+    "src": "/interactive/computacion-2/semana-16/useeffect-axios/index.html"
+  },
+  {
     "id": "computacion-3/semana-12/anatomia-slice",
     "course": "computacion-3",
     "courseName": "Computación 3",
