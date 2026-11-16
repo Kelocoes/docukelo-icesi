@@ -17,6 +17,8 @@ body { margin: 0; background: var(--night); }
 /* Secciones 01-04: número, título y subtítulo dentro de una barra más alta (la de la plantilla es para una línea). */
 .slide.section-a .blue-bar { top: 440px; height: 210px; }
 .slide.section-a .section-title { top: 462px; line-height: 1.1; }
+/* Solo si la diapositiva trae el flujo abajo: título + subtítulo suben para no quedar tapados por la tarjeta blanca (top 420). Sin flujo, se queda donde la plantilla. */
+.slide.section-e:has(svg.flow) .section-title { top: 285px; line-height: 1.15; }
 .sec-n { display: block; font-size: 22px; letter-spacing: .12em; opacity: .7; margin-bottom: 8px; }
 .sec-sub { display: block; font-size: 24px; font-weight: 500; margin-top: 14px; opacity: .85; }
 /* Portada y cierre: tamaños fijos (la plantilla usa vw, que cambia con la ventana) y sin recorte del recuadro amarillo. */
