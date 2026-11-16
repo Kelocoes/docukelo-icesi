@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guarda de ruta con Outlet</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<link rel="stylesheet" href="../../../_shared/dk-browser.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-browser.js"></script>
+<script src="../../../_shared/dk-views.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El usuario escribe /dashboard. El router (router.jsx) dibuja primero a ProtectedRoute, el wrapper que envuelve a las rutas
+   protegidas, y este decide: <Outlet /> (deja pasar) o <Navigate /> (redirige). Diagrama anidado + pantalla + dos archivos. Solo DATOS. */
+(function () {
+  var CASOS = ['Con token', 'Sin token', 'Token vencido'];
+  var PH = ['Ruta', 'Guarda', 'Resultado'];
+  var DASH_PATH = [102, 170, 372, 170];   // navegador -> ProtectedRoute (cruza el borde del router)
+
+  var ROUTER = [
+    'const router = createBrowserRouter([',                          // 1
+    '  { path: "/login", Component: Login },',                       // 2
+    '  {',                                                           // 3
+    '    Component: ProtectedRoute,',                                // 4
+    '    children: [',                                               // 5
+    '      { path: "/dashboard", Component: Dashboard },',           // 6
+    '      { path: "/rutinas", Component: Rutinas },',               // 7
+    '    ],',                                                        // 8
+    '  },',                                                          // 9
+    ']);'                                                            // 10
+  ].join('\n');
+
+  // las líneas son las mismas en las tres variantes: solo cambia la 3
+  function protegida(opt) {
+    var cond = opt.caso === 2 ? 'if (!token || estaVencido(token)) {' : 'if (!token) {';
+    return ['export default function ProtectedRoute() {',
+      '  const token = localStorage.getItem("token");',
+      '  ' + cond,
+      '    return <Navigate to="/login" replace />;',
+      '  }',
+      '  return <Outlet />;',
+      '}'].join('\n');
+  }
+
+  var NAV = '<div class="bw-nav">Dashboard <small>ana@icesi.edu.co</small></div>';
+  var DASH = NAV + '<p class="bw-ok">Bienvenida, ana</p><div class="bw-li"><b>Lunes</b> · Pecho y tríceps</div><div class="bw-li"><b>Miércoles</b> · Piernas</div>';
+  var LOGIN = '<h2 class="bw-h">Iniciar sesión</h2><div class="bw-form"><div><span class="bw-lbl">Correo</span><div class="bw-in">&nbsp;</div></div><div><span class="bw-lbl">Contraseña</span><div class="bw-in">&nbsp;</div></div><div class="bw-btn">Entrar</div></div>';
+  var PENDING = '<p class="bw-load">(el router todavía no dibuja nada: el guarda se ejecuta primero)</p>';
+
+  function build(opt) {
+    var c = opt.caso;
+    var store = c === 1 ? [] : [['token', c === 2 ? 'eyJhbGci… (exp: 2024)' : 'eyJhbGciOiJIUzI1NiJ9…']];
+    var scr = function (url, page) { return { url: 'localhost:5173' + url, page: page, dev: 'app', net: [], storage: store }; };
+    var steps = [];
+
+    steps.push({ phase: 0, title: 'El usuario entra a /dashboard', file: 'router.jsx', code: [1],
+      caption: 'Escribe la dirección o hace clic en un enlace. Para React Router es solo una URL nueva: todavía no sabe si la persona tiene permiso.',
+      focus: ['router'], msgs: [{ path: DASH_PATH, label: '/dashboard', kind: 'ctl' }], screen: scr('/dashboard', PENDING) });
+    steps.push({ phase: 0, title: 'La ruta padre es el guarda', file: 'router.jsx', code: [4, 5, 6],
+      caption: '/dashboard es hija de una ruta sin path cuyo Component es ProtectedRoute. Para dibujar la hija, el router dibuja primero al padre: el guarda envuelve a sus rutas.',
+      focus: ['protected'], sub: { protected: 'se ejecuta primero' }, msgs: [], screen: scr('/dashboard', PENDING) });
+    steps.push({ phase: 1, title: 'El guarda mira el navegador', file: 'ProtectedRoute.jsx', code: [2],
+      caption: 'Lo primero que hace es leer el token de localStorage (mira la pestaña Application). Es una lectura inmediata: no hay petición al servidor.',
+      focus: ['protected'], sub: { protected: c === 1 ? 'token: null' : 'token: eyJ…' }, msgs: [], screen: scr('/dashboard', PENDING) });
+    if (c === 2) {
+      steps.push({ phase: 1, title: 'Decodifica y revisa exp', file: 'ProtectedRoute.jsx', code: [3],
+        caption: 'El token existe, pero al decodificarlo (jwtDecode) su campo exp ya pasó: la sesión venció. Un token vencido vale lo mismo que no tener token, porque el servidor lo rechazaría con 401.',
+        focus: ['protected'], sub: { protected: 'exp ya pasó' }, msgs: [], screen: scr('/dashboard', PENDING) });
+    } else {
+      steps.push({ phase: 1, title: c === 0 ? 'Hay token: la condición no se cumple' : '¿Hay token? No', file: 'ProtectedRoute.jsx', code: [3],
+        caption: c === 0 ? 'La condición !token es falsa: la persona tiene una sesión guardada, así que el guarda no la bloquea.' : 'La condición !token es verdadera: no hay sesión, así que el guarda debe impedir el paso.',
+        focus: ['protected'], sub: { protected: c === 0 ? 'deja pasar' : 'bloquea' }, msgs: [], screen: scr('/dashboard', PENDING) });
+    }
+    if (c === 0) {
+      steps.push({ phase: 2, title: '<Outlet /> deja pasar a la hija', file: 'ProtectedRoute.jsx', code: [6],
+        caption: 'El guarda devuelve <Outlet />: el hueco donde React Router dibuja la ruta hija. El guarda no dibuja nada propio; solo abre la puerta, y el Dashboard queda dentro de él.',
+        focus: ['dashboard'], sub: { protected: 'Outlet abierto' },
+        msgs: [{ path: [477, 92, 477, 150], label: '<Outlet />', kind: 'ctl', labelSide: 'right' }, { path: [392, 200, 102, 200], label: 'Dashboard', kind: 'ack' }],
+        screen: scr('/dashboard', DASH) });
+    } else {
+      steps.push({ phase: 2, title: '<Navigate /> redirige al login', file: 'ProtectedRoute.jsx', code: [4],
+        caption: 'El guarda devuelve <Navigate to="/login" replace />. El Dashboard nunca se dibuja ni pide datos. replace cambia la entrada del historial, para que «Atrás» no regrese a la ruta bloqueada.',
+        focus: ['login'], sub: { protected: 'redirigió' },
+        msgs: [{ path: [372, 86, 292, 86], label: 'Navigate', kind: 'ctl' }, { path: [200, 116, 70, 150], label: 'Login', kind: 'ack' }],
+        screen: scr('/login', LOGIN) });
+    }
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Un guarda de ruta con React Router: el navegador pide /dashboard, createBrowserRouter dibuja primero a ProtectedRoute, que envuelve al Dashboard y decide entre Outlet y Navigate según el token',
+    phases: PH,
+    scene: function (svg, stage) {
+      return DK.views({ stage: stage, views: [
+        { label: 'Diagrama', aria: 'El router, el guarda que envuelve a las rutas protegidas y la ruta pública de login', scene: function (s) {
+          return DK.layers({ svg: s, width: 800, height: 270, labels: 'smart', trail: 'phase', nodes: [
+            { id: 'browser', kind: 'actor', icon: 'browser', label: 'Navegador', x: 6, y: 150, w: 96, h: 80 },
+            { id: 'router', kind: 'outer', label: 'createBrowserRouter', sub: 'router.jsx', x: 150, y: 8, w: 644, h: 252 },
+            { id: 'login', kind: 'box', label: 'Login', sub: '/login (pública)', x: 172, y: 56, w: 120, h: 60 },
+            { id: 'protected', kind: 'outer', label: 'ProtectedRoute', sub: 'wrapper de las rutas protegidas', x: 372, y: 44, w: 404, h: 200 },
+            { id: 'dashboard', kind: 'box', label: 'Dashboard', sub: '/dashboard', x: 392, y: 150, w: 170, h: 60 },
+            { id: 'rutinas', kind: 'box', label: 'Rutinas', sub: '/rutinas', x: 582, y: 150, w: 170, h: 60 },
+          ] });
+        } },
+        { label: 'Pantalla', html: true, scene: function (s, box) { return DK.browser({ stage: box }); } },
+      ] });
+    },
+    toggles: [{ key: 'caso', type: 'select', label: 'Sesión', options: CASOS, value: 0, restart: 'first' }],
+    code: function (opt) { return { files: [{ name: 'router.jsx', text: ROUTER }, { name: 'ProtectedRoute.jsx', text: protegida(opt) }] }; },
+    build: build,
+    kicker: function (p) { return 'Fase ' + (p + 1) + ' · ' + PH[p]; },
+    intro: { kicker: 'Guarda de ruta', title: 'Quién abre la puerta del Dashboard', text: 'ProtectedRoute envuelve a las rutas protegidas dentro del router. Cambia el estado de la sesión y mira, en el diagrama y en la pantalla, qué hace el guarda.' },
+  });
+})();
+</script>
+</body>
+</html>

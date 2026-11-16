@@ -1,0 +1,65 @@
+/* DOCS: references/kit-api.md de la skill docusaurus_animated_diagrams. Estilos de dk-browser.js (navegador simulado) y de dk-views.js (pestañas de vistas). Cargar después de dk-base.css. */
+
+/* ---------- pestañas de vistas (DK.views) ---------- */
+.dk-vtabs { display: flex; gap: 4px; margin: 0 0 8px; border-bottom: 1px solid var(--dk-line); }
+.dk-vt { font: 600 13px system-ui, sans-serif; color: var(--dk-muted); background: transparent; border: 1px solid transparent; border-bottom: 0; border-radius: 10px 10px 0 0; padding: 6px 16px; margin-bottom: -1px; cursor: pointer; }
+.dk-vt.on { color: var(--dk-ink); background: var(--dk-card); border-color: var(--dk-line); box-shadow: inset 0 2px 0 var(--dk-ctl); }
+.dk-view[hidden] { display: none; }
+
+/* ---------- navegador simulado (DK.browser) ---------- */
+.bw { border: 1px solid var(--dk-line); border-radius: 12px; overflow: hidden; background: var(--dk-card); font-size: 12.5px; }
+.bw-chrome { display: flex; align-items: center; gap: 10px; padding: 6px 10px; background: var(--dk-band); border-bottom: 1px solid var(--dk-line); }
+.bw-dots { display: inline-flex; gap: 5px; } .bw-dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--dk-line); }
+.bw-url { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; padding: 3px 12px; border: 1px solid var(--dk-line); border-radius: 999px; background: var(--dk-card); font: 600 12px ui-monospace, Consolas, monospace; overflow: hidden; white-space: nowrap; }
+.bw-lock { font-size: 7px; color: var(--dk-ack); }
+.bw-urltxt { overflow: hidden; text-overflow: ellipsis; }
+
+/* la página simulada se ve igual en tema claro y oscuro: es "otra pantalla" */
+.bw-page { --bw-ph: 112px; min-height: var(--bw-ph); padding: 9px 14px; background: #fff; color: #1c1e21; font: 13px/1.45 system-ui, 'Segoe UI', Roboto, sans-serif; }
+.bw-page.swap { animation: dk-in .3s ease-out; }
+.bw-h { margin: 0 0 6px; font-size: 15px; font-weight: 700; }
+.bw-p { margin: 0 0 6px; color: #5a5f66; }
+.bw-nav { display: flex; justify-content: space-between; align-items: center; margin: -9px -14px 8px; padding: 7px 14px; background: #f3f4f8; border-bottom: 1px solid #e3e5ec; font-weight: 700; }
+.bw-nav small { font-weight: 600; color: #5a5f66; }
+.bw-form { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; max-width: 420px; align-items: end; }
+.bw-form > .bw-err, .bw-form > .bw-wide { grid-column: 1 / -1; }
+.bw-in { padding: 3px 9px; border: 1.5px solid #c7c9d3; border-radius: 7px; background: #fff; font: 12.5px ui-monospace, Consolas, monospace; }
+.bw-lbl { display: block; margin: 0 0 2px; font: 700 10.5px system-ui, sans-serif; color: #79747e; }
+.bw-btn { justify-self: start; padding: 5px 16px; border-radius: 8px; background: #5454e9; color: #fff; font-weight: 700; }
+.bw-btn.dis { opacity: .55; }
+.bw-err { color: #c0392b; font-weight: 700; }
+.bw-ok { color: #1e8449; font-weight: 700; }
+.bw-load { color: #79747e; font-style: italic; }
+.bw-li { padding: 5px 10px; margin: 0 0 5px; border: 1px solid #e3e5ec; border-radius: 8px; background: #fafbff; }
+.bw-li b { color: #5454e9; }
+
+/* herramientas de desarrollo */
+.bw-dev { border-top: 1px solid var(--dk-line); background: var(--dk-card); }
+.bw-dtabs { display: flex; background: var(--dk-band); border-bottom: 1px solid var(--dk-line); }
+.bw-dt { font: 600 11.5px system-ui, sans-serif; color: var(--dk-muted); background: transparent; border: 0; border-top: 2px solid transparent; padding: 5px 12px; cursor: pointer; }
+.bw-dt.on { color: var(--dk-ink); background: var(--dk-card); border-top-color: var(--dk-ctl); }
+.bw-dbody { min-height: 62px; overflow-x: auto; }
+.bw-tbl { width: 100%; border-collapse: collapse; font: 12px ui-monospace, Consolas, monospace; }
+.bw-tbl th { text-align: left; padding: 3px 10px; font: 700 10.5px system-ui, sans-serif; color: var(--dk-muted); border-bottom: 1px solid var(--dk-line); }
+.bw-tbl td { padding: 3px 10px; border-bottom: 1px solid color-mix(in srgb, var(--dk-line) 55%, transparent); white-space: nowrap; }
+.bw-tbl td.st.ok { color: var(--dk-ack); font-weight: 700; } .bw-tbl td.st.bad { color: var(--dk-err); font-weight: 700; } .bw-tbl td.st.pend { color: var(--dk-muted); }
+.bw-tbl td.au { color: var(--dk-p5); } .bw-tbl td.no { color: var(--dk-muted); }
+.bw-tbl .bw-empty { color: var(--dk-muted); font-style: italic; }
+.bw-tbl tr.new { animation: bw-new 1.4s ease-out; }
+@keyframes bw-new { from { background: var(--dk-band-on); } }
+
+/* ---------- pantalla completa ---------- */
+@media (min-width: 821px) {
+  .dk-fs .dk-card:not(.dk-rlayout):has(> .dk-stage > .dk-views) { height: 100%; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); grid-template-rows: auto auto auto auto minmax(0, 1fr); column-gap: 14px; align-items: start; overflow: hidden; }
+  .dk-fs .dk-card:has(> .dk-stage > .dk-views) > .dk-tabs { grid-column: 1 / -1; grid-row: 1; }
+  .dk-fs .dk-card:has(> .dk-stage > .dk-views) > .dk-dots { grid-column: 1 / -1; grid-row: 2; }
+  .dk-fs .dk-card:has(> .dk-stage > .dk-views) > .dk-stage { grid-column: 1; grid-row: 3 / span 3; align-self: stretch; min-height: 0; overflow: auto; }
+  .dk-fs .dk-card:has(> .dk-stage > .dk-views) > .dk-cap { grid-column: 2; grid-row: 3; }
+  .dk-fs .dk-card:has(> .dk-stage > .dk-views) > .dk-bar { grid-column: 2; grid-row: 4; }
+  .dk-fs .dk-card:has(> .dk-stage > .dk-views) > .dk-code { grid-column: 2; grid-row: 5; align-self: stretch; max-height: none; min-height: 0; }
+  .dk-fs .dk-views { height: 100%; display: flex; flex-direction: column; }
+  .dk-fs .dk-view:not([hidden]) { flex: 1; min-height: 0; }
+  .dk-fs .dk-view .bw { height: 100%; display: flex; flex-direction: column; } .dk-fs .bw-page { flex: 1; }
+  .dk-fs .dk-view svg { width: 100%; height: 100%; min-width: 0; max-width: none !important; }
+  .dk-fs .bw { font-size: 15px; } .dk-fs .bw-page { --bw-ph: 220px; font-size: 16px; } .dk-fs .bw-tbl { font-size: 14px; }
+}

@@ -15,14 +15,21 @@ StepByStep.propTypes = {
 };
 
 export function Step({ title, number, children }) {
+    const hasTitleProp = Boolean(title);
     return (
-        <div className={styles.timelineItem}>
-            <div className={styles.timelineHeader}>
+        <div className={`${styles.timelineItem} ${!hasTitleProp ? styles.timelineItemHeading : ''}`}>
+            {hasTitleProp ? (
+                <div className={styles.timelineHeader}>
+                    <div className={styles.timelineBadge}>
+                        {number}
+                    </div>
+                    <h3 className={styles.timelineTitle}>{title}</h3>
+                </div>
+            ) : (
                 <div className={styles.timelineBadge}>
                     {number}
                 </div>
-                <h3 className={styles.timelineTitle}>{title}</h3>
-            </div>
+            )}
             <div className={styles.timelineBody}>
                 {children}
             </div>
@@ -31,7 +38,7 @@ export function Step({ title, number, children }) {
 }
 
 Step.propTypes = {
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string,
     number: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     children: PropTypes.node.isRequired,
 };

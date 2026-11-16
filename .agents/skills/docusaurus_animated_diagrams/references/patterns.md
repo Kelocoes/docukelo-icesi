@@ -34,6 +34,8 @@ Cada patrón dice cuándo usarlo, qué módulo del kit lo resuelve y qué pieza 
 | Código <-> resultado | Cada parte de un código real y lo que produce (pantalla, cookie, petición, navegador) | `dk-codemap.js` + `dk-player.js` | Hecho | `computacion-2/semana-14/anatomia-componente/`, `computacion-3/semana-14/anatomia-cookie-sesion/` |
 | Selector de escenarios | Una pieza con un selector de casos (peticiones, errores, tipos de fallo) en vez de una pieza por caso | `dk-layers.js` o `dk-canvas.js` + selector de `dk-player.js` | Hecho | `computacion-3/semana-14/capas-de-defensa/`, `manejo-de-errores/`, `donde-vive-la-sesion/`, `computacion-3/semana-15/piramide-pruebas/` |
 | Historial del navegador (pila con puntero) | Cómo crece la pila de páginas al navegar, qué mueven Atrás y Adelante, cuándo se descarta lo de adelante y qué cambia con `replace` (React Router, `history`) | `dk-history.js` + `dk-player.js` | Hecho | `computacion-2/semana-15/historial-navegacion/` |
+| Un recorrido que se entiende desde dos ángulos: flujo entre archivos **y** lo que ve el usuario (formulario, error, lista, `localStorage`, Network) | Pestañas **Flujo / Pantalla** sobre los mismos pasos, con el código de varios archivos siempre visible en pestañas tipo editor | `dk-views.js` + `dk-browser.js` + `dk-sequence.js` + `dk-player.js` | Hecho | `computacion-2/semana-16/useeffect-axios/`, `login-token/` |
+| Un wrapper que envuelve a otros componentes (guarda de ruta con `Outlet`), con el archivo del router | Diagrama anidado (router > guarda > páginas) + pantalla del navegador, dos archivos de código | `dk-views.js` + `dk-layers.js` + `dk-browser.js` | Hecho | `computacion-2/semana-16/guarda-outlet/` |
 | Sitio clásico frente a SPA | Qué se le pide al servidor en cada clic cuando hay un HTML por URL frente a una SPA con un router (y por qué al recargar hay que devolver `index.html`) | `dk-compare.js` + `dk-sequence.js` (`trayCount: 0`) | Hecho | `computacion-2/semana-15/spa-vs-multipagina/` |
 | Configuración <-> pantalla | Una configuración (rutas anidadas, URL con parámetros) y lo que produce para cada caso, con `focus` por parte | `dk-codemap.js` con `view()` propio | Hecho | `computacion-2/semana-15/rutas-anidadas/`, `params-url/` |
 | Dos puertas (identidad y permisos) | Autenticación frente a autorización: quién eres y qué puedes hacer, con un selector de quién llega | `dk-canvas.js` + selector (`restart: 'first'`) | Hecho | `seminario-de-i-d-i/semana-15/autenticacion-vs-autorizacion/` |
@@ -46,6 +48,9 @@ Cada patrón dice cuándo usarlo, qué módulo del kit lo resuelve y qué pieza 
 | Estado de un componente (un clic) | Qué ejecuta React al llamar a `setState` y qué cambia en el DOM; dos copias con estado propio | `dk-dom.js` (modo componentes + pestaña «Código») | Hecho | `computacion-2/semana-15/usestate-actualiza/` |
 | Foto y cola de actualizaciones | `setState` como instrucciones en una cola frente a la foto del render (`setCount(count + 1)` x3 frente a la forma funcional) con interruptor | `dk-canvas.js` (`tag` ocultos por variante) + `code` función | Hecho | `computacion-2/semana-15/usestate-instantanea/` |
 | Efecto y dependencias | Cuándo corre y cuándo se limpia un `useEffect` según el arreglo de dependencias (selector `[x]`, `[]`, sin arreglo) | `dk-sequence.js` + selector + `code` función | Hecho | `computacion-2/semana-15/useeffect-dependencias/` |
+| Árbol de decisión por caso | «¿Dónde va esta lógica?»: tres preguntas Sí/No y un resultado; cada pestaña es un requerimiento distinto que recorre las mismas preguntas | `dk-layers.js` (`kind: 'box'`, flechas con `path` y `ack`/`ctl`) + `dk-player.js` (una fase por caso) | Hecho | `seminario-de-i-d-i/semana-16/donde-va-la-logica` |
+| Dos carriles con deslizador (con y sin) | Lo mismo hecho de dos maneras y qué cruza la red en cada una; un deslizador cambia el tamaño de los datos | `dk-canvas.js` (dos zonas `round`, `tag` ocultas con cifras) + deslizador | Hecho | `seminario-de-i-d-i/semana-16/con-y-sin-funcion` |
+| Cliente y servidor con desenlaces | Una llamada a una función en la nube con sus desenlaces (200, 401, sin conexión) y el código de **los dos lados** (app Dart y función TypeScript) | `dk-sequence.js` (3 actores) + `code: { files }` + selector con `restart: 'first'` | Hecho | `seminario-de-i-d-i/semana-16/del-boton-a-la-funcion` |
 | Máquina de estados | Estados que cambian por eventos (transacción, sesión, token) | por construir (`dk-states.js`) | Por hacer | — |
 | Antes / después | Efecto de una técnica (refactor, normalización, índice) | por construir | Por hacer | — |
 
@@ -257,3 +262,33 @@ Cada patrón dice cuándo usarlo, qué módulo del kit lo resuelve y qué pieza 
 - **Cuándo:** hay reglas independientes (tipo, tamaño) y un elemento de entrada que las cumple o no.
 - **Estructura:** el archivo a la izquierda, una zona `round` con una pastilla (`tag`) por regla y un nodo `hidden` de resultado; un paso por regla con `state: ok | err` y una flecha `ack | err` con `curve` para que no cruce la pastilla vecina. Selector con 3 archivos: uno que pasa y uno que falla por cada regla.
 - **Ejemplo real:** `seminario-de-i-d-i/semana-15/bucket-reglas`.
+
+
+## Ficha del patrón "Flujo + Pantalla + código de varios archivos" (`DK.views`)
+
+- **Cuándo:** cuando el estudiante tiene que ver **dos cosas a la vez** que no caben en el mismo dibujo: cómo se comunican los archivos y lo que ocurre en el navegador (formulario, mensaje de error, lista, token guardado, peticiones). Un diagrama de secuencia solo no muestra «qué ve el usuario»; una pantalla sola no muestra «quién llama a quién».
+- **Estructura que funcionó:** `DK.player` con `scene` = `DK.views` (pestañas **Flujo** y **Pantalla**), `code: { files: [...] }` (pestañas de archivo siempre visibles) y un selector para los casos (200 / 401 / sin red; con token / sin token / vencido). Cada paso trae `msgs` y `state` (flujo), `screen` (pantalla), `file` y `code` (qué archivo y qué líneas).
+- **Que cada paso apunte al archivo correcto:** el paso en que el componente llama a `api.get` resalta el `import` en `Rutinas.jsx`; el siguiente cambia a la pestaña `api.js` y resalta `baseURL`. Así queda claro «de dónde viene eso».
+- **Wrapper:** para un guarda de ruta, `DK.layers` con el router como contenedor, el guarda como contenedor interno y las páginas dentro, y el archivo `router.jsx` en el editor (se ve que el guarda es la **ruta padre** de las protegidas).
+- **Alto:** apuntar a ~750 px con el panel de código visible (el alto útil de un portátil de 914 px es ~800). Si no cabe, subir a pantalla completa con `<InteractiveFrame>`.
+
+## Ficha del patrón "Árbol de decisión por caso" (`DK.layers`)
+
+- **Cuándo:** una decisión con tres preguntas encadenadas y resultados distintos (¿va en la app, en RLS, en una función o con consulta directa?). Se entiende mejor **con ejemplos** que con el árbol vacío.
+- **Estructura que funcionó:** 3 preguntas en fila (`y: 110`) y un resultado debajo de cada una; **«Sí» baja** (flecha `ack`, verde) y **«No» sigue** a la derecha (flecha `ctl`). El último «No» sube a un resultado por defecto (la consulta directa). **Una fase por requerimiento** (5 pestañas), 2 o 3 pasos cada una: enunciado, pregunta que decide, resultado. Idea tomada de `arbol-decision-asr` (Diseño de Software 1).
+- **Cuidado:** a 13 px un rótulo mide ~7,5 unidades por carácter; en una caja de 190 caben ~25 (`¿Solo es presentación?`) y el `sub` ~30. Con 5 pestañas, nombres de **≤ 7 caracteres** (`Botón`, `Filas`, `Resumen`, `Envío`, `Lista`) o la quinta baja a una segunda fila a 690 px.
+- **Ejemplo real:** `seminario-de-i-d-i/semana-16/donde-va-la-logica`.
+
+## Ficha del patrón "Dos carriles con deslizador" (`DK.canvas`)
+
+- **Cuándo:** la misma tarea hecha de dos maneras y lo que cambia es **qué viaja** (filas frente a resultado). Un deslizador hace tangible que una crece con los datos y la otra no.
+- **Estructura que funcionó:** dos zonas `round` apiladas (`y: 22` y `y: 178`, alto 140) con sus nodos en `y: 100` y `y: 256`; una `tag` oculta por carril con la cifra (`≈ 54 KB · red móvil`), 3 fases (Sin función, Con función, Comparar). Las cifras salen de una **suposición declarada** (~110 bytes por fila) y se dice en el comentario y en el capítulo.
+- **Cuidado:** la pastilla de cifras de un carril **no puede ir bajo las etiquetas de los nodos** (tapaba «App Flutter» y «Edge Function»): ponerla en el hueco entre dos nodos y con texto corto (`≈ 0,2 KB · red móvil`, no `por la red móvil`). Antes de poner un tope al deslizador, **verificar el límite real del servicio** (aquí, `Max rows` = 1000 en Integrations > Data API > Settings): una pieza que sube a 5000 enseñaría algo que el servicio no hace.
+- **Ejemplo real:** `seminario-de-i-d-i/semana-16/con-y-sin-funcion`. Referencia de deslizador: `computacion-3/semana-15/n-mas-uno`.
+
+## Ficha del patrón "Cliente y servidor con desenlaces" (`DK.sequence` + código de dos archivos)
+
+- **Cuándo:** una llamada a un servicio que **puede fallar de varias maneras** y el estudiante debe ver **ambos lados del código** (el servicio de la app y la función en la nube) resaltándose a medida que la petición avanza.
+- **Estructura que funcionó:** 3 actores (`laptop`, `server`, `database`), fases `Invocar`, `En la nube`, `Respuesta`; un selector con los desenlaces (`restart: 'first'`) y `code: { files: [dart, ts] }`. Cada paso lleva `file` y `code`; las líneas se buscan **por texto** (`at(lines, 'texto')`) y el rango termina en la línea que **cierra la sentencia** (`return error("…", 400);`), no en la que la abre. Los desenlaces de error **terminan con `return s` antes de los pasos que no ocurren** (una petición sin sesión no llega a consultar; sin conexión, la petición ni sale: flecha con `lost: true` y salto directo a la fase «Respuesta»).
+- **Cuidado:** código de la función con líneas de ≤ 60 caracteres (partir con `.catch(...)` en la línea siguiente): a 690 px un `if` de 100 caracteres obliga a desplazarse de lado. Si el código se despliega en un panel (Supabase), **reformatearlo en el panel también**, para que lo mostrado sea idéntico a lo real.
+- **Ejemplo real:** `seminario-de-i-d-i/semana-16/del-boton-a-la-funcion`.

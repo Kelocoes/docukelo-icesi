@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prop drilling y Context API</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-tree.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // El usuario autenticado en una app de rutinas: quién lo necesita y cómo le llega.
+  var NODES = [
+    { id: 'app', label: 'App', sub: 'raíz' },
+    { id: 'provider', label: 'AuthProvider', parent: 'app', sub: 'el wrapper' },
+    { id: 'layout', label: 'Layout', parent: 'provider' },
+    { id: 'navbar', label: 'Navbar', parent: 'layout' },
+    { id: 'usermenu', label: 'UserMenu', parent: 'navbar', sub: 'muestra el nombre' },
+    { id: 'main', label: 'Main', parent: 'layout' },
+    { id: 'login', label: 'LoginPage', parent: 'main', sub: 'llama a login()' },
+    { id: 'dash', label: 'Dashboard', parent: 'main' },
+    { id: 'rutinas', label: 'RutinasPage', parent: 'dash', sub: 'usa el usuario' },
+    { id: 'footer', label: 'Footer', parent: 'layout' },
+  ];
+
+  var step = function (phase, title, caption, extra) {
+    var s = { phase: phase, title: title, caption: caption, msgs: [] };
+    for (var k in extra) s[k] = extra[k];
+    return s;
+  };
+
+  var steps = [
+    step(0, 'La app es un árbol', 'Cada caja es un componente. Dos de ellos necesitan saber quién inició sesión: UserMenu (muestra el nombre) y RutinasPage (pide solo las rutinas de ese usuario).', { roles: { provider: 'hide' } }),
+    step(0, 'El estado vive arriba', 'Sin Context, el usuario tendría que vivir en App, el único ancestro que cubre a todos. Los datos solo bajan por las ramas, como props.',
+      { roles: { provider: 'hide', app: 'owner', usermenu: 'need', rutinas: 'need' }, tags: { app: 'useState(user)', usermenu: '¿user?', rutinas: '¿user?' } }),
+    step(0, 'Por props hasta el Navbar', 'Para llegar a UserMenu, user atraviesa Layout y Navbar, que no lo usan: solo lo reenvían.',
+      { roles: { provider: 'hide', app: 'owner', layout: 'pass', navbar: 'pass', usermenu: 'use' }, tags: { layout: 'no lo usa', navbar: 'no lo usa', usermenu: 'props.user' },
+        msgs: [{ path: ['app', 'layout', 'navbar', 'usermenu'], label: 'user', kind: 'data' }] }),
+    step(0, 'Y otra vez hasta RutinasPage', 'Hacia RutinasPage, el mismo dato cruza Layout, Main y Dashboard. Es el prop drilling: cada intermedio conoce una prop que no le importa, y renombrarla obliga a tocarlos a todos.',
+      { roles: { provider: 'hide', app: 'owner', layout: 'pass', main: 'pass', dash: 'pass', rutinas: 'use' }, tags: { layout: 'no lo usa', main: 'no lo usa', dash: 'no lo usa', rutinas: 'props.user' },
+        msgs: [{ path: ['app', 'layout', 'main', 'dash', 'rutinas'], label: 'user', kind: 'data' }] }),
+
+    step(0, 'Los cambios suben con callbacks', 'LoginPage también necesita cambiar el usuario, pero el estado está en App. Un hijo no puede modificar el estado de su padre: App le baja una función (onLogin) por las mismas props...',
+      { roles: { provider: 'hide', app: 'owner', layout: 'pass', main: 'pass', login: 'use' }, tags: { app: 'useState(user)', layout: 'no lo usa', main: 'no lo usa', login: 'props.onLogin' },
+        msgs: [{ path: ['app', 'layout', 'main', 'login'], label: 'onLogin', kind: 'data' }] }),
+    step(0, '...y el hijo la llama hacia arriba', '...y LoginPage la ejecuta cuando hay un login: onLogin(token). La llamada sube hasta App, que es la dueña del estado y ejecuta setUser. Datos hacia abajo, eventos (callbacks) hacia arriba.',
+      { roles: { provider: 'hide', app: 'owner', layout: 'pass', main: 'pass', login: 'use' }, tags: { app: 'setUser(...)', layout: 'solo la reenvía', main: 'solo la reenvía', login: 'onLogin(token)' },
+        msgs: [{ path: ['login', 'main', 'layout', 'app'], label: 'onLogin(token)', kind: 'ctl' }] }),
+    step(0, 'Al cambiar user, se repinta todo', 'setUser cambia el estado de App y React vuelve a ejecutar App y, por defecto, a todos sus hijos: Layout, Navbar, Main, Dashboard... aunque no usen user. Es lo normal en React: cuando un componente se repinta, sus hijos también.',
+      { roles: { provider: 'hide', app: 'owner' }, tags: { app: 're-render', layout: 're-render', navbar: 're-render', usermenu: 're-render', main: 're-render', login: 're-render', dash: 're-render', rutinas: 're-render', footer: 're-render' } }),
+
+    step(1, 'El wrapper: AuthProvider', 'Con Context, el estado se mueve a AuthProvider, un componente que envuelve a la app. Guarda user, login y logout y los publica en su value.',
+      { roles: { provider: 'provider' }, tags: { provider: 'AuthContext.Provider' } }),
+    step(1, 'Cada consumidor lo toma directo', 'UserMenu, RutinasPage y LoginPage llaman a useContext(AuthContext) y reciben el valor sin pasar por los intermedios. Layout, Navbar, Main y Dashboard ya no saben que existe.',
+      { roles: { provider: 'provider', usermenu: 'use', rutinas: 'use', login: 'use' }, tags: { provider: 'value = { user, login, logout }', usermenu: 'useContext', rutinas: 'useContext', login: 'useContext' },
+        msgs: [{ from: 'provider', to: 'usermenu', direct: true, label: 'user', kind: 'ack' }, { from: 'provider', to: 'rutinas', direct: true, label: 'user', kind: 'ack' }, { from: 'provider', to: 'login', direct: true, label: 'login', kind: 'ack' }] }),
+
+    step(2, 'Alguien llama a login()', 'El usuario envía el formulario. LoginPage ejecuta login(token), la función que recibió del contexto. El estado sigue viviendo en AuthProvider: el consumidor solo pide el cambio.',
+      { roles: { provider: 'provider', login: 'use' }, tags: { provider: 'setUser(decodificado)', login: 'login(token)' },
+        msgs: [{ from: 'login', to: 'provider', direct: true, label: 'login(token)', kind: 'ctl' }] }),
+    step(2, 'El value cambia: solo se repintan los consumidores', 'Cambió user, así que cambió el value. React vuelve a ejecutar el AuthProvider y a los componentes que usan useContext. Layout, Navbar, Main, Dashboard y Footer se saltan el render: llegan como children, el mismo elemento que ya había creado main.jsx, y React lo reutiliza.',
+      { roles: { provider: 'provider', usermenu: 'use', rutinas: 'use', login: 'use', layout: 'dim', navbar: 'dim', main: 'dim', dash: 'dim', footer: 'dim' },
+        tags: { provider: 'value cambió', usermenu: 're-render', rutinas: 're-render', login: 're-render', layout: 'sin render', navbar: 'sin render', main: 'sin render', dash: 'sin render', footer: 'sin render' } }),
+    step(2, 'Ojo: depende de cómo llegan los hijos', 'Tu intuición es correcta en general: si un componente cambia su estado, se repinta él y todo lo que él dibuja. Si AuthProvider dibujara a Layout dentro de su propio JSX (en vez de recibirlo como children), se repintaría todo el árbol, como en el estado de App. Por eso el wrapper recibe {children}.',
+      { roles: { provider: 'provider' },
+        tags: { provider: 'value cambió', layout: 're-render', navbar: 're-render', usermenu: 're-render', main: 're-render', login: 're-render', dash: 're-render', rutinas: 're-render', footer: 're-render' } }),
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Árbol de componentes de una app con usuario autenticado: prop drilling, un AuthProvider con Context API y qué componentes se vuelven a dibujar cuando el usuario cambia',
+    phases: ['Prop drilling', 'Context', 'Actualizar'],
+    wide: true,
+    scene: function (svg) {
+      return DK.tree({ svg: svg, width: 1000, nodes: NODES, legend: ['owner', 'pass', 'use', 'provider', 'need'] });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Context API',
+      title: 'Cómo le llega el usuario a quien lo necesita',
+      text: 'Compara el camino por props con el del Context y mira qué componentes se vuelven a dibujar cuando cambia el usuario.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

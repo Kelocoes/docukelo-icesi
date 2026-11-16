@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Darle a BMAD el contexto del backend</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* BMAD no trae un escenario oficial para «frontend nuevo sobre backend existente». Los mecanismos (persistent_facts con file:, bmad-deep-recon,
+   espacio de trabajo con varios repositorios) están documentados; usarlos con un OpenAPI o un backend-api.md es recomendación de la guía. Solo DATOS. */
+(function () {
+  var SK = ['bmad-prd', 'bmad-ux', 'bmad-architecture', 'bmad-build'];
+  var items = [
+    { id: 'be', type: 'node', icon: 'server', x: 70, y: 150, size: 54, label: 'Backend', sub: 'ya existe' },
+    { id: 'doc', type: 'node', icon: 'file', x: 330, y: 150, size: 54, label: 'Contexto', sub: '…', hidden: true },
+  ];
+  SK.forEach(function (n, i) { items.push({ id: 's' + i, type: 'node', icon: 'gear', x: 620, y: 50 + i * 80, size: 34, label: n, lp: 'left', ldx: -4, hidden: true }); });
+
+  var CASOS = [
+    { n: 'Tengo OpenAPI / Swagger', be: 'expone un OpenAPI', doc: 'openapi.json + backend-api.md', l1: 'guardas en docs/', l2: 'persistent_facts · file:',
+      c1: 'Si el backend expone Swagger/OpenAPI, esa es la fuente de verdad: guárdalo en el repositorio y resume lo esencial en docs/backend-api.md (recomendación de la guía).',
+      c2: 'En _bmad/custom/<skill>.toml, persistent_facts acepta entradas file:{project-root}/ruta: el skill las carga como hechos permanentes. El mecanismo es documentado; usarlo con un OpenAPI es recomendación de la guía.' },
+    { n: 'Tengo el repo del backend', be: 'repo a mano', doc: 'research.md (con citas)', l1: 'bmad-deep-recon', l2: 'lo leen los skills',
+      c1: 'Instala BMAD en una carpeta con frontend/ y backend/ lado a lado y deja que bmad-deep-recon investigue el código y cite líneas o commits.',
+      c2: 'Es lo que documenta V7 (modo codebase y espacio de trabajo con varios repositorios); en v6.12 sin confirmar. Mejor que resumirlo tú en texto: describir lo que el agente ya puede leer genera contradicciones.' },
+    { n: 'Solo lo conozco por Postman', be: 'solo Postman', doc: 'backend-api.md (a mano)', l1: 'lo escribes tú', l2: 'persistent_facts · file:',
+      c1: 'Escribe docs/backend-api.md: URL base (NEXT_PUBLIC_API_URL), cómo se inicia sesión, endpoints con método, ruta y ejemplo, y formato de errores.',
+      c2: 'BMAD no genera ni nombra este archivo (recomendación de la guía). Apunta los skills a él con persistent_facts para que dejen de inventar endpoints.' },
+  ];
+
+  function build(opt) {
+    var c = CASOS[opt.caso], s = [];
+    s.push({ phase: 0, title: 'El backend ya existe', focus: ['be'], sub: { be: c.be },
+      caption: 'Un agente no puede respetar un backend que no conoce: si no se lo cuentas, inventará endpoints.' });
+    s.push({ phase: 1, title: 'Qué guardas o qué lee el agente', focus: ['be', 'doc'], show: ['doc'], text: { doc: 'Contexto' }, sub: { be: c.be, doc: c.doc },
+      links: [{ from: 'be', to: 'doc', kind: 'ctl', label: c.l1, curve: 0 }], caption: c.c1 });
+    var links = SK.map(function (n, i) { return { from: 'doc', to: 's' + i, kind: 'ack', label: i === 0 ? c.l2 : '', curve: 0 }; });
+    s.push({ phase: 2, title: 'Quién lo lee', focus: ['doc', 's0', 's1', 's2', 's3'], show: ['doc', 's0', 's1', 's2', 's3'], sub: { be: c.be, doc: c.doc }, links: links, caption: c.c2 });
+    s.push({ phase: 2, title: 'Un límite que respetar', focus: ['doc'], show: ['doc', 's0', 's1', 's2', 's3'], sub: { be: c.be, doc: c.doc },
+      caption: 'Si el documento es enorme, hay que condensarlo: en V7, Sofia lee todo en una pasada y el techo práctico es de unas decenas de miles de tokens (unas 40 páginas); lo que lo excede se pierde sin avisar.' });
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Tres formas de darle a BMAD el contexto de un backend que ya existe: un OpenAPI guardado en el repositorio, el repositorio del backend investigado con bmad-deep-recon, o un backend-api.md escrito a mano, y qué skills lo leen',
+    phases: ['El backend', 'El contexto', 'Los skills'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 330, items: items, trail: 'step' }); },
+    toggles: [{ key: 'caso', type: 'select', label: 'Cómo es tu backend', options: CASOS.map(function (c) { return c.n; }), value: 0, restart: 'first' }],
+    build: build,
+    intro: { kicker: 'BMAD y el backend', title: 'Que el agente no invente endpoints', text: 'Elige qué tienes del backend y mira cómo llega su información a los skills de BMAD. Es una recomendación de la guía: BMAD no trae este escenario.' },
+  });
+})();
+</script>
+</body>
+</html>

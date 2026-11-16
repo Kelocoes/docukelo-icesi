@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sin spec y con spec: el mismo encargo</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Un mismo encargo (agregar el filtro por nivel a la lista de rutinas de la app de ejercicios) en dos carriles: sin spec (prompt vago)
+   y con spec (spec, plan, tareas). Fase 1: el recorrido en paralelo. Fase 2: los problemas que SDD dice atacar, con la fuente de cada
+   uno. Fase 3: las reservas (sin evidencia empirica de que SDD mejore resultados; para cambios pequenos puede ser exceso).
+   El ejemplo de la arquitectura violada es ilustrativo. Escena libre DK.canvas. Solo DATOS. */
+(function () {
+  var X = [66, 184, 302, 420, 538, 654], YA = 104, YB = 308, SZ = 46;
+
+  var items = [
+    { id: 'za', type: 'zone', shape: 'round', x: 10, y: 10, w: 700, h: 196, rx: 18, label: 'Sin spec: desarrollo tradicional o vibe coding', lx: 28, ly: 34 },
+    { id: 'zb', type: 'zone', shape: 'round', x: 10, y: 214, w: 700, h: 196, rx: 18, label: 'Con spec (SDD): la intención es la fuente de verdad', lx: 28, ly: 238 },
+
+    { id: 'a1', type: 'node', icon: 'chat', x: X[0], y: YA, size: SZ, label: 'Prompt vago', sub: 'agrega un filtro', hidden: true },
+    { id: 'a2', type: 'node', icon: 'chip', x: X[1], y: YA, size: SZ, label: 'El modelo', sub: 'rellena vacíos', hidden: true },
+    { id: 'a3', type: 'node', icon: 'filecode', x: X[2], y: YA, size: SZ, label: 'Código', sub: 'plausible', hidden: true },
+    { id: 'a4', type: 'node', icon: 'bandaid', x: X[3], y: YA, size: SZ, label: 'Lo corriges', sub: 'en el chat', hidden: true },
+    { id: 'a5', type: 'node', icon: 'memory', x: X[4], y: YA, size: SZ, label: 'La verdad', sub: 'queda en el chat', hidden: true },
+
+    { id: 'b1', type: 'node', icon: 'file', x: X[0], y: YB, size: SZ, label: 'Spec', sub: 'qué y por qué', hidden: true },
+    { id: 'b2', type: 'node', icon: 'file', x: X[1], y: YB, size: SZ, label: 'Plan', sub: 'cómo', hidden: true },
+    { id: 'b3', type: 'node', icon: 'file', x: X[2], y: YB, size: SZ, label: 'Tareas', sub: 'atómicas', hidden: true },
+    { id: 'b4', type: 'node', icon: 'gear', x: X[3], y: YB, size: SZ, label: 'Agente', sub: 'UNA tarea', hidden: true },
+    { id: 'b5', type: 'node', icon: 'flask', x: X[4], y: YB, size: SZ, label: 'Verificas', sub: 'criterios', hidden: true },
+    { id: 'b6', type: 'node', icon: 'file', x: X[5], y: YB, size: SZ, label: 'La verdad', sub: 'Markdown en Git', hidden: true },
+
+    { id: 'tA', type: 'tag', x: 360, y: 186, text: '…', hidden: true },
+    { id: 'tB', type: 'tag', x: 360, y: 390, text: '…', hidden: true },
+  ];
+
+  var link = function (from, to, kind) { return { from: from, to: to, kind: kind || 'ctl', curve: 0 }; };
+
+  function build() {
+    var s = [];
+    var st = function (phase, title, caption, o) {
+      var x = { phase: phase, title: title, caption: caption };
+      for (var k in o) x[k] = o[k];
+      s.push(x);
+    };
+
+    // ---- Fase 1: el mismo encargo, en paralelo ----
+    st(0, 'El mismo encargo', 'Los dos carriles reciben el mismo encargo: «agregar el filtro por nivel a la lista de rutinas». Arriba se escribe un prompt rápido; abajo se empieza por una spec: qué se quiere y por qué.',
+      { focus: ['a1', 'b1'], show: ['a1', 'b1'] });
+    st(0, 'El modelo rellena vacíos', 'Arriba, el modelo adivina lo que no dijiste: ¿filtra en el servidor o en el navegador?, ¿qué niveles hay? GitHub: los modelos son excelentes completando patrones, no leyendo mentes. Abajo, el plan dice cómo hacerlo.',
+      { focus: ['a2', 'b2'], show: ['a2', 'b2'], links: [link('a1', 'a2'), link('b1', 'b2')] });
+    st(0, 'Código frente a tareas', 'Arriba sale código que parece correcto. Abajo, la spec y el plan se parten en tareas atómicas, cada una con su criterio de aceptación.',
+      { focus: ['a3', 'b3'], show: ['a3', 'b3'], links: [link('a2', 'a3'), link('b2', 'b3')] });
+    st(0, 'Una tarea a la vez', 'Arriba, el código se salta la arquitectura de tu app (ejemplo ilustrativo: el componente llama a la API en vez de pasar por el hook). Abajo, el agente hace UNA sola tarea.',
+      { focus: ['a3', 'b4'], show: ['b4'], state: { a3: 'err' }, badge: { a3: { text: 'viola la arquitectura', tone: 'err' } }, links: [link('b3', 'b4')] });
+    st(0, 'Corregir y verificar', 'Arriba lo corriges conversando con el chat. Abajo verificas la tarea contra los criterios de aceptación y recién entonces sigues con la siguiente.',
+      { focus: ['a4', 'b5'], show: ['a4', 'b5'], state: { a3: 'err' }, links: [link('a3', 'a4', 'err'), link('b4', 'b5', 'ack')] });
+    st(0, 'Dónde queda la verdad', 'Arriba, lo decidido queda en el chat y se pierde al cerrar la sesión. Abajo queda en Markdown versionado. GitHub lo resume: de «el código es la fuente de verdad» a «la intención es la fuente de verdad».',
+      { focus: ['a5', 'b6'], show: ['a5', 'b6'], state: { a3: 'err', a5: 'err', b6: 'ok' }, links: [link('a4', 'a5'), link('b5', 'b6', 'ack')] });
+
+    // ---- Fase 2: los problemas que SDD dice atacar ----
+    var base = { a3: 'err', a5: 'err', b6: 'ok' };
+    st(1, 'Documentación atrás', 'Los autores de Spec Kit sostienen que la documentación va detrás del código y que los requisitos cambian más rápido que ella. Es una afirmación de parte, no un estudio.',
+      { focus: ['a3', 'tA'], show: ['tA', 'tB'], state: base, text: { tA: 'la documentación queda atrás del código', tB: 'la spec se guarda y se versiona con el repositorio' } });
+    st(1, 'Parece correcto', 'GitHub: con un objetivo vago recibes código que parece correcto pero a menudo falla. Su diagnóstico: el problema no es que el agente programe mal, sino cómo se le pide.',
+      { focus: ['a3', 'tA'], show: ['tA', 'tB'], state: base, text: { tA: 'parece correcto, pero a menudo falla', tB: 'el qué y el porqué, por escrito antes del código' } });
+    st(1, 'El contexto no persiste', 'Cada sesión empieza vacía. Anthropic: el contexto del modelo es finito y recomienda guardar notas fuera de la ventana. AGENTS.md y la spec cumplen ese papel (la conexión es nuestra, no de Anthropic).',
+      { focus: ['a5', 'tA'], show: ['tA', 'tB'], state: base, text: { tA: 'cada sesión empieza vacía', tB: 'AGENTS.md y la spec persisten en archivos' } });
+    st(1, 'Paquetes inventados', 'Un estudio de USENIX Security 2025 (576.000 muestras, 16 modelos) halló paquetes inexistentes: al menos 5,2 % en modelos comerciales y 21,7 % en abiertos. Se midió sobre paquetes, no sobre métodos de una API. Una spec no lo arregla: revisa tus dependencias.',
+      { focus: ['a3', 'tA'], show: ['tA', 'tB'], state: base, text: { tA: 'paquetes inexistentes: ≥ 5,2 % (comerciales), 21,7 % (abiertos)', tB: 'el plan fija el stack, pero revisa las dependencias' } });
+
+    // ---- Fase 3: con reservas ----
+    st(2, 'Falta evidencia', 'Ojo: no encontramos estudios controlados que midan que SDD mejore los resultados. Lo que hay son experiencias, anuncios de las herramientas y opiniones.',
+      { focus: ['tB'], show: ['tA', 'tB'], hide: ['tA'], state: base, text: { tB: 'sin estudios que midan que SDD mejore resultados' } });
+    st(2, 'Puede ser exceso', 'Para un cambio pequeño, el proceso puede pesar más que el cambio. Böckeler vio a Kiro convertir un bug pequeño en 4 historias y 16 criterios de aceptación. Elige el peso según el tamaño de la tarea.',
+      { focus: ['tA', 'tB'], show: ['tA', 'tB'], state: { a3: 'err', a5: 'err', b6: 'ok', tA: 'ok', tB: 'err' }, text: { tA: 'para un prototipo, el prompt directo sirve', tB: 'un bug pequeño: 4 historias y 16 criterios' } });
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Comparación en dos carriles del mismo encargo, agregar el filtro por nivel a la lista de rutinas, hecho sin spec con un prompt vago y con spec, plan y tareas; seguida de los problemas que SDD dice atacar y de sus reservas',
+    phases: ['Mismo encargo', 'Por qué falla', 'Con reservas'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 420, items: items }); },
+    build: build,
+    intro: {
+      kicker: 'Spec-driven development',
+      title: 'Por qué se mueve el desarrollo hacia las especificaciones',
+      text: 'El mismo encargo hecho de dos maneras: con un prompt suelto y con una spec. Pulsa «Siguiente» y mira dónde queda la verdad en cada una.',
+    },
+  });
+})();
+</script>
+</body>
+</html>

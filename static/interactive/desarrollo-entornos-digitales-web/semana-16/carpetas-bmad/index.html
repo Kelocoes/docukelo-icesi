@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Las carpetas que crea BMAD</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-files.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* BMAD v6.12.4: qué crea la instalación y cómo se va llenando _bmad-output con cada fase. Árbol según el instalador de v6.12;
+   los nombres de documentos de ejemplo llevan el proyecto y la fecha como los genera BMAD. Solo DATOS. */
+(function () {
+  var N = { isNew: true, hidden: true };
+  function f(path, edit, purpose, points) { var o = { path: path, edit: edit, purpose: purpose, isNew: true, hidden: true }; if (points) o.points = points; return o; }
+  var items = [
+    { path: '.claude/', edit: 'never', isNew: true, hidden: true, purpose: 'Carpeta de Claude Code.' },
+    { path: '.claude/skills/', edit: 'never', isNew: true, hidden: true, purpose: 'Soporte generado: una carpeta por skill de BMAD, cada una con su SKILL.md (lo que viste en la parte A).',
+      points: ['Se regenera al actualizar BMAD.'] },
+    { path: '_bmad/', edit: 'never', isNew: true, hidden: true, purpose: 'Configuración y soporte. No son documentos de tu producto.' },
+    { path: '_bmad/custom/', edit: 'sometimes', isNew: true, hidden: true, purpose: 'Configuración del equipo: tus sobrescrituras de skills y agentes, en archivos .toml.',
+      points: ['<code>&lt;skill&gt;.toml</code> se versiona (equipo).', '<code>&lt;skill&gt;.user.toml</code> es personal y <b>no</b> se versiona.'] },
+    { path: '_bmad/render/', edit: 'never', isNew: true, hidden: true, purpose: 'Soporte generado: copias renderizadas de skills. Se ignora en Git.' },
+    { path: '_bmad/scripts/', edit: 'never', isNew: true, hidden: true, purpose: 'Soporte generado: scripts de Python que ejecutan los skills (requieren uv).' },
+    { path: '_bmad/config.toml', edit: 'sometimes', isNew: true, hidden: true, purpose: 'Configuración del equipo: las respuestas de la instalación. Se versiona.' },
+    { path: '_bmad/config.user.toml', edit: 'sometimes', isNew: true, hidden: true, purpose: 'Configuración personal: tu nombre, idioma y nivel de experiencia. No se versiona.' },
+
+    { path: '_bmad-output/', edit: 'never', isNew: true, hidden: true, purpose: 'Artefactos del producto. No existen hasta que un skill los escribe.',
+      points: ['Se versionan y se revisan como código.', 'La documentación sugiere incluso que sea su propio repositorio.'] },
+    { path: '_bmad-output/implementation-artifacts/', edit: 'never', isNew: true, hidden: true, purpose: 'Fase 4: lo que producen la construcción y la planificación del sprint.' },
+    { path: '_bmad-output/implementation-artifacts/deferred-work.md', edit: 'always', isNew: true, hidden: true, purpose: 'Lo que bmad-build dejó para después.' },
+    { path: '_bmad-output/implementation-artifacts/sprint-status.yaml', edit: 'always', isNew: true, hidden: true, purpose: 'El estado de cada historia; lo crea bmad-sprint-planning.' },
+    { path: '_bmad-output/implementation-artifacts/spec-primera-historia.md', edit: 'always', isNew: true, hidden: true, purpose: 'El registro de implementación de una construcción (nombre ilustrativo: lleva el slug de la historia).' },
+    { path: '_bmad-output/planning-artifacts/', edit: 'never', isNew: true, hidden: true, purpose: 'Fases 1 a 3: brief, PRD, UX, arquitectura y épicas.' },
+    { path: '_bmad-output/planning-artifacts/architecture/', edit: 'never', isNew: true, hidden: true, purpose: 'Un subdirectorio por documento de arquitectura.' },
+    { path: '_bmad-output/planning-artifacts/architecture/architecture-ejercicios-2026-11-16/', edit: 'never', isNew: true, hidden: true, purpose: 'El nombre lleva el proyecto y la fecha (ejemplo ilustrativo).' },
+    { path: '_bmad-output/planning-artifacts/architecture/architecture-ejercicios-2026-11-16/ARCHITECTURE-SPINE.md', edit: 'always', isNew: true, hidden: true, purpose: 'La «columna vertebral»: solo las decisiones que podrían divergir entre partes construidas por separado (Winston, bmad-architecture).' },
+    { path: '_bmad-output/planning-artifacts/briefs/', edit: 'never', isNew: true, hidden: true, purpose: 'Briefs de la fase 1.' },
+    { path: '_bmad-output/planning-artifacts/briefs/brief-ejercicios-2026-11-16/', edit: 'never', isNew: true, hidden: true, purpose: 'Un directorio por brief.' },
+    { path: '_bmad-output/planning-artifacts/briefs/brief-ejercicios-2026-11-16/brief.md', edit: 'always', isNew: true, hidden: true, purpose: 'El problema, para quién y el alcance (Mary, bmad-product-brief).' },
+    { path: '_bmad-output/planning-artifacts/prds/', edit: 'never', isNew: true, hidden: true, purpose: 'PRDs de la fase 2.' },
+    { path: '_bmad-output/planning-artifacts/prds/prd-ejercicios-2026-11-16/', edit: 'never', isNew: true, hidden: true, purpose: 'Un directorio por PRD.' },
+    { path: '_bmad-output/planning-artifacts/prds/prd-ejercicios-2026-11-16/prd.md', edit: 'always', isNew: true, hidden: true, purpose: 'Los requisitos del producto (John, bmad-prd).',
+      points: ['Revisa las líneas <code>[ASSUMPTION]</code>: son lo que el agente decidió sin preguntarte.'] },
+    { path: '_bmad-output/planning-artifacts/ux-designs/', edit: 'never', isNew: true, hidden: true, purpose: 'Diseños de UX de la fase 2.' },
+    { path: '_bmad-output/planning-artifacts/ux-designs/ux-ejercicios-2026-11-16/', edit: 'never', isNew: true, hidden: true, purpose: 'Un directorio por diseño.' },
+    { path: '_bmad-output/planning-artifacts/ux-designs/ux-ejercicios-2026-11-16/DESIGN.md', edit: 'always', isNew: true, hidden: true, purpose: 'Cómo se ve: la guía visual (Sally, bmad-ux).' },
+    { path: '_bmad-output/planning-artifacts/ux-designs/ux-ejercicios-2026-11-16/EXPERIENCE.md', edit: 'always', isNew: true, hidden: true, purpose: 'Cómo funciona: flujos, pantallas y estados de carga, vacío y error.' },
+    { path: '_bmad-output/planning-artifacts/epics.md', edit: 'always', isNew: true, hidden: true, purpose: 'Épicas e historias con criterios de aceptación (John, bmad-create-epics-and-stories).',
+      points: ['Cada historia debe caber en una sesión de construcción.'] },
+
+    { path: 'AGENTS.md', edit: 'sometimes', isNew: true, hidden: true, purpose: 'Un bloque pequeño y verificado que escribe bmad-project-context: comandos, convenciones y errores conocidos. Se versiona.' },
+  ];
+
+  var A = ['.claude/', '.claude/skills/', '_bmad/', '_bmad/custom/', '_bmad/render/', '_bmad/scripts/', '_bmad/config.toml', '_bmad/config.user.toml'];
+  var B = 'planning-artifacts/briefs/brief-ejercicios-2026-11-16/', P = 'planning-artifacts/prds/prd-ejercicios-2026-11-16/', U = 'planning-artifacts/ux-designs/ux-ejercicios-2026-11-16/', R = 'planning-artifacts/architecture/architecture-ejercicios-2026-11-16/';
+  var O = '_bmad-output/';
+  var s2 = ['AGENTS.md'];
+  var s3 = [O, O + 'planning-artifacts/', O + 'planning-artifacts/briefs/', O + B, O + B + 'brief.md'];
+  var s4 = [O + 'planning-artifacts/prds/', O + P, O + P + 'prd.md'];
+  var s5 = [O + 'planning-artifacts/ux-designs/', O + U, O + U + 'DESIGN.md', O + U + 'EXPERIENCE.md'];
+  var s6 = [O + 'planning-artifacts/architecture/', O + R, O + R + 'ARCHITECTURE-SPINE.md'];
+  var s7 = [O + 'planning-artifacts/epics.md'];
+  var s8 = [O + 'implementation-artifacts/', O + 'implementation-artifacts/sprint-status.yaml'];
+  var s9 = [O + 'implementation-artifacts/spec-primera-historia.md', O + 'implementation-artifacts/deferred-work.md'];
+
+  var steps = [
+    { phase: 0, title: 'Recién instalado', show: A, depth: 8, focus: '_bmad/',
+      caption: 'npx bmad-method@6.12.4 install crea skills en .claude/skills/ y configuración en _bmad/. Todavía no hay ningún documento de tu producto.' },
+    { phase: 0, title: 'Configuración: equipo y personal', show: A, depth: 8, focus: '_bmad/config.user.toml',
+      caption: 'config.toml y custom/*.toml se versionan; los archivos .user.toml son tuyos y no se suben a Git.' },
+    { phase: 0, title: 'bmad-project-context', show: A.concat(s2), depth: 8, focus: 'AGENTS.md',
+      caption: 'Escribe un bloque verificado en AGENTS.md: el mismo archivo de la sección 4. Lo ven todos los skills.' },
+    { phase: 1, title: 'Fase 1: el brief', show: A.concat(s2, s3), depth: 8, base: '_bmad-output/', focus: O + B + 'brief.md',
+      caption: 'Aparece _bmad-output/: los artefactos del producto. Mary escribe el brief con el proyecto y la fecha en el nombre.' },
+    { phase: 1, title: 'Fase 2: el PRD', show: A.concat(s2, s3, s4), depth: 8, base: '_bmad-output/', focus: O + P + 'prd.md',
+      caption: 'John escribe los requisitos. Revisa las suposiciones marcadas.' },
+    { phase: 1, title: 'Fase 2: el UX', show: A.concat(s2, s3, s4, s5), depth: 8, base: '_bmad-output/', focus: O + U + 'EXPERIENCE.md',
+      caption: 'Sally separa cómo se ve (DESIGN.md) de cómo funciona (EXPERIENCE.md).' },
+    { phase: 1, title: 'Fase 3: arquitectura', show: A.concat(s2, s3, s4, s5, s6), depth: 8, base: '_bmad-output/', focus: O + R + 'ARCHITECTURE-SPINE.md',
+      caption: 'Winston fija las decisiones que no pueden divergir entre historias.' },
+    { phase: 1, title: 'Fase 3: épicas y sprint', show: A.concat(s2, s3, s4, s5, s6, s7, s8), depth: 8, base: '_bmad-output/', focus: O + 'planning-artifacts/epics.md',
+      caption: 'John corta en épicas e historias; bmad-sprint-planning crea sprint-status.yaml en implementation-artifacts/.' },
+    { phase: 1, title: 'Fase 4: construir', show: A.concat(s2, s3, s4, s5, s6, s7, s8, s9), depth: 8, base: '_bmad-output/', focus: O + 'implementation-artifacts/spec-primera-historia.md',
+      caption: 'bmad-build deja un registro por construcción. El código va en tu proyecto, no aquí.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Carpetas que crea BMAD v6.12.4: skills, configuración y la carpeta de artefactos que se llena con el brief, el PRD, el UX, la arquitectura, las épicas y los registros de construcción, y cuáles se versionan',
+    phases: ['La instalación', 'Las fases'],
+    wide: true,
+    scene: function (svg, stage) { return DK.files({ stage: stage, items: items }); },
+    build: function () { return steps; },
+    intro: { kicker: 'BMAD v6.12.4', title: 'Qué carpetas aparecen y cuáles son documentos', text: 'Mira cómo crece el proyecto con cada fase y qué es configuración, qué es soporte y qué es un artefacto de tu producto.' },
+  });
+})();
+</script>
+</body>
+</html>

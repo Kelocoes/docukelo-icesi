@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flujo completo Front (Clean Architecture) ↔ Back (NestJS + GraphQL)</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  .dk-stage { display: flex; flex-direction: column; gap: 10px; }
+  .dk-xform {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--dk-line);
+    border-left: 4px solid var(--dk-data);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--dk-data) 8%, var(--dk-card));
+    font: 600 12.5px/1.45 system-ui, sans-serif;
+  }
+  .dk-xform .xf-lbl {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--dk-data);
+    font-weight: 800;
+  }
+  .dk-xform code {
+    font: 600 12px ui-monospace, 'JetBrains Mono', Consolas, monospace;
+    background: var(--dk-card);
+    border: 1px solid var(--dk-line);
+    border-radius: 6px;
+    padding: 2px 7px;
+    color: var(--dk-ink);
+  }
+  .dk-xform .xf-arr { color: var(--dk-muted); font-weight: 800; }
+
+  .dk-ide {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.92fr) minmax(0, 1.25fr);
+    gap: 10px;
+    align-items: stretch;
+  }
+  .dk-treebox, .dk-editor {
+    min-width: 0;
+    border: 1px solid var(--dk-line);
+    border-radius: 12px;
+    background: var(--dk-card);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .dk-ide-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 12px;
+    border-bottom: 1px solid var(--dk-line);
+    background: var(--dk-band);
+    font: 700 12px ui-monospace, Consolas, monospace;
+    color: var(--dk-ink);
+  }
+  .dk-ide-head .pr { color: var(--dk-ack); }
+  .dk-ide-head .side-pill {
+    padding: 1px 8px;
+    border-radius: 999px;
+    font: 800 10.5px/1.5 system-ui, sans-serif;
+    color: var(--dk-card);
+  }
+  .dk-ide-head .side-pill.f { background: var(--dk-ctl); }
+  .dk-ide-head .side-pill.b { background: var(--dk-ack); }
+
+  .dk-tree-lines {
+    padding: 6px 0;
+    max-height: 235px;
+    overflow-y: auto;
+    font: 12px/1.5 ui-monospace, 'JetBrains Mono', Consolas, monospace;
+  }
+  .dk-tln {
+    display: flex;
+    align-items: center;
+    padding: 1.5px 10px;
+    border-left: 3px solid transparent;
+    white-space: pre;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .dk-tln.dir { cursor: default; font-weight: 700; color: var(--dk-ctl); }
+  .dk-tln.dir.back { color: var(--dk-ack); }
+  .dk-tln .art { color: var(--dk-muted); opacity: .75; }
+  .dk-tln .nm { color: var(--dk-ink); }
+  .dk-tln.dir .nm { color: inherit; }
+  .dk-tln.file:hover { background: color-mix(in srgb, var(--dk-ctl) 8%, transparent); }
+  .dk-tln.on { background: var(--dk-band-on); border-left-color: var(--dk-ctl); font-weight: 700; }
+  .dk-tln.on.back { border-left-color: var(--dk-ack); }
+  .dk-tln .fb {
+    margin-right: 6px;
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font: 800 9.5px/1 system-ui, sans-serif;
+    color: var(--dk-card);
+    flex: none;
+  }
+  .dk-tln .fb.f { background: var(--dk-ctl); }
+  .dk-tln .fb.b { background: var(--dk-ack); }
+  .dk-tln .tag-new {
+    margin-left: auto;
+    padding: 0 6px;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--dk-data) 18%, var(--dk-card));
+    color: var(--dk-data);
+    font: 700 10px/16px system-ui, sans-serif;
+  }
+
+  .dk-ed-body {
+    padding: 6px 0;
+    max-height: 235px;
+    overflow: auto;
+    font: 12px/1.55 ui-monospace, 'JetBrains Mono', Consolas, monospace;
+  }
+  .dk-ed-body .l {
+    display: flex;
+    gap: 10px;
+    white-space: pre;
+    padding: 0 10px;
+    border-left: 3px solid transparent;
+    transition: background .25s;
+  }
+  .dk-ed-body .l .ln {
+    width: 22px;
+    text-align: right;
+    color: var(--dk-muted);
+    user-select: none;
+    flex: none;
+    opacity: .75;
+  }
+  .dk-ed-body .l.on { background: var(--dk-band-on); border-left-color: var(--dk-ctl); }
+  .dk-ed-body .kw { color: var(--dk-s-kw); font-weight: 700; }
+  .dk-ed-body .ty { color: var(--dk-s-ty); font-weight: 600; }
+  .dk-ed-body .fn { color: var(--dk-s-fn); }
+  .dk-ed-body .ob { color: var(--dk-s-ob); }
+  .dk-ed-body .st { color: var(--dk-s-st); }
+  .dk-ed-body .nu { color: var(--dk-s-nu); }
+  .dk-ed-body .an { color: var(--dk-s-an); }
+  .dk-ed-body .cm { color: var(--dk-muted); font-style: italic; }
+
+  @media (min-width: 821px) {
+    .dk-fs .dk-card { height: 100%; display: flex; flex-direction: column; }
+    .dk-fs .dk-stage { flex: 1; min-height: 0; overflow: auto; }
+    .dk-fs .dk-tree-lines, .dk-fs .dk-ed-body { max-height: 310px; }
+  }
+  @media (max-width: 780px) {
+    .dk-ide { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var el = DK.el;
+  var msg = function (path, label, kind, extra) {
+    var m = { path: path, label: label, kind: kind };
+    for (var k in extra) m[k] = extra[k];
+    return m;
+  };
+
+  // ---------- 1. Mapa arquitectónico (viewBox 1020 x 430) ----------
+  var nodes = [
+    // Zona FRONTEND (izquierda)
+    { id: 'front_box', kind: 'outer', label: 'FRONTEND · Next.js (Puerto 3001 / 3000)', sub: 'rama week-16/graphql · Clean Architecture', x: 10, y: 12, w: 468, h: 406 },
+    { id: 'ui_comp', kind: 'box', icon: 'browser', label: 'RoutinesView / Form', sub: 'Navegador · UI', x: 26, y: 64, w: 196, h: 72 },
+    { id: 'hook_redux', kind: 'box', icon: 'gear', label: 'useRoutines + Slice', sub: 'Redux Thunk (Browser)', x: 26, y: 156, w: 196, h: 72 },
+    { id: 'action_dal', kind: 'box', icon: 'lock', label: 'routines.actions.ts', sub: "'use server' + requirePerm", x: 26, y: 248, w: 196, h: 72 },
+    { id: 'di_box', kind: 'box', icon: 'filecode', label: 'routine.container.ts', sub: 'inyecta GraphQLRepo', x: 26, y: 334, w: 196, h: 68 },
+
+    { id: 'usecase', kind: 'box', icon: 'gear', label: 'UseCase (Dominio)', sub: 'GetRoutines / Create', x: 262, y: 64, w: 200, h: 72 },
+    { id: 'repo_front', kind: 'box', icon: 'card', label: 'RoutineGraphQLRepo', sub: 'Mapper DTO ↔ Routine', x: 262, y: 156, w: 200, h: 72 },
+    { id: 'ds_gql', kind: 'box', icon: 'browser', label: 'GraphQLDatasource', sub: 'fetch POST :4000/graphql', x: 262, y: 248, w: 200, h: 72 },
+    { id: 'ds_mock', kind: 'box', label: 'MockDatasource', sub: 'reemplazado en DI', x: 262, y: 334, w: 200, h: 68 },
+
+    // Zona RED (centro)
+    { id: 'net_wire', kind: 'box', icon: 'filter', label: 'HTTP POST /graphql', sub: ':3001 → :4000', x: 496, y: 248, w: 122, h: 72 },
+
+    // Zona BACKEND (derecha)
+    { id: 'back_box', kind: 'outer', label: 'BACKEND · NestJS + Apollo (Puerto 4000)', sub: 'Code First · schema.gql + Apollo Sandbox', x: 636, y: 12, w: 374, h: 406 },
+    { id: 'nest_boot', kind: 'box', icon: 'filter', label: 'main.ts + ApolloDriver', sub: 'CORS + ValidationPipe', x: 654, y: 64, w: 170, h: 76 },
+    { id: 'schema_types', kind: 'box', icon: 'filecode', label: '@ObjectType / @Input', sub: 'genera src/schema.gql', x: 836, y: 64, w: 158, h: 76 },
+    { id: 'resolver', kind: 'box', icon: 'filecode', label: 'RoutinesResolver', sub: '@Query / @Mutation', x: 654, y: 168, w: 340, h: 72 },
+    { id: 'service', kind: 'box', icon: 'gear', label: 'RoutinesService', sub: 'lógica de negocio', x: 654, y: 256, w: 340, h: 68 },
+    { id: 'repo_back', kind: 'box', icon: 'database', label: 'RoutinesRepository', sub: 'almacén en memoria', x: 654, y: 338, w: 340, h: 64 },
+  ];
+
+  // Rutas de flechas entre cajas
+  var P_UI_HK   = [124, 136, 124, 156];
+  var P_HK_ACT  = [124, 228, 124, 248];
+  var P_ACT_DI  = [124, 320, 124, 334];
+  var P_ACT_UC  = [222, 270, 262, 108];
+  var P_UC_RF   = [362, 136, 362, 156];
+  var P_RF_DS   = [362, 228, 362, 248];
+  var P_DS_NET  = [462, 284, 496, 284];
+  var P_NET_AP  = [618, 272, 654, 118];
+  var P_AP_SCH  = [824, 102, 836, 102];
+  var P_AP_RES  = [740, 140, 740, 168];
+  var P_RES_SVC = [824, 240, 824, 256];
+  var P_SVC_RP  = [824, 324, 824, 338];
+  // Vuelta
+  var P_RP_SVC  = [860, 338, 860, 324];
+  var P_SVC_RES = [860, 256, 860, 240];
+  var P_RES_NET = [654, 214, 618, 294];
+  var P_NET_DS  = [496, 300, 462, 300];
+  var P_DS_RF   = [392, 248, 392, 228];
+  var P_RF_UC   = [392, 156, 392, 136];
+  var P_UC_ACT  = [262, 124, 222, 290];
+  var P_ACT_HK  = [156, 248, 156, 228];
+  var P_HK_UI   = [156, 156, 156, 136];
+
+  // ---------- 2. Árbol de archivos (tree -L) y código real ----------
+  var FILES = {
+    'front/src/features/routines/presentation/components/RoutinesView.tsx': {
+      side: 'f',
+      code: [
+        "// FRONT · Navegador (:3001) — Vista y formulario",
+        "const { routines, isLoading, createRoutine } = useRoutines();",
+        "",
+        "const handleCreate = async (values: { name: string; description?: string }) => {",
+        "  const ok = await createRoutine(values);",
+        "  if (ok) resetForm();",
+        "};",
+        "return <RoutineList items={routines} loading={isLoading} />;",
+      ].join('\n')
+    },
+    'front/src/features/routines/presentation/hooks/use-routines.ts': {
+      side: 'f',
+      code: [
+        "// FRONT · Hook fachada (Presentation)",
+        "useEffect(() => {",
+        "  if (routines.length === 0 && !isLoading) {",
+        "    dispatch(fetchRoutines());",
+        "  }",
+        "}, [dispatch, routines.length, isLoading]);",
+        "",
+        "const createRoutine = async (params: CreateRoutineParams) => {",
+        "  const resultAction = await dispatch(createRoutineMutation(params));",
+        "  return createRoutineMutation.fulfilled.match(resultAction);",
+        "};",
+      ].join('\n')
+    },
+    'front/src/features/routines/presentation/store/routines.slice.ts': {
+      side: 'f',
+      code: [
+        "// FRONT · Redux Toolkit Thunks + Reducer",
+        "export const fetchRoutines = createAsyncThunk('routines/fetchAll', async () => {",
+        "  const result = await getRoutinesAction();",
+        "  return result.ok ? result.routines : rejectWithValue(result.message);",
+        "});",
+        "export const createRoutineMutation = createAsyncThunk('routines/create', async (params) => {",
+        "  const result = await createRoutineAction(params);",
+        "  return result.ok ? result.routine : rejectWithValue(result.message);",
+        "});",
+        "builder.addCase(fetchRoutines.fulfilled, (s, a) => { s.items = a.payload; });",
+        "builder.addCase(createRoutineMutation.fulfilled, (s, a) => { s.items.unshift(a.payload); });",
+      ].join('\n')
+    },
+    'front/src/features/routines/presentation/actions/routines.actions.ts': {
+      side: 'f',
+      code: [
+        "'use server'; // FRONT · Corre en servidor Next.js (:3001)",
+        "export async function getRoutinesAction(): Promise<RoutinesResult> {",
+        "  await requirePermission('view_routines');",
+        "  const entities = await routineContainer.getRoutines.execute();",
+        "  return { ok: true, routines: entities.map(RoutineViewModelMapper.toViewModel) };",
+        "}",
+        "export async function createRoutineAction(params: CreateRoutineParams) {",
+        "  await requirePermission('create_routines');",
+        "  const entity = await routineContainer.createRoutine.execute(params);",
+        "  return { ok: true, routine: RoutineViewModelMapper.toViewModel(entity) };",
+        "}",
+      ].join('\n')
+    },
+    'front/src/features/routines/di/routine.container.ts': {
+      side: 'f',
+      code: [
+        "import 'server-only'; // Composition Root (DI)",
+        "import { RoutineGraphQLDatasource } from '../infrastructure/datasources/routine-graphql-datasource';",
+        "import { RoutineGraphQLRepositoryImpl } from '../infrastructure/repositories/routine-graphql.repository.impl';",
+        "",
+        "const datasource = new RoutineGraphQLDatasource(); // Reemplaza a RoutineMockDatasource",
+        "const routineRepository = new RoutineGraphQLRepositoryImpl(datasource);",
+        "",
+        "export const routineContainer = {",
+        "  getRoutines: new GetRoutinesUseCase(routineRepository),",
+        "  createRoutine: new CreateRoutineUseCase(routineRepository),",
+        "};",
+      ].join('\n')
+    },
+    'front/src/features/routines/domain/usecases/get-routines.usecase.ts': {
+      side: 'f',
+      code: [
+        "// FRONT · Capa de Dominio (independiente de HTTP / GraphQL)",
+        "export class GetRoutinesUseCase {",
+        "  constructor(private readonly repository: RoutineRepository) {}",
+        "",
+        "  async execute(): Promise<Routine[]> {",
+        "    const routines = await this.repository.getAll();",
+        "    return routines.sort((a, b) => a.name.localeCompare(b.name));",
+        "  }",
+        "}",
+      ].join('\n')
+    },
+    'front/src/features/routines/domain/usecases/create-routine.usecase.ts': {
+      side: 'f',
+      code: [
+        "// FRONT · Capa de Dominio",
+        "export class CreateRoutineUseCase {",
+        "  constructor(private readonly repository: RoutineRepository) {}",
+        "",
+        "  async execute(params: CreateRoutineParams): Promise<Routine> {",
+        "    return await this.repository.create(params);",
+        "  }",
+        "}",
+      ].join('\n')
+    },
+    'front/src/features/routines/infrastructure/repositories/routine-graphql.repository.impl.ts': {
+      side: 'f',
+      code: [
+        "// FRONT · Repositorio GraphQL (adapta DTOs ↔ Entidad Routine)",
+        "export class RoutineGraphQLRepositoryImpl implements RoutineRepository {",
+        "  constructor(private readonly datasource: RoutineDatasource) {}",
+        "  async getAll(): Promise<Routine[]> {",
+        "    const dtos = await this.datasource.fetchRoutines();",
+        "    return dtos.map((dto) => RoutineMapper.toDomain(dto));",
+        "  }",
+        "  async create(params: CreateRoutineParams): Promise<Routine> {",
+        "    const dtoToSend = RoutineMapper.toDto(params);",
+        "    const createdDto = await this.datasource.createRoutine(dtoToSend);",
+        "    return RoutineMapper.toDomain(createdDto);",
+        "  }",
+        "}",
+      ].join('\n')
+    },
+    'front/src/features/routines/infrastructure/datasources/routine-graphql-datasource.ts': {
+      side: 'f',
+      code: [
+        "// FRONT · Datasource GraphQL -> POST http://localhost:4000/graphql",
+        "private async request<T>(query: string, variables?: Record<string, unknown>): Promise<T> {",
+        "  const res = await fetch(this.endpoint, {",
+        "    method: 'POST', headers: { 'Content-Type': 'application/json' },",
+        "    body: JSON.stringify({ query, variables }), cache: 'no-store'",
+        "  });",
+        "  const payload = await res.json();",
+        "  if (payload.errors?.length) throw new Error(payload.errors[0].message);",
+        "  return payload.data;",
+        "}",
+        "async fetchRoutines() {",
+        "  const data = await this.request(`query { routines { id name description createdAt } }`);",
+        "  return data.routines.map((r) => this.toResponseDto(r));",
+        "}",
+        "async createRoutine(dto: CreateRoutineDto) {",
+        "  const data = await this.request(`mutation ($input: CreateRoutineInput!) { createRoutine(input: $input) { id name description createdAt } }`, { input: dto });",
+        "  return this.toResponseDto(data.createRoutine);",
+        "}",
+      ].join('\n')
+    },
+    'back/src/main.ts': {
+      side: 'b',
+      code: [
+        "// BACK · Arranque NestJS (Puerto 4000)",
+        "const app = await NestFactory.create(AppModule);",
+        "app.enableCors();",
+        "app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));",
+        "await app.listen(process.env.PORT ?? 4000);",
+      ].join('\n')
+    },
+    'back/src/app.module.ts': {
+      side: 'b',
+      code: [
+        "// BACK · Configuración ApolloDriver + Apollo Sandbox (Code First)",
+        "GraphQLModule.forRoot<ApolloDriverConfig>({",
+        "  driver: ApolloDriver,",
+        "  autoSchemaFile: join(process.cwd(), 'src/schema.gql'),",
+        "  graphiql: false,",
+        "  plugins: [ApolloServerPluginLandingPageLocalDefault()],",
+        "})",
+      ].join('\n')
+    },
+    'back/src/routines/dto/create-routine.input.ts': {
+      side: 'b',
+      code: [
+        "// BACK · Contrato de entrada + class-validator",
+        "@InputType()",
+        "export class CreateRoutineInput {",
+        "  @Field() @IsString() @MinLength(3) @MaxLength(100)",
+        "  name!: string;",
+        "  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(10)",
+        "  description?: string;",
+        "}",
+      ].join('\n')
+    },
+    'back/src/routines/routines.resolver.ts': {
+      side: 'b',
+      code: [
+        "// BACK · Puerta de entrada GraphQL (reemplaza al Controller)",
+        "@Resolver(() => Routine)",
+        "export class RoutinesResolver {",
+        "  constructor(private readonly routinesService: RoutinesService) {}",
+        "  @Query(() => [Routine], { name: 'routines' })",
+        "  findAll(): Routine[] { return this.routinesService.findAll(); }",
+        "  @Mutation(() => Routine, { name: 'createRoutine' })",
+        "  createRoutine(@Args('input') input: CreateRoutineInput): Routine {",
+        "    return this.routinesService.create(input);",
+        "  }",
+        "}",
+      ].join('\n')
+    },
+    'back/src/routines/routines.service.ts': {
+      side: 'b',
+      code: [
+        "// BACK · Lógica de negocio (desacoplada de GraphQL)",
+        "@Injectable()",
+        "export class RoutinesService {",
+        "  constructor(private readonly routinesRepository: RoutinesRepository) {}",
+        "  findAll(): Routine[] { return this.routinesRepository.findAll(); }",
+        "  create(input: CreateRoutineInput): Routine {",
+        "    return this.routinesRepository.create(input);",
+        "  }",
+        "}",
+      ].join('\n')
+    },
+    'back/src/routines/routines.repository.ts': {
+      side: 'b',
+      code: [
+        "// BACK · Repositorio simulado en memoria",
+        "findAll(): Routine[] { return [...this.routines]; }",
+        "create(input: CreateRoutineInput): Routine {",
+        "  const created: Routine = {",
+        "    id: nextId, name: input.name.trim(),",
+        "    description: input.description?.trim(), createdAt: new Date().toISOString()",
+        "  };",
+        "  this.routines.push(created);",
+        "  return { ...created };",
+        "}",
+      ].join('\n')
+    }
+  };
+
+  var TREE_ITEMS = [
+    { label: 'graphql-sandbox/', art: '', dir: true, side: 'f' },
+    { label: 'front/ (Next.js · :3001)', art: '├── ', dir: true, side: 'f' },
+    { label: 'src/features/routines/', art: '│   └── ', dir: true, side: 'f' },
+    { label: 'presentation/', art: '│       ├── ', dir: true, side: 'f' },
+    { label: 'RoutinesView.tsx', art: '│       │   ├── ', id: 'front/src/features/routines/presentation/components/RoutinesView.tsx', side: 'f' },
+    { label: 'use-routines.ts', art: '│       │   ├── ', id: 'front/src/features/routines/presentation/hooks/use-routines.ts', side: 'f' },
+    { label: 'routines.slice.ts', art: '│       │   ├── ', id: 'front/src/features/routines/presentation/store/routines.slice.ts', side: 'f' },
+    { label: 'routines.actions.ts', art: '│       │   └── ', id: 'front/src/features/routines/presentation/actions/routines.actions.ts', side: 'f' },
+    { label: 'di/routine.container.ts', art: '│       ├── ', id: 'front/src/features/routines/di/routine.container.ts', side: 'f', isNew: true },
+    { label: 'domain/usecases/', art: '│       ├── ', dir: true, side: 'f' },
+    { label: 'get-routines.usecase.ts', art: '│       │   ├── ', id: 'front/src/features/routines/domain/usecases/get-routines.usecase.ts', side: 'f' },
+    { label: 'create-routine.usecase.ts', art: '│       │   └── ', id: 'front/src/features/routines/domain/usecases/create-routine.usecase.ts', side: 'f' },
+    { label: 'infrastructure/', art: '│       └── ', dir: true, side: 'f' },
+    { label: 'routine-graphql.repository.impl.ts', art: '│           ├── ', id: 'front/src/features/routines/infrastructure/repositories/routine-graphql.repository.impl.ts', side: 'f', isNew: true },
+    { label: 'routine-graphql-datasource.ts', art: '│           └── ', id: 'front/src/features/routines/infrastructure/datasources/routine-graphql-datasource.ts', side: 'f', isNew: true },
+    { label: 'back/ (NestJS + Apollo · :4000)', art: '└── ', dir: true, side: 'b' },
+    { label: 'src/main.ts', art: '    ├── ', id: 'back/src/main.ts', side: 'b' },
+    { label: 'src/app.module.ts', art: '    ├── ', id: 'back/src/app.module.ts', side: 'b' },
+    { label: 'src/routines/', art: '    └── ', dir: true, side: 'b' },
+    { label: 'create-routine.input.ts', art: '        ├── ', id: 'back/src/routines/dto/create-routine.input.ts', side: 'b' },
+    { label: 'routines.resolver.ts', art: '        ├── ', id: 'back/src/routines/routines.resolver.ts', side: 'b' },
+    { label: 'routines.service.ts', art: '        ├── ', id: 'back/src/routines/routines.service.ts', side: 'b' },
+    { label: 'routines.repository.ts', art: '        └── ', id: 'back/src/routines/routines.repository.ts', side: 'b' },
+  ];
+
+  // ---------- 3. Construcción de pasos ----------
+  var OPS = ['Query: fetchRoutines (Leer)', 'Mutation: createRoutine (Crear)'];
+
+  function build(opt) {
+    var isCreate = (opt.op || 0) === 1;
+    if (!isCreate) {
+      return [
+        {
+          phase: 0,
+          title: '1 · [Front :3001] La vista y el hook disparan la carga',
+          caption: 'Al montar RoutinesView.tsx, el hook fachada useRoutines() detecta que el store está vacío y despacha el thunk fetchRoutines().',
+          focus: ['ui_comp', 'hook_redux'],
+          msgs: [msg(P_UI_HK, 'useRoutines()', 'ctl')],
+          file: 'front/src/features/routines/presentation/hooks/use-routines.ts',
+          lines: [2, 3, 4],
+          xform: ['UI monta componente', 'dispatch(fetchRoutines())']
+        },
+        {
+          phase: 0,
+          title: '2 · [Front :3001] El Thunk llama a la Server Action',
+          caption: 'El thunk cruza del navegador al servidor de Next.js invocando getRoutinesAction(), que verifica el permiso view_routines con requirePermission().',
+          focus: ['hook_redux', 'action_dal'],
+          msgs: [msg(P_HK_ACT, 'getRoutinesAction()', 'ctl')],
+          file: 'front/src/features/routines/presentation/actions/routines.actions.ts',
+          lines: [2, 3, 4],
+          xform: ['Navegador (Redux)', "'use server' + requirePermission('view_routines')"]
+        },
+        {
+          phase: 0,
+          title: '3 · [Front] El contenedor inyecta el Datasource GraphQL',
+          caption: 'routine.container.ts reemplaza RoutineMockDatasource por RoutineGraphQLDatasource dentro de RoutineGraphQLRepositoryImpl y ejecuta GetRoutinesUseCase.',
+          focus: ['action_dal', 'di_box', 'usecase', 'ds_mock'],
+          msgs: [msg(P_ACT_DI, 'DI', 'data'), msg(P_ACT_UC, 'execute()', 'ctl')],
+          file: 'front/src/features/routines/di/routine.container.ts',
+          lines: [5, 6, 9],
+          xform: ['routineContainer.getRoutines', 'GetRoutinesUseCase(RoutineGraphQLRepositoryImpl)']
+        },
+        {
+          phase: 0,
+          title: '4 · [Front] Dominio → Repositorio → Datasource',
+          caption: 'GetRoutinesUseCase llama a repository.getAll(). El repositorio delega la consulta en RoutineGraphQLDatasource.fetchRoutines().',
+          focus: ['usecase', 'repo_front', 'ds_gql'],
+          msgs: [msg(P_UC_RF, 'getAll()', 'ctl'), msg(P_RF_DS, 'fetchRoutines()', 'ctl')],
+          file: 'front/src/features/routines/infrastructure/repositories/routine-graphql.repository.impl.ts',
+          lines: [4, 5],
+          xform: ['Dominio espera Promise<Routine[]>', 'Datasource pide RoutineResponseDto[]']
+        },
+        {
+          phase: 1,
+          title: '5 · [Red :3001 → :4000] Petición POST /graphql',
+          caption: 'RoutineGraphQLDatasource envía un POST a http://localhost:4000/graphql con la query GraphQL en el cuerpo JSON. ApolloDriver la valida contra schema.gql.',
+          focus: ['ds_gql', 'net_wire', 'nest_boot', 'schema_types'],
+          msgs: [msg(P_DS_NET, 'POST JSON', 'ctl'), msg(P_NET_AP, 'query { routines }', 'ctl'), msg(P_AP_SCH, 'valida SDL', 'data')],
+          file: 'front/src/features/routines/infrastructure/datasources/routine-graphql-datasource.ts',
+          lines: [11, 12],
+          xform: ['fetch(:4000/graphql)', 'Body: { "query": "query { routines { id name description createdAt } }" }']
+        },
+        {
+          phase: 1,
+          title: '6 · [Back :4000] Resolver → Service → Repository',
+          caption: 'Apollo enruta la operación a @Query("routines") en RoutinesResolver. Este delega en RoutinesService y RoutinesRepository devuelve las rutinas en memoria.',
+          focus: ['resolver', 'service', 'repo_back'],
+          msgs: [msg(P_AP_RES, '@Query("routines")', 'ctl'), msg(P_RES_SVC, 'findAll()', 'ctl'), msg(P_SVC_RP, 'findAll()', 'ctl')],
+          file: 'back/src/routines/routines.resolver.ts',
+          lines: [5, 6],
+          xform: ['RoutinesResolver.findAll()', 'Routine[] en memoria (3 registros)']
+        },
+        {
+          phase: 2,
+          title: '7 · [Back → Front] Respuesta JSON y normalización a DTO',
+          caption: 'Apollo responde { data: { routines: [...] } }. El datasource verifica que no exista payload.errors y adapta createdAt → created_at en RoutineResponseDto[].',
+          focus: ['repo_back', 'service', 'resolver', 'net_wire', 'ds_gql'],
+          msgs: [msg(P_RP_SVC, 'Routine[]', 'data'), msg(P_SVC_RES, 'Routine[]', 'data'), msg(P_RES_NET, '{ data }', 'ack'), msg(P_NET_DS, 'JSON', 'ack')],
+          file: 'front/src/features/routines/infrastructure/datasources/routine-graphql-datasource.ts',
+          lines: [7, 8, 13],
+          xform: ['{ data: { routines: [{ createdAt }] } }', 'RoutineResponseDto[] ({ created_at })']
+        },
+        {
+          phase: 2,
+          title: '8 · [Front] Mapper → Entidad → ViewModel → UI',
+          caption: 'RoutineMapper.toDomain() crea instancias Routine, la Server Action las mapea a RoutineItemViewModel y Redux actualiza state.items en RoutinesView.',
+          focus: ['repo_front', 'usecase', 'action_dal', 'hook_redux', 'ui_comp'],
+          msgs: [msg(P_DS_RF, 'DTO[]', 'data'), msg(P_RF_UC, 'Routine[]', 'ack'), msg(P_UC_ACT, 'ordenado', 'ack'), msg(P_ACT_HK, 'ViewModel[]', 'ack'), msg(P_HK_UI, 'render', 'ack')],
+          file: 'front/src/features/routines/presentation/store/routines.slice.ts',
+          lines: [10],
+          xform: ['RoutineResponseDto[]', 'Routine (Entidad)', 'RoutineItemViewModel[]', 'Lista en pantalla']
+        }
+      ];
+    }
+
+    return [
+      {
+        phase: 0,
+        title: '1 · [Front :3001] Envío del formulario',
+        caption: 'El usuario llena el formulario en RoutinesView y llama a createRoutine(values) desde el hook useRoutines(), que despacha createRoutineMutation.',
+        focus: ['ui_comp', 'hook_redux'],
+        msgs: [msg(P_UI_HK, 'createRoutine(values)', 'ctl')],
+        file: 'front/src/features/routines/presentation/components/RoutinesView.tsx',
+        lines: [4, 5],
+        xform: ['Formulario', 'CreateRoutineParams { name, description }']
+      },
+      {
+        phase: 0,
+        title: '2 · [Front :3001] Thunk → Server Action (createRoutineAction)',
+        caption: 'El thunk invoca la Server Action en el servidor Next.js. requirePermission("create_routines") valida que el usuario tenga permiso antes de tocar el dominio.',
+        focus: ['hook_redux', 'action_dal'],
+        msgs: [msg(P_HK_ACT, 'createRoutineAction()', 'ctl')],
+        file: 'front/src/features/routines/presentation/actions/routines.actions.ts',
+        lines: [7, 8, 9],
+        xform: ['CreateRoutineParams', "requirePermission('create_routines') OK"]
+      },
+      {
+        phase: 0,
+        title: '3 · [Front] Contenedor DI → CreateRoutineUseCase',
+        caption: 'La acción usa routineContainer.createRoutine, configurado con RoutineGraphQLRepositoryImpl y RoutineGraphQLDatasource.',
+        focus: ['action_dal', 'di_box', 'usecase', 'ds_mock'],
+        msgs: [msg(P_ACT_DI, 'DI', 'data'), msg(P_ACT_UC, 'execute(params)', 'ctl')],
+        file: 'front/src/features/routines/domain/usecases/create-routine.usecase.ts',
+        lines: [5, 6],
+        xform: ['routineContainer.createRoutine', 'CreateRoutineUseCase.execute(params)']
+      },
+      {
+        phase: 0,
+        title: '4 · [Front] RoutineMapper.toDto() → Datasource',
+        caption: 'RoutineGraphQLRepositoryImpl limpia espacios y construye CreateRoutineDto con RoutineMapper.toDto(), luego llama a datasource.createRoutine(dto).',
+        focus: ['usecase', 'repo_front', 'ds_gql'],
+        msgs: [msg(P_UC_RF, 'create(params)', 'ctl'), msg(P_RF_DS, 'createRoutine(dto)', 'ctl')],
+        file: 'front/src/features/routines/infrastructure/repositories/routine-graphql.repository.impl.ts',
+        lines: [8, 9, 10],
+        xform: ['CreateRoutineParams', 'CreateRoutineDto { name, description, userId: 1 }']
+      },
+      {
+        phase: 1,
+        title: '5 · [Red :3001 → :4000] Mutation POST /graphql con variables',
+        caption: 'RoutineGraphQLDatasource envía la mutación createRoutine junto con { variables: { input: { name, description } } } hacia NestJS.',
+        focus: ['ds_gql', 'net_wire', 'nest_boot'],
+        msgs: [msg(P_DS_NET, 'POST mutation', 'ctl'), msg(P_NET_AP, 'createRoutine($input)', 'ctl')],
+        file: 'front/src/features/routines/infrastructure/datasources/routine-graphql-datasource.ts',
+        lines: [15, 16, 17],
+        xform: ['CreateRoutineDto', 'POST :4000/graphql { query: "mutation...", variables: { input } }']
+      },
+      {
+        phase: 1,
+        title: '6 · [Back :4000] ValidationPipe valida CreateRoutineInput',
+        caption: 'Antes de entrar al resolver, NestJS valida @MinLength(3) y @MaxLength(100) sobre CreateRoutineInput. Si falla, responde errors[] sin tocar el servicio.',
+        focus: ['nest_boot', 'schema_types'],
+        msgs: [msg(P_AP_SCH, 'class-validator', 'data')],
+        file: 'back/src/routines/dto/create-routine.input.ts',
+        lines: [4, 5, 6, 7],
+        xform: ['variables.input', 'CreateRoutineInput validado']
+      },
+      {
+        phase: 1,
+        title: '7 · [Back :4000] @Mutation → Service → Repository',
+        caption: 'RoutinesResolver.createRoutine(@Args("input")) llama a RoutinesService.create(input), y RoutinesRepository asigna id y createdAt en memoria.',
+        focus: ['resolver', 'service', 'repo_back'],
+        msgs: [msg(P_AP_RES, '@Mutation', 'ctl'), msg(P_RES_SVC, 'create(input)', 'ctl'), msg(P_SVC_RP, 'create(input)', 'ctl')],
+        file: 'back/src/routines/routines.repository.ts',
+        lines: [3, 4, 5, 6, 7, 8],
+        xform: ['CreateRoutineInput', 'Routine { id: 4, name, description, createdAt }']
+      },
+      {
+        phase: 2,
+        title: '8 · [Back → Front] Apollo devuelve { data: { createRoutine } }',
+        caption: 'La mutación retorna la rutina recién creada en el JSON de respuesta. RoutineGraphQLDatasource revisa errores y mapea a RoutineResponseDto.',
+        focus: ['repo_back', 'service', 'resolver', 'net_wire', 'ds_gql'],
+        msgs: [msg(P_RP_SVC, 'Routine', 'data'), msg(P_SVC_RES, 'Routine', 'data'), msg(P_RES_NET, '{ data }', 'ack'), msg(P_NET_DS, 'JSON', 'ack')],
+        file: 'front/src/features/routines/infrastructure/datasources/routine-graphql-datasource.ts',
+        lines: [17],
+        xform: ['{ data: { createRoutine: { id: 4, ... } } }', 'RoutineResponseDto { id: 4, created_at }']
+      },
+      {
+        phase: 2,
+        title: '9 · [Front] RoutineMapper.toDomain() → ViewModel',
+        caption: 'El repositorio reconstruye la entidad Routine del dominio (validando reglas de negocio) y la acción devuelve RoutineItemViewModel.',
+        focus: ['repo_front', 'usecase', 'action_dal'],
+        msgs: [msg(P_DS_RF, 'DTO', 'data'), msg(P_RF_UC, 'Routine', 'ack'), msg(P_UC_ACT, 'Routine', 'ack')],
+        file: 'front/src/features/routines/infrastructure/repositories/routine-graphql.repository.impl.ts',
+        lines: [11],
+        xform: ['RoutineResponseDto', 'new Routine(...)', 'RoutineItemViewModel']
+      },
+      {
+        phase: 2,
+        title: '10 · [Front :3001] Redux agrega la nueva rutina a la vista',
+        caption: 'createRoutineMutation.fulfilled inserta el nuevo ViewModel al inicio de state.items y RoutinesView muestra la rutina creada sin recargar la página.',
+        focus: ['action_dal', 'hook_redux', 'ui_comp'],
+        msgs: [msg(P_ACT_HK, 'fulfilled', 'ack'), msg(P_HK_UI, 'state.items.unshift', 'ack')],
+        file: 'front/src/features/routines/presentation/store/routines.slice.ts',
+        lines: [11],
+        xform: ['RoutineItemViewModel', 's.items.unshift(action.payload)', 'Tarjeta visible en UI']
+      }
+    ];
+  }
+
+  // ---------- 4. Construcción de la escena compuesta ----------
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Flujo completo de archivos, puertos y transformación de datos entre Next.js (Clean Architecture) y NestJS (GraphQL)',
+    phases: ['Frontend (Clean Arch)', 'Red + Backend (NestJS)', 'Retorno y Transformación'],
+    wide: true,
+    scene: function (svg, stage) {
+      // Asegurar que `svg` está dentro del stage + agregar barra de transformación e IDE debajo
+      var layersScene = DK.layers({ svg: svg, width: 1020, height: 428, nodes: nodes, labels: 'smart', trail: 'phase' });
+
+      var xformBox = el('div', { class: 'dk-xform', 'aria-live': 'polite' });
+      var treeLines = el('div', { class: 'dk-tree-lines' });
+      var treeBox = el('div', { class: 'dk-treebox' },
+        el('div', { class: 'dk-ide-head' },
+          el('span', {}, el('span', { class: 'pr', text: '$ ' }), 'tree -L 4 --dirsfirst'),
+          el('span', { style: 'color:var(--dk-muted);font-weight:600;font-size:11px;', text: 'Clic para inspeccionar' })
+        ),
+        treeLines
+      );
+
+      var edTitle = el('span', { text: 'Archivo' });
+      var edPill = el('span', { class: 'side-pill f', text: 'FRONT · :3001' });
+      var edBody = el('div', { class: 'dk-ed-body' });
+      var edBox = el('div', { class: 'dk-editor' },
+        el('div', { class: 'dk-ide-head' }, edTitle, edPill),
+        edBody
+      );
+
+      var ide = el('div', { class: 'dk-ide' }, treeBox, edBox);
+      stage.append(xformBox, ide);
+
+      var allSteps = [], activeFile = null, pinnedFile = null;
+
+      function renderXform(list) {
+        xformBox.replaceChildren(el('span', { class: 'xf-lbl', text: 'Transformación del dato:' }));
+        (list || ['Selecciona «Siguiente» para recorrer el flujo']).forEach(function (item, idx) {
+          if (idx > 0) xformBox.appendChild(el('span', { class: 'xf-arr', text: '→' }));
+          xformBox.appendChild(el('code', { text: item }));
+        });
+      }
+
+      function renderCode(fileId, hlLines) {
+        var f = FILES[fileId];
+        if (!f) return;
+        edTitle.textContent = fileId;
+        edPill.textContent = f.side === 'f' ? 'FRONT · :3001' : 'BACK · :4000';
+        edPill.className = 'side-pill ' + f.side;
+        edBody.replaceChildren();
+        var firstOn = null;
+        f.code.split('\n').forEach(function (line, idx) {
+          var num = idx + 1;
+          var isOn = hlLines && hlLines.indexOf(num) >= 0;
+          var row = el('div', { class: 'l' + (isOn ? ' on' : '') },
+            el('span', { class: 'ln', text: String(num) }),
+            el('span', {})
+          );
+          row.lastChild.innerHTML = DK.highlight(line) || ' ';
+          if (isOn && !firstOn) firstOn = row;
+          edBody.appendChild(row);
+        });
+        if (firstOn) {
+          edBody.scrollTop = Math.max(0, firstOn.offsetTop - 44);
+        }
+      }
+
+      function renderTree(currentId) {
+        treeLines.replaceChildren();
+        TREE_ITEMS.forEach(function (it) {
+          if (it.dir) {
+            treeLines.appendChild(el('div', { class: 'dk-tln dir' + (it.side === 'b' ? ' back' : '') },
+              el('span', { class: 'art', text: it.art }),
+              el('span', { class: 'nm', text: it.label })
+            ));
+            return;
+          }
+          var isOn = it.id === currentId;
+          var row = el('button', {
+            type: 'button',
+            class: 'dk-tln file' + (isOn ? ' on' : '') + (it.side === 'b' ? ' back' : ''),
+            style: 'width:100%;background:none;border-top:0;border-right:0;border-bottom:0;text-align:left;',
+            onclick: function () {
+              pinnedFile = it.id;
+              renderTree(it.id);
+              var curStep = allSteps.find(function (s) { return s.file === activeFile; });
+              renderCode(it.id, it.id === activeFile && curStep ? curStep.lines : []);
+            }
+          },
+            el('span', { class: 'art', text: it.art }),
+            el('span', { class: 'fb ' + it.side, text: it.side.toUpperCase() }),
+            el('span', { class: 'nm', text: it.label }),
+            it.isNew ? el('span', { class: 'tag-new', text: 'nuevo' }) : null
+          );
+          treeLines.appendChild(row);
+          if (isOn) {
+            var top = row.offsetTop - treeLines.clientHeight / 2;
+            if (top > 0) treeLines.scrollTop = top;
+          }
+        });
+      }
+
+      return {
+        msgDuration: layersScene.msgDuration,
+        setSteps: function (s) {
+          allSteps = s;
+          layersScene.setSteps(s);
+        },
+        render: function (i, animate) {
+          var out = layersScene.render(i, animate);
+          var st = i >= 0 ? allSteps[i] : null;
+          pinnedFile = null;
+          if (!st) {
+            activeFile = 'front/src/features/routines/di/routine.container.ts';
+            renderXform(['Pulsa «Siguiente» o abre «Pantalla completa» para inspeccionar todo el flujo']);
+            renderTree(activeFile);
+            renderCode(activeFile, [5, 6]);
+          } else {
+            activeFile = st.file;
+            renderXform(st.xform);
+            renderTree(st.file);
+            renderCode(st.file, st.lines);
+          }
+          return out;
+        }
+      };
+    },
+    toggles: [
+      { key: 'op', type: 'select', label: 'Operación', options: OPS, value: 0, restart: 'first' }
+    ],
+    build: build,
+    intro: {
+      kicker: 'Mapa integral · Clean Architecture ↔ NestJS GraphQL',
+      title: 'Flujo completo de extremo a extremo (Front :3001 ↔ Back :4000)',
+      text: 'Combina el mapa arquitectónico, la transformación exacta del dato en cada frontera y un explorador IDE con el árbol de archivos (tree -L) y las líneas activas. Usa «Pantalla completa» arriba a la derecha para verlo en grande.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -320,6 +320,96 @@
     "src": "/interactive/computacion-2/semana-15/usestate-instantanea/index.html"
   },
   {
+    "id": "computacion-2/semana-16/api-cliente",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "api-cliente",
+    "title": "api.js: el cliente de Axios con interceptor",
+    "src": "/interactive/computacion-2/semana-16/api-cliente/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/context-configuracion",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "context-configuracion",
+    "title": "AuthContext: las tres piezas de Context API",
+    "src": "/interactive/computacion-2/semana-16/context-configuracion/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/despliegue-tomcat",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "despliegue-tomcat",
+    "title": "Del proyecto al .war en Tomcat",
+    "src": "/interactive/computacion-2/semana-16/despliegue-tomcat/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/guarda-outlet",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "guarda-outlet",
+    "title": "Guarda de ruta con Outlet",
+    "src": "/interactive/computacion-2/semana-16/guarda-outlet/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/jwt-anatomia",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "jwt-anatomia",
+    "title": "Anatomía de un token JWT",
+    "src": "/interactive/computacion-2/semana-16/jwt-anatomia/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/login-token",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "login-token",
+    "title": "Login con Axios y token en localStorage",
+    "src": "/interactive/computacion-2/semana-16/login-token/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/prop-drilling-context",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "prop-drilling-context",
+    "title": "Prop drilling y Context API",
+    "src": "/interactive/computacion-2/semana-16/prop-drilling-context/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/spa-404-tomcat",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "spa-404-tomcat",
+    "title": "Recargar una ruta de la SPA en Tomcat",
+    "src": "/interactive/computacion-2/semana-16/spa-404-tomcat/index.html"
+  },
+  {
+    "id": "computacion-2/semana-16/useeffect-axios",
+    "course": "computacion-2",
+    "courseName": "Computación 2",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "useeffect-axios",
+    "title": "useEffect + Axios: pedir datos al montar",
+    "src": "/interactive/computacion-2/semana-16/useeffect-axios/index.html"
+  },
+  {
     "id": "computacion-3/semana-12/anatomia-slice",
     "course": "computacion-3",
     "courseName": "Computación 3",
@@ -700,6 +790,66 @@
     "src": "/interactive/computacion-3/semana-15/secretos-vercel/index.html"
   },
   {
+    "id": "computacion-3/semana-16/arquitectura-nestjs-graphql",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "arquitectura-nestjs-graphql",
+    "title": "Arquitectura de una petición GraphQL entre Next.js y NestJS",
+    "src": "/interactive/computacion-3/semana-16/arquitectura-nestjs-graphql/index.html"
+  },
+  {
+    "id": "computacion-3/semana-16/code-first-schema",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "code-first-schema",
+    "title": "Code First en NestJS: de decoradores TypeScript a schema.gql",
+    "src": "/interactive/computacion-3/semana-16/code-first-schema/index.html"
+  },
+  {
+    "id": "computacion-3/semana-16/flujo-completo-front-back",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "flujo-completo-front-back",
+    "title": "Flujo completo Front (Clean Architecture) ↔ Back (NestJS + GraphQL)",
+    "src": "/interactive/computacion-3/semana-16/flujo-completo-front-back/index.html"
+  },
+  {
+    "id": "computacion-3/semana-16/resolver-y-clean-arch",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "resolver-y-clean-arch",
+    "title": "Conexión Clean Architecture (Next.js) con Resolver (NestJS)",
+    "src": "/interactive/computacion-3/semana-16/resolver-y-clean-arch/index.html"
+  },
+  {
+    "id": "computacion-3/semana-16/rest-vs-websockets",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "rest-vs-websockets",
+    "title": "HTTP Polling frente a WebSockets",
+    "src": "/interactive/computacion-3/semana-16/rest-vs-websockets/index.html"
+  },
+  {
+    "id": "computacion-3/semana-16/simulador-ws-echarts",
+    "course": "computacion-3",
+    "courseName": "Computación 3",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "simulador-ws-echarts",
+    "title": "Simulador en vivo: WebSocket + CSV + Gráfica tipo Apache ECharts",
+    "src": "/interactive/computacion-3/semana-16/simulador-ws-echarts/index.html"
+  },
+  {
     "id": "desarrollo-entornos-digitales-web/semana-12/mapa-navegacion",
     "course": "desarrollo-entornos-digitales-web",
     "courseName": "Desarrollo de entornos digitales web",
@@ -808,6 +958,126 @@
     "slug": "url-como-estado",
     "title": "La URL como estado de los filtros",
     "src": "/interactive/desarrollo-entornos-digitales-web/semana-15/url-como-estado/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-16/agents-md-y-agents",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "agents-md-y-agents",
+    "title": "AGENTS.md, CLAUDE.md y la carpeta .agents: qué lee Claude Code",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-16/agents-md-y-agents/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-16/anatomia-de-una-skill",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "anatomia-de-una-skill",
+    "title": "Anatomía de una skill",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-16/anatomia-de-una-skill/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-16/asistente-vs-agente",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "asistente-vs-agente",
+    "title": "Asistente frente a agente: arreglar las pruebas que fallan",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-16/asistente-vs-agente/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-16/carga-progresiva-skills",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "carga-progresiva-skills",
+    "title": "Carga progresiva de una skill",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-16/carga-progresiva-skills/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-16/carpetas-bmad",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "carpetas-bmad",
+    "title": "Las carpetas que crea BMAD",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-16/carpetas-bmad/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-16/chat-vs-skill",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "chat-vs-skill",
+    "title": "Repetir en el chat o tener una skill",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-16/chat-vs-skill/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-16/contexto-del-backend",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "contexto-del-backend",
+    "title": "Darle a BMAD el contexto del backend",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-16/contexto-del-backend/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-16/entornos-vercel",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "entornos-vercel",
+    "title": "Entornos de Vercel y variables de entorno",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-16/entornos-vercel/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-16/fases-bmad",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "fases-bmad",
+    "title": "Las fases de BMAD",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-16/fases-bmad/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-16/mapa-fases-skills",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "mapa-fases-skills",
+    "title": "BMAD: qué skill usar en cada fase de un frontend nuevo",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-16/mapa-fases-skills/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-16/orquestador-y-subagentes",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "orquestador-y-subagentes",
+    "title": "Orquestador y subagentes",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-16/orquestador-y-subagentes/index.html"
+  },
+  {
+    "id": "desarrollo-entornos-digitales-web/semana-16/tradicional-vs-spec",
+    "course": "desarrollo-entornos-digitales-web",
+    "courseName": "Desarrollo de entornos digitales web",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "tradicional-vs-spec",
+    "title": "Sin spec y con spec: el mismo encargo",
+    "src": "/interactive/desarrollo-entornos-digitales-web/semana-16/tradicional-vs-spec/index.html"
   },
   {
     "id": "seminario-de-i-d-i/semana-11/agenda-monolitica",
@@ -998,5 +1268,105 @@
     "slug": "estados-asincronos",
     "title": "Estados de una petición asíncrona",
     "src": "/interactive/seminario-de-i-d-i/semana-14/estados-asincronos/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-15/anatomia-url-publica",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "anatomia-url-publica",
+    "title": "Las partes de una URL de Storage",
+    "src": "/interactive/seminario-de-i-d-i/semana-15/anatomia-url-publica/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-15/autenticacion-vs-autorizacion",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "autenticacion-vs-autorizacion",
+    "title": "Autenticación frente a autorización",
+    "src": "/interactive/seminario-de-i-d-i/semana-15/autenticacion-vs-autorizacion/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-15/bucket-reglas",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "bucket-reglas",
+    "title": "Un bucket y sus reglas",
+    "src": "/interactive/seminario-de-i-d-i/semana-15/bucket-reglas/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-15/modulos-supabase",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "modulos-supabase",
+    "title": "Los módulos de Supabase",
+    "src": "/interactive/seminario-de-i-d-i/semana-15/modulos-supabase/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-15/peticion-auth",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "peticion-auth",
+    "title": "La petición de autenticación en Supabase",
+    "src": "/interactive/seminario-de-i-d-i/semana-15/peticion-auth/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-15/rls-anon-vs-authenticated",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "rls-anon-vs-authenticated",
+    "title": "RLS: de anon a authenticated",
+    "src": "/interactive/seminario-de-i-d-i/semana-15/rls-anon-vs-authenticated/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-15/subir-y-mostrar",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-15",
+    "weekNumber": 15,
+    "slug": "subir-y-mostrar",
+    "title": "Subir una foto y mostrarla",
+    "src": "/interactive/seminario-de-i-d-i/semana-15/subir-y-mostrar/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-16/con-y-sin-funcion",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "con-y-sin-funcion",
+    "title": "Con y sin Edge Function",
+    "src": "/interactive/seminario-de-i-d-i/semana-16/con-y-sin-funcion/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-16/del-boton-a-la-funcion",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "del-boton-a-la-funcion",
+    "title": "Del botón a la Edge Function",
+    "src": "/interactive/seminario-de-i-d-i/semana-16/del-boton-a-la-funcion/index.html"
+  },
+  {
+    "id": "seminario-de-i-d-i/semana-16/donde-va-la-logica",
+    "course": "seminario-de-i-d-i",
+    "courseName": "Seminario de I+D+I",
+    "week": "semana-16",
+    "weekNumber": 16,
+    "slug": "donde-va-la-logica",
+    "title": "¿Dónde va esta lógica?",
+    "src": "/interactive/seminario-de-i-d-i/semana-16/donde-va-la-logica/index.html"
   }
 ]

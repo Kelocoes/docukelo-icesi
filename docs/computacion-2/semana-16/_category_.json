@@ -1,8 +1,8 @@
 {
-    "label": "S16 - State management, useContext & Axios",
+    "label": "S16 - Axios, Guardas, Context API y Despliegue",
     "position": 17,
     "link": {
         "type": "generated-index",
-        "description": "Introducción a useContext y manejo de estado en React"
+        "description": "Consumo de APIs con Axios y useEffect, guardas de ruta con React Router, Context API y despliegue en Tomcat"
     }
 }

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Las fases de BMAD</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* BMAD v6.12: cuatro fases, un rol por fase y un documento por rol. Un selector cambia el tamaño del trabajo y con él las fases que se usan.
+   Nombres de agentes, skills y documentos tomados de la documentación de v6.12. Solo DATOS. */
+(function () {
+  var FASES = [
+    { z: 'z0', n: 'n0', t0: 'a0', t1: 'b0', icon: 'globe', x: 8, ana: 'Mary', sub: 'analista', tags: ['brief.md', 'research.md'], name: 'Analysis' },
+    { z: 'z1', n: 'n1', t0: 'a1', t1: 'b1', icon: 'file', x: 186, ana: 'John y Sally', sub: 'PRD y UX', tags: ['prd.md', 'DESIGN + EXPERIENCE'], name: 'Planning' },
+    { z: 'z2', n: 'n2', t0: 'a2', t1: 'b2', icon: 'classbox', x: 364, ana: 'Winston y John', sub: 'arquitectura e historias', tags: ['ARCHITECTURE-SPINE', 'epics.md'], name: 'Solutioning' },
+    { z: 'z3', n: 'n3', t0: 'a3', t1: 'b3', icon: 'terminal', x: 542, ana: 'Amelia', sub: 'construir y revisar', tags: ['bmad-build', 'bmad-code-review'], name: 'Implementation' },
+  ];
+  var items = [];
+  FASES.forEach(function (f, i) {
+    items.push({ id: f.z, type: 'zone', shape: 'round', x: f.x, y: 36, w: 170, h: 262, rx: 14, label: (i + 1) + ' · ' + f.name, lx: f.x + 14, ly: 62 });
+    items.push({ id: f.n, type: 'node', icon: f.icon, x: f.x + 85, y: 142, size: 46, label: f.ana, sub: f.sub });
+    items.push({ id: f.t0, type: 'tag', x: f.x + 85, y: 236, text: f.tags[0] });
+    items.push({ id: f.t1, type: 'tag', x: f.x + 85, y: 270, text: f.tags[1] });
+  });
+  items.push({ id: 'any', type: 'tag', x: 360, y: 322, text: 'En cualquier momento: bmad-help · bmad-project-context · bmad-correct-course', hidden: true });
+
+  var RUTAS = [
+    { on: [], t: 'Una edición obvia', c: 'Si el cambio es obvio y de bajo riesgo, pídeselo directamente al agente: BMAD no hace falta. Ninguna fase se usa.' },
+    { on: [3], t: 'Un cambio de una sesión', c: 'Un cambio que cabe en una sesión (unas 500 líneas) va directo a /bmad-build. Solo la fase 4. El «Quick Flow» antiguo hoy es bmad-build.' },
+    { on: [0, 1, 2, 3], t: 'Un producto nuevo', c: 'Un producto con varias épicas usa la ruta completa: cada fase deja un documento que la siguiente toma como contrato.' },
+  ];
+
+  function dimAll(on) {
+    var st = {};
+    FASES.forEach(function (f, i) { if (on.indexOf(i) < 0) { st[f.z] = 'dim'; st[f.n] = 'dim'; st[f.t0] = 'dim'; st[f.t1] = 'dim'; } });
+    return st;
+  }
+
+  function build(opt) {
+    var r = RUTAS[opt.ruta], s = [];
+    s.push({ phase: 0, title: r.t, focus: [], state: dimAll(r.on), caption: r.c });
+    if (r.on.length === 0) return s;
+    r.on.forEach(function (i) {
+      var f = FASES[i], st = dimAll(r.on), focus = [f.z, f.n, f.t0, f.t1];
+      s.push({ phase: i === 3 ? 2 : (i === 2 ? 2 : 1), title: (i + 1) + ' · ' + f.name + ': ' + f.ana, focus: focus, state: st,
+        caption: [
+          'Mary investiga y aclara la idea (bmad-brainstorming, bmad-deep-recon) y escribe el brief (bmad-product-brief) o un PRFAQ.',
+          'John escribe el PRD (bmad-prd) y Sally el diseño (bmad-ux): DESIGN.md es cómo se ve y EXPERIENCE.md, cómo funciona.',
+          'Winston fija las decisiones de arquitectura (bmad-architecture); John corta en épicas e historias y bmad-sprint-planning crea sprint-status.yaml.',
+          'Amelia construye una historia (bmad-build), la revisa (bmad-code-review) y cierra la épica con bmad-retrospective.',
+        ][i] });
+    });
+    if (opt.ruta === 2) s.push({ phase: 2, title: 'Y en cualquier momento', focus: ['any'], show: ['any'], state: {},
+      caption: 'bmad-help te dice qué sigue; bmad-project-context deja el contexto del repositorio en AGENTS.md; bmad-correct-course maneja un cambio de rumbo.' });
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Las cuatro fases de BMAD v6.12, Analysis, Planning, Solutioning e Implementation, con el agente y el documento de cada una, y qué fases se usan según el tamaño del trabajo',
+    phases: ['Tamaño', 'Planear', 'Construir'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 345, items: items, trail: 'step' }); },
+    toggles: [{ key: 'ruta', type: 'select', label: 'Tamaño del trabajo', options: RUTAS.map(function (r) { return r.t; }), value: 2, restart: 'first' }],
+    build: build,
+    intro: { kicker: 'BMAD v6.12', title: 'Fases, roles y documentos', text: 'Elige el tamaño del trabajo y mira qué fases usa BMAD, quién las lidera y qué documento deja cada una. (V7 alfa usa otros nombres: Clarify, Plan, Build and verify, Learn and adjust.)' },
+  });
+})();
+</script>
+</body>
+</html>

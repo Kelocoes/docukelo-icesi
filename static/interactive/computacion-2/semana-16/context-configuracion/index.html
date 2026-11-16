@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AuthContext: las tres piezas de Context API</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  .cx-card { margin: 0 0 8px; padding: 6px 8px; border: 1.5px solid var(--dk-line); border-radius: 8px; }
+  .cx-hd { display: block; margin-bottom: 3px; font: 700 10.5px system-ui, sans-serif; color: var(--dk-muted); }
+  .cx-m { display: block; font: 600 11px ui-monospace, Consolas, monospace; word-break: break-word; }
+  .cx-wrap { margin: 0 0 8px; padding: 6px 8px; border: 1.5px dashed var(--dk-ctl); border-radius: 8px; background: color-mix(in srgb, var(--dk-ctl) 7%, transparent); }
+  .cx-wrap .cx-hd { color: var(--dk-ctl); }
+  .cx-ch { padding: 4px 8px; border: 1.5px solid var(--dk-line); border-radius: 6px; background: var(--dk-bg, transparent); margin-top: 4px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  // p1 = crear el contexto; p2 = el estado; p3 = la función login; p4 = value; p5 = children / consumir.
+  var code = [
+    [['export const AuthContext = ', 'ctx'], ['createContext(null)', 'ctx'], [';', 'ctx']],
+    [['export function AuthProvider({ children }) {', 'kids']],
+    [['  const [user, setUser] = ', 'state'], ['useState(null)', 'state'], [';', 'state']],
+    [['  const login = (token) => {', 'login']],
+    [['    localStorage.setItem("token", token);', 'login']],
+    [['    setUser(jwtDecode(token));', 'login']],
+    [['  };', 'login']],
+    [['  return (', '']],
+    [['    <AuthContext.Provider value={{ user, login }}>', 'value']],
+    [['      {children}', 'kids']],
+    [['    </AuthContext.Provider>', 'value']],
+    [['  );', '']],
+    [['}', '']],
+    [['', '']],
+    [['// en cualquier componente hijo', '']],
+    [['const { user } = ', 'use'], ['useContext(AuthContext)', 'use'], [';', 'use']],
+  ];
+
+  var parts = {
+    ctx: { label: 'createContext', color: 'p1', title: 'El canal',
+      text: '<code>createContext</code> crea el «canal» por el que viajará el dato. Por sí solo no guarda nada: es solo el identificador que usan el Provider y quienes consumen.',
+      bullets: ['El <code>null</code> es el valor por defecto: se ve solo si alguien usa el contexto <b>fuera</b> de un Provider.', 'Se exporta porque lo importan los consumidores.'],
+      where: 'En pantalla: el recuadro «Contexto».' },
+    state: { label: 'useState', color: 'p2', title: 'El estado vive en el Provider',
+      text: 'El Provider es un componente normal con <code>useState</code>. Cuando <code>setUser</code> cambia el estado, el Provider se vuelve a ejecutar y publica el valor nuevo.',
+      where: 'En pantalla: «Estado del Provider».' },
+    login: { label: 'login()', color: 'p3', title: 'Las acciones también viajan',
+      text: 'Además del dato, el Provider publica funciones para cambiarlo. <code>login</code> guarda el token en el navegador y actualiza el usuario con lo que dice el token.',
+      bullets: ['Quien consume nunca llama a <code>setUser</code>: pide el cambio con <code>login()</code>.', 'Así la lógica de sesión queda en un solo archivo.'],
+      where: 'En pantalla: LoginPage llama a <code>login(token)</code>.' },
+    value: { label: 'value', color: 'p4', title: 'value: lo que se comparte',
+      text: '<code>Context.Provider</code> recibe en <code>value</code> lo que quieres compartir con todo el árbol de abajo: aquí, el usuario y la función login.',
+      bullets: ['Cuando el <code>value</code> cambia, se repintan todos los que consumen este contexto.', 'Conviene compartir poco y que cambie poco.'],
+      where: 'En pantalla: el recuadro del Provider y el valor que publica.' },
+    kids: { label: 'children', color: 'p5', title: 'children: lo que envuelve',
+      text: '<code>children</code> es todo lo que va <b>dentro</b> de <code>&lt;AuthProvider&gt;</code> en <code>main.jsx</code>: la aplicación entera queda dentro del alcance del contexto.',
+      bullets: ['Si el Provider cambia su estado, <code>children</code> sigue siendo el <b>mismo elemento</b> que le dio <code>main.jsx</code>: React lo reutiliza y solo repinta a quien usa <code>useContext</code>.', 'Si el Provider dibujara a sus hijos él mismo, se repintaría todo el árbol.'],
+      where: 'En pantalla: <code>main.jsx</code> envuelve a <code>&lt;App /&gt;</code>.' },
+    use: { label: 'useContext', color: 'p1', title: 'Consumir sin props',
+      text: 'En cualquier componente de abajo, <code>useContext(AuthContext)</code> devuelve el <code>value</code> del Provider <b>más cercano</b> hacia arriba. No importa cuántos niveles haya en medio.',
+      where: 'En pantalla: UserMenu lee <code>user</code> y muestra el nombre.' },
+  };
+
+  function view() {
+    return '<div class="cx-card"><span class="cx-hd">main.jsx</span>' +
+      '<div class="cx-wrap" data-part="kids"><span class="cx-hd">&lt;AuthProvider&gt;</span><span class="cx-m">&lt;App /&gt;</span></div></div>' +
+      '<div class="cx-card" data-part="state"><span class="cx-hd">Estado del Provider</span><span class="cx-m">user = { sub: "ana@icesi.edu.co" }</span></div>' +
+      '<div class="cx-card" data-part="ctx"><span class="cx-hd">Contexto</span><span class="cx-m"><span data-part="value">value = { user, login }</span></span></div>' +
+      '<div class="cx-card" data-part="use"><span class="cx-hd">UserMenu.jsx</span><span class="cx-m">Hola, ana@icesi.edu.co</span></div>' +
+      '<div class="cx-card" data-part="login"><span class="cx-hd">LoginPage.jsx</span><span class="cx-m">login(token)</span></div>';
+  }
+
+  var steps = [
+    { phase: 0, title: 'createContext crea el canal', focus: 'ctx',
+      caption: 'Un contexto vacío: aún no tiene dato, solo el nombre del canal.' },
+    { phase: 0, title: 'El Provider guarda el estado', focus: 'state',
+      caption: 'AuthProvider es un componente con useState. Ahí vive el usuario.' },
+    { phase: 0, title: 'Y publica acciones', focus: 'login',
+      caption: 'login guarda el token y actualiza el usuario. Los demás componentes lo llaman en vez de tocar el estado.' },
+    { phase: 1, title: 'value: lo que viaja por el canal', focus: 'value',
+      caption: 'El Provider pone user y login en su value: eso es lo que reciben los consumidores.' },
+    { phase: 1, title: 'children: la app dentro del wrapper', focus: 'kids',
+      caption: 'Todo lo que está entre <AuthProvider> y </AuthProvider> queda dentro del alcance.' },
+    { phase: 2, title: 'useContext lo lee donde haga falta', focus: 'use',
+      caption: 'UserMenu toma user directo del Provider, sin props intermedias.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'El archivo AuthContext.jsx: createContext, el AuthProvider con su estado, el value, children y useContext, enlazados con lo que pasa en la aplicación',
+    phases: ['Crear', 'Publicar', 'Consumir'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.codemap({ stage: stage, file: 'src/context/AuthContext.jsx', code: code, parts: parts, view: view, split: '1.9fr', compact: true });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Context API',
+      title: 'Las piezas de un contexto',
+      text: 'Recorre el archivo, o pasa el mouse por el código o por la pantalla, para ver qué hace cada pieza: crear, publicar y consumir.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

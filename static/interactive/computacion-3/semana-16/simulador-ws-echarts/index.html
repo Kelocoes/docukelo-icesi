@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulador en vivo: WebSocket + CSV + Gráfica tipo Apache ECharts</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  .ws-wrap { display: flex; flex-direction: column; gap: 12px; }
+  .ws-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--dk-line);
+    border-radius: 12px;
+    background: var(--dk-band);
+  }
+  .ws-group { display: inline-flex; align-items: center; gap: 6px; font: 600 13px system-ui, sans-serif; }
+  .ws-sel {
+    font: 600 12.5px ui-monospace, Consolas, monospace;
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--dk-line);
+    background: var(--dk-card);
+    color: var(--dk-ink);
+  }
+  .ws-btn {
+    border: 1px solid var(--dk-line);
+    background: var(--dk-card);
+    color: var(--dk-ink);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font: 700 12.5px system-ui, sans-serif;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, transform .1s;
+  }
+  .ws-btn:hover { border-color: var(--dk-ctl); }
+  .ws-btn.primary {
+    background: var(--dk-ctl);
+    border-color: var(--dk-ctl);
+    color: var(--dk-card);
+  }
+  .ws-btn.rec {
+    background: var(--dk-err);
+    border-color: var(--dk-err);
+    color: var(--dk-card);
+  }
+  .ws-status {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font: 700 11.5px ui-monospace, Consolas, monospace;
+    border: 1px solid var(--dk-line);
+    background: var(--dk-card);
+    color: var(--dk-muted);
+  }
+  .ws-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dk-muted); }
+  .ws-status.live { color: var(--dk-ack); border-color: var(--dk-ack); }
+  .ws-status.live .ws-dot { background: var(--dk-ack); }
+
+  .ws-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .ws-kpi {
+    border: 1px solid var(--dk-line);
+    border-radius: 10px;
+    background: var(--dk-card);
+    padding: 8px 10px;
+  }
+  .ws-kpi small { display: block; font: 600 11px system-ui, sans-serif; color: var(--dk-muted); }
+  .ws-kpi strong { font: 800 17px ui-monospace, Consolas, monospace; color: var(--dk-ink); }
+  .ws-kpi.c-temp strong { color: var(--dk-ctl); }
+  .ws-kpi.c-hum strong { color: var(--dk-ack); }
+  .ws-kpi.c-kw strong { color: var(--dk-data); }
+
+  .ws-chart-card {
+    position: relative;
+    border: 1px solid var(--dk-line);
+    border-radius: 12px;
+    background: var(--dk-card);
+    padding: 10px 12px 8px;
+  }
+  .ws-chart-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .ws-chart-head h4 { margin: 0; font: 700 14px system-ui, sans-serif; color: var(--dk-ink); }
+  .ws-legend { display: flex; gap: 14px; font: 600 12px system-ui, sans-serif; color: var(--dk-muted); }
+  .ws-legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .ws-legend i { width: 12px; height: 3px; border-radius: 2px; display: inline-block; }
+  .ws-legend i.t { background: var(--dk-ctl); }
+  .ws-legend i.h { background: var(--dk-ack); }
+  .ws-chart-svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .ws-grid { stroke: var(--dk-line); stroke-width: 1; stroke-dasharray: 3 3; opacity: .7; }
+  .ws-ax { font: 600 11px ui-monospace, Consolas, monospace; fill: var(--dk-muted); }
+  .ws-line-t { fill: none; stroke: var(--dk-ctl); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .ws-area-t { fill: color-mix(in srgb, var(--dk-ctl) 14%, transparent); }
+  .ws-line-h { fill: none; stroke: var(--dk-ack); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .ws-pt { cursor: pointer; transition: r .15s; }
+  .ws-empty {
+    font: 600 13px system-ui, sans-serif;
+    fill: var(--dk-muted);
+    text-anchor: middle;
+  }
+  .ws-tip {
+    position: absolute;
+    pointer-events: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--dk-line);
+    background: var(--dk-card);
+    box-shadow: 0 6px 18px rgba(0,0,0,.12);
+    font: 600 11.5px/1.45 ui-monospace, Consolas, monospace;
+    color: var(--dk-ink);
+    display: none;
+    z-index: 4;
+  }
+
+  .ws-bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px;
+  }
+  .ws-panel {
+    border: 1px solid var(--dk-line);
+    border-radius: 12px;
+    background: var(--dk-card);
+    overflow: hidden;
+  }
+  .ws-panel-head {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--dk-line);
+    background: var(--dk-band);
+    font: 700 11.5px ui-monospace, Consolas, monospace;
+    color: var(--dk-ink);
+  }
+  .ws-panel-body {
+    max-height: 150px;
+    overflow: auto;
+    padding: 6px 0;
+    font: 11.5px/1.5 ui-monospace, Consolas, monospace;
+  }
+  .ws-row {
+    padding: 1.5px 10px;
+    border-left: 3px solid transparent;
+    white-space: nowrap;
+    color: var(--dk-muted);
+  }
+  .ws-row.on {
+    background: var(--dk-band-on);
+    border-left-color: var(--dk-ctl);
+    color: var(--dk-ink);
+    font-weight: 700;
+  }
+  .ws-log { padding: 2px 10px; white-space: pre-wrap; word-break: break-word; }
+  .ws-log.in { color: var(--dk-ack); }
+  .ws-log.out { color: var(--dk-ctl); }
+
+  @media (max-width: 700px) {
+    .ws-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ws-bottom { grid-template-columns: 1fr; }
+    .ws-status { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="dk-card dk-wide" id="sim"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script>
+(function () {
+  var el = DK.el, S = DK.svg;
+
+  // Datos simulados del archivo CSV del backend divididos en dos tópicos (Día 1 y Día 2)
+  var CSV_DATA = {
+    'telemetry:day-1': [
+      { time: '08:00', temp: 19.2, hum: 74, kw: 1.4 },
+      { time: '09:00', temp: 21.0, hum: 68, kw: 1.8 },
+      { time: '10:00', temp: 23.5, hum: 61, kw: 2.3 },
+      { time: '11:00', temp: 26.1, hum: 54, kw: 2.9 },
+      { time: '12:00', temp: 28.4, hum: 48, kw: 3.4 },
+      { time: '13:00', temp: 29.8, hum: 44, kw: 3.7 },
+      { time: '14:00', temp: 30.2, hum: 42, kw: 3.8 },
+      { time: '15:00', temp: 28.9, hum: 46, kw: 3.2 },
+      { time: '16:00', temp: 26.4, hum: 53, kw: 2.6 },
+      { time: '17:00', temp: 23.8, hum: 60, kw: 2.1 }
+    ],
+    'telemetry:day-2': [
+      { time: '08:00', temp: 17.5, hum: 82, kw: 1.6 },
+      { time: '09:00', temp: 18.1, hum: 85, kw: 1.9 },
+      { time: '10:00', temp: 17.9, hum: 88, kw: 2.2 },
+      { time: '11:00', temp: 16.8, hum: 92, kw: 2.5 },
+      { time: '12:00', temp: 16.2, hum: 94, kw: 2.8 },
+      { time: '13:00', temp: 16.9, hum: 91, kw: 2.7 },
+      { time: '14:00', temp: 18.0, hum: 86, kw: 2.4 },
+      { time: '15:00', temp: 19.3, hum: 80, kw: 2.1 },
+      { time: '16:00', temp: 19.7, hum: 77, kw: 1.9 },
+      { time: '17:00', temp: 18.5, hum: 81, kw: 1.7 }
+    ]
+  };
+
+  var topic = 'telemetry:day-1';
+  var running = false;
+  var cursor = 0;
+  var series = [];
+  var logs = ['[Cliente] Página Next.js lista (sin conexión activa)'];
+  var timerId = null;
+
+  var sel = el('select', { class: 'ws-sel', 'aria-label': 'Seleccionar tópico WebSocket' },
+    el('option', { value: 'telemetry:day-1', text: 'telemetry:day-1 (Día 1 · Soleado)' }),
+    el('option', { value: 'telemetry:day-2', text: 'telemetry:day-2 (Día 2 · Lluvia)' })
+  );
+
+  var btnRun = el('button', { class: 'ws-btn primary', text: 'Ejecutar (Conectar WS)' });
+  var btnStep = el('button', { class: 'ws-btn', text: '+1 Tick (3s)' });
+  var btnClear = el('button', { class: 'ws-btn', text: 'Limpiar' });
+  var statusBadge = el('span', { class: 'ws-status' }, el('span', { class: 'ws-dot' }), el('span', { text: 'Desconectado' }));
+
+  var kTime = el('strong', { text: '--:--' });
+  var kTemp = el('strong', { text: '-- °C' });
+  var kHum  = el('strong', { text: '-- %' });
+  var kKw   = el('strong', { text: '-- kW' });
+
+  var svg = S('svg', { class: 'ws-chart-svg', viewBox: '0 0 760 220', role: 'img', 'aria-label': 'Gráfico de línea en tiempo real' });
+  var tip = el('div', { class: 'ws-tip' });
+  var csvBody = el('div', { class: 'ws-panel-body' });
+  var logBody = el('div', { class: 'ws-panel-body' });
+  var chartTitle = el('h4', { text: 'Serie temporal en vivo · Tópico: telemetry:day-1' });
+
+  var root = document.getElementById('sim');
+  root.appendChild(el('div', { class: 'ws-wrap' },
+    el('div', { class: 'ws-bar' },
+      el('label', { class: 'ws-group' }, 'Tópico:', sel),
+      btnRun,
+      btnStep,
+      btnClear,
+      statusBadge
+    ),
+    el('div', { class: 'ws-kpis' },
+      el('div', { class: 'ws-kpi' }, el('small', { text: 'Último tick CSV' }), kTime),
+      el('div', { class: 'ws-kpi c-temp' }, el('small', { text: 'Temperatura' }), kTemp),
+      el('div', { class: 'ws-kpi c-hum' }, el('small', { text: 'Humedad relativa' }), kHum),
+      el('div', { class: 'ws-kpi c-kw' }, el('small', { text: 'Consumo' }), kKw)
+    ),
+    el('div', { class: 'ws-chart-card' },
+      el('div', { class: 'ws-chart-head' },
+        chartTitle,
+        el('div', { class: 'ws-legend' },
+          el('span', {}, el('i', { class: 't' }), 'Temperatura (°C)'),
+          el('span', {}, el('i', { class: 'h' }), 'Humedad (%)')
+        )
+      ),
+      svg,
+      tip
+    ),
+    el('div', { class: 'ws-bottom' },
+      el('div', { class: 'ws-panel' },
+        el('div', { class: 'ws-panel-head', text: 'Backend · telemetria.csv (lectura cada 3s)' }),
+        csvBody
+      ),
+      el('div', { class: 'ws-panel' },
+        el('div', { class: 'ws-panel-head', text: 'Tráfico Socket.IO en vivo' }),
+        logBody
+      )
+    )
+  ));
+
+  function addLog(text, cls) {
+    logs.unshift({ text: text, cls: cls || '' });
+    if (logs.length > 20) logs.pop();
+  }
+
+  function renderChart() {
+    svg.replaceChildren();
+    var W = 760, H = 220, L = 46, R = 46, T = 16, B = 28;
+    var pw = W - L - R, ph = H - T - B;
+
+    // Grilla horizontal
+    for (var g = 0; g <= 4; g++) {
+      var gy = T + (ph * g) / 4;
+      svg.appendChild(S('line', { x1: L, y1: gy, x2: W - R, y2: gy, class: 'ws-grid' }));
+      var tVal = Math.round(35 - (g * 20) / 4);
+      var hVal = Math.round(100 - (g * 60) / 4);
+      svg.appendChild(S('text', { x: L - 8, y: gy + 4, class: 'ws-ax', 'text-anchor': 'end', text: tVal + '°' }));
+      svg.appendChild(S('text', { x: W - R + 8, y: gy + 4, class: 'ws-ax', 'text-anchor': 'start', text: hVal + '%' }));
+    }
+
+    if (series.length === 0) {
+      svg.appendChild(S('text', { x: W / 2, y: H / 2, class: 'ws-empty', text: 'Pulsa «Ejecutar (Conectar WS)» o «+1 Tick (3s)» para recibir datos en vivo...' }));
+      return;
+    }
+
+    var totalSlots = CSV_DATA[topic].length;
+    var xOf = function (idx) { return L + (idx * pw) / Math.max(1, totalSlots - 1); };
+    var yTemp = function (v) { return T + ph - ((v - 15) / 20) * ph; };
+    var yHum  = function (v) { return T + ph - ((v - 40) / 60) * ph; };
+
+    // Etiquetas eje X
+    CSV_DATA[topic].forEach(function (row, idx) {
+      if (idx % 2 === 0 || idx === totalSlots - 1) {
+        svg.appendChild(S('text', { x: xOf(idx), y: H - 6, class: 'ws-ax', 'text-anchor': 'middle', text: row.time }));
+      }
+    });
+
+    var ptsT = series.map(function (d, idx) { return [xOf(idx), yTemp(d.temp)]; });
+    var ptsH = series.map(function (d, idx) { return [xOf(idx), yHum(d.hum)]; });
+
+    if (ptsT.length > 1) {
+      var dT = 'M' + ptsT.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' L');
+      var areaT = dT + ' L' + ptsT[ptsT.length - 1][0].toFixed(1) + ',' + (T + ph) + ' L' + ptsT[0][0].toFixed(1) + ',' + (T + ph) + ' Z';
+      svg.appendChild(S('path', { d: areaT, class: 'ws-area-t' }));
+      svg.appendChild(S('path', { d: dT, class: 'ws-line-t' }));
+
+      var dH = 'M' + ptsH.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' L');
+      svg.appendChild(S('path', { d: dH, class: 'ws-line-h' }));
+    }
+
+    series.forEach(function (d, idx) {
+      var cx = xOf(idx);
+      var cT = S('circle', { cx: cx, cy: yTemp(d.temp), r: 4.5, fill: 'var(--dk-ctl)', stroke: 'var(--dk-card)', 'stroke-width': 1.8, class: 'ws-pt' });
+      var cH = S('circle', { cx: cx, cy: yHum(d.hum), r: 4.5, fill: 'var(--dk-ack)', stroke: 'var(--dk-card)', 'stroke-width': 1.8, class: 'ws-pt' });
+      var showTip = function () {
+        tip.style.display = 'block';
+        tip.innerHTML = '<b>' + topic + ' · ' + d.time + '</b><br>Temp: ' + d.temp + ' °C<br>Hum: ' + d.hum + ' %<br>Consumo: ' + d.kw + ' kW';
+        tip.style.left = Math.min(72, Math.max(8, (cx / W) * 100)) + '%';
+        tip.style.top = '42px';
+      };
+      var hideTip = function () { tip.style.display = 'none'; };
+      cT.onmouseenter = showTip; cT.onmouseleave = hideTip;
+      cH.onmouseenter = showTip; cH.onmouseleave = hideTip;
+      svg.append(cT, cH);
+    });
+  }
+
+  function renderPanels() {
+    var rows = CSV_DATA[topic];
+    csvBody.replaceChildren();
+    rows.forEach(function (r, idx) {
+      var isCurrent = idx === cursor - 1;
+      csvBody.appendChild(el('div', {
+        class: 'ws-row' + (isCurrent ? ' on' : ''),
+        text: topic.replace('telemetry:', '') + ',' + r.time + ',' + r.temp + ',' + r.hum + ',' + r.kw
+      }));
+    });
+
+    logBody.replaceChildren();
+    logs.forEach(function (item) {
+      var text = typeof item === 'string' ? item : item.text;
+      var cls = typeof item === 'string' ? '' : item.cls;
+      logBody.appendChild(el('div', { class: 'ws-log ' + cls, text: text }));
+    });
+  }
+
+  function updateKpis() {
+    var last = series[series.length - 1];
+    kTime.textContent = last ? last.time : '--:--';
+    kTemp.textContent = last ? last.temp + ' °C' : '-- °C';
+    kHum.textContent  = last ? last.hum + ' %' : '-- %';
+    kKw.textContent   = last ? last.kw + ' kW' : '-- kW';
+  }
+
+  function renderAll() {
+    chartTitle.textContent = 'Serie temporal en vivo · Tópico: ' + topic;
+    updateKpis();
+    renderChart();
+    renderPanels();
+    DK.autoHeight();
+  }
+
+  function emitTick() {
+    var list = CSV_DATA[topic];
+    if (cursor >= list.length) {
+      stopStream();
+      addLog('[NestJS] Fin del CSV para ' + topic + '. Puedes cambiar de día o limpiar.', 'out');
+      renderAll();
+      return;
+    }
+    var reading = list[cursor++];
+    series.push(reading);
+    addLog('← on("telemetry:tick") [' + topic + '] ' + JSON.stringify(reading), 'in');
+    renderAll();
+  }
+
+  function startStream() {
+    if (running) return;
+    running = true;
+    btnRun.textContent = 'Pausar transmisión';
+    btnRun.className = 'ws-btn rec';
+    statusBadge.className = 'ws-status live';
+    statusBadge.lastChild.textContent = 'Conectado · ' + topic;
+    addLog('→ emit("join-topic", "' + topic + '") · 101 Switching Protocols', 'out');
+    emitTick();
+    timerId = setInterval(emitTick, 1300);
+  }
+
+  function stopStream() {
+    running = false;
+    if (timerId) { clearInterval(timerId); timerId = null; }
+    btnRun.textContent = 'Ejecutar (Conectar WS)';
+    btnRun.className = 'ws-btn primary';
+    statusBadge.className = 'ws-status';
+    statusBadge.lastChild.textContent = series.length ? 'Pausado' : 'Desconectado';
+  }
+
+  btnRun.onclick = function () {
+    if (running) {
+      stopStream();
+      addLog('→ Cliente pausó la suscripción', 'out');
+      renderAll();
+    } else {
+      if (cursor >= CSV_DATA[topic].length) {
+        cursor = 0;
+        series = [];
+      }
+      startStream();
+    }
+  };
+
+  btnStep.onclick = function () {
+    if (cursor >= CSV_DATA[topic].length) {
+      cursor = 0;
+      series = [];
+    }
+    emitTick();
+  };
+
+  btnClear.onclick = function () {
+    stopStream();
+    cursor = 0;
+    series = [];
+    logs = ['[Cliente] Gráfico reiniciado para ' + topic];
+    renderAll();
+  };
+
+  sel.onchange = function () {
+    var prev = topic;
+    topic = sel.value;
+    cursor = 0;
+    series = [];
+    addLog('→ emit("leave-topic", "' + prev + '") + emit("join-topic", "' + topic + '")', 'out');
+    if (running) {
+      statusBadge.lastChild.textContent = 'Conectado · ' + topic;
+      emitTick();
+    } else {
+      renderAll();
+    }
+  };
+
+  renderAll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTTP Polling frente a WebSockets</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>.dk-pane { flex-basis: 280px; }</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-compare.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var C = 'client', S = 'server';
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+  var PH = ['Conectar', 'Cada 3s (CSV)', 'Cambio de día'];
+
+  function build(opt) {
+    var switchDay = !!opt.switchDay;
+    var steps = [];
+    var step = function (phase, title, caption, http, ws) {
+      steps.push({ phase: phase, title: title, caption: caption, panes: { http: http, ws: ws } });
+    };
+
+    step(0, 'Inicio de la sesión',
+      'Con HTTP Polling cada lectura requiere abrir una petición GET. Con WebSocket solo hay un handshake HTTP inicial que asciende a un túnel TCP persistente (101 Switching Protocols) y el cliente se une al tópico.',
+      { msgs: [msg(C, S, 'GET /telemetry?day=1', 'ctl'), msg(S, C, '200 OK + fila 1', 'data')],
+        state: { client: 'esperando 3s', server: 'stateless' },
+        note: 'Abre y cierra conexión en cada consulta' },
+      { msgs: [msg(C, S, 'HTTP Upgrade: websocket', 'ctl'), msg(S, C, '101 Switching Protocols', 'ack'), msg(C, S, 'join: telemetry:day-1', 'ctl')],
+        state: { client: 'conectado (ws)', server: 'suscrito a day-1' },
+        note: 'Un solo handshake; conexión queda abierta' });
+
+    step(1, 'Tick a los 3 segundos (mismo día)',
+      'Pasan 3 segundos y el backend lee la siguiente fila del CSV. HTTP obliga al cliente a preguntar de nuevo (con todas sus cabeceras); WebSocket hace push directo desde el servidor.',
+      { msgs: [msg(C, S, 'GET /telemetry?day=1', 'ctl'), msg(S, C, '200 OK + fila 2', 'data')],
+        state: { client: 'poll #2', server: 'lee CSV' },
+        note: 'El cliente siempre tiene que preguntar' },
+      { msgs: [msg(S, C, 'tick { temp: 23.4 }', 'data')],
+        state: { client: 'actualiza gráfica', server: 'emite cada 3s' },
+        note: 'El servidor empuja el dato sin que lo pidan' });
+
+    step(1, 'Tick a los 6 segundos (¿y si el CSV no cambió?)',
+      'Si en un intervalo no hubo cambios en el sensor, HTTP Polling igual gastó red y servidor respondiendo vacío. WebSocket solo envía un frame ligero cuando hay un dato nuevo.',
+      { msgs: [msg(C, S, 'GET /telemetry?day=1', 'ctl'), msg(S, C, '200 OK (sin cambios)', 'lost' in {} ? 'err' : 'ack')],
+        state: { client: 'poll #3 (vacío)', server: 'procesó GET igual' },
+        note: 'Petición innecesaria si no hay cambios' },
+      { msgs: [],
+        state: { client: 'túnel en reposo', server: 'espera siguiente fila' },
+        note: '0 bytes extra hasta que exista un nuevo dato' });
+
+    step(2, switchDay ? 'Cambiar de tópico (Día 1 → Día 2)' : 'Resumen del canal',
+      switchDay
+        ? 'Al elegir otro día, el cliente WebSocket no reconecta: envía un evento corto por el mismo túnel para salir de day-1 y escuchar day-2.'
+        : 'En series temporales cada pocos segundos, HTTP Polling multiplica peticiones y cabeceras; WebSocket mantiene un canal único con latencia mínima.',
+      { msgs: switchDay ? [msg(C, S, 'GET /telemetry?day=2', 'ctl'), msg(S, C, '200 OK + día 2', 'data')] : [],
+        state: { client: 'polling', server: 'sin estado' },
+        note: switchDay ? 'Nueva petición completa por cada tick' : 'Más cabeceras y peticiones repetidas' },
+      { msgs: switchDay ? [msg(C, S, 'join: telemetry:day-2', 'ctl'), msg(S, C, 'tick día 2', 'data')] : [],
+        state: { client: switchDay ? 'escuchando day-2' : 'conectado', server: switchDay ? 'sala day-2' : 'push en vivo' },
+        note: switchDay ? 'Cambia de sala en el mismo socket' : 'Push en tiempo real, mínima sobrecarga' });
+
+    return steps;
+  }
+
+  var seq = function () {
+    return {
+      trayCount: 0,
+      idleState: 'desconectado',
+      phases: PH,
+      actors: [{ id: C, label: 'Next.js', icon: 'browser' }, { id: S, label: 'NestJS', icon: 'server' }]
+    };
+  };
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Comparación entre HTTP Polling cada 3 segundos y WebSockets con tópicos en NestJS y Next.js',
+    phases: PH,
+    scene: function (svg, stage) {
+      return DK.compare({
+        stage: stage,
+        statLabel: 'mensajes',
+        panes: [
+          { id: 'http', title: 'HTTP Polling (REST)', subtitle: 'el cliente pregunta cada 3s', sequence: seq() },
+          { id: 'ws', title: 'WebSocket (Socket.IO)', subtitle: 'túnel persistente + push por tópico', sequence: seq() },
+        ],
+      });
+    },
+    toggles: [{ key: 'switchDay', label: 'El usuario cambia de tópico (Día 1 → Día 2)', affectsPhase: 2 }],
+    build: build,
+    kicker: function (p) { return 'Fase ' + (p + 1) + ' · ' + PH[p]; },
+    intro: {
+      kicker: 'REST Polling frente a WebSockets',
+      title: 'Preguntar cada 3 segundos vs. recibir en tiempo real',
+      text: 'Observa qué ocurre en la red cuando un backend lee una serie temporal de un CSV cada 3 segundos y el frontend la grafica en vivo.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

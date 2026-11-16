@@ -25,6 +25,8 @@ Orden de carga en el `index.html` de una pieza (rutas relativas, para que funcio
 <script src="../../../_shared/dk-phone.js"></script>     <!-- escena: teléfono + State + árbol de widgets + consola (cargar dk-tree.js ANTES de dk-phone.js) -->
 <script src="../../../_shared/dk-nav.js"></script>       <!-- escena: teléfono + pila de rutas del Navigator (cargar dk-phone.js ANTES; con <link> a dk-nav.css) -->
 <script src="../../../_shared/dk-history.js"></script>   <!-- escena: navegador (URL, Atrás/Adelante) + historial como pila con puntero (con <link> a dk-nav.css y dk-history.css; solo necesita dk-kit.js) -->
+<script src="../../../_shared/dk-browser.js"></script>   <!-- escena: navegador simulado con Network y Application (con <link> a dk-browser.css; solo necesita dk-kit.js) -->
+<script src="../../../_shared/dk-views.js"></script>     <!-- contenedor: varias vistas de los mismos pasos en pestañas (Flujo / Pantalla); necesita las escenas que reúne -->
 <script src="../../../_shared/dk-tabs.js"></script>      <!-- teléfono con NavigationBar y detalle que la cubre (con <link> a dk-tabs.css; solo necesita dk-kit.js) -->
 <script src="../../../_shared/dk-player.js"></script>
 ```
@@ -54,6 +56,8 @@ Todo es JavaScript plano (scripts clásicos, sin módulos ni dependencias) y exp
 | `dk-tabs.js` + `dk-tabs.css` | `DK.tabs.phone`: teléfono con `NavigationBar` de 3 pestañas (Cursos, Guardados, Perfil), un detalle que la cubre y la flecha de volver; no guarda estado, la pieza decide qué dibujar | Navegación por pestañas de Flutter: `setState` + `IndexedStack` frente a `push` |
 | `dk-radial.js` + `dk-radial.css` | `DK.radial`: anillos concéntricos (arquitectura de cebolla), piezas en sus anillos, flechas rectas o curvas que viajan entre ellas y un panel que al tocar una pieza marca en verde lo que puede importar y en rojo lo prohibido (matriz de límites). Carga también `dk-flow.js` | Capas concéntricas y regla de dependencia (Clean Architecture, hexagonal) |
 | `dk-compare.js` | `DK.compare`: dos o más diagramas de secuencia lado a lado, sincronizados paso a paso, con contador y nota por panel | Contrastar alternativas (TCP/UDP, con/sin caché, stateful/stateless) |
+| `dk-browser.js` + `dk-browser.css` | `DK.browser`: un **navegador simulado** (barra de direcciones, página con clases `bw-*`) y debajo unas herramientas de desarrollo con **Network** (método, URL, estado, columna Authorization) y **Application > Local Storage**; las filas y claves nuevas se resaltan | Mostrar lo que el estudiante vería mientras el código trabaja: formulario, error, lista que llega, token guardado, peticiones |
+| `dk-views.js` | `DK.views`: **pestañas de vistas** (Flujo / Pantalla / Diagrama...) sobre los **mismos pasos**; el panel de código, la leyenda y los botones del player quedan siempre visibles | Cuando un mismo recorrido se entiende mejor desde dos ángulos (flujo entre archivos y pantalla del navegador) |
 | `dk-player.js` | `DK.player`: pestañas por fase, leyenda, controles, interruptores | Cualquier pieza paso a paso |
 
 ## dk-kit.js
@@ -182,7 +186,7 @@ Escena para `DK.player` (con `wide: true`; escenario HTML). `items` va en el ord
 
 ## dk-codemap.js: `DK.codemap(opciones)`
 
-Escena para `DK.player` (con `wide: true`). `file` es el nombre del archivo que se muestra en la pestaña del editor y `filePart` (opcional) el id de la parte que ese nombre señala, para que también se pueda iluminar. `code` es un arreglo de lineas y cada linea un arreglo de segmentos `[texto, parte?]`; `parts: { id: { label, color: 'p1'..'p5', title, text, bullets, where } }`; `view()` devuelve el HTML del resultado con `data-part="id"` (clases utiles: `cm-lbl`, `cm-chip`, `cm-code-sm`, `cm-arrow`, `cm-card`, `cm-out`). Un paso solo lleva `focus: 'id'`. Mouse, toque y teclado iluminan en los dos lados; la explicacion ocupa todo el ancho debajo (en pantalla completa pasa a una tercera columna con letra mas grande y la pantalla simulada con `zoom: 1.5`). Ejemplo: `computacion-2/semana-14/anatomia-componente/`. Leccion: el resaltador de `DK.highlight` usa la clase `cm` para los comentarios, asi que la raiz de la escena NO puede llamarse `.cm`. **Sombreado suave:** cada parte del codigo lleva un subrayado de 1 px y un fondo al 4 % de su color; al enfocarla sube al 15 % (en el resultado, aro al 60 % y fondo al 9 %). Los colores `p1` a `p5` son vivos: no subas esos porcentajes (el profesor pidio bajar la intensidad porque dificultaba leer el codigo; en `dk-anatomy` con `code: true` aplica lo mismo). **Codigo largo:** en pantalla completa el codigo se desplaza dentro del editor y, al cambiar de paso, el codigo **y** el panel de resultado se desplazan hasta la parte enfocada (`focus`). A 690 px la columna del codigo admite ~36 caracteres por linea sin scroll horizontal y 25 lineas dan una pieza de ~1100 px: recorta imports y parte las firmas largas. Ejemplos de codigo real enlazado con su salida (cookie, peticion POST, navegador): `computacion-3/semana-14/anatomia-cookie-sesion/`, `anatomia-server-action/`, `computacion-3/semana-15/anatomia-test-playwright/`, `computacion-3/semana-15/localizadores-playwright/`.
+Escena para `DK.player` (con `wide: true`). `file` es el nombre del archivo que se muestra en la pestaña del editor y `filePart` (opcional) el id de la parte que ese nombre señala, para que también se pueda iluminar. `code` es un arreglo de lineas y cada linea un arreglo de segmentos `[texto, parte?]`; `parts: { id: { label, color: 'p1'..'p5', title, text, bullets, where } }`; `view()` devuelve el HTML del resultado con `data-part="id"` (clases utiles: `cm-lbl`, `cm-chip`, `cm-code-sm`, `cm-arrow`, `cm-card`, `cm-out`). Un paso solo lleva `focus: 'id'`. Mouse, toque y teclado iluminan en los dos lados; la explicacion ocupa todo el ancho debajo (en pantalla completa pasa a una tercera columna con letra mas grande y la pantalla simulada con `zoom: 1.5`). Ejemplo: `computacion-2/semana-14/anatomia-componente/`. **Opciones de tamaño:** `split: '1.9fr'` (más ancho para el código: se pueden dejar líneas de ~50 caracteres sin partirlas) y `compact: true` (letra de 12,5 px y explicación más baja, para que la pieza entera quepa en la pantalla de un portátil: sin `compact` una pieza con 18 líneas medía ~920 px y el estudiante no veía los botones). Leccion: el resaltador de `DK.highlight` usa la clase `cm` para los comentarios, asi que la raiz de la escena NO puede llamarse `.cm`. **Sombreado suave:** cada parte del codigo lleva un subrayado de 1 px y un fondo al 4 % de su color; al enfocarla sube al 15 % (en el resultado, aro al 60 % y fondo al 9 %). Los colores `p1` a `p5` son vivos: no subas esos porcentajes (el profesor pidio bajar la intensidad porque dificultaba leer el codigo; en `dk-anatomy` con `code: true` aplica lo mismo). **Codigo largo:** en pantalla completa el codigo se desplaza dentro del editor y, al cambiar de paso, el codigo **y** el panel de resultado se desplazan hasta la parte enfocada (`focus`). A 690 px la columna del codigo admite ~36 caracteres por linea sin scroll horizontal y 25 lineas dan una pieza de ~1100 px: recorta imports y parte las firmas largas. Ejemplos de codigo real enlazado con su salida (cookie, peticion POST, navegador): `computacion-3/semana-14/anatomia-cookie-sesion/`, `anatomia-server-action/`, `computacion-3/semana-15/anatomia-test-playwright/`, `computacion-3/semana-15/localizadores-playwright/`.
 
 ## dk-table.js: `DK.table(opciones)`
 
@@ -403,6 +407,44 @@ Escena circular para `DK.player`. La cabecera de `kit/dk-radial.js` documenta ca
 
 Con `ctrl.rebuild()` (en el objeto que devuelve `DK.player`) la pieza vuelve a ejecutar `build()` sin mover el paso actual; sirve para piezas genéricas que reescriben todos sus textos (por ejemplo, cambiar el nombre de la feature). Pieza de referencia: `static/interactive/computacion-3/semana-12/clean-architecture-circular/index.html`.
 
+## dk-views.js: `DK.views(opciones)`
+
+Escena **contenedora** para `DK.player`: reúne varias vistas de los mismos pasos en pestañas («Flujo», «Pantalla», «Diagrama»). El estudiante cambia de pestaña cuando quiere (no cambia de paso) y el panel de código, la leyenda y los botones siguen debajo.
+
+```js
+scene: function (svg, stage) {
+  return DK.views({ stage: stage, initial: 0, views: [
+    { label: 'Flujo', scene: function (svg, box) { return DK.sequence({ svg: svg, ... }); } },     // vista con svg: recibe (svg, box)
+    { label: 'Pantalla', html: true, scene: function (svg, box) { return DK.browser({ stage: box }); } },   // html: true => svg = null, la escena llena box
+  ] });
+}
+```
+
+- **Todas las vistas leen el mismo arreglo de pasos**: cada paso trae los datos de cada vista (`msgs`/`state` para `DK.sequence`, `focus`/`msgs` para `DK.layers`, `screen` para `DK.browser`). Una escena ignora los campos que no son suyos.
+- Cargar `dk-browser.css` (trae también los estilos de las pestañas y las reglas de pantalla completa del contenedor).
+- La vista que se muestra se redibuja en el paso actual al cambiar de pestaña; las ocultas se actualizan sin animar.
+- Pantalla completa: `dk-browser.css` trae las reglas (`.dk-fs`): vistas a la izquierda, texto, controles y código a la derecha.
+- Ejemplos: `computacion-2/semana-16/useeffect-axios/`, `login-token/` (Flujo + Pantalla) y `guarda-outlet/` (Diagrama con `DK.layers` + Pantalla).
+
+## dk-browser.js: `DK.browser(opciones)`
+
+Escena de un navegador simulado, para usarse sola en `DK.player` o como una vista de `DK.views`. `DK.browser({ stage, pageHeight })`. Cada paso lleva `screen`, el estado **completo** de la pantalla en ese paso (no un cambio):
+
+```js
+screen: {
+  url: 'localhost:5173/login',
+  page: '<h2 class="bw-h">Iniciar sesión</h2><div class="bw-form">...</div>',   // HTML con las clases bw-*
+  dev: 'net',                                                                   // pestaña de las herramientas: 'net' | 'app'
+  net: [{ m: 'POST', url: '/auth/login', st: '200', auth: false }],              // st: '200', '401', '…' (pendiente), 'ERR'; auth: true muestra «Bearer eyJ…»
+  storage: [['token', 'eyJhbGci…']],                                            // Application > Local Storage
+}
+```
+
+- Clases de la página (`dk-browser.css`): `bw-nav` (barra superior), `bw-h`, `bw-p`, `bw-form` (dos columnas), `bw-in` (campo; es un `div`, no se escribe), `bw-lbl`, `bw-btn` (`dis` = deshabilitado), `bw-err`, `bw-ok`, `bw-load`, `bw-li`. La página es **clara en los dos temas** (es «otra pantalla»); las herramientas usan los tokens.
+- Las filas de Network y las claves de `storage` **nuevas** respecto del paso anterior se resaltan un instante. El estudiante puede abrir a mano la otra pestaña de las herramientas.
+- Solo muestra: no es un navegador que el estudiante manipule. Sirve para que **vea lo que produce el código** (mensajes de error, lista, token guardado, la columna Authorization de cada petición).
+- Alto: ~330 px con `pageHeight` por defecto (112). Con el panel de código (164 px) y los controles la pieza mide ~750 px; si el contenido de `page` es más alto, sube `pageHeight` y recorta en otro lado.
+
 ## dk-player.js: `DK.player(opciones)`
 
 ```js
@@ -428,6 +470,8 @@ code: { title: 'HelloServlet.java', text: CODIGO_COMO_TEXTO },   // en el player
 ```
 
 `code` también puede ser una **función** `(opts) => ({ title, text })` cuando el código cambia con los interruptores (por ejemplo, con y sin `@Transactional`): el panel se redibuja en cada cambio y las líneas se numeran igual en todas las variantes (reemplaza una línea, no agregues ni quites líneas, para que los números de los pasos sigan valiendo). Pieza de referencia: `candidates/static/interactive/computacion-2/semana-6/transaccion-transferencia/index.html`.
+
+**Varios archivos en el panel de código (pestañas tipo editor):** `code: { files: [{ name: 'Login.jsx', text }, { name: 'api.js', text }] }` (también como función `(opts) => ({ files })`). Cada archivo tiene su pestaña (con un punto de color por extensión: `.jsx`, `.js`, `.xml`, `.env`) y cada paso elige **cuál se ve** con `file: 'api.js'` (por defecto, la primera) y qué líneas resalta con `code: [3, 4]` (numeradas **en ese archivo**). El estudiante también puede abrir a mano otra pestaña. Sirve para responder «¿de dónde viene eso?»: el paso apunta al `import` en un archivo y el siguiente salta al archivo donde se define. El panel con archivos mide 164 px de alto (la barra de pestañas se queda pegada arriba). Ejemplo: `computacion-2/semana-16/useeffect-axios/`.
 
 **Colores del código por rol** (`DK.highlight`, con leyenda automática en la cabecera del panel; se apaga con `legend: false`): **clase o tipo** (verde azulado, negrita: `Product`, `Pageable`), **método** (marrón: lo que va seguido de `(`), **objeto o variable** (morado: `productRepository`, `page`), **palabra clave** (azul, negrita: `public`, `new`, `throw`), texto, número, anotación y comentario (gris cursiva). Reglas del tokenizador: mayúscula inicial = clase; palabra + `(` = método (tras `new`, es la clase del constructor); el resto en minúscula = objeto o variable. Los tokens `--dk-s-kw/ty/fn/ob/st/nu/an` están en `dk-base.css` con variante oscura. Si el código de un capítulo usa otro lenguaje (XML, SQL), ampliar `DK.highlight` o agregar un resaltador por lenguaje. **Dart:** `late` y `required` son palabras clave, y `int double bool num dynamic` se pintan como tipo (no como variable); `String`, `List`, `Widget` ya salen como clase por la mayúscula inicial. Para números de línea que no se desfasen al editar el código, no los escribas a mano: define las líneas en un arreglo y busca por texto (`at('initState')`, `rng('setState(() {', "_mensaje = 'Usuario")`), lanzando un error si el rango queda vacío.
 

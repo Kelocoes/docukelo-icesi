@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carga progresiva de una skill</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>#app .dk-cap { min-height: 112px; }</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Divulgación progresiva de una skill en tres niveles (memo de skills, secciones 6 y 9).
+   Nivel 1: nombre y descripción de TODAS las skills, siempre en el contexto (~100 tokens cada una).
+   Nivel 2: el cuerpo de SKILL.md, solo cuando la skill se activa (< 5k tokens).
+   Nivel 3: archivos de apoyo, 0 tokens hasta que se leen; un script se EJECUTA y solo su salida entra al contexto.
+   Interruptor: disable-model-invocation: true saca la descripción del contexto (Claude Code).
+   Los nombres de las skills y la petición son ilustrativos; las cifras son aproximadas y no están a escala. Escena libre DK.canvas. Solo DATOS. */
+(function () {
+  var pill = function (id, x, y, text, extra) { var o = { id: id, type: 'tag', x: x, y: y, text: text }; for (var k in extra) o[k] = extra[k]; return o; };
+  var block = function (id, cx, w, color, hidden, ghost) {
+    return { id: id, type: 'draw', x: cx, y: 358, r: 10, hidden: hidden !== false, draw: function (S, g) {
+      g.appendChild(ghost
+        ? S('rect', { x: -w / 2, y: -9, width: w, height: 18, rx: 4, class: 'dk-dev', fill: 'none' })
+        : S('rect', { x: -w / 2, y: -9, width: w, height: 18, rx: 4, style: 'fill: color-mix(in srgb, var(--dk-' + color + ') 55%, transparent); stroke: var(--dk-' + color + '); stroke-width: 1.6px' }));
+    } };
+  };
+
+  var items = [
+    { id: 'zc', type: 'zone', shape: 'round', x: 10, y: 70, w: 390, h: 246, rx: 18, label: 'Contexto del modelo', sub: 'skills de ejemplo', lx: 28, ly: 94 },
+    { id: 'zd', type: 'zone', shape: 'round', x: 420, y: 70, w: 290, h: 246, rx: 18, label: 'En disco', sub: 'carpetas de ejemplo', lx: 438, ly: 94 },
+    { id: 'user', type: 'node', icon: 'user', x: 36, y: 34, size: 40, lp: 'right', label: 'Estudiante' },
+    pill('req', 400, 34, '«revisa mi informe de la semana 3»', { hidden: true }),
+
+    // nivel 1: nombre y descripción de cada skill
+    pill('p1', 205, 134, 'revisando-informes · ≈ 100 tokens', { hidden: true }),
+    pill('p2', 205, 164, 'creando-quiz · ≈ 100 tokens', { hidden: true }),
+    pill('p3', 205, 194, 'desplegando-sitio · ≈ 100 tokens', { hidden: true }),
+    // niveles 2 y 3, dentro del contexto
+    pill('cMd', 205, 232, 'SKILL.md (el cuerpo)', { hidden: true }),
+    pill('cRub', 205, 262, 'references/rubrica.md', { hidden: true }),
+    pill('cOut', 205, 292, 'salida de validar-citas.py', { hidden: true }),
+
+    // el disco: carpetas de las tres skills y los archivos de la elegida
+    pill('dA', 520, 134, 'creando-quiz/'),
+    pill('dB', 520, 164, 'desplegando-sitio/'),
+    pill('dC', 520, 194, 'revisando-informes/'),
+    pill('fMd', 585, 232, 'SKILL.md'),
+    pill('fRub', 585, 262, 'references/rubrica.md'),
+    pill('fScr', 585, 292, 'scripts/validar-citas.py'),
+
+    // la barra de contexto usado (no está a escala)
+    { id: 'zm', type: 'zone', shape: 'none', cx: 10, cy: 336, lx: 10, ly: 338, label: 'Contexto usado por las skills (aprox., sin escala)' },
+    block('m1a', 21, 22, 'p1'), block('m1b', 47, 22, 'p1'), block('m1c', 73, 22, 'p1'), block('m1x', 73, 22, 'p1', true, true),
+    block('m2', 208, 240, 'p3'), block('m3a', 360, 56, 'p5'), block('m3b', 400, 16, 'p5'),
+    pill('l1', 62, 386, 'N1 · siempre', { hidden: true }),
+    pill('l2', 208, 386, 'N2 · al activarse', { hidden: true }),
+    pill('l3', 372, 386, 'N3 · si se necesita', { hidden: true }),
+    pill('ctr', 600, 358, '', { hidden: true }),
+  ];
+
+  var DISK = { dA: 'dim', dB: 'dim' };            // las otras skills siguen en disco, sin tocar
+  var ORDER = ['p1', 'p2', 'p3'];
+
+  function build(opt) {
+    var dis = !!opt.dis;
+    var n1 = dis ? 2 : 3;
+    var st = function (extra) { var s = {}; for (var k in DISK) s[k] = DISK[k]; for (var j in extra) s[j] = extra[j]; if (dis && !s.p3) s.p3 = 'ghost'; return s; };
+    var steps = [];
+    var p3txt = dis ? 'desplegando-sitio · fuera del contexto' : 'desplegando-sitio · ≈ 100 tokens';
+
+    steps.push({ phase: 0, title: 'Al iniciar: solo el aviso de cada skill', focus: ['p1', 'p2'].concat(dis ? [] : ['p3']),
+      show: ['p1', 'p2', 'p3', 'm1a', 'm1b', dis ? 'm1x' : 'm1c', 'l1', 'ctr'],
+      text: { p3: p3txt, ctr: dis ? '≈ 200 tokens (2 × ~100)' : '≈ 300 tokens (3 × ~100)' },
+      state: st(dis ? { m1x: 'ghost', p3: 'ghost' } : {}),
+      caption: dis
+        ? 'Con disable-model-invocation: true, la descripción de desplegando-sitio sale del contexto: el modelo no puede cargarla por su cuenta (tú sí, con /desplegando-sitio). Quedan dos avisos, ≈ 200 tokens.'
+        : 'Al iniciar, el modelo carga solo el nombre y la descripción de cada skill: ≈ 100 tokens por skill. Hay tres disponibles y casi no pesan. (Nombres y cifras de ejemplo, aproximadas.)' });
+
+    steps.push({ phase: 0, title: 'El modelo compara con las descripciones', focus: ['req', 'p1'], show: ['req'],
+      state: st({ p1: 'ok', p2: 'dim', p3: dis ? 'ghost' : 'dim' }),
+      links: [{ path: [335, 49, 285, 119], kind: 'ctl', label: 'encaja' }],
+      caption: dis
+        ? 'El estudiante pide revisar su informe. El modelo compara la petición con las descripciones que tiene delante y elige revisando-informes. Si pidiera desplegar, no podría elegir esa skill solo: tendrías que escribir /desplegando-sitio.'
+        : 'El estudiante pide revisar su informe. El modelo compara la petición con las descripciones del nivel 1 y elige la que encaja: revisando-informes. Por eso la descripción debe decir qué hace y cuándo usarla.' });
+
+    steps.push({ phase: 1, title: 'Se carga el cuerpo de SKILL.md', focus: ['fMd', 'cMd'], show: ['cMd', 'm2', 'l2'],
+      text: { ctr: '+ SKILL.md: < 5k tokens' },
+      state: st({ p1: 'ok', p2: 'dim', p3: dis ? 'ghost' : 'dim', dC: 'ok' }),
+      links: [{ from: 'fMd', to: 'cMd', kind: 'data', label: 'se carga', curve: 0 }],
+      caption: 'Solo ahora se lee el cuerpo de SKILL.md: menos de 5k tokens. Las otras dos skills siguen en el nivel 1, solo con su aviso.' });
+
+    steps.push({ phase: 2, title: 'Un archivo de apoyo, solo si hace falta', focus: ['fRub', 'cRub'], show: ['cRub', 'm3a', 'l3'],
+      text: { ctr: '+ rubrica.md: solo si se lee' },
+      state: st({ p1: 'ok', p2: 'dim', p3: dis ? 'ghost' : 'dim', dC: 'ok', cMd: 'ok' }),
+      links: [{ from: 'fRub', to: 'cRub', kind: 'data', label: 'se lee', curve: 0 }],
+      caption: 'SKILL.md enlaza references/rubrica.md. Ese archivo cuesta 0 tokens mientras nadie lo abra: el modelo lo lee solo cuando la revisión lo necesita.' });
+
+    steps.push({ phase: 2, title: 'Un script se ejecuta, no se lee', focus: ['fScr', 'cOut'], show: ['cOut', 'm3b'],
+      text: { ctr: '+ solo la salida del script' },
+      state: st({ p1: 'ok', p2: 'dim', p3: dis ? 'ghost' : 'dim', dC: 'ok', cMd: 'ok', cRub: 'ok', fScr: 'ok' }),
+      links: [{ from: 'fScr', to: 'cOut', kind: 'ack', label: 'se ejecuta', curve: 0 }],
+      caption: 'scripts/validar-citas.py no se carga como texto: se ejecuta y al contexto entra solo su salida. Es más barato y más fiable que pedirle al modelo que escriba ese código cada vez.' });
+
+    steps.push({ phase: 3, title: 'Una vez invocada, se queda', focus: ['cMd'], pulse: ['cMd'],
+      text: { cMd: 'SKILL.md · sigue en el contexto', ctr: 'SKILL.md sigue contando' },
+      state: st({ p1: 'ok', p2: 'dim', p3: dis ? 'ghost' : 'dim', dC: 'ok', cMd: 'warn', cRub: 'ok', cOut: 'ok', fScr: 'ok' }),
+      caption: 'En Claude Code, una vez invocada la skill, su contenido se queda en el contexto en los turnos siguientes. Escribe el cuerpo como instrucciones permanentes y breves.' });
+
+    steps.push({ phase: 3, title: 'Resumen: se paga lo que se usa', show: ['l1', 'l2', 'l3'],
+      text: { cMd: 'SKILL.md · sigue en el contexto', ctr: 'solo se paga lo que se usa' },
+      state: st({ p1: 'ok', p2: 'dim', p3: dis ? 'ghost' : 'dim', dC: 'ok', cMd: 'ok', cRub: 'ok', cOut: 'ok', fScr: 'ok' }),
+      caption: 'Nivel 1: el aviso de cada skill, siempre. Nivel 2: el cuerpo, cuando la skill se activa. Nivel 3: los archivos de apoyo, solo si se leen o se ejecutan. Más skills no significan mucho más contexto.' });
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Carga progresiva de una skill en tres niveles: nombre y descripción siempre en el contexto, el cuerpo de SKILL.md al activarla y los archivos de apoyo solo si se necesitan; un interruptor quita la descripción de una skill del contexto',
+    phases: ['Nivel 1', 'Nivel 2', 'Nivel 3', 'Después'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 404, trail: 'step', items: items }); },
+    toggles: [{ key: 'dis', label: 'disable-model-invocation: true en desplegando-sitio', affectsPhase: 0 }],
+    build: build,
+    intro: { kicker: 'Skills', title: 'Qué entra al contexto y cuándo', text: 'El estudiante pide «revisa mi informe de la semana 3». Pulsa «Siguiente» y mira qué parte de la skill llega al modelo en cada nivel. Prueba el interruptor.' },
+  });
+})();
+</script>
+</body>
+</html>

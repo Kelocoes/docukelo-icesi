@@ -13,6 +13,8 @@
  *     code: { title: 'HelloServlet.java', text: '...codigo...' },   // opcional: panel de código (o una función (opts) => {title, text}
  *                                                                    // si el código cambia con los interruptores); cada paso resalta
  *                                                                    // sus líneas con step.code = [5, 6, 7] (desde 1)
+ *                                                                    // VARIOS ARCHIVOS (pestanas tipo editor): code: { files: [{ name: 'api.js', text }, ...] } y en cada paso
+ *                                                                    // step.file = 'api.js' (pestana activa) + step.code = [lineas de ESE archivo]
  *     // URL con #fase=3: abre la pieza directamente en la fase 3
  *     wide: true,   // opcional: sin topes de 760/640 px; la pieza ocupa todo el ancho del iframe (dibujar con viewBox ~1000)
  *   });
@@ -81,25 +83,55 @@ DK.player = function (o) {
   // Panel de codigo sincronizado: cada paso puede resaltar lineas (step.code = [numeros de linea, desde 1]).
   // `code` puede ser un objeto { title, text } o una funcion (opts) => { title, text } cuando el codigo cambia con los
   // interruptores (por ejemplo con y sin @Transactional). Se vuelve a dibujar en cada rebuild.
-  var codeBox = null, codeLines = [];
+  var codeBox = null, codeLines = [], codeFiles = {}, fileNames = [];
   if (o.code) codeBox = el('div', { class: 'dk-code' });
+  function lineSpans(text, into) {
+    var arr = [];
+    text.split('\n').forEach(function (line) {
+      var n = el('span', { class: 'l' });
+      n.innerHTML = DK.highlight(line) || ' ';
+      into.appendChild(n);
+      arr.push(n);
+    });
+    return arr;
+  }
+  // pestana activa del editor (solo con code.files); `codeLines` apunta a las lineas del archivo activo
+  function pickFile(name) {
+    if (!codeFiles[name]) return;
+    fileNames.forEach(function (n) {
+      codeFiles[n].btn.classList.toggle('on', n === name);
+      codeFiles[n].btn.setAttribute('aria-selected', n === name ? 'true' : 'false');
+      codeFiles[n].pane.hidden = n !== name;
+    });
+    codeLines = codeFiles[name].lines;
+  }
   function fillCode() {
     if (!codeBox) return;
     var c = typeof o.code === 'function' ? o.code(opts) : o.code;
     codeBox.replaceChildren();
-    codeLines = [];
+    codeLines = []; codeFiles = {}; fileNames = [];
+    if (c.files) {
+      // varios archivos: una barra de pestanas como la del editor y un panel por archivo
+      var ftabs = el('div', { class: 'ftabs', role: 'tablist' });
+      codeBox.appendChild(ftabs);
+      c.files.forEach(function (f) {
+        var ext = (/\.([a-z0-9]+)$/i.exec(f.name) || [])[1] || 'txt';
+        var btn = el('button', { class: 'ft ext-' + ext.toLowerCase(), role: 'tab', text: f.name, onclick: function () { pickFile(f.name); } });
+        var pane = el('div', { class: 'fp', role: 'tabpanel' });
+        codeFiles[f.name] = { btn: btn, pane: pane, lines: lineSpans(f.text, pane) };
+        fileNames.push(f.name);
+        ftabs.appendChild(btn); codeBox.appendChild(pane);
+      });
+      pickFile(c.files[0].name);
+      return;
+    }
     if (c.title) {
       // leyenda de colores: lo que el estudiante necesita para leer el codigo (clase, metodo, objeto, palabra clave)
       var legend = el('span', { class: 'lg' });
       [['ty', 'clase'], ['fn', 'método'], ['ob', 'objeto o variable'], ['kw', 'palabra clave']].forEach(function (x) { legend.appendChild(el('span', { class: x[0], text: x[1] })); });
       codeBox.appendChild(el('div', { class: 'ct' }, c.title, c.legend === false ? null : legend));
     }
-    c.text.split('\n').forEach(function (line) {
-      var n = el('span', { class: 'l' });
-      n.innerHTML = DK.highlight(line) || ' ';
-      codeBox.appendChild(n);
-      codeLines.push(n);
-    });
+    codeLines = lineSpans(c.text, codeBox);
   }
   fillCode();
 
@@ -114,13 +146,20 @@ DK.player = function (o) {
 
   // resalta lineas del panel de codigo (numeradas desde 1) y lo desplaza hasta la primera; tambien lo usan las escenas
   // interactivas (DK.phone en modo libre) a traves de api.code(lineas)
-  function markCode(lines, animate) {
+  function markCode(lines, animate, file) {
     if (!codeBox) return;
     lines = lines || [];
+    if (fileNames.length) {
+      // cada paso elige su pestana (por defecto, la primera) y las demas quedan sin resaltado
+      pickFile(file && codeFiles[file] ? file : fileNames[0]);
+      fileNames.forEach(function (n) { codeFiles[n].lines.forEach(function (l) { l.classList.remove('on'); }); });
+    }
     codeLines.forEach(function (n, k) { n.classList.toggle('on', lines.indexOf(k + 1) >= 0); });
     // el panel de codigo tiene alto limitado: se desplaza solo para dejar a la vista las lineas resaltadas
     var firstOn = codeLines.filter(function (n) { return n.classList.contains('on'); })[0];
-    if (firstOn) codeBox.scrollTo({ top: Math.max(0, firstOn.offsetTop - 40), behavior: animate && !DK.reduced ? 'smooth' : 'auto' });
+    // con pestanas, la barra pegajosa tapa el borde de arriba: se desplaza lo minimo para que la linea quede a la vista
+    var top = !firstOn ? 0 : fileNames.length ? Math.max(0, firstOn.offsetTop + firstOn.offsetHeight + 24 - codeBox.clientHeight) : Math.max(0, firstOn.offsetTop - 40);
+    codeBox.scrollTo({ top: top, behavior: animate && !DK.reduced ? 'smooth' : 'auto' });
   }
 
   function show(i, animate) {
@@ -131,7 +170,7 @@ DK.player = function (o) {
       b.className = p === phase ? 'on' : (p < phase ? 'done' : '');
     });
     [].forEach.call(dots.children, function (d, k) { d.className = k === i ? 'cur' : (k < i ? 'past' : ''); });
-    markCode(step ? step.code : [], animate);
+    markCode(step ? step.code : [], animate, step && step.file);
     var intro = o.intro || {};
     ph.textContent = step ? (o.kicker ? o.kicker(step.phase) : 'Fase ' + (step.phase + 1) + ' · ' + o.phases[step.phase]) : (intro.kicker || '');
     ttl.textContent = step ? step.title : (intro.title || '');

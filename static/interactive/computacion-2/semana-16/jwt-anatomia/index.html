@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomía de un token JWT</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-anatomy.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var H = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';
+  var P = 'eyJzdWIiOiJhbmFAaWNlc2kuZWR1LmNvIiwicm9sIjoiVVNFUiIsImV4cCI6MTg5MzQ1NjAwMH0';
+  var F = 'SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+
+  // un solo documento: el token y, debajo, lo que devuelve jwtDecode (todos los pasos comparten el doc)
+  var doc = [
+    [[H, 'header'], ['.']], [[P, 'payload'], ['.']], [[F, 'sign']],
+    [['']],
+    [['jwtDecode(token) devuelve:']],
+    [['{']],
+    [['  "sub": "ana@icesi.edu.co",', 'payload']],
+    [['  "rol": "USER",', 'payload']],
+    [['  "exp": 1893456000', 'exp']],
+    [['}']],
+  ];
+
+  var steps = [
+    { phase: 0, title: 'Tres partes separadas por puntos', doc: doc, all: true, msgs: [],
+      caption: 'Un JWT es un solo texto con tres partes unidas por puntos: encabezado, contenido y firma.',
+      callout: { text: 'Lo que guardas en localStorage es este texto: tres trozos en Base64 unidos por puntos. Cada color es una parte; abajo ves lo que devuelve jwtDecode.' } },
+    { phase: 0, title: 'Encabezado: cómo se firmó', doc: doc, focus: 'header', msgs: [],
+      caption: 'Dice qué algoritmo se usó para la firma.',
+      callout: { text: 'Decodificado es {"alg":"HS256","typ":"JWT"}: firma HMAC con SHA-256, de tipo JWT.' } },
+    { phase: 0, title: 'Contenido: los claims', doc: doc, focus: 'payload', msgs: [],
+      caption: 'Aquí viaja la información de la sesión: quién es el usuario y hasta cuándo vale.',
+      callout: { text: 'Cada dato se llama claim. El servidor decide cuáles incluir; el front solo los lee.', examples: ['sub: a quién pertenece el token', 'rol: qué permisos tiene', 'exp: cuándo vence'] } },
+    { phase: 0, title: 'Firma: la prueba de que es auténtico', doc: doc, focus: 'sign', msgs: [],
+      caption: 'Solo el servidor conoce la clave con la que se calcula.',
+      callout: { text: 'Si alguien cambia el contenido (por ejemplo rol: ADMIN), la firma deja de coincidir y el servidor rechaza el token.' } },
+    { phase: 1, title: 'jwtDecode lee el contenido', doc: doc, focus: 'payload', msgs: [],
+      caption: 'const datos = jwtDecode(token) convierte la parte central de Base64 a un objeto.',
+      callout: { text: 'Con eso la interfaz sabe el nombre y el rol: puede saludar al usuario o esconder el botón «Administrar».', examples: ['datos.sub', 'datos.rol'] } },
+    { phase: 1, title: 'exp: ¿ya venció?', doc: doc, focus: 'exp', msgs: [],
+      caption: 'exp es una fecha en segundos desde 1970.',
+      callout: { text: 'El guarda compara: datos.exp * 1000 < Date.now(). Si es verdadero, la sesión venció y se manda al login.', examples: ['1893456000 → 1 de enero de 2030'] } },
+    { phase: 1, title: 'Decodificar no es verificar', doc: doc, focus: 'sign', msgs: [],
+      caption: 'Cualquiera puede leer el contenido: no pongas secretos ahí.',
+      callout: { text: 'jwtDecode no comprueba la firma, solo lee. Sirve para mejorar la experiencia; la seguridad real la hace el servidor en cada petición.' } },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Anatomía de un token JWT: encabezado, contenido y firma, y cómo jwtDecode lee el contenido y el campo exp',
+    phases: ['Las tres partes', 'Decodificar'],
+    scene: function (svg, stage) {
+      return DK.anatomy({ stage: stage,
+        parts: { header: { label: 'Encabezado', color: 'p1' }, payload: { label: 'Contenido (claims)', color: 'p4' }, sign: { label: 'Firma', color: 'p3' }, exp: { label: 'exp (vencimiento)', color: 'p2' } } });
+    },
+    build: function () { return steps; },
+    intro: { kicker: 'JWT', title: 'Qué hay dentro del token', text: 'Recorre las tres partes del token y mira qué puede leer el front con jwtDecode y qué solo puede comprobar el servidor.' },
+  });
+})();
+</script>
+</body>
+</html>

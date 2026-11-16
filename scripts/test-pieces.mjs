@@ -137,7 +137,7 @@ async function walk(ctx, errors) {
 async function testPiece(browser, base, piece) {
     const result = { piece, engines: [], steps: 0, toggles: 0, errors: [], notes: [] };
     const html = await readFile(join(ROOT, piece, 'index.html'), 'utf8');
-    result.engines = ['radial', 'phone', 'layers', 'canvas', 'tree', 'table', 'anatomy', 'compare', 'sequence'].filter((e) => html.includes(`dk-${e}.js`));
+    result.engines = ['radial', 'phone', 'layers', 'canvas', 'tree', 'table', 'anatomy', 'compare', 'sequence', 'views', 'browser'].filter((e) => html.includes(`dk-${e}.js`));
     const url = `${base}/${piece}/index.html`;
 
     // 1 y 2: pagina normal, tema claro y oscuro

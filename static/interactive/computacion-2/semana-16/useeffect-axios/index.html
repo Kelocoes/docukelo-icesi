@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>useEffect + Axios: pedir datos al montar</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<link rel="stylesheet" href="../../../_shared/dk-browser.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-browser.js"></script>
+<script src="../../../_shared/dk-views.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Un componente que pide /rutinas al montar. Dos vistas de los mismos pasos (Flujo y Pantalla) y dos archivos en el editor
+   (Rutinas.jsx y api.js). El selector cambia lo que responde el servidor. Solo DATOS. */
+(function () {
+  var C = 'comp', A = 'api', S = 'srv';
+  var CASOS = ['200 OK', '401 sin permiso', 'Sin red'];
+  var PH = ['Montar', 'Petición', 'Respuesta'];
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind }; };
+
+  var RUTINAS = [
+    'import api from "../api";',                                   // 1
+    '',                                                            // 2
+    'function Rutinas() {',                                        // 3
+    '  const [rutinas, setRutinas] = useState([]);',               // 4
+    '  const [cargando, setCargando] = useState(true);',           // 5
+    '  const [error, setError] = useState(null);',                 // 6
+    '',                                                            // 7
+    '  useEffect(() => {',                                         // 8
+    '    api.get("/rutinas")',                                     // 9
+    '      .then((res) => setRutinas(res.data))',                  // 10
+    '      .catch((err) => setError(err.message))',                // 11
+    '      .finally(() => setCargando(false));',                   // 12
+    '  }, []);',                                                   // 13
+    '',                                                            // 14
+    '  if (cargando) return <p>Cargando...</p>;',                  // 15
+    '  if (error) return <p>Error: {error}</p>;',                  // 16
+    '  return <Lista rutinas={rutinas} />;',                       // 17
+    '}'                                                            // 18
+  ].join('\n');
+
+  var APIJS = [
+    'import axios from "axios";',                                  // 1
+    '',                                                            // 2
+    'const api = axios.create({',                                  // 3
+    '  baseURL: import.meta.env.VITE_API_URL,',                    // 4
+    '});',                                                         // 5
+    '// (aquí también va el interceptor del token)',                // 6
+    'export default api;'                                          // 7
+  ].join('\n');
+
+  var NAV = '<div class="bw-nav">Mis rutinas <small>ana@icesi.edu.co</small></div>';
+  var LOADING = NAV + '<p class="bw-load">Cargando...</p>';
+  var LISTA = NAV + '<div class="bw-li"><b>Lunes</b> · Pecho y tríceps</div><div class="bw-li"><b>Miércoles</b> · Piernas</div><div class="bw-li"><b>Viernes</b> · Espalda y bíceps</div>';
+  var URLP = 'localhost:5173/rutinas';
+
+  function build(opt) {
+    var c = opt.caso, ok = c === 0;
+    var auth = c !== 1;                                  // en el caso 401 la petición salió sin token
+    var row = function (st) { return [{ m: 'GET', url: '/rutinas', st: st, auth: auth }]; };
+    var scr = function (page, net) { return { url: URLP, page: page, dev: 'net', net: net || [] }; };
+    var final = ok ? { st: '200', page: LISTA } : c === 1 ? { st: '401', page: NAV + '<p class="bw-err">Error: Request failed with status code 401</p>' } : { st: 'ERR', page: NAV + '<p class="bw-err">Error: Network Error</p>' };
+    var steps = [];
+
+    steps.push({ phase: 0, title: 'Primer render: cargando', file: 'Rutinas.jsx', code: [4, 5, 6, 15],
+      caption: 'React ejecuta la función. Los estados valen lo inicial (lista vacía, cargando = true) y la pantalla muestra «Cargando...». El efecto todavía no ha corrido.',
+      msgs: [], state: { comp: 'Cargando...', api: 'Libre', srv: 'Esperando' }, screen: scr(LOADING) });
+    steps.push({ phase: 0, title: 'El efecto corre después de pintar', file: 'Rutinas.jsx', code: [8, 13],
+      caption: 'Con [] el efecto corre una sola vez, justo después del primer render. Es el lugar correcto para una petición: nunca se hace en el cuerpo del componente.',
+      msgs: [], state: { comp: 'Corre el efecto', api: 'Libre', srv: 'Esperando' }, screen: scr(LOADING) });
+    steps.push({ phase: 1, title: 'api.get llama al cliente', file: 'Rutinas.jsx', code: [1, 9],
+      caption: '«api» no es de Axios: viene del import de la línea 1, un archivo tuyo. El componente solo escribe la ruta, "/rutinas".',
+      msgs: [msg(C, A, 'api.get("/rutinas")', 'ctl')], state: { comp: 'Cargando...', api: 'Recibe la ruta', srv: 'Esperando' }, screen: scr(LOADING) });
+    steps.push({ phase: 1, title: 'api.js completa la URL y envía', file: 'api.js', code: [3, 4, 5],
+      caption: 'En api.js, axios.create guardó la URL base (la variable VITE_API_URL del .env). Axios la une con "/rutinas" y envía la petición; la función no espera: devuelve una promesa.',
+      msgs: [msg(A, S, 'GET base + /rutinas', 'data')], state: { comp: 'Cargando...', api: 'Promesa pendiente', srv: 'Procesando' }, screen: scr(LOADING, row('…')) });
+    if (ok) {
+      steps.push({ phase: 2, title: 'Llega la respuesta: then', file: 'Rutinas.jsx', code: [10],
+        caption: 'El servidor responde 200 con la lista. Axios ya convirtió el JSON: los datos están en res.data. setRutinas guarda la lista y pide un nuevo render.',
+        msgs: [msg(S, A, '200 + JSON', 'ack'), msg(A, C, 'res.data', 'ack')], state: { comp: 'Con datos', api: 'Resuelta', srv: 'Listo' }, screen: scr(LOADING, row('200')) });
+    } else if (c === 1) {
+      steps.push({ phase: 2, title: 'Llega un 401: catch', file: 'Rutinas.jsx', code: [11],
+        caption: 'Axios lanza un error por cualquier estado fuera de 2xx (fetch no lo haría). err.response.status vale 401 y el flujo salta al catch.',
+        msgs: [msg(S, A, '401', 'ack'), msg(A, C, 'error', 'ack')], state: { comp: 'Con error', api: 'Rechazada', srv: 'Listo' }, screen: scr(LOADING, row('401')) });
+    } else {
+      steps.push({ phase: 2, title: 'No hay red: catch', file: 'Rutinas.jsx', code: [11],
+        caption: 'Ninguna respuesta llegó (servidor apagado, VPN caída). Axios rechaza la promesa con error.message = «Network Error» y err.response es undefined.',
+        msgs: [{ from: S, to: A, label: 'sin respuesta', kind: 'ack', lost: true }, msg(A, C, 'error', 'ack')], state: { comp: 'Con error', api: 'Rechazada', srv: 'Inalcanzable' }, screen: scr(LOADING, row('ERR')) });
+    }
+    steps.push({ phase: 2, title: 'finally apaga el «Cargando»', file: 'Rutinas.jsx', code: [12],
+      caption: 'Pase lo que pase, finally pone cargando en false. Es el tercer estado que casi siempre acompaña a una petición: datos, cargando y error.',
+      msgs: [], state: { comp: ok ? 'Con datos' : 'Con error', api: 'Terminó', srv: 'Listo' }, screen: scr(LOADING, row(final.st)) });
+    steps.push({ phase: 2, title: ok ? 'Se dibuja la lista' : 'Se dibuja el error', file: 'Rutinas.jsx', code: ok ? [17] : [16],
+      caption: ok
+        ? 'Cambiaron los estados, React vuelve a ejecutar Rutinas y esta vez ninguno de los dos if corta: se dibuja <Lista />. El efecto no vuelve a correr porque sus dependencias [] no cambiaron.'
+        : 'Cambiaron los estados y React vuelve a ejecutar Rutinas: cargando es false y error tiene texto, así que se dibuja el mensaje. Mostrar el error evita una pantalla vacía sin explicación.',
+      msgs: [], state: { comp: ok ? 'Lista en pantalla' : 'Error en pantalla', api: 'Libre', srv: 'Libre' }, screen: scr(final.page, row(final.st)) });
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Un componente que pide /rutinas con useEffect y Axios al montarse: el flujo entre archivos, la pantalla del navegador y el código de Rutinas.jsx y api.js',
+    phases: PH,
+    scene: function (svg, stage) {
+      return DK.views({ stage: stage, views: [
+        { label: 'Flujo', aria: 'Flujo entre el componente, api.js y el servidor', scene: function (s) {
+          return DK.sequence({ svg: s, trayCount: 0, idleState: '—', phases: PH,
+            actors: [{ id: C, label: 'Rutinas.jsx', icon: 'filecode' }, { id: A, label: 'api.js', icon: 'gear' }, { id: S, label: 'Servidor', icon: 'server' }] });
+        } },
+        { label: 'Pantalla', html: true, scene: function (s, box) { return DK.browser({ stage: box }); } },
+      ] });
+    },
+    toggles: [{ key: 'caso', type: 'select', label: 'Respuesta del servidor', options: CASOS, value: 0, restart: 'first' }],
+    code: { files: [{ name: 'Rutinas.jsx', text: RUTINAS }, { name: 'api.js', text: APIJS }] },
+    build: build,
+    kicker: function (p) { return 'Fase ' + (p + 1) + ' · ' + PH[p]; },
+    intro: { kicker: 'useEffect + Axios', title: 'Pedir datos cuando el componente aparece', text: 'Sigue la petición desde el primer render hasta la pantalla. Alterna entre las pestañas Flujo y Pantalla, y cambia la respuesta del servidor para ver el éxito y los dos errores.' },
+  });
+})();
+</script>
+</body>
+</html>

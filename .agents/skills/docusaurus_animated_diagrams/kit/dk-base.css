@@ -155,6 +155,18 @@ svg text { font-family: inherit; fill: var(--dk-ink); }
 .dk-code .cm { color: var(--dk-muted); font-style: italic; }
 .dk-code .lg { margin-left: 10px; text-transform: none; letter-spacing: 0; font: 600 11px system-ui, sans-serif; display: inline-flex; flex-wrap: wrap; gap: 2px 12px; }
 
+/* varios archivos en el panel de codigo (code.files): pestanas como las de un editor */
+.dk-code:has(> .ftabs) { padding-top: 0; max-height: 164px; }
+.dk-code .ftabs { position: sticky; top: 0; z-index: 2; display: flex; margin: 0 0 6px; background: color-mix(in srgb, var(--dk-ctl) 7%, var(--dk-card)); border-bottom: 1px solid var(--dk-line); overflow-x: auto; }
+.dk-code .ft { flex: none; display: inline-flex; align-items: center; gap: 6px; font: 600 12px ui-monospace, Consolas, monospace; color: var(--dk-muted); background: transparent; border: 0; border-right: 1px solid var(--dk-line); border-top: 2px solid transparent; padding: 6px 14px 5px; cursor: pointer; }
+.dk-code .ft::before { content: ''; width: 8px; height: 8px; border-radius: 2px; background: var(--dk-muted); }
+.dk-code .ft.ext-jsx::before, .dk-code .ft.ext-tsx::before { background: var(--dk-s-ty); }
+.dk-code .ft.ext-js::before, .dk-code .ft.ext-ts::before { background: var(--dk-p5); }
+.dk-code .ft.ext-xml::before, .dk-code .ft.ext-html::before { background: var(--dk-p4); }
+.dk-code .ft.ext-env::before, .dk-code .ft.ext-json::before { background: var(--dk-ack); }
+.dk-code .ft.on { color: var(--dk-ink); background: var(--dk-card); border-top-color: var(--dk-ctl); }
+.dk-code .fp[hidden] { display: none; }
+
 /* ---------- anatomia explorable (dk-anatomy.js) ---------- */
 .dk-anatomy { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 12px; align-items: start; }
 .dk-wire { grid-column: 1 / -1; }
@@ -165,6 +177,7 @@ svg text { font-family: inherit; fill: var(--dk-ink); }
 .dk-msg [data-part] { border-radius: 4px; padding: 1px 3px; margin: 0 -3px; border-bottom: 2px solid transparent; transition: opacity .3s, background .3s, border-color .3s; }
 .dk-msg.has-focus [data-part] { opacity: .42; }
 .dk-msg.has-focus [data-part].on { opacity: 1; background: color-mix(in srgb, var(--pc) 9%, transparent); border-bottom-color: color-mix(in srgb, var(--pc) 70%, transparent); }
+.dk-msg.show-all:not(.code) [data-part] { background: color-mix(in srgb, var(--pc) 13%, transparent); border-bottom-color: color-mix(in srgb, var(--pc) 75%, transparent); color: color-mix(in srgb, var(--pc) 70%, var(--dk-ink)); font-weight: 600; }
 .dk-callout { min-height: 170px; border: 1px solid var(--dk-line); border-left: 5px solid var(--pc, var(--dk-line)); border-radius: 12px; background: var(--dk-card); padding: 12px 14px; }
 .dk-callout .tag { display: inline-block; font: 700 11px system-ui, sans-serif; letter-spacing: .05em; text-transform: uppercase; color: var(--pc, var(--dk-muted)); }
 .dk-callout h4 { margin: 2px 0 6px; font-size: 17px; }

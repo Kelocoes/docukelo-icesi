@@ -96,7 +96,7 @@
   // piece=true: pieza del kit en tema claro y con alto fijo (data-dk-fixed). Así no crece al avanzar
   // y adopta la disposición horizontal del kit (html.dk-fs): figura a la izquierda, texto y botones a la derecha.
   function live(src, w, h, scale = 0.75, tag = 'EN VIVO', piece = true) {
-    const url = piece ? `${src}?theme=light` : src;
+    const url = `${src}?theme=light`; // siempre claro, también cuando piece=false
     return `<div class="live" style="width:${w}px;height:${h}px"><span class="tag">${tag}</span>` +
       `<iframe data-src="${url}"${piece ? ' data-dk-fixed="true"' : ''} width="${Math.round(w / scale)}" height="${Math.round(h / scale)}" style="transform:scale(${scale})" loading="lazy" title="Pieza interactiva"></iframe></div>`;
   }

@@ -1,0 +1,8 @@
+{
+    "label": "S16 - GraphQL y WebSockets en NestJS",
+    "position": 16,
+    "link": {
+        "type": "generated-index",
+        "description": "Configuración de GraphQL en NestJS con Apollo Server y Clean Architecture en Next.js, y comunicación en tiempo real con WebSockets, tópicos y Apache ECharts."
+    }
+}

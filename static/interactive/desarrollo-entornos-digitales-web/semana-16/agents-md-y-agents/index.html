@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AGENTS.md, CLAUDE.md y la carpeta .agents: qué lee Claude Code</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  /* insignia de estado de cada archivo (en el árbol y en el detalle) */
+  .stb { margin-left: 10px; padding: 0 7px; border: 1.5px solid var(--bc); border-radius: 8px; background: color-mix(in srgb, var(--bc) 14%, var(--dk-card)); color: var(--dk-ink); font: 700 10.5px/16px system-ui, sans-serif; white-space: nowrap; }
+  .dkf-detail li .stb { margin-left: 0; }
+  /* dos columnas también en la columna del sitio (~690 px) y alto fijo: la pieza no cambia de tamaño entre pasos */
+  #app .dkf-lines { font-size: 12.5px; }
+  #app .dkf-ln { padding-right: 8px; }
+  #app .dkf-detail { height: 318px; min-height: 0; overflow: auto; padding: 10px 14px; }
+  #app .dkf-detail h4 { font-size: 15px; }
+  #app .dkf-detail .cb { max-height: 150px; }
+  .dkf-sum .stb { margin: 0 6px 0 0; font-weight: 600; }
+  @media (max-width: 700px) and (min-width: 521px) { #app .dkf { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-files.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Qué archivos y carpetas de instrucciones hay en un proyecto y cuáles lee Claude Code. DK.files con un árbol ilustrativo (un selector
+   cambia qué archivos existen y un interruptor, si AGENTS.md enlaza a .agents/) y, al final, el árbol real de DocuKelo. Cada línea lleva
+   una insignia de estado. Solo DATOS: la envoltura de abajo solo pone las insignias y alterna entre los dos árboles.
+   Hechos: code.claude.com/docs/en/memory y /skills (leídos el 2026-11-16). Nada se afirma de cómo otras herramientas tratan AGENTS.md. */
+(function () {
+  // ---- insignias: [texto corto, token de color, texto completo para el detalle] ----
+  var CH = {
+    load: ['al iniciar', 'ack', 'Se carga al iniciar'],
+    link: ['si se enlaza', 'ctl', 'Se abre si se enlaza y el agente decide'],
+    no: ['no lo lee', 'err', 'Claude Code no lo lee'],
+    skill: ['skill', 'p3', 'Skill descubierta'],
+    people: ['personas', 'muted', 'Para personas'],
+    std: ['estándar', 'ack', 'Estándar abierto'],
+    emerg: ['emergente', 'p2', 'Convención emergente'],
+    own: ['propia', 'data', 'Convención propia del proyecto'],
+  };
+  var chip = function (k, long) { return '<span class="stb" style="--bc:var(--dk-' + CH[k][1] + ')">' + (long ? CH[k][2] : CH[k][0]) + '</span>'; };
+
+  // ---- código de ejemplo (ilustrativo; líneas cortas para que quepan) ----
+  var AGENTS_MIN = '# AGENTS.md\n\n## Comandos\n- Instalar: `npm install`\n- Servidor: `npm start`\n- Pruebas: `npm test`\n\n## Convenciones\n- Docs en español, código en inglés\n- No editar la carpeta `build/`\n\n## Antes de terminar\n- Corre `npm test` y que pase';
+  var AGENTS_LINK = '\n\n## Más contexto\n- Estilo: .agents/memory/estilo.md\n- Para revisar informes, lee:\n  .agents/skills/revisar-informes/\n  SKILL.md';
+  var CLAUDE_OWN = '# CLAUDE.md\n\n## Comandos\n- Pruebas: `npm test`\n\n## Claude Code\nUsa el modo plan en `src/billing/`.\n\n(no importa AGENTS.md)';
+  var CLAUDE_IMPORT = '@AGENTS.md\n\n## Claude Code\nUsa el modo plan para cambios en\n`src/billing/`.';
+  var SKILL_AG = '---\nname: revisar-informes\ndescription: >\n  Revisa informes con la rúbrica.\n  Úsala cuando pidan revisar uno.\n---\n# Revisión de informes\n1. Lee el documento completo.\n2. Compáralo con la rúbrica.';
+  var SKILL_CL = '---\nname: revisar-pr\ndescription: >\n  Revisa un pull request y lista\n  problemas. Úsala al pedir revisión.\n---\n# Revisión de un PR\n1. Lee el diff completo.\n2. Lista problemas por gravedad.';
+
+  // ---- árbol ilustrativo (A): el texto de cada línea lo llena fillA() según el caso ----
+  var A = ['.agents/', '.agents/memory/', '.agents/skills/', '.agents/skills/revisar-informes/',
+    '.claude/', '.claude/skills/', '.claude/skills/revisar-pr/', 'src/', 'AGENTS.md', 'CLAUDE.md', 'README.md']
+    .map(function (p) { return { path: p, hidden: p === 'CLAUDE.md' }; });
+  var byA = {}; A.forEach(function (it) { byA[it.path] = it; });
+  var statusA = {};
+
+  function put(it, k, why, purpose, pts, code, codeTitle) {
+    it.purpose = purpose;
+    it.points = (k ? [chip(k, true) + ' ' + why] : []).concat(pts || []);
+    it.code = code || ''; it.codeTitle = codeTitle || '';
+  }
+
+  function fillA(c, link) {
+    var read = c !== 1;                       // ¿Claude Code carga AGENTS.md?
+    var ok = read && link;                    // ¿el enlace a .agents/ llega al agente?
+    var why = link ? (c === 1 ? 'AGENTS.md lo enlaza, pero Claude Code no lee AGENTS.md (hay un CLAUDE.md sin import): el enlace queda mudo.' : 'AGENTS.md lo enlaza; el agente decide si lo abre.')
+      : 'Nada lo enlaza y Claude Code no lee nada bajo .agents/ por sí solo.';
+    statusA = { 'AGENTS.md': c === 1 ? 'no' : 'load', 'CLAUDE.md': 'load', 'README.md': 'people',
+      '.agents/memory/': ok ? 'link' : 'no', '.agents/skills/revisar-informes/': ok ? 'link' : 'no', '.claude/skills/revisar-pr/': 'skill' };
+    var agentsCode = AGENTS_MIN + (link ? AGENTS_LINK : '');
+
+    put(byA['AGENTS.md'], statusA['AGENTS.md'],
+      c === 0 ? 'Claude Code lo lee porque no existe un CLAUDE.md.' : c === 1 ? 'Existe un CLAUDE.md que no lo importa: Claude Code lee solo CLAUDE.md.' : 'Entra por el @AGENTS.md de CLAUDE.md: se leen los dos contenidos.',
+      'Un «README para agentes»: comandos, convenciones y trampas del repositorio.',
+      ['Formato abierto: Markdown libre, sin campos obligatorios.', c === 1 ? 'Con el ajuste «Project instructions» en <code>claude-md-and-agents-md</code>, Claude Code leería los dos.' : 'Claude Code lo lee desde la v2.1.277.',
+        'Otras herramientas leen AGENTS.md; verifica en la de tu preferencia.'], agentsCode, 'AGENTS.md (ilustrativo)');
+    put(byA['CLAUDE.md'], 'load', c === 1 ? 'Claude Code lo carga al iniciar; como no importa AGENTS.md, ese contenido no llega.' : 'Su primera línea, <code>@AGENTS.md</code>, importa el otro archivo.',
+      'El archivo de instrucciones propio de Claude Code.',
+      c === 2 ? ['Un solo archivo fuente; debajo, lo específico de Claude.', 'En Windows se recomienda el import y no el symlink.'] : ['Es contexto, no una obligación: lo que debe cumplirse siempre se pone en un hook.'],
+      c === 2 ? CLAUDE_IMPORT : CLAUDE_OWN, 'CLAUDE.md (ilustrativo)');
+    put(byA['README.md'], 'people', 'No es un archivo de instrucciones.', 'Qué es el proyecto y cómo instalarlo, para personas.', ['AGENTS.md lo complementa, no lo reemplaza.']);
+    put(byA['.agents/'], '', '', 'Una carpeta de convención, no parte del estándar AGENTS.md.',
+      ['Es una convención emergente para skills y notas.', 'Claude Code no lee nada bajo <code>.agents/</code> por sí solo.']);
+    put(byA['.agents/memory/'], statusA['.agents/memory/'], why, 'Notas del proyecto en Markdown, como estilo.md (ilustrativo).', [], '# Estilo\n- Textos en español neutro.\n- Sin emojis.', 'estilo.md');
+    put(byA['.agents/skills/'], '', '', 'Una ruta de convención emergente para skills.', ['Claude Code busca skills en <code>.claude/skills/</code> y <code>~/.claude/skills/</code>.']);
+    put(byA['.agents/skills/revisar-informes/'], statusA['.agents/skills/revisar-informes/'], why,
+      'Una skill bien escrita, pero fuera de las rutas de Claude Code.', ['Aunque el agente abra su SKILL.md, no es una skill registrada: se lee como un archivo más.'], SKILL_AG, 'SKILL.md (abreviado)');
+    put(byA['.claude/'], '', '', 'La carpeta de configuración de Claude Code en el proyecto.', ['Aquí viven también <code>.claude/agents/</code> y, si quieres, <code>.claude/CLAUDE.md</code>.']);
+    put(byA['.claude/skills/'], '', '', 'Donde Claude Code descubre las skills del proyecto.', ['Se versionan con Git: el equipo las recibe.']);
+    put(byA['.claude/skills/revisar-pr/'], 'skill', 'Al iniciar carga solo el nombre y la descripción (~100 tokens, cifra aproximada); el cuerpo, cuando se usa.',
+      'Claude Code la usa sola o con <code>/revisar-pr</code> (nombre ilustrativo).', [], SKILL_CL, 'SKILL.md (abreviado)');
+    put(byA['src/'], '', '', 'Tu código. No es un archivo de instrucciones.');
+  }
+
+  // ---- árbol real de DocuKelo (B) ----
+  var SK = [
+    ['documentation_auditor', 'Revisar y encontrar mejoras en contenido educativo.'],
+    ['docusaurus_animated_diagrams', 'La más compleja: SKILL.md más references/, kit/, host/, templates/, examples/ y tools/.'],
+    ['docusaurus_content_researcher', 'Tono, estructura pedagógica y alineación curricular.'],
+    ['docusaurus_mermaid_svg', 'Reglas visuales y plantillas de Mermaid.'],
+    ['docusaurus_quiz', 'Cuestionarios de opción múltiple interactivos.'],
+    ['pedagogical_svg_designer', 'SVG conceptuales para diapositivas; SKILL.md con references/shape-library.md y pattern-catalog.md.'],
+    ['resource_visualizer', 'Ilustrar enlaces y herramientas con esquemas SVG.'],
+  ];
+  var statusB = { 'AGENTS.md': 'std', '.agents/memory/': 'own', '.agents/skills/': 'emerg', '.agents/spec/': 'own' };
+  var B = [
+    { path: '.agents/', purpose: 'Todo lo que cuelga de aquí es convención.', points: ['Claude Code no lo lee por sí solo.'] },
+    { path: '.agents/memory/', purpose: 'Guías en Markdown: de Docusaurus, de marca, el backlog y planes, más un subproyecto svg-redesign/.',
+      points: [chip('own', true) + ' Escrita por humanos y agentes.', 'Ninguna herramienta la lee sola: llega al agente porque AGENTS.md la enlaza.'] },
+    { path: '.agents/skills/', purpose: 'Siete skills, cada una en su carpeta con un SKILL.md (name y description).',
+      points: [chip('emerg', true) + ' La ruta no es del estándar AGENTS.md; Claude Code busca en <code>.claude/skills/</code>.', 'Las alcanza porque AGENTS.md las enlaza y el agente decide leerlas.',
+        'Detalle: el <code>name</code> usa guiones y la carpeta guion bajo; la especificación abierta pide que coincidan.'] },
+  ];
+  SK.forEach(function (s) { B.push({ path: '.agents/skills/' + s[0] + '/', purpose: s[1], points: ['El SKILL.md sigue la especificación abierta de skills (name y description).'] }); });
+  B.push({ path: '.agents/spec/', purpose: 'Dos documentos de especificación de una semana de curso.', points: [chip('own', true) + ' Ninguna herramienta la lee sola.'] });
+  B.push({ path: 'AGENTS.md', purpose: 'El índice del proyecto: «Agent System Entrypoint».',
+    points: [chip('std', true) + ' Formato abierto, hoy bajo la Linux Foundation.', 'Dos secciones: Memory (enlaces a .agents/memory/) y Skills (un enlace por SKILL.md, con una línea de cuándo usarla).',
+      'No hay CLAUDE.md ni .claude/ en la raíz: Claude Code lee este archivo directo.'] });
+
+  // ---- envoltura: dos DK.files (uno por árbol), insignias y leyenda ----
+  function scene(svg, stage) {
+    var boxA = DK.el('div'), boxB = DK.el('div'), steps = [];
+    stage.replaceChildren(boxA, boxB);
+    var fA = DK.files({ stage: boxA, items: A }), fB = DK.files({ stage: boxB, items: B });
+    function paint(box, map, legend) {
+      [].forEach.call(box.querySelectorAll('.dkf-ln[data-id]'), function (ln) {
+        var k = map[ln.getAttribute('data-id')];
+        if (k) ln.appendChild(DK.el('span', { class: 'stb', style: '--bc:var(--dk-' + CH[k][1] + ')', text: CH[k][0] }));
+      });
+      var sum = box.querySelector('.dkf-sum'); sum.replaceChildren(DK.el('span', { text: 'Estado: ' }));
+      legend.forEach(function (k) { sum.appendChild(DK.el('span', { class: 'stb', style: '--bc:var(--dk-' + CH[k][1] + ')', text: CH[k][0] })); });
+    }
+    return {
+      msgDuration: 700,
+      setSteps: function (s) {
+        steps = s; fA.setSteps(s); fB.setSteps(s);
+        [boxA, boxB].forEach(function (b) { b.querySelector('.dkf-lines').style.minHeight = '292px'; });   // el mismo alto con o sin CLAUDE.md
+      },
+      render: function (i) {
+        var real = !!(steps[i] && steps[i].view === 'real');
+        boxA.hidden = real; boxB.hidden = !real;
+        fA.render(i); fB.render(i);
+        paint(boxA, statusA, ['load', 'link', 'no', 'skill']); paint(boxB, statusB, ['std', 'emerg', 'own']);
+        return { animMs: 0 };
+      },
+    };
+  }
+
+  function build(opt) {
+    var c = opt.c, link = opt.link, s = [];
+    fillA(c, link);
+    var add = function (phase, title, caption, focus, extra) { s.push(Object.assign({ phase: phase, title: title, caption: caption, focus: focus, depth: 3 }, extra || {})); };
+    var skAg = '.agents/skills/revisar-informes/';
+
+    // Qué hay
+    if (c === 0) add(0, 'Un solo archivo de instrucciones', 'El proyecto tiene un AGENTS.md y ningún CLAUDE.md. Es un formato abierto: un «README para agentes» con comandos, convenciones y trampas del repo.', 'AGENTS.md');
+    if (c === 1) add(0, 'Dos archivos', 'Hay un AGENTS.md (formato abierto) y un CLAUDE.md (el propio de Claude Code). CLAUDE.md no menciona a AGENTS.md.', 'CLAUDE.md', { show: ['CLAUDE.md'] });
+    if (c === 2) add(0, 'Dos archivos, un contenido', 'CLAUDE.md empieza con @AGENTS.md y, debajo, agrega lo específico de Claude Code.', 'CLAUDE.md', { show: ['CLAUDE.md'] });
+    // Qué se lee
+    if (c === 0) add(1, 'Claude Code lo lee', 'Sin CLAUDE.md, Claude Code carga AGENTS.md al iniciar. Otras herramientas leen AGENTS.md; verifica en la de tu preferencia. Si luego creas un CLAUDE.md, prueba las otras opciones.', 'AGENTS.md');
+    if (c === 1) {
+      add(1, 'Gana CLAUDE.md', 'Si existen los dos, Claude Code lee solo CLAUDE.md.', 'CLAUDE.md');
+      add(1, 'AGENTS.md queda fuera', 'Lo que escribiste en AGENTS.md no llega a Claude Code, salvo que cambies el ajuste «Project instructions». Otras herramientas sí lo leen.', 'AGENTS.md');
+    }
+    if (c === 2) add(1, 'El import trae el otro', 'La línea @AGENTS.md hace que se lean los dos contenidos: un solo archivo fuente para todas las herramientas.', 'AGENTS.md');
+    // Las skills
+    add(2, 'Skills en .claude/skills/', 'Esta sí: Claude Code descubre las skills de .claude/skills/ y de ~/.claude/skills/. Al iniciar solo lee su nombre y su descripción.', '.claude/skills/revisar-pr/');
+    add(2, 'Skills en .agents/skills/', link ? (c === 1 ? 'AGENTS.md la enlaza, pero Claude Code no lee AGENTS.md porque hay un CLAUDE.md sin import: el enlace no sirve.'
+      : 'Solo llega si AGENTS.md la enlaza y el agente decide abrirla. Se lee como un archivo más, no como una skill registrada.')
+      : 'Claude Code no descubre skills en .agents/skills/ ni lee nada bajo .agents/: esta skill no existe para él.', skAg);
+    add(2, 'Para que sirva', 'Dos caminos: enlazarla desde el archivo que Claude Code carga y confiar en que el agente la abra, o copiarla (o enlazarla) a .claude/skills/. Activa «AGENTS.md enlaza a .agents/» para ver el primero.', '.claude/skills/');
+    // Ejemplo real
+    var R = { view: 'real' };
+    add(3, 'Un proyecto real', 'DocuKelo, la plataforma de documentación del curso: un AGENTS.md en la raíz, sin CLAUDE.md ni .claude/. Claude Code lo lee directo.', 'AGENTS.md', R);
+    add(3, 'AGENTS.md es un índice', 'Tiene dos secciones, Memory y Skills, con enlaces. Funciona porque el agente sigue los enlaces cuando hace falta.', 'AGENTS.md', R);
+    add(3, '.agents/memory/', 'Notas de referencia escritas por humanos y agentes. Convención propia del proyecto: ninguna herramienta la lee sola.', '.agents/memory/', R);
+    add(3, '.agents/skills/', 'Siete skills. Claude Code no las descubre como skills: llegan por los enlaces de AGENTS.md.', '.agents/skills/', R);
+    add(3, 'Estándar o convención', 'Estándar: AGENTS.md y el formato de SKILL.md. Convención emergente: la ruta .agents/skills/. Convención propia: .agents/memory/, .agents/spec/ y el índice con enlaces.', '.agents/', R);
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Árbol ilustrativo de un proyecto con AGENTS.md, CLAUDE.md, .claude/skills y .agents, con una insignia por archivo que dice si Claude Code lo lee; un selector cambia qué archivos de instrucciones existen y, al final, el caso real de DocuKelo',
+    phases: ['Qué hay', 'Qué se lee', 'Las skills', 'DocuKelo'],
+    wide: true,
+    scene: scene,
+    toggles: [
+      { key: 'c', type: 'select', label: 'Qué archivos de instrucciones hay', options: ['Solo AGENTS.md', 'AGENTS.md y CLAUDE.md, sin import', 'CLAUDE.md que empieza con @AGENTS.md'], value: 0, restart: 'first' },
+      { key: 'link', label: 'AGENTS.md enlaza a .agents/', affectsPhase: 1 },
+    ],
+    build: build,
+    intro: { kicker: 'Instrucciones para el agente', title: 'Qué archivos lee Claude Code y cuáles no', text: 'Elige qué archivos de instrucciones hay y mira cuáles se leen. El árbol es ilustrativo; la última pestaña es el proyecto real de DocuKelo.' },
+  });
+})();
+</script>
+</body>
+</html>

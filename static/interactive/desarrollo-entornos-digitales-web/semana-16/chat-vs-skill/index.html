@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Repetir en el chat o tener una skill</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  .dk-pane { flex-basis: 280px; }
+  #app .dk-note { min-height: 40px; }
+  #app .dk-cap { min-height: 112px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-compare.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Repetir instrucciones en el chat frente a tener una skill, y también los límites de la skill (memo de skills, secciones 8 y 9).
+   Escenario ilustrativo: «necesito un quiz de la semana con el formato del curso»; la skill se llama «creando-quiz» (ejemplo).
+   Un selector cambia la descripción de la skill: clara (qué hace y cuándo usarla) o vaga («Ayuda con documentos», ejemplo de Anthropic).
+   Con la vaga, la skill PUEDE no activarse o activarse otra (no es seguro): se muestra una de las posibilidades y se dice «puede».
+   DK.compare con dos paneles. Solo DATOS. */
+(function () {
+  var T = 'tu', A = 'ia', K = 'sk';
+  var msg = function (from, to, label, kind) { return { from: from, to: to, label: label, kind: kind || 'ctl' }; };
+  var PH = ['Sesión 1', 'Sesión 2', 'Resultado', 'Balance'];
+
+  function build(opt) {
+    var vague = opt.d === 1;
+    var steps = [];
+    var step = function (phase, title, caption, chat, skill) { steps.push({ phase: phase, title: title, caption: caption, panes: { chat: chat, skill: skill } }); };
+
+    // ----- Sesión 1 -----
+    step(0, 'Pides el quiz',
+      'Necesitas un quiz de la semana con el formato del curso. Lo pides igual en los dos lados.',
+      { msgs: [msg(T, A, 'Pides el quiz')], state: { tu: 'Pide un quiz', ia: 'Sin el formato' }, note: 'No conoce el formato del curso' },
+      { msgs: [msg(T, A, 'Pides el quiz')], state: { tu: 'Pide un quiz', ia: 'Ve descripción', sk: 'Sin cargar' }, note: 'Solo ve el nombre y la descripción' });
+
+    step(0, 'Explicar el formato',
+      vague
+        ? 'En el chat explicas el formato con tus palabras. La descripción de la skill, «Ayuda con documentos», no dice cuándo usarla: puede no activarse, o activarse otra skill.'
+        : 'En el chat explicas el formato con tus palabras. Con la skill, el asistente compara tu pedido con su descripción, que dice qué hace y cuándo usarla, y carga SKILL.md.',
+      { msgs: [msg(T, A, 'Explicas el formato')], state: { tu: 'Explica', ia: 'Formato en chat' }, note: 'Lo escribes tú, con tus palabras' },
+      vague
+        ? { msgs: [], state: { ia: 'No la activa', sk: 'Sin cargar' }, note: 'Descripción vaga: puede no activarse' }
+        : { msgs: [msg(A, K, 'carga SKILL.md'), msg(K, A, 'instrucciones', 'data')], state: { ia: 'Skill cargada', sk: 'Activa' }, note: 'La descripción coincide: se carga' });
+
+    step(0, 'Sale el quiz',
+      vague
+        ? 'Los dos entregan un quiz, pero el de la skill sale sin el formato del curso. Para evitarlo, mejora la descripción o invoca la skill tú mismo con /creando-quiz.'
+        : 'Los dos entregan un quiz. La diferencia aparece en la sesión siguiente.',
+      { msgs: [msg(A, T, 'Quiz', 'data')], state: { tu: 'Recibe el quiz', ia: 'Quiz entregado' }, note: 'Sale como lo hayas explicado' },
+      vague
+        ? { msgs: [msg(A, T, 'Quiz genérico', 'err')], state: { tu: 'Recibe el quiz', ia: 'Sin el formato' }, note: 'Sin el formato del curso' }
+        : { msgs: [msg(A, T, 'Quiz', 'data')], state: { tu: 'Recibe el quiz', ia: 'Quiz entregado' }, note: 'Sale con el procedimiento de la skill' });
+
+    // ----- Sesión 2 -----
+    step(1, 'Abres una sesión nueva',
+      'Cada sesión nueva empieza con el contexto vacío: el chat anterior no está. La skill es una carpeta de tu proyecto (.claude/skills/) y sigue ahí.',
+      { msgs: [], state: { tu: 'Sesión nueva', ia: 'Contexto vacío' }, note: 'Empieza sin saber nada' },
+      { msgs: [], state: { tu: 'Sesión nueva', ia: 'Contexto vacío', sk: 'En el repo' }, note: 'La skill sigue en la carpeta' });
+
+    step(1, 'Pides el quiz otra vez',
+      vague
+        ? 'En el chat debes volver a explicar el formato. La skill, con la descripción vaga, sigue igual de difícil de activar: puede fallar otra vez.'
+        : 'En el chat debes volver a explicar el formato. La skill no: se activa por su descripción (o la invocas con /creando-quiz) y no repites nada.',
+      { msgs: [msg(T, A, 'Pides el quiz')], state: { tu: 'Pide otra vez', ia: 'Sin el formato' }, note: 'Tienes que explicarlo otra vez' },
+      vague
+        ? { msgs: [msg(T, A, 'Pides el quiz')], state: { tu: 'Pide otra vez', ia: 'No la activa', sk: 'Sin cargar' }, note: 'Puede fallar otra vez' }
+        : { msgs: [msg(T, A, 'Pides el quiz'), msg(A, K, 'carga SKILL.md')], state: { tu: 'Pide otra vez', ia: 'Skill cargada', sk: 'Activa' }, note: 'No repites nada: se activa sola' });
+
+    step(1, 'Compartir con el equipo',
+      'Una skill de proyecto se versiona con Git y tu equipo la recibe junto con el repositorio. Lo que explicaste en un chat se queda en ese chat.',
+      { msgs: [], state: { tu: 'Lo repite' }, note: 'El formato vive en tu cabeza' },
+      { msgs: [], state: { tu: 'Hace commit', sk: 'Versionada' }, note: 'Se versiona y se comparte con Git' });
+
+    // ----- Resultado -----
+    step(2, 'Dos resultados',
+      'El chat puede variar según cómo expliques el formato cada vez. La skill da un procedimiento fijo, pero el modelo lo sigue interpretando: no es determinista.',
+      { msgs: [msg(A, T, 'Quiz', 'data')], state: { tu: 'Recibe el quiz', ia: 'Resultado varía' }, note: 'Cambia según cómo lo expliques' },
+      vague
+        ? { msgs: [msg(A, T, 'Quiz genérico', 'err')], state: { tu: 'Recibe el quiz', ia: 'Sin skill' }, note: 'Sin skill: igual que el chat' }
+        : { msgs: [msg(A, T, 'Quiz', 'data')], state: { tu: 'Recibe el quiz', ia: 'Sigue la skill' }, note: 'Procedimiento fijo; el modelo interpreta' });
+
+    // ----- Balance -----
+    step(3, 'Lo que ganas con una skill',
+      'Reutilizas las instrucciones sin repetirlas. El contexto se carga bajo demanda: ≈ 100 tokens por skill al inicio y el cuerpo solo al activarse. Se versiona, se comparte y el procedimiento es más consistente.',
+      { msgs: [], state: { ia: 'Una sola vez' }, note: 'Rápido para algo de una sola vez' },
+      { msgs: [], state: { ia: 'Reutilizable' }, note: 'Reutilizar, versionar y compartir' });
+
+    step(3, 'Lo que arriesgas',
+      'Una descripción mala o solapada con otra hace que no se active o que se cargue la equivocada. Hay que mantenerla al día. Una skill de terceros puede hacer cosas que no dice: usa solo fuentes de confianza y revisa SKILL.md y sus scripts.',
+      { msgs: [], state: { ia: 'Varía' }, note: 'Pierdes tiempo y el resultado varía' },
+      { msgs: [], state: { ia: 'Hay que cuidarla' }, note: 'Descripción, solapes, mantenimiento, terceros' });
+
+    step(3, 'Si es crítico, no basta',
+      'Una skill es una petición, no una garantía: el modelo la interpreta. Si una regla debe cumplirse siempre (por ejemplo, no tocar el archivo .env), usa permisos o un hook, que sí son deterministas.',
+      { msgs: [], state: { ia: 'Solo una petición' }, note: 'Tampoco garantiza nada' },
+      { msgs: [], state: { ia: 'Solo una petición' }, note: 'Regla crítica: permisos o un hook' });
+    return steps;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Comparación entre repetir las instrucciones en el chat y tener una skill, a lo largo de dos sesiones, con el balance de ventajas y riesgos; un selector cambia si la descripción de la skill es clara o vaga',
+    phases: PH,
+    scene: function (svg, stage) {
+      return DK.compare({
+        stage: stage,
+        panes: [
+          { id: 'chat', title: 'Chat', subtitle: 'explicas cada vez', sequence: { trayCount: 0, idleState: 'Listo', phases: [],
+            actors: [{ id: T, label: 'Tú', icon: 'user' }, { id: A, label: 'Asistente', icon: 'chip' }] } },
+          { id: 'skill', title: 'Skill', subtitle: 'ejemplo: creando-quiz', sequence: { trayCount: 0, idleState: 'Listo', phases: [], margin: 62,
+            actors: [{ id: T, label: 'Tú', icon: 'user' }, { id: A, label: 'Asistente', icon: 'chip' }, { id: K, label: 'Skill', icon: 'filecode' }] } },
+        ],
+      });
+    },
+    toggles: [{ key: 'd', type: 'select', label: 'La descripción de la skill es', options: ['Clara (qué hace y cuándo usarla)', 'Vaga («Ayuda con documentos»)'], value: 0, restart: 'first' }],
+    build: build,
+    kicker: function (p) { return 'Paso ' + (p + 1) + ' · ' + PH[p]; },
+    intro: { kicker: 'Chat o skill', title: 'Explicar cada vez, o guardarlo una vez', text: 'Pides «un quiz de la semana con el formato del curso» en dos sesiones, con el chat y con una skill de ejemplo. Pulsa «Siguiente» y cambia la descripción de la skill para ver qué pasa.' },
+  });
+})();
+</script>
+</body>
+</html>
