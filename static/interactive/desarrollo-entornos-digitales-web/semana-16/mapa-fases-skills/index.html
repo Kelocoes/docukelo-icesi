@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BMAD: qué skill usar en cada fase de un frontend nuevo</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* BMAD v6.12.4 para un frontend nuevo (Next.js) sobre un backend REST que ya existe. Una fase por momento: a la izquierda los
+   comandos (uno por skill), a la derecha el documento que sale (extracto ILUSTRATIVO), debajo el objetivo, lo que tú le das,
+   lo que debes revisar y cuándo se puede omitir. Fuente: memo de BMAD (tablas 2.2, 3, 6.3). Solo DATOS. */
+(function () {
+  var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+  var OUT = '_bmad-output/planning-artifacts/';
+  var IMPL = '_bmad-output/implementation-artifacts/';
+
+  // kind: cómo se rotula el comando (literal de la documentación, ejemplo adaptado o solo el nombre del skill)
+  var LIT = 'literal de la documentación', ADA = 'ejemplo adaptado', NOM = 'nombre del skill (sin ejemplo literal)';
+  var PH = [
+    { id: 'ctx', tab: 'Contexto', color: 'p1', agent: 'Mary', skill: 'bmad-project-context', line: ['/bmad-project-context', 'Mary'],
+      cmd: '/bmad-project-context', kind: LIT,
+      out: 'AGENTS.md (un bloque gestionado)',
+      doc: '## Backend (ilustrativo)\n- API REST de NestJS.\n- URL base: NEXT_PUBLIC_API_URL\n  (por defecto http://localhost:4000)\n- Contrato: docs/backend-api.md',
+      title: 'Contexto: lo que todo agente debe saber',
+      caption: 'Antes de planear, deja por escrito lo que todos los agentes deben saber: dónde está el backend, qué comandos hay y qué convenciones sigues.',
+      give: 'tu <code>docs/backend-api.md</code> (lo escribes tú: es <b>recomendación de la guía</b>, BMAD no lo genera ni lo nombra) y los comandos del proyecto, si ya existen.',
+      review: 'que cada línea del bloque sea verdadera y verificable. En una carpeta vacía será breve.',
+      omit: 'Recomendado, no obligatorio. Vuelve a correrlo cuando existan comandos y convenciones.' },
+
+    { id: 'brief', tab: 'Brief', color: 'p2', agent: 'Mary', skill: 'bmad-product-brief', line: ['/bmad-product-brief', 'Mary'],
+      cmd: '/bmad-agent-analyst create a product brief for the exercises and routines frontend', kind: ADA,
+      out: OUT + 'briefs/brief-<proyecto>-<fecha>/brief.md (y addendum.md)',
+      doc: '# Brief: app de ejercicios y rutinas\nProblema: consultar ejercicios y\narmar rutinas desde una interfaz.\nAlcance: solo el frontend; el\nbackend ya existe.\n[ASSUMPTION] Un solo rol de usuario.',
+      title: 'Brief: qué se construye y para quién',
+      caption: 'Una o dos páginas que aclaran la idea antes de comprometerte con requisitos.',
+      give: 'tu idea en pocas líneas: qué app, para quién y qué problema resuelve.',
+      review: 'que el alcance sea el tuyo y que hayas leído lo que el agente rellenó sin preguntar (las etiquetas <code>[ASSUMPTION]</code>).',
+      omit: 'Opcional. Sáltalo si una sola persona decide o si la idea ya es clara.' },
+
+    { id: 'prd', tab: 'PRD', color: 'p3', agent: 'John', skill: 'bmad-prd', line: ['/bmad-prd', 'John'],
+      cmd: '/bmad-agent-pm create a PRD for the exercises and routines frontend from docs/backend-api.md', kind: ADA,
+      out: OUT + 'prds/prd-<proyecto>-<fecha>/prd.md (y addendum.md)',
+      doc: 'Requisito 1: iniciar sesión.\n  Lo sostiene: POST /auth/login\nRequisito 2: ver el catálogo de\n  ejercicios.\n  Lo sostiene: GET /exercises\n  (ilustrativo: no está en el curso)',
+      title: 'PRD: requisitos y qué endpoint los sostiene',
+      caption: 'Los requisitos del frontend, cada uno apoyado en un endpoint del backend que ya existe.',
+      give: 'el brief (si lo hay), <code>docs/backend-api.md</code> y la lista de pantallas que quieres.',
+      review: 'que cada requisito cite un endpoint que existe de verdad, que no invente comportamiento del backend y que lo que queda fuera esté escrito.',
+      omit: 'En v6.12 es el paso requerido que precede a las épicas; en V7 sería opcional.' },
+
+    { id: 'ux', tab: 'UX', color: 'p4', agent: 'Sally', skill: 'bmad-ux', line: ['/bmad-ux', 'Sally'],
+      cmd: '/bmad-ux design the login and routines screens', kind: ADA,
+      out: OUT + 'ux-designs/ux-<proyecto>-<fecha>/DESIGN.md y EXPERIENCE.md',
+      doc: 'DESIGN.md: cómo se ve\n  Tailwind CSS + daisyUI\nEXPERIENCE.md: cómo funciona\n  Pantalla Rutinas\n  - vacía: «Aún no tienes rutinas»\n  - error de red: botón «Reintentar»',
+      title: 'UX: cómo se ve y cómo funciona',
+      caption: 'Dos documentos: DESIGN.md (apariencia) y EXPERIENCE.md (comportamiento y estados de cada pantalla).',
+      give: 'el PRD, una referencia visual y las librerías de estilo que ya usas en el curso (Tailwind CSS y daisyUI).',
+      review: 'que estén los estados que el backend produce de verdad: cargando, vacío, error 401 (credenciales) y error de red.',
+      omit: 'Recomendado: la interfaz es la parte principal de este proyecto.' },
+
+    { id: 'arq', tab: 'Arquitectura', color: 'p5', agent: 'Winston', skill: 'bmad-architecture', line: ['/bmad-architecture', 'Winston'],
+      cmd: '/bmad-architecture', kind: NOM,
+      out: OUT + 'architecture/architecture-<proyecto>-<fecha>/ARCHITECTURE-SPINE.md',
+      doc: 'Restricción: backend REST existente.\nDecisiones del spine (ilustrativo):\n- estructura de carpetas\n- dónde se llama al backend\n  (servidor o cliente)\n- token y sesión\n- formato de errores\n- variables de entorno',
+      title: 'Arquitectura: las decisiones que no deben divergir',
+      caption: 'El «spine» fija solo lo que podría quedar distinto si cada historia lo decide por separado. Qué decidir para Next.js (lista de la derecha) es <b>recomendación de la guía</b>, inferencia que BMAD no afirma.',
+      give: 'el PRD, la UX y <code>docs/backend-api.md</code>.',
+      review: 'que cada decisión tenga su razón escrita y no contradiga al backend.',
+      omit: 'Recomendado: varias historias compartirán el cliente de API, la autenticación y los errores.' },
+
+    { id: 'hist', tab: 'Historias', color: 'p1', agent: 'John', skill: 'bmad-create-epics-and-stories', line: ['/bmad-create-epics-and-stories', 'John'], line2: ['/bmad-sprint-planning', 'John o Amelia'],
+      cmd: '/bmad-create-epics-and-stories   y luego   /bmad-sprint-planning', kind: NOM,
+      out: OUT + 'epics.md  y  ' + IMPL + 'sprint-status.yaml',
+      doc: 'epics.md\nÉpica 1: Sesión y cliente de API\n  Historia 1.1: cliente de API base\n  Historia 1.2: iniciar sesión\n    Aceptación: usa POST /auth/login\nsprint-status.yaml\n  veredicto: PASS | CONCERNS | FAIL',
+      title: 'Historias: del documento al trabajo',
+      caption: 'John corta el PRD en épicas e historias con criterios de aceptación; luego <code>bmad-sprint-planning</code> comprueba si ya se puede construir.',
+      give: 'el PRD, la UX y el spine, ya aprobados por ti.',
+      review: 'que la primera épica traiga lo que las demás necesitan (estructura inicial, cliente de API, autenticación) y que cada historia quepa en una sesión (~500 líneas).',
+      omit: 'Sí es obligatorio: convierte los documentos en trabajo construible.' },
+
+    { id: 'build', tab: 'Construir', color: 'p2', agent: 'Amelia', skill: 'bmad-build', line: ['/bmad-build', 'Amelia'],
+      cmd: '/bmad-build Create the login page that calls POST /auth/login', kind: ADA,
+      out: 'código del proyecto + ' + IMPL + 'spec-<slug>.md y deferred-work.md',
+      doc: 'spec-login.md    (registro del build)\ndeferred-work.md (lo que quedó\n                  pendiente)\n+ el código de la historia,\n  ya con commit',
+      title: 'Construir: una historia por sesión',
+      caption: 'Amelia aclara la intención, planifica, implementa, revisa y hace commit. Abre una conversación nueva para cada historia.',
+      give: 'la historia elegida (de <code>epics.md</code>), en una conversación nueva.',
+      review: 'las primeras historias fijan el patrón (estructura inicial, cliente de API, autenticación): hazlas con atención humana, lee el diff y ejecuta la app.',
+      omit: 'Sí. Para un cambio pequeño basta este skill solo, sin los documentos anteriores.' },
+
+    { id: 'rev', tab: 'Revisar', color: 'p3', agent: 'Amelia', skill: 'bmad-code-review', line: ['/bmad-code-review', 'Amelia'],
+      cmd: '/bmad-code-review Review https://github.com/org/repo/pull/42', kind: LIT,
+      out: 'hallazgos clasificados y parches',
+      doc: 'Hallazgo (ilustrativo): el login\nno muestra el error 401.\nParche propuesto: mostrar el\nmensaje del backend bajo el campo.',
+      title: 'Revisar: otros ojos sobre el cambio',
+      caption: 'Varios revisores independientes miran el cambio y clasifican lo que encuentran; tú decides qué aplicar.',
+      give: 'el diff, el commit o el pull request de la historia construida (la URL del comando es la del ejemplo).',
+      review: 'qué hallazgos aplicas y cuáles no; vuelve a ejecutar la app y las pruebas después de cada parche.',
+      omit: 'Es parte de la cadena de la fase 4; en un cambio pequeño y de bajo riesgo puedes omitirlo (<b>recomendación de la guía</b>), porque <code>bmad-build</code> ya revisa.' },
+
+    { id: 'retro', tab: 'Cerrar', color: 'p4', agent: 'Amelia', skill: 'bmad-retrospective', line: ['/bmad-retrospective', 'Amelia'],
+      cmd: '/bmad-retrospective epic-diffsettings-audit', kind: LIT,
+      out: 'retrospectiva, acciones y veredicto en ' + IMPL,
+      doc: 'Épica 1: Sesión y cliente de API\nVeredicto de aceptación: ...\nAcciones (ilustrativo):\n- documentar el cliente de API\n  en AGENTS.md',
+      title: 'Cerrar: juzgar la épica con evidencia',
+      caption: 'Al terminar una épica, se juzga frente a su evidencia y se decide qué cambiar en la siguiente.',
+      give: 'la épica terminada, con sus historias construidas y revisadas.',
+      review: 'que el veredicto se apoye en lo que ves funcionando, no solo en lo que dice el agente.',
+      omit: 'Opcional.' }
+  ];
+
+  // ---- columna izquierda: un comando por línea (cada skill es una parte) ----
+  var code = [];
+  PH.forEach(function (p) {
+    var pad = function (s) { var t = s; while (t.length < 31) t += ' '; return t; };
+    code.push([[pad(p.line[0]), p.id], [p.line[1], '']]);
+    if (p.line2) code.push([[pad(p.line2[0]), p.id], [p.line2[1], '']]);
+  });
+
+  var parts = {};
+  PH.forEach(function (p) {
+    parts[p.id] = {
+      label: p.agent + ' · ' + p.skill, color: p.color, title: p.title,
+      text: '<b>Tú le das:</b> ' + p.give,
+      bullets: ['<b>Revisas tú:</b> ' + p.review, '<b>¿Se puede omitir?</b> ' + p.omit]
+    };
+  });
+
+  function view() {
+    var cards = PH.map(function (p) {
+      return '<div class="doc" data-part="' + p.id + '">' +
+        '<p class="cm-lbl">Comando · ' + esc(p.kind) + '</p><div class="cm-code-sm">' + esc(p.cmd) + '</div>' +
+        '<p class="cm-lbl">Sale · ' + esc(p.out) + '</p><div class="cm-code-sm">' + esc(p.doc) + '</div></div>';
+    }).join('');
+    return cards + '<p class="cm-lbl foot">Extracto: ejemplo ilustrativo; el contenido real lo redacta el agente contigo y tú lo revisas.</p>';
+  }
+
+  var PHASE_OF = [0, 0, 1, 1, 1, 2, 2, 2, 3];
+  var steps = PH.map(function (p, i) {
+    return { phase: PHASE_OF[i], title: p.agent + ' · ' + p.skill, caption: p.caption, focus: p.id, msgs: [] };
+  });
+
+  // un solo documento a la vez en la columna derecha (el kit dibuja todos; el CSS deja visible el enfocado)
+  var st = document.createElement('style');
+  st.textContent = [
+    '#app .cm-ui .doc { display: none; gap: 6px; }',
+    '#app .cm-ui .doc.on, #app .cmx:not(.has-on) .cm-ui .doc:first-child { display: grid; outline: none; background: none; }',
+    '#app .cm-ui .foot { text-transform: none; letter-spacing: 0; font-weight: 600; margin-top: 2px; }',
+    '#app .cm-ui .cm-code-sm { font-size: 11.5px; line-height: 1.45; }',
+    '#app .cm-lines { white-space: pre; }',
+  ].join('\n');
+  document.head.appendChild(st);
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Mapa de las fases de BMAD para un frontend nuevo sobre un backend existente: contexto, brief, PRD, UX, arquitectura, historias, construir, revisar y cerrar; cada fase con su skill, su comando, el documento que sale, lo que debes revisar y si se puede omitir',
+    phases: ['Preparar', 'Definir', 'Construir', 'Cerrar'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.codemap({ stage: stage, file: 'Claude Code · frontend/', code: code, parts: parts, view: view, compact: true, split: '1.15fr' });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'BMAD v6.12.4 · frontend nuevo, backend existente',
+      title: 'Qué skill usar en cada fase y qué recibes a cambio',
+      text: 'Recorre las nueve fases con «Siguiente». A la izquierda, el comando; a la derecha, el documento que sale. Pasa el mouse por un comando para ver su fase.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asistente frente a agente: arreglar las pruebas que fallan</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* El mismo problema (arreglar las pruebas que fallan, el ejemplo de la documentacion de Claude Code) hecho por un asistente de chat
+   y por un agente con herramientas. Dos carriles con los mismos pasos: quien decide el siguiente paso, que produce cada uno (texto
+   o acciones) y donde interviene el humano. Interruptor: las pruebas vuelven a fallar y el bucle se repite.
+   Las definiciones de «asistente» y «agente» de esta pieza son didacticas (sintesis del curso, no citas de Anthropic).
+   Escena libre DK.canvas. Solo DATOS. */
+(function () {
+  var items = [
+    { id: 'zA', type: 'zone', shape: 'round', x: 10, y: 8, w: 700, h: 176, rx: 16, label: 'Asistente (chat)', lx: 28, ly: 34 },
+    { id: 'zB', type: 'zone', shape: 'round', x: 10, y: 196, w: 700, h: 246, rx: 16, label: 'Agente (con herramientas)', lx: 28, ly: 222 },
+    { id: 'iA', type: 'tag', x: 586, y: 30, text: 'produce texto · decides tú', c: 'p1' },
+    { id: 'iB', type: 'tag', x: 556, y: 218, text: 'produce acciones · decide el agente', c: 'p3' },
+
+    { id: 'you1', type: 'node', icon: 'user', x: 110, y: 112, size: 44, label: 'Tú', sub: 'aplicas y ejecutas' },
+    { id: 'chat', type: 'node', icon: 'chat', x: 360, y: 80, size: 44, lp: 'right', label: 'Chat', sub: 'solo texto' },
+    { id: 'p1', type: 'node', icon: 'filecode', x: 610, y: 112, size: 44, label: 'Tu proyecto', sub: 'código y pruebas' },
+
+    { id: 'you2', type: 'node', icon: 'user', x: 110, y: 288, size: 44, label: 'Tú', sub: 'das el objetivo y supervisas' },
+    { id: 'agent', type: 'node', icon: 'gear', x: 360, y: 288, size: 46, label: 'Agente', sub: 'decide y actúa' },
+    { id: 'p2', type: 'node', icon: 'filecode', x: 610, y: 288, size: 44, label: 'Tu proyecto', sub: 'código y pruebas' },
+
+    { id: 'hum', type: 'tag', x: 360, y: 374, text: '…', hidden: true, c: 'p5' },
+    { id: 'r1', type: 'tag', x: 360, y: 158, text: '…', hidden: true, c: 'p5' },
+
+    { id: 't1', type: 'tag', x: 190, y: 412, text: '1 · Reunir contexto', w: 170 },
+    { id: 't2', type: 'tag', x: 360, y: 412, text: '2 · Actuar', w: 120 },
+    { id: 't3', type: 'tag', x: 530, y: 412, text: '3 · Verificar', w: 130 },
+  ];
+
+  function build(opt) {
+    var again = !!opt.again;
+    var bad = { p1: 'err', p2: 'err' }, good = { p1: 'ok', p2: 'ok' };
+    var who = { you1: { text: 'tú decides', tone: 'ctl' }, agent: { text: 'decide el agente', tone: 'ok' } };
+    var s = [];
+
+    s.push({ phase: 0, title: 'Las pruebas fallan', focus: ['p1', 'p2'], state: bad,
+      badge: { p1: { text: 'pruebas fallan', tone: 'err' }, p2: { text: 'pruebas fallan', tone: 'err' } },
+      caption: 'El ejemplo de la documentación de Claude Code: arreglar las pruebas que fallan. Las definiciones de esta pieza son didácticas, no citas de Anthropic.' });
+    s.push({ phase: 0, title: 'Pides ayuda', focus: ['you1', 'chat', 'you2', 'agent'], state: bad,
+      links: [{ from: 'you1', to: 'chat', kind: 'ctl', label: 'copias el error', curve: 14 }, { from: 'you2', to: 'agent', kind: 'ctl', label: 'arréglalas', curve: 0 }],
+      caption: 'Sin herramientas, Claude solo puede responder con texto; con herramientas, puede actuar. Por eso al asistente le pegas el error y al agente le das el objetivo.' });
+
+    s.push({ phase: 1, title: 'Reunir contexto', focus: ['chat', 'agent', 't1'], state: bad, badge: who,
+      links: [{ from: 'chat', to: 'you1', kind: 'data', label: 'texto: la causa probable', curve: 14 },
+              { from: 'agent', to: 'p2', kind: 'ctl', label: 'corre pruebas, lee archivos', curve: -16 },
+              { from: 'p2', to: 'agent', kind: 'data', label: 'error y código', curve: -16 }],
+      caption: 'El asistente responde con texto. El agente corre las pruebas, lee el error y busca y abre archivos: en cada paso obtiene «verdad de base» del entorno.' });
+    s.push({ phase: 1, title: 'Actuar', focus: ['you1', 'agent', 't2'], state: bad, badge: who,
+      links: [{ from: 'you1', to: 'p1', kind: 'ctl', label: 'copias y editas tú', curve: 26 },
+              { from: 'agent', to: 'p2', kind: 'ctl', label: 'edita los archivos', curve: 0 }],
+      caption: 'El texto del asistente solo sirve si tú lo copias y lo aplicas. El agente edita los archivos por su cuenta, con los permisos que tú le des.' });
+    if (!again) {
+      s.push({ phase: 1, title: 'Verificar', focus: ['you1', 'agent', 't3'], state: good, badge: { p1: { text: 'pruebas pasan', tone: 'ok' }, p2: { text: 'pruebas pasan', tone: 'ok' } },
+        links: [{ from: 'you1', to: 'p1', kind: 'ctl', label: 'vuelves a correrlas tú', curve: 26 },
+                { from: 'agent', to: 'p2', kind: 'ctl', label: 'vuelve a correrlas', curve: -16 },
+                { from: 'p2', to: 'agent', kind: 'ack', label: 'pasan', curve: -16 }],
+        caption: 'El agente verifica su propio trabajo: corre las pruebas y lee el resultado. Con el asistente, verificar es cosa tuya.' });
+    } else {
+      s.push({ phase: 1, title: 'Verificar', focus: ['you1', 'agent', 't3'], state: bad, badge: { p1: { text: 'siguen fallando', tone: 'err' }, p2: { text: 'siguen fallando', tone: 'err' } },
+        links: [{ from: 'you1', to: 'p1', kind: 'ctl', label: 'vuelves a correrlas tú', curve: 26 },
+                { from: 'agent', to: 'p2', kind: 'ctl', label: 'vuelve a correrlas', curve: -16 },
+                { from: 'p2', to: 'agent', kind: 'err', label: 'fallan', curve: -16 }],
+        caption: 'Siguen fallando. El agente lo sabe porque verificó el resultado de su propio trabajo. Al asistente tendrías que contárselo tú.' });
+      s.push({ phase: 1, title: 'Otra vuelta', focus: ['you1', 'chat', 'agent', 't1'], state: bad, pulse: ['agent'],
+        links: [{ from: 'you1', to: 'chat', kind: 'ctl', label: 'pegas el nuevo error', curve: 14 },
+                { path: [530, 388, 190, 388], c: [360, 360], kind: 'ctl', label: 'repite el bucle', lx: 360, ly: 372 }],
+        caption: 'El agente repite el bucle solo: reunir contexto, actuar, verificar. Con el asistente, repetirlo es cosa tuya. Un buen sistema pone una condición de parada, por ejemplo un máximo de iteraciones.' });
+      s.push({ phase: 1, title: 'Ahora pasan', focus: ['p1', 'p2', 't3'], state: good, badge: { p1: { text: 'pruebas pasan', tone: 'ok' }, p2: { text: 'pruebas pasan', tone: 'ok' } },
+        links: [{ from: 'agent', to: 'you2', kind: 'ack', label: 'te informa', curve: -14 }],
+        caption: 'Las pruebas pasan. Quien estuvo repitiendo pasos a mano fuiste tú con el asistente; con el agente, el bucle corrió solo y tú revisas el resultado.' });
+    }
+
+    s.push({ phase: 2, title: 'Interrumpir con Esc', focus: ['you2', 'hum'], show: ['hum'], text: { hum: 'Esc: interrumpes y rediriges' },
+      links: [{ from: 'you2', to: 'agent', kind: 'ctl', label: 'Esc', curve: 0 }],
+      caption: 'El agente no es una caja negra: mientras trabaja puedes interrumpirlo con Esc y redirigirlo hacia otro camino.' });
+    s.push({ phase: 2, title: 'Modos de permiso', focus: ['you2', 'hum'], show: ['hum'], text: { hum: 'Permisos: manual, aceptar ediciones, plan, auto' },
+      caption: 'Tú decides cuánta libertad tiene el agente. Los modos de permiso son manual, aceptar ediciones, plan y auto.' });
+    s.push({ phase: 2, title: 'Checkpoints', focus: ['p2', 'hum'], show: ['hum'], text: { hum: 'Checkpoint: deshaces ediciones de archivos' },
+      caption: 'Los checkpoints permiten deshacer ediciones de archivos. No cubren acciones remotas, como una base de datos o un despliegue.' });
+    s.push({ phase: 2, title: 'Cada uno, su riesgo', focus: ['r1', 'hum'], show: ['hum', 'r1'],
+      text: { hum: 'riesgo: cambios reales que no querías', r1: 'riesgo: copiar código incorrecto sin revisar' },
+      caption: 'Cada uno falla distinto. Y un agente cuesta más tiempo y dinero: Anthropic recomienda la solución más simple que funcione.' });
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Comparación entre un asistente de chat y un agente con herramientas resolviendo el mismo problema, arreglar las pruebas que fallan: quién decide cada paso, qué produce cada uno y dónde interviene la persona',
+    phases: ['El pedido', 'El bucle', 'Tu papel'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 452, trail: 'step', items: items }); },
+    toggles: [{ key: 'again', label: 'Las pruebas vuelven a fallar', affectsPhase: 1 }],
+    build: build,
+    intro: { kicker: 'Asistente y agente', title: 'Quién decide el siguiente paso', text: 'El mismo problema: arreglar las pruebas que fallan. Avanza paso a paso y mira qué hace cada uno y dónde entras tú. Activa «Las pruebas vuelven a fallar» para ver cómo se repite el bucle.' },
+  });
+})();
+</script>
+</body>
+</html>

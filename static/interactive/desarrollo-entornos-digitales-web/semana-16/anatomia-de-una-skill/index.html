@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomía de una skill</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-files.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Una skill es una carpeta: SKILL.md es lo único obligatorio; scripts/, references/ y assets/ son opcionales y se leen (o ejecutan) solo si hacen falta.
+   Datos del estándar abierto de skills y de la documentación de Claude Code. Solo DATOS. */
+(function () {
+  var items = [
+    { path: 'revisando-informes/', edit: 'never', purpose: 'La skill es esta carpeta. Su nombre debe coincidir con el campo name de SKILL.md (minúsculas, dígitos y guiones, hasta 64 caracteres).' },
+    { path: 'revisando-informes/assets/', edit: 'sometimes', purpose: 'Opcional (estándar): plantillas, imágenes y datos que la skill usa.',
+      points: ['No cuestan contexto hasta que el agente los abre.'] },
+    { path: 'revisando-informes/assets/plantilla-informe.md', edit: 'sometimes', purpose: 'Ejemplo: la plantilla que se entrega al estudiante.' },
+    { path: 'revisando-informes/references/', edit: 'sometimes', purpose: 'Opcional (estándar): documentación de apoyo que se lee bajo demanda.',
+      points: ['Enlázala desde <code>SKILL.md</code>, a un solo nivel de profundidad.', 'En archivos de más de 100 líneas, agrega una tabla de contenido.'] },
+    { path: 'revisando-informes/references/rubrica.md', edit: 'sometimes', purpose: 'Ejemplo: los criterios de la rúbrica del curso.',
+      points: ['Solo entra al contexto cuando el agente decide leerla.'] },
+    { path: 'revisando-informes/scripts/', edit: 'sometimes', purpose: 'Opcional (estándar): código que el agente ejecuta.',
+      points: ['Solo la <b>salida</b> del script entra al contexto, no su código.', 'Un script da el mismo resultado cada vez: más fiable que pedirle al modelo que lo reescriba.', '<b>Riesgo:</b> es código que se ejecuta con tus permisos; revisa los de terceros.'] },
+    { path: 'revisando-informes/scripts/validar-citas.py', edit: 'sometimes', purpose: 'Ejemplo: comprueba que cada cita tenga su referencia.' },
+    { path: 'revisando-informes/REFERENCE.md', edit: 'sometimes', purpose: 'Un archivo suelto de apoyo, como los que usan los ejemplos de Anthropic (FORMS.md, REFERENCE.md).',
+      points: ['Se lee solo si <code>SKILL.md</code> lo menciona y hace falta.'] },
+    { path: 'revisando-informes/SKILL.md', edit: 'always', purpose: 'El único archivo obligatorio: encabezado YAML (frontmatter) más las instrucciones.',
+      points: ['<code>name</code>: 1 a 64 caracteres, igual a la carpeta.', '<code>description</code>: hasta 1024; qué hace y <b>cuándo usarla</b>.', 'Bajo 500 líneas. Un campo mal escrito se ignora sin avisar.'],
+      codeTitle: 'SKILL.md',
+      code: '---\nname: revisando-informes\ndescription: Revisa informes contra la\n  rúbrica del curso. Úsala cuando pidan\n  revisar o evaluar un informe.\n---\n\n1. Lee el documento completo.\n2. Compáralo con references/rubrica.md.' },
+  ];
+
+  var steps = [
+    { phase: 0, title: 'Una skill es una carpeta', depth: 3,
+      caption: 'Un árbol de ejemplo (ilustrativo). Solo SKILL.md es obligatorio; lo demás es opcional. Toca cada línea para ver su función.' },
+    { phase: 0, title: 'SKILL.md: el único obligatorio', focus: 'revisando-informes/SKILL.md', depth: 3,
+      caption: 'Frontmatter con name y description, y debajo las instrucciones. La description decide cuándo se activa la skill.' },
+    { phase: 0, title: 'references/: documentación bajo demanda', focus: 'revisando-informes/references/', depth: 3,
+      caption: 'Material largo que no debe ocupar contexto siempre: se lee solo si hace falta.' },
+    { phase: 0, title: 'scripts/: código que se ejecuta', focus: 'revisando-informes/scripts/', depth: 3,
+      caption: 'Se ejecutan y solo su salida entra al contexto. Úsalos para lo que debe ser siempre igual, y desconfía de los de terceros.' },
+    { phase: 0, title: 'assets/: plantillas y datos', focus: 'revisando-informes/assets/', depth: 3,
+      caption: 'Archivos que la skill entrega o usa como base. Tampoco cuestan contexto hasta que se abren.' },
+    { phase: 1, title: 'Siempre en contexto: nombre y descripción', focus: 'revisando-informes/SKILL.md', depth: 3,
+      caption: 'Nivel 1: unos 100 tokens por skill, en cada sesión. Por eso la descripción debe ser precisa: es lo único que el agente ve antes de decidir.' },
+    { phase: 1, title: 'Al activarla: el cuerpo de SKILL.md', focus: 'revisando-informes/SKILL.md', depth: 3,
+      caption: 'Nivel 2: menos de 5 000 tokens, cuando la skill se activa. Una vez cargado, se queda en el contexto de los turnos siguientes.' },
+    { phase: 1, title: 'Solo si hace falta: los demás archivos', focus: 'revisando-informes/references/rubrica.md', depth: 3,
+      caption: 'Nivel 3: cuesta 0 hasta que se lee. Las cifras son aproximadas y vienen de la documentación de Anthropic.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Anatomía de una skill: la carpeta, el archivo obligatorio SKILL.md con su encabezado, las carpetas opcionales scripts, references y assets, y qué se carga en cada nivel',
+    phases: ['La carpeta', 'Qué se carga'],
+    wide: true,
+    scene: function (svg, stage) { return DK.files({ stage: stage, items: items }); },
+    build: function () { return steps; },
+    intro: { kicker: 'Skills', title: 'Qué hay dentro de una skill', text: 'Recorre el árbol de una skill de ejemplo: qué archivo es obligatorio, qué es opcional y cuándo se lee cada uno.' },
+  });
+})();
+</script>
+</body>
+</html>

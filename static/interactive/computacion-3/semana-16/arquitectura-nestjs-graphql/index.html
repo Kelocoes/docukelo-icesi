@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arquitectura de una petición GraphQL entre Next.js y NestJS</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-layers.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var msg = function (path, label, kind, extra) {
+    var m = { path: path, label: label, kind: kind };
+    for (var k in extra) m[k] = extra[k];
+    return m;
+  };
+
+  var nodes = [
+    { id: 'front', kind: 'outer', label: 'Next.js (Clean Arch)', sub: 'Servidor / Server Actions', x: 10, y: 18, w: 220, h: 364 },
+    { id: 'usecase', kind: 'box', icon: 'gear', label: 'UseCase', sub: 'GetRoutines / Create', x: 26, y: 74, w: 188, h: 74 },
+    { id: 'repo_front', kind: 'box', icon: 'card', label: 'RoutineGraphQLRepo', sub: 'implementa contrato', x: 26, y: 174, w: 188, h: 74 },
+    { id: 'ds', kind: 'box', icon: 'browser', label: 'GraphQLDatasource', sub: 'POST /graphql', x: 26, y: 274, w: 188, h: 74 },
+
+    { id: 'nest', kind: 'outer', label: 'Backend NestJS + Apollo', sub: 'Puerto 4000 · /graphql', x: 320, y: 18, w: 490, h: 364 },
+    { id: 'apollo', kind: 'box', icon: 'filter', label: 'ApolloDriver', sub: 'valida contra schema.gql', x: 344, y: 174, w: 140, h: 86 },
+    { id: 'resolver', kind: 'box', icon: 'filecode', label: 'RoutinesResolver', sub: '@Query / @Mutation', x: 520, y: 74, w: 130, h: 86 },
+    { id: 'service', kind: 'box', icon: 'gear', label: 'RoutinesService', sub: 'lógica de negocio', x: 520, y: 174, w: 130, h: 86 },
+    { id: 'repo_back', kind: 'box', icon: 'database', label: 'RoutinesRepository', sub: 'datos en memoria / BD', x: 520, y: 274, w: 130, h: 86 },
+    { id: 'err_box', kind: 'box', tone: 'err', label: 'errors[]', sub: 'validación o pipe', x: 674, y: 174, w: 120, h: 86 },
+  ];
+
+  // Coordenadas de flechas
+  var F_UC_RF = [120, 148, 120, 174];
+  var F_RF_DS = [120, 248, 120, 274];
+  var F_DS_AP = [214, 304, 344, 217];
+  var F_AP_RS = [414, 174, 520, 117];
+  var F_RS_SV = [585, 160, 585, 174];
+  var F_SV_RP = [585, 260, 585, 274];
+  var F_RP_SV = [615, 274, 615, 260];
+  var F_SV_RS = [615, 174, 615, 160];
+  var F_RS_AP = [520, 132, 434, 174];
+  var F_AP_DS = [344, 232, 214, 324];
+  var F_DS_RF = [148, 274, 148, 248];
+  var F_RF_UC = [148, 174, 148, 148];
+  var F_AP_ERR = [484, 217, 674, 217];
+
+  var MODES = ['Query: routines', 'Mutation: createRoutine', 'Input inválido (ValidationPipe)'];
+
+  function build(opt) {
+    var mode = opt.operacion || 0;
+    var intro = [
+      {
+        phase: 0,
+        title: 'En el frontend: Clean Architecture intacta',
+        focus: ['front', 'usecase', 'repo_front', 'ds'],
+        msgs: [],
+        caption: 'Los UseCases y las entidades de dominio no saben si los datos vienen de un mock, REST o GraphQL. Solo cambia la capa de infraestructura: RoutineGraphQLDatasource y RoutineGraphQLRepositoryImpl.'
+      },
+      {
+        phase: 0,
+        title: 'En NestJS: Apollo + Resolver en lugar de Controller',
+        focus: ['nest', 'apollo', 'resolver', 'service', 'repo_back'],
+        msgs: [],
+        caption: 'RoutinesService y RoutinesRepository funcionan igual que en REST. Lo único que cambia es la puerta de entrada: en vez de un @Controller() con rutas HTTP, exponemos un @Resolver() detrás de ApolloDriver.'
+      }
+    ];
+
+    if (mode === 0) {
+      return intro.concat([
+        {
+          phase: 1,
+          title: '1 · El caso de uso pide las rutinas',
+          focus: ['usecase', 'repo_front', 'ds'],
+          msgs: [
+            msg(F_UC_RF, 'getAll()', 'ctl'),
+            msg(F_RF_DS, 'fetchRoutines()', 'ctl')
+          ],
+          caption: 'GetRoutinesUseCase llama al repositorio y este delega en RoutineGraphQLDatasource.'
+        },
+        {
+          phase: 1,
+          title: '2 · Envía la consulta por POST /graphql',
+          focus: ['ds', 'apollo'],
+          msgs: [msg(F_DS_AP, 'query { routines }', 'ctl')],
+          caption: 'El datasource hace un fetch POST a http://localhost:4000/graphql con la query en el body JSON. Apollo valida que los campos pedidos existan en schema.gql.'
+        },
+        {
+          phase: 1,
+          title: '3 · Apollo delega en RoutinesResolver',
+          focus: ['apollo', 'resolver', 'service', 'repo_back'],
+          msgs: [
+            msg(F_AP_RS, '@Query("routines")', 'ctl'),
+            msg(F_RS_SV, 'findAll()', 'ctl'),
+            msg(F_SV_RP, 'findAll()', 'ctl')
+          ],
+          caption: 'El resolver recibe la petición, llama a RoutinesService y este consulta a RoutinesRepository.'
+        },
+        {
+          phase: 1,
+          title: '4 · La respuesta sube y se mapea al dominio',
+          focus: ['repo_back', 'service', 'resolver', 'apollo', 'ds', 'repo_front', 'usecase'],
+          msgs: [
+            msg(F_RP_SV, 'Routine[]', 'data'),
+            msg(F_SV_RS, 'Routine[]', 'data'),
+            msg(F_RS_AP, '{ data: { routines } }', 'ack'),
+            msg(F_AP_DS, 'JSON', 'ack'),
+            msg(F_DS_RF, 'DTO[]', 'data'),
+            msg(F_RF_UC, 'Routine[]', 'ack')
+          ],
+          caption: 'Apollo serializa solo los campos pedidos. RoutineGraphQLRepositoryImpl convierte los DTOs en entidades Routine mediante RoutineMapper.toDomain().'
+        }
+      ]);
+    }
+
+    if (mode === 1) {
+      return intro.concat([
+        {
+          phase: 1,
+          title: '1 · CreateRoutineUseCase recibe los parámetros',
+          focus: ['usecase', 'repo_front', 'ds'],
+          msgs: [
+            msg(F_UC_RF, 'create(params)', 'ctl'),
+            msg(F_RF_DS, 'createRoutine(dto)', 'ctl')
+          ],
+          caption: 'El formulario dispara la Server Action -> CreateRoutineUseCase -> RoutineGraphQLRepositoryImpl.'
+        },
+        {
+          phase: 1,
+          title: '2 · Envía la mutation con variables',
+          focus: ['ds', 'apollo'],
+          msgs: [msg(F_DS_AP, 'mutation ($input)', 'ctl')],
+          caption: 'La petición viaja como POST /graphql con la mutación createRoutine y el objeto variables: { input: { name, description } }.'
+        },
+        {
+          phase: 1,
+          title: '3 · ValidationPipe y RoutinesResolver ejecutan',
+          focus: ['apollo', 'resolver', 'service', 'repo_back'],
+          msgs: [
+            msg(F_AP_RS, '@Mutation + @Args', 'ctl'),
+            msg(F_RS_SV, 'create(input)', 'ctl'),
+            msg(F_SV_RP, 'create(input)', 'ctl')
+          ],
+          caption: 'ValidationPipe valida CreateRoutineInput con class-validator antes de entrar al método del resolver. Si todo es válido, el servicio crea la rutina.'
+        },
+        {
+          phase: 1,
+          title: '4 · Devuelve la rutina recién creada',
+          focus: ['repo_back', 'apollo', 'ds', 'repo_front', 'usecase'],
+          msgs: [
+            msg(F_RS_AP, 'Routine', 'ack'),
+            msg(F_AP_DS, '{ data: { createRoutine } }', 'ack'),
+            msg(F_DS_RF, 'DTO', 'data'),
+            msg(F_RF_UC, 'Routine', 'ack')
+          ],
+          caption: 'En la misma respuesta de la mutación regresa la rutina con su id y createdAt generados por el servidor.'
+        }
+      ]);
+    }
+
+    return intro.concat([
+      {
+        phase: 1,
+        title: '1 · Se envía un nombre demasiado corto ("ab")',
+        focus: ['ds', 'apollo'],
+        msgs: [msg(F_DS_AP, 'name: "ab"', 'ctl')],
+        caption: 'El cliente envía una mutación con un nombre de 2 caracteres, violando @MinLength(3) en CreateRoutineInput.'
+      },
+      {
+        phase: 1,
+        title: '2 · ValidationPipe detiene la petición',
+        focus: ['apollo', 'err_box'],
+        msgs: [msg(F_AP_ERR, 'BadRequestException', 'err')],
+        caption: 'NestJS ejecuta ValidationPipe antes del resolver. Como falla, nunca llega a RoutinesService ni a RoutinesRepository.'
+      },
+      {
+        phase: 1,
+        title: '3 · Apollo responde con errors[]',
+        focus: ['err_box', 'ds'],
+        msgs: [msg(F_AP_DS, '{ errors: [...] }', 'err')],
+        caption: 'Apollo convierte la excepción en el arreglo errors de GraphQL. RoutineGraphQLDatasource detecta payload.errors y lanza un Error legible para la interfaz.'
+      }
+    ]);
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Arquitectura de comunicación entre Next.js con Clean Architecture y NestJS con Apollo Server y GraphQL',
+    phases: ['Las capas', 'Flujo en vivo'],
+    wide: true,
+    scene: function (svg) {
+      return DK.layers({ svg: svg, width: 820, height: 400, nodes: nodes, labels: 'smart', trail: 'phase' });
+    },
+    toggles: [
+      { key: 'operacion', type: 'select', label: 'Operación', options: MODES, value: 0, affectsPhase: 1 }
+    ],
+    build: build,
+    intro: {
+      kicker: 'NestJS + Clean Architecture',
+      title: 'Cómo viaja una petición GraphQL de punta a punta',
+      text: 'Explora qué piezas cambian y cuáles se mantienen intactas cuando conectas un frontend con Clean Architecture a un backend NestJS con Apollo.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

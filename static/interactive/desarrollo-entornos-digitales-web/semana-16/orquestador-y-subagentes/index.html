@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orquestador y subagentes</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-canvas.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+/* Un subagente trabaja en su propio contexto y devuelve solo un resumen; así la conversación principal no se llena.
+   Los tres subagentes del ejemplo son ilustrativos. Solo DATOS. */
+(function () {
+  var SUB = [['investigar', 50], ['construir', 140], ['revisar', 230]];
+  var items = [
+    { id: 'o', type: 'node', icon: 'laptop', x: 90, y: 140, size: 60, label: 'Orquestador', sub: 'la conversación principal' },
+    { id: 'co', type: 'tag', x: 90, y: 232, text: 'contexto: …', hidden: true },
+  ];
+  SUB.forEach(function (s, i) {
+    items.push({ id: 's' + i, type: 'node', icon: 'chip', x: 400, y: s[1], size: 44, label: s[0], sub: 'subagente', hidden: true });
+    items.push({ id: 'cs' + i, type: 'tag', x: 560, y: s[1], text: 'su propio contexto', hidden: true });
+  });
+
+  function build(opt) {
+    var solo = !!opt.solo, ids = ['s0', 's1', 's2'], tags = ['cs0', 'cs1', 'cs2'], s = [];
+    if (solo) {
+      s.push({ phase: 0, title: 'Todo en una sola conversación', focus: ['o', 'co'], show: ['co'], text: { co: 'contexto: poco' },
+        caption: 'Sin subagentes, el mismo agente investiga, construye y revisa dentro de una sola conversación.' });
+      s.push({ phase: 1, title: 'El contexto se llena', focus: ['o', 'co'], show: ['co'], state: { co: 'err' }, text: { co: 'contexto: lleno' },
+        caption: 'Las búsquedas, los logs y los archivos que ya no necesitas siguen ahí y compiten con lo importante.' });
+      s.push({ phase: 2, title: 'Se pierde lo que importa', focus: ['o', 'co'], show: ['co'], state: { o: 'err', co: 'err' }, text: { co: 'contexto: desbordado' },
+        caption: 'Las instrucciones del principio quedan lejos y el agente rinde peor. Activa un subagente para aislar esa carga.' });
+      return s;
+    }
+    s.push({ phase: 0, title: 'Delegar: cada uno recibe su tarea', focus: ['o'].concat(ids), show: ['co'].concat(ids, tags), text: { co: 'contexto: poco' },
+      links: ids.map(function (id) { return { from: 'o', to: id, kind: 'ctl', label: id === 's1' ? 'tarea' : '', curve: 0 }; }),
+      caption: 'Un subagente recibe solo la tarea que le delegas: no ve tu historial, así que debe explicarse completa.' });
+    s.push({ phase: 1, title: 'Trabajan en su propio contexto', focus: ids.concat(tags), show: ['co'].concat(ids, tags), state: { cs0: 'warn', cs1: 'warn', cs2: 'warn' }, text: { co: 'contexto: sin cambios' },
+      caption: 'Cada uno lee archivos y corre comandos en SU contexto, y puede trabajar a la vez que los demás si las tareas son independientes.' });
+    s.push({ phase: 2, title: 'Devuelven solo un resumen', focus: ['o'].concat(ids), show: ['co'].concat(ids, tags), state: { co: 'ok' }, text: { co: 'solo resúmenes' },
+      links: ids.map(function (id) { return { from: id, to: 'o', kind: 'ack', label: id === 's1' ? 'resumen' : '', curve: 0 }; }),
+      caption: 'A la conversación principal solo llega un resumen. Lo que cada uno leyó en el camino se queda en su contexto.' });
+    s.push({ phase: 2, title: 'No es gratis', focus: ['o'], show: ['co'].concat(ids, tags), text: { co: 'solo resúmenes' },
+      caption: 'Repartir y coordinar también cuesta, y paralelizar tareas que dependen unas de otras no acelera nada. Por defecto un subagente puede crear otros, hasta tres niveles.' });
+    return s;
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Un orquestador reparte tareas a tres subagentes que trabajan cada uno en su propio contexto y devuelven solo un resumen; con un interruptor se ve qué pasa sin subagentes',
+    phases: ['Delegar', 'Trabajar', 'Integrar'],
+    scene: function (svg) { return DK.canvas({ svg: svg, width: 720, height: 330, items: items, trail: 'step' }); },
+    toggles: [{ key: 'solo', label: 'Sin subagentes', affectsPhase: 0 }],
+    build: build,
+    intro: { kicker: 'Subagentes', title: 'Repartir el trabajo sin llenar el contexto', text: 'Sigue una tarea repartida entre tres subagentes y activa «Sin subagentes» para ver qué pasa con el contexto principal.' },
+  });
+})();
+</script>
+</body>
+</html>

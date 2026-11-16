@@ -47,3 +47,16 @@
 .timelineBody {
     padding-left: 4px;
 }
+
+.timelineItemHeading > .timelineBadge {
+    position: absolute;
+    left: -39px;
+    top: 0;
+}
+
+.timelineItemHeading .timelineBody > h3:first-child {
+    margin: 0 0 12px 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 28px;
+}

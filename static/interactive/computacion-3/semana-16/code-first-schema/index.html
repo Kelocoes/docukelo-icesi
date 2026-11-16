@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code First en NestJS: de decoradores TypeScript a schema.gql</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-codemap.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var code = [
+    [['@ObjectType()', 'obj'], [' export class ', ''], ['Routine', 'obj'], [' {', '']],
+    [['  ', ''], ['@Field(() => Int)', 'idfield'], [' id: number;', 'idfield']],
+    [['  ', ''], ['@Field()', 'reqfield'], [' name: string;', 'reqfield']],
+    [['  ', ''], ['@Field({ nullable: true })', 'optfield'], [' description?: string;', 'optfield']],
+    [['  ', ''], ['@Field()', 'reqfield'], [' createdAt: string;', 'reqfield']],
+    [['}', '']],
+    [['', '']],
+    [['@InputType()', 'inp'], [' export class ', ''], ['CreateRoutineInput', 'inp'], [' {', '']],
+    [['  ', ''], ['@Field()', 'inpreq'], [' @MinLength(3)', 'val']],
+    [['  name: string;', 'inpreq']],
+    [['  ', ''], ['@Field({ nullable: true })', 'inpopt'], [' @MinLength(10)', 'val']],
+    [['  description?: string;', 'inpopt']],
+    [['}', '']],
+  ];
+
+  var parts = {
+    obj: {
+      label: '@ObjectType()',
+      color: 'p1',
+      title: 'Define un tipo de salida en el schema',
+      text: 'El decorador <code>@ObjectType()</code> le indica a <code>@nestjs/graphql</code> que esta clase TypeScript debe convertirse en un <code>type</code> dentro de <code>schema.gql</code>.',
+      bullets: ['Aplica el enfoque <b>Code First</b>: escribes clases en TypeScript y NestJS genera el SDL automáticamente.', 'No tienes que mantener dos archivos sincronizados a mano.'],
+      where: 'A la derecha: genera <code>type Routine &#123; ... &#125;</code>.'
+    },
+    idfield: {
+      label: 'Escalar Int',
+      color: 'p2',
+      title: 'Indicar el tipo GraphQL explícitamente',
+      text: 'En TypeScript tanto enteros como decimales son <code>number</code>. Por eso pasamos <code>() => Int</code> a <code>@Field()</code>: si lo omites, GraphQL generaría <code>Float!</code>.',
+      bullets: ['Por defecto, todo campo con <code>@Field()</code> es obligatorio (<code>!</code>).'],
+      where: 'A la derecha: <code>id: Int!</code>.'
+    },
+    reqfield: {
+      label: 'Campo obligatorio',
+      color: 'p3',
+      title: 'Campos String! por defecto',
+      text: 'Cuando el tipo en TypeScript es <code>string</code> y no pasas opciones, NestJS infiere <code>String!</code> (no nulo).',
+      where: 'A la derecha: <code>name: String!</code> y <code>createdAt: String!</code>.'
+    },
+    optfield: {
+      label: 'Campo nullable',
+      color: 'p4',
+      title: 'Hacer un campo opcional en GraphQL',
+      text: 'Poner <code>?</code> en TypeScript no basta para GraphQL porque los tipos de TypeScript desaparecen al compilar. Debes pasar <code>&#123; nullable: true &#125;</code> en <code>@Field()</code>.',
+      where: 'A la derecha: <code>description: String</code> (sin signo <code>!</code>).'
+    },
+    inp: {
+      label: '@InputType()',
+      color: 'p1',
+      title: 'Objeto de entrada para mutaciones',
+      text: 'En GraphQL un <code>type</code> de salida no puede usarse como argumento de entrada. Las clases que recibe <code>@Args()</code> llevan <code>@InputType()</code>.',
+      where: 'A la derecha: genera <code>input CreateRoutineInput &#123; ... &#125;</code>.'
+    },
+    inpreq: {
+      label: 'Input obligatorio',
+      color: 'p3',
+      title: 'Campo requerido en el input',
+      text: 'Al igual que en <code>@ObjectType()</code>, <code>@Field()</code> sin opciones marca el campo como obligatorio en el contrato.',
+      where: 'A la derecha: <code>name: String!</code> en <code>CreateRoutineInput</code>.'
+    },
+    inpopt: {
+      label: 'Input opcional',
+      color: 'p4',
+      title: 'Campo opcional en el input',
+      text: '<code>&#123; nullable: true &#125;</code> permite que el cliente omita <code>description</code> al ejecutar la mutación.',
+      where: 'A la derecha: <code>description: String</code> en <code>CreateRoutineInput</code>.'
+    },
+    val: {
+      label: 'class-validator',
+      color: 'p5',
+      title: 'Validación reutilizada de NestJS',
+      text: 'Los decoradores de <code>class-validator</code> (<code>@MinLength</code>, <code>@IsString</code>) conviven en la misma clase. <code>ValidationPipe</code> los ejecuta antes de entrar al resolver.',
+      bullets: ['GraphQL valida la <b>forma y tipo</b> (ej. que sea String).', '<code>class-validator</code> valida las <b>reglas de formato</b> (ej. mínimo 3 caracteres).'],
+      where: 'Protege la mutación antes de llegar al servicio.'
+    }
+  };
+
+  function view() {
+    return '' +
+      '<p class="cm-lbl">Archivo generado en el Backend (NestJS): src/schema.gql</p>' +
+      '<div class="cm-code-sm">' +
+        '<span data-part="obj">type Routine &#123;</span><br>' +
+        '&nbsp;&nbsp;<span data-part="idfield">id: Int!</span><br>' +
+        '&nbsp;&nbsp;<span data-part="reqfield">name: String!</span><br>' +
+        '&nbsp;&nbsp;<span data-part="optfield">description: String</span><br>' +
+        '&nbsp;&nbsp;<span data-part="reqfield">createdAt: String!</span><br>' +
+        '<span data-part="obj">&#125;</span><br><br>' +
+        '<span data-part="inp">input CreateRoutineInput &#123;</span><br>' +
+        '&nbsp;&nbsp;<span data-part="inpreq">name: String!</span><br>' +
+        '&nbsp;&nbsp;<span data-part="inpopt">description: String</span><br>' +
+        '<span data-part="inp">&#125;</span>' +
+      '</div>' +
+      '<div class="cm-arrow">↓ Validación en tiempo de ejecución</div>' +
+      '<div class="cm-chip" data-part="val">ValidationPipe + class-validator → rechaza inputs cortos antes del servicio</div>';
+  }
+
+  var steps = [
+    { phase: 0, title: '@ObjectType(): la clase se vuelve un type', focus: 'obj',
+      caption: 'Pasa el mouse sobre cualquier decorador o sobre el schema generado. @ObjectType() convierte una clase TypeScript en un tipo GraphQL.' },
+    { phase: 0, title: '@Field(() => Int): precisión en números', focus: 'idfield',
+      caption: 'TypeScript solo tiene number. Para que GraphQL genere Int! y no Float!, se pasa () => Int.' },
+    { phase: 0, title: 'Obligatorio vs nullable', focus: 'optfield',
+      caption: 'Sin opciones, @Field() genera ! (obligatorio). Con { nullable: true }, el campo puede ser null u omitirse.' },
+    { phase: 1, title: '@InputType(): contratos de entrada', focus: 'inp',
+      caption: 'Para recibir objetos en una mutación, GraphQL exige input en lugar de type. Se define igual con @InputType().' },
+    { phase: 1, title: 'Validación con class-validator', focus: 'val',
+      caption: 'En la misma clase puedes combinar @Field() con @MinLength o @MaxLength para que ValidationPipe valide los datos al llegar.' },
+  ];
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Mapeo Code First en NestJS entre clases TypeScript con decoradores y el archivo schema.gql generado',
+    phases: ['ObjectType (Salida)', 'InputType (Entrada)'],
+    wide: true,
+    scene: function (svg, stage) {
+      return DK.codemap({
+        stage: stage,
+        file: 'Backend (NestJS) · routine.entity.ts + create-routine.input.ts',
+        filePart: 'obj',
+        code: code,
+        parts: parts,
+        view: view
+      });
+    },
+    build: function () { return steps; },
+    intro: {
+      kicker: 'Code First en NestJS',
+      title: 'Cómo tus clases TypeScript generan schema.gql',
+      text: 'En Code First nunca editas schema.gql a mano: NestJS lee los decoradores @ObjectType, @InputType y @Field al arrancar y construye el contrato por ti.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

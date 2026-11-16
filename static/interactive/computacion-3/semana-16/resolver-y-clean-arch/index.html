@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conexión Clean Architecture (Next.js) con Resolver (NestJS)</title>
+<link rel="stylesheet" href="../../../_shared/dk-base.css">
+<style>
+  .dk-code .ft::before {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font: 800 10px/1 system-ui, sans-serif;
+    color: var(--dk-card);
+    letter-spacing: 0;
+  }
+  .dk-code .ft:nth-child(1)::before,
+  .dk-code .ft:nth-child(2)::before {
+    content: 'F';
+    background: var(--dk-ctl);
+  }
+  .dk-code .ft:nth-child(3)::before {
+    content: 'B';
+    background: var(--dk-ack);
+  }
+  .dk-zone-div {
+    stroke: var(--dk-muted);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 5;
+    opacity: .65;
+  }
+  .dk-zone-lbl {
+    font: 700 11px system-ui, sans-serif;
+    letter-spacing: .06em;
+    text-anchor: middle;
+  }
+  .dk-zone-lbl.front { fill: var(--dk-ctl); }
+  .dk-zone-lbl.back { fill: var(--dk-ack); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>if (window.parent === window) document.documentElement.classList.add('solo');</script>
+<script src="../../../_shared/dk-theme.js"></script>
+<script src="../../../_shared/dk-kit.js"></script>
+<script src="../../../_shared/dk-icons.js"></script>
+<script src="../../../_shared/dk-flow.js"></script>
+<script src="../../../_shared/dk-sequence.js"></script>
+<script src="../../../_shared/dk-player.js"></script>
+<script>
+(function () {
+  var DS_CODE = [
+    "// [FRONT · Next.js] src/features/routines/infrastructure/datasources/",
+    "export class RoutineGraphQLDatasource implements RoutineDatasource {",
+    "  async fetchRoutines(): Promise<RoutineResponseDto[]> {",
+    "    const query = `query FetchRoutines { routines { id name description createdAt } }`;",
+    "    const data = await this.request<{ routines: GraphQLRoutine[] }>(query);",
+    "    return data.routines.map((r) => this.toResponseDto(r));",
+    "  }",
+    "  async createRoutine(dto: CreateRoutineDto): Promise<RoutineResponseDto> {",
+    "    const mutation = `mutation CreateRoutine($input: CreateRoutineInput!) {",
+    "      createRoutine(input: $input) { id name description createdAt }",
+    "    }`;",
+    "    const data = await this.request(mutation, { input: { name: dto.name, description: dto.description } });",
+    "    return this.toResponseDto(data.createRoutine);",
+    "  }",
+    "}"
+  ].join('\n');
+
+  var RES_CODE = [
+    "// [BACK · NestJS] src/routines/routines.resolver.ts",
+    "@Resolver(() => Routine)",
+    "export class RoutinesResolver {",
+    "  constructor(private readonly routinesService: RoutinesService) {}",
+    "",
+    "  @Query(() => [Routine], { name: 'routines' })",
+    "  findAll(): Routine[] {",
+    "    return this.routinesService.findAll();",
+    "  }",
+    "",
+    "  @Mutation(() => Routine, { name: 'createRoutine' })",
+    "  createRoutine(@Args('input') input: CreateRoutineInput): Routine {",
+    "    return this.routinesService.create(input);",
+    "  }",
+    "}"
+  ].join('\n');
+
+  var REPO_CODE = [
+    "// [FRONT · Next.js] src/features/routines/infrastructure/repositories/",
+    "export class RoutineGraphQLRepositoryImpl implements RoutineRepository {",
+    "  constructor(private readonly datasource: RoutineDatasource) {}",
+    "",
+    "  async getAll(): Promise<Routine[]> {",
+    "    const dtos = await this.datasource.fetchRoutines();",
+    "    return dtos.map((dto) => RoutineMapper.toDomain(dto));",
+    "  }",
+    "",
+    "  async create(params: CreateRoutineParams): Promise<Routine> {",
+    "    const dtoToSend = RoutineMapper.toDto(params);",
+    "    const createdDto = await this.datasource.createRoutine(dtoToSend);",
+    "    return RoutineMapper.toDomain(createdDto);",
+    "  }",
+    "}"
+  ].join('\n');
+
+  var F_REPO = 'Front · routine-graphql.repository.impl.ts';
+  var F_DS = 'Front · routine-graphql-datasource.ts';
+  var B_RES = 'Back · routines.resolver.ts';
+
+  var actors = [
+    { id: 'repo', label: 'F · RepositoryImpl', icon: 'card' },
+    { id: 'ds', label: 'F · GraphQLDatasource', icon: 'browser' },
+    { id: 'res', label: 'B · RoutinesResolver', icon: 'filecode' },
+    { id: 'svc', label: 'B · RoutinesService', icon: 'gear' },
+  ];
+
+  var CASES = ['fetchRoutines (Query)', 'createRoutine (Mutation)'];
+
+  function build(opt) {
+    var isMutation = (opt.caso || 0) === 1;
+    if (!isMutation) {
+      return [
+        {
+          phase: 0,
+          title: '1 · [Front] El repositorio pide los datos al datasource',
+          caption: 'GetRoutinesUseCase llamó a repository.getAll(). El repositorio delega la obtención de DTOs a RoutineGraphQLDatasource.',
+          msgs: [{ from: 'repo', to: 'ds', label: 'fetchRoutines()', kind: 'ctl' }],
+          state: { repo: 'esperando DTO[]', ds: 'preparando query', res: 'en escucha', svc: 'listo' },
+          file: F_REPO,
+          code: [5, 6]
+        },
+        {
+          phase: 0,
+          title: '2 · [Front → Back] El datasource envía la Query por POST :4000/graphql',
+          caption: 'RoutineGraphQLDatasource cruza la red haciendo POST a http://localhost:4000/graphql con la query en el cuerpo JSON.',
+          msgs: [{ from: 'ds', to: 'res', label: 'POST query { routines }', kind: 'ctl' }],
+          state: { repo: 'esperando DTO[]', ds: 'esperando JSON', res: '@Query("routines")', svc: 'listo' },
+          file: F_DS,
+          code: [3, 4, 5]
+        },
+        {
+          phase: 1,
+          title: '3 · [Back] El resolver delega en el servicio',
+          caption: 'RoutinesResolver recibe la query y delega la lógica de obtención en RoutinesService.findAll().',
+          msgs: [{ from: 'res', to: 'svc', label: 'findAll()', kind: 'ctl' }],
+          state: { repo: 'esperando DTO[]', ds: 'esperando JSON', res: 'resolviendo', svc: 'leyendo memoria' },
+          file: B_RES,
+          code: [6, 7, 8]
+        },
+        {
+          phase: 1,
+          title: '4 · [Back → Front] El servicio devuelve las rutinas y Apollo responde',
+          caption: 'El servicio retorna Routine[], Apollo serializa los campos pedidos y responde { data: { routines } } hacia el datasource.',
+          msgs: [
+            { from: 'svc', to: 'res', label: 'Routine[]', kind: 'data' },
+            { from: 'res', to: 'ds', label: '{ data: { routines } }', kind: 'ack' }
+          ],
+          state: { repo: 'esperando DTO[]', ds: 'convierte a DTO[]', res: 'respondido', svc: 'listo' },
+          file: F_DS,
+          code: [6]
+        },
+        {
+          phase: 1,
+          title: '5 · [Front] RoutineMapper convierte a entidades de dominio',
+          caption: 'RoutineGraphQLRepositoryImpl recibe los RoutineResponseDto y los transforma en instancias Routine del dominio.',
+          msgs: [{ from: 'ds', to: 'repo', label: 'RoutineResponseDto[]', kind: 'data' }],
+          state: { repo: 'Routine[] listo', ds: 'inactivo', res: 'en escucha', svc: 'listo' },
+          file: F_REPO,
+          code: [7]
+        }
+      ];
+    }
+
+    return [
+      {
+        phase: 0,
+        title: '1 · [Front] El repositorio convierte los parámetros a DTO',
+        caption: 'RoutineGraphQLRepositoryImpl transforma CreateRoutineParams en CreateRoutineDto con RoutineMapper.toDto() y llama al datasource.',
+        msgs: [{ from: 'repo', to: 'ds', label: 'createRoutine(dto)', kind: 'ctl' }],
+        state: { repo: 'mapea input', ds: 'preparando mutation', res: 'en escucha', svc: 'listo' },
+        file: F_REPO,
+        code: [10, 11, 12]
+      },
+      {
+        phase: 0,
+        title: '2 · [Front → Back] El datasource envía la Mutation con variables',
+        caption: 'La operación createRoutine viaja por POST :4000/graphql con variables: { input: { name, description } }.',
+        msgs: [{ from: 'ds', to: 'res', label: 'POST mutation ($input)', kind: 'ctl' }],
+        state: { repo: 'esperando', ds: 'esperando JSON', res: '@Mutation("createRoutine")', svc: 'listo' },
+        file: F_DS,
+        code: [8, 9, 10, 11, 12]
+      },
+      {
+        phase: 1,
+        title: '3 · [Back] El resolver recibe @Args("input") ya validado',
+        caption: 'ValidationPipe ya validó CreateRoutineInput. El resolver invoca a routinesService.create(input).',
+        msgs: [{ from: 'res', to: 'svc', label: 'create(input)', kind: 'ctl' }],
+        state: { repo: 'esperando', ds: 'esperando JSON', res: 'ejecutando', svc: 'guardando rutina' },
+        file: B_RES,
+        code: [11, 12, 13]
+      },
+      {
+        phase: 1,
+        title: '4 · [Back → Front] La rutina creada regresa al frontend',
+        caption: 'El backend devuelve la rutina creada con id y createdAt, y el repositorio la transforma en Routine de dominio.',
+        msgs: [
+          { from: 'svc', to: 'res', label: 'Routine', kind: 'data' },
+          { from: 'res', to: 'ds', label: '{ data: { createRoutine } }', kind: 'ack' },
+          { from: 'ds', to: 'repo', label: 'RoutineResponseDto', kind: 'data' }
+        ],
+        state: { repo: 'Routine creada', ds: 'inactivo', res: 'respondido', svc: 'listo' },
+        file: F_REPO,
+        code: [13]
+      }
+    ];
+  }
+
+  DK.player({
+    mount: document.getElementById('app'),
+    ariaLabel: 'Secuencia de código entre Frontend Next.js (RoutineGraphQLRepositoryImpl y RoutineGraphQLDatasource) y Backend NestJS (RoutinesResolver)',
+    phases: ['Salida (Front)', 'Resolución (Back)'],
+    wide: true,
+    scene: function (svg) {
+      var seq = DK.sequence({
+        svg: svg,
+        actors: actors,
+        phases: ['Salida (Front)', 'Resolución (Back)'],
+        idleState: 'listo',
+        trayCount: 0,
+        firstRowY: 138,
+        width: 820
+      });
+      return {
+        msgDuration: seq.msgDuration,
+        render: seq.render,
+        setSteps: function (s) {
+          seq.setSteps(s);
+          var vb = (svg.getAttribute('viewBox') || '0 0 820 300').split(' ');
+          var h = Number(vb[3]) || 300;
+          var S = DK.svg;
+          svg.insertBefore(S('line', { x1: 410, y1: 6, x2: 410, y2: h - 6, class: 'dk-zone-div' }), svg.firstChild);
+          svg.appendChild(S('text', { x: 215, y: 120, class: 'dk-zone-lbl front', text: 'FRONTEND · Next.js (:3001)' }));
+          svg.appendChild(S('text', { x: 605, y: 120, class: 'dk-zone-lbl back', text: 'BACKEND · NestJS (:4000)' }));
+        }
+      };
+    },
+    code: {
+      files: [
+        { name: F_REPO, text: REPO_CODE },
+        { name: F_DS, text: DS_CODE },
+        { name: B_RES, text: RES_CODE }
+      ]
+    },
+    toggles: [
+      { key: 'caso', type: 'select', label: 'Operación', options: CASES, value: 0, restart: 'first' }
+    ],
+    build: build,
+    intro: {
+      kicker: 'Código sincronizado · Front ↔ Back',
+      title: 'Del Repository (Front) al Resolver (Back) línea por línea',
+      text: 'Las pestañas marcadas con F pertenecen al Frontend (Next.js) y las marcadas con B al Backend (NestJS). Alterna entre fetchRoutines y createRoutine para seguir el viaje completo.'
+    }
+  });
+})();
+</script>
+</body>
+</html>

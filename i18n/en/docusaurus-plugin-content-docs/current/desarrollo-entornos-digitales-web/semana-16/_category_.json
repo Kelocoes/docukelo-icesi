@@ -1,0 +1,9 @@
+{
+    "label": "W16 - BMAD, Mock Exam and Deployment",
+    "key": "desarrollo-entornos-digitales-web-semana-16",
+    "position": 16,
+    "link": {
+        "type": "generated-index",
+        "description": "Agent-driven development with BMAD, midterm preparation, and deploying the app to Vercel with GitHub Actions."
+    }
+}
